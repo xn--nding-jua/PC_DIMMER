@@ -1,0 +1,78 @@
+var
+  CopiedBytes:Integer;
+  FastCopyResult:Integer;
+
+function GetFileSize1(const FileName: String): Integer;
+var
+  SR: TSearchRec;
+begin
+  Result := -1;
+
+  if FindFirst(FileName, faAnyFile and not faDirectory, SR) = 0 then
+  try
+    Result := SR.Size;
+  finally
+    SysUtils.FindClose(SR)
+  end;
+end;
+
+// beste Variante
+function GetFileSize2(const FileName: String): Int64;
+var
+  fFile: THandle;
+  wfd: TWIN32FINDDATA;
+begin
+  result := 0;
+  if not FileExists(FileName) then exit;
+  fFile := FindFirstfile(pchar(FileName),wfd);
+  if fFile = INVALID_HANDLE_VALUE then exit;
+  result := (wfd.nFileSizeHigh*(MAXDWORD))+wfd.nFileSizeLow;
+  windows.FindClose(fFile);
+end;
+
+// Bei GetFileSize3 wird die Datei geöffnet
+function GetFileSize3(const FileName : String): Int64;
+var FileStream: TFileStream;
+begin
+  FileStream := TFileStream.Create(FileName, fmOpenRead or fmShareDenyNone);
+  try
+    try
+      Result := FileStream.Size;
+    except
+      Result := 0;
+    end;
+  finally
+    FileStream.Free;
+  end;
+end;
+
+procedure FastCopyFile(SourceFile,DestinationFile:String;OverwriteExistingFile:Boolean);
+const
+  BufferSize   = 32768;
+var
+  Sou,Des:file;
+  Buffer:Array[1..BufferSize] of Byte;
+  NumRead, NumSave:Integer;
+begin
+  CopiedBytes:=0;
+
+  If (OverwriteExistingFile=false) and FileExists(DestinationFile) then exit;
+
+  AssignFile(Sou,SourceFile); {$I-} reset(Sou,1); {$I+}
+  FastCopyResult:=IOresult;
+  if FastCopyResult<>0 then exit;
+
+  AssignFile(Des,DestinationFile); {$I-} rewrite(Des,1); {$I+}
+  FastCopyResult:=IOresult;
+  if FastCopyResult<>0 then exit;
+
+  repeat
+    BlockRead (Sou,Buffer,SizeOf(Buffer),NumRead);
+    BlockWrite(Des,Buffer,NumRead,       NumSave);
+    inc(CopiedBytes,NumSave);
+    Application.ProcessMessages;
+  until (NumRead=0) or (NumSave<>NumRead);
+  
+  CloseFile(Sou);
+  CloseFile(Des);
+end;

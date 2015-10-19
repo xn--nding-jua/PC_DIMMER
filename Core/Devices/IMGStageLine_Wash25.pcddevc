@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\varyscanp6.png">
+ <information id="PC_DIMMER">
+ <name>Wash-25</name>
+ <vendor>IMG StageLine</vendor>
+ <author>Christian Nöding</author>
+ <description>Moving-Head Farbwechsler</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Farbe" fade="yes" type="color1"/>
+ </channels>
+ <initvalues ch0="128" ch1="128" ch2="-1" ch3="-1" ch4="-1" />
+ <colors>
+  <color name="Weiß" value="0" valueend="0" r="255" g="255" b="255" />
+  <color name="Grün" value="11" valueend="11" r="0" g="128" b="0" />
+  <color name="Orange" value="22" valueend="22" r="255" g="128" b="0" />
+  <color name="Hellblau" value="33" valueend="33" r="166" g="202" b="240" />
+  <color name="Bernstein" value="44" valueend="44" r="255" g="204" b="0" />
+  <color name="Rot" value="55" valueend="55" r="255" g="0" b="0" />
+  <color name="UV-Violett" value="66" valueend="66" r="128" g="0" b="128" />
+  <color name="Rosa" value="77" valueend="77" r="255" g="128" b="192" />
+  <color name="Hellgrün" value="88" valueend="88" r="0" g="255" b="0" />
+  <color name="Blau" value="99" valueend="99" r="0" g="0" b="255" />
+  <color name="Gelb" value="110" valueend="110" r="255" g="255" b="0" />
+  <color name="Magenta" value="121" valueend="121" r="255" g="0" b="255" />
+ </colors>
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="132" LeftMaxValue="253" OffValue="132" RightMinValue="132" RightMaxValue="253" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="251" height="472">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="80" left="10" height="230" width="230" />
+  <colorbox top="340" left="10" height="22" width="120" />
+  <slider name="stroboslider" top="390" left="10" width="230" height="20" action="strobosliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="dimmerslider" top="440" left="10" width="230" height="20" action="dimmersliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="colorslider" top="340" left="140" width="100" height="20" action="colorsliderchange" startvalue="128" endvalue="255" default="128"/>
+  <label name="Label1" top="320" left="10" width="30" height="13" caption="Farbe:"/>
+  <label name="Label2" top="370" left="10" width="57" height="13" caption="Stroboskop:"/>
+  <label name="Label3" top="420" left="10" width="46" height="13" caption="Helligkeit:"/>
+  <label name="Label4" top="320" left="140" width="63" height="13" caption="Farbwechsel:"/>
+ </form>
+ <code>
+  unit wash25;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorBoxChange;
+  procedure strobosliderchange;
+  procedure dimmersliderchange;
+  procedure colorsliderchange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+		wert:integer;
+	begin
+    case channel of
+    	0..1:
+    	begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+    	end;
+    	2:
+    	begin
+    		if not dontrefresh then
+    			dimmerslider.position:=get_channel('DIMMER');
+    	end;
+    	3:
+    	begin
+    		if not dontrefresh then
+    			stroboslider.position:=get_channel('SHUTTER');
+    	end;
+    	4:
+    	begin
+    		wert:=get_channel('COLOR1');
+    		case wert of
+    			0..10: colorbox.itemindex:=0;
+    			11..21: colorbox.itemindex:=1;
+    			22..32: colorbox.itemindex:=2;
+    			33..43: colorbox.itemindex:=3;
+    			44..54: colorbox.itemindex:=4;
+    			55..65: colorbox.itemindex:=5;
+    			66..76: colorbox.itemindex:=6;
+    			77..87: colorbox.itemindex:=7;
+    			88..98: colorbox.itemindex:=8;
+    			99..109: colorbox.itemindex:=9;
+    			110..120: colorbox.itemindex:=10;
+    			121..127: colorbox.itemindex:=11;
+    			128..255:
+    			begin
+    				if not dontrefresh then
+    					colorslider.position:=wert;
+    			end;
+    		end;
+    	end;
+    end;
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  procedure ColorBoxChange;
+  begin
+    case colorbox.itemindex of
+			11: set_channel('COLOR1',-1,121,0,0);
+			10: set_channel('COLOR1',-1,110,0,0);
+			9: set_channel('COLOR1',-1,99,0,0);
+			8: set_channel('COLOR1',-1,88,0,0);
+			7: set_channel('COLOR1',-1,77,0,0);
+			6: set_channel('COLOR1',-1,66,0,0);
+			5: set_channel('COLOR1',-1,55,0,0);
+			4: set_channel('COLOR1',-1,44,0,0);
+			3: set_channel('COLOR1',-1,33,0,0);
+			2: set_channel('COLOR1',-1,22,0,0);
+			1: set_channel('COLOR1',-1,11,0,0);
+			0: set_channel('COLOR1',-1,0,0,0);
+    end;
+  end;
+  procedure strobosliderchange;
+  begin
+		dontrefresh:=true;
+		set_channel('SHUTTER',-1,stroboslider.position,0,0);
+  end;
+  procedure dimmersliderchange;
+  begin
+		dontrefresh:=true;
+		set_channel('DIMMER',-1,dimmerslider.position,0,0);
+  end;
+  procedure colorsliderchange;
+  begin
+    dontrefresh:=true;
+		set_channel('COLOR1',-1,colorslider.position,0,0);
+  end;
+  end.
+ </code>
+</device>

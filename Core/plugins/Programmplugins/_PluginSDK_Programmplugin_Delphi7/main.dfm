@@ -1,0 +1,714 @@
+object mainform: Tmainform
+  Left = 661
+  Top = 184
+  HorzScrollBar.Smooth = True
+  HorzScrollBar.Tracking = True
+  VertScrollBar.Smooth = True
+  VertScrollBar.Tracking = True
+  BorderStyle = bsSingle
+  Caption = 'Kontrollpanel'
+  ClientHeight = 608
+  ClientWidth = 665
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Icon.Data = {
+    0000010001002020000001002000A81000001600000028000000200000004000
+    0000010020000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000331F0A14331C0E2C341C0E3A331F113C311E1336321E1929351E
+    171B3020181A3221162535201432341C113B321B113D341E0F37302015260000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000331C0E2C331A0E93331B0EB3341E12B8331F14AA33201686321E
+    1452341F124E331F1577331E15A3331D10B6331B0EBA331C10AC331F167A0000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000252C30FF424242FF323132FB232121F82A1F19EF331B0FD7331E
+    11C72C201AD1242121EE202225F9413F3FFF37373AFF26201DEA321F16950000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000424245FFFFB4B4FFFFB2B2FFEEA5A5FF6F6563FF29292AFD2321
+    21FB56504EFFD78C8CFFFF9F9FFFFF9C9CFF996666FF26201DEA321F16950000
+    0001000000010000000200000002000000020000000200000002000000020000
+    0002000000020000000200000002000000020000000200000002000000020000
+    000200000002424244FFFFB6B6FFFFB4B4FFFFB2B2FFFFAFAFFFE29B9BFF8261
+    61FFFFA6A6FFFFA4A4FFFFA1A1FFFF9F9FFF996767FF26201FD6331F167B2B2B
+    00053712120B391C0E0E331A0D10331A0D10331A0D10331A0D10331A0D10331A
+    0D10331A0D10331A0D10331A0D10331A0D10331A0D10331A0D10331A0D10331A
+    0D10331A0D10252C30FF424244FF565254FF997373FFF9AEAEFFFFAFAFFFFFAC
+    ACFFFFA9A9FFD79090FF554545FF403F40FF363739FF212124A13021132A331F
+    0A14331C0E2C341C0E3A341A0D3F331A0D40331A0D40331A0D40331A0D40331A
+    0D40331A0D40331A0D40331A0D40331A0D40331A0D40331A0D40331A0D40331A
+    0D40331A0D40321B0C44331B0E492B1E1766222122AF5A4C4CFFFFB2B2FFFFAF
+    AFFFBB8484FF222121F42C1D18A3331B0F64331E0F4D341C0E38301C0E1D331C
+    0E2C331A0D93321B0DB5331A0DBE331A0DBF331A0DBF331A0DBF331A0DBF331A
+    0DBF331A0DBF331A0DBF331A0DBF331A0DBF331A0DBF331A0DBF331A0DBF331A
+    0DBF331A0DBF331A0DBF331A0DBF331A0DBF331A0DBF3E3E3EFDFFB4B4FFFFB2
+    B2FF554747FF3C291EF2331B0DD1331A0DC4321B0DB7321A0D94321B0E2D0000
+    00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+    00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+    00FF000000FF000000FF000000FF000000FF000000FF464748FFFFB6B6FFFFB4
+    B4FF554848FF26140AFF0D0603FF030201FF000000FF000000FF34180E3B0000
+    00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF525354FFFFB9B9FFFFB6
+    B6FF554848FF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF341A0D3F0000
+    00FFFFFFFFFFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFFFFFFFFF525354FFFFBCBCFFFFB9
+    B9FF554949FF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF331A0D400000
+    00FFFFFFFFFFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFFFFFFFFF525354FFFFBFBFFFFFBC
+    BCFF554949FF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF331A0D400000
+    00FFFFFFFFFFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFFFFFFFFF525354FFFFC1C1FFFFBF
+    BFFF554A4AFF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF331A0D400000
+    00FFFFFFFFFFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFFFFFFFFF525354FFFFC5C5FFFFC1
+    C1FF554A4AFF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF331A0D400000
+    00FFFFFFFFFFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFFFFFFFFF525354FFFFC7C7FFFFC5
+    C5FF554B4BFF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF331A0D400000
+    00FFFFFFFFFFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFFFFFFFFF525354FFFFC9C9FFFFC7
+    C7FF554B4BFF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF331A0D400000
+    00FFFFFFFFFFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFFFFFFFFF525354FFFFCCCCFFFFC9
+    C9FF554B4BFF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF331A0D400000
+    00FFFFFFFFFFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFFFFFFFFF525354FFFFCFCFFFFFCC
+    CCFF554C4CFF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF331A0D400000
+    00FFFFFFFFFFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFFFFFFFFF525354FFFFD2D2FFFFCF
+    CFFF554C4CFF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF331A0D400000
+    00FFFFFFFFFFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFFFFFFFFF525354FFFFD4D4FFFFD2
+    D2FF554D4DFF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF331A0D400000
+    00FFFFFFFFFFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFFFFFFFFF525354FFFFD8D8FFFFD4
+    D4FF554D4DFF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF331A0D400000
+    00FFFFFFFFFFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFFFFFFFFF525354FFFFDADAFFFFD8
+    D8FF554E4EFF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF341A0D3F0000
+    00FFFFFFFFFFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB03602FFB036
+    02FFB03602FFB03602FFB03602FFB03602FFFFFFFFFF525354FFFFDCDCFFFFDA
+    DAFF554E4EFF66534AFFCCC6C2FFFFFFFFFFFFFFFFFF000000FF34180E3B0000
+    00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF525354FFFFDFDFFFFFDC
+    DCFF554E4EFF645248FFCAC3C0FFFFFFFFFFFFFFFFFF000000FF331C0E2C0000
+    00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+    00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+    00FF000000FF010000FF010101FF020101FF050302FF464748FFFFE2E2FFFFDF
+    DFFF554F4FFF28140BFF0F0805FF000000FF020201FF020101FF332211180000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000003724120B2E1F171A2F1F1527311F153A494A4BF5FFE5E5FFFFE2
+    E2FF554F4FFF341A0ED5331D1379321F13412F21182B33201A2033291F140000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000361B141E3320185A331F1577331F1596404141FEFFE7E7FFFFE5
+    E5FF776D6DFF301C12EE331D11CD331F14A0331F167D3321186A332218430000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000252020652B1E19B9291E1ADF212123F7827B7BFFFFEAEAFFFFE7
+    E7FFE2CCCCFF3B3B3BFF281F1BF52D1E16E92C1E16E02F1D15C6321F18840000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00000000000031373BFF999595FF999494FFD7CCCCFFFFEFEFFFF9E8E8FFE2D0
+    D0FFFFE7E7FFF9E0E0FF998A8AFF998989FF665D5DFF27201EEC321F17980000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000484D50FFFFFAFAFFFFF8F8FFFFF4F4FFEEE2E2FF4F4D4DFF3E3D
+    3DFFD7C6C6FFFFE7E7FFFFE5E5FFFFE2E2FF998989FF27201EEE3321179A0000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000484D50FF999797FF999696FF777474FF5A5A5AFF232223BA2323
+    238D5D5E5EFE5A5656FF998D8DFF998B8BFF665E5EFF262120EA3222198E0000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000001C2329BF1C2329BF1C23299F1C2329701C232920000000000000
+    00001C2329101C2329601C23298F1C2329BF1C2329BF1C23296000000000FFFF
+    C000FFFFC000FFFFC000FFFFC000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000FFFFC000FFFFC000FFFFC000FFFFC000FFFFC000FFFFC000FFFFC181}
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnHide = FormHide
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 8
+    Top = 8
+    Width = 442
+    Height = 22
+    Caption = 'PC_DIMMER PluginSDK Programmplugin Demo'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 8
+    Top = 32
+    Width = 106
+    Height = 13
+    Caption = '- Anwendungsfenster -'
+  end
+  object Label3: TLabel
+    Left = 8
+    Top = 64
+    Width = 57
+    Height = 13
+    Caption = 'Verzeichnis:'
+  end
+  object Label4: TLabel
+    Left = 8
+    Top = 80
+    Width = 9
+    Height = 13
+    Caption = '...'
+  end
+  object Label5: TLabel
+    Left = 8
+    Top = 104
+    Width = 78
+    Height = 13
+    Caption = 'Letzte Message:'
+  end
+  object Label6: TLabel
+    Left = 8
+    Top = 120
+    Width = 9
+    Height = 13
+    Caption = '...'
+  end
+  object Label16: TLabel
+    Left = 408
+    Top = 64
+    Width = 135
+    Height = 13
+    Caption = 'Audioeffektplayer-Timecode:'
+  end
+  object Label17: TLabel
+    Left = 408
+    Top = 80
+    Width = 9
+    Height = 13
+    Caption = '...'
+  end
+  object Shape1: TShape
+    Left = 0
+    Top = 569
+    Width = 665
+    Height = 1
+    Align = alBottom
+  end
+  object Shape2: TShape
+    Left = 0
+    Top = 570
+    Width = 665
+    Height = 38
+    Align = alBottom
+    Pen.Style = psClear
+  end
+  object Button1: TButton
+    Left = 8
+    Top = 576
+    Width = 113
+    Height = 25
+    Caption = 'Schlie'#223'en'
+    TabOrder = 0
+    OnClick = Button1Click
+  end
+  object GroupBox1: TGroupBox
+    Left = 472
+    Top = 144
+    Width = 185
+    Height = 105
+    Caption = ' Beatbox '
+    TabOrder = 1
+    object Label8: TLabel
+      Left = 8
+      Top = 24
+      Width = 60
+      Height = 13
+      Caption = 'Temposlider:'
+    end
+    object TrackBar1: TTrackBar
+      Left = 8
+      Top = 36
+      Width = 169
+      Height = 29
+      Max = 60000
+      Min = 1
+      Position = 1
+      TabOrder = 0
+      OnChange = TrackBar1Change
+    end
+    object Button4: TButton
+      Left = 8
+      Top = 72
+      Width = 169
+      Height = 25
+      Caption = 'Beat-Impuls senden'
+      TabOrder = 1
+      OnClick = Button4Click
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 216
+    Top = 144
+    Width = 249
+    Height = 105
+    Caption = ' Hauptprogrammszenen '
+    TabOrder = 2
+    object Label7: TLabel
+      Left = 8
+      Top = 24
+      Width = 108
+      Height = 13
+      Caption = 'Szenen- und Effekt-ID:'
+    end
+    object Button2: TButton
+      Left = 8
+      Top = 72
+      Width = 113
+      Height = 25
+      Caption = 'Starten'
+      TabOrder = 0
+      OnClick = Button2Click
+    end
+    object Edit1: TEdit
+      Left = 8
+      Top = 40
+      Width = 233
+      Height = 21
+      TabOrder = 1
+      Text = '{86F714CE-B376-45FB-847F-DCF81A4DB132}'
+    end
+    object Button3: TButton
+      Left = 128
+      Top = 72
+      Width = 113
+      Height = 25
+      Caption = 'Stoppen'
+      TabOrder = 2
+      OnClick = Button3Click
+    end
+  end
+  object GroupBox3: TGroupBox
+    Left = 8
+    Top = 144
+    Width = 201
+    Height = 193
+    Caption = ' Master '
+    TabOrder = 3
+    object Label9: TLabel
+      Left = 8
+      Top = 16
+      Width = 29
+      Height = 13
+      Caption = 'Grand'
+    end
+    object Label10: TLabel
+      Left = 64
+      Top = 16
+      Width = 25
+      Height = 13
+      Caption = 'Flash'
+    end
+    object Label11: TLabel
+      Left = 104
+      Top = 16
+      Width = 31
+      Height = 13
+      Caption = 'Speed'
+    end
+    object Label15: TLabel
+      Left = 152
+      Top = 16
+      Width = 35
+      Height = 13
+      Caption = 'Volume'
+    end
+    object TrackBar2: TTrackBar
+      Left = 8
+      Top = 32
+      Width = 45
+      Height = 135
+      Max = 255
+      Orientation = trVertical
+      TabOrder = 0
+      TickMarks = tmBoth
+      OnChange = TrackBar2Change
+    end
+    object TrackBar3: TTrackBar
+      Left = 56
+      Top = 32
+      Width = 45
+      Height = 135
+      Max = 255
+      Orientation = trVertical
+      TabOrder = 1
+      TickMarks = tmBoth
+      OnChange = TrackBar3Change
+    end
+    object TrackBar4: TTrackBar
+      Left = 104
+      Top = 32
+      Width = 45
+      Height = 135
+      Max = 512
+      Orientation = trVertical
+      Position = 255
+      TabOrder = 2
+      TickMarks = tmBoth
+      OnChange = TrackBar4Change
+    end
+    object CheckBox1: TCheckBox
+      Left = 8
+      Top = 168
+      Width = 185
+      Height = 17
+      Caption = 'Audio mute'
+      TabOrder = 3
+      OnMouseUp = CheckBox1MouseUp
+    end
+    object TrackBar5: TTrackBar
+      Left = 152
+      Top = 32
+      Width = 45
+      Height = 135
+      Max = 100
+      Orientation = trVertical
+      TabOrder = 4
+      TickMarks = tmBoth
+      OnChange = TrackBar5Change
+    end
+  end
+  object GroupBox4: TGroupBox
+    Left = 216
+    Top = 256
+    Width = 249
+    Height = 81
+    Caption = ' MIDI-Senden '
+    TabOrder = 4
+    object Label12: TLabel
+      Left = 8
+      Top = 32
+      Width = 24
+      Height = 13
+      Caption = 'MSG'
+    end
+    object Label13: TLabel
+      Left = 64
+      Top = 32
+      Width = 29
+      Height = 13
+      Caption = 'Data1'
+    end
+    object Label14: TLabel
+      Left = 112
+      Top = 32
+      Width = 29
+      Height = 13
+      Caption = 'Data2'
+    end
+    object Edit2: TEdit
+      Left = 8
+      Top = 48
+      Width = 49
+      Height = 21
+      TabOrder = 0
+      Text = '144'
+    end
+    object Edit3: TEdit
+      Left = 64
+      Top = 48
+      Width = 41
+      Height = 21
+      TabOrder = 1
+      Text = '52'
+    end
+    object Edit4: TEdit
+      Left = 112
+      Top = 48
+      Width = 49
+      Height = 21
+      TabOrder = 2
+      Text = '64'
+    end
+    object Button5: TButton
+      Left = 168
+      Top = 16
+      Width = 73
+      Height = 25
+      Caption = 'als MIDI-IN'
+      TabOrder = 3
+      OnClick = Button5Click
+    end
+    object Button7: TButton
+      Left = 168
+      Top = 48
+      Width = 73
+      Height = 25
+      Caption = 'als MIDI-OUT'
+      TabOrder = 4
+      OnClick = Button7Click
+    end
+  end
+  object GroupBox5: TGroupBox
+    Left = 472
+    Top = 256
+    Width = 185
+    Height = 81
+    Caption = ' Debuglogeintrag '
+    TabOrder = 5
+    object Edit5: TEdit
+      Left = 8
+      Top = 24
+      Width = 169
+      Height = 21
+      TabOrder = 0
+      Text = 'Testeintrag'
+    end
+    object Button6: TButton
+      Left = 8
+      Top = 48
+      Width = 169
+      Height = 25
+      Caption = 'Eintrag hinzuf'#252'gen'
+      TabOrder = 1
+      OnClick = Button6Click
+    end
+  end
+  object GroupBox6: TGroupBox
+    Left = 8
+    Top = 344
+    Width = 457
+    Height = 217
+    Caption = ' Pluginszenen '
+    TabOrder = 6
+    object Label18: TLabel
+      Left = 8
+      Top = 128
+      Width = 9
+      Height = 13
+      Caption = '...'
+    end
+    object NewPluginScene: TButton
+      Left = 8
+      Top = 144
+      Width = 145
+      Height = 25
+      Caption = 'Neue Szene'
+      TabOrder = 0
+      OnClick = NewPluginSceneClick
+    end
+    object ListBox1: TListBox
+      Left = 8
+      Top = 24
+      Width = 441
+      Height = 97
+      ItemHeight = 13
+      TabOrder = 1
+    end
+    object DeletePluginScene: TButton
+      Left = 312
+      Top = 144
+      Width = 137
+      Height = 25
+      Caption = 'Szene l'#246'schen'
+      TabOrder = 2
+      OnClick = DeletePluginSceneClick
+    end
+    object RenamePluginScene: TButton
+      Left = 160
+      Top = 144
+      Width = 145
+      Height = 25
+      Caption = 'Szene umbennen'
+      TabOrder = 3
+      OnClick = RenamePluginSceneClick
+    end
+    object Button8: TButton
+      Left = 8
+      Top = 176
+      Width = 217
+      Height = 25
+      Caption = 'Bibliothek mit Szenen-ID '#246'ffnen'
+      TabOrder = 4
+      OnClick = Button8Click
+    end
+    object Button9: TButton
+      Left = 232
+      Top = 176
+      Width = 217
+      Height = 25
+      Caption = 'Bibliothek ohne Szenen-ID '#246'ffnen'
+      TabOrder = 5
+      OnClick = Button9Click
+    end
+  end
+  object GroupBox7: TGroupBox
+    Left = 472
+    Top = 344
+    Width = 185
+    Height = 217
+    Caption = ' Befehl '
+    TabOrder = 7
+    object Label19: TLabel
+      Left = 8
+      Top = 24
+      Width = 14
+      Height = 13
+      Caption = 'ID:'
+    end
+    object Label20: TLabel
+      Left = 8
+      Top = 48
+      Width = 46
+      Height = 13
+      Caption = 'Wert 1/2:'
+    end
+    object Label22: TLabel
+      Left = 8
+      Top = 72
+      Width = 39
+      Height = 13
+      Caption = 'String 1:'
+    end
+    object Label23: TLabel
+      Left = 8
+      Top = 96
+      Width = 39
+      Height = 13
+      Caption = 'String 2:'
+    end
+    object Label24: TLabel
+      Left = 8
+      Top = 120
+      Width = 23
+      Height = 13
+      Caption = 'ID 1:'
+    end
+    object Label25: TLabel
+      Left = 8
+      Top = 144
+      Width = 23
+      Height = 13
+      Caption = 'ID 2:'
+    end
+    object Label21: TLabel
+      Left = 112
+      Top = 48
+      Width = 5
+      Height = 13
+      Caption = '/'
+    end
+    object Label26: TLabel
+      Left = 8
+      Top = 168
+      Width = 35
+      Height = 13
+      Caption = 'Data 2:'
+    end
+    object Button10: TButton
+      Left = 8
+      Top = 192
+      Width = 169
+      Height = 17
+      Caption = 'Start Command'
+      TabOrder = 0
+      OnClick = Button10Click
+    end
+    object Edit6: TEdit
+      Left = 32
+      Top = 20
+      Width = 145
+      Height = 21
+      TabOrder = 1
+      Text = '{86F714CE-B376-45FB-847F-DCF81A4DB132}'
+    end
+    object Edit7: TEdit
+      Left = 56
+      Top = 44
+      Width = 49
+      Height = 21
+      TabOrder = 2
+      Text = '1'
+    end
+    object Edit8: TEdit
+      Left = 128
+      Top = 44
+      Width = 49
+      Height = 21
+      TabOrder = 3
+      Text = '0'
+    end
+    object Edit9: TEdit
+      Left = 56
+      Top = 68
+      Width = 121
+      Height = 21
+      TabOrder = 4
+      Text = 'Teststring 1'
+    end
+    object Edit10: TEdit
+      Left = 56
+      Top = 92
+      Width = 121
+      Height = 21
+      TabOrder = 5
+      Text = 'Teststring 2'
+    end
+    object Edit11: TEdit
+      Left = 56
+      Top = 116
+      Width = 121
+      Height = 21
+      TabOrder = 6
+      Text = '{00000000-0000-0000-0000-000000000000}'
+    end
+    object Edit12: TEdit
+      Left = 56
+      Top = 140
+      Width = 121
+      Height = 21
+      TabOrder = 7
+      Text = '{00000000-0000-0000-0000-000000000000}'
+    end
+    object Edit13: TEdit
+      Left = 56
+      Top = 164
+      Width = 121
+      Height = 21
+      TabOrder = 8
+      Text = '255'
+    end
+  end
+end

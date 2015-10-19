@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\genioby5.png">
+ <information id="PC_DIMMER">
+ <name>OBY-5 Modus 1</name>
+ <vendor>Geni</vendor>
+ <author>Christian Nöding</author>
+ <description>PAN und TILT auf Kanal 11-12 im 14-Kanalmodus</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Shutter" fade="no" type="shutter"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Farbe 1" fade="no" type="color1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Farbe 2" fade="no" type="color2"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Gobo 1" fade="no" type="gobo1"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Gobo 2" fade="no" type="gobo2"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Gobo 2 Rotation" fade="yes" type="gobo2rot"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Prisma" fade="no" type="prisma"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Iris" fade="yes" type="iris"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="Fokus" fade="yes" type="focus"/>
+  <function channel="10" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="11" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="12" minvalue="0" maxvalue="255" name="Steuerung" fade="no" type="special1"/>
+  <function channel="13" minvalue="0" maxvalue="255" name="Lampensteuerung" fade="no" type="special2"/>
+ </channels>
+ <initvalues ch0="-1" ch1="5" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" ch8="127" ch9="127" ch10="127" ch11="127" ch12="0" ch13="0" />
+ <colors>
+  <color name="Weiß" value="0" valueend="13" r="255" g="255" b="255" />
+  <color name="Hellblau" value="14" valueend="27" r="166" g="202" b="240" />
+  <color name="Orange" value="28" valueend="41" r="255" g="128" b="0" />
+  <color name="Grün" value="42" valueend="55" r="140" g="254" b="86" />
+  <color name="Blau" value="56" valueend="69" r="0" g="0" b="128" />
+  <color name="Magenta" value="70" valueend="83" r="128" g="0" b="128" />
+  <color name="Rot" value="84" valueend="97" r="255" g="0" b="0" />
+  <color name="Violett" value="98" valueend="111" r="160" g="160" b="164" />
+  <color name="Gelb" value="112" valueend="125" r="255" g="255" b="0" />
+  <color name="Rosa" value="126" valueend="139" r="255" g="210" b="255" />
+  <color name="Tiefgrün" value="140" valueend="153" r="0" g="128" b="0" />
+  <color name="Hellblau" value="154" valueend="167" r="0" g="0" b="255" />
+ </colors>
+ <colors2>
+  <color2 name="Weiß" value="0" valueend="13" r="255" g="255" b="255" />
+  <color2 name="Hellblau" value="14" valueend="27" r="166" g="202" b="240" />
+  <color2 name="Rosa" value="28" valueend="41" r="255" g="198" b="226" />
+  <color2 name="Gelb" value="42" valueend="55" r="255" g="255" b="0" />
+  <color2 name="Weißblau" value="56" valueend="69" r="230" g="234" b="255" />
+  <color2 name="Warmweiß" value="70" valueend="83" r="255" g="255" b="225" />
+  <color2 name="Gelb/Blau" value="84" valueend="97" r="0" g="255" b="230" />
+  <color2 name="Orange/Blau" value="98" valueend="111" r="207" g="5" b="250" />
+  <color2 name="Grün/Gelb" value="112" valueend="125" r="191" g="255" b="0" />
+  <color2 name="Grün/Blau" value="126" valueend="139" r="60" g="150" b="176" />
+  <color2 name="Quadro 1" value="140" valueend="153" r="29" g="29" b="29" />
+  <color2 name="Quadro 2" value="154" valueend="167" r="13" g="13" b="13" />
+ </colors2>
+ <shutter OpenValue="5" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="5" MinValue="8" MaxValue="63" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="129" LeftMaxValue="255" OffValue="128" RightMinValue="129" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="129" LeftMaxValue="255" OffValue="128" RightMinValue="129" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="8" LeftMaxValue="253" OffValue="2" RightMinValue="8" RightMaxValue="253" ChannelName="prisma"/>
+ <prisma SingleValue="0" TripleValue="2"/>
+ <iris OpenValue="127" CloseValue="0" MinValue="0" MaxValue="127"/>
+ <gobos>
+  <gobo name="Offen" value="0" valueend="15" filename="Open.png" />
+  <gobo name="Stern" value="16" valueend="31" filename="Star9.png" />
+  <gobo name="Blasen" value="32" valueend="47" filename="Holes.png" />
+  <gobo name="Nebel" value="48" valueend="63" filename="R15010171.png" />
+  <gobo name="Konstrukte" value="64" valueend="79" filename="R15010701.png" />
+  <gobo name="Punkte" value="80" valueend="95" filename="dotcircle2.png" />
+  <gobo name="Netz" value="96" valueend="111" filename="Gridball.png" />
+  <gobo name="Blumen" value="112" valueend="127" filename="Flowers.png" />
+  <gobo name="Pfade" value="128" valueend="143" filename="PipeDreams.png" />
+  <gobo name="Sterne" value="144" valueend="159" filename="Stars2.png" />
+ </gobos>
+ <gobos2>
+  <gobo2 name="Offen" value="0" valueend="23" filename="Open.png" />
+  <gobo2 name="Farbflecken" value="24" valueend="47" filename="4Color.png" />
+  <gobo2 name="Balken" value="48" valueend="71" filename="LineOfBeams.png" />
+  <gobo2 name="Windmühle" value="72" valueend="95" filename="Nordic.png" />
+  <gobo2 name="Kreis" value="96" valueend="119" filename="RadialDashes2.png" />
+  <gobo2 name="Streifen" value="120" valueend="143" filename="Slice.png" />
+  <gobo2 name="Turbinen" value="144" valueend="167" filename="Turbine.png" />
+ </gobos2>
+ <form width="491" height="422">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="80" left="10" height="230" width="230" />
+  <colorbox top="190" left="250" height="22" width="110" />
+  <colorbox2 top="190" left="370" height="22" width="110" />
+  <dropdown name="gobo1box" top="90" left="250" width="110" height="21" action="gobo1boxchange">
+   <item caption="Offen" value="0" picture="" />
+   <item caption="Stern" value="0" picture="" />
+   <item caption="Blasen" value="0" picture="" />
+   <item caption="Nebel" value="0" picture="" />
+   <item caption="Konstrukte" value="0" picture="" />
+   <item caption="Punkte" value="0" picture="" />
+   <item caption="Netz" value="0" picture="" />
+   <item caption="Blumen" value="0" picture="" />
+   <item caption="Pfade" value="0" picture="" />
+   <item caption="Sterne" value="0" picture="" />
+  </dropdown>
+  <dropdown name="gobo2box" top="140" left="250" width="110" height="21" action="gobo2boxchange">
+   <item caption="Offen" value="0" picture="" />
+   <item caption="Farbflecke" value="0" picture="" />
+   <item caption="Balken" value="0" picture="" />
+   <item caption="Windmühle" value="0" picture="" />
+   <item caption="Kreis" value="0" picture="" />
+   <item caption="Streifen" value="0" picture="" />
+   <item caption="Turbine" value="0" picture="" />
+  </dropdown>
+  <dropdown name="prismabox" top="240" left="250" width="110" height="21" action="prismasliderchange">
+   <item caption="Einfach" value="0" picture="" />
+   <item caption="Dreifach" value="0" picture="" />
+   <item caption="Rotierend" value="0" picture="" />
+  </dropdown>
+  <dropdown name="shutterbox" top="390" left="10" width="110" height="21" action="shuttersliderchange">
+   <item caption="Geschlossen" value="0" picture="" />
+   <item caption="Offen" value="0" picture="" />
+   <item caption="Klein->Groß" value="0" picture="" />
+   <item caption="Schnell->Langsam" value="0" picture="" />
+   <item caption="Langsam->Schnell" value="0" picture="" />
+   <item caption="Zufällig" value="0" picture="" />
+  </dropdown>
+  <dropdown name="controlbox" top="390" left="250" width="230" height="21" action="controlboxchange">
+   <item caption="Pan/Tilt-Bewegung Auto" value="0" picture="" />
+   <item caption="Pan/Tilt-Bewegung Manuell 1" value="0" picture="" />
+   <item caption="Pan/Tilt-Bewegung Manuell 2" value="0" picture="" />
+   <item caption="Pan/Tilt-Bewegung Manuell 3" value="0" picture="" />
+  </dropdown>
+  <slider name="focusslider" top="340" left="250" width="230" height="20" action="focussliderchange" startvalue="0" endvalue="255" default="125"/>
+  <slider name="dimmerslider" top="340" left="10" width="230" height="20" action="dimmersliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="gobo2rotslider" top="140" left="370" width="110" height="20" action="gobo2rotsliderchange" startvalue="128" endvalue="255" default="128"/>
+  <slider name="gobo2angleslider" top="90" left="370" width="110" height="20" action="gobo2anglesliderchange" startvalue="0" endvalue="127" default="0"/>
+  <slider name="irisadjustmentslider" top="290" left="250" width="110" height="20" action="irisadjustmentsliderchange" startvalue="0" endvalue="127" default="127"/>
+  <slider name="irisinoutslider" top="290" left="370" width="110" height="20" action="irisinoutsliderchange" startvalue="128" endvalue="255" default="128"/>
+  <slider name="prismaslider" top="240" left="370" width="110" height="20" action="prismasliderchange" startvalue="8" endvalue="253" default="8"/>
+  <slider name="shutterslider" top="390" left="130" width="110" height="20" action="shuttersliderchange" startvalue="8" endvalue="63" default="8"/>
+  <label name="Label1" top="320" left="250" width="32" height="13" caption="Fokus:"/>
+  <label name="Label2" top="320" left="10" width="46" height="13" caption="Helligkeit:"/>
+  <label name="Label3" top="70" left="250" width="53" height="13" caption="Goborad 1:"/>
+  <label name="Label4" top="120" left="250" width="53" height="13" caption="Goborad 2:"/>
+  <label name="Label5" top="170" left="250" width="48" height="13" caption="Farbrad 1:"/>
+  <label name="Label6" top="170" left="370" width="48" height="13" caption="Farbrad 2:"/>
+  <label name="Label7" top="120" left="370" width="81" height="13" caption="Gobo 2 Rotation:"/>
+  <label name="Label8" top="70" left="370" width="74" height="13" caption="Gobo 2 Winkel:"/>
+  <label name="Label9" top="270" left="250" width="48" height="13" caption="Iris-Größe:"/>
+  <label name="Label10" top="270" left="370" width="50" height="13" caption="Iris-In/Out:"/>
+  <label name="Label11" top="220" left="250" width="34" height="13" caption="Prisma:"/>
+  <label name="Label12" top="220" left="370" width="69" height="13" caption="Prismarotation:"/>
+  <label name="Label13" top="370" left="10" width="37" height="13" caption="Shutter:"/>
+  <label name="Label14" top="370" left="250" width="123" height="13" caption="Zusätzliche Einstellungen:"/>
+  <label name="Label15" top="370" left="130" width="63" height="13" caption="Shutterregler:"/>
+  <button name="lamponbtn" top="20" left="250" width="70" height="30" action="lamponbtnclick" caption="Lampe ein"/>
+  <button name="lampoffbtn" top="20" left="330" width="70" height="30" action="lampoffbtnclick" caption="Lampe aus"/>
+  <button name="resetbtn" top="20" left="410" width="70" height="30" action="resetbtnclick" caption="Reset"/>
+ </form>
+ <code>
+  unit GeniOby5;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorBoxChange;
+  procedure dimmersliderchange;
+  procedure shuttersliderchange;
+  procedure ColorBoxChange2;
+  procedure gobo1boxchange;
+  procedure gobo2boxchange;
+  procedure gobo2anglesliderchange;
+  procedure gobo2rotsliderchange;
+  procedure prismasliderchange;
+  procedure irisadjustmentsliderchange;
+  procedure irisinoutsliderchange;
+  procedure focussliderchange;
+  procedure lamponbtnclick;
+  procedure lampoffbtnclick;
+  procedure resetbtnclick;
+  procedure controlboxchange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+	var
+		wert:integer;
+		r,phi,temp:single;
+  begin
+		if not dontrefresh then
+    case channel of
+    	0:
+    	begin
+				dimmerslider.position:=get_channel('dimmer');
+    	end;
+    	1:
+    	begin
+    		wert:=get_channel('shutter');
+    		case wert of
+    			0: shutterbox.itemindex:=0;
+    			1..7: shutterbox.itemindex:=1;
+					8..63:
+					begin
+						shutterbox.itemindex:=2;
+						shutterslider.position:=wert;
+					end;
+    			64..71: shutterbox.itemindex:=1;
+					72..127:
+					begin
+						shutterbox.itemindex:=3;
+						shutterslider.position:=wert-64;
+					end;
+    			128..135: shutterbox.itemindex:=1;
+					136..191:
+					begin
+						shutterbox.itemindex:=3;
+						shutterslider.position:=wert-128;
+					end;
+    			192..199: shutterbox.itemindex:=1;
+					200..255:
+					begin
+						shutterbox.itemindex:=4;
+						shutterslider.position:=wert-192;
+					end;
+    		end;
+    	end;
+    	2:
+    	begin
+    		wert:=get_channel('color1');
+    		case wert of
+    			0..13: colorbox.itemindex:=0;
+    			14..27: colorbox.itemindex:=1;
+    			28..41: colorbox.itemindex:=2;
+    			42..55: colorbox.itemindex:=3;
+    			56..69: colorbox.itemindex:=4;
+    			70..83: colorbox.itemindex:=5;
+    			84..97: colorbox.itemindex:=6;
+    			98..111: colorbox.itemindex:=7;
+    			112..125: colorbox.itemindex:=8;
+    			126..139: colorbox.itemindex:=9;
+    			140..153: colorbox.itemindex:=10;
+    			154..167: colorbox.itemindex:=11;
+    		end;
+    	end;
+    	3:
+    	begin
+    		wert:=get_channel('color2');
+    		case wert of
+    			0..13: colorbox2.itemindex:=0;
+    			14..27: colorbox2.itemindex:=1;
+    			28..41: colorbox2.itemindex:=2;
+    			42..55: colorbox2.itemindex:=3;
+    			56..69: colorbox2.itemindex:=4;
+    			70..83: colorbox2.itemindex:=5;
+    			84..97: colorbox2.itemindex:=6;
+    			98..111: colorbox2.itemindex:=7;
+    			112..125: colorbox2.itemindex:=8;
+    			126..139: colorbox2.itemindex:=9;
+    			140..153: colorbox2.itemindex:=10;
+    			154..167: colorbox2.itemindex:=11;
+   			end;
+    	end;
+    	4:
+    	begin
+    		wert:=get_channel('gobo1');
+    		case wert of
+    			0..15: gobo1box.itemindex:=0;
+    			16..31: gobo1box.itemindex:=1;
+    			32..47: gobo1box.itemindex:=2;
+    			48..63: gobo1box.itemindex:=3;
+    			64..79: gobo1box.itemindex:=4;
+    			80..95: gobo1box.itemindex:=5;
+    			96..111: gobo1box.itemindex:=6;
+    			112..127: gobo1box.itemindex:=7;
+    			128..143: gobo1box.itemindex:=8;
+    			144..159: gobo1box.itemindex:=9;
+   			end;
+    	end;
+    	5:
+    	begin
+    		wert:=get_channel('gobo2');
+    		case wert of
+    			0..23: gobo2box.itemindex:=0;
+    			24..47: gobo2box.itemindex:=1;
+    			48..71: gobo2box.itemindex:=2;
+    			72..95: gobo2box.itemindex:=3;
+    			96..119: gobo2box.itemindex:=4;
+    			120..143: gobo2box.itemindex:=5;
+    			144..167: gobo2box.itemindex:=6;
+   			end;
+    	end;
+    	6:
+    	begin
+    		wert:=get_channel('gobo2rot');
+    		case wert of
+    			0..127:
+    			begin
+    				gobo2angleslider.position:=wert;
+    			end;
+    			128..255:
+    			begin
+    				gobo2rotslider.position:=wert;
+    			end;
+    		end;
+    	end;
+    	7:
+    	begin
+    		wert:=get_channel('prisma');
+    		case wert of
+    			0..1:
+    			begin
+    				prismabox.itemindex:=0;
+    			end;
+    			2..7:
+    			begin
+    				prismabox.itemindex:=1;
+    			end;
+    			8..253:
+    			begin
+    				prismabox.itemindex:=2;
+    				prismaslider.position:=wert;
+    			end;
+    			254..255:
+    			begin
+    				prismabox.itemindex:=0;
+    			end;
+    		end;
+    	end;
+    	8:
+    	begin
+    		wert:=get_channel('iris');
+    		case wert of
+    			0..127: irisadjustmentslider.position:=wert;
+    			128..255: irisinoutslider.position:=wert;
+//				254..255: irisinoutslider.position:=127;
+    		end;
+    	end;
+    	9:
+    	begin
+				focusslider.position:=get_channel('focus');
+    	end;
+    	10..13:
+    	begin
+			if usemhcontrol.checked then
+			begin
+				// Moving-Head-Steuerung
+				temp:=get_channel('tilt')+(get_channel('tiltfine')/256);
+				case round(temp) of
+					0..127: r:=((127-temp)/127);
+					128..255: r:=((temp-128)/127);
+				end;
+				phi:=(get_channel('pan')+(get_channel('panfine')/256))/255*6.283185307179586476925286766559;	//(X/255)*PI
+				PositionXY.Left:=round(r*sin(phi)*(Fadenkreuz.Width/2)+(Fadenkreuz.Width/2)-(PositionXY.Width div 2));
+				PositionXY.Top:=round(r*cos(phi)*(Fadenkreuz.Height/2)+(Fadenkreuz.Height/2)-(PositionXY.Width div 2));
+			end else
+			begin
+				// Scanner-Steuerung
+				PositionXY.Left:=round(Fadenkreuz.Width * (get_channel('pan')+get_channel('panfine')/256)/255)-(PositionXY.Width div 2);
+				PositionXY.Top:=round(Fadenkreuz.Height * (get_channel('tilt')+get_channel('tiltfine')/256)/255)-(PositionXY.Height div 2);
+			end;
+		end;
+    	14:
+    	begin
+    		wert:=get_channel('special1');
+    		case wert of
+					0..7: controlbox.itemindex:=0;
+					8..31: controlbox.itemindex:=1;
+					32..45: controlbox.itemindex:=2;
+					46..63: controlbox.itemindex:=3;
+    		end;
+    	end;
+    	15:
+    	begin
+    		//
+    	end;
+    end;
+	dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  var
+	phi,r,x,y:single;
+	pan, tilt, panfine, tiltfine:single;
+  begin
+	if usemhcontrol.checked then
+	begin
+		// Moving-Head-Steuerung (Polarkoordinaten)
+		x:=((PositionXY.Left+(PositionXY.Width div 2)-(fadenkreuz.Width/2))/fadenkreuz.Width)*2;	//-1..0..1
+		y:=((PositionXY.Top+(PositionXY.Height div 2)-(fadenkreuz.Width/2))/fadenkreuz.Height)*2;	//-1..0..1
+		r:=sqrt(x*x+y*y);
+	
+		if (r>0) then
+		begin
+			if (y>=0) then
+				phi:=arccos(x/r)
+			else
+				phi:=6.283185307179586476925286766559-arccos(x/r);
+		end else
+			phi:=64;
+		
+		r:=128-((r/2)*255);
+		phi:=(phi/6.283185307179586476925286766559)*255;
+		if 64>=phi then
+			phi:=phi+191
+		else
+			phi:=phi-64;
+	
+		pan:=255-phi;
+		tilt:=255-r;
+	end else
+	begin
+		// Scannersteuerung (Kartesische Koordinaten)
+		pan:=((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255;
+		tilt:=((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255;
+	end;
+	
+	// Ausgabe
+	if panmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(255-pan),trunc(255-pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(255-pan)*255),trunc(frac(255-pan)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(pan),trunc(pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(pan)*255),trunc(frac(pan)*255),0);
+	end;
+	if tiltmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(255-tilt),trunc(255-tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(255-tilt)*255),trunc(frac(255-tilt)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(tilt),trunc(tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(tilt)*255),trunc(frac(tilt)*255),0);
+	end;
+  end;
+  procedure ColorBoxChange;
+  begin
+		case colorbox.itemindex of
+			0: set_channel('color1', 0, 0, 0);
+			1: set_channel('color1', 14, 14, 0);
+			2: set_channel('color1', 28, 28, 0);
+			3: set_channel('color1', 42, 42, 0);
+			4: set_channel('color1', 56, 56, 0);
+			5: set_channel('color1', 70, 70, 0);
+			6: set_channel('color1', 84, 84, 0);
+			7: set_channel('color1', 98, 98, 0);
+			8: set_channel('color1', 112, 112, 0);
+			9: set_channel('color1', 126, 126, 0);
+			10: set_channel('color1', 140, 140, 0);
+			11: set_channel('color1', 154, 154, 0);
+		end;
+  end;
+  procedure dimmersliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('dimmer',dimmerslider.position,dimmerslider.position,0);
+  end;
+  procedure shuttersliderchange;
+  begin
+    dontrefresh:=true;
+    case shutterbox.itemindex of
+    	0:
+    	begin
+    		set_channel('shutter',0,0,0);
+    	end;
+    	1:
+    	begin
+    		set_channel('shutter',5,5,0);
+    	end;
+    	2:
+    	begin
+    		set_channel('shutter',shutterslider.position,shutterslider.position,0);
+    	end;
+    	3:
+    	begin
+    		set_channel('shutter',shutterslider.position+64,shutterslider.position+64,0);
+    	end;
+    	4:
+    	begin
+    		set_channel('shutter',shutterslider.position+128,shutterslider.position+128,0);
+    	end;
+    	5:
+    	begin
+    		set_channel('shutter',shutterslider.position+192,shutterslider.position+192,0);
+    	end;
+		end;
+  end;
+  procedure ColorBoxChange2;
+  begin
+    dontrefresh:=true;
+		case colorbox2.itemindex of
+			0: set_channel('color2', 0, 0, 0);
+			1: set_channel('color2', 14, 14, 0);
+			2: set_channel('color2', 28, 28, 0);
+			3: set_channel('color2', 42, 42, 0);
+			4: set_channel('color2', 56, 56, 0);
+			5: set_channel('color2', 70, 70, 0);
+			6: set_channel('color2', 84, 84, 0);
+			7: set_channel('color2', 98, 98, 0);
+			8: set_channel('color2', 112, 112, 0);
+			9: set_channel('color2', 126, 126, 0);
+			10: set_channel('color2', 140, 140, 0);
+			11: set_channel('color2', 154, 154, 0);
+		end;
+  end;
+  procedure gobo1boxchange;
+  begin
+    dontrefresh:=true;
+  	case gobo1box.itemindex of
+  		0: set_channel('gobo1', 0, 0, 0);
+  		1: set_channel('gobo1', 16, 16, 0);
+  		2: set_channel('gobo1', 32, 32, 0);
+  		3: set_channel('gobo1', 48, 48, 0);
+  		4: set_channel('gobo1', 64, 64, 0);
+  		5: set_channel('gobo1', 80, 80, 0);
+  		6: set_channel('gobo1', 96, 96, 0);
+  		7: set_channel('gobo1', 112, 112, 0);
+  		8: set_channel('gobo1', 128, 128, 0);
+  		9: set_channel('gobo1', 144, 144, 0);
+  	end;
+  end;
+  procedure gobo2boxchange;
+  begin
+    dontrefresh:=true;
+  	case gobo2box.itemindex of
+  		0: set_channel('gobo2', 0, 0, 0);
+  		1: set_channel('gobo2', 24, 24, 0);
+  		2: set_channel('gobo2', 48, 48, 0);
+  		3: set_channel('gobo2', 72, 72, 0);
+  		4: set_channel('gobo2', 96, 96, 0);
+  		5: set_channel('gobo2', 120, 120, 0);
+  		6: set_channel('gobo2', 144, 144, 0);
+  	end;
+  end;
+  procedure gobo2anglesliderchange;
+  begin
+    dontrefresh:=true;
+		set_channel('gobo2rot', gobo2angleslider.position, gobo2angleslider.position, 0);
+  end;
+  procedure gobo2rotsliderchange;
+  begin
+    dontrefresh:=true;
+		set_channel('gobo2rot', gobo2rotslider.position, gobo2rotslider.position, 0);
+  end;
+  procedure prismasliderchange;
+  begin
+    dontrefresh:=true;
+    case prismabox.itemindex of
+    	0: set_channel('prisma', 0, 0, 0);
+    	1: set_channel('prisma', 2, 2, 0);
+    	2: set_channel('prisma', prismaslider.position, prismaslider.position, 0);
+    end;
+  end;
+  procedure irisadjustmentsliderchange;
+  begin
+		dontrefresh:=true;
+		case irisadjustmentslider.position of
+			0..127: set_channel('iris', irisadjustmentslider.position, irisadjustmentslider.position, 0);
+//			128: set_channel('iris', 255, 255, 0);
+		end;
+  end;
+  procedure irisinoutsliderchange;
+  begin
+		dontrefresh:=true;
+		set_channel('iris', irisinoutslider.position, irisinoutslider.position, 0);
+  end;
+  procedure focussliderchange;
+  begin
+		dontrefresh:=true;
+    set_channel('focus', focusslider.position, focusslider.position, 0);
+  end;
+  procedure lamponbtnclick;
+  begin
+    set_channel('special2', 48, 48, 0);
+  end;
+  procedure lampoffbtnclick;
+  begin
+    set_channel('special2', 160, 160, 0);
+  end;
+  procedure resetbtnclick;
+  begin
+    set_channel('special1', 255, 255, 0);
+    ShowMessage('Klicken Sie auf OK, wenn der Reset ausgeführt wird...');
+		set_channel('special1', 0, 0, 0);
+  end;
+  procedure controlboxchange;
+  begin
+    dontrefresh:=true;
+    case controlbox.itemindex of
+    	0: set_channel('special1', 0, 0, 0);
+    	1: set_channel('special1', 8, 8, 0);
+    	2: set_channel('special1', 32, 32, 0);
+    	3: set_channel('special1', 46, 46, 0);
+    end;
+  end;
+  end.
+ </code>
+</device>

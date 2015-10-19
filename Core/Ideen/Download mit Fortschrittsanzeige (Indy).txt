@@ -1,0 +1,74 @@
+// Dateigröße ermitteln
+function GetFileSize(url: string):cardinal;
+var
+  hURL: HInternet;
+  dwindex,dwcodelen :dword;
+  dwcode:array[1..20] of char;
+begin
+  hURL := InternetOpenURL(hSession, PChar(URL), nil, 0, 0, 0);
+
+  dwIndex := 0;
+  dwCodeLen := 10;
+  HttpQueryInfo(hURL, HTTP_QUERY_CONTENT_LENGTH, @dwcode,  dwcodeLen, dwIndex);
+  Result := cardinal(strtoint(PCHAR(@dwcode)));
+  InternetCloseHandle(hURL);
+end;
+
+
+// FloatToStrF((GetFileSize('http://home.arcor.de/christian.noeding/Demoprojekt.pcdproj') / 1048576), ffFixed, 8, 2); // = MB
+
+
+// Indy IdHTTP:
+procedure DownloadFile(url, DestinationFile:string);
+var
+  FileStream: TFileStream;
+begin
+  try
+    FileStream:=TFileStream.Create(DestinationFile, fmCreate or fmShareDenyNone);
+    idHTTP1.Get(URL, FileStream);
+  finally
+    FileStream.Free;
+  end;
+end;
+
+
+IdHTTP-OnWorkBegin:
+begin
+  progressbar1.Max:=AWorkCountMax;
+end;
+
+IdHTTP-OnWork:
+begin
+  Application.ProcessMessages;
+  progressbar1.Position:=AWorkCount;
+
+  if (AWorkCount div 1048576=0) then
+  begin
+    FloatToStrF((AWorkCount / 1024), ffFixed, 8, 2)+' kB'; // kB
+  end else
+  begin
+    FloatToStrF((AWorkCount / 1048576), ffFixed, 8, 2)+' MB'; // MB
+  end;
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

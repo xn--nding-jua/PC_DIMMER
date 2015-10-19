@@ -1,0 +1,23 @@
+FormCreate
+========================================
+0	Registrywerte auslesen
+5	Konfigurationsdatei öffnen
+10	Konfigurationsdatei reparieren
+15	Konfigurationsdatei laden
+20	Oberfläche vorbereiten
+25	Plugins suchen
+50	Toolboxes anordnen
+55	Menü und Kanäle einrichten
+60	Audioplayer einrichten
+61	Audio-Input einrichten
+63	Powerbutton deaktivieren
+65	Werte an Interface übergeben
+70	Letzte Plugins anzeigen
+75	Oberfläche starten
+
+
+FormShow
+========================================
+75-95	Plugins öffnen
+95	Dateien öffnen
+100	Alle Arbeiten abgeschlossen

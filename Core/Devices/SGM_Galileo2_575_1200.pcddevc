@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\scanner.png">
+ <information id="PC_DIMMER">
+ <name>Galileo 575/1200</name>
+ <vendor>SGM</vendor>
+ <author>Christian Nöding</author>
+ <description>Scanner mit Gobo- und Farbrad</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Iris" fade="yes" type="iris"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Farbe" fade="yes" type="color1"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Gobo" fade="yes" type="gobo1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Gobo-Rotation" fade="yes" type="gobo1rot"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Prisma" fade="yes" type="prisma"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="Funktionskanal" fade="yes" type="special1"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="127" ch5="127" ch6="-1" ch7="-1" ch8="-1" ch9="-1" />
+ <colors>
+  <color name="Weiß" value="144" valueend="144" r="255" g="255" b="255" />
+  <color name="Gelb" value="158" valueend="158" r="255" g="255" b="0" />
+  <color name="Magenta" value="172" valueend="172" r="255" g="0" b="255" />
+  <color name="Rot" value="186" valueend="186" r="255" g="0" b="0" />
+  <color name="Cyan" value="200" valueend="200" r="128" g="0" b="0" />
+  <color name="Blau" value="214" valueend="214" r="0" g="0" b="255" />
+  <color name="Grün" value="228" valueend="228" r="0" g="255" b="0" />
+ </colors>
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="255" MinValue="8" MaxValue="112" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="128" LeftMaxValue="255" OffValue="128" RightMinValue="128" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="500" height="450">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="80" left="10" height="230" width="230" />
+  <colorbox top="130" left="250" height="22" width="240" />
+  <dropdown name="GoboBox" top="210" left="250" width="240" height="21" action="GoboChange">
+   <item caption="Weiß" value="0" picture="" />
+   <item caption="Gobo 1B" value="0" picture="" />
+   <item caption="Gobo 2B" value="0" picture="" />
+   <item caption="Gobo 3B" value="0" picture="" />
+   <item caption="Gobo 4B" value="0" picture="" />
+   <item caption="Gobo 4A" value="0" picture="" />
+   <item caption="Gobo 3A" value="0" picture="" />
+   <item caption="Gobo 2A" value="0" picture="" />
+   <item caption="Gobo 1A" value="0" picture="" />
+   <item caption="Gobo 1A, 1B" value="0" picture="" />
+   <item caption="Gobo 2A, 1B" value="0" picture="" />
+   <item caption="Gobo 3A, 1B" value="0" picture="" />
+   <item caption="Gobo 4A, 1B" value="0" picture="" />
+   <item caption="Gobo 4A, 2B" value="0" picture="" />
+   <item caption="Gobo 3A, 2B" value="0" picture="" />
+   <item caption="Gobo 2A, 2B" value="0" picture="" />
+   <item caption="Gobo 1A, 2B" value="0" picture="" />
+   <item caption="Gobo 1A, 3B" value="0" picture="" />
+   <item caption="Gobo 2A, 3B" value="0" picture="" />
+   <item caption="Gobo 3A, 3B" value="0" picture="" />
+   <item caption="Gobo 4A, 3B" value="0" picture="" />
+   <item caption="Gobo 4A, 4B" value="0" picture="" />
+   <item caption="Gobo 3A, 4B" value="0" picture="" />
+   <item caption="Gobo 2A, 4B" value="0" picture="" />
+   <item caption="Gobo 1A, 4B" value="0" picture="" />
+   <item caption="Musikgesteuert" value="0" picture="" />
+  </dropdown>
+  <dropdown name="ShutterBox" top="360" left="250" width="130" height="21" action="ShutterChange">
+   <item caption="Chiuso" value="0" picture="" />
+   <item caption="0.5 Hz" value="0" picture="" />
+   <item caption="1.42 Hz" value="0" picture="" />
+   <item caption="1.7 Hz" value="0" picture="" />
+   <item caption="2 Hz" value="0" picture="" />
+   <item caption="2.42 Hz" value="0" picture="" />
+   <item caption="2.9 Hz" value="0" picture="" />
+   <item caption="3.46 Hz" value="0" picture="" />
+   <item caption="4.15 Hz" value="0" picture="" />
+   <item caption="4.89 Hz" value="0" picture="" />
+   <item caption="5.93 Hz" value="0" picture="" />
+   <item caption="6.91 Hz" value="0" picture="" />
+   <item caption="8.29 Hz" value="0" picture="" />
+   <item caption="9.95 Hz" value="0" picture="" />
+   <item caption="11.83 Hz" value="0" picture="" />
+   <item caption="Shutter Strobe" value="0" picture="" />
+   <item caption="Music Flash Low" value="0" picture="" />
+   <item caption="Music Flash High" value="0" picture="" />
+   <item caption="Autoshade Gobos" value="0" picture="" />
+   <item caption="Autoshade Colors" value="0" picture="" />
+   <item caption="Autoshade Gobos/Colors" value="0" picture="" />
+   <item caption="Slow Gobochange" value="0" picture="" />
+   <item caption="Offen" value="0" picture="" />
+  </dropdown>
+  <dropdown name="PrismaBox" top="410" left="250" width="240" height="21" action="PrismaChange">
+   <item caption="Kein Effekt" value="0" picture="" />
+   <item caption="Festes Prisma" value="0" picture="" />
+   <item caption="Prisma + Filter" value="0" picture="" />
+   <item caption="Filter" value="0" picture="" />
+   <item caption="Filter + Frost" value="0" picture="" />
+   <item caption="Frost" value="0" picture="" />
+   <item caption="Frost + Wood" value="0" picture="" />
+   <item caption="Wood" value="0" picture="" />
+  </dropdown>
+  <slider name="IrisSlider" top="80" left="250" width="240" height="20" action="IrisChange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="ColorSlider" top="160" left="360" width="130" height="20" action="ColorChange" startvalue="0" endvalue="111" default="0"/>
+  <slider name="GoboRotationSlider" top="260" left="250" width="240" height="20" action="GoboSpeedChange" startvalue="128" endvalue="255" default="128"/>
+  <slider name="GoboIndexSlider" top="310" left="250" width="240" height="20" action="GoboIndexChange" startvalue="0" endvalue="127" default="0"/>
+  <slider name="DimmerSlider" top="360" left="10" width="230" height="20" action="DimmerChange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="shutterslider" top="360" left="390" width="100" height="20" action="ShutterSliderChange" startvalue="0" endvalue="7" default="0"/>
+  <label name="Label1" top="60" left="250" width="16" height="13" caption="Iris:"/>
+  <label name="Label2" top="110" left="250" width="30" height="13" caption="Farbe:"/>
+  <label name="Label3" top="190" left="250" width="29" height="13" caption="Gobo:"/>
+  <label name="Label4" top="240" left="250" width="72" height="13" caption="Gobo-Rotation:"/>
+  <label name="Label5" top="290" left="250" width="72" height="13" caption="Gobo-Indexing:"/>
+  <label name="Label6" top="340" left="250" width="37" height="13" caption="Shutter:"/>
+  <label name="Label7" top="340" left="10" width="38" height="13" caption="Dimmer:"/>
+  <label name="Label8" top="390" left="250" width="150" height="13" caption="Prisma / Frost / Farbtemperatur:"/>
+  <label name="Label9" top="160" left="250" width="99" height="13" caption="Stufenlose Farbwahl:"/>
+  <label name="statuslabel" top="390" left="10" width="33" height="13" caption="Status:"/>
+  <button name="Button1" top="410" left="90" width="70" height="30" action="LampOff" caption="Lampe aus"/>
+  <button name="Button2" top="410" left="10" width="70" height="30" action="LampOn" caption="Lampe ein"/>
+  <button name="Button3" top="410" left="170" width="70" height="30" action="Reset" caption="Reset"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure IrisChange;
+  procedure ColorBoxChange;
+  procedure ColorChange;
+  procedure GoboChange;
+  procedure GoboSpeedChange;
+  procedure GoboIndexChange;
+  procedure ShutterChange;
+  procedure DimmerChange;
+  procedure PrismaChange;
+  procedure LampOn;
+  procedure LampOff;
+  procedure Reset;
+  procedure ShutterSliderChange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+		wert:integer;
+	begin
+		case channel of
+			0:  // Iris
+			begin
+				if not dontrefresh then
+					irisslider.position:=get_channel('iris');
+			end;
+			1: // Farbe
+			begin
+				wert:=get_channel('color1');
+				case wert of
+					0..111:
+					begin
+						if not dontrefresh then
+							colorslider.position:=wert;
+					end;
+					144..157: colorbox.itemindex:=0;
+					158..171: colorbox.itemindex:=1;
+					172..185: colorbox.itemindex:=2;
+					186..199: colorbox.itemindex:=3;
+					200..213: colorbox.itemindex:=4;
+					214..227: colorbox.itemindex:=5;
+					228..240: colorbox.itemindex:=6;				
+				end;
+			end;
+			2: // Gobo
+			begin
+				wert:=get_channel('gobo1');
+				case wert of
+					0..8: gobobox.itemindex:=0;
+					9..17: gobobox.itemindex:=1;
+					18..26: gobobox.itemindex:=2;
+					27..35: gobobox.itemindex:=3;
+					36..44: gobobox.itemindex:=4;
+					45..53: gobobox.itemindex:=5;
+					54..62: gobobox.itemindex:=6;
+					63..71: gobobox.itemindex:=7;
+					72..80: gobobox.itemindex:=8;
+					81..89: gobobox.itemindex:=9;
+					90..98: gobobox.itemindex:=10;
+					99..107: gobobox.itemindex:=11; 
+					108..116: gobobox.itemindex:=12;
+					117..125: gobobox.itemindex:=13;
+					126..134: gobobox.itemindex:=14;
+					135..143: gobobox.itemindex:=15;
+					144..152: gobobox.itemindex:=16;
+					153..161: gobobox.itemindex:=17;
+					162..170: gobobox.itemindex:=18;
+					171..179: gobobox.itemindex:=19;
+					180..188: gobobox.itemindex:=20;
+					189..197: gobobox.itemindex:=21;
+					198..206: gobobox.itemindex:=22;
+					207..215: gobobox.itemindex:=23;
+					216..224: gobobox.itemindex:=24;
+					249..255: gobobox.itemindex:=25;
+				end;
+			end;
+			3: // Shutter
+			begin
+				wert:=get_channel('shutter');
+				if not dontrefresh then
+				case wert of
+					0..7: begin	shutterbox.itemindex:=0; shutterslider.position:=wert; end;
+					8..15: begin	shutterbox.itemindex:=1; shutterslider.position:=wert-8; end;
+					16..23: begin	shutterbox.itemindex:=2; shutterslider.position:=wert-16; end;
+					24..31: begin	shutterbox.itemindex:=3; shutterslider.position:=wert-24; end;
+					32..39: begin	shutterbox.itemindex:=4; shutterslider.position:=wert-32; end;
+					40..47: begin	shutterbox.itemindex:=5; shutterslider.position:=wert-40; end;
+					48..55: begin	shutterbox.itemindex:=6; shutterslider.position:=wert-48; end;
+					56..63: begin	shutterbox.itemindex:=7; shutterslider.position:=wert-56; end;
+					64..71: begin	shutterbox.itemindex:=8; shutterslider.position:=wert-64; end;
+					72..79: begin	shutterbox.itemindex:=9; shutterslider.position:=wert-72; end;
+					80..87: begin	shutterbox.itemindex:=10; shutterslider.position:=wert-80; end;
+					88..95: begin	shutterbox.itemindex:=11; shutterslider.position:=wert-88; end;
+					96..103: begin	shutterbox.itemindex:=12; shutterslider.position:=wert-96; end;
+					104..111: begin	shutterbox.itemindex:=13; shutterslider.position:=wert-104; end;
+					112..119: begin	shutterbox.itemindex:=14; shutterslider.position:=wert-112; end;
+					120..136: begin	shutterbox.itemindex:=15; shutterslider.position:=wert-120; end;
+					137..153: begin	shutterbox.itemindex:=16; shutterslider.position:=wert-137; end;
+					154..170: begin	shutterbox.itemindex:=17; shutterslider.position:=wert-154; end;
+					171..187: begin	shutterbox.itemindex:=18; shutterslider.position:=wert-171; end;
+					188..204: begin	shutterbox.itemindex:=19; shutterslider.position:=wert-188; end;
+					205..221: begin	shutterbox.itemindex:=20; shutterslider.position:=wert-205; end;
+					222..238: begin	shutterbox.itemindex:=21; shutterslider.position:=wert-222; end;
+					239..255: begin	shutterbox.itemindex:=22; shutterslider.position:=wert-239; end;
+				end;
+			end;
+			4..5: // Pan/Tilt
+			begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+			end;
+			6: // GoboRotation
+			begin
+				wert:=get_channel('gobo1rot');
+				case wert of
+					0..127:
+					begin
+						if not dontrefresh then
+							GoboIndexSlider.Position:=wert;
+					end;
+					128..255:
+					begin
+						if not dontrefresh then
+							GoboRotationSlider.position:=wert;
+					end;
+				end;
+			end;
+			7: // Helligkeit
+			begin
+				if not dontrefresh then
+					dimmerslider.position:=get_channel('dimmer');
+			end;
+			8: // Prisma
+			begin
+				wert:=get_channel('prisma');
+				case wert of
+					0..31: prismabox.itemindex:=0;
+					32..63: prismabox.itemindex:=1;
+					64..95: prismabox.itemindex:=2;
+					96..127: prismabox.itemindex:=3;
+					128..159: prismabox.itemindex:=4;
+					160..191: prismabox.itemindex:=5;
+					192..223: prismabox.itemindex:=6;
+					224..255: prismabox.itemindex:=7;
+				end;
+			end;
+			9: // Funktionskanal
+			begin
+				wert:=get_channel('special1');
+				case wert of
+					0..60: statuslabel.caption:='Status: Lampe aus';
+					130..179: statuslabel.caption:='Status: Lampe an';
+					240..255: statuslabel.caption:='Status: Reset wird durchgeführt';
+				end;
+			end;
+		end;
+	  dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  procedure IrisChange;
+  begin
+		dontrefresh:=true;
+    set_channel('iris',irisslider.position,irisslider.position,0);
+  end;
+  procedure ColorBoxChange;
+  begin
+    case colorbox.itemindex of
+    	0: set_channel('color1',144,144,0);
+    	1: set_channel('color1',158,158,0);
+    	2: set_channel('color1',172,172,0);                               
+    	3: set_channel('color1',186,186,0);
+    	4: set_channel('color1',200,200,0);
+    	5: set_channel('color1',214,214,0);
+    	6: set_channel('color1',228,228,0);
+    end;
+  end;
+  procedure ColorChange;
+  begin
+		dontrefresh:=true;
+    set_channel('color1',colorslider.position,colorslider.position,0);
+  end;
+  procedure GoboChange;
+  begin
+    case Gobobox.itemindex of
+    	0: set_channel('gobo1',-1,0,0);
+    	1: set_channel('gobo1',-1,9,0);
+    	2: set_channel('gobo1',-1,18,0);
+    	3: set_channel('gobo1',-1,27,0);
+    	4: set_channel('gobo1',-1,36,0);
+    	5: set_channel('gobo1',-1,45,0);
+    	6: set_channel('gobo1',-1,54,0);
+    	7: set_channel('gobo1',-1,63,0);
+    	8: set_channel('gobo1',-1,72,0);
+    	9: set_channel('gobo1',-1,81,0);
+    	10: set_channel('gobo1',-1,90,0);
+    	11: set_channel('gobo1',-1,99,0);
+    	12: set_channel('gobo1',-1,108,0);
+    	13: set_channel('gobo1',-1,117,0);
+    	14: set_channel('gobo1',-1,126,0);
+    	15: set_channel('gobo1',-1,135,0);
+    	16: set_channel('gobo1',-1,144,0);
+    	17: set_channel('gobo1',-1,153,0);
+    	18: set_channel('gobo1',-1,162,0);
+    	19: set_channel('gobo1',-1,171,0);
+    	20: set_channel('gobo1',-1,180,0);
+    	21: set_channel('gobo1',-1,189,0);
+    	22: set_channel('gobo1',-1,198,0);
+    	23: set_channel('gobo1',-1,207,0);
+    	24: set_channel('gobo1',-1,216,0);
+    	25: set_channel('gobo1',-1,255,0);
+    end;
+  end;
+  procedure GoboSpeedChange;
+  begin
+		dontrefresh:=true;
+    set_channel('gobo1rot',GoboRotationSlider.position,GoboRotationSlider.position,0);
+  end;
+  procedure GoboIndexChange;
+  begin
+		dontrefresh:=true;
+    set_channel('gobo1rot',GoboIndexSlider.position,GoboIndexSlider.position,0);
+  end;
+  procedure ShutterChange;
+  begin
+    case ShutterBox.itemindex of
+    	0: set_channel('shutter',-1,shutterslider.position,0);
+    	1: set_channel('shutter',-1,shutterslider.position+8,0);
+    	2: set_channel('shutter',-1,shutterslider.position+16,0);
+    	3: set_channel('shutter',-1,shutterslider.position+24,0);
+    	4: set_channel('shutter',-1,shutterslider.position+32,0);
+    	5: set_channel('shutter',-1,shutterslider.position+40,0);
+    	6: set_channel('shutter',-1,shutterslider.position+48,0);
+    	7: set_channel('shutter',-1,shutterslider.position+56,0);
+    	8: set_channel('shutter',-1,shutterslider.position+64,0);
+    	9: set_channel('shutter',-1,shutterslider.position+72,0);
+    	10: set_channel('shutter',-1,shutterslider.position+80,0);
+    	11: set_channel('shutter',-1,shutterslider.position+88,0);
+    	12: set_channel('shutter',-1,shutterslider.position+96,0);
+    	13: set_channel('shutter',-1,shutterslider.position+104,0);
+    	14: set_channel('shutter',-1,shutterslider.position+112,0);
+    	15: set_channel('shutter',-1,shutterslider.position+120,0);
+    	16: set_channel('shutter',-1,shutterslider.position+137,0);
+    	17: set_channel('shutter',-1,shutterslider.position+154,0);
+    	18: set_channel('shutter',-1,shutterslider.position+171,0);
+    	19: set_channel('shutter',-1,shutterslider.position+188,0);
+    	20: set_channel('shutter',-1,shutterslider.position+205,0);
+    	21: set_channel('shutter',-1,shutterslider.position+222,0);
+    	22: set_channel('shutter',-1,255,0);
+    end;
+  end;
+  procedure DimmerChange;
+  begin
+		dontrefresh:=true;
+    set_channel('dimmer',-1,dimmerslider.position,0);
+  end;
+  procedure PrismaChange;
+  begin
+		case prismabox.itemindex of
+    	0: set_channel('prisma',-1,0,0);
+    	1: set_channel('prisma',-1,32,0);
+    	2: set_channel('prisma',-1,64,0);
+    	3: set_channel('prisma',-1,96,0);
+    	4: set_channel('prisma',-1,128,0);
+    	5: set_channel('prisma',-1,160,0);
+    	6: set_channel('prisma',-1,192,0);
+    	7: set_channel('prisma',-1,224,0);
+    end;
+  end;
+  procedure LampOn;
+  begin
+    if MessageDlg('Soll die Lampe eingeschaltet werden?',mtConfirmation,[mbYes,mbNo],0)=mrYes then
+    begin
+	    set_channel('special1',130,130,0);
+    end;
+  end;
+  procedure LampOff;
+  begin
+    if MessageDlg('Soll die Lampe ausgeschaltet werden?',mtConfirmation,[mbYes,mbNo],0)=mrYes then
+    begin
+	    set_channel('special1',0,0,0);
+    end;
+  end;
+  procedure Reset;
+  begin
+    if MessageDlg('Soll ein Gerätereset durchgeführt werden?',mtConfirmation,[mbYes,mbNo],0)=mrYes then
+    begin
+	    set_channel('special1',255,255,0);
+			ShowMessage('Reset wird durchgeführt...');
+	    set_channel('special1',0,0,0);
+    end;
+  end;
+  procedure ShutterSliderChange;
+  begin
+		dontrefresh:=true;
+    shutterchange;
+  end;
+  end.
+ </code>
+</device>

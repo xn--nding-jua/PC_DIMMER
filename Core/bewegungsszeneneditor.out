@@ -1,0 +1,1638 @@
+unit bewegungsszeneneditor;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ExtCtrls, StdCtrls, ComCtrls, Grids, figureneditor, Math,
+  CHHighResTimer, Buttons, PngBitBtn, szenenverwaltung;
+
+const
+  {$I GlobaleKonstanten.inc}
+
+type
+  TBewegungsszeneAktiv = record
+    Zeit:     cardinal;
+    Position: word;
+    Aktiv:    boolean;
+  end;
+
+  Tbewegungsszeneneditorform = class(TForm)
+    Panel1:      TPanel;
+    GroupBox1:   TGroupBox;
+    PaintBox1:   TPaintBox;
+    GroupBox2:   TGroupBox;
+    Label1:      TLabel;
+    Edit1:       TEdit;
+    Label2:      TLabel;
+    ComboBox1:   TComboBox;
+    Label3:      TLabel;
+    Time_h:      TEdit;
+    Time_m:      TEdit;
+    Time_s:      TEdit;
+    FigureneditorBtn: TButton;
+    Label4:      TLabel;
+    Label5:      TLabel;
+    Label6:      TLabel;
+    Label7:      TLabel;
+    InvertXCheckbox: TCheckBox;
+    InvertYCheckbox: TCheckBox;
+    PositionX:   TTrackBar;
+    ScaleXTrackbar: TTrackBar;
+    PositionY:   TTrackBar;
+    ScaleYTrackbar: TTrackBar;
+    Button1:     TButton;
+    StringGrid1: TStringGrid;
+    Label8:      TLabel;
+    JumpToChannel: TEdit;
+    a:           TLabel;
+    LinkScalexyTrackbar: TCheckBox;
+    ResetBtn:    TButton;
+    CheckBox1:   TCheckBox;
+    Button2:     TButton;
+    Button3:     TButton;
+    BewegungsszeneTimer: TCHHighResTimer;
+    Button4:     TButton;
+    printPoints: TCheckBox;
+    printText:   TCheckBox;
+    mixXY:       TCheckBox;
+    Edit2:       TEdit;
+    Label9:      TLabel;
+    Label10:     TLabel;
+    OffsetTrackbar: TTrackBar;
+    Bevel1:      TBevel;
+    StartpositionRelativ: TRadioButton;
+    StartpositionAbsolut: TRadioButton;
+    Label12:     TLabel;
+    GroupBox3:   TGroupBox;
+    Edit3:       TEdit;
+    Label13:     TLabel;
+    Edit4:       TEdit;
+    Time_ms:     TEdit;
+    Repaint:     TTimer;
+    GroupBox4:   TGroupBox;
+    SceneList:   TStringGrid;
+    AddScene:    TPngBitBtn;
+    DeleteScene: TPngBitBtn;
+    EditScene:   TPngBitBtn;
+    procedure RedrawAll;
+    procedure RefreshSceneList;
+    procedure FigureneditorBtnClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure StringGrid1DrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
+    procedure StringGrid1GetEditMask(Sender: TObject; ACol, ARow: integer; var Value: string);
+    procedure StringGrid1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure StringGrid1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure JumpToChannelKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure ComboBox1Change(Sender: TObject);
+    procedure PositionXChange(Sender: TObject);
+    procedure PositionYChange(Sender: TObject);
+    procedure ScaleXTrackbarChange(Sender: TObject);
+    procedure ScaleYTrackbarChange(Sender: TObject);
+    procedure InvertXCheckboxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure InvertYCheckboxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure Edit1Change(Sender: TObject);
+    procedure ResetBtnClick(Sender: TObject);
+    procedure CheckBox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure Button2Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Time_hChange(Sender: TObject);
+    function FigurLength(Figur: TGUID): extended;
+    function Laenge(x1, y1, x2, y2: integer): extended;
+    function ZeitzwischenzweiPunkten(x1, y1, x2, y2, maxPunkte: integer; Bewegungsszene: TGUID): extended;
+    function ZeitzwischenzweiPunktenActual(x1, y1, x2, y2, maxPunkte: integer): extended;
+    function GetX(Kanal, Position: integer; Bewegungsszene: TGUID): integer;
+    function GetY(Kanal, Position: integer; Bewegungsszene: TGUID): integer;
+    function GetXActual(Kanal, Position: integer): integer;
+    function GetYActual(Kanal, Position: integer): integer;
+    procedure BewegungsszeneTimerTimer(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure printPointsMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure printTextMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure mixXYMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure Edit2Change(Sender: TObject);
+    procedure Edit2Exit(Sender: TObject);
+    procedure OffsetTrackbarChange(Sender: TObject);
+    procedure StartpositionRelativMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure SaveBewegungsDaten;
+    procedure Edit3Change(Sender: TObject);
+    procedure Edit4Change(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure RepaintTimer(Sender: TObject);
+    procedure AddSceneClick(Sender: TObject);
+    procedure EditSceneClick(Sender: TObject);
+    procedure DeleteSceneClick(Sender: TObject);
+    procedure SceneListGetEditMask(Sender: TObject; ACol, ARow: integer; var Value: string);
+    procedure SceneListKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+  private
+    { Private-Deklarationen }
+    _Buffer:        TBitmap;
+    AktuelleBewegungsszeneZeit: array[0..chan] of cardinal;
+    AktuelleBewegungsszenePosition: array[0..chan] of word;
+    AktuelleBewegungsszeneAktiv: boolean;
+    AktuelleBewegungsszeneRepeats: single;
+    Zeit:           array[1..chan] of cardinal;
+    KanalExistiert: integer;
+  public
+    { Public-Deklarationen }
+  end;
+
+var
+  bewegungsszeneneditorform: Tbewegungsszeneneditorform;
+
+implementation
+
+uses PCDIMMER;
+
+{$R *.dfm}
+
+procedure Tbewegungsszeneneditorform.FigureneditorBtnClick(Sender: TObject);
+begin
+  Button4Click(nil);
+
+  if Combobox1.ItemIndex > -1 then
+    figureneditorform.LoadFigure := Combobox1.ItemIndex
+  else
+    figureneditorform.LoadFigure := -1;
+
+  figureneditorform.ShowModal;
+
+  bewegungsszeneneditorform.FormShow(FigureneditorBtn);
+  mainform.AktuelleBewegungsszene.figur := mainform.Figuren[Combobox1.ItemIndex].ID;
+end;
+
+procedure Tbewegungsszeneneditorform.FormCreate(Sender: TObject);
+begin
+  _Buffer := TBitmap.Create;
+  _Buffer.Width := Paintbox1.Width;
+  _Buffer.Height := Paintbox1.Height;
+end;
+
+procedure Tbewegungsszeneneditorform.FormShow(Sender: TObject);
+var
+  i: integer;
+begin
+  if Edit1.Text = '' then
+    Edit1.Text := 'Neue Bewegungsszene';
+
+  StringGrid1.RowCount := mainform.lastchan + 1;
+
+  for i := 1 to mainform.lastchan do
+  begin
+    StringGrid1.Cells[2, i] := IntToStr(i);
+    StringGrid1.Cells[3, i] := mainform.Data.Names[i];
+  end;
+
+  stringgrid1.Cols[0].Strings[0] := 'X';
+  stringgrid1.Cols[1].Strings[0] := 'Y';
+  stringgrid1.Cols[2].Strings[0] := 'Kanal';
+  stringgrid1.Cols[3].Strings[0] := 'Kanalname';
+
+  Combobox1.Clear;
+
+  for i := 0 to length(mainform.Figuren) - 1 do
+    Combobox1.Items.Add(mainform.Figuren[i].Name);
+
+  if length(mainform.Figuren) > 0 then
+  begin
+    Edit1.Enabled  := True;
+    Edit3.Enabled  := True;
+    Combobox1.Enabled := True;
+    GroupBox2.Enabled := True;
+    Combobox1.ItemIndex := 0;
+    Time_h.Enabled := True;
+    Time_m.Enabled := True;
+    Time_s.Enabled := True;
+  end else
+  begin
+    Edit1.Enabled := False;
+    Edit3.Enabled := False;
+    Combobox1.Enabled := False;
+    GroupBox2.Enabled := False;
+    Combobox1.ItemIndex := -1;
+    Time_h.Text := '0';
+    Time_m.Text := '0';
+    Time_s.Text := '5';
+    Time_h.Enabled := False;
+    Time_m.Enabled := False;
+    Time_s.Enabled := False;
+  end;
+
+  Combobox1.ItemIndex := -1;
+
+  if (figureneditorform.LoadFigure > -1) and (Sender = FigurenEditorBtn) and (figureneditorform.LoadFigure < Combobox1.Items.Count) then
+  begin
+    Combobox1.ItemIndex := figureneditorform.LoadFigure;
+    mainform.AktuelleBewegungsszene.figur := mainform.Figuren[Combobox1.ItemIndex].ID;
+    OffsetTrackbar.Max  := length(mainform.Figuren[Combobox1.ItemIndex].posx);
+  end else
+  begin
+    if length(mainform.Figuren) > 0 then
+      for i := 0 to Combobox1.Items.Count - 1 do
+        if GUIDToString(mainform.Figuren[i].ID) = GUIDToString(mainform.AktuelleBewegungsszene.figur) then
+        begin
+          Combobox1.ItemIndex := i;
+          mainform.AktuelleBewegungsszene.figur := mainform.Figuren[Combobox1.ItemIndex].ID;
+          OffsetTrackbar.Max  := length(mainform.Figuren[Combobox1.ItemIndex].posx);
+        end;
+  end;
+
+  Edit1.Text := mainform.AktuelleBewegungsszene.Name;
+  Edit3.Text := mainform.AktuelleBewegungsszene.Beschreibung;
+  CheckBox1.Checked := mainform.AktuelleBewegungsszene.identischespurgeschwidigkeit;
+
+  KanalExistiert := -1;
+  for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+  begin
+    if mainform.AktuelleBewegungsszene.kanal[i].channel = 1 then
+      KanalExistiert := i;
+  end;
+
+  if KanalExistiert > -1 then
+  begin
+    PositionX.Position := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].mittelpunktx;
+    PositionY.Position := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].mittelpunkty;
+    ScaleXTrackbar.Position := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].scalex;
+    ScaleYTrackbar.Position := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].scaley;
+    InvertXCheckbox.Checked := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].invertx;
+    InvertYCheckbox.Checked := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].inverty;
+    MixXY.Checked := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].mixXY;
+    OffsetTrackbar.Position := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].Offset;
+    Edit4.Text := IntToStr(offsettrackbar.Position);
+    StartpositionRelativ.Checked := mainform.AktuelleBewegungsszene.startpositionrelativ;
+  end else
+  begin
+    PositionX.Position := 800;
+    PositionY.Position := 800;
+    ScaleXTrackbar.Position := 10000;
+    ScaleYTrackbar.Position := 10000;
+    InvertXCheckbox.Checked := False;
+    InvertYCheckbox.Checked := False;
+    MixXY.Checked := False;
+    OffsetTrackbar.Position := 0;
+    Edit4.Text := IntToStr(offsettrackbar.Position);
+    StartpositionRelativ.Checked := mainform.AktuelleBewegungsszene.startpositionrelativ;
+  end;
+
+  StringGrid1.Row := 1;
+  StringGrid1.Col := 2;
+  Repaint.Enabled := True;
+end;
+
+procedure Tbewegungsszeneneditorform.RedrawAll;
+var
+  i, k: integer;
+begin
+  _Buffer.Canvas.Brush.Color := clBlack;
+  _Buffer.Canvas.FillRect(_Buffer.Canvas.ClipRect);
+
+  // Vertikale Linien zeichnen
+  i := 20;
+  _Buffer.Canvas.Pen.Color := clBlue;
+  while i <= _Buffer.Height do
+  begin
+    _Buffer.Canvas.MoveTo(i, 0);
+    _Buffer.Canvas.LineTo(i, _Buffer.Height);
+    i := i + 20;
+  end;
+
+  // Horizontale Linien zeichnen
+  i := 20;
+  _Buffer.Canvas.Pen.Color := clBlue;
+  while i <= _Buffer.Width do
+  begin
+    _Buffer.Canvas.MoveTo(0, i);
+    _Buffer.Canvas.LineTo(_Buffer.Width, i);
+    i := i + 20;
+  end;
+  _Buffer.Canvas.Pen.Color := -1;
+
+  // Fadenkreuz zeichnen
+  _Buffer.Canvas.Pen.Color := $000080FF;
+  _Buffer.Canvas.MoveTo(200, 0);
+  _Buffer.Canvas.LineTo(200, _Buffer.Height);
+  _Buffer.Canvas.MoveTo(0, 200);
+  _Buffer.Canvas.LineTo(_Buffer.Width, 200);
+  _Buffer.Canvas.Pen.Color := -1;
+
+  if (Combobox1.items.Count > 0) and (Combobox1.ItemIndex > -1) then
+  begin
+    // Linien zeichnen
+    for k := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+      if mainform.AktuelleBewegungsszene.kanal[k].x or mainform.AktuelleBewegungsszene.kanal[k].y then
+        if length(mainform.Figuren[Combobox1.ItemIndex].posx) > 0 then
+          for i := 0 to length(mainform.Figuren[Combobox1.ItemIndex].posx) - 1 do
+          begin
+            if ((i + 1) <= length(mainform.Figuren[Combobox1.ItemIndex].posx) - 1) then
+            begin // Normale Punkteverbindungen zeichnen
+              //        if AktuelleBewegungsszenePosition[StringGrid1.Row-1]=i then
+              if AktuelleBewegungsszenePosition[k] = i + 1 then
+              begin
+                // Aktuelle Punkteverbindung zeichnen
+                _Buffer.Canvas.Pen.Color := $000080FF;
+                _Buffer.Canvas.MoveTo(GetXActual(k, i), GetYActual(k, i));
+                _Buffer.Canvas.LineTo(GetXActual(k, i + 1), GetYActual(k, i + 1));
+              end else
+              begin
+                // Normale Punkteverbindung zeichnen
+                _Buffer.Canvas.Pen.Color := clYellow;
+                _Buffer.Canvas.MoveTo(GetXActual(k, i), GetYActual(k, i));
+                _Buffer.Canvas.LineTo(GetXActual(k, i + 1), GetYActual(k, i + 1));
+              end;
+            end else
+            begin // Letzte Punktverbindung zeichnen
+              // Zurück zum ersten Punkt
+              //        if AktuelleBewegungsszenePosition[StringGrid1.Row-1]=i then
+              if AktuelleBewegungsszenePosition[k] - 1 = i then
+              begin
+                _Buffer.Canvas.Pen.Color := $000080FF;
+                _Buffer.Canvas.MoveTo(GetXActual(k, i), GetYActual(k, i));
+                _Buffer.Canvas.LineTo(GetXActual(k, 0), GetYActual(k, 0));
+              end else
+              begin
+                _Buffer.Canvas.Pen.Color := clYellow;
+                _Buffer.Canvas.MoveTo(GetXActual(k, i), GetYActual(k, i));
+                _Buffer.Canvas.LineTo(GetXActual(k, 0), GetYActual(k, 0));
+              end;
+            end;
+
+            if printPoints.Checked then
+            begin
+              // Punkte zeichnen
+              //        if AktuelleBewegungsszenePosition[StringGrid1.Row-1]=i then
+              if AktuelleBewegungsszenePosition[k] = i + 1 then
+                _Buffer.Canvas.Brush.Color := $000080FF
+              else
+              begin
+                if i = 0 then
+                  _Buffer.Canvas.Brush.Color := clLime
+                else if i = length(mainform.Figuren[Combobox1.ItemIndex].posx) - 1 then
+                  _Buffer.Canvas.Brush.Color := clRed
+                else
+                  _Buffer.Canvas.Brush.Color := clYellow;
+              end;
+              _Buffer.Canvas.Pen.Color := -1;
+              _Buffer.Canvas.Ellipse(GetXActual(k, i) - 3, GetYActual(k, i) - 3, GetXActual(k, i) + 3, GetYActual(k, i) + 3);
+            end;
+            // Ende von Punkte zeichnen
+            // Bezeichnungen ausgeben
+            if printtext.Checked then
+            begin
+              _Buffer.Canvas.Brush.Color := clBlack;
+              //          if AktuelleBewegungsszenePosition[StringGrid1.Row-1]=i then
+              if AktuelleBewegungsszenePosition[k] = i + 1 then
+              begin
+                _Buffer.Canvas.Font.Color := $000080FF;
+                if mainform.Figuren[Combobox1.ItemIndex].posx[i] < 375 then
+                  _Buffer.Canvas.TextOut(GetXActual(k, i), GetYActual(k, i) - 15, 'Aktuell')
+                else
+                  _Buffer.Canvas.TextOut(GetXActual(k, i) - 30, GetYActual(k, i) - 15, 'Aktuell');
+              end else if i = 0 then
+              begin
+                _Buffer.Canvas.Font.Color := clLime;
+                if mainform.Figuren[Combobox1.ItemIndex].posx[i] < 375 then
+                  _Buffer.Canvas.TextOut(GetXActual(k, i), GetYActual(k, i) - 15, 'Start')
+                else
+                  _Buffer.Canvas.TextOut(GetXActual(k, i) - 25, GetYActual(k, i) - 15, 'Start');
+              end else if i = length(mainform.Figuren[Combobox1.ItemIndex].posx) - 1 then
+              begin
+                _Buffer.Canvas.Font.Color := clRed;
+                if GetXActual(k, i) < 375 then
+                  _Buffer.Canvas.TextOut(GetXActual(k, i), GetYActual(k, i) - 15, 'Stop')
+                else
+                  _Buffer.Canvas.TextOut(GetXActual(k, i) - 25, GetYActual(k, i) - 15, 'Stop');
+              end else
+              begin
+                _Buffer.Canvas.Font.Color := clYellow;
+                if mainform.Figuren[Combobox1.ItemIndex].posx[i] < 385 then
+                  _Buffer.Canvas.TextOut(GetXActual(k, i), GetYActual(k, i) - 15, IntToStr(i))
+                else
+                  _Buffer.Canvas.TextOut(GetXActual(k, i) - 15, GetYActual(k, i) - 15, IntToStr(i));
+              end;
+            end;
+            // Ende von Bezeichnungen ausgeben
+          end;
+  end;
+  BitBlt(PaintBox1.canvas.Handle, 0, 0, 400, 400, _Buffer.Canvas.Handle, 0, 0, SRCCOPY);
+end;
+
+procedure Tbewegungsszeneneditorform.StringGrid1DrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
+var
+  i: integer;
+  AOffSet: TPoint;
+  AHaken1: TPoint;
+  AHaken2: TPoint;
+  AHaken3: TPoint;
+  ARect: TRect;
+begin
+  if (Combobox1.Items.Count > 0) and (Combobox1.ItemIndex > -1) then
+    with StringGrid1.Canvas do
+    begin
+      // Kasten vorbereiten
+      if Rect.Top = 0 then
+      begin
+        Brush.Color := clBtnFace;
+        FillRect(Rect);
+        Pen.Color := clWhite;
+        Rectangle(Rect);
+        TextOut(Rect.Left, Rect.Top, StringGrid1.Cells[ACol, ARow]);
+        Exit;
+      end;
+
+      if (ACol = Stringgrid1.Col) and (ARow = Stringgrid1.Row) then
+      begin
+        Brush.Color := clHighlight;
+        Font.Color  := clHighlightText;
+      end else
+      begin
+        Brush.Color := clWhite;
+        Font.Color  := clWindowText;
+      end;
+      FillRect(Rect);
+      TextOut(Rect.Left, Rect.Top, StringGrid1.Cells[ACol, ARow]);
+
+      if (ARow > 0) then
+      begin
+        if (ACol = 0) then
+        begin
+          //Kasten zeichnen
+          AOffSet.X := (Rect.Right - Rect.Left - 11) div 2;
+          AOffSet.Y := (Rect.Bottom - Rect.Top - 11) div 2;
+
+          ARect.Left := AOffSet.X + Rect.Left;
+          ARect.Top  := AOffSet.Y + Rect.Top;
+          ARect.Right := AOffSet.X + Rect.Left + 11;
+          ARect.Bottom := AOffSet.Y + Rect.Top + 11;
+
+          Pen.Color := clGray;
+          Rectangle(ARect);
+
+          // Haken bei X
+          for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+            if (mainform.AktuelleBewegungsszene.kanal[i].channel = ARow) then
+              if (mainform.AktuelleBewegungsszene.kanal[i].x) then
+              begin
+                //Haken zeichnen
+                AHaken1.X := ARect.Left + 2;
+                AHaken1.Y := ARect.Top + 6;
+                AHaken2.X := ARect.Left + 4;
+                AHaken2.Y := ARect.Top + 8;
+                AHaken3.X := ARect.Left + 9;
+                AHaken3.Y := ARect.Top + 3;
+
+                Pen.Color := clBlack; // Farbe des Häkchens
+
+                MoveTo(AHaken1.X, AHaken1.Y - 0);
+                LineTo(AHaken2.X, AHaken2.Y - 0);
+                LineTo(AHaken3.X, AHaken3.Y - 0);
+
+                MoveTo(AHaken1.X, AHaken1.Y - 1);
+                LineTo(AHaken2.X, AHaken2.Y - 1);
+                LineTo(AHaken3.X, AHaken3.Y - 1);
+
+                MoveTo(AHaken1.X, AHaken1.Y - 2);
+                LineTo(AHaken2.X, AHaken2.Y - 2);
+                LineTo(AHaken3.X, AHaken3.Y - 2);
+              end;
+        end;
+        if (ACol = 1) then
+        begin
+          //Kasten zeichnen
+          AOffSet.X := (Rect.Right - Rect.Left - 11) div 2;
+          AOffSet.Y := (Rect.Bottom - Rect.Top - 11) div 2;
+
+          ARect.Left := AOffSet.X + Rect.Left;
+          ARect.Top  := AOffSet.Y + Rect.Top;
+          ARect.Right := AOffSet.X + Rect.Left + 11;
+          ARect.Bottom := AOffSet.Y + Rect.Top + 11;
+
+          Pen.Color := clGray;
+          Rectangle(ARect);
+
+          // Haken bei Y
+          for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+            if (mainform.AktuelleBewegungsszene.kanal[i].channel = ARow) then
+              if (mainform.AktuelleBewegungsszene.kanal[i].y) then
+              begin
+                //Haken zeichnen
+                AHaken1.X := ARect.Left + 2;
+                AHaken1.Y := ARect.Top + 6;
+                AHaken2.X := ARect.Left + 4;
+                AHaken2.Y := ARect.Top + 8;
+                AHaken3.X := ARect.Left + 9;
+                AHaken3.Y := ARect.Top + 3;
+
+                Pen.Color := clBlack; // Farbe des Häkchens
+
+                MoveTo(AHaken1.X, AHaken1.Y - 0);
+                LineTo(AHaken2.X, AHaken2.Y - 0);
+                LineTo(AHaken3.X, AHaken3.Y - 0);
+
+                MoveTo(AHaken1.X, AHaken1.Y - 1);
+                LineTo(AHaken2.X, AHaken2.Y - 1);
+                LineTo(AHaken3.X, AHaken3.Y - 1);
+
+                MoveTo(AHaken1.X, AHaken1.Y - 2);
+                LineTo(AHaken2.X, AHaken2.Y - 2);
+                LineTo(AHaken3.X, AHaken3.Y - 2);
+              end;
+        end;
+      end;
+      TextOut(Rect.Left, Rect.Top, StringGrid1.Cells[ACol, ARow]);
+    end;
+end;
+
+procedure Tbewegungsszeneneditorform.StringGrid1GetEditMask(Sender: TObject; ACol, ARow: integer; var Value: string);
+var
+  Text: string;
+begin
+  if ACol = 2 then
+    Text := StringGrid1.Cells[ACol, ARow];
+
+  if (ACol = 0) or (ACol = 1) or (ACol = 2) then
+    StringGrid1.EditorMode := False
+  else
+    StringGrid1.EditorMode := True;
+
+  if ACol = 2 then
+    StringGrid1.Cells[ACol, ARow] := Text;
+end;
+
+procedure Tbewegungsszeneneditorform.StringGrid1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if stringgrid1.Col = 3 then
+  begin
+    mainform.Data.Names[stringgrid1.row] := stringgrid1.Cells[stringgrid1.Col, stringgrid1.row];
+    mainform.pluginsaktualisieren(nil);
+    mainform.UpdateLevels;
+    mainform.effekttimelineundkanaluebersichtaktualisieren(nil);
+  end;
+end;
+
+procedure Tbewegungsszeneneditorform.StringGrid1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i, highest: integer;
+  allchecked: boolean;
+  CheckCount: integer;
+begin
+  if StringGrid1.Col = 0 then
+  begin
+{
+    if Shift=[ssCtrl] then
+    begin
+      for i:=1 to mainform.MaximumChan do
+        mainform.AktuelleBewegungsszene.kanal[i].x:=true;
+    end else if Shift=[ssAlt] then
+    begin
+      for i:=1 to mainform.MaximumChan do
+        mainform.AktuelleBewegungsszene.kanal[i].x:=false;
+    end else if Button=mbRight then
+    begin
+      i:=StringGrid1.Row-1;
+      repeat
+        i:=i+1;
+      until (i mod 8 =0);
+       highest:=i;
+       allchecked:=true;
+        for i:=highest-7 to highest do
+          if not mainform.AktuelleBewegungsszene.kanal[i].x then
+          begin
+            mainform.AktuelleBewegungsszene.kanal[i].x:=true;
+            allchecked:=false;
+          end;
+
+        if allchecked then
+          for i:=highest-7 to highest do
+            mainform.AktuelleBewegungsszene.kanal[i].x:=false;
+    end else
+    begin
+      mainform.AktuelleBewegungsszene.kanal[StringGrid1.Row].x:=not mainform.AktuelleBewegungsszene.kanal[StringGrid1.Row].x;
+    end;
+}
+    KanalExistiert := -1;
+    for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+    begin
+      if mainform.AktuelleBewegungsszene.kanal[i].channel = StringGrid1.Row then
+        KanalExistiert := i;
+    end;
+
+    if KanalExistiert = -1 then
+    begin
+      setlength(mainform.AktuelleBewegungsszene.kanal, length(mainform.AktuelleBewegungsszene.kanal) + 1);
+      setlength(mainform.AktuelleBewegungsszene.Szenen, length(mainform.AktuelleBewegungsszene.Szenen) + 1);
+      mainform.AktuelleBewegungsszene.kanal[length(mainform.AktuelleBewegungsszene.kanal) - 1].channel := StringGrid1.Row;
+
+      mainform.AktuelleBewegungsszene.kanal[length(mainform.AktuelleBewegungsszene.kanal) - 1].invertx := False;
+      mainform.AktuelleBewegungsszene.kanal[length(mainform.AktuelleBewegungsszene.kanal) - 1].inverty := False;
+      mainform.AktuelleBewegungsszene.kanal[length(mainform.AktuelleBewegungsszene.kanal) - 1].mittelpunktx := 800;
+      mainform.AktuelleBewegungsszene.kanal[length(mainform.AktuelleBewegungsszene.kanal) - 1].mittelpunkty := 800;
+      mainform.AktuelleBewegungsszene.kanal[length(mainform.AktuelleBewegungsszene.kanal) - 1].scalex := 10000;
+      mainform.AktuelleBewegungsszene.kanal[length(mainform.AktuelleBewegungsszene.kanal) - 1].scaley := 10000;
+      mainform.AktuelleBewegungsszene.kanal[length(mainform.AktuelleBewegungsszene.kanal) - 1].mixXY := False;
+
+      KanalExistiert := StringGrid1.Row - 1;
+    end;
+
+    if Kanalexistiert > -1 then
+    begin
+      mainform.AktuelleBewegungsszene.kanal[KanalExistiert].x := not mainform.AktuelleBewegungsszene.kanal[KanalExistiert].x;
+
+      if (mainform.AktuelleBewegungsszene.kanal[KanalExistiert].x = False) and (mainform.AktuelleBewegungsszene.kanal[KanalExistiert].y = False) then
+      begin
+        for i := KanalExistiert to length(mainform.AktuelleBewegungsszene.kanal) - 2 do
+        begin
+          mainform.AktuelleBewegungsszene.kanal[i] := mainform.AktuelleBewegungsszene.kanal[i + 1];
+        end;
+        setlength(mainform.AktuelleBewegungsszene.kanal, length(mainform.AktuelleBewegungsszene.kanal) - 1);
+      end;
+    end;
+
+    StringGrid1.Refresh;
+  end;
+
+  if StringGrid1.Col = 1 then
+  begin
+{
+    if Shift=[ssCtrl] then
+    begin
+      for i:=1 to mainform.MaximumChan do
+        mainform.AktuelleBewegungsszene.kanal[i].y:=true;
+    end else if Shift=[ssAlt] then
+    begin
+      for i:=1 to mainform.MaximumChan do
+        mainform.AktuelleBewegungsszene.kanal[i].y:=false;
+    end else if Button=mbRight then
+    begin
+      i:=StringGrid1.Row-1;
+      repeat
+        i:=i+1;
+      until (i mod 8 =0);
+       highest:=i;
+       allchecked:=true;
+        for i:=highest-7 to highest do
+          if not mainform.AktuelleBewegungsszene.kanal[i].y then
+          begin
+            mainform.AktuelleBewegungsszene.kanal[i].y:=true;
+            allchecked:=false;
+          end;
+
+        if allchecked then
+          for i:=highest-7 to highest do
+            mainform.AktuelleBewegungsszene.kanal[i].y:=false;
+    end else
+    begin
+      mainform.AktuelleBewegungsszene.kanal[StringGrid1.Row].y:=not mainform.AktuelleBewegungsszene.kanal[StringGrid1.Row].y;
+    end;
+}
+    KanalExistiert := -1;
+    for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+    begin
+      if mainform.AktuelleBewegungsszene.kanal[i].channel = StringGrid1.Row then
+        KanalExistiert := i;
+    end;
+
+    if KanalExistiert = -1 then
+    begin
+      setlength(mainform.AktuelleBewegungsszene.kanal, length(mainform.AktuelleBewegungsszene.kanal) + 1);
+      setlength(mainform.AktuelleBewegungsszene.Szenen, length(mainform.AktuelleBewegungsszene.Szenen) + 1);
+      mainform.AktuelleBewegungsszene.kanal[length(mainform.AktuelleBewegungsszene.kanal) - 1].channel := StringGrid1.Row;
+      KanalExistiert := StringGrid1.Row - 1;
+    end;
+
+    if Kanalexistiert > -1 then
+    begin
+      mainform.AktuelleBewegungsszene.kanal[KanalExistiert].y := not mainform.AktuelleBewegungsszene.kanal[KanalExistiert].y;
+
+      if (mainform.AktuelleBewegungsszene.kanal[KanalExistiert].x = False) and (mainform.AktuelleBewegungsszene.kanal[KanalExistiert].y = False) then
+      begin
+        for i := KanalExistiert to length(mainform.AktuelleBewegungsszene.kanal) - 2 do
+        begin
+          mainform.AktuelleBewegungsszene.kanal[i] := mainform.AktuelleBewegungsszene.kanal[i + 1];
+        end;
+        setlength(mainform.AktuelleBewegungsszene.kanal, length(mainform.AktuelleBewegungsszene.kanal) - 1);
+        setlength(mainform.AktuelleBewegungsszene.Szenen, length(mainform.AktuelleBewegungsszene.Szenen) - 1);
+      end;
+    end;
+
+    StringGrid1.Refresh;
+  end;
+
+  KanalExistiert := -1;
+  for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+  begin
+    if mainform.AktuelleBewegungsszene.kanal[i].channel = StringGrid1.Row then
+      KanalExistiert := i;
+  end;
+
+  with StringGrid1 do
+  begin
+    if KanalExistiert > -1 then
+    begin
+      PositionX.Position := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].mittelpunktx;
+      PositionY.Position := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].mittelpunkty;
+      ScaleXTrackbar.Position := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].scalex;
+      ScaleYTrackbar.Position := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].scaley;
+      InvertXCheckbox.Checked := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].invertx;
+      InvertYCheckbox.Checked := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].inverty;
+      MixXY.Checked := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].mixXY;
+      OffsetTrackbar.Position := mainform.AktuelleBewegungsszene.kanal[KanalExistiert].offset;
+      Edit4.Text := IntToStr(offsettrackbar.Position);
+    end;
+  end;
+
+  CheckCount := 0;
+  for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+  begin
+    if mainform.AktuelleBewegungsszene.kanal[i].x then
+      CheckCount := CheckCount + 1;
+    if mainform.AktuelleBewegungsszene.kanal[i].y then
+      CheckCount := CheckCount + 1;
+  end;
+{
+  if CheckCount>2 then
+  begin
+    printText.Checked:=false;
+    printPoints.Checked:=false;
+    printText.Enabled:=false;
+    printPoints.Enabled:=false;
+  end else
+}  begin
+    printText.Checked := True;
+    printPoints.Checked := True;
+    printText.Enabled := True;
+    printPoints.Enabled := True;
+  end;
+
+  RedrawAll;
+  RefreshSceneList;
+end;
+
+procedure Tbewegungsszeneneditorform.JumpToChannelKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+var
+  s: string;
+  i: integer;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  mainform.input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+  if (JumpToChannel.Text <> '') and (StrToInt(JumpToChannel.Text) > 0) and (StrToInt(JumpToChannel.Text) <= mainform.lastchan) then
+    StringGrid1.TopRow := StrToInt(JumpToChannel.Text);
+end;
+
+procedure Tbewegungsszeneneditorform.ComboBox1Change(Sender: TObject);
+begin
+  mainform.AktuelleBewegungsszene.figur := mainform.Figuren[Combobox1.ItemIndex].ID;
+  RedrawAll;
+end;
+
+procedure Tbewegungsszeneneditorform.PositionXChange(Sender: TObject);
+var
+  i: integer;
+begin
+  if Stringgrid1.Row > 0 then
+  begin
+    KanalExistiert := -1;
+    for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+    begin
+      if mainform.AktuelleBewegungsszene.kanal[i].channel = Stringgrid1.Row then
+        KanalExistiert := i;
+    end;
+    if KanalExistiert > -1 then
+      mainform.AktuelleBewegungsszene.kanal[Kanalexistiert].mittelpunktx := PositionX.Position;
+  end;
+  RedrawAll;
+end;
+
+procedure Tbewegungsszeneneditorform.PositionYChange(Sender: TObject);
+var
+  i: integer;
+begin
+  if Stringgrid1.Row > 0 then
+  begin
+    KanalExistiert := -1;
+    for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+    begin
+      if mainform.AktuelleBewegungsszene.kanal[i].channel = Stringgrid1.Row then
+        KanalExistiert := i;
+    end;
+    if KanalExistiert > -1 then
+      mainform.AktuelleBewegungsszene.kanal[Kanalexistiert].mittelpunkty := PositionY.Position;
+  end;
+  RedrawAll;
+end;
+
+procedure Tbewegungsszeneneditorform.ScaleXTrackbarChange(Sender: TObject);
+var
+  i: integer;
+begin
+  if Stringgrid1.Row > 0 then
+  begin
+    KanalExistiert := -1;
+    for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+    begin
+      if mainform.AktuelleBewegungsszene.kanal[i].channel = Stringgrid1.Row then
+        KanalExistiert := i;
+    end;
+    if KanalExistiert > -1 then
+      mainform.AktuelleBewegungsszene.kanal[Kanalexistiert].scalex := ScaleXTrackbar.Position;
+  end;
+  if LinkScalexyTrackbar.Checked then
+    ScaleYTrackbar.Position := ScaleXTrackbar.Position;
+  RedrawAll;
+end;
+
+procedure Tbewegungsszeneneditorform.ScaleYTrackbarChange(Sender: TObject);
+var
+  i: integer;
+begin
+  if Stringgrid1.Row > 0 then
+  begin
+    KanalExistiert := -1;
+    for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+    begin
+      if mainform.AktuelleBewegungsszene.kanal[i].channel = Stringgrid1.Row then
+        KanalExistiert := i;
+    end;
+    if KanalExistiert > -1 then
+      mainform.AktuelleBewegungsszene.kanal[Kanalexistiert].scaley := ScaleYTrackbar.Position;
+  end;
+  if LinkScalexyTrackbar.Checked then
+    ScaleXTrackbar.Position := ScaleYTrackbar.Position;
+  RedrawAll;
+end;
+
+procedure Tbewegungsszeneneditorform.InvertXCheckboxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  if Stringgrid1.Row > 0 then
+  begin
+    KanalExistiert := -1;
+    for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+    begin
+      if mainform.AktuelleBewegungsszene.kanal[i].channel = Stringgrid1.Row then
+        KanalExistiert := i;
+    end;
+    if KanalExistiert > -1 then
+      mainform.AktuelleBewegungsszene.kanal[Kanalexistiert].invertx := InvertXCheckbox.Checked;
+  end;
+  RedrawAll;
+end;
+
+procedure Tbewegungsszeneneditorform.InvertYCheckboxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  if Stringgrid1.Row > 0 then
+  begin
+    KanalExistiert := -1;
+    for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+    begin
+      if mainform.AktuelleBewegungsszene.kanal[i].channel = Stringgrid1.Row then
+        KanalExistiert := i;
+    end;
+    if KanalExistiert > -1 then
+      mainform.AktuelleBewegungsszene.kanal[Kanalexistiert].inverty := InvertYCheckbox.Checked;
+  end;
+  RedrawAll;
+end;
+
+procedure Tbewegungsszeneneditorform.Edit1Change(Sender: TObject);
+begin
+  mainform.AktuelleBewegungsszene.Name := Edit1.Text;
+end;
+
+procedure Tbewegungsszeneneditorform.ResetBtnClick(Sender: TObject);
+begin
+  PositionX.Position := 800;
+  PositionY.Position := 800;
+  LinkScaleXYTrackbar.Checked := False;
+  ScaleXTrackbar.Position := 10000;
+  ScaleYTrackbar.Position := 10000;
+  InvertXCheckbox.Checked := False;
+  InvertYCheckbox.Checked := False;
+  MixXY.Checked := False;
+  OffsetTrackbar.Position := 0;
+  RedrawAll;
+end;
+
+procedure Tbewegungsszeneneditorform.CheckBox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  mainform.AktuelleBewegungsszene.identischespurgeschwidigkeit := CheckBox1.Checked;
+end;
+
+procedure Tbewegungsszeneneditorform.Button2Click(Sender: TObject);
+var
+  i, t: integer;
+begin
+  mainform.AktuelleBewegungsszene.Name := Edit1.Text;
+  mainform.AktuelleBewegungsszene.Beschreibung := Edit3.Text;
+  mainform.AktuelleBewegungsszene.Repeats := StrToInt(Edit2.Text);
+  if Combobox1.ItemIndex > -1 then
+    mainform.AktuelleBewegungsszene.figur := mainform.Figuren[Combobox1.ItemIndex].ID;
+  mainform.AktuelleBewegungsszene.identischespurgeschwidigkeit := Checkbox1.Checked;
+
+  t := StrToInt(Time_ms.Text);
+  t := t + 1000 * StrToInt(Time_s.Text);
+  t := t + 60 * 1000 * StrToInt(Time_m.Text);
+  t := t + 60 * 60 * 1000 * StrToInt(Time_h.Text);
+
+  if t > 0 then
+    mainform.AktuelleBewegungsszene.dauer := t
+  else
+    mainform.AktuelleBewegungsszene.dauer := 1000;
+
+  AktuelleBewegungsszeneRepeats := 0;
+
+  for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+  begin
+    AktuelleBewegungsszeneZeit[i] := 0;
+    if not mainform.AktuelleBewegungsszene.startpositionrelativ then
+      AktuelleBewegungsszenePosition[i] := mainform.AktuelleBewegungsszene.kanal[i].offset;
+  end;
+
+  for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+  begin
+    // Dimmzeit zwischen aktuellem Punkt und nächstem Punkt berechnen
+    if AktuelleBewegungsszenePosition[i] + 1 > length(mainform.figuren[Combobox1.ItemIndex].posx) - 1 then
+      Zeit[i] := round(ZeitzwischenzweiPunktenActual(GetXActual(i, AktuelleBewegungsszeneposition[i]), GetYActual(i, AktuelleBewegungsszeneposition[i]), GetXActual(i, 0), GetYActual(i, 0), length(mainform.Figuren[Combobox1.ItemIndex].posx)))
+    else
+      Zeit[i] := round(ZeitzwischenzweiPunktenActual(GetXActual(i, AktuelleBewegungsszeneposition[i]), GetYActual(i, AktuelleBewegungsszeneposition[i]), GetXActual(i, AktuelleBewegungsszeneposition[i] + 1), GetYActual(i, AktuelleBewegungsszeneposition[i] + 1), length(mainform.Figuren[Combobox1.ItemIndex].posx)));
+
+    // Kanalwerte ausgeben
+    if (mainform.AktuelleBewegungsszene.kanal[i].y) and (not mainform.AktuelleBewegungsszene.kanal[i].x) then
+    begin
+      mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - (GetYActual(i, AktuelleBewegungsszenePosition[i]) * 255 div 400), 255 - (GetYActual(i, AktuelleBewegungsszenePosition[i]) * 255 div 400), 0, mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel]);
+    end else if (mainform.AktuelleBewegungsszene.kanal[i].x) and (not mainform.AktuelleBewegungsszene.kanal[i].y) then
+    begin
+      mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - (GetXActual(i, AktuelleBewegungsszenePosition[i]) * 255 div 400), 255 - (GetXActual(i, AktuelleBewegungsszenePosition[i]) * 255 div 400), 0, mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel]);
+    end else if (mainform.AktuelleBewegungsszene.kanal[i].x) and (mainform.AktuelleBewegungsszene.kanal[i].y) then
+    begin
+      if not mainform.AktuelleBewegungsszene.kanal[i].mixXY then
+      begin
+        mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - (GetXActual(i, AktuelleBewegungsszenePosition[i]) * 255 div 400), 255 - (GetXActual(i, AktuelleBewegungsszenePosition[i]) * 255 div 400), 0, mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel]);
+        mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel + 1, 255 - (GetYActual(i, AktuelleBewegungsszenePosition[i]) * 255 div 400), 255 - (GetYActual(i, AktuelleBewegungsszenePosition[i]) * 255 div 400), 0, mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel + 1]);
+      end else
+      begin
+        mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel + 1, 255 - (GetXActual(i, AktuelleBewegungsszenePosition[i]) * 255 div 400), 255 - (GetXActual(i, AktuelleBewegungsszenePosition[i]) * 255 div 400), 0, mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel + 1]);
+        mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - (GetYActual(i, AktuelleBewegungsszenePosition[i]) * 255 div 400), 255 - (GetYActual(i, AktuelleBewegungsszenePosition[i]) * 255 div 400), 0, mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel]);
+      end;
+    end;
+
+    AktuelleBewegungsszeneZeit[i] := mainform.AktuelleBewegungsszene.dauer;
+  end;
+  RedrawAll;
+  AktuelleBewegungsszeneAktiv := True;
+end;
+
+procedure Tbewegungsszeneneditorform.Button1Click(Sender: TObject);
+begin
+  Button4Click(nil);
+  SaveBewegungsDaten;
+end;
+
+procedure Tbewegungsszeneneditorform.Time_hChange(Sender: TObject);
+var
+  i, t: integer;
+  s: string;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  mainform.input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+
+  t := StrToInt(Time_ms.Text);
+  t := t + 1000 * StrToInt(Time_s.Text);
+  t := t + 60 * 1000 * StrToInt(Time_m.Text);
+  t := t + 60 * 60 * 1000 * StrToInt(Time_h.Text);
+  if t >= 100 then
+    mainform.AktuelleBewegungsszene.dauer := t
+  else
+    mainform.AktuelleBewegungsszene.dauer := 100;
+end;
+
+function Tbewegungsszeneneditorform.FigurLength(Figur: TGUID): extended;
+var
+  i, k: integer;
+  figurenlaenge: extended;
+begin
+  figurenlaenge := 0;
+
+  with mainform do
+    // aktuelle Figur herausfinden
+    for i := 0 to length(Figuren) - 1 do
+    begin
+      if GUIDToString(Figur) = GUIDToString(Figuren[i].ID) then
+      begin
+        // länge der aktuelle Figur herausfinden
+        for k := 0 to length(Figuren[i].posx) - 2 do
+        begin
+          figurenlaenge := figurenlaenge + Laenge(Figuren[i].posx[k], Figuren[i].posy[k], Figuren[i].posx[k + 1], Figuren[i].posy[k + 1]);
+        end;
+      end;
+    end;
+  Result := figurenlaenge;
+end;
+
+function Tbewegungsszeneneditorform.Laenge(x1, y1, x2, y2: integer): extended;
+begin
+  Result := sqrt(power((x1 - x2), 2) + power((y1 - y2), 2));
+end;
+
+procedure Tbewegungsszeneneditorform.BewegungsszeneTimerTimer(Sender: TObject);
+var
+  i, j: integer;
+begin
+  if AktuelleBewegungsszeneAktiv then
+    for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+    begin
+      if (mainform.AktuelleBewegungsszene.kanal[i].x or mainform.AktuelleBewegungsszene.kanal[i].y) then
+      begin
+        // Wartezeiten für jeden Kanal einzeln inkrementieren
+        AktuelleBewegungsszeneZeit[i] := AktuelleBewegungsszeneZeit[i] + 1;
+
+        // Falls aktuelle Zeit abgewartet, dann wechseln zu nächstem Punkt
+        if (AktuelleBewegungsszeneZeit[i] >= Zeit[i]) then
+        begin
+          AktuelleBewegungsszeneZeit[i] := 0;
+
+          // Dimmzeit zwischen aktuellem Punkt und nächstem Punkt berechnen
+          if AktuelleBewegungsszenePosition[i] + 1 > length(mainform.figuren[Combobox1.ItemIndex].posx) - 1 then
+            Zeit[i] := round(ZeitzwischenzweiPunktenActual(GetXActual(i, AktuelleBewegungsszeneposition[i]), GetYActual(i, AktuelleBewegungsszeneposition[i]), GetXActual(i, 0), GetYActual(i, 0), length(mainform.Figuren[Combobox1.ItemIndex].posx)))
+          else
+            Zeit[i] := round(ZeitzwischenzweiPunktenActual(GetXActual(i, AktuelleBewegungsszeneposition[i]), GetYActual(i, AktuelleBewegungsszeneposition[i]), GetXActual(i, AktuelleBewegungsszeneposition[i] + 1), GetYActual(i, AktuelleBewegungsszeneposition[i] + 1), length(mainform.Figuren[Combobox1.ItemIndex].posx)));
+
+          // Kanalwerte ausgeben
+          if (mainform.AktuelleBewegungsszene.kanal[i].y) and (not mainform.AktuelleBewegungsszene.kanal[i].x) then
+          begin
+            // Falls nur Y
+            if AktuelleBewegungsszeneposition[i] + 1 > length(mainform.figuren[Combobox1.ItemIndex].posx) - 1 then
+              mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - (GetYActual(i, AktuelleBewegungsszeneposition[i]) * 255 div 400), 255 - (GetYActual(i, 0) * 255 div 400), Zeit[i], mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel])
+            else
+              mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - (GetYActual(i, AktuelleBewegungsszeneposition[i]) * 255 div 400), 255 - (GetYActual(i, AktuelleBewegungsszeneposition[i] + 1) * 255 div 400), Zeit[i], mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel]);
+          end else if (mainform.AktuelleBewegungsszene.kanal[i].x) and (not mainform.AktuelleBewegungsszene.kanal[i].y) then
+          begin
+            // Falls nur X
+            if AktuelleBewegungsszenePosition[i] + 1 > length(mainform.figuren[Combobox1.ItemIndex].posx) - 1 then
+              mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - (GetXActual(i, AktuelleBewegungsszeneposition[i]) * 255 div 400), 255 - (GetXActual(i, 0) * 255 div 400), Zeit[i], mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel])
+            else
+              mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - (GetXActual(i, AktuelleBewegungsszeneposition[i]) * 255 div 400), 255 - (GetXActual(i, AktuelleBewegungsszeneposition[i] + 1) * 255 div 400), Zeit[i], mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel]);
+          end else if (mainform.AktuelleBewegungsszene.kanal[i].x) and (mainform.AktuelleBewegungsszene.kanal[i].y) then
+          begin
+            // Falls X und Y (Unterscheidung, ob Umgedreht oder nicht)
+            if not mainform.AktuelleBewegungsszene.kanal[i].mixXY then
+            begin
+              if AktuelleBewegungsszenePosition[i] + 1 > length(mainform.figuren[Combobox1.ItemIndex].posx) - 1 then
+                mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - (GetXActual(i, AktuelleBewegungsszeneposition[i]) * 255 div 400), 255 - (GetXActual(i, 0) * 255 div 400), Zeit[i], mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel])
+              else
+                mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - (GetXActual(i, AktuelleBewegungsszeneposition[i]) * 255 div 400), 255 - (GetXActual(i, AktuelleBewegungsszeneposition[i] + 1) * 255 div 400), Zeit[i], mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel]);
+
+              if AktuelleBewegungsszeneposition[i] + 1 > length(mainform.figuren[Combobox1.ItemIndex].posx) - 1 then
+                mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel + 1, 255 - (GetYActual(i, AktuelleBewegungsszeneposition[i]) * 255 div 400), 255 - (GetYActual(i, 0) * 255 div 400), Zeit[i], mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel + 1])
+              else
+                mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel + 1, 255 - (GetYActual(i, AktuelleBewegungsszeneposition[i]) * 255 div 400), 255 - (GetYActual(i, AktuelleBewegungsszeneposition[i] + 1) * 255 div 400), Zeit[i], mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel + 1]);
+            end else
+            begin
+              if AktuelleBewegungsszenePosition[i] + 1 > length(mainform.figuren[Combobox1.ItemIndex].posx) - 1 then
+                mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel + 1, 255 - (GetXActual(i, AktuelleBewegungsszeneposition[i]) * 255 div 400), 255 - (GetXActual(i, 0) * 255 div 400), Zeit[i], mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel + 1])
+              else
+                mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel + 1, 255 - (GetXActual(i, AktuelleBewegungsszeneposition[i]) * 255 div 400), 255 - (GetXActual(i, AktuelleBewegungsszeneposition[i] + 1) * 255 div 400), Zeit[i], mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel + 1]);
+
+              if AktuelleBewegungsszeneposition[i] + 1 > length(mainform.figuren[Combobox1.ItemIndex].posx) - 1 then
+                mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - (GetYActual(i, AktuelleBewegungsszeneposition[i]) * 255 div 400), 255 - (GetYActual(i, 0) * 255 div 400), Zeit[i], mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel])
+              else
+                mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - (GetYActual(i, AktuelleBewegungsszeneposition[i]) * 255 div 400), 255 - (GetYActual(i, AktuelleBewegungsszeneposition[i] + 1) * 255 div 400), Zeit[i], mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel]);
+            end;
+          end;
+
+          //        if (printText.Checked or printPoints.Checked) and (mainform.AktuelleBewegungsszene.kanal[i].channel=Stringgrid1.Row) then
+          //          RedrawAll;
+
+          // Szene an aktuelle Position abspielen
+          for j := 0 to length(mainform.AktuelleBewegungsszene.Szenen[i]) - 1 do
+            if mainform.AktuelleBewegungsszene.Szenen[i][j].Position = AktuelleBewegungsszenePosition[i] then
+              mainform.StartScene(mainform.AktuelleBewegungsszene.Szenen[i][j].ID);
+
+          // nächste Position
+          AktuelleBewegungsszeneposition[i] := AktuelleBewegungsszeneposition[i] + 1;
+
+          if AktuelleBewegungsszeneposition[i] > length(mainform.figuren[Combobox1.ItemIndex].posx) - 1 then
+          begin
+            AktuelleBewegungsszeneposition[i] := 0;
+
+            if mainform.AktuelleBewegungsszene.repeats > -1 then
+            begin
+              AktuelleBewegungsszeneRepeats := AktuelleBewegungsszeneRepeats + 1;
+              if AktuelleBewegungsszeneRepeats >= mainform.AktuelleBewegungsszene.repeats then
+                AktuelleBewegungsszeneAktiv := False;
+            end;
+          end;
+          RedrawAll;
+        end;
+      end;
+    end;
+end;
+
+procedure Tbewegungsszeneneditorform.Button4Click(Sender: TObject);
+var
+  i: integer;
+begin
+  AktuelleBewegungsszeneAktiv := False;
+  for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+  begin
+    // Kanalwerte ausgeben
+    if (mainform.AktuelleBewegungsszene.kanal[i].y) and (not mainform.AktuelleBewegungsszene.kanal[i].x) then
+    begin
+      mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - mainform.channel_value[mainform.AktuelleBewegungsszene.kanal[i].channel], 255 - mainform.channel_value[mainform.AktuelleBewegungsszene.kanal[i].channel], 0, mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel]);
+    end else if (mainform.AktuelleBewegungsszene.kanal[i].x) and (not mainform.AktuelleBewegungsszene.kanal[i].y) then
+    begin
+      mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - mainform.channel_value[mainform.AktuelleBewegungsszene.kanal[i].channel], 255 - mainform.channel_value[mainform.AktuelleBewegungsszene.kanal[i].channel], 0, mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel]);
+    end else if (mainform.AktuelleBewegungsszene.kanal[i].x) and (mainform.AktuelleBewegungsszene.kanal[i].y) then
+      if not mainform.AktuelleBewegungsszene.kanal[i].mixXY then
+      begin
+        if not mainform.AktuelleBewegungsszene.kanal[i].mixXY then
+        begin
+          mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - mainform.channel_value[mainform.AktuelleBewegungsszene.kanal[i].channel], 255 - mainform.channel_value[mainform.AktuelleBewegungsszene.kanal[i].channel], 0, mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel]);
+          mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel + 1, 255 - mainform.channel_value[mainform.AktuelleBewegungsszene.kanal[i].channel + 1], 255 - mainform.channel_value[mainform.AktuelleBewegungsszene.kanal[i].channel + 1], 0, mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel + 1]);
+        end else
+        begin
+          mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel + 1, 255 - mainform.channel_value[mainform.AktuelleBewegungsszene.kanal[i].channel + 1], 255 - mainform.channel_value[mainform.AktuelleBewegungsszene.kanal[i].channel + 1], 0, mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel + 1]);
+          mainform.Senddata(mainform.AktuelleBewegungsszene.kanal[i].channel, 255 - mainform.channel_value[mainform.AktuelleBewegungsszene.kanal[i].channel], 255 - mainform.channel_value[mainform.AktuelleBewegungsszene.kanal[i].channel], 0, mainform.Data.names[mainform.AktuelleBewegungsszene.kanal[i].channel]);
+        end;
+      end;
+  end;
+end;
+
+function Tbewegungsszeneneditorform.ZeitzwischenzweiPunktenActual(x1, y1, x2, y2, maxPunkte: integer): extended;
+var
+  i, Gesamtzeit: integer;
+  Gesamtlaenge:  single;
+  Teillaenge, Teilzeit: extended;
+begin
+  Gesamtlaenge := 1;
+  Teilzeit := 1000;
+
+  Gesamtzeit := mainform.AktuelleBewegungsszene.dauer;
+
+  if mainform.AktuelleBewegungsszene.identischespurgeschwidigkeit then
+  begin
+    for i := 0 to length(mainform.Figuren) - 1 do
+      if GUIDtoString(mainform.Figuren[i].ID) = GUIDtoString(mainform.AktuelleBewegungsszene.figur) then
+        Gesamtlaenge := mainform.Figuren[i].Gesamtlaenge;
+    Teillaenge := Laenge(x1, y1, x2, y2);
+    if Gesamtlaenge > 0 then
+      Teilzeit := (Gesamtzeit / Gesamtlaenge) * Teillaenge;
+  end else
+  begin
+    if maxPunkte > 0 then
+      Teilzeit := Gesamtzeit / maxPunkte;
+  end;
+  Result := Teilzeit;
+end;
+
+function Tbewegungsszeneneditorform.ZeitzwischenzweiPunkten(x1, y1, x2, y2, maxPunkte: integer; Bewegungsszene: TGUID): extended;
+var
+  i, k, Gesamtzeit: integer;
+  Gesamtlaenge: single;
+  Teillaenge, Teilzeit: extended;
+begin
+  Gesamtlaenge := 1;
+  Teilzeit := 1000;
+  Result := -1;
+
+  for k := 0 to length(mainform.Bewegungsszenen) - 1 do
+  begin
+    if GUIDtoString(mainform.bewegungsszenen[k].ID) = GUIDtoString(Bewegungsszene) then
+    begin
+      Gesamtzeit := mainform.bewegungsszenen[k].dauer;
+
+      if mainform.bewegungsszenen[k].identischespurgeschwidigkeit then
+      begin
+        for i := 0 to length(mainform.Figuren) - 1 do
+          if GUIDtoString(mainform.Figuren[i].ID) = GUIDtoString(mainform.bewegungsszenen[k].figur) then
+            Gesamtlaenge := mainform.Figuren[i].Gesamtlaenge;
+        Teillaenge := Laenge(x1, y1, x2, y2);
+        if Gesamtlaenge > 0 then
+          Teilzeit := (Gesamtzeit / Gesamtlaenge) * Teillaenge;
+      end else
+      begin
+        if maxPunkte > 0 then
+          Teilzeit := Gesamtzeit / maxPunkte;
+      end;
+      Result := Teilzeit;
+    end;
+  end;
+end;
+
+function tbewegungsszeneneditorform.GetX(Kanal, Position: integer; Bewegungsszene: TGUID): integer;
+var
+  i, j, k: integer;
+begin
+  Result := 0;
+  for k := 0 to length(mainform.Bewegungsszenen) - 1 do
+  begin
+    if GUIDtoString(mainform.bewegungsszenen[k].ID) = GUIDtoString(Bewegungsszene) then
+    begin // Bewegungsszene gefunden
+      for i := 0 to length(mainform.Figuren) - 1 do
+      begin
+        if GUIDToString(mainform.Bewegungsszenen[k].figur) = GUIDToString(mainform.figuren[i].ID) then
+        begin // Figur gefunden
+          with mainform.Figuren[i] do
+          begin
+            //            for j:=0 to length(mainform.AktuelleBewegungsszene.kanal)-1 do
+            //            if mainform.AktuelleBewegungsszene.kanal[j].channel=kanal then
+            j := kanal;
+            begin
+              if mainform.Bewegungsszenen[k].kanal[j].invertx then
+                Result := round(200 * ((10000 - mainform.Bewegungsszenen[k].kanal[j].scalex) / 10000)) + round((400 - posx[Position] + mainform.Bewegungsszenen[k].kanal[j].mittelpunktx - 800) * mainform.Bewegungsszenen[k].kanal[j].scalex / 10000)
+              else
+                Result := round(200 * ((10000 - mainform.Bewegungsszenen[k].kanal[j].scalex) / 10000)) + round((posx[position] + mainform.Bewegungsszenen[k].kanal[j].mittelpunktx - 800) * mainform.Bewegungsszenen[k].kanal[j].scalex / 10000);
+            end;
+          end;
+        end;
+      end;
+    end;
+  end;
+end;
+
+function tbewegungsszeneneditorform.GetY(Kanal, Position: integer; Bewegungsszene: TGUID): integer;
+var
+  i, j, k: integer;
+begin
+  Result := 0;
+  for k := 0 to length(mainform.Bewegungsszenen) - 1 do
+  begin
+    if GUIDtoString(mainform.bewegungsszenen[k].ID) = GUIDtoString(Bewegungsszene) then
+    begin
+      for i := 0 to length(mainform.Figuren) - 1 do
+        if GUIDToString(mainform.Bewegungsszenen[k].figur) = GUIDToString(mainform.figuren[i].ID) then
+        begin
+          with mainform.Figuren[i] do
+          begin
+            //            for j:=0 to length(mainform.AktuelleBewegungsszene.kanal)-1 do
+            //            if mainform.AktuelleBewegungsszene.kanal[j].channel=kanal then
+            j := kanal;
+            begin
+              if mainform.Bewegungsszenen[k].kanal[j].inverty then
+                Result := round(200 * ((10000 - mainform.Bewegungsszenen[k].kanal[j].scaley) / 10000)) + round((400 - posy[Position] + mainform.Bewegungsszenen[k].kanal[j].mittelpunkty - 800) * mainform.Bewegungsszenen[k].kanal[j].scaley / 10000)
+              else
+                Result := round(200 * ((10000 - mainform.Bewegungsszenen[k].kanal[j].scaley) / 10000)) + round((posy[position] + mainform.Bewegungsszenen[k].kanal[j].mittelpunkty - 800) * mainform.Bewegungsszenen[k].kanal[j].scaley / 10000);
+            end;
+          end;
+        end;
+    end;
+  end;
+end;
+
+function tbewegungsszeneneditorform.GetXActual(Kanal, Position: integer): integer;
+var
+  i, j: integer;
+begin
+  Result := 0;
+  //  for j:=0 to length(mainform.AktuelleBewegungsszene.kanal)-1 do
+  //    if mainform.AktuelleBewegungsszene.kanal[j].channel=kanal then
+  j := kanal;
+  begin
+    for i := 0 to length(mainform.Figuren) - 1 do
+      if GUIDToString(mainform.AktuelleBewegungsszene.figur) = GUIDToString(mainform.figuren[i].ID) then
+      begin
+        with mainform.Figuren[i] do
+        begin
+          if mainform.AktuelleBewegungsszene.kanal[j].invertx then
+            Result := round(200 * ((10000 - mainform.AktuelleBewegungsszene.kanal[j].scalex) / 10000)) + round((400 - posx[Position] + mainform.AktuelleBewegungsszene.kanal[j].mittelpunktx - 800) * mainform.AktuelleBewegungsszene.kanal[j].scalex / 10000)
+          else
+            Result := round(200 * ((10000 - mainform.AktuelleBewegungsszene.kanal[j].scalex) / 10000)) + round((posx[position] + mainform.AktuelleBewegungsszene.kanal[j].mittelpunktx - 800) * mainform.AktuelleBewegungsszene.kanal[j].scalex / 10000);
+        end;
+      end;
+  end;
+end;
+
+function tbewegungsszeneneditorform.GetYActual(Kanal, Position: integer): integer;
+var
+  i, j: integer;
+begin
+  Result := 0;
+  //  for j:=0 to length(mainform.AktuelleBewegungsszene.kanal)-1 do
+  //    if mainform.AktuelleBewegungsszene.kanal[j].channel=kanal then
+  j := kanal;
+  begin
+    for i := 0 to length(mainform.Figuren) - 1 do
+      if GUIDToString(mainform.AktuelleBewegungsszene.figur) = GUIDToString(mainform.figuren[i].ID) then
+      begin
+        with mainform.Figuren[i] do
+        begin
+          if mainform.AktuelleBewegungsszene.kanal[j].inverty then
+            Result := round(200 * ((10000 - mainform.AktuelleBewegungsszene.kanal[j].scaley) / 10000)) + round((400 - posy[Position] + mainform.AktuelleBewegungsszene.kanal[j].mittelpunkty - 800) * mainform.AktuelleBewegungsszene.kanal[j].scaley / 10000)
+          else
+            Result := round(200 * ((10000 - mainform.AktuelleBewegungsszene.kanal[j].scaley) / 10000)) + round((posy[position] + mainform.AktuelleBewegungsszene.kanal[j].mittelpunkty - 800) * mainform.AktuelleBewegungsszene.kanal[j].scaley / 10000);
+        end;
+      end;
+  end;
+end;
+
+procedure Tbewegungsszeneneditorform.printPointsMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  RedrawAll;
+end;
+
+procedure Tbewegungsszeneneditorform.printTextMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  RedrawAll;
+end;
+
+procedure Tbewegungsszeneneditorform.mixXYMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  if Stringgrid1.Row > 0 then
+  begin
+    KanalExistiert := -1;
+    for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+    begin
+      if mainform.AktuelleBewegungsszene.kanal[i].channel = Stringgrid1.Row then
+        KanalExistiert := i;
+    end;
+    if KanalExistiert > -1 then
+      mainform.AktuelleBewegungsszene.kanal[Kanalexistiert].mixXY := mixXY.Checked;
+  end;
+end;
+
+procedure Tbewegungsszeneneditorform.Edit2Change(Sender: TObject);
+var
+  s: string;
+  i: integer;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  mainform.input_number_minus(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+end;
+
+procedure Tbewegungsszeneneditorform.Edit2Exit(Sender: TObject);
+begin
+  mainform.AktuelleBewegungsszene.repeats := StrToInt(Edit2.Text);
+end;
+
+procedure Tbewegungsszeneneditorform.OffsetTrackbarChange(Sender: TObject);
+var
+  i: integer;
+begin
+  if Stringgrid1.Row > 0 then
+  begin
+    KanalExistiert := -1;
+    for i := 0 to length(mainform.AktuelleBewegungsszene.kanal) - 1 do
+    begin
+      if mainform.AktuelleBewegungsszene.kanal[i].channel = Stringgrid1.Row then
+        KanalExistiert := i;
+    end;
+    if KanalExistiert > -1 then
+      mainform.AktuelleBewegungsszene.kanal[Kanalexistiert].Offset := OffsetTrackbar.Position;
+    if not (Sender = Edit4) then
+      Edit4.Text := IntToStr(offsettrackbar.Position);
+  end;
+end;
+
+procedure Tbewegungsszeneneditorform.StartpositionRelativMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  mainform.AktuelleBewegungsszene.startpositionrelativ := StartpositionRelativ.Checked;
+end;
+
+procedure Tbewegungsszeneneditorform.SaveBewegungsDaten;
+var
+  t: integer;
+begin
+  mainform.AktuelleBewegungsszene.Name := Edit1.Text;
+  mainform.AktuelleBewegungsszene.Beschreibung := Edit3.Text;
+  mainform.AktuelleBewegungsszene.Repeats := StrToInt(Edit2.Text);
+  if Combobox1.ItemIndex > -1 then
+    mainform.AktuelleBewegungsszene.figur := mainform.Figuren[Combobox1.ItemIndex].ID;
+  mainform.AktuelleBewegungsszene.identischespurgeschwidigkeit := Checkbox1.Checked;
+
+  t := StrToInt(Time_ms.Text);
+  t := t + 1000 * StrToInt(Time_s.Text);
+  t := t + 60 * 1000 * StrToInt(Time_m.Text);
+  t := t + 60 * 60 * 1000 * StrToInt(Time_h.Text);
+  if t > 0 then
+    mainform.AktuelleBewegungsszene.dauer := t
+  else
+    mainform.AktuelleBewegungsszene.dauer := 1000;
+end;
+
+procedure Tbewegungsszeneneditorform.Edit3Change(Sender: TObject);
+begin
+  mainform.AktuelleBewegungsszene.Beschreibung := Edit3.Text;
+end;
+
+procedure Tbewegungsszeneneditorform.Edit4Change(Sender: TObject);
+var
+  s: string;
+  i: integer;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  mainform.input_number_minus(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+
+  if StrToInt(Edit4.Text) <= OffsetTrackbar.Max then
+    OffsetTrackbar.Position := StrToInt(Edit4.Text);
+end;
+
+procedure Tbewegungsszeneneditorform.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = vk_escape then
+    modalresult := mrCancel;
+end;
+
+procedure Tbewegungsszeneneditorform.RepaintTimer(Sender: TObject);
+begin
+  Repaint.Enabled := False;
+  RedrawAll;
+end;
+
+procedure Tbewegungsszeneneditorform.AddSceneClick(Sender: TObject);
+begin
+  setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) + 1);
+  szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1] := Tszenenverwaltungform.Create(self);
+  //  szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].Position:=mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row-1][#POSITION#];
+  if (szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].showmodal = mrOk) then
+  begin
+    setlength(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1], length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) + 1);
+    case szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].TreeView1.Selected.Parent.Index of
+      0:
+      begin
+        // Einfache Szene
+        mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1].ID := mainform.EinfacheSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+        mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1].Name := mainform.EinfacheSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+      end;
+      1:
+      begin
+        // Geräteszene
+        mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1].ID := mainform.Devicescenes[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+        mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1].Name := mainform.Devicescenes[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+      end;
+      2:
+      begin
+        // Audioszene
+        mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1].ID := mainform.AudioSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+        mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1].Name := mainform.AudioSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+      end;
+      3:
+      begin
+        // Bewegungsszene
+        mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1].ID := mainform.BewegungsSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+        mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1].Name := mainform.BewegungsSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+      end;
+      4:
+      begin
+        // Befehl
+        mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1].ID := mainform.Befehle[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+        mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1].Name := mainform.Befehle[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+      end;
+      5:
+      begin
+        // Kompositionsszene
+        mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1].ID := mainform.Kompositionsszenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+        mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1].Name := mainform.KompositionsSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+      end;
+    end;
+  end;
+  szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Free;
+  setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) - 1);
+
+  RefreshSceneList;
+end;
+
+procedure Tbewegungsszeneneditorform.RefreshSceneList;
+var
+  i: integer;
+begin
+  SceneList.Cells[0, 0] := 'Pos';
+  SceneList.Cells[1, 0] := 'Szene';
+
+  if (StringGrid1.Row - 1) < length(mainform.AktuelleBewegungsszene.Szenen) then
+  begin
+    SceneList.RowCount := length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) + 1;
+    if SceneList.RowCount < 2 then
+      SceneList.RowCount := 2;
+    SceneList.FixedRows := 1;
+
+    for i := 0 to length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1 do
+    begin
+      SceneList.Cells[0, i + 1] := IntToStr(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][i].Position);
+      SceneList.Cells[1, i + 1] := mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][i].Name;
+    end;
+  end else
+  begin
+    SceneList.RowCount  := 2;
+    SceneList.FixedRows := 1;
+    SceneList.Cells[0, 1] := '';
+    SceneList.Cells[1, 1] := '';
+  end;
+end;
+
+procedure Tbewegungsszeneneditorform.EditSceneClick(Sender: TObject);
+var
+  i: integer;
+begin
+  if length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) > 0 then
+  begin
+    setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) + 1);
+    szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1] := Tszenenverwaltungform.Create(self);
+    szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Position := mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].ID;
+    if (szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].showmodal = mrOk) then
+    begin
+      case szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].TreeView1.Selected.Parent.Index of
+        0:
+        begin
+          // Einfache Szene
+          mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].ID := mainform.EinfacheSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+          mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].Name := mainform.EinfacheSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+        end;
+        1:
+        begin
+          // Geräteszene
+          mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].ID := mainform.Devicescenes[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+          mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].Name := mainform.Devicescenes[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+        end;
+        2:
+        begin
+          // Audioszene
+          mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].ID := mainform.AudioSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+          mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].Name := mainform.AudioSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+        end;
+        3:
+        begin
+          // Bewegungsszene
+          mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].ID := mainform.BewegungsSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+          mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].Name := mainform.BewegungsSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+        end;
+        4:
+        begin
+          // Befehl
+          mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].ID := mainform.Befehle[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+          mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].Name := mainform.Befehle[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+        end;
+        5:
+        begin
+          // Kompositionsszene
+          mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].ID := mainform.Kompositionsszenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+          mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].Name := mainform.KompositionsSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+        end;
+      end;
+    end;
+    szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Free;
+    setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) - 1);
+  end;
+  RefreshSceneList;
+end;
+
+procedure Tbewegungsszeneneditorform.DeleteSceneClick(Sender: TObject);
+var
+  i: integer;
+begin
+  if length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) > 0 then
+  begin
+    // Alle Elemente um eins nach vorne kopieren
+    for i := SceneList.Row - 1 to length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 2 do
+      mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][i] := mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][i + 1];
+    // Letztes Element löschen
+    setlength(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1], length(mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1]) - 1);
+    // Liste aktualisieren
+  end;
+  RefreshSceneList;
+end;
+
+procedure Tbewegungsszeneneditorform.SceneListGetEditMask(Sender: TObject; ACol, ARow: integer; var Value: string);
+var
+  Text: string;
+begin
+  if ACol = 1 then
+    Text := SceneList.Cells[ACol, ARow];
+
+  if (ACol = 1) then
+    SceneList.EditorMode := False
+  else
+    SceneList.EditorMode := True;
+
+  if ACol = 1 then
+    SceneList.Cells[ACol, ARow] := Text;
+end;
+
+procedure Tbewegungsszeneneditorform.SceneListKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if SceneList.Col = 0 then
+  begin
+    try
+      mainform.AktuelleBewegungsszene.Szenen[StringGrid1.Row - 1][SceneList.Row - 1].Position := StrToInt(SceneList.Cells[SceneList.Col, SceneList.row]);
+    except
+    end;
+  end;
+end;
+
+end.

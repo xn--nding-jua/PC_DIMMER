@@ -1,0 +1,1426 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\mac500.png">
+ <information id="PC_DIMMER">
+ <name>Mac500E (Mode 1)-GoboScroll</name>
+ <vendor>Martin</vendor>
+ <author>Christian Nöding/GD</author>
+ <description>Headmover with different functions</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Shutter/strobe/reset/lamp on/off" fade="yes" type="shutter"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Intensity" fade="yes" type="dimmer"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Color1" fade="yes" type="color1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Color2" fade="yes" type="color2"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Rotating Gobo" fade="yes" type="gobo1rot"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Rotating Gobo2" fade="yes" type="gobo2rot"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Fixed Gobo" fade="yes" type="gobo1"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Focus" fade="yes" type="focus"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Iris" fade="yes" type="iris"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="Prism" fade="yes" type="prisma"/>
+  <function channel="10" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="11" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="127" ch8="0" ch9="-1" ch10="128" ch11="128" />
+ <colors>
+  <color name="White-->Blue111" value="0" valueend="15" r="255" g="255" b="255" />
+  <color name="Blue111-->Red301" value="16" valueend="31" r="64" g="64" b="255" />
+  <color name="Red301-->Magenta507" value="32" valueend="47" r="226" g="5" b="83" />
+  <color name="Magenta507-->Green202" value="48" valueend="63" r="255" g="0" b="255" />
+  <color name="Green202-->Yellow604" value="64" valueend="79" r="45" g="139" b="147" />
+  <color name="Yellow604-->Purple502" value="80" valueend="95" r="235" g="165" b="20" />
+  <color name="Purple502-->Blue101" value="96" valueend="111" r="159" g="0" b="159" />
+  <color name="Blue 101-->Pink312" value="112" valueend="127" r="0" g="128" b="255" />
+  <color name="Pink312-->Cyan401" value="128" valueend="143" r="255" g="100" b="255" />
+  <color name="Cyan401" value="145" valueend="148" r="0" g="255" b="255" />
+  <color name="Pink312" value="149" valueend="152" r="255" g="101" b="255" />
+  <color name="Blue101" value="153" valueend="156" r="1" g="128" b="255" />
+  <color name="Purple502" value="157" valueend="160" r="159" g="0" b="160" />
+  <color name="Yellow604" value="161" valueend="164" r="235" g="165" b="21" />
+  <color name="Green202" value="165" valueend="168" r="79" g="139" b="148" />
+  <color name="Magenta507" value="169" valueend="172" r="255" g="1" b="180" />
+  <color name="Red301" value="173" valueend="176" r="226" g="5" b="84" />
+  <color name="Blue111" value="177" valueend="180" r="31" g="64" b="254" />
+  <color name="White" value="181" valueend="184" r="255" g="255" b="254" />
+  <color name="CW Cont Rot fast-slow" value="185" valueend="215" r="0" g="0" b="1" />
+  <color name="CCW Cont Rot slow-fast" value="216" valueend="245" r="0" g="0" b="2" />
+ </colors>
+ <colors2>
+  <color2 name="White-->CTC3200" value="0" valueend="15" r="255" g="255" b="255" />
+  <color2 name="CTC3200-4100-->CTC" value="16" valueend="32" r="202" g="222" b="232" />
+  <color2 name="CTC3200-5600-->Blue104" value="32" valueend="47" r="183" g="210" b="223" />
+  <color2 name="Blue104-->Blue108" value="48" valueend="63" r="32" g="188" b="221" />
+  <color2 name="Blue108-->Green206" value="64" valueend="79" r="0" g="0" b="128" />
+  <color2 name="Green206-->Red308" value="80" valueend="95" r="1" g="182" b="96" />
+  <color2 name="Red308-->Yellow603" value="96" valueend="111" r="128" g="0" b="0" />
+  <color2 name="Yellow603-->CTC5600" value="112" valueend="127" r="254" g="188" b="90" />
+  <color2 name="CTC5500-2900-->CTC" value="128" valueend="144" r="236" g="206" b="206" />
+  <color2 name="CTC5500-4200" value="145" valueend="148" r="241" g="220" b="220" />
+  <color2 name="CTC5500-2900" value="0" valueend="0" r="239" g="214" b="214" />
+  <color2 name="Yellow603" value="153" valueend="156" r="254" g="188" b="91" />
+  <color2 name="Red308" value="157" valueend="160" r="129" g="0" b="0" />
+  <color2 name="Green206" value="0" valueend="0" r="1" g="182" b="97" />
+  <color2 name="Blue108" value="165" valueend="168" r="0" g="0" b="129" />
+  <color2 name="Blue104" value="169" valueend="172" r="32" g="188" b="222" />
+  <color2 name="CTC3200-5600" value="0" valueend="0" r="183" g="210" b="224" />
+  <color2 name="CTC3200-4100" value="0" valueend="0" r="202" g="222" b="233" />
+  <color2 name="White" value="181" valueend="184" r="255" g="255" b="254" />
+  <color2 name="CW Cont rot fast-slow" value="185" valueend="215" r="255" g="254" b="255" />
+  <color2 name="CCW Cont rot slow-fast" value="216" valueend="245" r="254" g="255" b="255" />
+  <color2 name="Random color Fast" value="246" valueend="248" r="245" g="245" b="255" />
+  <color2 name="Random color Medium" value="249" valueend="251" r="245" g="255" b="254" />
+  <color2 name="Random color Slow" value="252" valueend="255" r="255" g="245" b="245" />
+ </colors2>
+ <shutter OpenValue="20" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="20" MinValue="50" MaxValue="59" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="126" OffValue="0" RightMinValue="0" RightMaxValue="126" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="570" height="369">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="80" left="10" height="230" width="230" />
+  <colorbox top="100" left="250" height="22" width="150" />
+  <colorbox2 top="160" left="250" height="22" width="150" />
+  <checkbox name="goboshakeon" top="161" left="480" width="80" height="17" caption="Goboshake" action="ChangeGobo" checked="false"/>
+  <dropdown name="shutterbox" top="87" left="410" width="150" height="21" action="ShutterChange">
+   <item caption="Shutter closed" value="0" picture="" />
+   <item caption="Shutter open" value="8" picture="" />
+   <item caption="Strobe" value="20" picture="" />
+   <item caption="Opening puls" value="31" picture="" />
+   <item caption="Closing puls" value="39" picture="" />
+   <item caption="Random Strobe fast" value="50" picture="" />
+   <item caption="Random Strobe medium" value="58" picture="" />
+   <item caption="Random Strobe slow" value="66" picture="" />
+   <item caption="Random opening puls fast" value="75" picture="" />
+   <item caption="Random opening puls slow" value="76" picture="" />
+   <item caption="Random closing puls fast" value="77" picture="" />
+   <item caption="Random closing puls slow" value="78" picture="" />
+  </dropdown>
+  <dropdown name="gobobox" top="137" left="410" width="150" height="21" action="ChangeGobo">
+   <item caption="Open" value="0" picture="" />
+   <item caption="Gobo 1" value="20" picture="" />
+   <item caption="Gobo 2" value="40" picture="" />
+   <item caption="Gobo 3" value="60" picture="" />
+   <item caption="Gobo 4" value="80" picture="" />
+   <item caption="Gobo 5" value="100" picture="" />
+   <item caption="Gobo 6" value="120" picture="" />
+   <item caption="Gobo 7" value="140" picture="" />
+   <item caption="Gobo 8" value="160" picture="" />
+   <item caption="Gobo 9" value="180" picture="" />
+   <item caption="Gobo CW fast-slow" value="208" picture="" />
+   <item caption="Gobo CCw slow-fast" value="232" picture="" />
+  </dropdown>
+  <dropdown name="prismabox" top="230" left="250" width="150" height="21" action="PrismaChange">
+   <item caption="Prism off" value="0" picture="" />
+   <item caption="Rotating prism CCW" value="0" picture="" />
+   <item caption="Prism no rotation" value="0" picture="" />
+   <item caption="Rotating prism CW" value="0" picture="" />
+   <item caption="Prism Macro 1" value="0" picture="" />
+   <item caption="Prism Macro 2" value="0" picture="" />
+   <item caption="Prism Macro 3" value="0" picture="" />
+   <item caption="Prism Macro 4" value="0" picture="" />
+   <item caption="Prism Macro 5" value="0" picture="" />
+   <item caption="Prism Macro 6" value="0" picture="" />
+   <item caption="Prism Macro 7" value="0" picture="" />
+   <item caption="Prism Macro 8" value="0" picture="" />
+  </dropdown>
+  <dropdown name="IrisBox" top="310" left="410" width="150" height="21" action="IrisChange">
+   <item caption="Open -->close" value="0" picture="" />
+   <item caption="Close" value="200" picture="" />
+   <item caption="Pulse opening fast -->slow" value="216" picture="" />
+   <item caption="Pulse closing fast -->slow" value="230" picture="" />
+   <item caption="Random pulse opening fast" value="244" picture="" />
+   <item caption="Random pulse opening slow" value="247" picture="" />
+   <item caption="Random pulse closing fast" value="250" picture="" />
+   <item caption="Random pulse closing slow" value="253" picture="" />
+  </dropdown>
+  <dropdown name="GoboIndexSelect" top="229" left="410" width="150" height="21" action="ChangeGoboRot">
+   <item caption="Open Gobo" value="0" picture="" />
+   <item caption="Gobo1- Index CCW" value="0" picture="" />
+   <item caption="Gobo1- Index CW" value="0" picture="" />
+   <item caption="Gobo2- Index CCW" value="0" picture="" />
+   <item caption="Gobo2- Index CW" value="0" picture="" />
+   <item caption="Gobo3- Index CCW" value="0" picture="" />
+   <item caption="Gobo3- Index CW" value="0" picture="" />
+   <item caption="Gobo4- Index CCW" value="0" picture="" />
+   <item caption="Gobo4- Index CW" value="0" picture="" />
+   <item caption="Gobo5- Index CCW" value="0" picture="" />
+   <item caption="Gobo5- Index CW" value="0" picture="" />
+   <item caption="Gobo5- Rotation CCW" value="0" picture="" />
+   <item caption="Gobo5- Rotation CW" value="0" picture="" />
+   <item caption="Gobo4- Rotation CCW" value="0" picture="" />
+   <item caption="Gobo4- Rotation CW" value="0" picture="" />
+   <item caption="Gobo3- Rotation CCW" value="0" picture="" />
+   <item caption="Gobo3- Rotation CW" value="0" picture="" />
+   <item caption="Gobo2- Rotation CCW" value="0" picture="" />
+   <item caption="Gobo2- Rotation CW" value="0" picture="" />
+   <item caption="Gobo1- Rotation CCW" value="0" picture="" />
+   <item caption="Gobo1- Rotation CW" value="0" picture="" />
+  </dropdown>
+  <slider name="shutterslider" top="50" left="410" width="150" height="20" action="ShutterChange" startvalue="0" endvalue="19" default="0"/>
+  <slider name="dimmerslider" top="50" left="250" width="150" height="20" action="ChangeDimmer" startvalue="0" endvalue="255" default="0"/>
+  <slider name="goborotslider" top="270" left="410" width="150" height="20" action="ChangeGoboRot" startvalue="0" endvalue="126" default="0"/>
+  <slider name="focusslider" top="330" left="250" width="150" height="20" action="FocusChange" startvalue="0" endvalue="255" default="7"/>
+  <slider name="goboshakeslider" top="182" left="410" width="150" height="20" action="ChangeGobo" startvalue="0" endvalue="23" default="0"/>
+  <slider name="Prismslider" top="280" left="250" width="150" height="20" action="PrismaChange" startvalue="0" endvalue="59" default="0"/>
+  <slider name="IrisSlide" top="332" left="410" width="150" height="20" action="IrisChange" startvalue="0" endvalue="199" default="0"/>
+  <slider name="Color1Slide" top="124" left="250" width="150" height="20" action="ColorBoxChange" startvalue="0" endvalue="29" default="0"/>
+  <slider name="Color2slide" top="183" left="250" width="150" height="20" action="ColorBoxChange2" startvalue="0" endvalue="29" default="0"/>
+  <label name="Label1" top="73" left="410" width="37" height="13" caption="Shutter:"/>
+  <label name="Label2" top="30" left="250" width="38" height="13" caption="Dimmer:"/>
+  <label name="Label3" top="80" left="250" width="27" height="13" caption="Color:"/>
+  <label name="Label4" top="121" left="410" width="29" height="13" caption="Gobo:"/>
+  <label name="Label5" top="253" left="410" width="64" height="13" caption="Goborotation:"/>
+  <label name="Label6" top="313" left="250" width="32" height="13" caption="Focus:"/>
+  <label name="Label7" top="212" left="250" width="34" height="13" caption="Prisma:"/>
+  <label name="Label8" top="162" left="410" width="63" height="13" caption="Gobo-Shake:"/>
+  <label name="Label9" top="30" left="410" width="113" height="13" caption="Shutter-Function-speed:"/>
+  <label name="Label10" top="144" left="250" width="30" height="13" caption="Color2"/>
+  <label name="Label11" top="260" left="250" width="100" height="13" caption="Prism Rotation speed"/>
+  <label name="Label12" top="295" left="412" width="13" height="13" caption="Iris"/>
+  <label name="Label13" top="212" left="410" width="98" height="13" caption="Gobo Index Rotation"/>
+  <button name="Button1" top="320" left="10" width="70" height="30" action="LampOn" caption="Lamp on"/>
+  <button name="Button2" top="320" left="80" width="80" height="30" action="LampOff" caption="Lamp off"/>
+  <button name="Button3" top="320" left="170" width="70" height="30" action="DoReset" caption="Reset"/>
+ </form>
+ <code>
+  unit Mac500;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorBoxChange;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ChangeDimmer;
+  procedure ChangeGobo;
+  procedure ChangeGoboRot;
+  procedure FocusChange;
+  procedure PrismaChange;
+  procedure LampOff;
+  procedure LampOn;
+  procedure DoReset;
+  procedure ShutterChange;
+  procedure ColorBoxChange2;
+  procedure IrisChange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+  	dontrefresh:=false;
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    wert:integer;
+    wert2:integer;
+  begin
+  case channel of
+    	0: // Shutter
+    	begin
+    		wert:=get_channel('shutter');
+    		case wert of
+    			0..19: shutterbox.itemindex:=0;
+    			20..49: shutterbox.itemindex:=1;
+    			50..72:
+					begin
+						shutterbox.itemindex:=2;
+		    		if not dontrefresh then
+							shutterslider.position:=wert-50;
+					end;
+    			73..79: shutterbox.itemindex:=1;
+    			80..99:
+					begin
+						shutterbox.itemindex:=3;
+		    		if not dontrefresh then
+							shutterslider.position:=wert-80;
+					end;
+    			100..119:
+					begin
+						shutterbox.itemindex:=4;
+		    		if not dontrefresh then
+							shutterslider.position:=wert-100;
+					end;
+    			120..127: shutterbox.itemindex:=1;
+    			128..147: shutterbox.itemindex:=5;
+    			148..167: shutterbox.itemindex:=6;
+    			168..187: shutterbox.itemindex:=7;
+    			188..190: shutterbox.itemindex:=1;
+    			191..193: shutterbox.itemindex:=8;
+    			194..196: shutterbox.itemindex:=9;
+    			197..199: shutterbox.itemindex:=10;
+    			200..202: shutterbox.itemindex:=11;
+    			203..207: shutterbox.itemindex:=1;
+    			218..227: shutterbox.itemindex:=1;
+    			238..247: shutterbox.itemindex:=1;
+    		end;
+    	end;
+    	1: // Dimmer
+    	begin
+    		wert:=get_channel('dimmer');
+    		if not dontrefresh then
+    		begin
+    			dimmerslider.position:=wert;
+    		end;
+    	end;
+    	2: // Color1
+    	begin
+    		wert:=get_channel('color1');
+    		case wert of
+    			0..15: 
+			begin
+				colorbox.itemindex:=0;
+	    			Color1Slide.position:=wert*2;
+			end;
+    			16..31: 
+			begin
+				colorbox.itemindex:=1;
+	    			Color1Slide.position:=(wert-16)*2;
+			end;
+    			32..47: 
+			begin
+				colorbox.itemindex:=2;
+	    			Color1Slide.position:=(wert-32)*2;
+			end;
+    			48..63: 
+			begin
+				colorbox.itemindex:=3;
+	    			Color1Slide.position:=(wert-48)*2;
+			end;
+    			64..79:	
+			begin
+				colorbox.itemindex:=4;
+	    			Color1Slide.position:=(wert-64)*2;
+			end;
+    			80..95:
+			begin
+				colorbox.itemindex:=5;
+	    			Color1Slide.position:=(wert-80)*2;
+			end;
+    			96..101:
+			begin
+				colorbox.itemindex:=6;
+	    			Color1Slide.position:=(wert-96)*2;
+			end;
+   			112..127:
+			begin
+				colorbox.itemindex:=7;
+	    			Color1Slide.position:=(wert-112)*2;
+			end;
+    			128..144:
+			begin
+				colorbox.itemindex:=8;
+	    			Color1Slide.position:=(wert-128)*2;
+			end;
+    			145..148: colorbox.itemindex:=9;
+    			149..152: colorbox.itemindex:=10;
+    			153..156: colorbox.itemindex:=11;
+    			157..160: colorbox.itemindex:=12;
+    			161..164: colorbox.itemindex:=13;
+    			165..168: colorbox.itemindex:=14;
+    			169..172: colorbox.itemindex:=15;
+    			173..176: colorbox.itemindex:=16;
+    			177..180: colorbox.itemindex:=17;
+    			181..184: colorbox.itemindex:=18;
+    			185..215:
+			begin
+				colorbox.itemindex:=19;
+	    			Color1Slide.position:=wert-185;
+			end;
+			216..245:
+			begin
+				colorbox.itemindex:=20; 
+	    			Color1Slide.position:=wert-216;
+			end;
+    		end;
+    	end;
+    	3: // Color2
+    	begin
+    		wert:=get_channel('color2');
+    		case wert of
+    			0..15: 
+			begin
+				colorbox2.itemindex:=0;
+	    			Color2Slide.position:=wert*2;
+			end;
+    			16..31: 
+			begin
+				colorbox2.itemindex:=1;
+	    			Color2Slide.position:=(wert-16)*2;
+			end;
+    			32..47: 
+			begin
+				colorbox2.itemindex:=2;
+	    			Color2Slide.position:=(wert-32)*2;
+			end;
+    			48..63: 
+			begin
+				colorbox2.itemindex:=3;
+	    			Color2Slide.position:=(wert-48)*2;
+			end;
+    			64..79:	
+			begin
+				colorbox2.itemindex:=4;
+	    			Color2Slide.position:=(wert-64)*2;
+			end;
+    			80..95:
+			begin
+				colorbox2.itemindex:=5;
+	    			Color2Slide.position:=(wert-80)*2;
+			end;
+    			96..101:
+			begin
+				colorbox2.itemindex:=6;
+	    			Color2Slide.position:=(wert-96)*2;
+			end;
+   			112..127:
+			begin
+				colorbox2.itemindex:=7;
+	    			Color2Slide.position:=(wert-112)*2;
+			end;
+    			128..144:
+			begin
+				colorbox2.itemindex:=8;
+	    			Color2Slide.position:=(wert-128)*2;
+			end;
+    			145..148: colorbox2.itemindex:=9;
+    			149..152: colorbox2.itemindex:=10;
+    			153..156: colorbox2.itemindex:=11;
+    			157..160: colorbox2.itemindex:=12;
+    			161..164: colorbox2.itemindex:=13;
+    			165..168: colorbox2.itemindex:=14;
+    			169..172: colorbox2.itemindex:=15;
+    			173..176: colorbox2.itemindex:=16;
+    			177..180: colorbox2.itemindex:=17;
+    			181..184: colorbox2.itemindex:=18;
+			185..215:
+			begin
+				colorbox2.itemindex:=19;
+	    			Color2Slide.position:=wert-185;
+			end;
+			216..245:
+			begin
+				colorbox2.itemindex:=20; 
+	    			Color2Slide.position:=wert-216;
+			end;
+      			246..248: colorbox2.itemindex:=21;
+    			249..251: colorbox2.itemindex:=22;
+    			252..255: colorbox2.itemindex:=23;
+    			
+    		end;
+    	end;
+	4..5: // Gobo1Rotation
+    	begin
+   		wert:=get_channel('gobo1rot');
+		wert2:=get_channel('gobo2rot');
+    		if not dontrefresh then
+    		 begin
+		  case wert of
+			0..55: 
+			begin
+				GoboIndexSelect.itemindex:=0;
+				goborotslider.position:=0;
+			end;
+			56..75:
+			begin
+			  case wert2 of
+				0..127:
+				 begin
+				  GoboIndexSelect.itemindex:=1;
+				  goborotslider.position:=wert2;
+				 end;
+				128..255:
+				 begin
+				  GoboIndexSelect.itemindex:=2;
+				  goborotslider.position:=wert2-128;
+				 end;
+			  end;
+			end;
+			76..95:
+			begin
+			  case wert2 of
+				0..127:
+				 begin
+				  GoboIndexSelect.itemindex:=3;
+				  goborotslider.position:=wert2;
+				 end;
+				128..255:
+				 begin
+				  GoboIndexSelect.itemindex:=4;
+				  goborotslider.position:=wert2-128;
+				 end;
+			  end;
+			end;
+			96..115:
+			begin
+			  case wert2 of
+				0..127:
+				 begin
+				  GoboIndexSelect.itemindex:=5;
+				  goborotslider.position:=wert2;
+				 end;
+				128..255:
+				 begin
+				  GoboIndexSelect.itemindex:=6;
+				  goborotslider.position:=wert2-128;
+				 end;
+			  end;
+			end;
+			116..135:
+			begin
+			  case wert2 of
+				0..127:
+				 begin
+				  GoboIndexSelect.itemindex:=7;
+				  goborotslider.position:=wert2;
+				 end;
+				128..255:
+				 begin
+				  GoboIndexSelect.itemindex:=8;
+				  goborotslider.position:=wert2-128;
+				 end;
+			  end;
+			end;
+			136..155:
+			begin
+			  case wert2 of
+				0..127:
+				 begin
+				  GoboIndexSelect.itemindex:=9;
+				  goborotslider.position:=wert2;
+				 end;
+				128..255:
+				 begin
+				  GoboIndexSelect.itemindex:=10;
+				  goborotslider.position:=wert2-128;
+				 end;
+			  end;
+			end;
+			156..175:
+			begin
+			  case wert2 of
+				0..127:
+				 begin
+				  GoboIndexSelect.itemindex:=11;
+				  goborotslider.position:=wert2;
+				 end;
+				128..255:
+				 begin
+				  GoboIndexSelect.itemindex:=12;
+				  goborotslider.position:=wert2-128;
+				 end;
+			  end;
+			end;
+			176..195:
+			begin
+			  case wert2 of
+				0..127:
+				 begin
+				  GoboIndexSelect.itemindex:=13;
+				  goborotslider.position:=wert2;
+				 end;
+				128..255:
+				 begin
+				  GoboIndexSelect.itemindex:=14;
+				  goborotslider.position:=wert2-128;
+				 end;
+			  end;
+			end;
+			196..215:
+			begin
+			  case wert2 of
+				0..127:
+				 begin
+				  GoboIndexSelect.itemindex:=15;
+				  goborotslider.position:=wert2;
+				 end;
+				128..255:
+				 begin
+				  GoboIndexSelect.itemindex:=16;
+				  goborotslider.position:=wert2-128;
+				 end;
+			  end;
+			end;
+			216..235:
+			begin
+			  case wert2 of
+				0..127:
+				 begin
+				  GoboIndexSelect.itemindex:=17;
+				  goborotslider.position:=wert2;
+				 end;
+				128..255:
+				 begin
+				  GoboIndexSelect.itemindex:=18;
+				  goborotslider.position:=wert2-128;
+				 end;
+			  end;
+			end;
+			236..255:
+			begin
+			  case wert2 of
+				0..127:
+				 begin
+				  GoboIndexSelect.itemindex:=19;
+				  goborotslider.position:=wert2;
+				 end;
+				128..255:
+				 begin
+				  GoboIndexSelect.itemindex:=20;
+				  goborotslider.position:=wert2-128;
+				 end;
+			  end;
+			end;
+		  end;
+		 end;
+
+   	end;    	
+	6: // Gobo1
+    	begin
+    		wert:=get_channel('gobo1');
+				case wert of
+					0..19:
+						begin
+							gobobox.itemindex:=0;
+							goboshakeon.checked:=false;
+						end;
+
+					20..39:
+						begin
+							gobobox.itemindex:=1;
+							goboshakeon.checked:=false;
+						end;
+
+					40..59:
+						begin
+							gobobox.itemindex:=2;
+							goboshakeon.checked:=false;
+						end;
+
+					60..79:
+						begin
+							gobobox.itemindex:=3;
+							goboshakeon.checked:=false;
+						end;
+
+					80..99: 
+						begin
+							gobobox.itemindex:=4;
+							goboshakeon.checked:=false;
+						end;
+
+					100..119:
+						begin
+							gobobox.itemindex:=5;
+							goboshakeon.checked:=false;
+						end;
+
+					120..139:
+						begin
+							gobobox.itemindex:=6;
+							goboshakeon.checked:=false;
+						end;
+
+					140..159:
+						begin
+							gobobox.itemindex:=7;
+							goboshakeon.checked:=false;
+						end;
+
+					160..179:						
+						begin
+							gobobox.itemindex:=8;
+							goboshakeon.checked:=false;
+						end;
+
+					180: 
+						begin
+							gobobox.itemindex:=9;
+							goboshakeon.checked:=false;
+						end;
+					181..183:
+						begin
+							gobobox.itemindex:=9;
+							goboshakeon.checked:=true;
+						end;
+					184..186:
+						begin
+							gobobox.itemindex:=8;
+							goboshakeon.checked:=true;
+						end;	
+					187..189:
+						begin
+							gobobox.itemindex:=7;
+							goboshakeon.checked:=true;
+						end;	
+					190..192:
+						begin
+							gobobox.itemindex:=6;
+							goboshakeon.checked:=true;
+						end;	
+					193..195:
+						begin
+							gobobox.itemindex:=5;
+							goboshakeon.checked:=true;
+						end;	
+					196..198:
+						begin
+							gobobox.itemindex:=4;
+							goboshakeon.checked:=true;
+						end;	
+					199..201:
+						begin
+							gobobox.itemindex:=3;
+							goboshakeon.checked:=true;
+						end;	
+					202..204:
+						begin
+							gobobox.itemindex:=2;
+							goboshakeon.checked:=true;
+						end;	
+					205..207:
+						begin
+							gobobox.itemindex:=1;
+							goboshakeon.checked:=true;
+						end;
+					208-231:
+						begin
+							gobobox.itemindex:=10;
+							goboshakeon.checked:=false;
+							goboshakeslider.position:=wert-208;
+
+						end;
+					232-255:
+						begin
+							gobobox.itemindex:=11;
+							goboshakeon.checked:=false;
+							goboshakeslider.position:=wert-232;
+
+						end;
+
+	
+		end;
+	end;
+	
+    	7: // Fokus
+    	begin
+    		wert:=get_channel('focus');
+    		if not dontrefresh then
+    		begin
+    			focusslider.position:=wert;
+    		end;
+    	end;
+	8: //Iris
+	begin
+		wert:=get_channel('iris');
+    		if not dontrefresh then
+    		case wert of
+    			0..199:
+			begin
+				IrisBox.itemindex:=0;
+				IrisSlide.position:= Wert;
+			end;
+    			200..215:
+			begin
+				IrisBox.itemindex:=1;
+				IrisSlide.position:= 0;
+			end;
+    			216..229:
+			begin
+				IrisBox.itemindex:=2;
+				IrisSlide.position:= (Wert-216)*13;
+			end;
+    			230..243:
+			begin
+				IrisBox.itemindex:=3;
+				IrisSlide.position:= (Wert-230)*13;
+			end;
+    			244..246:
+			begin
+				IrisBox.itemindex:=4;
+				IrisSlide.position:= 0;
+			end;
+    			247..249:
+			begin
+				IrisBox.itemindex:=5;
+				IrisSlide.position:= 0;
+			end;
+    			250..252:
+			begin
+				IrisBox.itemindex:=6;
+				IrisSlide.position:= 0;
+			end;
+    			253..255:
+			begin
+				IrisBox.itemindex:=7;
+				IrisSlide.position:= 0;
+			end;
+			
+		end;
+	end;
+    	9: // Prisma
+    	begin
+    		wert:=get_channel('prisma');
+    		if not dontrefresh then
+    		case wert of
+    			0..19: prismabox.itemindex:=0;
+    			20..79:
+   				begin
+						 prismabox.itemindex:=1;
+		    		if not dontrefresh then
+							Prismslider.position:=wert-20;
+					end;
+    			80..89: prismabox.itemindex:=2;
+    			90..149: 
+   				begin
+						 prismabox.itemindex:=3;
+		    		if not dontrefresh then
+							Prismslider.position:=wert-90;
+					end;
+    			150..215: prismabox.itemindex:=0;
+    			216..220: prismabox.itemindex:=4;
+					221..225: prismabox.itemindex:=5;
+					226..230: prismabox.itemindex:=6;
+					231..235: prismabox.itemindex:=7;
+					236..240: prismabox.itemindex:=8;
+					241..245: prismabox.itemindex:=9;
+					246..250: prismabox.itemindex:=10;
+					251..255: prismabox.itemindex:=11;    			
+    		end;
+    	end;
+    	10..11: // Pan/Tilt
+    	begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+    	end;
+    end;
+ 		dontrefresh:=false;  
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure ColorBoxChange;
+  begin
+    case colorbox.itemindex of
+    	0:
+    	begin
+	    		set_channel('color1',0+round((Color1Slide.position)/2),0+round((Color1Slide.position)/2),0);
+    	end;
+    	1:
+    	begin                    
+	    		set_channel('color1',16+round((Color1Slide.position)/2),16+round((Color1Slide.position)/2),0);
+     	end;
+    	2:
+    	begin
+	    		set_channel('color1',32+round((Color1Slide.position)/2),32+round((Color1Slide.position)/2),0);
+     	end;
+    	3:
+    	begin
+ 	    		set_channel('color1',48+round((Color1Slide.position)/2),48+round((Color1Slide.position)/2),0);
+    	end;
+    	4:
+    	begin
+	    		set_channel('color1',64+round((Color1Slide.position)/2),64+round((Color1Slide.position)/2),0);
+     	end;
+    	5:
+    	begin
+	    		set_channel('color1',80+round((Color1Slide.position)/2),80+round((Color1Slide.position)/2),0);
+     	end;
+    	6:
+    	begin
+	    		set_channel('color1',96+round((Color1Slide.position)/2),96+round((Color1Slide.position)/2),0);
+     	end;
+    	7:
+    	begin
+	    		set_channel('color1',112+round((Color1Slide.position)/2),112+round((Color1Slide.position)/2),0);
+     	end;
+    	8:
+    	begin
+	    		set_channel('color1',128+round((Color1Slide.position)/2),128+round((Color1Slide.position)/2),0);
+     	end;
+    	9:
+    	begin
+    		set_channel('color1',145,145,0);
+    	end;
+    	10:
+			begin
+    		set_channel('color1',149,149,0);
+    	end;
+   	  11:
+			begin
+    		set_channel('color1',153,153,0);
+    	end;
+    	12:
+		  begin
+   			set_channel('color1',157,157,0);
+   		end;	
+   	  13:
+	    begin
+   			set_channel('color1',161,161,0);
+   		end;	
+    	14:
+		  begin
+   			set_channel('color1',165,165,0);
+   		end;	
+   	  15:
+	    begin
+   			set_channel('color1',169,169,0);
+   		end;	
+   	  16:
+		  begin
+   			set_channel('color1',173,173,0);
+   		end;	
+   	  17:
+		  begin
+   			set_channel('color1',177,177,0);
+   		end;	
+   	  18:
+		  begin
+   			set_channel('color1',181,181,0);
+   		end;
+	  19:	
+	    begin
+	    		set_channel('color1',round(185+Color1Slide.position),round(185+Color1Slide.position),0);
+   		end;
+  	  20:	
+	    begin
+	    		set_channel('color1',round(216+Color1Slide.position),round(216+Color1Slide.position),0);
+   		end;
+    end;
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  procedure ChangeDimmer;
+  begin
+		dontrefresh:=true;
+ 		set_channel('dimmer',dimmerslider.position,dimmerslider.position,0);
+  end;
+  procedure ChangeGobo;
+  begin
+    case gobobox.itemindex of
+    	0:
+    	begin
+				set_channel('gobo1',0,0,0);
+    	end;
+    	1:
+    	begin
+				if goboshakeon.checked then
+	    		set_channel('gobo1',205,205,0)
+  			else
+  				set_channel('gobo1',20,20,0);
+    	end;
+    	2:
+    	begin
+				if goboshakeon.checked then
+	    		set_channel('gobo1',202,202,0)
+  			else
+  				set_channel('gobo1',40,40,0);
+    	end;
+    	3:
+    	begin
+				if goboshakeon.checked then
+	    		set_channel('gobo1',199,199,0)
+  			else
+  				set_channel('gobo1',60,60,0);
+    	end;
+    	4:
+    	begin
+				if goboshakeon.checked then
+	    		set_channel('gobo1',196,196,0)
+  			else
+  				set_channel('gobo1',80,80,0);
+    	end;
+    	5:
+    	begin
+				if goboshakeon.checked then
+	    		set_channel('gobo1',193,193,0)
+  			else
+  				set_channel('gobo1',100,100,0);
+    	end;
+    	6:
+    	begin
+				if goboshakeon.checked then
+	    		set_channel('gobo1'190,190,0)
+  			else
+  				set_channel('gobo1',120,120,0);
+    	end;
+    	7:
+    	begin
+				if goboshakeon.checked then
+	    		set_channel('gobo1',187,187,0)
+  			else
+  				set_channel('gobo1',140,140,0);
+    	end;
+    	8:
+    	begin
+				if goboshakeon.checked then
+	    		set_channel('gobo1',184,184,0)
+  			else
+  				set_channel('gobo1',160,160,0);
+    	end;
+    	9:
+    	begin
+				if goboshakeon.checked then
+	    		set_channel('gobo1',181,181,0)
+  			else
+  				set_channel('gobo1',180,180,0);
+    	end;
+    	10:
+    	begin
+	    		set_channel('gobo1',208+goboshakeslider.position,208+goboshakeslider.position,0)
+    	end;
+    	11:
+    	begin
+	    		set_channel('gobo1',232+goboshakeslider.position,232+goboshakeslider.position,0)
+    	end;
+
+    end;
+  end;
+  procedure ChangeGoboRot;
+  begin
+		dontrefresh:=true;
+		case GoboIndexSelect.itemindex of
+			0:
+			begin
+				set_channel('gobo1rot',0,0,0);                                                              
+			end;
+			1:
+			begin
+				set_channel('gobo1rot',56,56,0);
+				set_channel('gobo2rot',goborotslider.position,goborotslider.position,0);
+			end;
+			2:
+			begin
+				set_channel('gobo1rot',56,56,0);
+				set_channel('gobo2rot',128+goborotslider.position,128+goborotslider.position,0);
+			end;
+			3:
+			begin
+				set_channel('gobo1rot',76,76,0);
+				set_channel('gobo2rot',goborotslider.position,goborotslider.position,0);
+			end;
+			4:
+			begin
+				set_channel('gobo1rot',76,76,0);
+				set_channel('gobo2rot',128+goborotslider.position,128+goborotslider.position,0);
+			end;
+			5:
+			begin
+				set_channel('gobo1rot',96,96,0);
+				set_channel('gobo2rot',goborotslider.position,goborotslider.position,0);
+			end;
+			6:
+			begin
+				set_channel('gobo1rot',96,96,0);
+				set_channel('gobo2rot',128+goborotslider.position,128+goborotslider.position,0);
+			end;
+			7:
+			begin
+				set_channel('gobo1rot',116,116,0);
+				set_channel('gobo2rot',goborotslider.position,goborotslider.position,0);
+			end;
+			8:
+			begin
+				set_channel('gobo1rot',116,116,0);
+				set_channel('gobo2rot',128+goborotslider.position,128+goborotslider.position,0);
+			end;
+			9:
+			begin
+				set_channel('gobo1rot',136,136,0);
+				set_channel('gobo2rot',goborotslider.position,goborotslider.position,0);
+			end;
+			10:
+			begin
+				set_channel('gobo1rot',136,136,0);
+				set_channel('gobo2rot',128+goborotslider.position,128+goborotslider.position,0);
+			end;
+			11:
+			begin
+				set_channel('gobo1rot',156,156,0);
+				set_channel('gobo2rot',goborotslider.position,goborotslider.position,0);
+			end;
+			12:
+			begin
+				set_channel('gobo1rot',156,156,0);
+				set_channel('gobo2rot',128+goborotslider.position,128+goborotslider.position,0);
+			end;
+			13:
+			begin
+				set_channel('gobo1rot',176,176,0);
+				set_channel('gobo2rot',goborotslider.position,goborotslider.position,0);
+			end;
+			14:
+			begin
+				set_channel('gobo1rot',176,176,0);
+				set_channel('gobo2rot',128+goborotslider.position,128+goborotslider.position,0);
+			end;
+			15:
+			begin
+				set_channel('gobo1rot',196,196,0);
+				set_channel('gobo2rot',goborotslider.position,goborotslider.position,0);
+			end;
+			16:
+			begin
+				set_channel('gobo1rot',196,196,0);
+				set_channel('gobo2rot',128+goborotslider.position,128+goborotslider.position,0);
+			end;
+			17:
+			begin
+				set_channel('gobo1rot',216,216,0);
+				set_channel('gobo2rot',goborotslider.position,goborotslider.position,0);
+			end;
+			18:
+			begin
+				set_channel('gobo1rot',216,216,0);
+				set_channel('gobo2rot',128+goborotslider.position,128+goborotslider.position,0);
+			end;
+			19:
+			begin
+				set_channel('gobo1rot',236,236,0);
+				set_channel('gobo2rot',goborotslider.position,goborotslider.position,0);
+			end;
+			20:
+			begin
+				set_channel('gobo1rot',236,236,0);
+				set_channel('gobo2rot',128+goborotslider.position,128+goborotslider.position,0);
+			end;
+                end;
+		dontrefresh:=true;
+
+  end;
+  procedure FocusChange;
+  begin
+		dontrefresh:=true;
+    set_channel('focus',focusslider.position,focusslider.position,0);
+  end;
+  procedure PrismaChange;
+  begin
+    dontrefresh:=true;
+	case prismabox.itemindex of
+			0:
+			begin
+				set_channel('prisma',0,0,0);
+			end;
+			1:
+			begin
+				set_channel('prisma',20+Prismslider.position,20+Prismslider.position,0);
+			end;
+			2:
+			begin
+				set_channel('prisma',80,80,0);
+			end;
+			3:
+			begin
+				set_channel('prisma',90+Prismslider.position,90+Prismslider.position,0);
+			end;
+			4:
+			begin
+				set_channel('prisma',216,216,0);
+			end;
+			5:
+			begin
+				set_channel('prisma',221,221,0);
+			end;
+			6:
+			begin
+				set_channel('prisma',226,226,0);
+			end;
+			7:
+			begin
+				set_channel('prisma',231,231,0);
+			end;
+			8:
+			begin
+				set_channel('prisma',236,236,0);
+			end;
+			9:
+			begin
+				set_channel('prisma',241,241,0);
+			end;
+			10:
+			begin
+				set_channel('prisma',246,246,0);
+			end;
+			11:
+			begin
+				set_channel('prisma',251,251,0);
+			end;
+		end;
+  end;
+  procedure LampOff;
+  begin
+    if MessageDlg('Shall lamp be switched OFF?',mtConfirmation,[mbYes,mbNo],0)=mrYes then
+    begin
+	    set_channel('color1',12,12,0);
+	    set_channel('prisma',80,80,0);
+	    set_channel('gobo1',0,0,0);
+
+	    set_channel('shutter',255,255,0);
+			ShowMessage('Klick "OK", if lamp is switched OFF...');
+	    set_channel('shutter',0,0,0);
+
+	    set_channel('color1',0,0,0);
+	    set_channel('prisma',0,0,0);
+	    set_channel('gobo1',0,0,0);
+    end;
+  end;
+  procedure LampOn;
+  begin
+    if MessageDlg('Shall lamp be switched ON?',mtConfirmation,[mbYes,mbNo],0)=mrYes then
+    begin
+	    set_channel('color1',12,12,0);
+	    set_channel('prisma',80,80,0);
+	    set_channel('gobo1',0,0,0);
+
+	    set_channel('shutter',230,230,0);
+			ShowMessage('Klick "OK", if lamp is switched ON...');
+	    set_channel('shutter',0,0,0);
+
+	    set_channel('color1',0,0,0);
+	    set_channel('prisma',0,0,0);
+	    set_channel('gobo1',0,0,0);
+    end;
+  end;
+  procedure DoReset;
+  begin
+    if MessageDlg('Shall the MovingHead be RESET?',mtConfirmation,[mbYes,mbNo],0)=mrYes then
+    begin
+	    set_channel('color1',12,12,0);
+	    set_channel('prisma',80,80,0);
+	    set_channel('gobo1',0,0,0);
+
+	    set_channel('shutter',210,210,0);
+			ShowMessage('Klick "OK", if RESET has been initiated...');
+	    set_channel('shutter',0,0,0);
+
+	    set_channel('color1',0,0,0);
+	    set_channel('prisma',0,0,0);
+	    set_channel('gobo1',0,0,0);
+    end;
+  end;
+  procedure ShutterChange;
+  begin
+		dontrefresh:=true;
+		case shutterbox.itemindex of
+			0:
+			begin
+				set_channel('shutter',0,0,0);
+			end;
+			1:
+			begin
+				set_channel('shutter',20,20,0);
+			end;
+			2:
+			begin
+				set_channel('shutter',50+shutterslider.position,50+shutterslider.position,0);
+			end;
+			3:
+			begin
+				set_channel('shutter',80+shutterslider.position,80+shutterslider.position,0);
+			end;
+			4:
+			begin
+				set_channel('shutter',100+shutterslider.position,100+shutterslider.position,0);
+			end;
+			5:
+			begin
+				set_channel('shutter',128,128,0);
+			end;
+			6:
+			begin
+				set_channel('shutter',148,148,0);
+			end;
+			7:
+			begin
+				set_channel('shutter',168,168,0);
+			end;
+			8:
+			begin
+				set_channel('shutter',191,191,0);
+			end;
+			9:
+			begin
+				set_channel('shutter',194,194,0);
+			end;
+			10:
+			begin
+				set_channel('shutter',197,197,0);
+			end;
+			11:
+			begin
+				set_channel('shutter',200,200,0);
+			end;
+			12:
+			begin
+				set_channel('shutter',0,0,0);
+			end;
+			13:
+			begin
+				set_channel('shutter',20,20,0);
+			end;
+		end;
+  end;
+  procedure ColorBoxChange2;
+  begin
+    case colorbox2.itemindex of
+    	0:
+    	begin
+ 	    		set_channel('color2',0+round((Color2Slide.position)/2),0+round((Color2Slide.position)/2),0);
+   	end;
+    	1:
+    	begin
+ 	    		set_channel('color2',16+round((Color2Slide.position)/2),16+round((Color2Slide.position)/2),0);
+    	end;
+    	2:
+    	begin
+ 	    		set_channel('color2',32+round((Color2Slide.position)/2),32+round((Color2Slide.position)/2),0);
+    	end;
+    	3:
+    	begin
+ 	    		set_channel('color2',48+round((Color2Slide.position)/2),48+round((Color2Slide.position)/2),0);
+    	end;
+    	4:
+    	begin
+ 	    		set_channel('color2',64+round((Color2Slide.position)/2),64+round((Color2Slide.position)/2),0);
+    	end;
+    	5:
+    	begin
+ 	    		set_channel('color2',80+round((Color2Slide.position)/2),80+round((Color2Slide.position)/2),0);
+    	end;
+    	6:
+    	begin
+ 	    		set_channel('color2',96+round((Color2Slide.position)/2),96+round((Color2Slide.position)/2),0);
+    	end;
+    	7:
+    	begin
+ 	    		set_channel('color2',112+round((Color2Slide.position)/2),112+round((Color2Slide.position)/2),0);
+    	end;
+    	8:
+    	begin
+ 	    		set_channel('color2',128+round((Color2Slide.position)/2),128+round((Color2Slide.position)/2),0);
+    	end;
+    	9:
+    	begin
+    		set_channel('color2',145,145,0);
+    	end;
+    	10:
+			begin
+    		set_channel('color2',149,149,0);
+    	end;
+   	  11:
+			begin
+    		set_channel('color2',153,153,0);
+    	end;
+    	12:
+		  begin
+   			set_channel('color2',157,157,0);
+   		end;	
+   	  13:
+	    begin
+   			set_channel('color2',161,161,0);
+   		end;	
+    	14:
+		  begin
+   			set_channel('color2',165,165,0);
+   		end;	
+   	  15:
+	    begin
+   			set_channel('color2',169,169,0);
+   		end;	
+   	  16:
+		  begin
+   			set_channel('color2',173,173,0);
+   		end;	
+   	  17:
+		  begin
+   			set_channel('color2',177,177,0);
+   		end;	
+   	  18:
+		  begin
+   			set_channel('color2',181,181,0);
+   		end;	
+   	  19:
+ 		  begin
+ 	    		set_channel('color2',(185+Color2Slide.position),(185+Color2Slide.position),0);
+   		end;	
+  	  20:
+ 		  begin
+ 	    		set_channel('color2',(216+Color2Slide.position),(216+Color2Slide.position),0);
+   		end;	
+  	  21:
+ 		  begin
+   			set_channel('color2',246,246,0);
+   		end;	
+   	  22:
+ 		  begin
+   			set_channel('color2',249,249,0);
+   		end;	
+   	  23:
+ 		  begin
+   			set_channel('color2',252,252,0);
+   		end;	
+
+    end;
+  end;
+  procedure IrisChange;
+  begin
+		dontrefresh:=true;
+		case IrisBox.itemindex of
+			0:
+			begin
+				set_channel('iris',0+IrisSlide.position,0+IrisSlide.position,0);
+			end;
+			1:
+			begin
+				set_channel('iris',200,200,0);
+			end;
+			2:
+			begin
+				set_channel('iris',216+round(IrisSlide.position/15),216+round(IrisSlide.position/15),0);
+			end;
+			3:
+			begin
+				set_channel('iris',230+round(IrisSlide.position/15),230+round(IrisSlide.position/15),0);
+			end;
+			4:
+			begin
+				set_channel('iris',244,244,0);
+			end;
+			5:
+			begin
+				set_channel('iris',247,247,0);
+			end;
+			6:
+			begin
+				set_channel('iris',250,250,0);
+			end;
+			7:
+			begin
+				set_channel('iris',253,253,0);
+			end;
+		end;
+  end;
+  end.
+ </code>
+</device>

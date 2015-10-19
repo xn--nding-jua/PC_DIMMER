@@ -1,0 +1,37 @@
+Type=Exe
+Form=parzic.frm
+Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#I:\WINDOWS\system32\stdole2.tlb#OLE Automation
+Module=Module1; parzic.bas
+IconForm="Parzic"
+Startup="Parzic"
+HelpFile=""
+NoControlUpgrade=1
+Title="parzic"
+ExeName32="parzic.exe"
+Command32=""
+Name="parzic_exe"
+HelpContextID="0"
+Description="parzic driver"
+CompatibleMode="0"
+MajorVer=1
+MinorVer=0
+RevisionVer=0
+AutoIncrementVer=0
+ServerSupportFiles=0
+CompilationType=-1
+OptimizationType=0
+FavorPentiumPro(tm)=0
+CodeViewDebugInfo=0
+NoAliasing=0
+BoundsCheck=0
+OverflowCheck=0
+FlPointCheck=0
+FDIVCheck=0
+UnroundedFP=0
+StartMode=0
+Unattended=0
+ThreadPerObject=0
+MaxNumberOfThreads=1
+
+[MS Transaction Server]
+AutoRefresh=1

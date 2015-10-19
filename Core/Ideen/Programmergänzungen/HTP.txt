@@ -1,0 +1,9 @@
+Hallo Christian,
+
+ich habe mal wieder ein paar kleinere und größere Ideen für den PC_DIMMER. Ich verstehe, wenn du momentan sehr beschäftigt bist, würde dich aber um einen Kommentar bitten. Neben den Bugtracker-Einträgen #348 und #349 habe ich mir über die Implementierung von Prioritäts- und Overridesteuerung von Gerätekanälen Gedanken gemacht. Meiner Ansicht nach könnte diese Funktionalität mit vertretbarem Aufwand implementiert werden. Ich würde mir diese Aufgabe auch selber zutrauen - mein größtes Problem ist aber, dass ich zum einen keine aktuelle Delphi-IDE habe, zum anderen habe ich mich noch nicht getraut, das Thema anzufassen, da meine Erfahrung mit früheren Delphi-Versionen war, dass die Installation der Vielzahl an externen Komponenten in der IDE frustrierend und zeitraubend ist. Ich hatte auch im Hinterkopf, dass du kostenpflichtige Komponenten benutzt, die ein weiteres Problem darstellen würden. Blindes bearbeiten des Codes steht auch außer Frage, da ich Fenster bearbeiten und zahlreiche Tests machen müsste.
+
+Deshalb: Findest du die erwähnten Prioritäts- und Overridefeatures interessant? Hätten wir die Möglichkeit, diese zu implementieren?
+
+Herzliche Grüße aus Bad Hersfeld,
+Ingo
+

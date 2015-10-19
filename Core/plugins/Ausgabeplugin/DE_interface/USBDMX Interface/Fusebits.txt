@@ -1,0 +1,2 @@
+-U lfuse:w:0xbf:m -U hfuse:w:0xd9:m für Firmware v1.1 (Brown-out detection enabled)
+-U lfuse:w:0xff:m -U hfuse:w:0xd9:m für Firmware v1.0

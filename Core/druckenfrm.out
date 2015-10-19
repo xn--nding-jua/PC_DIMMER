@@ -1,0 +1,40 @@
+unit druckenfrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls;
+
+type
+  Tdrucken = class(TForm)
+    GroupBox1: TGroupBox;
+    Label1:    TLabel;
+    OK:        TButton;
+    Abbrechen: TButton;
+    Label2:    TLabel;
+    Label3:    TLabel;
+    Edit1:     TEdit;
+    Edit2:     TEdit;
+    ComboBox1: TComboBox;
+    procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+  end;
+
+var
+  drucken: Tdrucken;
+
+implementation
+
+{$R *.dfm}
+
+procedure Tdrucken.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = vk_escape then
+    modalresult := mrCancel;
+end;
+
+end.

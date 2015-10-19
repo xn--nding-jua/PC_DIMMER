@@ -1,0 +1,15 @@
+' Import der Funktionen aus mdmxsvr.dll v1.0.0
+' Die Datei mdmxsvr.dll muß im Suchpfad (z.B. c:\windows) liegen.
+
+' Funktionsparameter und Rückgabewerte sind in der Datei mdmxsvr.h aufgelistet.
+
+Private Declare Function MDMX_OpenSerialDevice Lib "mdmxsvr.dll" _
+    (ByVal PortName As String, ByVal SerialMode As Long) As Long
+
+Private Declare Function MDMX_SetChannel Lib "mdmxsvr.dll" _
+    (ByVal Channel As Long, ByVal Value As Long) As Boolean
+
+Private Declare Function MDMX_GetDMXTransmissions Lib "mdmxsvr.dll" () As Long
+
+Private Declare Sub MDMX_Close Lib "mdmxsvr.dll" ()
+

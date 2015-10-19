@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\color150dmx.png">
+ <information id="PC_DIMMER">
+ <name>LaserSim</name>
+ <vendor>Zoidberg</vendor>
+ <author>Christian Nöding</author>
+ <description>Lasersimulator durch einen Beamer</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Element" fade="yes" type="iris"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="PAN" fade="yes" type="pan"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Skalierung X" fade="yes" type="special3"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Skalierung Y" fade="yes" type="extra"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Rotation" fade="yes" type="gobo1rot"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Elemente" fade="yes" type="gobo1"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="AutoRotate" fade="yes" type="gobo2rot"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="Zoom" fade="yes" type="zoom"/>
+  <function channel="10" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="11" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="12" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="13" minvalue="0" maxvalue="255" name="Animation" fade="yes" type="moves"/>
+  <function channel="14" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+  <function channel="15" minvalue="0" maxvalue="255" name="Autorotation" fade="yes" type="special1"/>
+  <function channel="16" minvalue="0" maxvalue="255" name="Autorotation (Alle)" fade="yes" type="special2"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" ch8="-1" ch9="-1" ch10="-1" ch11="-1" ch12="-1" ch13="-1" ch14="-1" ch15="-1" ch16="-1" />
+ <shutter OpenValue="248" CloseValue="8" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="128" LeftMaxValue="255" OffValue="128" RightMinValue="128" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="731" height="422">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorpicker top="70" left="297" />
+  <position top="80" left="10" height="230" width="230" />
+  <dropdown name="Combobox1" top="80" left="490" width="230" height="21" action="combobox1change">
+   <item caption="Kein Gobo" value="0" picture="" />
+   <item caption="Linie" value="0" picture="" />
+   <item caption="Linie gestrichelt" value="0" picture="" />
+   <item caption="Linie RGB" value="0" picture="" />
+   <item caption="Linie schwarz/weiß" value="0" picture="" />
+   <item caption="Linie weiß/blau" value="0" picture="" />
+   <item caption="Linie weiß/rot" value="0" picture="" />
+   <item caption="Linie weiß/grün" value="0" picture="" />
+   <item caption="Linie rot/grün" value="0" picture="" />
+   <item caption="Linie rot/blau" value="0" picture="" />
+   <item caption="Linie grün/blau" value="0" picture="" />
+   <item caption="Linie violett/blau" value="0" picture="" />
+   <item caption="Linie violett/rot" value="0" picture="" />
+   <item caption="Linie violett/gelb" value="0" picture="" />
+   <item caption="Linie hellblau/gelb" value="0" picture="" />
+   <item caption="Viereck" value="0" picture="" />
+   <item caption="Viereck voll" value="0" picture="" />
+   <item caption="Viereck RGB" value="0" picture="" />
+   <item caption="Kreis" value="0" picture="" />
+   <item caption="Kreis voll" value="0" picture="" />
+   <item caption="Kreis gestrichelt" value="0" picture="" />
+   <item caption="Kreis RGB" value="0" picture="" />
+   <item caption="Dreieck" value="0" picture="" />
+   <item caption="Dreieck voll" value="0" picture="" />
+   <item caption="Dreieck RGB" value="0" picture="" />
+   <item caption="Kreis rot/blau" value="0" picture="" />
+   <item caption="Kreis rot/grün" value="0" picture="" />
+   <item caption="Kreis blau/rot" value="0" picture="" />
+   <item caption="Kreis blau/grün" value="0" picture="" />
+   <item caption="Kreis grün/rot" value="0" picture="" />
+   <item caption="Kreis grün/blau" value="0" picture="" />
+   <item caption="Kreis weiß/rot" value="0" picture="" />
+   <item caption="Kreis weiß/blau" value="0" picture="" />
+   <item caption="Kreis weiß/grün" value="0" picture="" />
+   <item caption="Kreis rot/blau" value="0" picture="" />
+   <item caption="Kreis rot/grün" value="0" picture="" />
+   <item caption="Kreis blau/rot" value="0" picture="" />
+   <item caption="Kreis blau/grün" value="0" picture="" />
+   <item caption="Kreis grün/rot" value="0" picture="" />
+   <item caption="Kreis grün/blau" value="0" picture="" />
+   <item caption="Kreis weiß/rot" value="0" picture="" />
+   <item caption="Kreis weiß/blau" value="0" picture="" />
+   <item caption="Kreis weiß/grün" value="0" picture="" />
+   <item caption="Tropfen" value="0" picture="" />
+   <item caption="Halbmond" value="0" picture="" />
+   <item caption="Spirale" value="0" picture="" />
+   <item caption="Herz" value="0" picture="" />
+   <item caption="Stern" value="0" picture="" />
+   <item caption="Stern RGB" value="0" picture="" />
+   <item caption="Halbkreis oben" value="0" picture="" />
+   <item caption="Halbkreis rechts" value="0" picture="" />
+   <item caption="Halbkreis unten" value="0" picture="" />
+   <item caption="Halbkreis links" value="0" picture="" />
+   <item caption="Welle 1" value="0" picture="" />
+   <item caption="Welle 2" value="0" picture="" />
+   <item caption="Welle 3" value="0" picture="" />
+   <item caption="Welle 4" value="0" picture="" />
+   <item caption="Lüfterrad" value="0" picture="" />
+   <item caption="KnightRider" value="0" picture="" />
+   <item caption="Flagge" value="0" picture="" />
+   <item caption="KnightRider" value="0" picture="" />
+   <item caption="Sterne" value="0" picture="" />
+   <item caption="Schnee" value="0" picture="" />
+   <item caption="Welle" value="0" picture="" />
+   <item caption="Welle gestrichelt" value="0" picture="" />
+   <item caption="Welle RGB" value="0" picture="" />
+  </dropdown>
+  <slider name="Slider1" top="340" left="10" width="230" height="20" action="slider1change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider2" top="390" left="10" width="230" height="20" action="slider2change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider3" top="290" left="250" width="230" height="20" action="slider3change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider4" top="340" left="250" width="230" height="20" action="slider4change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider5" top="390" left="250" width="230" height="20" action="slider5change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider6" top="140" left="490" width="230" height="20" action="slider6change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider7" top="190" left="490" width="230" height="20" action="slider7change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider8" top="240" left="490" width="230" height="20" action="slider8change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider9" top="290" left="490" width="230" height="20" action="slider9change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider10" top="340" left="490" width="230" height="20" action="slider10change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider11" top="390" left="490" width="230" height="20" action="slider11change" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="320" left="10" width="49" height="13" caption="Animation:"/>
+  <label name="Label2" top="370" left="10" width="38" height="13" caption="Drehen:"/>
+  <label name="Label3" top="60" left="490" width="29" height="13" caption="Gobo:"/>
+  <label name="Label4" top="270" left="250" width="38" height="13" caption="Dimmer:"/>
+  <label name="Label5" top="320" left="250" width="37" height="13" caption="Shutter:"/>
+  <label name="Label6" top="370" left="250" width="69" height="13" caption="Drehen (Auto):"/>
+  <label name="Label7" top="120" left="490" width="63" height="13" caption="X-Skalierung:"/>
+  <label name="Label8" top="170" left="490" width="63" height="13" caption="Y-Skalierung:"/>
+  <label name="Label9" top="220" left="490" width="35" height="13" caption="Anzahl:"/>
+  <label name="Label10" top="270" left="490" width="30" height="13" caption="Zoom:"/>
+  <label name="Label11" top="320" left="490" width="56" height="13" caption="Alle drehen:"/>
+  <label name="Label12" top="370" left="490" width="87" height="13" caption="Alle drehen (Auto):"/>
+  <button name="Button1" top="230" left="250" width="230" height="30" action="oncolorpickerchange" caption="< Farbansicht wechseln >"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure slider1change;
+  procedure slider2change;
+  procedure slider3change;
+  procedure slider4change;
+  procedure slider5change;
+  procedure slider6change;
+  procedure slider7change;
+  procedure slider8change;
+  procedure slider9change;
+  procedure slider10change;
+  procedure slider11change;
+  procedure oncolorpickerchange;
+  procedure combobox1change;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  var
+  	i:integer;
+	begin
+    combobox1.items.clear;
+
+      combobox1.items.add('Kein Gobo');
+      combobox1.items.add('Linie');
+      combobox1.items.add('Linie gestrichelt');
+      combobox1.items.add('Linie RGB');
+      combobox1.items.add('Linie schwarz weiß');
+      combobox1.items.add('Linie weiß blau');
+      combobox1.items.add('Linie weiß rot');
+      combobox1.items.add('Linie weiß grün');
+      combobox1.items.add('Linie rot grün');
+      combobox1.items.add('Linie rot blau');
+      combobox1.items.add('Linie grün blau');
+      combobox1.items.add('Linie lila blau');
+      combobox1.items.add('Linie lila rot');
+      combobox1.items.add('Linie lila gelb');
+      combobox1.items.add('Linie hellblau gelb');
+      combobox1.items.add('15');
+      combobox1.items.add('16');
+      combobox1.items.add('17');
+      combobox1.items.add('18');
+      combobox1.items.add('19');
+      combobox1.items.add('Viereck');
+      combobox1.items.add('Viereck voll');
+      combobox1.items.add('22');
+      combobox1.items.add('Viereck RGB');
+      combobox1.items.add('24');
+      combobox1.items.add('Kreis');
+      combobox1.items.add('Kreis voll');
+      combobox1.items.add('Kreis gestrichelt');
+      combobox1.items.add('Kreis RGB');
+      combobox1.items.add('29');
+      combobox1.items.add('Dreieck');
+      combobox1.items.add('Dreieck voll');
+      combobox1.items.add('Dreieck RGB');
+      combobox1.items.add('33');
+      combobox1.items.add('34');
+      combobox1.items.add('35');
+      combobox1.items.add('36');
+      combobox1.items.add('37');
+      combobox1.items.add('38');
+      combobox1.items.add('39');
+      combobox1.items.add('4');
+      combobox1.items.add('Kreis rot blau');
+      combobox1.items.add('Kreis rot grün');
+      combobox1.items.add('Kreis blau rot');
+      combobox1.items.add('Kreis blau grün');
+      combobox1.items.add('Kreis grün rot');
+      combobox1.items.add('Kreis grün blau');
+      combobox1.items.add('Kreis weiß rot');
+      combobox1.items.add('Kreis weiß blau');
+      combobox1.items.add('Kreis weiß grün');
+      combobox1.items.add('Kreis rot blau');
+      combobox1.items.add('Kreis rot grün');
+      combobox1.items.add('Kreis blau rot');
+      combobox1.items.add('Kreis blau grün');
+      combobox1.items.add('Kreis grün rot');
+      combobox1.items.add('Kreis grün blau');
+      combobox1.items.add('Kreis weiß rot');
+      combobox1.items.add('Kreis weiß blau');
+      combobox1.items.add('Kreis weiß grün');
+      combobox1.items.add('59');
+      combobox1.items.add('60');
+      combobox1.items.add('61');
+      combobox1.items.add('62');
+      combobox1.items.add('63');
+      combobox1.items.add('64');
+      combobox1.items.add('65');
+      combobox1.items.add('66');
+      combobox1.items.add('67');
+      combobox1.items.add('68');
+      combobox1.items.add('69');
+      combobox1.items.add('70');
+      combobox1.items.add('71');
+      combobox1.items.add('72');
+      combobox1.items.add('73');
+      combobox1.items.add('74');
+      combobox1.items.add('75');
+      combobox1.items.add('76');
+      combobox1.items.add('77');
+      combobox1.items.add('78');
+      combobox1.items.add('79');
+      combobox1.items.add('Tropfen');
+      combobox1.items.add('81');
+      combobox1.items.add('Halbmond');
+      combobox1.items.add('83');
+      combobox1.items.add('Spirale');
+      combobox1.items.add('85');
+      combobox1.items.add('Herz');
+      combobox1.items.add('87');
+      combobox1.items.add('Stern');
+      combobox1.items.add('Stern RGB');
+      combobox1.items.add('Halbkreis oben');
+      combobox1.items.add('Halbkreis rechts');
+      combobox1.items.add('Halbkreis unten');
+      combobox1.items.add('Halbkreis links');
+      combobox1.items.add('94');
+      combobox1.items.add('Welle1');
+      combobox1.items.add('Welle2');
+      combobox1.items.add('Welle3');
+      combobox1.items.add('Welle4');
+      combobox1.items.add('99');
+      combobox1.items.add('100');
+      combobox1.items.add('101');
+      combobox1.items.add('102');
+      combobox1.items.add('103');
+      combobox1.items.add('104');
+      combobox1.items.add('105');
+      combobox1.items.add('106');
+      combobox1.items.add('107');
+      combobox1.items.add('108');
+      combobox1.items.add('109');
+      combobox1.items.add('110');
+      combobox1.items.add('111');
+      combobox1.items.add('112');
+      combobox1.items.add('113');
+      combobox1.items.add('114');
+      combobox1.items.add('115');
+      combobox1.items.add('116');
+      combobox1.items.add('117');
+      combobox1.items.add('118');
+      combobox1.items.add('119');
+      combobox1.items.add('120');
+      combobox1.items.add('121');
+      combobox1.items.add('122');
+      combobox1.items.add('123');
+      combobox1.items.add('124');
+      combobox1.items.add('Lüfterrad');
+      combobox1.items.add('Knight Rider');
+      combobox1.items.add('Flagge');
+
+	  	for i:=128 to 191 do
+				combobox1.items.add(inttostr(i));
+	  
+      combobox1.items.add('Knight Rider');
+      combobox1.items.add('Sterne');
+      combobox1.items.add('Schnee');
+      combobox1.items.add('Welle');
+      combobox1.items.add('Welle gestrichelt');
+      combobox1.items.add('Welle RGB');
+
+	  	for i:=198 to 255 do
+				combobox1.items.add(inttostr(i));
+  end;
+  procedure FormRefresh(channel:Integer);
+	var
+		wert:integer;
+  begin
+    if not dontrefresh then
+		case channel of
+			0: combobox1.itemindex:=get_channel('IRIS');
+			1: slider3.position:=get_channel('DIMMER');
+			2..3:
+			begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+			end;
+			4: slider6.position:=get_channel('SPECIAL3');
+			5: slider7.position:=get_channel('EXTRA');
+			6: slider2.position:=get_channel('GOBO1ROT');
+			7: slider8.position:=get_channel('GOBO1');
+			8: slider5.position:=get_channel('GOBO2ROT');
+			9: slider9.position:=get_channel('ZOOM');
+			10..12:
+			begin
+			end;
+			13: slider1.position:=get_channel('MOVES');
+			14: slider4.position:=get_channel('SHUTTER');
+			15: slider10.position:=get_channel('SPECIAL1');
+			16: slider11.position:=get_channel('SPECIAL2');
+    end;
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  procedure ColorPickerChange(R, G, B: Byte);
+  begin
+        set_channel('r',-1,r,0);
+        set_channel('g',-1,g,0);
+        set_channel('b',-1,b,0);
+  end;
+  procedure slider1change;
+  begin
+    dontrefresh:=true;
+    set_channel('MOVES',-1,slider1.position,0);
+  end;
+  procedure slider2change;
+  begin
+    dontrefresh:=true;
+    set_channel('GOBO1ROT',-1,slider2.position,0);
+  end;
+  procedure slider3change;
+  begin
+    dontrefresh:=true;
+    set_channel('DIMMER',-1,slider3.position,0);
+  end;
+  procedure slider4change;
+  begin
+    dontrefresh:=true;
+    set_channel('SHUTTER',-1,slider4.position,0);
+  end;
+  procedure slider5change;
+  begin
+    dontrefresh:=true;
+    set_channel('GOBO2ROT',-1,slider5.position,0);
+  end;
+  procedure slider6change;
+  begin
+    dontrefresh:=true;
+    set_channel('SPECIAL3',-1,slider6.position,0);
+  end;
+  procedure slider7change;
+  begin
+    dontrefresh:=true;
+    set_channel('EXTRA',-1,slider7.position,0);
+  end;
+  procedure slider8change;
+  begin
+    dontrefresh:=true;
+    set_channel('GOBO1',-1,slider8.position,0);
+  end;
+  procedure slider9change;
+  begin
+    dontrefresh:=true;
+    set_channel('ZOOM',-1,slider9.position,0);
+  end;
+  procedure slider10change;
+  begin
+    dontrefresh:=true;
+    set_channel('SPECIAL1',-1,slider10.position,0);
+  end;
+  procedure slider11change;
+  begin
+    dontrefresh:=true;
+    set_channel('SPECIAL2',-1,slider11.position,0);
+  end;
+  procedure oncolorpickerchange;
+  begin
+      if colorpicker.visible then
+      begin
+        colorpicker.visible:=false;
+        colorpicker2.visible:=true;
+      end else
+      begin
+        colorpicker.visible:=true;
+        colorpicker2.visible:=false;
+      end;
+  end;
+  procedure combobox1change;
+  begin
+ 		set_channel('IRIS',-1,combobox1.itemindex,0);
+  end;
+  end.
+ </code>
+</device>

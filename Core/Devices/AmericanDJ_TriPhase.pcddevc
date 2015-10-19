@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\TriPhase.PNG">
+ <information id="PC_DIMMER">
+ <name>Tri-Phase (4 channel)</name>
+ <vendor>American DJ</vendor>
+ <author>Geert Dierckx</author>
+ <description>Tri Phase-4channels</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Color" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Rotation" fade="yes" type="special1"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Strobe" fade="yes" type="shutter"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Dimmer" fade="yes" type="dimmer"/>
+ </channels>
+ <initvalues 0="-1" 1="-1" 2="-1" 3="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="dimmer"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="128" LeftMaxValue="255" OffValue="128" RightMinValue="128" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="221" height="342">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="RotationBox" top="155" left="20" width="180" height="21" action="RotationChange">
+   <item caption="No Rotation" value="0" picture="" />
+   <item caption="Clockwise" value="0" picture="" />
+   <item caption="CounterClockwise" value="135" picture="" />
+  </dropdown>
+  <slider name="ColorSlider" top="110" left="20" width="180" height="20" action="ColorChange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="RotationSlider" top="200" left="20" width="180" height="20" action="RotationChange" startvalue="0" endvalue="110" default="55"/>
+  <slider name="StrobeSlider" top="250" left="20" width="180" height="20" action="StrobeChange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DimmerSlider" top="300" left="20" width="180" height="20" action="DimmerChange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Color" top="90" left="20" width="24" height="13" caption="Color"/>
+  <label name="Rotation" top="140" left="20" width="40" height="13" caption="Rotation"/>
+  <label name="RotationSpeed" top="180" left="20" width="71" height="13" caption="RotationSpeed"/>
+  <label name="Strobe" top="230" left="20" width="31" height="13" caption="Strobe"/>
+  <label name="Dimmer" top="280" left="20" width="35" height="13" caption="Dimmer"/>
+ </form>
+ <code>
+  unit Triphase;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure DimmerChange;
+  procedure StrobeChange;
+  procedure ColorChange;
+  procedure RotationChange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  //var
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+	wert:integer;
+  begin
+    case channel of
+    	0:
+    	begin
+    		wert:=get_channel('special1');
+    		if not dontrefresh then
+    		ColorSlider.position:= wert;
+    	end;
+    	1:
+    	begin
+    		wert:=get_channel('SPECIAL1');
+    		if not dontrefresh then
+			case wert of
+				0..9: RotationBox.itemindex:=0;
+				10..120:
+					begin
+						RotationBox.itemindex:=1;
+						RotationSlider.position:= wert-10;
+					end;
+				121..134: RotationBox.itemindex:=0;
+				135..245:
+					begin
+						RotationBox.itemindex:=2;
+						RotationSlider.position:= wert-135;
+					end;
+				246..255: RotationBox.itemindex:=0;
+			end;
+    	end;
+    	2:
+    	begin
+    		wert:=get_channel('SHUTTER');
+    		if not dontrefresh then
+    		StrobeSlider.position:= wert;
+    	end;
+    	3:
+    	begin
+    		wert:=get_channel('DIMMER');
+    		if not dontrefresh then
+    		DimmerSlider.position:= wert;
+    	end;
+
+    end;
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure DimmerChange;
+//  var
+    // hier ist Platz für eigene Variablen (z.B. "temp: boolean;" oder "temp:string;")
+  begin
+    DontRefresh:=true;
+		set_channel('DIMMER',-1,DimmerSlider.position,0,0);
+    // bitte hier die eigene Funktion eintragen
+  end;
+  procedure StrobeChange;
+//  var
+    // hier ist Platz für eigene Variablen (z.B. "temp: boolean;" oder "temp:string;")
+  begin
+    DontRefresh:=true;
+		set_channel('SHUTTER',-1,StrobeSlider.position,0,0);
+    // bitte hier die eigene Funktion eintragen
+  end;
+  procedure ColorChange;
+//  var
+    // hier ist Platz für eigene Variablen (z.B. "temp: boolean;" oder "temp:string;")
+  begin
+    DontRefresh:=true;
+		set_channel('special1',-1,ColorSlider.position,0,0);
+    // bitte hier die eigene Funktion eintragen
+  end;
+  procedure RotationChange;
+//  var
+    // hier ist Platz für eigene Variablen (z.B. "temp: boolean;" oder "temp:string;")
+  begin
+    DontRefresh:=true;
+		case Rotationbox.itemindex of
+		 0: set_channel('SPECIAL1',-1,0,0,0);
+		 1: set_channel('SPECIAL1',-1,RotationSlider.position+10,0,0);
+		 2: set_channel('SPECIAL1',-1,RotationSlider.position+135,0,0);
+		end;
+  end;
+  end.
+ </code>
+</device>

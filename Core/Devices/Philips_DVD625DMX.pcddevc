@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\dvdplayer.png">
+ <information id="PC_DIMMER">
+ <name>DVD625-Player</name>
+ <vendor>Philips</vendor>
+ <author>Christian Nöding</author>
+ <description>Philips DVD625-Player mit DMX-Steuerung</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Command" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Execute" fade="yes" type="special2"/>
+ </channels>
+ <initvalues 0="-1" 1="-1" />
+ <form width="251" height="142">
+  <deviceimage top="10" left="10" width="60" height="60"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <dropdown name="Combobox1" top="60" left="80" width="100" height="21" action="ComboboxChange">
+  </dropdown>
+  <label name="Label1" top="70" left="10" width="45" height="13" caption="Titelwahl:"/>
+  <button name="Button1" top="100" left="10" width="50" height="30" action="PlayBtn" caption="4"/>
+  <button name="Button2" top="100" left="70" width="50" height="30" action="PauseBtn" caption=";"/>
+  <button name="Button3" top="100" left="130" width="50" height="30" action="StopBtn" caption="<"/>
+  <button name="Button4" top="100" left="190" width="50" height="30" action="MuteBtn" caption="X"/>
+  <button name="Button5" top="60" left="190" width="50" height="30" action="JumpBtn" caption="Sprung"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure JumpBtn;
+  procedure PlayBtn;
+  procedure PauseBtn;
+  procedure StopBtn;
+  procedure MuteBtn;
+  procedure ComboboxChange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+	var
+		i:integer;
+  begin
+ 		button1.font.name:='Webdings';
+ 		button2.font.name:='Webdings';
+ 		button3.font.name:='Webdings';
+ 		button4.font.name:='Webdings';
+ 		button1.font.size:=16;
+ 		button2.font.size:=16;
+ 		button3.font.size:=16;
+ 		button4.font.size:=16;
+
+    Combobox1.Items.Clear;
+		for i:=1 to 90 do
+    	Combobox1.Items.Add('Track '+inttostr(i));
+  end;
+  procedure FormRefresh(channel:Integer);
+	var
+		wert,index:integer;
+  begin
+  	if not dontrefresh then
+  	begin
+			wert:=get_channel('special1');
+	  	index:=round(wert/255*100);
+	    Combobox1.itemindex:=index;
+    end;
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure JumpBtn;
+  begin
+		dontrefresh:=true;
+    set_channel('special1',round((Combobox1.ItemIndex)/100*255),round((Combobox1.ItemIndex)/100*255),0);
+  	set_channel('special2',255,255,0);
+		ShowMessage('Klicken Sie auf "OK", wenn der Player die gewünschte Funktion ausgeführt hat.');
+//		sleep(250);
+//  	set_channel('special1',0,0,0);
+  	set_channel('special2',0,0,0);
+  end;
+  procedure PlayBtn;
+  begin
+  	set_channel('special1',255,255,0);
+  	set_channel('special2',255,255,0);
+		ShowMessage('Klicken Sie auf "OK", wenn der Player die gewünschte Funktion ausgeführt hat.');
+//		sleep(250);
+  	set_channel('special1',0,0,0);
+  	set_channel('special2',0,0,0);
+  end;
+  procedure PauseBtn;
+  begin
+  	set_channel('special1',250,250,0);
+  	set_channel('special2',255,255,0);
+		ShowMessage('Klicken Sie auf "OK", wenn der Player die gewünschte Funktion ausgeführt hat.');
+//		sleep(250);
+  	set_channel('special1',0,0,0);
+  	set_channel('special2',0,0,0);
+  end;
+  procedure StopBtn;
+  begin
+  	set_channel('special1',245,245,0);
+  	set_channel('special2',255,255,0);
+		ShowMessage('Klicken Sie auf "OK", wenn der Player die gewünschte Funktion ausgeführt hat.');
+//		sleep(250);
+  	set_channel('special1',0,0,0);
+  	set_channel('special2',0,0,0);
+  end;
+  procedure MuteBtn;
+  begin
+  	set_channel('special1',235,235,0);
+  	set_channel('special2',255,255,0);
+		ShowMessage('Klicken Sie auf "OK", wenn der Player die gewünschte Funktion ausgeführt hat.');
+//		sleep(250);
+  	set_channel('special1',0,0,0);
+  	set_channel('special2',0,0,0);
+  end;
+  procedure ComboboxChange;
+  begin
+    dontrefresh:=true;
+		set_channel('special1',round((Combobox1.ItemIndex)/100*255),round((Combobox1.ItemIndex)/100*255),0);
+  end;
+  end.
+ </code>
+</device>

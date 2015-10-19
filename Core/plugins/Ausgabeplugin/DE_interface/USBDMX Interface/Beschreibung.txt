@@ -1,0 +1,51 @@
+Allgemeine Beschreibung des Interfaces
+======================================
+
+
+Übersicht:
+----------
+Das hier vorgestellte USB-DMX Interface ermöglicht es eine DMX fähige Lichtanlage von einem PC aus zu steuern. Dazu verfügt das Interface sowohl über einen DMX Ausgang als auch über einen DMX Eingang welche gleichzeitig jeweils 512 Kanäle verarbeiten können. Da die Kommunikation zwischen Interface und PC mit für USB 1.1 üblichen 12MBit arbeitet können alle Ein- und Ausgangsdaten schnell genug übertragen werden. Selbst wenn sich der Wert aller 512 Kanäle ändert kommt der DMX Datenstrom nicht ins stocken.
+Durch die Wahl verschiedener Betriebsmodi lassen sich die DMX Eingangsdaten oder ein per PC generierter Datenstrom auf den DMX Ausgang legen. Natürlich können auch DMX Eingang und PC Daten kombiniert werden und der DMX Eingang kann zum PC übertragen werden. Der komplette DMX Tranceiver Teil ist galvanisch (max. 1000V) vom Rest der Schaltung getrennt. Weiter gibt es die Möglichkeit das Interface mit einem externen Netzteil zu versorgen und es so im Stand-Alone Betrieb als Repeater zu nutzen oder den Anschluss an einen passiven USB Hub zu ermöglichen.
+Die Ansteuerung auf PC Seite erfolgt durch eine dll-Datei. Sie stellt Funktionen zur Kommunikation mit den angeschlossenen Interfaces zur Verfügung. Es lassen sich bis zu 32 Interfaces an einen Rechner anschliessen, praktisch begrenzt natürlich die Übertragungskapazität von USB die Anzahl.
+
+Hier nocheinmal alle Features des Interfaces:
+- DMX-512 kompatibler Ausgang (512 Kanäle)
+- DMX-512 kompatibler Eingang (512 Kanäle)
+- USB 1.1 kompatible Schnittstelle zum PC
+- Galvanisch getrennter DMX Tranceiver (max. 1000V)
+- Keine externe Stromversorgung nötig sofern das Interface an einem High-Power USB Port betrieben wird
+- Betrieb an einem Low-Power USB Port (z.B. passiver Hub) mit externer Stromversorgung möglich
+- Erfolgreich getestet mit Win98SE, Win2K, WinXP, sowohl mit USB 1.1 als auch mit USB 2.0 Ports
+
+
+Treiber Installation:
+---------------------
+Wurde die Hardware einwandfrei aufgebaut und auf Fehler überprüft, kann das Interface an einen freien USB Port des Rechners angeschlossen werden. Windows erkennt ein neues Gerät und startet den Hardware-Assistenten welcher einen passenden Treiber sucht. Da sich das Interface als HID konformes Gerät anmeldet sollte kein spezieller Treiber notwendig sein. Falls der Hardware-Assistent aber wider erwarten Probleme macht kann die Datei "Sunlight Killer.inf" als Treiber verwendet werden.
+
+
+Zugriff auf das Interface:
+--------------------------
+Ist die Treiber Installation abgeschlossen, kann das Interface mit Hilfe der "usbdmx.dll" angesprochen werden. Eine Übersicht der exportierten Funktionen und Deklarationsvorschläge finden sich in der Datei "usbdmx.txt". Alle Funktionen sind als stdcall implementiert.
+Um Zugriff auf ein Interface zu erhalten sollte folgendermassen vorgegangen werden:
+Mit Hilfe der Funktionen "RegisterInterfaceChangeNotification" und "RegisterInputChangeNotification" kann die Hostanwendung zwei parameterlose Funktionen registrieren, die beim Wechsel der Interfacekonfiguration am PC bzw. beim Eintreffen neuer Daten an einem DMX Eingang aufgerufen werden.
+Die Funktion "GetAllConnectedInterfaces" liefert alle am PC angeschlossenen Inerfaces zurück während die Funktion "GetAllOpenedInterfaces" alle geöffneten Interfaces liefert. Der Rückgabewert ist in beiden Fällen eine Liste mit 16-stelligen Seriennummern. Die Seriennummer ist für jedes Interface eindeutig. Die Seriennummer "0000000000000000" ist nicht vergeben, d.h. wenn diese Nummer an einer Position in der Liste auftaucht sind keine weiteren Interfaces verfügbar.
+Um mit einem Interface zu kommunizieren muss zunächst mit der Funktion "OpenLink" eine Verbindung aufgebaut werden. Diese Funktion erwartet als Parameter die Seriennummer des zu öffnenden Interfaces und zwei Pointer auf 512 Byte grosse Speicherbereiche (z.B. Arrays). Der erste Pointer verweist auf den DMX-Ausgabe-Speicher während der zweite Pointer auf den DMX-Eingabe-Speicher zeigt. Nun muss nur noch der Betriebsmodus des Interfaces mit der Funktion "SetInterfaceMode" gewählt werden. Auch diese Funktion erwartet als ersten Parameter die Seriennummer des zu steuernden Interfaces. Der zweite Parameter gibt den Mode an:
+0: Do nothing - Standby
+1: DMX In -> DMX Out
+2: PC Out -> DMX Out
+3: DMX In + PC Out -> DMX Out
+4: DMX In -> PC In
+5: DMX In -> DMX Out & DMX In -> PC In
+6: PC Out -> DMX Out & DMX In -> PC In
+7: DMX In + PC Out -> DMX Out & DMX In -> PC In
+Um Daten vom PC an das Interface zu senden wird einfach nur der DMX-Ausgabe-Speicher welcher beim Aufruf von "OpenLink" festgelegt wurde beschrieben. Entsprechend liefert der DMX-Eingabe-Speicher den aktuellen Zustand des DMX-Eingangs.
+Wurde mit "RegisterInputChangeNotification" eine Funktion registriert, so wird diese jedes Mal aufgerufen wenn sich ein Kanal am DMX Eingang ändert. Die registrierte Funktion sollte so kurz wie möglich gehalten werden (< 1ms Ausführungszeit), da sie den DMX-Input Thread blockt. Ein längeres blocken dieses Threads kann zum Verlust von DMX-Eingangsdaten führen. Bei jedem Aufruf dieser Funktion können bis zu 32 DMX Kanäle ihren Wert verändert haben.
+Zum Schliessen der Interfaceverbindungen dienen die beiden Funktionen "CloseLink" und "CloseAllLinks".
+
+Weiterhin liegt noch die Datei "lcm_dmx.dll" bei welche kompatibel zu den Programmen von "tabu-lightcontrol.de" ist. Sie öffnet das erste angeschlossene Interface in Mode 2 und leitet den Datenstrom der Hostapplikation an das Interface weiter.
+
+
+Stand 08.12.2004
+(c) 2004 Michael Dreschmann
+info@digital-enlightenment.de
+www.digital-enlightenment.de

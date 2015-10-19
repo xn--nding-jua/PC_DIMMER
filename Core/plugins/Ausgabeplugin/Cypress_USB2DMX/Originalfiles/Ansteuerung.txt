@@ -1,0 +1,191 @@
+uses
+  Hid, JvHidControllerClass;
+
+
+
+//TJvHidDeviceController auf Form ziehen (aus den Jedis)
+
+
+
+  public
+    Transmit : boolean;
+    ValueArray : array [1..512] of Byte;  //brightness value
+    DMXAdaptor: TJvHidDevice;
+    DMXAdaptorReady : boolean;
+  end;
+
+
+var
+  Form1: TForm1;
+  HidHandle : THandle;
+  Success: LongBool;
+  Buffer  : array [0..253] of WideChar;
+  Capabilities : HIDP_CAPS;
+  OutputReport : Array [0..255] of Byte;
+  BytesRead : Cardinal;
+  address : WORD;
+  data : BYTE;
+  PacketCount : WORD;
+  Addr : Byte;
+
+
+const
+  VendorID   = $04B4;
+  ProductID  = $F23F;
+
+
+
+procedure FormClose(Sender: TObject);
+begin
+  if HidHandle <> INVALID_HANDLE_VALUE  then
+  begin
+    CloseHandle(HidHandle);
+  end;
+end;
+
+
+procedure JvHidDeviceControllerDeviceChange(Sender: TObject);
+begin
+  // Free the device object if it has been unplugged
+  if (Assigned(DMXAdaptor)) and not(DMXAdaptor.IsPluggedIn) then
+      FreeAndNil(DMXAdaptor);
+
+  // if no in use yet then search for one
+  if not Assigned(DMXAdaptor) then
+      JvHidDeviceController.CheckOutByID(DMXAdaptor, VendorID, ProductID);
+
+  // update the controls on the form
+  if Assigned(DMXAdaptor) then
+  begin
+    // Gerät verfügbar
+    DMXAdaptorReady:=true;
+  end else
+  begin
+    // Gerät nicht verfügbar
+    DMXAdaptorReady:=false;
+  end;
+end;
+
+procedure JvHidDeviceControllerArrival(HidDev: TJvHidDevice);
+begin
+
+  // if no in use yet then search for one
+  if not Assigned(DMXAdaptor) then
+      JvHidDeviceController.CheckOutByID(DMXAdaptor, VendorID, ProductID);
+
+  // update the controls on the form
+  if Assigned(DMXAdaptor) then
+  begin
+    // Gerät verfügbar
+    DMXAdaptorReady:=true;
+  end;
+end;
+
+procedure FormActivate(Sender: TObject);
+begin
+  PacketCount := 24;
+  Addr := 0;
+end;
+
+procedure SetTransceiver(Active: boolean);
+var
+    Command : byte;
+    Buf : array[0..3] of byte; //first byte is report number
+    ToWrite, Written : Cardinal;
+    str : String;
+begin
+  Transmit := Active;
+
+  // setup command code
+  if Transmit then
+  begin
+      Command := $4;  //enable DMX transmission
+      str := ' -->Enable transmission';
+  end
+    else
+  begin
+      Command := $2; //disable DMX transmission
+      str := ' -->Disable transmission';
+  end;
+
+  // send to device
+  Buf[0] := 0;
+  Buf[1] := Command;
+  Buf[2] := 0;
+  Buf[3] := 0;
+
+  if Assigned(DMXAdaptor) then
+  begin
+      ToWrite := DMXAdaptor.Caps.OutputReportByteLength;
+      DMXAdaptor.WriteFile(Buf, ToWrite, Written);
+      //Memo1.Lines.Add(IntToHex(Buf[1], 2) + IntToHex(Buf[2], 2) + IntToHex(Buf[3], 2) + str);
+  end;
+
+  if Transmit then
+  begin
+      // send to device
+      Buf[0] := 0;
+      Buf[1] := $10 or ((PacketCount - 1) div 256);
+      Buf[2] := (PacketCount - 1) mod 256;
+      Buf[3] := 0;
+
+      ToWrite := DMXAdaptor.Caps.OutputReportByteLength;
+      DMXAdaptor.WriteFile(Buf, ToWrite, Written);
+      //Memo1.Lines.Add(IntToHex(Buf[1], 2) + IntToHex(Buf[2], 2) + IntToHex(Buf[3], 2) + ' -->Send packet length');
+  end;
+end;
+
+procedure SetChannel(Channel, Value: Word);    //OnChange()
+var
+   Val : BYTE;
+   Adr : WORD;
+   i : BYTE;
+
+   Buf : array[0..3] of byte; //first byte is report number
+   ToWrite, Written : Cardinal;
+   Command : byte;
+begin
+   Val := Value;
+   Adr := Channel-1;
+   ValueArray[Adr + 1] := Val;
+   data := Val;
+   address := Adr;
+
+   if Transmit then
+   begin
+     Command := $8;  //send data
+     Buf[0] := 0;
+     Buf[1] := Command or (address div 256);
+     Buf[2] := address mod 256;
+     Buf[3] := data;
+     ToWrite := DMXAdaptor.Caps.OutputReportByteLength;
+     DMXAdaptor.WriteFile(Buf, ToWrite, Written);
+     //Memo1.Lines.Add(IntToHex(Buf[1], 2) + IntToHex(Buf[2], 2) + IntToHex(Buf[3], 2) + ' -->Send data') ;
+   end;
+end;
+
+procedure SetPaketSize(PaketSize: Word);  //Packet count
+var
+    Buf : array[0..3] of byte;    //buffer for output
+    ToWrite, Written : Cardinal;  //
+    i : integer;
+begin
+    PacketCount := PaketSize;
+
+    // setup command code
+    if Transmit then
+    begin
+      if (PacketCount < 24) then
+      PacketCount := 24;
+
+      // send to device
+      Buf[0] := 0;
+      Buf[1] := $10 or ((PacketCount - 1) div 256);
+      Buf[2] := (PacketCount - 1) mod 256;
+      Buf[3] := 0;
+
+      ToWrite := DMXAdaptor.Caps.OutputReportByteLength;
+      DMXAdaptor.WriteFile(Buf, ToWrite, Written);
+      //Memo1.Lines.Add(IntToHex(Buf[1], 2) + IntToHex(Buf[2], 2) + IntToHex(Buf[3], 2) + ' -->Change packet length');
+   end;
+end;

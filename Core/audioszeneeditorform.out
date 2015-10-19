@@ -1,0 +1,91 @@
+unit audioszeneeditorform;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Buttons;
+
+type
+  Taudioszeneneditor = class(TForm)
+    GroupBox1:    TGroupBox;
+    Button1:      TButton;
+    Label1:       TLabel;
+    Label2:       TLabel;
+    Label3:       TLabel;
+    Edit1:        TEdit;
+    Edit2:        TEdit;
+    Label4:       TLabel;
+    Edit3:        TEdit;
+    SpeedButton1: TSpeedButton;
+    Edit4:        TEdit;
+    Edit5:        TEdit;
+    Edit6:        TEdit;
+    Button4:      TButton;
+    Edit7:        TEdit;
+    Label5:       TLabel;
+    Label6:       TLabel;
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure Edit4Change(Sender: TObject);
+    procedure Edit4Exit(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+  end;
+
+var
+  audioszeneneditor: Taudioszeneneditor;
+
+implementation
+
+uses PCDIMMER;
+
+{$R *.dfm}
+
+procedure Taudioszeneneditor.SpeedButton1Click(Sender: TObject);
+begin
+  if mainform.project_folder <> '' then
+    mainform.openmedia.InitialDir := mainform.project_folder;
+  if mainform.openmedia.Execute then
+  begin
+    if Edit1.Text = '' then
+      Edit1.Text := ExtractFileName(mainform.openmedia.FileName);
+    if pos(mainform.workingdirectory + 'Projekt\', mainform.openmedia.FileName) > 0 then
+    begin
+      Edit3.Text := copy(mainform.openmedia.FileName, length(mainform.workingdirectory + 'Projekt\') + 1, length(mainform.openmedia.FileName));
+      label6.Caption := copy(mainform.openmedia.FileName, length(mainform.workingdirectory + 'Projekt\') + 1, length(mainform.openmedia.FileName));
+    end else
+    begin
+      Edit3.Text := mainform.openmedia.FileName;
+      label6.Caption := mainform.openmedia.FileName;
+    end;
+  end;
+end;
+
+procedure Taudioszeneneditor.Edit4Change(Sender: TObject);
+var
+  s: string;
+  i: integer;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  mainform.input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+end;
+
+procedure Taudioszeneneditor.Edit4Exit(Sender: TObject);
+begin
+  if TEdit(Sender).Text = '' then
+    TEdit(Sender).Text := '0';
+end;
+
+procedure Taudioszeneneditor.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = vk_escape then
+    modalresult := mrCancel;
+end;
+
+end.

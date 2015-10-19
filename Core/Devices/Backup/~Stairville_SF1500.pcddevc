@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\martin_magnum.png">
+ <information id="PC_DIMMER">
+ <name>SF1500</name>
+ <vendor>Stairville</vendor>
+ <author>Christian Nöding</author>
+ <description>Nebelmaschine</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="SPECIAL1" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="DIMMER" fade="yes" type="dimmer"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="SPECIAL2" fade="yes" type="special2"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" />
+ <shutter OpenValue="20" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="20" MinValue="50" MaxValue="72" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="255" OffValue="0" RightMinValue="0" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="233" height="210">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="fctbox" top="100" left="10" width="210" height="23" action="fctboxchange">
+   <item caption="Nebel aus" value="0" valueend="0" picture="" />
+   <item caption="Dauerbetrieb" value="0" valueend="0" picture="" />
+   <item caption="Zeitsteuerung (Timer)" value="0" valueend="0" picture="" />
+   <item caption="Maximaler Nebelausstoß" value="0" valueend="0" picture="" />
+  </dropdown>
+  <dropdown name="timerbox" top="180" left="10" width="210" height="23" action="timerboxchange">
+   <item caption="1s" value="0" valueend="0" picture="" />
+   <item caption="13s" value="0" valueend="0" picture="" />
+   <item caption="33s" value="0" valueend="0" picture="" />
+   <item caption="53s" value="0" valueend="0" picture="" />
+   <item caption="73s" value="0" valueend="0" picture="" />
+   <item caption="92s" value="0" valueend="0" picture="" />
+   <item caption="112s" value="0" valueend="0" picture="" />
+   <item caption="131s" value="0" valueend="0" picture="" />
+   <item caption="151s" value="0" valueend="0" picture="" />
+   <item caption="170s" value="0" valueend="0" picture="" />
+   <item caption="190s" value="0" valueend="0" picture="" />
+  </dropdown>
+  <slider name="volumeslider" top="150" left="10" width="210" height="20" action="volumechange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="130" left="10" width="60" height="10" caption="Nebelmenge:"/>
+  <label name="Label2_939" top="80" left="10" width="88" height="13" caption="Funktionsauswahl:"/>
+ </form>
+ <code>
+  unit magnum1500unit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure volumechange;
+  procedure timerboxchange;
+  procedure fctboxchange;
+
+  implementation
+
+var
+	dontsetslider, dontsetbox:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+	var
+		wert:integer;
+  begin
+		case channel of
+    	0:
+    	begin
+    		wert:=get_channel('special1');
+
+		    if not dontsetslider then
+				case wert of
+					0..13: fctbox.itemindex:=0;
+					14..127: fctbox.itemindex:=1;
+					128..231: fctbox.itemindex:=2;
+					232..255: fctbox.itemindex:=3;
+				end;
+    	end;
+    	1:
+    	begin
+    		wert:=get_channel('dimmer');
+
+		    if not dontsetslider then
+					volumeslider.position:=wert;
+    	end;
+    	2:
+    	begin
+    		wert:=get_channel('special2');
+
+		    if not dontsetbox then
+				case wert of
+					0..4: timerbox.itemindex:=0;
+					5..29: timerbox.itemindex:=1;
+					30..54: timerbox.itemindex:=2;
+					55..79: timerbox.itemindex:=3;
+					80..104: timerbox.itemindex:=4;
+					105..129: timerbox.itemindex:=5;
+					130..154: timerbox.itemindex:=6;
+					155..179: timerbox.itemindex:=7;
+					180..204: timerbox.itemindex:=8;
+					205..229: timerbox.itemindex:=9;
+					230..255: timerbox.itemindex:=10;
+				end;    		
+    	end;
+    end;
+		dontsetslider:=false;
+    dontsetbox:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure volumechange;
+  begin
+    dontsetslider:=true;
+		set_channel('dimmer',volumeslider.position,volumeslider.position,0);
+  end;
+  procedure timerboxchange;
+  begin
+    dontsetbox:=true;
+    case timerbox.itemindex of
+    	0: set_channel('special2',0,0,0);
+    	1: set_channel('special2',0,10,0);
+    	2: set_channel('special2',0,30,0);
+    	3: set_channel('special2',0,60,0);
+    	4: set_channel('special2',0,90,0);
+    	5: set_channel('special2',0,110,0);
+    	6: set_channel('special2',0,140,0);
+    	7: set_channel('special2',0,160,0);
+    	8: set_channel('special2',0,190,0);
+    	9: set_channel('special2',0,210,0);
+    	10: set_channel('special2',0,240,0);
+    end;
+  end;
+  procedure fctboxchange;
+  begin
+    dontsetbox:=true;
+		case fctbox.itemindex of
+			0: set_channel('special1',0,0,0);
+			1: set_channel('special1',64,64,0);
+			2: set_channel('special1',191,191,0);
+			3: set_channel('special1',255,255,0);
+		end;
+  end;
+  end.
+ </code>
+</device>

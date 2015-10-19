@@ -1,0 +1,38 @@
+{
+// Inhalt der Combobox:
+Linear
+Schalter
+Viertel-Sinus
+Exponentiell
+Doppelt-Exponentiell
+Doppelt-Exponentiell 2
+Treppenstufe
+Stufenverlauf
+Sinuswackeln klein
+Sinuswackeln groß
+}
+
+var
+  i:integer;
+begin
+  RepaintGraph;
+
+  if Treeview1.Selected.Index>-1 then
+  begin
+    if Sender<>nil then
+    begin
+      for i:=0 to length(mainform.devices)-1 do
+      begin
+        if (mainform.devices[i].Startaddress>=(mainform.Devices[aktuellesgeraet].Startaddress+Treeview1.Selected.Index)) and (mainform.devices[i].Startaddress+mainform.devices[i].MaxChan-1<=(mainform.Devices[aktuellesgeraet].Startaddress+Treeview1.Selected.Index)) and (i<>aktuellesgeraet) and (mainform.Devices[i].kanaldimmcurve[mainform.Devices[aktuellesgeraet].Startaddress+Treeview1.Selected.Index-mainform.devices[i].Startaddress]<>Combobox1.ItemIndex) then
+        begin
+          if messagedlg('Ein anderer Gerätekanal ('+mainform.Devices[i].Name+': '+mainform.Devices[i].Kanalname[mainform.Devices[aktuellesgeraet].Startaddress+Treeview1.Selected.Index-mainform.devices[i].Startaddress]+') belegt die gleiche Adresse wie der ausgewählte Kanal.'+#10#13+'Es kann allerdings nur eine Kurve pro Kanal genutzt werden.'+#10#13#10#13+'Soll die Kurvenform des anderen Gerätekanals nun automatisch angepasst werden?',mtConfirmation,
+            [mbYes,mbNo],0)=mrYes then
+              mainform.Devices[i].kanaldimmcurve[mainform.Devices[aktuellesgeraet].Startaddress+Treeview1.Selected.Index-mainform.devices[i].Startaddress]:=Combobox1.ItemIndex;
+        end;
+      end;
+
+      mainform.Devices[aktuellesgeraet].kanaldimmcurve[Treeview1.Selected.Index]:=Combobox1.ItemIndex;
+      mainform.channel_dimmcurve[mainform.Devices[aktuellesgeraet].Startaddress+Treeview1.Selected.Index]:=mainform.Devices[aktuellesgeraet].kanaldimmcurve[Treeview1.Selected.Index];
+    end;
+  end;
+end;

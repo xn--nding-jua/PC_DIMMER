@@ -1,0 +1,69 @@
+  // Graph 1
+  _Buffer.Canvas.Brush.Color := clBlack;
+  _Buffer.Canvas.FillRect(_Buffer.Canvas.ClipRect);
+
+  if Treeview1.Selected.Index>-1 then
+  begin
+    maxres:=127;
+    _Buffer.Width:=Paintbox1.Width;
+    _Buffer.Height:=Paintbox1.Height;
+
+    _Buffer.Canvas.Brush.Color := clBlack;
+    _Buffer.Canvas.FillRect(_Buffer.Canvas.ClipRect);
+
+    _Buffer.Canvas.Pen.Color:=clYellow;
+    _Buffer.Canvas.MoveTo(15+0,_Buffer.Height-0-15);
+    _Buffer.Canvas.LineTo(15+0,_Buffer.Height-maxres-15);
+    _Buffer.Canvas.MoveTo(15+0,_Buffer.Height-0-15);
+    _Buffer.Canvas.LineTo(15+maxres,_Buffer.Height-0-15);
+
+    _Buffer.Canvas.Pen.Color:=clLime;
+    y:=0;
+    for i:=0 to maxres do
+    begin
+      case Combobox1.ItemIndex of
+        0: y:=i;  // Linear
+        1: if i < (maxres div 2) then y:=0 else y:=maxres; // Schalten
+        2: y:=round(sin((i/maxres)*(pi/2))*maxres); // Viertel-Sinus
+        3: y:=maxres-round(sin(((maxres-i)/maxres)*(pi/2))*maxres); // Viertel-Sinus Invertiert
+        4: y:=round(((cos(((maxres-i)/maxres)*pi)+1)/2)*maxres); // Halber Cosinus
+        5: y:=round(power(((cos(power(((maxres-i)/maxres),2)*pi)+1)/2),4)*maxres); // Gestauchter halber Cosinus
+        6: y:=round((power(((i-64)/16),3)+64));
+        7:
+        begin
+          if (i>=0) and (i<(maxres div 5 * 1)) then y:=0;
+          if (i>=(maxres div 5 * 1)) and (i<(maxres div 5 * 2)) then y:=(maxres div 5 * 1);
+          if (i>=(maxres div 5 * 2)) and (i<(maxres div 5 * 3)) then y:=(maxres div 5 * 2);
+          if (i>=(maxres div 5 * 3)) and (i<(maxres div 5 * 4)) then y:=(maxres div 5 * 3);
+          if (i>=(maxres div 5 * 4)) and (i<(maxres div 5 * 5)) then y:=(maxres div 5 * 4);
+          if (i>=maxres) then y:=maxres;
+        end;
+        8: y:=round(i+sin(i/4)*10);
+        9: y:=round(i+sin(i/4)*40);
+      end;
+      _Buffer.Canvas.MoveTo(15+i,_Buffer.Height-y-15);
+      _Buffer.Canvas.LineTo(15+i+1,_Buffer.Height-y-15);
+    end;
+
+    if Combobox1.ItemIndex=1 then
+    begin
+      _Buffer.Canvas.MoveTo(15+(maxres div 2),_Buffer.Height-0-15);
+      _Buffer.Canvas.LineTo(15+(maxres div 2),_Buffer.Height-maxres-15);
+    end;
+    if Combobox1.ItemIndex=7 then
+    begin
+      _Buffer.Canvas.MoveTo(15+(maxres div 5 * 1),_Buffer.Height-0-15);
+      _Buffer.Canvas.LineTo(15+(maxres div 5 * 1),_Buffer.Height-(maxres div 5 * 1)-15);
+      _Buffer.Canvas.MoveTo(15+(maxres div 5 * 2),_Buffer.Height-(maxres div 5 * 1)-15);
+      _Buffer.Canvas.LineTo(15+(maxres div 5 * 2),_Buffer.Height-(maxres div 5 * 2)-15);
+      _Buffer.Canvas.MoveTo(15+(maxres div 5 * 3),_Buffer.Height-(maxres div 5 * 2)-15);
+      _Buffer.Canvas.LineTo(15+(maxres div 5 * 3),_Buffer.Height-(maxres div 5 * 3)-15);
+      _Buffer.Canvas.MoveTo(15+(maxres div 5 * 4),_Buffer.Height-(maxres div 5 * 3)-15);
+      _Buffer.Canvas.LineTo(15+(maxres div 5 * 4),_Buffer.Height-(maxres div 5 * 4)-15);
+      _Buffer.Canvas.MoveTo(15+(maxres),_Buffer.Height-(maxres div 5 * 4)-15);
+      _Buffer.Canvas.LineTo(15+(maxres),_Buffer.Height-(maxres)-15);
+    end;
+  end;
+
+  BitBlt(Paintbox1.Canvas.Handle,0,0,Paintbox1.Width,Paintbox1.Height,_Buffer.Canvas.Handle,0,0,SRCCOPY);
+

@@ -1,0 +1,17 @@
+001 byte    Start of message delimiter, hex 7E.
+001 byte    Label to identify type of message. => 6
+001 byte    Data length LSB. Valid range for data length is 513
+001 byte    Data length MSB.
+512 byte    Data bytes.
+001 byte    End of message delimiter, hex E7.
+
+Package to port: 1-20Hz
+
+Port settings:
+
+DTR= False
+RTS = False
+Baud rate: 128000bps
+Parity: No
+Data bits: 8
+Stop bit: 1

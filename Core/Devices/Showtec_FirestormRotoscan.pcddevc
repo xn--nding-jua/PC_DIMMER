@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\rotoscan.png">
+ <information id="PC_DIMMER">
+ <name>Firestorm Rotoscan</name>
+ <vendor>Showtec</vendor>
+ <author>Christian Nöding</author>
+ <description></description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Gobo" fade="yes" type="gobo1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Rotation" fade="yes" type="speed"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Farbe" fade="yes" type="color1"/>
+ </channels>
+ <initvalues ch0="127" ch1="127" ch2="-1" ch3="-1" ch4="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="255" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="128" LeftMaxValue="255" OffValue="128" RightMinValue="128" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="251" height="472">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="80" left="10" height="230" width="230" />
+  <slider name="GoboSlider" top="340" left="10" width="230" height="20" action="GoboChange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="ColorSlider" top="440" left="10" width="230" height="20" action="ColorChange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Rotationslider" top="390" left="10" width="230" height="20" action="RotationChange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="320" left="10" width="29" height="13" caption="Gobo:"/>
+  <label name="Label2" top="420" left="10" width="30" height="13" caption="Farbe:"/>
+  <label name="Label3" top="370" left="10" width="43" height="13" caption="Rotation:"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure GoboChange;
+  procedure ColorChange;
+  procedure RotationChange;
+
+  implementation
+
+  var
+    dontrefreshvalue:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  begin
+    case channel of
+    	0..1:
+    	begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+    	end;
+    	2:
+    	begin
+    		if not dontrefreshvalue then
+    			GoboSlider.position:=get_channel('GOBO1');
+    	end;
+    	3:
+    	begin
+    		if not dontrefreshvalue then
+    			RotationSlider.position:=get_channel('SPEED');
+    	end;
+    	4:
+    	begin
+    		if not dontrefreshvalue then
+    			ColorSlider.position:=get_channel('COLOR1');
+    	end;
+    end;
+    
+    dontrefreshvalue:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  procedure GoboChange;
+  begin
+    dontrefreshvalue:=true;
+    set_channel('GOBO1', GoboSlider.position, GoboSlider.position, 0);
+  end;
+  procedure ColorChange;
+  begin
+    dontrefreshvalue:=true;
+    set_channel('COLOR1', ColorSlider.position, ColorSlider.position, 0);
+  end;
+  procedure RotationChange;
+  begin
+    dontrefreshvalue:=true;
+    set_channel('SPEED', RotationSlider.position, RotationSlider.position, 0);
+  end;
+  end.
+ </code>
+</device>

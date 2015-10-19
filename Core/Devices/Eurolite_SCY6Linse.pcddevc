@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\quadgem.png">
+ <information id="PC_DIMMER">
+ <name>SCY-6 (Linsen DDF)</name>
+ <vendor>Eurolite</vendor>
+ <author>Martin</author>
+ <description>DDF für Linsen des SCY-6</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Farbe" fade="yes" type="color1"/>
+ </channels>
+ <initvalues ch0="-1" />
+ <colors>
+  <color name="Aus" value="0" valueend="10" r="0" g="0" b="0" />
+  <color name="Rot" value="11" valueend="45" r="255" g="0" b="0" />
+  <color name="Grün" value="46" valueend="80" r="0" g="255" b="0" />
+  <color name="Blau" value="81" valueend="115" r="0" g="0" b="255" />
+  <color name="Rot & Grün" value="116" valueend="150" r="255" g="255" b="0" />
+  <color name="Rot & Blau" value="151" valueend="185" r="128" g="0" b="128" />
+  <color name="Grün & Blau" value="186" valueend="220" r="0" g="255" b="255" />
+  <color name="Rot &  Grün & Blau" value="221" valueend="255" r="255" g="255" b="255" />
+ </colors>
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="230" height="121">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorbox top="90" left="40" height="22" width="150" />
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorBoxChange;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        value:=get_channel('color1');
+        case value of
+          0..10: colorbox.itemindex:=0;
+          11..45: colorbox.itemindex:=1;
+          46..80: colorbox.itemindex:=2;
+          81..115: colorbox.itemindex:=3;
+          116..150: colorbox.itemindex:=4;
+          151..185: colorbox.itemindex:=5;
+          186..220: colorbox.itemindex:=6;
+          221..255: colorbox.itemindex:=7;
+        end;
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure ColorBoxChange;
+  begin
+    case colorbox.itemindex of
+      0: set_channel('color1', -1, 0, 0);
+      1: set_channel('color1', -1, 11, 0);
+      2: set_channel('color1', -1, 46, 0);
+      3: set_channel('color1', -1, 81, 0);
+      4: set_channel('color1', -1, 116, 0);
+      5: set_channel('color1', -1, 151, 0);
+      6: set_channel('color1', -1, 186, 0);
+      7: set_channel('color1', -1, 221, 0);
+    end;
+  end;
+  end.
+ </code>
+</device>

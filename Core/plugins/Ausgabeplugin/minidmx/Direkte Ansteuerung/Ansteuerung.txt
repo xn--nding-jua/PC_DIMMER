@@ -1,0 +1,44 @@
+Serielle Protokoll v1.0/v1.1
+
+Einfach folgenden Datenblock mit 115.200 Bits pro Sekunde, 8 Datenbits, ohne Parität, einem Stoppbit und ohne Software- oder Hardware-Flußkontrolle über die serielle Schnittstelle senden:
+$5A - Blockstart
+$A0 - Befehl: DMX-Out mit 96 Kanäle
+96 Bytes für die Kanäle 1 bis 96
+$A5 - Blockende
+
+Nach max. 100ms sendet MiniDMX folgendes zurück:
+$5A - Blockstart
+$C1 - Befehl ausgeführt
+$A5 - Blockende
+
+Wenn nach 100ms nichts zurückgekommen ist, stimmt die Verbindung nicht. Normalerweise meldet sich MiniDMX schon früher zurück, dann kann sofort der nächste Datenblock gesendet werden. Auf diese Weise können die DMX-Daten bis zu 72 mal in der Sekunde aufgefrischt werden.
+Serielle Protokoll v2.0
+
+Die Einstellungen der seriellen Schnittstelle entsprechen denen aus Version 1.0/1.1. Es gibt zwei zusätzliche Befehle:
+
+DMX-Out mit 256 Kanälen
+
+$5A - Blockstart
+$A1 - Befehl: DMX-Out mit 256 Kanäle
+256 Bytes für die Kanäle 1 bis 256
+$A5 - Blockende
+
+DMX-Out mit 512 Kanälen
+
+$5A - Blockstart
+$A2 - Befehl: DMX-Out mit 512 Kanäle
+512 Bytes für die Kanäle 1 bis 512
+$A5 - Blockende
+
+Antwort vom MiniDMX bei erfolgreicher Befehlsbearbeitung (wie bei v1.0/v1.1)
+
+Nach max. 100ms sendet MiniDMX folgendes zurück:
+$5A - Blockstart
+$C1 - Befehl erfolgreich ausgeführt
+$A5 - Blockende
+
+Antwort vom MiniDMX bei einem Fehler
+
+$5A - Blockstart
+$C0 - Fehler bei der Befehlsausführung
+$A5 - Blockende 

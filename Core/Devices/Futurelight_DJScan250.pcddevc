@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\scanner2.png">
+ <information id="PC_DIMMER">
+ <name>DJ Scan 250</name>
+ <vendor>Futurelight</vendor>
+ <author>Christian Nöding</author>
+ <description>Scanner mit Gobo- und Farbrad sowie Shutter</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Farbe" fade="no" type="color1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Gobo" fade="no" type="gobo1"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Gobo-Rotation" fade="no" type="gobo1rot"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="DIMMER" fade="no" type="dimmer"/>
+ </channels>
+ <initvalues ch0="127" ch1="127" ch2="-1" ch3="-1" ch4="-1" ch5="-1" />
+ <colors>
+  <color name="Weiß" value="0" valueend="0" r="255" g="255" b="255" />
+  <color name="Dunkelblau" value="18" valueend="18" r="0" g="0" b="128" />
+  <color name="Pink" value="36" valueend="36" r="255" g="128" b="192" />
+  <color name="Hellgrün" value="54" valueend="54" r="0" g="255" b="0" />
+  <color name="Rot" value="72" valueend="72" r="255" g="0" b="0" />
+  <color name="Hellblau" value="90" valueend="90" r="0" g="255" b="255" />
+  <color name="Gelb" value="108" valueend="108" r="255" g="255" b="0" />
+  <color name="Dunkelrot" value="127" valueend="127" r="128" g="0" b="0" />
+ </colors>
+ <shutter OpenValue="255" CloseValue="0" ChannelName="dimmer"/>
+ <strobe OffValue="255" MinValue="140" MaxValue="189" ChannelName="dimmer"/>
+ <dimmer OffValue="6" MaxValue="128"/>
+ <gobo1rot LeftMinValue="136" LeftMaxValue="255" OffValue="0" RightMinValue="16" RightMaxValue="135" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="0" RightMinValue="0" RightMaxValue="0" ChannelName="gobo2rot"/>
+ <form width="391" height="302">
+  <deviceimage top="0" left="10" width="64" height="64"/>
+  <devicename top="8" left="80"/>
+  <deviceadress top="24" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="80" left="10" height="180" width="180" />
+  <colorbox top="80" left="200" height="22" width="180" />
+  <dropdown name="gobobox" top="130" left="200" width="180" height="21" action="setgobo">
+   <item caption="Offen" value="0" picture="" />
+   <item caption="Gobo 1" value="0" picture="" />
+   <item caption="Gobo 2" value="0" picture="" />
+   <item caption="Gobo 3" value="0" picture="" />
+   <item caption="Gobo 4" value="0" picture="" />
+   <item caption="Gobo 5" value="0" picture="" />
+   <item caption="Gobo 6" value="0" picture="" />
+   <item caption="Gobo 7" value="0" picture="" />
+  </dropdown>
+  <dropdown name="shutterbox" top="180" left="200" width="90" height="21" action="setshutter">
+   <item caption="Geschlossen" value="0" picture="" />
+   <item caption="Offen" value="255" picture="" />
+   <item caption="Strobe" value="-1" picture="" />
+   <item caption="Strobe Zufall" value="0" picture="" />
+  </dropdown>
+  <dropdown name="rotation" top="230" left="200" width="90" height="21" action="setrotation">
+   <item caption="Stillstand" value="0" picture="" />
+   <item caption="Rechts" value="-1" picture="" />
+   <item caption="Links" value="-2" picture="" />
+  </dropdown>
+  <slider name="shutterslider" top="180" left="300" width="80" height="20" action="setshutter" startvalue="0" endvalue="49" default="0"/>
+  <slider name="rotation_speed" top="230" left="300" width="80" height="20" action="setrotation" startvalue="0" endvalue="119" default="0"/>
+  <slider name="dimmerslider" top="270" left="60" width="130" height="20" action="dimmersliderchange" startvalue="6" endvalue="128" default="6"/>
+  <label name="label1" top="60" left="200" width="27" height="13" caption="Farbe"/>
+  <label name="label2" top="110" left="200" width="26" height="13" caption="Gobo"/>
+  <label name="label3" top="160" left="200" width="37" height="13" caption="Shutter:"/>
+  <label name="label4" top="210" left="200" width="72" height="13" caption="Gobo-Rotation:"/>
+  <label name="Label5" top="270" left="10" width="38" height="13" caption="Dimmer:"/>
+  <button name="resetbtn" top="10" left="300" width="80" height="20" action="resetbtnclick" caption="Reset"/>
+ </form>
+ <code>
+  unit DJScan250;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:String);
+  procedure ColorBoxChange;
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure setgobo;
+  procedure setshutter;
+  procedure setrotation;
+  procedure resetbtnclick;
+  procedure dimmersliderchange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // bitte hier die eigene Funktion eintragen
+  end;
+  procedure FormShow;
+    begin
+    end;
+  procedure FormRefresh(channel:String);
+    var
+      wert:integer;
+    begin
+      case channel of
+      0..1:
+      begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+      end;
+      2:
+      begin
+        wert:=get_channel('color1');
+				case wert of
+					0..17: colorbox.itemindex:=0;
+					18..35: colorbox.itemindex:=1;
+					36..53: colorbox.itemindex:=2;
+					54..71: colorbox.itemindex:=3;
+					72..89: colorbox.itemindex:=4;
+					90..107: colorbox.itemindex:=5;
+					108..126: colorbox.itemindex:=6;
+					127..127: colorbox.itemindex:=7;
+				end;
+      end;
+      3:
+      begin
+        if not dontrefresh then
+        begin
+          wert:=get_channel('gobo1');
+          case wert of
+          	0..15: gobobox.itemindex:=0;
+          	16..31: gobobox.itemindex:=1;
+          	32..47: gobobox.itemindex:=2;
+          	48..63: gobobox.itemindex:=3;
+          	64..79: gobobox.itemindex:=4;
+          	80..95: gobobox.itemindex:=5;
+          	96..111: gobobox.itemindex:=6;
+          	112..127: gobobox.itemindex:=7;
+          end;
+        end;
+      end;
+      4:
+      begin
+        if not dontrefresh then
+        begin
+          wert:=get_channel('gobo1rot');
+          if wert>=136 then
+          begin
+            rotation.itemindex:=2;
+            rotation_speed.position:=wert-136;
+          end else if wert>=16 then
+          begin
+            rotation.itemindex:=1;
+            rotation_speed.position:=wert-16;
+          end else if wert=0 then
+          begin
+            rotation.itemindex:=0;
+          end;
+        end;
+      end;
+      5:
+      begin
+        if not dontrefresh then
+        begin
+          wert:=get_channel('dimmer');
+          case wert of
+          	0..5: shutterbox.itemindex:=0;
+          	6..128: dimmerslider.position:=wert;
+						132..139: shutterbox.itemindex:=1;
+						140..189:
+						begin
+							shutterbox.itemindex:=2;
+							shutterslider.position:=wert-140;
+						end;
+						200..249:
+						begin
+							shutterbox.itemindex:=3;
+							shutterslider.position:=wert-200;
+						end;
+						250..255: shutterbox.itemindex:=1; 
+          end;
+        end;
+      end;
+      end;
+      dontrefresh:=false;
+    end;
+  procedure ColorBoxChange;
+    begin
+      dontrefresh:=true;
+      case colorbox.itemindex of
+        0: set_channel('color1',-1,0,0);
+        1: set_channel('color1',-1,18,0);
+        2: set_channel('color1',-1,36,0);
+        3: set_channel('color1',-1,54,0);
+        4: set_channel('color1',-1,72,0);
+        5: set_channel('color1',-1,90,0);
+        6: set_channel('color1',-1,108,0);
+        7: set_channel('color1',-1,127,0);
+      end;
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure PositionXYChange(Top, Left: Integer);
+    var
+      x,y:byte;
+    begin
+				x:=((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255;
+        y:=((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255;
+        set_channel('pan',x,x,0);
+        set_channel('tilt',y,y,0);
+    end;
+  procedure setgobo;
+    begin
+      dontrefresh:=true;
+      case gobobox.itemindex of
+        0: set_channel('gobo1',-1,0,0);
+        1: set_channel('gobo1',-1,16,0);
+        2: set_channel('gobo1',-1,32,0);
+        3: set_channel('gobo1',-1,48,0);
+        4: set_channel('gobo1',-1,64,0);
+        5: set_channel('gobo1',-1,80,0);
+        6: set_channel('gobo1',-1,96,0);
+        7: set_channel('gobo1',-1,112,0);
+      end;
+    end;
+  procedure setshutter;
+    begin
+      dontrefresh:=true;
+      case shutterbox.itemindex of
+        0: set_channel('dimmer',-1,0,0);
+        1: set_channel('dimmer',-1,255,0);
+        2: set_channel('dimmer',-1,140+shutterslider.position,0);
+        3: set_channel('dimmer',-1,200+shutterslider.position,0);
+      end;
+    end;
+  procedure setrotation;
+    begin
+      dontrefresh:=true;
+      case rotation.itemindex of
+        0: set_channel('gobo1rot',-1,0,0);
+        1: set_channel('gobo1rot',-1,16+rotation_speed.position,0);
+        2: set_channel('gobo1rot',-1,136+rotation_speed.position,0);
+      end;
+    end;
+  procedure resetbtnclick;
+  begin
+    set_channel('dimmer',-1,129,0);
+  end;
+  procedure dimmersliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('dimmer',-1,dimmerslider.position,0);
+  end;
+  end.
+ </code>
+</device>

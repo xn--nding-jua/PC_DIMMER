@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\stroboskop.png">
+ <information id="PC_DIMMER">
+ <name>SP-1500 DMX</name>
+ <vendor>Botex</vendor>
+ <author>Christian Nöding</author>
+ <description>Stroboskop</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="SPEED" fade="yes" type="speed"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="speed"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="233" height="170">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <slider name="SpeedSlider" top="90" left="10" width="210" height="20" action="SetSpeed" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DimmerSlider" top="140" left="10" width="210" height="20" action="SetDimmer" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="70" left="10" width="47" height="13" caption="Frequenz:"/>
+  <label name="Label2" top="120" left="10" width="43" height="13" caption="Helligkeit"/>
+  <label name="Speedlbl" top="70" left="190" width="14" height="13" caption="0%"/>
+  <label name="Dimmerlbl" top="120" left="190" width="14" height="13" caption="0%"/>
+ </form>
+ <code>
+  unit BotexSP1500;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure SetDimmer;
+  procedure SetSpeed;
+
+  implementation
+
+
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  begin
+		case channel of
+			0:
+			begin
+				SpeedSlider.Position:=get_channel('SPEED');
+				Speedlbl.caption:=levelstr(SpeedSlider.position);
+			end;
+			1:
+			begin
+				DimmerSlider.Position:=get_channel('DIMMER');
+				Dimmerlbl.caption:=levelstr(DimmerSlider.position);
+			end;
+		end;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure SetDimmer;
+  begin
+    set_channel('DIMMER',DimmerSlider.Position,DimmerSlider.Position,0);
+		Dimmerlbl.caption:=levelstr(DimmerSlider.position);
+  end;
+  procedure SetSpeed;
+  begin
+    set_channel('SPEED',SpeedSlider.Position,SpeedSlider.Position,0);
+		Speedlbl.caption:=levelstr(SpeedSlider.position);
+  end;
+  end.
+ </code>
+</device>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\leddevil.png">
+ <information id="PC_DIMMER">
+ <name>TSR-400</name>
+ <vendor>Eurolite</vendor>
+ <author>Martin</author>
+ <description>RGBAW Flower von Eurolite</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Farbe" fade="yes" type="color1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Shutter / Speed" fade="yes" type="shutter"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Schrittmotor" fade="yes" type="gobo1rot"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" />
+ <colors>
+  <color name="Blackout" value="0" valueend="4" r="0" g="0" b="0" />
+  <color name="Rot" value="5" valueend="9" r="255" g="0" b="0" />
+  <color name="Grün" value="10" valueend="14" r="0" g="255" b="0" />
+  <color name="Blau" value="15" valueend="19" r="0" g="0" b="255" />
+  <color name="Weiß" value="20" valueend="24" r="255" g="251" b="240" />
+  <color name="Amber" value="25" valueend="29" r="255" g="128" b="0" />
+  <color name="Rot / Grün" value="30" valueend="34" r="255" g="255" b="0" />
+  <color name="Grün / Blau" value="35" valueend="39" r="0" g="255" b="255" />
+  <color name="Blau / Weiß" value="40" valueend="44" r="130" g="146" b="255" />
+  <color name="Weiß / Amber" value="45" valueend="49" r="255" g="187" b="119" />
+  <color name="Rot / Amber" value="50" valueend="54" r="128" g="64" b="64" />
+  <color name="Grün / Amber" value="55" valueend="59" r="0" g="128" b="0" />
+  <color name="Blau / Amber" value="60" valueend="64" r="0" g="255" b="134" />
+  <color name="Rot / Blau" value="65" valueend="69" r="255" g="0" b="255" />
+  <color name="Rot / Weiß" value="70" valueend="74" r="255" g="128" b="128" />
+  <color name="Grün / Weiß" value="75" valueend="79" r="0" g="255" b="128" />
+  <color name="Rot / Grün / Blau" value="80" valueend="84" r="166" g="202" b="240" />
+  <color name="Grün/ Blau / Weiß" value="85" valueend="89" r="125" g="255" b="255" />
+  <color name="Blau / Weiß / Amber" value="90" valueend="94" r="128" g="255" b="0" />
+  <color name="Rot / Weiß / Amber" value="95" valueend="99" r="255" g="172" b="0" />
+  <color name="Grün / Weiß / Amber" value="100" valueend="104" r="198" g="255" b="0" />
+  <color name="Rot / Grün / Weiß" value="105" valueend="109" r="255" g="255" b="128" />
+  <color name="Rot / Grün / Amber" value="110" valueend="114" r="255" g="128" b="64" />
+  <color name="Rot / Blau / Amber" value="115" valueend="119" r="255" g="255" b="128" />
+  <color name="Rot / Blau / Weiß" value="120" valueend="124" r="255" g="128" b="128" />
+  <color name="Grün / Blau / Amber" value="125" valueend="129" r="0" g="128" b="128" />
+  <color name="Rot / Grün / Blau / Weiß" value="130" valueend="134" r="255" g="255" b="255" />
+  <color name="Grün / Blau / Weiß / Amber" value="135" valueend="139" r="255" g="187" b="119" />
+  <color name="Rot / Grün / Blau / Amber" value="140" valueend="144" r="255" g="224" b="183" />
+  <color name="Rot / Grün / Weiß / Amber" value="145" valueend="149" r="255" g="255" b="0" />
+  <color name="Rot / Grün / Blau / Weiß / Amber" value="150" valueend="154" r="255" g="255" b="255" />
+  <color name="Farbwechsel" value="155" valueend="200" r="2" g="7" b="77" />
+  <color name="Farbefade" value="201" valueend="250" r="98" g="0" b="0" />
+  <color name="Sound Active" value="251" valueend="255" r="0" g="53" b="1" />
+ </colors>
+ <shutter OpenValue="0" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="1" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="127" LeftMaxValue="0" OffValue="128" RightMinValue="129" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="250" height="305">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorbox top="170" left="10" height="22" width="210" />
+  <slider name="SHUTTERslider1" top="96" left="8" width="217" height="17" action="SHUTTERchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="GOBO1ROTslider2" top="136" left="8" width="217" height="17" action="GOBO1ROTchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="SHUTTERlbl1" top="80" left="8" width="76" height="13" caption="Shutter / Speed"/>
+  <label name="GOBO1ROTlbl2" top="120" left="8" width="56" height="13" caption="Schrittmotor"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorBoxChange;
+  procedure SHUTTERchange;
+  procedure GOBO1ROTchange;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        value:=get_channel('color1');
+        case value of
+          0..4: colorbox.itemindex:=0;
+          5..9: colorbox.itemindex:=1;
+          10..14: colorbox.itemindex:=2;
+          15..19: colorbox.itemindex:=3;
+          20..24: colorbox.itemindex:=4;
+          25..29: colorbox.itemindex:=5;
+          30..34: colorbox.itemindex:=6;
+          35..39: colorbox.itemindex:=7;
+          40..44: colorbox.itemindex:=8;
+          45..49: colorbox.itemindex:=9;
+          50..54: colorbox.itemindex:=10;
+          55..59: colorbox.itemindex:=11;
+          60..64: colorbox.itemindex:=12;
+          65..69: colorbox.itemindex:=13;
+          70..74: colorbox.itemindex:=14;
+          75..79: colorbox.itemindex:=15;
+          80..84: colorbox.itemindex:=16;
+          85..89: colorbox.itemindex:=17;
+          90..94: colorbox.itemindex:=18;
+          95..99: colorbox.itemindex:=19;
+          100..104: colorbox.itemindex:=20;
+          105..109: colorbox.itemindex:=21;
+          110..114: colorbox.itemindex:=22;
+          115..119: colorbox.itemindex:=23;
+          120..124: colorbox.itemindex:=24;
+          125..129: colorbox.itemindex:=25;
+          130..134: colorbox.itemindex:=26;
+          135..139: colorbox.itemindex:=27;
+          140..144: colorbox.itemindex:=28;
+          145..149: colorbox.itemindex:=29;
+          150..154: colorbox.itemindex:=30;
+          155..200: colorbox.itemindex:=31;
+          201..250: colorbox.itemindex:=32;
+          251..255: colorbox.itemindex:=33;
+        end;
+      end;
+      1:
+      begin
+        SHUTTERslider1.position:=get_channel('SHUTTER');
+      end;
+      2:
+      begin
+        GOBO1ROTslider2.position:=get_channel('GOBO1ROT');
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure ColorBoxChange;
+  begin
+    case colorbox.itemindex of
+      0: set_channel('color1', -1, 0, 0);
+      1: set_channel('color1', -1, 5, 0);
+      2: set_channel('color1', -1, 10, 0);
+      3: set_channel('color1', -1, 15, 0);
+      4: set_channel('color1', -1, 20, 0);
+      5: set_channel('color1', -1, 25, 0);
+      6: set_channel('color1', -1, 30, 0);
+      7: set_channel('color1', -1, 35, 0);
+      8: set_channel('color1', -1, 40, 0);
+      9: set_channel('color1', -1, 45, 0);
+      10: set_channel('color1', -1, 50, 0);
+      11: set_channel('color1', -1, 55, 0);
+      12: set_channel('color1', -1, 60, 0);
+      13: set_channel('color1', -1, 65, 0);
+      14: set_channel('color1', -1, 70, 0);
+      15: set_channel('color1', -1, 75, 0);
+      16: set_channel('color1', -1, 80, 0);
+      17: set_channel('color1', -1, 85, 0);
+      18: set_channel('color1', -1, 90, 0);
+      19: set_channel('color1', -1, 95, 0);
+      20: set_channel('color1', -1, 100, 0);
+      21: set_channel('color1', -1, 105, 0);
+      22: set_channel('color1', -1, 110, 0);
+      23: set_channel('color1', -1, 115, 0);
+      24: set_channel('color1', -1, 120, 0);
+      25: set_channel('color1', -1, 125, 0);
+      26: set_channel('color1', -1, 130, 0);
+      27: set_channel('color1', -1, 135, 0);
+      28: set_channel('color1', -1, 140, 0);
+      29: set_channel('color1', -1, 145, 0);
+      30: set_channel('color1', -1, 150, 0);
+      31: set_channel('color1', -1, 155, 0);
+      32: set_channel('color1', -1, 201, 0);
+      33: set_channel('color1', -1, 251, 0);
+    end;
+  end;
+  procedure SHUTTERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SHUTTER',-1,SHUTTERslider1.position,0);
+  end;
+  procedure GOBO1ROTchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('GOBO1ROT',-1,GOBO1ROTslider2.position,0);
+  end;
+  end.
+ </code>
+</device>

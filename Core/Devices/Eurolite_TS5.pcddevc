@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\ts255.png">
+ <information id="PC_DIMMER">
+ <name>TS-5</name>
+ <vendor>Eurolite</vendor>
+ <author>Christian Nöding</author>
+ <description></description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Farbrad" fade="no" type="color1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="GOBO1" fade="no" type="gobo1"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+ </channels>
+ <initvalues ch0="127" ch1="127" ch2="-1" ch3="-1" ch4="-1" />
+ <colors>
+  <color name="Weiß" value="0" valueend="0" r="255" g="255" b="255" />
+  <color name="Grün" value="10" valueend="10" r="0" g="128" b="0" />
+  <color name="Rot" value="21" valueend="21" r="255" g="0" b="0" />
+  <color name="Cyan" value="32" valueend="32" r="166" g="202" b="240" />
+  <color name="Hellgrün" value="42" valueend="42" r="0" g="255" b="0" />
+  <color name="Rose" value="53" valueend="53" r="128" g="0" b="0" />
+  <color name="Hellblau" value="64" valueend="64" r="0" g="255" b="255" />
+  <color name="Gelb" value="74" valueend="74" r="255" g="255" b="0" />
+  <color name="Grün" value="85" valueend="85" r="0" g="166" b="0" />
+  <color name="Pink" value="96" valueend="96" r="255" g="0" b="255" />
+  <color name="Violett" value="106" valueend="106" r="128" g="0" b="128" />
+  <color name="Orange" value="117" valueend="117" r="255" g="128" b="0" />
+ </colors>
+ <shutter OpenValue="32" CloseValue="0" ChannelName="gobo1"/>
+ <strobe OffValue="32" MinValue="6" MaxValue="31" ChannelName="gobo1"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="201" height="452">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="80" left="10" height="180" width="180" />
+  <colorbox top="320" left="10" height="22" width="90" />
+  <dropdown name="ColorOption" top="290" left="10" width="180" height="21" action="ColorOptionChange">
+   <item caption="Farbauswahl" value="0" picture="" />
+   <item caption="Scroll" value="0" picture="" />
+   <item caption="Sound-Controlled" value="0" picture="" />
+   <item caption="Rainbow vorwärts" value="0" picture="" />
+   <item caption="Keine Rotation" value="0" picture="" />
+   <item caption="Rainbow rückwärts" value="0" picture="" />
+  </dropdown>
+  <dropdown name="GoboBox" top="370" left="10" width="180" height="21" action="GoboChange">
+   <item caption="Blackout" value="0" picture="" />
+   <item caption="Strobo langsam" value="0" picture="" />
+   <item caption="Strobo schnell" value="0" picture="" />
+   <item caption="Offen" value="0" picture="" />
+   <item caption="Gobo 1" value="0" picture="" />
+   <item caption="Gobo 2" value="0" picture="" />
+   <item caption="Gobo 3" value="0" picture="" />
+   <item caption="Gobo 4" value="0" picture="" />
+   <item caption="Gobo 5" value="0" picture="" />
+   <item caption="Gobo 6" value="0" picture="" />
+   <item caption="Gobo 7" value="0" picture="" />
+   <item caption="Gobo 8" value="0" picture="" />
+   <item caption="Gobo 9" value="0" picture="" />
+   <item caption="Keine Funktion" value="0" picture="" />
+   <item caption="Gobo 1 Shake" value="0" picture="" />
+   <item caption="Gobo 2 Shake" value="0" picture="" />
+   <item caption="Gobo 3 Shake" value="0" picture="" />
+   <item caption="Gobo 4 Shake" value="0" picture="" />
+   <item caption="Gobo 5 Shake" value="0" picture="" />
+   <item caption="Gobo 6 Shake" value="0" picture="" />
+   <item caption="Gobo 7 Shake" value="0" picture="" />
+   <item caption="Gobo 8 Shake" value="0" picture="" />
+   <item caption="Gobo 9 Shake" value="0" picture="" />
+   <item caption="Sound-Controlled" value="0" picture="" />
+   <item caption="Stop" value="0" picture="" />
+   <item caption="Kontinuierlich" value="0" picture="" />
+  </dropdown>
+  <slider name="DimmerSlider" top="420" left="10" width="180" height="20" action="DimmerChange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="ColorSlider" top="320" left="110" width="80" height="20" action="ColorSliderChange" startvalue="129" endvalue="190" default="129"/>
+  <label name="Label3" top="270" left="10" width="39" height="13" caption="Farbrad:"/>
+  <label name="Label4" top="350" left="10" width="44" height="13" caption="Goborad:"/>
+  <label name="Label5" top="400" left="10" width="38" height="13" caption="Dimmer:"/>
+ </form>
+ <code>
+  unit TS5;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorBoxChange;
+  procedure ColorOptionChange;
+  procedure DimmerChange;
+  procedure GoboChange;
+  procedure ColorSliderChange;
+  procedure PositionXYChange(Top, Left: Integer);
+
+  implementation
+
+  var
+    dontrefreshvalue:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // bitte hier die eigene Funktion eintragen
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+  	wert:integer;
+	begin
+    case channel of
+    	0..1:
+    	begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+    	end;
+    	2:
+    	begin
+    		if not dontrefreshvalue then
+    		begin
+					ColorSlider.enabled:=false;
+					wert:=get_channel('COLOR1');
+  	  		ColorOption.itemindex:=0;
+					case wert of
+						0..9: ColorBox.itemindex:=0;
+						10..20: ColorBox.itemindex:=1;
+						21..31: ColorBox.itemindex:=2;
+						32..41: ColorBox.itemindex:=3;
+						42..52: ColorBox.itemindex:=4;
+						53..63: ColorBox.itemindex:=5;
+						64..73: ColorBox.itemindex:=6;
+						74..84: ColorBox.itemindex:=7;
+						85..95: ColorBox.itemindex:=8;
+						96..105: ColorBox.itemindex:=9;
+						106..116: ColorBox.itemindex:=10;
+						117..128: ColorBox.itemindex:=11;
+						129..190:
+    				begin
+							ColorOption.itemindex:=1;
+							ColorSlider.enabled:=true;
+    					ColorSlider.position:=wert;
+	    			end;
+  	  			191..193: ColorOption.itemindex:=2;
+    				194..223: ColorOption.itemindex:=3;
+    				224..225: ColorOption.itemindex:=4;
+    				226..255: ColorOption.itemindex:=5;
+	    		end;
+    		end;
+    	end;
+    	3:
+    	begin
+    		if not dontrefreshvalue then
+    		begin
+					wert:=get_channel('GOBO1');
+  	  		case wert of
+    				0..5: GoboBox.itemindex:=0;
+    				6..16: GoboBox.itemindex:=1;
+    				17..31: GoboBox.itemindex:=2;
+    				32..41: GoboBox.itemindex:=3;
+    				42..52: GoboBox.itemindex:=4;
+	    			53..63: GoboBox.itemindex:=5;
+  	  			64..73: GoboBox.itemindex:=6;
+    				74..84: GoboBox.itemindex:=7;
+    				85..95: GoboBox.itemindex:=8;
+    				96..105: GoboBox.itemindex:=9;
+    				106..116: GoboBox.itemindex:=10;
+	    			117..127: GoboBox.itemindex:=11;
+  	  			128..137: GoboBox.itemindex:=12;
+    				138..147: GoboBox.itemindex:=13;
+    				148..155: GoboBox.itemindex:=14;
+    				156..163: GoboBox.itemindex:=15;
+    				164..171: GoboBox.itemindex:=16;
+	    			172..179: GoboBox.itemindex:=17;
+  	  			180..187: GoboBox.itemindex:=18;
+    				188..195: GoboBox.itemindex:=19;
+    				196..203: GoboBox.itemindex:=20;
+    				204..210: GoboBox.itemindex:=21;
+    				211..217: GoboBox.itemindex:=22;
+				218..223: GoboBox.itemindex:=23;
+	    			224..225: GoboBox.itemindex:=24;
+  	  			226..255: GoboBox.itemindex:=25;
+    			end;
+  			end;
+    	end;
+    	4:
+    	begin
+    		if not dontrefreshvalue then
+    			DimmerSlider.position:=get_channel('DIMMER');
+    	end;
+    end;
+
+    dontrefreshvalue:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure ColorBoxChange;
+  begin
+    dontrefreshvalue:=true;
+    case colorbox.itemindex of
+    	0: set_channel('COLOR1', 0, 0, 0); 
+    	1: set_channel('COLOR1', 10, 10, 0); 
+    	2: set_channel('COLOR1', 21, 21, 0); 
+    	3: set_channel('COLOR1', 32, 32, 0); 
+    	4: set_channel('COLOR1', 42, 42, 0); 
+    	5: set_channel('COLOR1', 53, 53, 0); 
+    	6: set_channel('COLOR1', 64, 64, 0); 
+    	7: set_channel('COLOR1', 74, 74, 0); 
+    	8: set_channel('COLOR1', 85, 85, 0); 
+    	9: set_channel('COLOR1', 96, 96, 0); 
+    	10: set_channel('COLOR1', 106, 106, 0); 
+    	11: set_channel('COLOR1', 117, 117, 0); 
+    end;
+  end;
+  procedure ColorOptionChange;
+  begin
+		ColorSlider.enabled:=false;
+    case ColorOption.itemindex of
+    	1:
+			begin
+				set_channel('COLOR1', 129, 129, 0);
+				ColorSlider.enabled:=true;
+			end;
+    	2: set_channel('COLOR1', 191, 191, 0);
+    	3: set_channel('COLOR1', 194, 194, 0);
+    	4: set_channel('COLOR1', 224, 224, 0);
+    	5: set_channel('COLOR1', 226, 226, 0);
+    end;
+  end;
+  procedure DimmerChange;
+  begin
+		dontrefreshvalue:=true;
+		set_channel('DIMMER', DimmerSlider.position, DimmerSlider.position, 0);
+  end;
+  procedure GoboChange;
+  begin
+    case GoboBox.itemindex of
+			0: set_channel('GOBO1', 0, 0, 0);
+			1: set_channel('GOBO1', 6, 6, 0);
+			2: set_channel('GOBO1', 31, 31, 0);
+			3: set_channel('GOBO1', 32, 32, 0);
+			4: set_channel('GOBO1', 42, 42, 0);
+			5: set_channel('GOBO1', 53, 53, 0);
+			6: set_channel('GOBO1', 64, 64, 0);
+			7: set_channel('GOBO1', 74, 74, 0);
+			8: set_channel('GOBO1', 85, 85, 0);
+			9: set_channel('GOBO1', 96, 96, 0);
+			10: set_channel('GOBO1', 106, 106, 0);
+			11: set_channel('GOBO1', 117, 117, 0);
+			12: set_channel('GOBO1', 128, 128, 0);
+			13: set_channel('GOBO1', 138, 138, 0);
+			14: set_channel('GOBO1', 148, 148, 0);
+			15: set_channel('GOBO1', 156, 156, 0);
+			16: set_channel('GOBO1', 164, 164, 0);
+			17: set_channel('GOBO1', 172, 172, 0);
+			18: set_channel('GOBO1', 180, 180, 0);
+			19: set_channel('GOBO1', 188, 188, 0);
+			20: set_channel('GOBO1', 196, 196, 0);
+			21: set_channel('GOBO1', 204, 204, 0);
+			22: set_channel('GOBO1', 211, 211, 0);
+			23: set_channel('GOBO1', 218, 218, 0);
+			24: set_channel('GOBO1', 224, 224, 0);
+			25: set_channel('GOBO1', 226, 226, 0);
+    end;
+  end;
+  procedure ColorSliderChange;
+  begin
+    dontrefreshvalue:=true;
+    set_channel('COLOR1', ColorSlider.position, ColorSlider.position, 0);
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  end.
+ </code>
+</device>

@@ -1,0 +1,2253 @@
+unit geraetesteuerungfrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ComCtrls, StdCtrls, ExtCtrls, Mask, Menus, Buttons, Registry,
+  messagesystem, CHLabel, CHHighResTimer, JvExStdCtrls, JvExExtCtrls, JvComponent,
+  JvOfficeColorPanel, JvExControls, JvGammaPanel, Grids, JvAppStorage,
+  JvAppXMLStorage, JvComponentBase, JvExtComponent, JvPanel, PngBitBtn,
+  JvColorBox, JvColorButton, HSLColorPicker;
+
+const
+  {$I GlobaleKonstanten.inc}
+
+type
+  Teditproperties = record
+    Name:       string;
+    channel:    integer;
+    actionname: string;
+  end;
+
+  Tcheckboxproperties = record
+    Name:       string;
+    channel:    integer;
+    actionname: string;
+  end;
+
+  Tcomboboxproperties = record
+    Name:       string;
+    channel:    integer;
+    actionname: string;
+    itemvalue:  array of integer;
+  end;
+
+  Tsliderproperties = record
+    Name:       string;
+    channel:    integer;
+    actionname: string;
+  end;
+
+  Tbuttonproperties = record
+    Name:       string;
+    channel:    integer;
+    onvalue:    integer;
+    offvalue:   integer;
+    actionname: string;
+  end;
+
+  Tradiobuttonproperties = record
+    Name:       string;
+    channel:    integer;
+    actionname: string;
+    itemvalue:  array of integer;
+  end;
+
+  TDeviceprototyp = record
+    ID:           TGUID;
+    Name:         string[255];
+    DeviceName:   string[255];
+    Beschreibung: string[255];
+    Author:       string[255];
+    Vendor:       string[255];
+    Bildadresse:  string[255];
+    MaxChan:      byte;
+    invertpan:    boolean;
+    inverttilt:   boolean;
+    KanalMinValue: array of byte;
+    KanalMaxValue: array of byte;
+    kanaltyp:     array of string[255];
+    kanalname:    array of string[255];
+    ddffilename:  string[255];
+    funktionen:   string;
+    hasDimmer:    boolean;
+    hasRGB:       boolean;
+    hasPANTILT:   boolean;
+  end;
+
+  Tgeraetesteuerung = class(TForm)
+    OpenDialog1: TOpenDialog;
+    SaveDialog1: TSaveDialog;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    RefreshTimer: TTimer;
+    PresetGroupbox: TPanel;
+    Panel3:      TPanel;
+    DDFControls: TPanel;
+    ColorPicker: TJvOfficeColorPanel;
+    fadenkreuz:  TPanel;
+    Bevel1:      TBevel;
+    Bevel2:      TBevel;
+    PositionXY:  TShape;
+    XML:         TJvAppXMLFileStorage;
+    deviceimage: TImage;
+    devicename:  TLabel;
+    deviceadress: TLabel;
+    R:           TScrollBar;
+    G:           TScrollBar;
+    B:           TScrollBar;
+    CloseBtn:    TButton;
+    tiltmirror:  TCheckBox;
+    panmirror:   TCheckBox;
+    DevStartaddressEdit: TEdit;
+    SendNamesBtn: TButton;
+    TreeView1:   TTreeView;
+    Label7:      TLabel;
+    Grouplist:   TStringGrid;
+    Label1:      TLabel;
+    Bevel3:      TBevel;
+    Bevel4:      TBevel;
+    ProgressBar1: TProgressBar;
+    Edit1:       TEdit;
+    AddBtn:      TPngBitBtn;
+    ChangeBtn:   TPngBitBtn;
+    DeleteBtn:   TPngBitBtn;
+    AddGroupBtn: TPngBitBtn;
+    DeleteGroupBtn: TPngBitBtn;
+    RefreshGroupBtn: TPngBitBtn;
+    Label2:      TLabel;
+    showinstageview: TCheckBox;
+    PngBitBtn1:  TPngBitBtn;
+    OpenDialog2: TOpenDialog;
+    buttonfarbe: TJvColorButton;
+    ColorPicker2: THSLColorPicker;
+    PngBitBtn2:  TPngBitBtn;
+    TreeView2:   TTreeView;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormHide(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure RefreshDeviceControl;
+    procedure SpeedButton3Click(Sender: TObject);
+    procedure CloseBtnClick(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure PositionXYMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+    procedure fadenkreuzMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure SendPosition;
+    procedure DevStartaddressEditChange(Sender: TObject);
+    procedure SendNamesBtnClick(Sender: TObject);
+    procedure TreeViewCheckbuttons(Shift: TShiftState);
+    procedure TreeViewRefresh;
+    procedure GroupListChanged;
+    procedure Gerthinzufgen1Click(Sender: TObject);
+    procedure Gertlschen1Click(Sender: TObject);
+    procedure tiltmirrorMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure input_number(var pos: integer; var s: string);
+    procedure CreateParams(var Params: TCreateParams); override;
+    procedure AddGroupBtnClick(Sender: TObject);
+    procedure DeleteGroupBtnClick(Sender: TObject);
+    procedure GrouplistKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    function GetChannelName(DeviceID: TGUID; Channel: integer): string;
+    procedure GrouplistMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure TreeView1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure TreeView1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure ChangeBtnClick(Sender: TObject);
+    procedure RefreshGroupBtnClick(Sender: TObject);
+    procedure TreeView1Edited(Sender: TObject; Node: TTreeNode; var S: string);
+    function GetDevicePositionInDeviceArray(ID: TGUID): integer;
+    procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure TreeView1Editing(Sender: TObject; Node: TTreeNode; var AllowEdit: boolean);
+    procedure TreeView1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure panmirrorMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure loadDDF_geraetesteuerung(DevicePrototypName: string);
+    procedure deleteDDFwindow_geraetesteuerung;
+    procedure fadenkreuzMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+    function channel(channel: integer): integer;
+    procedure Edit1Enter(Sender: TObject);
+    procedure Edit1Exit(Sender: TObject);
+    procedure Edit1Change(Sender: TObject);
+    procedure BScroll(Sender: TObject; ScrollCode: TScrollCode; var ScrollPos: integer);
+    procedure GrouplistExit(Sender: TObject);
+    procedure showinstageviewMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure FormActivate(Sender: TObject);
+    procedure PngBitBtn1Click(Sender: TObject);
+    procedure buttonfarbeChange(Sender: TObject);
+    procedure ColorPicker2Change(Sender: TObject);
+    procedure PngBitBtn2Click(Sender: TObject);
+    procedure TreeView2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure PositionXYMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure RefreshTimerTimer(Sender: TObject);
+    procedure sliderscroll(Sender: TObject; ScrollCode: TScrollCode; var ScrollPos: integer);
+    procedure ColorPickerColorChange(Sender: TObject);
+  private
+    { Private-Deklarationen }
+    SystemVals:          array [0..2] of integer;
+    ddffenstervorhanden: boolean;
+    procedure WMMoving(var AMsg: TMessage); message WM_MOVING;
+  public
+    { Public-Deklarationen }
+    Red, Green, Blue: byte;
+    Position:         TGUID;
+    NodeGUID:         array of array of array of TGUID;
+    NodeIndex:        array of array of array of TTreenode;
+    DevicePrototyp:   array of TDeviceprototyp;
+    PositioninSelectedDevices: integer;
+
+    active:           array[0..chan] of boolean;
+    showingmodal:     boolean;
+    flashmastervalue: byte;
+
+    slidervalue_temp: array[1..15] of byte;
+    refreshGUI:       boolean;
+
+    FileStream: TFileStream;
+
+    // Arrays für DDF Darstellung
+    Edits:          array of TEdit;
+    CheckBoxs:      array of TCheckBox;
+    ComboBoxs:      array of TComboBox;
+    Labels:         array of TLabel;
+    Sliders:        array of TScrollbar;
+    Shapes:         array of TShape;
+    Buttons:        array of TButton;
+    Radiobuttons:   array of TRadioGroup;
+    // DDF-Control-Eigenschaften
+    checkboxproperties: array of Tcheckboxproperties;
+    comboboxproperties: array of Tcomboboxproperties;
+    sliderproperties: array of Tsliderproperties;
+    buttonproperties: array of Tbuttonproperties;
+    radiobuttonproperties: array of Tradiobuttonproperties;
+    editproperties: array of Teditproperties;
+    funktionen:     string;
+    Colorpickerchannel: array[0..2] of integer;
+    procedure startscript(Sender: TObject);
+
+    procedure NewFile;
+    procedure OpenFile(FileName: string);
+    procedure SaveFile(FileName: string);
+    procedure MSGSave;
+    procedure set_channel(DeviceID: TGUID; channel: string; startvalue, endvalue, fadetime: integer);
+    function get_channel(DeviceID: TGUID; channel: string): integer;
+    function FindDeviceConnections(ID: TGUID; var TreeView: TTreeView): boolean;
+  end;
+
+var
+  geraetesteuerung: Tgeraetesteuerung;
+
+implementation
+
+uses PCDIMMER, adddevicefrm, geraeteremovedfrm, buehnenansicht,
+  ddfwindowfrm;
+
+{$R *.dfm}
+
+procedure Tgeraetesteuerung.input_number(var pos: integer; var s: string);
+var
+  i: integer;
+begin
+  i := 1;
+  while i <= length(s) do
+  begin
+    if (s[i] < '0') or (s[i] > '9') then
+    begin
+      Delete(s, i, 1);
+      Dec(pos);
+    end
+    else
+      Inc(i);
+  end;
+end;
+
+procedure TColor2RGB(const Color: TColor; var R, G, B: byte);
+begin
+  // convert hexa-decimal values to RGB
+  R := Color and $FF;
+  G := (Color shr 8) and $FF;
+  B := (Color shr 16) and $FF;
+end;
+
+procedure Tgeraetesteuerung.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  MSGSave;
+end;
+
+procedure Tgeraetesteuerung.FormHide(Sender: TObject);
+var
+  LReg: TRegistry;
+begin
+  if not mainform.shutdown then
+  begin
+    LReg := TRegistry.Create;
+    LReg.RootKey := HKEY_CURRENT_USER;
+
+    if LReg.OpenKey('Software', True) then
+    begin
+      if not LReg.KeyExists('PHOENIXstudios') then
+        LReg.CreateKey('PHOENIXstudios');
+      if LReg.OpenKey('PHOENIXstudios', True) then
+      begin
+        if not LReg.KeyExists('PC_DIMMER') then
+          LReg.CreateKey('PC_DIMMER');
+        if LReg.OpenKey('PC_DIMMER', True) then
+        begin
+          LReg.WriteBool('Showing Geraetesteuerung', False);
+        end;
+      end;
+    end;
+    LReg.CloseKey;
+  end;
+end;
+
+procedure Tgeraetesteuerung.FormShow(Sender: TObject);
+var
+  LReg: TRegistry;
+begin
+  mainform.ddfsource := 0;
+
+  LReg := TRegistry.Create;
+  LReg.RootKey := HKEY_CURRENT_USER;
+
+  if LReg.OpenKey('Software', True) then
+  begin
+    if not LReg.KeyExists('PHOENIXstudios') then
+      LReg.CreateKey('PHOENIXstudios');
+    if LReg.OpenKey('PHOENIXstudios', True) then
+    begin
+      if not LReg.KeyExists('PC_DIMMER') then
+        LReg.CreateKey('PC_DIMMER');
+      if LReg.OpenKey('PC_DIMMER', True) then
+      begin
+        LReg.WriteBool('Showing Geraetesteuerung', True);
+
+        if not LReg.KeyExists('Geraetesteuerung') then
+          LReg.CreateKey('Geraetesteuerung');
+        if LReg.OpenKey('Geraetesteuerung', True) then
+        begin
+          if LReg.ValueExists('PosX') then
+          begin
+            if (not (LReg.ReadInteger('PosX') + geraetesteuerung.Width < screen.DesktopLeft)) and (not (LReg.ReadInteger('PosX') > screen.DesktopWidth + screen.DesktopLeft)) then
+              geraetesteuerung.Left := LReg.ReadInteger('PosX')
+            else
+              geraetesteuerung.Left := screen.DesktopLeft;
+          end else
+            geraetesteuerung.Left := screen.DesktopLeft;
+
+          if LReg.ValueExists('PosY') then
+          begin
+            if (not (LReg.ReadInteger('PosY') < screen.DesktopTop)) and (not (LReg.ReadInteger('PosY') > screen.DesktopHeight + screen.DesktopTop)) then
+              geraetesteuerung.Top := LReg.ReadInteger('PosY')
+            else
+              geraetesteuerung.Top := screen.DesktopTop;
+          end else
+            geraetesteuerung.Top := screen.DesktopTop;
+        end;
+      end;
+    end;
+  end;
+  LReg.CloseKey;
+  LReg.Free;
+
+  RefreshDeviceControl;
+end;
+
+procedure Tgeraetesteuerung.RefreshDeviceControl;
+var
+  SR: TSearchRec;
+  ddfliste: array of string;
+  i, j, k: integer;
+begin
+  ProgressBar1.Position := 0;
+  ProgressBar1.Visible  := True;
+  setlength(ddfliste, 0);
+  setlength(geraetesteuerung.DevicePrototyp, 0);
+  setlength(NodeGUID, 0);
+
+  // XML-DDFs auflisten
+  if (FindFirst(mainform.workingdirectory + '\Devices\*.xml', faAnyFile - faDirectory, SR) = 0) then
+  begin
+    repeat
+      if (SR.Name <> '.') and (SR.Name <> '..') and (SR.Attr <> faDirectory) then
+      begin
+        setlength(ddfliste, length(ddfliste) + 1);
+        setlength(geraetesteuerung.DevicePrototyp, length(geraetesteuerung.DevicePrototyp) + 1);
+        CreateGUID(geraetesteuerung.DevicePrototyp[length(geraetesteuerung.DevicePrototyp) - 1].ID);
+        ddfliste[length(ddfliste) - 1] := SR.Name;
+        geraetesteuerung.DevicePrototyp[length(geraetesteuerung.DevicePrototyp) - 1].ddffilename := SR.Name;
+      end;
+    until FindNext(SR) <> 0;
+    FindClose(SR);
+  end;
+
+  ProgressBar1.Max := length(ddfliste);
+  // XML-DDFs laden und auswerten
+  for i := 0 to length(ddfliste) - 1 do
+  begin
+    ProgressBar1.Position := i;
+    XML.Xml.LoadFromFile(mainform.workingdirectory + 'Devices\' + ddfliste[i]);
+    geraetesteuerung.DevicePrototyp[i].Bildadresse := XML.XML.Root.Properties.Value('image');
+    for j := 0 to XML.Xml.Root.Items.Count - 1 do
+    begin // <device>
+      if XML.XML.Root.Items[j].Name = 'information' then
+      begin // <information>
+        for k := 0 to XML.XML.Root.Items[j].Items.Count - 1 do
+        begin
+          if XML.XML.Root.Items[j].Items[k].Name = 'name' then
+          begin
+            geraetesteuerung.DevicePrototyp[i].Name := XML.XML.Root.Items[j].Items[k].Value;
+            geraetesteuerung.DevicePrototyp[i].DeviceName := XML.XML.Root.Items[j].Items[k].Value;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name = 'vendor' then
+            geraetesteuerung.DevicePrototyp[i].vendor := XML.XML.Root.Items[j].Items[k].Value;
+          if XML.XML.Root.Items[j].Items[k].Name = 'author' then
+            geraetesteuerung.DevicePrototyp[i].author := XML.XML.Root.Items[j].Items[k].Value;
+          if XML.XML.Root.Items[j].Items[k].Name = 'description' then
+            geraetesteuerung.DevicePrototyp[i].Beschreibung := XML.XML.Root.Items[j].Items[k].Value;
+        end;
+      end;
+      if XML.XML.Root.Items[j].Name = 'channels' then
+      begin // <channels>
+        geraetesteuerung.DevicePrototyp[i].MaxChan := XML.XML.Root.Items[j].Items.Count;
+        setlength(geraetesteuerung.DevicePrototyp[i].kanalminvalue, geraetesteuerung.DevicePrototyp[i].MaxChan);
+        setlength(geraetesteuerung.DevicePrototyp[i].kanalmaxvalue, geraetesteuerung.DevicePrototyp[i].MaxChan);
+        setlength(geraetesteuerung.DevicePrototyp[i].kanaltyp, geraetesteuerung.DevicePrototyp[i].MaxChan);
+        setlength(geraetesteuerung.DevicePrototyp[i].kanalname, geraetesteuerung.DevicePrototyp[i].MaxChan);
+        for k := 0 to XML.XML.Root.Items[j].Items.Count - 1 do
+        begin
+          geraetesteuerung.DevicePrototyp[i].kanalname[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))] := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          geraetesteuerung.DevicePrototyp[i].kanaltyp[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))]  := XML.XML.Root.Items[j].Items[k].Properties.Value('type');
+          if (geraetesteuerung.DevicePrototyp[i].kanaltyp[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))] = 'PAN') or
+            (geraetesteuerung.DevicePrototyp[i].kanaltyp[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))] = 'TILT') then
+            geraetesteuerung.DevicePrototyp[i].hasPANTILT := True;
+          if geraetesteuerung.DevicePrototyp[i].kanaltyp[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))] = 'DIMMER' then
+            geraetesteuerung.DevicePrototyp[i].hasDimmer := True;
+          if (geraetesteuerung.DevicePrototyp[i].kanaltyp[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))] = 'R') or
+            (geraetesteuerung.DevicePrototyp[i].kanaltyp[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))] = 'G') or
+            (geraetesteuerung.DevicePrototyp[i].kanaltyp[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))] = 'B') then
+            geraetesteuerung.DevicePrototyp[i].hasRGB := True;
+          geraetesteuerung.DevicePrototyp[i].KanalMinValue[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))] := StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('minvalue'));
+          geraetesteuerung.DevicePrototyp[i].KanalMaxValue[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))] := StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('maxvalue'));
+        end;
+      end;
+    end;
+  end;
+  ProgressBar1.Visible := False;
+
+  Grouplist.Cells[0, 0] := 'Name';
+  Grouplist.Cells[1, 0] := 'Beschreibung';
+
+  TreeviewRefresh;
+  TreeViewCheckbuttons([]);
+  GroupListChanged;
+end;
+
+procedure Tgeraetesteuerung.SpeedButton3Click(Sender: TObject);
+begin
+  if messagedlg('Möchten Sie wirklich alle Geräte und Presets löschen?', mtWarning, [mbYes, mbNo], 0) = mrYes then
+    NewFile;
+end;
+
+procedure Tgeraetesteuerung.CloseBtnClick(Sender: TObject);
+begin
+  if not showingmodal then
+    Close;
+end;
+
+procedure Tgeraetesteuerung.SpeedButton2Click(Sender: TObject);
+begin
+  if SaveDialog1.Execute then
+  begin
+    SaveFile(SaveDialog1.FileName);
+  end;
+end;
+
+procedure Tgeraetesteuerung.SpeedButton1Click(Sender: TObject);
+begin
+  if OpenDialog1.Execute then
+  begin
+    OpenFile(OpenDialog1.FileName);
+  end;
+end;
+
+procedure Tgeraetesteuerung.NewFile;
+begin
+  grafischebuehnenansicht.deletealldeviceicon;
+  setlength(mainform.Devices, 0);
+  setlength(mainform.DeviceSelected, 0);
+  setlength(mainform.DeviceGroups, 0);
+
+  TreeviewRefresh;
+  TreeViewCheckbuttons([]);
+  GroupListChanged;
+end;
+
+procedure Tgeraetesteuerung.OpenFile(FileName: string);
+var
+  i, j, k, Count, count2: integer;
+begin
+  if FileExists(FileName) then
+  begin
+    FileStream := TFileStream.Create(FileName, fmOpenRead);
+
+    Filestream.ReadBuffer(Count, sizeof(Count));
+    setlength(mainform.Devices, Count);
+    setlength(mainform.DeviceSelected, Count);
+    for i := 0 to Count - 1 do
+    begin
+      Filestream.ReadBuffer(mainform.Devices[i].ID, sizeof(mainform.Devices[i].ID));
+      Filestream.ReadBuffer(mainform.Devices[i].Name, sizeof(mainform.Devices[i].Name));
+      Filestream.ReadBuffer(mainform.Devices[i].DeviceName, sizeof(mainform.Devices[i].DeviceName));
+      Filestream.ReadBuffer(mainform.Devices[i].Beschreibung, sizeof(mainform.Devices[i].Beschreibung));
+      Filestream.ReadBuffer(mainform.Devices[i].Vendor, sizeof(mainform.Devices[i].Vendor));
+      Filestream.ReadBuffer(mainform.Devices[i].Bildadresse, sizeof(mainform.Devices[i].Bildadresse));
+      Filestream.ReadBuffer(mainform.Devices[i].Startaddress, sizeof(mainform.Devices[i].Startaddress));
+      Filestream.ReadBuffer(mainform.Devices[i].MaxChan, sizeof(mainform.Devices[i].MaxChan));
+      Filestream.ReadBuffer(mainform.Devices[i].invertpan, sizeof(mainform.Devices[i].invertpan));
+      Filestream.ReadBuffer(mainform.Devices[i].inverttilt, sizeof(mainform.Devices[i].inverttilt));
+      // Bühnenansichtdarstellung
+      Filestream.ReadBuffer(mainform.Devices[i].ShowInStageView, sizeof(mainform.Devices[i].ShowInStageView));
+      Filestream.ReadBuffer(mainform.Devices[i].color, sizeof(mainform.Devices[i].color));
+      Filestream.ReadBuffer(mainform.Devices[i].picturesize, sizeof(mainform.Devices[i].picturesize));
+      Filestream.ReadBuffer(mainform.Devices[i].pictureangle, sizeof(mainform.Devices[i].pictureangle));
+      Filestream.ReadBuffer(mainform.Devices[i].picturefliphor, sizeof(mainform.Devices[i].picturefliphor));
+      Filestream.ReadBuffer(mainform.Devices[i].pictureflipver, sizeof(mainform.Devices[i].pictureflipver));
+      Filestream.ReadBuffer(mainform.Devices[i].pictureispng, sizeof(mainform.Devices[i].pictureispng));
+      Filestream.ReadBuffer(mainform.Devices[i].top, sizeof(mainform.Devices[i].top));
+      Filestream.ReadBuffer(mainform.Devices[i].left, sizeof(mainform.Devices[i].left));
+      Filestream.ReadBuffer(mainform.Devices[i].hasDimmer, sizeof(mainform.Devices[i].hasDIMMER));
+      Filestream.ReadBuffer(mainform.Devices[i].hasRGB, sizeof(mainform.Devices[i].hasRGB));
+      Filestream.ReadBuffer(mainform.Devices[i].hasPANTILT, sizeof(mainform.Devices[i].hasPANTILT));
+
+      Filestream.ReadBuffer(Count2, sizeof(Count2));
+      setlength(mainform.Devices[i].KanalMinValue, Count2);
+      setlength(mainform.Devices[i].KanalMaxValue, Count2);
+      setlength(mainform.Devices[i].kanaltyp, Count2);
+      setlength(mainform.Devices[i].kanalname, Count2);
+      for j := 0 to Count2 - 1 do
+      begin
+        Filestream.ReadBuffer(mainform.Devices[i].KanalMinValue[j], sizeof(mainform.Devices[i].KanalMinValue[j]));
+        Filestream.ReadBuffer(mainform.Devices[i].KanalMaxValue[j], sizeof(mainform.Devices[i].KanalMaxValue[j]));
+        Filestream.ReadBuffer(mainform.Devices[i].kanaltyp[j], sizeof(mainform.Devices[i].kanaltyp[j]));
+        Filestream.ReadBuffer(mainform.Devices[i].kanalname[j], sizeof(mainform.Devices[i].kanalname[j]));
+      end;
+    end;
+
+    Filestream.ReadBuffer(Count, sizeof(Count));
+    setlength(mainform.DeviceGroups, Count);
+    for i := 0 to Count - 1 do
+    begin
+      Filestream.ReadBuffer(mainform.DeviceGroups[i].ID, sizeof(mainform.DeviceGroups[i].ID));
+      Filestream.ReadBuffer(mainform.DeviceGroups[i].Name, sizeof(mainform.DeviceGroups[i].Name));
+      Filestream.ReadBuffer(mainform.DeviceGroups[i].Beschreibung, sizeof(mainform.DeviceGroups[i].Beschreibung));
+      Filestream.ReadBuffer(Count2, sizeof(Count2));
+      setlength(mainform.DeviceGroups[i].IDs, Count2);
+      for k := 0 to length(mainform.DeviceGroups[i].IDs) - 1 do
+      begin
+        Filestream.ReadBuffer(mainform.DeviceGroups[i].IDs[k], sizeof(mainform.DeviceGroups[i].IDs[k]));
+      end;
+    end;
+
+    FileStream.Free;
+
+    RefreshDeviceControl;
+
+    for i := 0 to length(mainform.devices) - 1 do
+      if mainform.devices[i].ShowInStageview then
+        grafischebuehnenansicht.createdeviceicon(mainform.devices[i].ID);
+  end;
+end;
+
+procedure Tgeraetesteuerung.SaveFile(FileName: string);
+var
+  i, j, k, Count, count2: integer;
+begin
+  FileStream := TFileStream.Create(FileName, fmCreate);
+  Count := length(mainform.Devices);
+  Filestream.WriteBuffer(Count, sizeof(Count));
+  for i := 0 to Count - 1 do
+  begin
+    Filestream.WriteBuffer(mainform.Devices[i].ID, sizeof(mainform.Devices[i].ID));
+    Filestream.WriteBuffer(mainform.Devices[i].Name, sizeof(mainform.Devices[i].Name));
+    Filestream.WriteBuffer(mainform.Devices[i].DeviceName, sizeof(mainform.Devices[i].DeviceName));
+    Filestream.WriteBuffer(mainform.Devices[i].Beschreibung, sizeof(mainform.Devices[i].Beschreibung));
+    Filestream.WriteBuffer(mainform.Devices[i].Vendor, sizeof(mainform.Devices[i].Vendor));
+    Filestream.WriteBuffer(mainform.Devices[i].Bildadresse, sizeof(mainform.Devices[i].Bildadresse));
+    Filestream.WriteBuffer(mainform.Devices[i].Startaddress, sizeof(mainform.Devices[i].Startaddress));
+    Filestream.WriteBuffer(mainform.Devices[i].MaxChan, sizeof(mainform.Devices[i].MaxChan));
+    Filestream.WriteBuffer(mainform.Devices[i].invertpan, sizeof(mainform.Devices[i].invertpan));
+    Filestream.WriteBuffer(mainform.Devices[i].inverttilt, sizeof(mainform.Devices[i].inverttilt));
+    // Bilddarstellung für Bühnenansicht
+    Filestream.WriteBuffer(mainform.Devices[i].ShowInStageView, sizeof(mainform.Devices[i].ShowInStageView));
+    Filestream.WriteBuffer(mainform.Devices[i].color, sizeof(mainform.Devices[i].color));
+    Filestream.WriteBuffer(mainform.Devices[i].picturesize, sizeof(mainform.Devices[i].picturesize));
+    Filestream.WriteBuffer(mainform.Devices[i].pictureangle, sizeof(mainform.Devices[i].pictureangle));
+    Filestream.WriteBuffer(mainform.Devices[i].picturefliphor, sizeof(mainform.Devices[i].picturefliphor));
+    Filestream.WriteBuffer(mainform.Devices[i].pictureflipver, sizeof(mainform.Devices[i].pictureflipver));
+    Filestream.WriteBuffer(mainform.Devices[i].pictureispng, sizeof(mainform.Devices[i].pictureispng));
+    Filestream.WriteBuffer(mainform.Devices[i].top, sizeof(mainform.Devices[i].top));
+    Filestream.WriteBuffer(mainform.Devices[i].left, sizeof(mainform.Devices[i].left));
+    Filestream.WriteBuffer(mainform.Devices[i].hasDimmer, sizeof(mainform.Devices[i].hasDIMMER));
+    Filestream.WriteBuffer(mainform.Devices[i].hasRGB, sizeof(mainform.Devices[i].hasRGB));
+    Filestream.WriteBuffer(mainform.Devices[i].hasPANTILT, sizeof(mainform.Devices[i].hasPANTILT));
+
+    Count2 := length(mainform.Devices[i].kanaltyp);
+    Filestream.WriteBuffer(Count2, sizeof(Count2));
+    for j := 0 to length(mainform.Devices[i].kanaltyp) - 1 do
+    begin
+      Filestream.WriteBuffer(mainform.Devices[i].KanalMinValue[j], sizeof(mainform.Devices[i].KanalMinValue[j]));
+      Filestream.WriteBuffer(mainform.Devices[i].KanalMaxValue[j], sizeof(mainform.Devices[i].KanalMaxValue[j]));
+      Filestream.WriteBuffer(mainform.Devices[i].kanaltyp[j], sizeof(mainform.Devices[i].kanaltyp[j]));
+      Filestream.WriteBuffer(mainform.Devices[i].kanalname[j], sizeof(mainform.Devices[i].kanalname[j]));
+    end;
+  end;
+
+  Count := length(mainform.DeviceGroups);
+  Filestream.WriteBuffer(Count, sizeof(Count));
+  for i := 0 to Count - 1 do
+  begin
+    Filestream.WriteBuffer(mainform.DeviceGroups[i].ID, sizeof(mainform.DeviceGroups[i].ID));
+    Filestream.WriteBuffer(mainform.DeviceGroups[i].Name, sizeof(mainform.DeviceGroups[i].Name));
+    Filestream.WriteBuffer(mainform.DeviceGroups[i].Beschreibung, sizeof(mainform.DeviceGroups[i].Beschreibung));
+    Count2 := length(mainform.DeviceGroups[i].IDs);
+    Filestream.WriteBuffer(Count2, sizeof(Count2));
+    for k := 0 to length(mainform.DeviceGroups[i].IDs) - 1 do
+    begin
+      Filestream.WriteBuffer(mainform.DeviceGroups[i].IDs[k], sizeof(mainform.DeviceGroups[i].IDs[k]));
+    end;
+  end;
+  FileStream.Free;
+end;
+
+procedure Tgeraetesteuerung.PositionXYMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+begin
+  if Shift = [ssLeft] then
+  begin
+    if ((PositionXY.Left + x - (PositionXY.Width div 2)) >= 0 - (PositionXY.Width div 2)) and ((PositionXY.Left + x - (PositionXY.Width div 2)) <= fadenkreuz.Width - (PositionXY.Width div 2)) then
+      PositionXY.Left := PositionXY.Left + x - (PositionXY.Width div 2);
+    if ((PositionXY.Top + y - (PositionXY.Height div 2)) >= 0 - (PositionXY.Height div 2)) and ((PositionXY.Top + y - (PositionXY.Height div 2)) <= fadenkreuz.Height - (PositionXY.Height div 2)) then
+      PositionXY.Top := PositionXY.Top + y - (PositionXY.Height div 2);
+    PositionXY.Refresh;
+
+    startscript(positionxy);
+  end;
+end;
+
+procedure Tgeraetesteuerung.fadenkreuzMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  if Button = mbLeft then
+  begin
+    PositionXY.Top  := Y - PositionXY.Height div 2;
+    PositionXY.Left := X - PositionXY.Width div 2;
+  end else
+  begin
+    PositionXY.Top  := (fadenkreuz.Height div 2) - (PositionXY.Height div 2);
+    PositionXY.Left := (fadenkreuz.Width div 2) - (PositionXY.Width div 2);
+  end;
+  startscript(positionxy);
+end;
+
+procedure Tgeraetesteuerung.SendPosition;
+var
+  pan, tilt, posx, posy, i: integer;
+begin
+  posx := round(((PositionXY.Left + (PositionXY.Width div 2)) / fadenkreuz.Width) * 255);
+  posy := round(((PositionXY.Top + (PositionXY.Height div 2)) / fadenkreuz.Height) * 255);
+
+  for i := 0 to TreeView1.SelectionCount - 1 do
+  begin
+    begin
+      pan  := posx;
+      tilt := posy;
+
+      if mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].invertpan then
+        pan := 255 - pan;
+      if mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].inverttilt then
+        tilt := 255 - tilt;
+
+      if mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].kanaltyp[0] = 'pan' then
+        mainform.SendData(mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].startaddress, 255 - pan, 255 - pan, 0, mainform.Data.names[mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].startaddress]);
+      if mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].kanaltyp[1] = 'tilt' then
+        mainform.SendData(mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].startaddress + 1, 255 - tilt, 255 - tilt, 0, mainform.Data.names[mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].startaddress + 1]);
+    end;
+  end;
+end;
+
+procedure Tgeraetesteuerung.DevStartaddressEditChange(Sender: TObject);
+var
+  s: string;
+  i: integer;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  mainform.input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+
+  if TEdit(Sender).Text = '0' then
+    TEdit(Sender).Text := '1';
+  if TEdit(Sender).Text <> '' then
+  begin
+    if StrToInt(TEdit(Sender).Text) > mainform.MaximumChan then
+      TEdit(Sender).Text := IntToStr(mainform.MaximumChan);
+    mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Startaddress := StrToInt(DevStartaddressEdit.Text);
+  end;
+end;
+
+procedure Tgeraetesteuerung.SendNamesBtnClick(Sender: TObject);
+var
+  i, j: integer;
+begin
+  for i := 0 to Treeview1.SelectionCount - 1 do
+  begin
+    if TreeView1.Selections[i].Parent.Index > -1 then
+    begin
+      for j := 0 to mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].MaxChan - 1 do
+      begin
+        mainform.Data.names[mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].Startaddress + j] := mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].Name + ': ' + mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].kanalname[j];
+        grafischebuehnenansicht.aktualisierechannel[mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].Startaddress + j] := True;
+      end;
+    end;
+  end;
+  mainform.pluginsaktualisieren(Sender);
+  mainform.UpdateLevels;
+  mainform.effekttimelineundkanaluebersichtaktualisieren(Sender);
+  grafischebuehnenansicht.aktualisieren := True;
+end;
+
+procedure Tgeraetesteuerung.Gerthinzufgen1Click(Sender: TObject);
+var
+  i, k, offset: integer;
+begin
+  adddevice.ShowModal;
+  if adddevice.modalresult = mrOk then
+  begin
+    if (adddevice.TreeView1.SelectionCount = 1) and (adddevice.TreeView1.Selected.Parent.Index > -1) then
+    begin
+      offset := StrToInt(adddevice.Edit3.Text) - 1;
+      for k := 0 to StrToInt(adddevice.Edit2.Text) - 1 do
+      begin
+        setlength(mainform.Devices, length(mainform.Devices) + 1);
+        setlength(mainform.DeviceSelected, length(mainform.Devices) + 1);
+
+        CreateGUID(mainform.Devices[length(mainform.Devices) - 1].ID);
+        Position := mainform.Devices[length(mainform.Devices) - 1].ID;
+        mainform.Devices[length(mainform.Devices) - 1].startaddress := 1 + (offset + k * deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].MaxChan);
+
+        mainform.Devices[length(mainform.Devices) - 1].Name := 'Neuer ' + deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].Name;
+        mainform.Devices[length(mainform.Devices) - 1].DeviceName := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].DeviceName;
+        mainform.Devices[length(mainform.Devices) - 1].Vendor := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].Vendor;
+        mainform.Devices[length(mainform.Devices) - 1].Beschreibung := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].Beschreibung;
+        mainform.Devices[length(mainform.Devices) - 1].Bildadresse := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].Bildadresse;
+        mainform.Devices[length(mainform.Devices) - 1].MaxChan := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].MaxChan;
+        mainform.Devices[length(mainform.Devices) - 1].color := clWhite;
+        mainform.Devices[length(mainform.Devices) - 1].hasDimmer := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].hasDimmer;
+        mainform.Devices[length(mainform.Devices) - 1].hasRGB := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].hasRGB;
+        mainform.Devices[length(mainform.Devices) - 1].hasPANTILT := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].hasPANTILT;
+
+        setlength(mainform.Devices[length(mainform.Devices) - 1].KanalMinValue, mainform.devices[length(mainform.devices) - 1].MaxChan);
+        setlength(mainform.Devices[length(mainform.Devices) - 1].KanalMaxValue, mainform.devices[length(mainform.devices) - 1].MaxChan);
+        setlength(mainform.Devices[length(mainform.Devices) - 1].kanaltyp, mainform.devices[length(mainform.devices) - 1].MaxChan);
+        setlength(mainform.Devices[length(mainform.Devices) - 1].kanalname, mainform.devices[length(mainform.devices) - 1].MaxChan);
+
+        for i := 0 to mainform.devices[length(mainform.devices) - 1].MaxChan - 1 do
+        begin
+          mainform.Devices[length(mainform.Devices) - 1].KanalMinValue[i] := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].KanalMinValue[i];
+          mainform.Devices[length(mainform.Devices) - 1].KanalMaxValue[i] := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].KanalMaxValue[i];
+          mainform.Devices[length(mainform.Devices) - 1].kanaltyp[i] := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].kanaltyp[i];
+          mainform.Devices[length(mainform.Devices) - 1].kanalname[i] := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].kanalname[i];
+        end;
+
+        mainform.Devices[length(mainform.Devices) - 1].ShowInStageview := True;
+        grafischebuehnenansicht.createdeviceicon(mainform.Devices[length(mainform.Devices) - 1].ID);
+      end;
+      TreeViewRefresh;
+      TreeViewCheckbuttons([]);
+      GroupListChanged;
+    end;
+  end;
+end;
+
+procedure Tgeraetesteuerung.Gertlschen1Click(Sender: TObject);
+var
+  i, j, k, devicefordelete: integer;
+  IDfordelete: TGUID;
+  deviceinuse: boolean;
+begin
+  if Treeview1.Selected.Parent.Index > -1 then
+    if Treeview1.Selected.Parent.Parent.Index > -1 then
+    begin
+      IDfordelete := NodeGUID[Treeview1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.Index][Treeview1.Selected.Index];
+
+      deviceinuse := FindDeviceConnections(IDfordelete, geraetremoved.Treeview1);
+
+      for k := 0 to length(mainform.Devices) - 1 do
+      begin
+        if IsEqualGUID(mainform.devices[k].ID, IDfordelete) then
+        begin
+          devicefordelete := k;
+        end;
+      end;
+
+      geraetremoved.devicenamelabel.Caption := mainform.devices[devicefordelete].Name;
+      geraetremoved.devicedescription.Caption := mainform.devices[devicefordelete].Vendor + ' ' + mainform.devices[devicefordelete].DeviceName;
+      geraetremoved.startadresselabel.Caption := 'Kanal ' + IntToStr(mainform.devices[devicefordelete].Startaddress) + '...' + IntToStr(mainform.devices[devicefordelete].Startaddress + mainform.devices[devicefordelete].MaxChan - 1);
+
+      // Gerät wird noch verwendet -> Dialogbox anzeigen
+      if deviceinuse then
+        geraetremoved.showmodal;
+
+      if (deviceinuse = False) or (geraetremoved.modalresult = mrOk) then
+      begin
+        // Alle Elemente um eins nach vorne rutschen
+        grafischebuehnenansicht.deletedeviceicon(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index]);
+
+        for k := GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index]) to length(mainform.devices) - 2 do
+          mainform.devices[k] := mainform.devices[k + 1];
+
+        // Letzte Position löschen
+        setlength(mainform.Devices, length(mainform.Devices) - 1);
+        setlength(mainform.DeviceSelected, length(mainform.DeviceSelected) - 1);
+
+        Treeviewrefresh;
+        TreeViewCheckbuttons([]);
+        GroupListChanged;
+      end;
+    end;
+end;
+
+procedure Tgeraetesteuerung.TreeViewRefresh;
+var
+  i, j: integer;
+  vendornode, devicenode, subnode: TTreenode;
+begin
+  TreeView1.Items.Clear;
+
+  setlength(NodeGUID, 0);
+  setlength(NodeIndex, 0);
+
+  for i := 0 to length(mainform.devices) - 1 do
+  begin
+    vendornode := nil;
+    devicenode := nil;
+
+    // Herausfinden, ob für Device-Vendor schon ein Top-Node vorhanden ist
+    for j := 0 to Treeview1.Items.Count - 1 do
+    begin
+      if (Treeview1.Items[j].Text = mainform.devices[i].vendor) and (Treeview1.Items[j].Parent.Index = -1) then
+        vendornode := Treeview1.Items[j];
+    end;
+    // Wenn kein DeviceVendorNode verfügbar -> erstellen
+    if vendornode = nil then
+    begin
+      vendornode := Treeview1.Items.Add(nil, mainform.devices[i].Vendor);
+      setlength(NodeGUID, length(NodeGUID) + 1);
+      setlength(NodeIndex, length(NodeIndex) + 1);
+    end;
+
+    vendornode.ImageIndex := 46;
+    vendornode.SelectedIndex := 9;
+
+    // Herausfinden, ob für DeviceTyp schon ein Sub-Node vorhanden ist
+    for j := 0 to Treeview1.Items.Count - 1 do
+    begin
+      if (Treeview1.Items[j].Text = mainform.devices[i].DeviceName) and (Treeview1.Items[j].Parent.Index <> -1) then
+        if (Treeview1.Items[j].Parent.Parent.Index = -1) then
+          devicenode := Treeview1.Items[j];
+    end;
+    // Wenn kein DeviceTypNode verfügbar -> erstellen
+    if devicenode = nil then
+    begin
+      devicenode := Treeview1.Items.AddChild(vendornode, mainform.devices[i].DeviceName);
+      setlength(NodeGUID[vendornode.index], length(NodeGUID[vendornode.index]) + 1);
+      setlength(NodeIndex[vendornode.index], length(NodeIndex[vendornode.index]) + 1);
+    end;
+
+    devicenode.ImageIndex := 1;
+    devicenode.SelectedIndex := 9;
+
+    // Neuen Device-SubSubNode für Gerät erstellen
+    subnode := TreeView1.Items.AddChild(devicenode, mainform.devices[i].Name);
+    setlength(NodeGUID[vendornode.Index][devicenode.index], length(NodeGUID[vendornode.Index][devicenode.index]) + 1);
+    setlength(NodeIndex[vendornode.Index][devicenode.index], length(NodeIndex[vendornode.Index][devicenode.index]) + 1);
+    NodeGUID[vendornode.Index][devicenode.index][length(NodeGUID[vendornode.index][devicenode.Index]) - 1] := mainform.devices[i].ID;
+    NodeIndex[vendornode.Index][devicenode.index][length(NodeIndex[vendornode.index][devicenode.Index]) - 1] := subnode;
+
+    subnode.ImageIndex := 47;
+    subnode.SelectedIndex := 9;
+
+    if GUIDtoString(position) = GUIDtoString(mainform.devices[i].ID) then
+    begin
+      subnode.Selected := True;
+      subnode.Expand(True);
+      TreeViewCheckbuttons([]);
+    end;
+  end;
+
+  mainform.TreeViewRefresh;
+end;
+
+procedure Tgeraetesteuerung.TreeViewCheckbuttons(Shift: TShiftState);
+var
+  i, j:  integer;
+  First: boolean;
+  mastertype: string;
+  temp:  TTreenode;
+begin
+  //  thesame:=false;
+  mastertype := '';
+
+  AddGroupBtn.Enabled := False;
+  DeleteGroupBtn.Enabled := False;
+  RefreshGroupBtn.Enabled := False;
+
+  // Wenn nur ein Objekt, dann Einzelgeräteinstellungen freischalten
+  if (Treeview1.SelectionCount = 1) and (Treeview1.Selected.Parent.Index > -1) then
+    if (Treeview1.Selected.Parent.Parent.Index > -1) then
+    begin
+      AddGroupBtn.Enabled := True;
+      DeleteGroupBtn.Enabled := True;
+      RefreshGroupBtn.Enabled := True;
+
+      DevStartaddressEdit.Enabled := True;
+      ChangeBtn.Enabled  := True;
+      DeleteBtn.Enabled  := True;
+      panmirror.Enabled  := True;
+      tiltmirror.Enabled := True;
+
+      mastertype := mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].DeviceName;
+      DevStartAddressEdit.Text := IntToStr(mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Startaddress);
+      panmirror.Checked := mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].invertpan;
+      tiltmirror.Checked := mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].inverttilt;
+      showinstageview.Checked := mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].ShowInStageview;
+      buttonfarbe.Color := mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].color;
+      //    thesame:=true;
+    end;
+
+  // Wenn nur Devicenode, dann Einzelgeräteinstellungen freischalten und Unterobjekte Selektieren
+  if Shift = [ssAlt] then
+    if (Treeview1.SelectionCount = 1) and (Treeview1.Selected.Parent.Index > -1) then
+      if (Treeview1.Selected.Parent.Parent.Index = -1) then
+        if (Treeview1.Selected.HasChildren) then
+        begin
+          AddGroupBtn.Enabled := True;
+          DeleteGroupBtn.Enabled := True;
+          RefreshGroupBtn.Enabled := True;
+
+          ChangeBtn.Enabled := True;
+          DeleteBtn.Enabled := True;
+
+          DevStartaddressEdit.Enabled := False;
+          panmirror.Enabled  := False;
+          tiltmirror.Enabled := False;
+
+          mastertype := mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Index][TreeView1.Selected.Index][0])].DeviceName;
+
+          // Oberobjekt deselektieren
+          temp := treeview1.Selected;
+          treeview1.Deselect(treeview1.Selected);
+
+          // Unterobjekte selektieren
+          for i := 0 to temp.Count - 1 do
+            treeview1.Select(temp.Item[i], [ssCtrl]);
+
+          //    thesame:=true;
+        end;
+
+  // Wenn mehr als ein Gerät oder kein Gerät
+  if (Treeview1.SelectionCount > 1) or (Treeview1.SelectionCount = 0) then
+  begin
+    DevStartaddressEdit.Enabled := False;
+    ChangeBtn.Enabled  := False;
+    DeleteBtn.Enabled  := False;
+    panmirror.Enabled  := False;
+    tiltmirror.Enabled := False;
+    //    thesame:=false;
+  end;
+
+  if Treeview1.Items.Count = 0 then
+    deleteDDFwindow_geraetesteuerung;
+
+  if (Treeview1.SelectionCount > 1) then
+  begin
+    //    thesame:=true;
+    First := True;
+    for i := 0 to Treeview1.SelectionCount - 1 do
+    begin
+      if TreeView1.Selections[i].Parent.Index > -1 then
+      begin
+        if TreeView1.Selections[i].Parent.Parent.Index > -1 then
+        begin
+          if First then
+          begin
+            First := False;
+            mastertype := mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].DeviceName;
+          end;
+          //          if (mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].DeviceName<>mastertype) then
+          //            thesame:=false;
+        end;
+      end;
+    end;
+  end;
+
+  //    if thesame then
+  //    begin
+  // alle selektierten Objekte sind identischen Typs
+  AddGroupBtn.Enabled := True;
+  DeleteGroupBtn.Enabled := True;
+  RefreshGroupBtn.Enabled := True;
+  if mastertype <> '' then
+    loadDDF_geraetesteuerung(mastertype);
+{    end else
+    begin
+      // Objekte sind unterschiedlichen Typs
+      AddGroupBtn.Enabled:=false;
+      DeleteGroupBtn.Enabled:=false;
+      RefreshGroupBtn.Enabled:=false;
+      deleteDDFwindow_geraetesteuerung;
+    end;
+}
+
+  // Alle Geräte-Selektionen löschen
+  for j := 0 to length(mainform.devices) - 1 do
+  begin
+    mainform.DeviceSelected[j] := False;
+  end;
+  // Selektionen neu setzen
+  for i := 0 to Treeview1.SelectionCount - 1 do
+  begin
+    // Geräteselektion aktualisieren
+    if TreeView1.Selections[i].Parent.Index > -1 then
+      if TreeView1.Selections[i].Parent.Parent.Index > -1 then
+        for j := 0 to length(mainform.devices) - 1 do
+        begin
+          if GUIDtoString(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index]) = GUIDtoString(mainform.Devices[j].ID) then
+          begin
+            mainform.DeviceSelected[j] := True;
+          end;
+        end;
+  end;
+end;
+
+procedure Tgeraetesteuerung.tiltmirrorMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  for i := 0 to Treeview1.SelectionCount - 1 do
+  begin
+    mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].inverttilt := tiltmirror.Checked;
+  end;
+  SendPosition;
+end;
+
+procedure Tgeraetesteuerung.CreateParams(var Params: TCreateParams);
+begin
+
+  inherited;// CreateParams(Params);
+  Params.ExStyle := WS_EX_APPWINDOW; // Params.ExStyle sorgt dafür, dass das Form einen eigenen Taskbareintrag erhält
+  geraetesteuerung.ParentWindow := GetDesktopWindow;
+  //  Params.Caption:=PChar(geraetesteuerung.Caption);
+  //  Params.WndParent:=GetDesktopWindow; // Params.WndParent sorgt dafür, dass das Fenster zum Desktop und nicht zur Application gehört
+
+{
+  inherited CreateParams(Params);
+  Params.WndParent := GetDesktopWindow;
+
+}
+end;
+
+procedure Tgeraetesteuerung.AddGroupBtnClick(Sender: TObject);
+var
+  i, k: integer;
+begin
+  setlength(mainform.DeviceGroups, length(mainform.DeviceGroups) + 1);
+  CreateGUID(mainform.DeviceGroups[length(mainform.DeviceGroups) - 1].ID);
+  mainform.DeviceGroups[length(mainform.DeviceGroups) - 1].Name := 'Neue Gerätegruppe (' + IntToStr(length(mainform.DeviceGroups)) + ')';
+
+  k := 0;
+  if (Treeview1.SelectionCount = 1) and (Treeview1.Selected.HasChildren) and (Treeview1.Selected.Parent.Index > -1) then
+  begin
+    setlength(mainform.DeviceGroups[length(mainform.DeviceGroups) - 1].IDs, TreeView1.Selected.Count);
+    for i := 0 to TreeView1.Selected.Count - 1 do
+    begin
+      mainform.DeviceGroups[length(mainform.DeviceGroups) - 1].IDs[k] := mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Item[i].Parent.Parent.Index][TreeView1.Selected.Item[i].Parent.Index][TreeView1.Selected.Item[i].index])].ID;
+      k := k + 1;
+    end;
+  end else
+  begin
+    setlength(mainform.DeviceGroups[length(mainform.DeviceGroups) - 1].IDs, TreeView1.SelectionCount);
+    for i := 0 to Treeview1.SelectionCount - 1 do
+    begin
+      mainform.DeviceGroups[length(mainform.DeviceGroups) - 1].IDs[k] := mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].ID;
+      k := k + 1;
+    end;
+  end;
+
+  GroupListChanged;
+  Grouplist.Row := Grouplist.RowCount - 1;
+  GroupListChanged;
+  mainform.GroupListChanged;
+end;
+
+procedure Tgeraetesteuerung.GroupListChanged;
+var
+  i, j, k, l: integer;
+  firstselection: boolean;
+begin
+  if length(mainform.DeviceGroups) > 0 then
+  begin
+    for i := 0 to Treeview1.Items.Count - 1 do
+      Treeview1.Deselect(Treeview1.Items[i]);
+
+    for i := 0 to Treeview1.Items.Count - 1 do
+      Treeview1.Items.Item[i].Collapse(True);
+
+    Grouplist.RowCount := length(mainform.DeviceGroups) + 1;
+    for i := 1 to length(mainform.DeviceGroups) do
+    begin
+      Grouplist.Cells[0, i] := mainform.DeviceGroups[i - 1].Name;
+      Grouplist.Cells[1, i] := mainform.DeviceGroups[i - 1].Beschreibung;
+    end;
+
+    // In Treeview die gruppierten Geräte selektieren
+    firstselection := True;
+    for i := 0 to length(mainform.DeviceGroups[Grouplist.Row - 1].IDs) - 1 do
+    begin
+      for j := 0 to length(NodeGUID) - 1 do
+      begin
+        for k := 0 to length(NodeGUID[j]) - 1 do
+        begin
+          for l := 0 to length(NodeGUID[j][k]) - 1 do
+          begin
+            if GUIDtoString(mainform.DeviceGroups[Grouplist.Row - 1].IDs[i]) = GUIDtoString(NodeGUID[j][k][l]) then
+            begin
+              if firstselection then
+              begin
+                Treeview1.Select(NodeIndex[j][k][l], []);
+                firstselection := False;
+              end else
+              begin
+                Treeview1.Select(NodeIndex[j][k][l], [ssCtrl]);
+              end;
+              NodeIndex[j][k][l].Expand(True);
+            end;
+          end;
+        end;
+      end;
+    end;
+
+  end else
+  begin
+    Grouplist.RowCount := 2;
+    Grouplist.Cells[0, 1] := '';
+    Grouplist.Cells[1, 1] := '';
+  end;
+  Treeviewcheckbuttons([]);
+
+  for i := 0 to length(mainform.deviceselected) - 1 do
+    mainform.deviceselected[i] := False;
+
+  for i := 0 to Treeview1.SelectionCount - 1 do
+  begin
+    if (Treeview1.Selections[i].HasChildren = False) then//and Treeview1.Selections[i].Selected then
+      mainform.deviceselected[GetDevicePositionInDeviceArray(NodeGUID[Treeview1.Selections[i].Parent.Parent.Index][Treeview1.Selections[i].Parent.Index][Treeview1.Selections[i].Index])] := True;
+  end;
+
+  Grouplist.Enabled := length(mainform.DeviceGroups) > 0;
+
+  //  mainform.GroupListChanged;
+end;
+
+procedure Tgeraetesteuerung.DeleteGroupBtnClick(Sender: TObject);
+var
+  i, k: integer;
+begin
+  if length(mainform.DeviceGroups) > 0 then
+  begin
+    // Objektekopieren nur starten, wenn nicht letztes Element (Row=RowCount-1) selektiert
+    if Grouplist.Row < (Grouplist.RowCount - 1) then
+    begin
+      for i := Grouplist.Row - 1 to Grouplist.RowCount - 3 do
+      begin
+        mainform.DeviceGroups[i].ID := mainform.DeviceGroups[i + 1].ID;
+        mainform.DeviceGroups[i].Name := mainform.DeviceGroups[i + 1].Name;
+        mainform.DeviceGroups[i].Beschreibung := mainform.DeviceGroups[i + 1].Beschreibung;
+
+        setlength(mainform.DeviceGroups[i].IDs, length(mainform.DeviceGroups[i + 1].IDs));
+        for k := 0 to length(mainform.DeviceGroups[i].IDs) - 1 do
+          mainform.DeviceGroups[i].IDs[k] := mainform.DeviceGroups[i + 1].IDs[k];
+      end;
+    end;
+    setlength(mainform.DeviceGroups, length(mainform.DeviceGroups) - 1);
+  end;
+  GroupListChanged;
+end;
+
+procedure Tgeraetesteuerung.GrouplistKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Treeview1.SelectionCount > 0 then
+  begin
+    if Grouplist.Col = 0 then
+      mainform.DeviceGroups[Grouplist.row - 1].Name := Grouplist.Cells[Grouplist.Col, Grouplist.Row];
+
+    if Grouplist.Col = 1 then
+      mainform.DeviceGroups[Grouplist.row - 1].Beschreibung := Grouplist.Cells[Grouplist.Col, Grouplist.row];
+  end;
+end;
+
+function Tgeraetesteuerung.GetChannelName(DeviceID: TGUID; Channel: integer): string;
+var
+  i: integer;
+begin
+  for i := 0 to length(mainform.devices) - 1 do
+  begin
+    if GUIDtoString(DeviceID) = GUIDtoString(mainform.devices[i].ID) then
+    begin
+      Result := mainform.devices[i].kanalname[Channel];
+    end;
+  end;
+end;
+
+procedure Tgeraetesteuerung.GrouplistMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  GroupListChanged;
+  TreeView1.SetFocus;
+  TreeViewCheckbuttons(Shift);
+end;
+
+procedure Tgeraetesteuerung.TreeView1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  TreeViewCheckbuttons(Shift);
+end;
+
+procedure Tgeraetesteuerung.TreeView1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+var
+  i: integer;
+begin
+  for i := 0 to length(mainform.deviceselected) - 1 do
+    mainform.deviceselected[i] := False;
+
+  for i := 0 to Treeview1.SelectionCount - 1 do
+  begin
+    if (Treeview1.Selections[i].HasChildren = False) and Treeview1.Selections[i].Selected then
+      mainform.deviceselected[geraetesteuerung.GetDevicePositionInDeviceArray(geraetesteuerung.NodeGUID[Treeview1.Selections[i].Parent.Parent.Index][Treeview1.Selections[i].Parent.Index][Treeview1.Selections[i].Index])] := True;
+  end;
+
+  TreeViewCheckbuttons(Shift);
+end;
+
+procedure Tgeraetesteuerung.ChangeBtnClick(Sender: TObject);
+var
+  i: integer;
+begin
+  if Treeview1.Selected.Parent.Index > -1 then
+    if Treeview1.Selected.Parent.Parent.Index > -1 then
+    begin
+      adddevice.Button1.Caption := 'Ändern';
+
+      adddevice.Label7.Visible := False;
+      adddevice.Edit2.Visible := False;
+      adddevice.Edit3.Enabled := False;
+      adddevice.Edit3.Text := IntToStr(mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Startaddress);
+      adddevice.Label9.Visible := False;
+      adddevice.lastaddress.Visible := False;
+
+      adddevice.ShowModal;
+      adddevice.Button1.Caption := 'Hinzufügen';
+
+      adddevice.Label7.Visible := True;
+      adddevice.Edit2.Visible  := True;
+      adddevice.Edit3.Enabled  := True;
+      adddevice.Label9.Visible := True;
+      adddevice.lastaddress.Visible := True;
+
+      if adddevice.modalresult = mrOk then
+      begin
+        if (adddevice.TreeView1.SelectionCount = 1) and (adddevice.TreeView1.Selected.Parent.Index > -1) then
+        begin
+          //      mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Startaddress:=1;
+
+          mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Name := 'Neuer ' + deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].Name;
+          mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].DeviceName := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].DeviceName;
+          mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Vendor := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].Vendor;
+          mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Beschreibung := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].Beschreibung;
+          mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Bildadresse := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].Bildadresse;
+          mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].MaxChan := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].MaxChan;
+
+          mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].hasDimmer := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].hasDimmer;
+          mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].hasRGB := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].hasRGB;
+          mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].hasPANTILT := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].hasPANTILT;
+
+          setlength(mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].KanalMinValue, deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].MaxChan);
+          setlength(mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].KanalMaxValue, deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].MaxChan);
+          setlength(mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].kanaltyp, deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].MaxChan);
+          setlength(mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].kanalname, deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].MaxChan);
+
+          for i := 0 to mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].MaxChan - 1 do
+          begin
+            mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].KanalMinValue[i] := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].KanalMinValue[i];
+            mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].KanalMaxValue[i] := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].KanalMaxValue[i];
+            mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].kanaltyp[i] := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].kanaltyp[i];
+            mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].kanalname[i] := deviceprototyp[adddevice.GetDevicePositionInDeviceArray(adddevice.NodeGUID[adddevice.Treeview1.selected.parent.index][adddevice.Treeview1.selected.index])].kanalname[i];
+          end;
+
+          Position := mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].ID;
+
+          Treeviewrefresh;
+          TreeViewCheckbuttons([]);
+          GroupListChanged;
+        end;
+      end;
+    end;
+end;
+
+procedure Tgeraetesteuerung.RefreshGroupBtnClick(Sender: TObject);
+var
+  i, k: integer;
+begin
+  if length(mainform.DeviceGroups) >= Grouplist.row then
+  begin
+    setlength(mainform.DeviceGroups[Grouplist.row - 1].IDs, Treeview1.SelectionCount);
+    k := 0;
+    if (Treeview1.SelectionCount = 1) and (Treeview1.Selected.HasChildren) and (Treeview1.Selected.Parent.Index > -1) then
+    begin
+      // falls Device-Node
+      for i := 0 to TreeView1.Selected.Count - 1 do
+      begin
+        mainform.DeviceGroups[Grouplist.row - 1].IDs[k] := mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Item[i].Parent.Parent.Index][TreeView1.Selected.Item[i].Parent.Index][TreeView1.Selected.Item[i].index])].ID;
+        k := k + 1;
+      end;
+    end else if (Treeview1.Selected.Parent.Index > -1) and (Treeview1.Selected.Parent.Parent.Index > -1) then
+    begin
+      // falls Subnode
+      for i := 0 to Treeview1.SelectionCount - 1 do
+      begin
+        mainform.DeviceGroups[Grouplist.row - 1].IDs[k] := mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].ID;
+        k := k + 1;
+      end;
+    end;
+  end;
+end;
+
+procedure Tgeraetesteuerung.TreeView1Edited(Sender: TObject; Node: TTreeNode; var S: string);
+var
+  j: integer;
+begin
+  if Node.HasChildren = False then
+  begin
+    mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[Node.Parent.Parent.Index][Node.Parent.Index][Node.Index])].Name := S;
+
+    for j := 0 to mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[Node.Parent.Parent.Index][Node.Parent.Index][Node.Index])].MaxChan - 1 do
+    begin
+      mainform.Data.names[mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[Node.Parent.Parent.Index][Node.Parent.Index][Node.Index])].Startaddress + j] := mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[Node.Parent.Parent.Index][Node.Parent.Index][Node.Index])].Name + ': ' + mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[Node.Parent.Parent.Index][Node.Parent.Index][Node.Index])].kanalname[j];
+      grafischebuehnenansicht.aktualisierechannel[mainform.devices[GetDevicePositionInDeviceArray(NodeGUID[Node.Parent.Parent.Index][Node.Parent.Index][Node.Index])].Startaddress + j] := True;
+    end;
+  end;
+  grafischebuehnenansicht.aktualisieren := True;
+end;
+
+function Tgeraetesteuerung.GetDevicePositionInDeviceArray(ID: TGUID): integer;
+var
+  i: integer;
+begin
+  Result := -1;
+  for i := 0 to length(mainform.devices) - 1 do
+  begin
+    if GUIDtoString(ID) = GUIDtoString(mainform.devices[i].ID) then
+      Result := i;
+  end;
+end;
+
+procedure Tgeraetesteuerung.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = vk_escape then
+    modalresult := mrCancel;
+end;
+
+procedure Tgeraetesteuerung.TreeView1Editing(Sender: TObject; Node: TTreeNode; var AllowEdit: boolean);
+begin
+  if Node.HasChildren then
+    AllowEdit := False;
+end;
+
+procedure Tgeraetesteuerung.TreeView1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  if Button = mbRight then
+  begin
+    for i := 0 to Treeview1.items.Count - 1 do
+      Treeview1.Deselect(Treeview1.items[i]);
+  end;
+end;
+
+procedure Tgeraetesteuerung.startscript(Sender: TObject);
+var
+  i: integer;
+begin
+  PositioninSelectedDevices := 0;
+
+  //  mainform.ScriptInterpreter.Pas.Text:=funktionen;
+  //  mainform.ScriptInterpreter.Compile;
+
+  for i := 0 to length(Edits) - 1 do
+  begin
+    if Sender = Edits[i] then
+    begin
+      if editproperties[i].actionname <> '' then
+        mainform.ScriptInterpreter.CallFunction(editproperties[i].actionname, nil, [edits[i].Text]);
+    end;
+  end;
+
+  for i := 0 to length(CheckBoxs) - 1 do
+  begin
+    if Sender = CheckBoxs[i] then
+    begin
+      if checkboxproperties[i].actionname <> '' then
+        mainform.ScriptInterpreter.CallFunction(checkboxproperties[i].actionname, nil, [Checkboxs[i].Checked]);
+    end;
+  end;
+
+  for i := 0 to length(ComboBoxs) - 1 do
+  begin
+    if Sender = ComboBoxs[i] then
+    begin
+      if comboboxproperties[i].actionname <> '' then
+        mainform.ScriptInterpreter.CallFunction(comboboxproperties[i].actionname, nil, [Comboboxs[i].ItemIndex]);
+    end;
+  end;
+
+  for i := 0 to length(Sliders) - 1 do
+  begin
+    if Sender = Sliders[i] then
+    begin
+      if sliderproperties[i].actionname <> '' then
+        mainform.ScriptInterpreter.CallFunction(sliderproperties[i].actionname, nil, [Sliders[i].Position]);
+    end;
+  end;
+
+  for i := 0 to length(Buttons) - 1 do
+  begin
+    if Sender = Buttons[i] then
+    begin
+      if buttonproperties[i].actionname <> '' then
+        mainform.ScriptInterpreter.CallFunction(buttonproperties[i].actionname, nil, []);
+    end;
+  end;
+
+  for i := 0 to length(Radiobuttons) - 1 do
+  begin
+    if Sender = Radiobuttons[i] then
+    begin
+      if radiobuttonproperties[i].actionname <> '' then
+        mainform.ScriptInterpreter.CallFunction(radiobuttonproperties[i].actionname, nil, [radiobuttons[i].ItemIndex]);
+    end;
+  end;
+
+  if Sender = Colorpicker then
+  begin
+    mainform.ScriptInterpreter.CallFunction('colorchange', nil, [colorpicker.SelectedColor]);
+  end;
+
+  if Sender = PositionXY then
+  begin
+    mainform.ScriptInterpreter.CallFunction('positionchange', nil, []);
+  end;
+end;
+
+procedure Tgeraetesteuerung.panmirrorMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  for i := 0 to Treeview1.SelectionCount - 1 do
+  begin
+    mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].invertpan := panmirror.Checked;
+  end;
+end;
+
+procedure Tgeraetesteuerung.deleteDDFwindow_geraetesteuerung;
+var
+  i: integer;
+begin
+  if ddffenstervorhanden = False then
+    exit;
+
+  try
+    mainform.ScriptInterpreter.CallFunction('FormClose', nil, []);
+  except
+  end;
+
+  deviceimage.Width  := 128;
+  deviceimage.Height := 128;
+  deviceimage.Picture.LoadFromFile(mainform.workingdirectory + '\Devicepictures\128x128\par56silber.png');
+
+  devicename.Top  := 150;
+  devicename.Left := 8;
+  devicename.Caption := 'PC_DIMMER Gerätesteuerung';
+  deviceadress.Top := 165;
+  deviceadress.Left := 8;
+  deviceadress.Caption := 'Derzeit keine Geräte selektiert.';
+
+  // zunächst alle Controls der Form löschen
+  for i := 0 to length(Edits) - 1 do
+    Edits[i].Free;
+  setlength(Edits, 0);
+  setlength(editproperties, 0);
+
+  for i := 0 to length(CheckBoxs) - 1 do
+    CheckBoxs[i].Free;
+  setlength(Checkboxs, 0);
+  setlength(checkboxproperties, 0);
+
+  for i := 0 to length(ComboBoxs) - 1 do
+    ComboBoxs[i].Free;
+  setlength(Comboboxs, 0);
+  setlength(comboboxproperties, 0);
+
+  for i := 0 to length(Labels) - 1 do
+    Labels[i].Free;
+  setlength(Labels, 0);
+
+  for i := 0 to length(Sliders) - 1 do
+    Sliders[i].Free;
+  setlength(Sliders, 0);
+  setlength(sliderproperties, 0);
+
+  for i := 0 to length(Shapes) - 1 do
+    Shapes[i].Free;
+  setlength(Shapes, 0);
+
+  for i := 0 to length(Buttons) - 1 do
+    Buttons[i].Free;
+  setlength(Buttons, 0);
+  setlength(buttonproperties, 0);
+
+  for i := 0 to length(Radiobuttons) - 1 do
+    Radiobuttons[i].Free;
+  setlength(Radiobuttons, 0);
+  setlength(radiobuttonproperties, 0);
+
+  Colorpicker.Visible := False;
+{
+  R.Visible:=false;
+  G.Visible:=false;
+  B.Visible:=false;
+}
+
+  fadenkreuz.Visible := False;
+
+  ddffenstervorhanden := False;
+end;
+
+procedure Tgeraetesteuerung.loadDDF_geraetesteuerung(DevicePrototypName: string);
+var
+  i, j, k, l: integer;
+  DevicePrototypPosition: integer;
+begin
+  LockWindow(DDFControls.Handle);
+
+  DevicePrototypPosition := 0;
+  deleteDDFwindow_geraetesteuerung;
+
+  for i := 0 to length(DevicePrototyp) - 1 do
+  begin
+    if DevicePrototypName = deviceprototyp[i].DeviceName then
+      DevicePrototypPosition := i;
+  end;
+
+  XML.Xml.LoadFromFile(mainform.workingdirectory + '\Devices\' + deviceprototyp[DevicePrototypPosition].ddffilename);
+  for j := 0 to XML.Xml.Root.Items.Count - 1 do
+  begin // <device>
+    if XML.XML.Root.Items[j].Name = 'form' then
+    begin // <form>
+      if (XML.XML.Root.Items[j].Properties.IntValue('width') + 500) > 500 then
+        geraetesteuerung.Width := XML.XML.Root.Items[j].Properties.IntValue('width') + 500;
+      if XML.XML.Root.Items[j].Properties.IntValue('height') > 402 then
+        geraetesteuerung.Height := XML.XML.Root.Items[j].Properties.IntValue('height');
+      for k := 0 to XML.XML.Root.Items[j].Items.Count - 1 do
+      begin
+        if XML.XML.Root.Items[j].Items[k].Name = 'deviceimage' then
+        begin
+          if FileExists(mainform.workingdirectory + 'Devicepictures\' + '64 x 64' + copy(mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Bildadresse, 8, length(mainform.devices[i].Bildadresse))) then
+          begin
+            // versuche 64x64 Bild zu laden
+            deviceimage.Picture.LoadFromFile(mainform.workingdirectory + 'Devicepictures\' + '64 x 64' + copy(mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Bildadresse, 8, length(mainform.devices[i].Bildadresse)));
+          end else
+          if FileExists(mainform.workingdirectory + 'Devicepictures\' + mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Bildadresse) then
+          begin
+            // 64x64 existiert nicht, eingestelltes Bild laden
+            deviceimage.Picture.LoadFromFile(mainform.workingdirectory + 'Devicepictures\' + mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Bildadresse);
+          end else
+          begin
+            // Gerätebild nicht verfügbar, Gerätegruppenbild laden
+            try
+              deviceimage.Picture.LoadFromFile(mainform.workingdirectory + '\Devicepictures\' + geraetesteuerung.deviceprototyp[DevicePrototypPosition].Bildadresse);
+            except
+              // Gerätegruppenbild nicht verfügbar, Standardbild laden
+              ShowMessage('Das Bild "' + deviceprototyp[DevicePrototypPosition].Bildadresse + '" welches in der DDF Datei referenziert ist, wurde nicht gefunden!');
+            end;
+          end;
+          deviceimage.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+          deviceimage.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+          deviceimage.Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+          deviceimage.Height := XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+          deviceimage.Visible := True;
+        end;
+        if XML.XML.Root.Items[j].Items[k].Name = 'devicename' then
+        begin
+          if not TreeView1.Selected.HasChildren then
+          begin
+            devicename.Caption := mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Name;//deviceprototyp[DevicePrototypPosition].DeviceName;
+            devicename.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            devicename.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            //              devicename.Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+            //              devicename.Height:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+            devicename.Visible := True;
+          end else
+          begin
+            devicename.Caption := 'Keine Namensanzeige möglich, da';
+            devicename.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            devicename.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            devicename.Visible := True;
+          end;
+        end;
+        if XML.XML.Root.Items[j].Items[k].Name = 'deviceadress' then
+        begin
+          if not TreeView1.Selected.HasChildren then
+          begin
+            deviceadress.Caption := 'Startadresse: ' + IntToStr(mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.selected.index])].Startaddress);
+            deviceadress.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            deviceadress.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            //              deviceadress.Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+            //              deviceadress.Height:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+            deviceadress.Visible := True;
+          end else
+          begin
+            deviceadress.Caption := 'mehrere Geräte ausgewählt sind.';
+            deviceadress.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            deviceadress.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            deviceadress.Visible := True;
+          end;
+        end;
+        if XML.XML.Root.Items[j].Items[k].Name = 'position' then
+        begin
+          fadenkreuz.Visible := True;
+          fadenkreuz.top := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+          fadenkreuz.left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+          fadenkreuz.Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+          fadenkreuz.Height := XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+          Bevel1.Left := fadenkreuz.Width div 2;
+          Bevel1.Height := fadenkreuz.Height;
+          Bevel2.Top  := fadenkreuz.Height div 2;
+          Bevel2.Width := fadenkreuz.Width;
+          PositionXY.Top := (fadenkreuz.Height div 2) - (PositionXY.Height div 2);
+          PositionXY.Left := (fadenkreuz.Width div 2) - (PositionXY.Width div 2);
+        end;
+        if XML.XML.Root.Items[j].Items[k].Name = 'label' then
+        begin
+          setlength(Labels, length(Labels) + 1);
+          Labels[length(Labels) - 1] := TLabel.Create(self);
+          Labels[length(Labels) - 1].Parent := DDFControls;
+          Labels[length(Labels) - 1].Top := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+          Labels[length(Labels) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+          Labels[length(Labels) - 1].Caption := XML.XML.Root.Items[j].Items[k].Properties.Value('caption');
+          Labels[length(Labels) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          Labels[length(Labels) - 1].Visible := True;
+        end;
+        if XML.XML.Root.Items[j].Items[k].Name = 'slider' then
+        begin
+          setlength(Sliders, length(Sliders) + 1);
+          setlength(sliderproperties, length(sliderproperties) + 1);
+          Sliders[length(Sliders) - 1] := TScrollbar.Create(self);
+          Sliders[length(Sliders) - 1].Parent := DDFControls;
+          if XML.XML.Root.Items[j].Items[k].Properties.Value('name') <> '' then
+            Sliders[length(Sliders) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          sliderproperties[length(sliderproperties) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          sliderproperties[length(sliderproperties) - 1].channel := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+          sliderproperties[length(sliderproperties) - 1].actionname := XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+          Sliders[length(Sliders) - 1].Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+          Sliders[length(Sliders) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+          Sliders[length(Sliders) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+          Sliders[length(Sliders) - 1].Height := XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+          Sliders[length(Sliders) - 1].Min  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('startvalue');
+          Sliders[length(Sliders) - 1].Max  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('endvalue');
+          Sliders[length(Sliders) - 1].position := XML.XML.Root.Items[j].Items[k].Properties.IntValue('default');
+          Sliders[length(Sliders) - 1].Visible := True;
+          Sliders[length(Sliders) - 1].OnScroll := sliderscroll;
+        end;
+        if XML.XML.Root.Items[j].Items[k].Name = 'dropdown' then
+        begin
+          setlength(Comboboxs, length(Comboboxs) + 1);
+          setlength(comboboxproperties, length(comboboxproperties) + 1);
+          Comboboxs[length(Comboboxs) - 1] := TCombobox.Create(self);
+          Comboboxs[length(Comboboxs) - 1].Parent := DDFControls;
+          Comboboxs[length(Comboboxs) - 1].Style := csDropDownList;
+          if XML.XML.Root.Items[j].Items[k].Properties.Value('name') <> '' then
+            Comboboxs[length(Comboboxs) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          comboboxproperties[length(comboboxproperties) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          comboboxproperties[length(comboboxproperties) - 1].channel := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+          comboboxproperties[length(comboboxproperties) - 1].actionname := XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+          Comboboxs[length(Comboboxs) - 1].Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+          Comboboxs[length(Comboboxs) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+          Comboboxs[length(Comboboxs) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+          Comboboxs[length(Comboboxs) - 1].Visible := True;
+          setlength(comboboxproperties[length(comboboxproperties) - 1].itemvalue, XML.XML.Root.Items[j].Items[k].Items.Count);
+          for l := 0 to XML.XML.Root.Items[j].Items[k].Items.Count - 1 do
+          begin
+            comboboxproperties[length(comboboxproperties) - 1].itemvalue[l] := XML.XML.Root.Items[j].Items[k].Items[l].Properties.IntValue('value');
+            Comboboxs[length(Comboboxs) - 1].Items.Add(XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('caption'));
+          end;
+          Comboboxs[length(Comboboxs) - 1].ItemIndex := 0;
+          Comboboxs[length(Comboboxs) - 1].OnChange  := startscript;
+        end;
+        if XML.XML.Root.Items[j].Items[k].Name = 'line' then
+        begin
+          setlength(Shapes, length(Shapes) + 1);
+          Shapes[length(Shapes) - 1] := TShape.Create(self);
+          Shapes[length(Shapes) - 1].Parent := DDFControls;
+          Shapes[length(Shapes) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('x1');
+          Shapes[length(Shapes) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('x2') - Shapes[length(Shapes) - 1].Left;
+          Shapes[length(Shapes) - 1].Top := XML.XML.Root.Items[j].Items[k].Properties.IntValue('y1');
+          Shapes[length(Shapes) - 1].Height := XML.XML.Root.Items[j].Items[k].Properties.IntValue('y2') - Shapes[length(Shapes) - 1].Top + 1;
+          Shapes[length(Shapes) - 1].Visible := True;
+        end;
+        if XML.XML.Root.Items[j].Items[k].Name = 'colorpicker' then
+        begin
+          Colorpicker.Top := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+          R.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top') + 140;
+          G.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top') + 157;
+          B.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top') + 174;
+          Colorpicker.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+          R.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 6;
+          G.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 6;
+          B.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 6;
+          Colorpicker.Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+          Colorpicker.Height := XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+          Colorpickerchannel[0] := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel1');
+          Colorpickerchannel[1] := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel2');
+          Colorpickerchannel[2] := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel3');
+          Colorpicker.Visible := True;
+{
+            R.Visible:=true;
+            G.Visible:=true;
+            B.Visible:=true;
+}
+        end;
+        if XML.XML.Root.Items[j].Items[k].Name = 'colorpicker2' then
+        begin
+          Colorpicker2.Top := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+          R.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top') + 140;
+          G.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top') + 157;
+          B.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top') + 174;
+          Colorpicker2.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 7;
+          R.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 6;
+          G.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 6;
+          B.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 6;
+          Colorpickerchannel[0] := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel1');
+          Colorpickerchannel[1] := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel2');
+          Colorpickerchannel[2] := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel3');
+          Colorpicker2.Visible := True;
+{
+            R.Visible:=true;
+            G.Visible:=true;
+            B.Visible:=true;
+}
+        end;
+        if XML.XML.Root.Items[j].Items[k].Name = 'button' then
+        begin
+          setlength(Buttons, length(Buttons) + 1);
+          setlength(buttonproperties, length(buttonproperties) + 1);
+          Buttons[length(Buttons) - 1] := TButton.Create(self);
+          Buttons[length(Buttons) - 1].Parent := DDFControls;
+          if XML.XML.Root.Items[j].Items[k].Properties.Value('name') <> '' then
+            Buttons[length(Buttons) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          Buttonproperties[length(Buttonproperties) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          Buttonproperties[length(Buttonproperties) - 1].channel := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+          Buttonproperties[length(Buttonproperties) - 1].onvalue := XML.XML.Root.Items[j].Items[k].Properties.IntValue('onvalue');
+          Buttonproperties[length(Buttonproperties) - 1].offvalue := XML.XML.Root.Items[j].Items[k].Properties.IntValue('offvalue');
+          Buttonproperties[length(Buttonproperties) - 1].actionname := XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+          Buttons[length(Buttons) - 1].Caption := XML.XML.Root.Items[j].Items[k].Properties.Value('caption');
+          Buttons[length(Buttons) - 1].Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+          Buttons[length(Buttons) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+          Buttons[length(Buttons) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+          Buttons[length(Buttons) - 1].Height := XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+          Buttons[length(Buttons) - 1].Visible := True;
+          Buttons[length(Buttons) - 1].OnClick := startscript;
+        end;
+        if XML.XML.Root.Items[j].Items[k].Name = 'options' then
+        begin
+          setlength(Radiobuttons, length(Radiobuttons) + 1);
+          setlength(radiobuttonproperties, length(radiobuttonproperties) + 1);
+          Radiobuttons[length(Radiobuttons) - 1] := TRadioGroup.Create(self);
+          Radiobuttons[length(Radiobuttons) - 1].Parent := DDFControls;
+          if XML.XML.Root.Items[j].Items[k].Properties.Value('name') <> '' then
+            Radiobuttons[length(Radiobuttons) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          radiobuttonproperties[length(radiobuttonproperties) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          radiobuttonproperties[length(radiobuttonproperties) - 1].channel := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+          radiobuttonproperties[length(radiobuttonproperties) - 1].actionname := XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+          Radiobuttons[length(Radiobuttons) - 1].Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top', 50);
+          Radiobuttons[length(Radiobuttons) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+          Radiobuttons[length(Radiobuttons) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width', 100);
+          Radiobuttons[length(Radiobuttons) - 1].Visible := True;
+          setlength(radiobuttonproperties[length(radiobuttonproperties) - 1].itemvalue, XML.XML.Root.Items[j].Items[k].Items.Count);
+          for l := 0 to XML.XML.Root.Items[j].Items[k].Items.Count - 1 do
+          begin
+            radiobuttonproperties[length(radiobuttonproperties) - 1].itemvalue[l] := XML.XML.Root.Items[j].Items[k].Items[l].Properties.IntValue('value');
+            Radiobuttons[length(Radiobuttons) - 1].Items.Add(XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('caption'));
+            if XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('default') = 'true' then
+              Radiobuttons[length(Radiobuttons) - 1].ItemIndex := l;
+          end;
+          Radiobuttons[length(Radiobuttons) - 1].OnClick := startscript;
+        end;
+        if XML.XML.Root.Items[j].Items[k].Name = 'checkbox' then
+        begin
+          setlength(checkboxs, length(checkboxs) + 1);
+          setlength(checkboxproperties, length(checkboxproperties) + 1);
+          checkboxs[length(checkboxs) - 1] := TCheckbox.Create(self);
+          Checkboxs[length(checkboxs) - 1].Parent := DDFControls;
+          if XML.XML.Root.Items[j].Items[k].Properties.Value('name') <> '' then
+            checkboxs[length(checkboxs) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          Checkboxproperties[length(Checkboxproperties) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          Checkboxproperties[length(Checkboxproperties) - 1].channel := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+          Checkboxproperties[length(Checkboxproperties) - 1].actionname := XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+          Checkboxs[length(Checkboxs) - 1].Caption := XML.XML.Root.Items[j].Items[k].Properties.Value('caption');
+          Checkboxs[length(Checkboxs) - 1].Checked := XML.XML.Root.Items[j].Items[k].Properties.Value('checked') = 'true';
+          Checkboxs[length(Checkboxs) - 1].Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top', 50);
+          Checkboxs[length(Checkboxs) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+          Checkboxs[length(Checkboxs) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width', 100);
+          Checkboxs[length(Checkboxs) - 1].Visible := True;
+          Checkboxs[length(Checkboxs) - 1].OnClick := startscript;
+        end;
+        if XML.XML.Root.Items[j].Items[k].Name = 'edit' then
+        begin
+          setlength(edits, length(Edits) + 1);
+          setlength(editproperties, length(editproperties) + 1);
+          Edits[length(Edits) - 1] := TEdit.Create(self);
+          Edits[length(Edits) - 1].Parent := DDFControls;
+          if XML.XML.Root.Items[j].Items[k].Properties.Value('name') <> '' then
+            Edits[length(Edits) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          Editproperties[length(Editproperties) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          Editproperties[length(Editproperties) - 1].channel := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+          Editproperties[length(Editproperties) - 1].actionname := XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+          Edits[length(Edits) - 1].Text := XML.XML.Root.Items[j].Items[k].Properties.Value('text');
+          Edits[length(Edits) - 1].Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top', 50);
+          Edits[length(Edits) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+          Edits[length(Edits) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width', 100);
+          Edits[length(Edits) - 1].Visible := True;
+          Edits[length(Edits) - 1].OnChange := startscript;
+        end;
+      end;
+    end;
+    if XML.XML.Root.Items[j].Name = 'code' then
+    begin // <code>
+      funktionen := XML.XML.Root.Items[j].Value;
+      mainform.ScriptInterpreter.Pas.Text := XML.XML.Root.Items[j].Value;
+      mainform.ScriptInterpreter.Compile;
+    end;
+  end;
+
+  mainform.ScriptInterpreter.CallFunction('FormShow', nil, []);
+
+  UnLockWindow(DDFControls.Handle);
+
+  RefreshTimer.Enabled := True;
+
+  ddffenstervorhanden := True;
+end;
+
+procedure Tgeraetesteuerung.set_channel(DeviceID: TGUID; channel: string; startvalue, endvalue, fadetime: integer);
+var
+  i, k, endvalue_new: integer;
+begin
+  endvalue_new := endvalue;
+
+  for i := 1 to mainform.MaximumChan do
+    mainform.recordchannelvalue[i] := -1;
+
+  for k := 0 to mainform.Devices[GetDevicePositionInDeviceArray(DeviceID)].MaxChan - 1 do
+  begin
+    if lowercase(mainform.Devices[GetDevicePositionInDeviceArray(DeviceID)].kanaltyp[k]) = lowercase(channel) then
+    begin
+      if startvalue = -1 then
+        startvalue := 255 - mainform.Data.ch[mainform.Devices[GetDevicePositionInDeviceArray(DeviceID)].Startaddress + k];
+
+      if (endvalue_new > mainform.Devices[GetDevicePositionInDeviceArray(DeviceID)].KanalMaxValue[k]) then
+        endvalue_new := mainform.Devices[GetDevicePositionInDeviceArray(DeviceID)].KanalMaxValue[k];
+
+      if (endvalue_new < mainform.Devices[GetDevicePositionInDeviceArray(DeviceID)].KanalMinValue[k]) then
+        endvalue_new := mainform.Devices[GetDevicePositionInDeviceArray(DeviceID)].KanalMinValue[k];
+
+      mainform.Senddata(mainform.Devices[GetDevicePositionInDeviceArray(DeviceID)].Startaddress + k, 255 - startvalue, 255 - endvalue_new, fadetime, mainform.Data.names[mainform.Devices[GetDevicePositionInDeviceArray(DeviceID)].Startaddress + k]);
+      mainform.recordchannelvalue[mainform.Devices[GetDevicePositionInDeviceArray(DeviceID)].Startaddress + k] := 255 - endvalue_new;
+      mainform.RecordAudioeffekt(fadetime);
+    end;
+  end;
+end;
+
+function Tgeraetesteuerung.get_channel(DeviceID: TGUID; channel: string): integer;
+var
+  k: integer;
+begin
+  Result := 0;
+  for k := 0 to mainform.Devices[GetDevicePositionInDeviceArray(DeviceID)].MaxChan - 1 do
+  begin
+    if lowercase(mainform.Devices[GetDevicePositionInDeviceArray(DeviceID)].kanaltyp[k]) = lowercase(channel) then
+    begin
+      Result := 255 - mainform.Data.ch[mainform.Devices[GetDevicePositionInDeviceArray(DeviceID)].Startaddress + k];
+    end;
+  end;
+end;
+
+procedure Tgeraetesteuerung.fadenkreuzMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+begin
+  if Shift = [ssLeft] then
+  begin
+    if ((x - (PositionXY.Width div 2)) >= 0 - (PositionXY.Width div 2)) and ((x - (PositionXY.Width div 2)) <= fadenkreuz.Width - (PositionXY.Width div 2)) then
+      PositionXY.Left := x - (PositionXY.Width div 2);
+    if ((y - (PositionXY.Height div 2)) >= 0 - (PositionXY.Height div 2)) and ((y - (PositionXY.Height div 2)) <= fadenkreuz.Height - (PositionXY.Height div 2)) then
+      PositionXY.Top := y - (PositionXY.Height div 2);
+    PositionXY.Refresh;
+
+    startscript(positionxy);
+  end;
+end;
+
+function Tgeraetesteuerung.channel(channel: integer): integer;
+begin
+  Result := 255 - mainform.Data.ch[channel];
+end;
+
+procedure Tgeraetesteuerung.Edit1Enter(Sender: TObject);
+begin
+  if Edit1.Text = 'Suchtext hier eingeben...' then
+  begin
+    Edit1.Text := '';
+    Edit1.Font.Color := clBlack;
+  end;
+end;
+
+procedure Tgeraetesteuerung.Edit1Exit(Sender: TObject);
+begin
+  if Edit1.Text = '' then
+  begin
+    Edit1.Text := 'Suchtext hier eingeben...';
+    Edit1.Font.Color := clGray;
+  end;
+end;
+
+procedure Tgeraetesteuerung.Edit1Change(Sender: TObject);
+var
+  i: integer;
+  Text, Suchtext: string;
+begin
+
+  LockWindow(Treeview1.Handle);
+  Treeview1.FullCollapse;
+  UnLockWindow(Treeview1.Handle);
+  Suchtext := Edit1.Text;
+  for i := 0 to Treeview1.Items.Count - 1 do
+  begin
+    Treeview1.Deselect(Treeview1.Items[i]);
+
+    Text := copy(Treeview1.Items[i].Text, 0, length(Treeview1.Items[i].Text));
+
+    if StrPos(StrLower(PChar(Text)), StrLower(PChar(Suchtext))) <> nil then
+    begin
+      Treeview1.Select(Treeview1.Items[i]);
+      exit;
+    end;
+  end;
+end;
+
+procedure Tgeraetesteuerung.BScroll(Sender: TObject; ScrollCode: TScrollCode; var ScrollPos: integer);
+begin
+  startscript(Colorpicker);
+end;
+
+procedure Tgeraetesteuerung.GrouplistExit(Sender: TObject);
+begin
+  mainform.GroupListChanged;
+end;
+
+procedure Tgeraetesteuerung.showinstageviewMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  for i := 0 to Treeview1.SelectionCount - 1 do
+  begin
+    mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].ShowInStageview := showinstageview.Checked;
+    if showinstageview.Checked then
+      grafischebuehnenansicht.createdeviceicon(mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].ID)
+    else
+      grafischebuehnenansicht.deletedeviceicon(mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].ID);
+  end;
+end;
+
+procedure Tgeraetesteuerung.FormActivate(Sender: TObject);
+begin
+  mainform.ddfsource := 0;
+end;
+
+procedure Tgeraetesteuerung.PngBitBtn1Click(Sender: TObject);
+var
+  i: integer;
+  newpicturefile: string;
+begin
+  OpenDialog2.Filter := 'Bilddateien (*.bmp;*.jpg;*.gif;*.ico;*.png)|*.bmp;*.jpg;*.gif;*.ico;*.png|Alle Dateien (*.*)|*.*';
+  OpenDialog2.InitialDir := mainform.workingdirectory + 'Devicepictures';
+  opendialog2.FileName := '';
+  if OpenDialog2.Execute then
+  begin
+    newpicturefile := OpenDialog2.FileName;
+    if pos(mainform.workingdirectory + 'Devicepictures\', newpicturefile) > -1 then
+      newpicturefile := copy(newpicturefile, length(mainform.workingdirectory + 'Devicepictures\') + 1, length(newpicturefile));
+
+    for i := 0 to length(mainform.DeviceSelected) - 1 do
+    begin
+      if mainform.DeviceSelected[i] then
+      begin
+        mainform.devices[i].Bildadresse := newpicturefile;
+        if mainform.devices[i].ShowInStageview then
+        begin
+          grafischebuehnenansicht.deletedeviceicon(mainform.devices[i].ID);
+          grafischebuehnenansicht.createdeviceicon(mainform.devices[i].ID);
+        end;
+      end;
+    end;
+  end;
+end;
+
+procedure Tgeraetesteuerung.MSGSave;
+var
+  LReg: TRegistry;
+begin
+  LReg := TRegistry.Create;
+  LReg.RootKey := HKEY_CURRENT_USER;
+
+  if LReg.OpenKey('Software', True) then
+  begin
+    if not LReg.KeyExists('PHOENIXstudios') then
+      LReg.CreateKey('PHOENIXstudios');
+    if LReg.OpenKey('PHOENIXstudios', True) then
+    begin
+      if not LReg.KeyExists('PC_DIMMER') then
+        LReg.CreateKey('PC_DIMMER');
+      if LReg.OpenKey('PC_DIMMER', True) then
+      begin
+        if not LReg.KeyExists('Geraetesteuerung') then
+          LReg.CreateKey('Geraetesteuerung');
+        if LReg.OpenKey('Geraetesteuerung', True) then
+        begin
+          LReg.WriteInteger('PosX', geraetesteuerung.Left);
+          LReg.WriteInteger('PosY', geraetesteuerung.Top);
+        end;
+      end;
+    end;
+  end;
+  LReg.CloseKey;
+  LReg.Free;
+end;
+
+procedure Tgeraetesteuerung.buttonfarbeChange(Sender: TObject);
+var
+  i: integer;
+begin
+  for i := 0 to Treeview1.SelectionCount - 1 do
+  begin
+    mainform.Devices[GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.selections[i].index])].color := buttonfarbe.Color;
+  end;
+end;
+
+procedure Tgeraetesteuerung.ColorPicker2Change(Sender: TObject);
+begin
+  if ColorPicker2.Visible then
+  begin
+    TColor2RGB(ColorPicker2.SelectedColor, Red, Green, Blue);
+
+    R.Position := Red;
+    G.Position := Green;
+    B.position := Blue;
+
+    startscript(Colorpicker);
+  end;
+end;
+
+function Tgeraetesteuerung.FindDeviceConnections(ID: TGUID; var Treeview: TTreeview): boolean;
+var
+  deviceinuse: boolean;
+  i, j, k: integer;
+  Befehle, Kompositionsszene, Tastencode, Joystickevent, MidiEventArray, DataInEventArray, DevicePresets, DeviceGroups, DeviceScenes: TTreeNode;
+begin
+  Treeview.Items.Clear;
+  deviceinuse := False;
+
+  // Gerätegruppen
+  for i := 0 to length(mainform.Befehle) - 1 do
+  begin
+    if IsEqualGUID(mainform.Befehle[i].Arg3, ID) then
+    begin
+      if Befehle = nil then
+        Befehle := Treeview.Items.Add(nil, 'Befehle');
+      Treeview.Items.AddChild(Befehle, mainform.befehle[i].Name);
+      deviceinuse := True;
+    end;
+  end;
+  // Ende Gerätegruppen
+  // Tastencodes
+  for i := 0 to length(mainform.TastencodeArray) - 1 do
+  begin
+    if IsEqualGUID(mainform.TastencodeArray[i].Arg3, ID) then
+    begin
+      if Tastencode = nil then
+        Tastencode := Treeview.Items.Add(nil, 'Tastencode');
+      Treeview.Items.AddChild(Tastencode, ShortCutToText(mainform.TastencodeArray[i].HotKey));
+      deviceinuse := True;
+    end;
+  end;
+  // Ende Tastencodes
+  // Joystickevents
+  for i := 0 to length(mainform.JoystickEvents) - 1 do
+  begin
+    if IsEqualGUID(mainform.JoystickEvents[i].Arg3, ID) then
+    begin
+      if Joystickevent = nil then
+        Joystickevent := Treeview.Items.Add(nil, 'Joystickevent');
+      Treeview.Items.AddChild(Joystickevent, 'Joystickevent ' + IntToStr(i + 1));
+      deviceinuse := True;
+    end;
+  end;
+  // Ende Joystickevents
+  // MidiEvents
+  for i := 0 to length(mainform.MidiEventArray) - 1 do
+  begin
+    if IsEqualGUID(mainform.MidiEventArray[i].ID, ID) then
+    begin
+      if MidiEventArray = nil then
+        MidiEventArray := Treeview.Items.Add(nil, 'Midievent');
+      Treeview.Items.AddChild(MidiEventArray, 'MidiEvent ' + IntToStr(i + 1));
+      deviceinuse := True;
+    end;
+  end;
+  // Ende MidiEvents
+  // DataInEvent
+  for i := 0 to length(mainform.DataInEventArray) - 1 do
+  begin
+    if IsEqualGUID(mainform.DataInEventArray[i].ID, ID) then
+    begin
+      if DataInEventArray = nil then
+        DataInEventArray := Treeview.Items.Add(nil, 'DataInEvent');
+      Treeview.Items.AddChild(DataInEventArray, 'DataInEvent ' + IntToStr(i + 1));
+      deviceinuse := True;
+    end;
+  end;
+  // Ende DataInEvent
+  // DevicePreset
+  for i := 0 to length(mainform.DevicePresets) - 1 do
+  begin
+    if IsEqualGUID(mainform.DevicePresets[i].ID, ID) then
+    begin
+      if DevicePresets = nil then
+        DevicePresets := Treeview.Items.Add(nil, 'Gerätepreset');
+      Treeview.Items.AddChild(DevicePresets, mainform.DevicePresets[i].Name);
+      deviceinuse := True;
+    end;
+  end;
+  // Ende DevicePreset
+  // Gerätegruppen absuchen
+  for i := 0 to length(mainform.DeviceGroups) - 1 do
+  begin
+    for j := 0 to length(mainform.DeviceGroups[i].IDs) - 1 do
+    begin
+      if IsEqualGUID(ID, mainform.DeviceGroups[i].IDs[j]) then
+      begin
+        if DeviceGroups = nil then
+          DeviceGroups := Treeview.Items.Add(nil, 'Gerätegruppe');
+        Treeview.Items.AddChild(DeviceGroups, mainform.DeviceGroups[i].Name);
+        deviceinuse := True;
+      end;
+    end;
+  end;
+  // Ende Gerätegruppen
+  // DeviceSzenen
+  for i := 0 to length(mainform.DeviceScenes) - 1 do
+  begin
+    for j := 0 to length(mainform.DeviceScenes[i].Devices) - 1 do
+      if IsEqualGUID(mainform.DeviceScenes[i].Devices[j].ID, ID) then
+      begin
+        if DeviceScenes = nil then
+          DeviceScenes := Treeview.Items.Add(nil, 'Geräteszene');
+        Treeview.Items.AddChild(DeviceScenes, mainform.DeviceScenes[i].Name);
+        deviceinuse := True;
+      end;
+  end;
+  // Ende DeviceSzenen
+
+  Treeview.FullExpand;
+  Result := deviceinuse;
+end;
+
+procedure Tgeraetesteuerung.PngBitBtn2Click(Sender: TObject);
+begin
+  Treeview2.Items.Clear;
+  if Treeview1.Selected.Parent.Index > -1 then
+    if Treeview1.Selected.Parent.Parent.Index > -1 then
+    begin
+      FindDeviceConnections(NodeGUID[Treeview1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.Index][Treeview1.Selected.Index], Treeview2);
+      Treeview2.Visible := True;
+    end;
+end;
+
+procedure Tgeraetesteuerung.TreeView2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  if Button = mbRight then
+    Treeview2.Visible := False;
+end;
+
+procedure Tgeraetesteuerung.PositionXYMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  Vals: array [0..2] of integer;
+begin
+{
+  Vals[0] := 20;
+  Vals[1] := 20;
+  Vals[2] := 20;
+  SystemParametersInfo(SPI_GETMOUSESPEED, 0, @SystemVals[0], 0);
+  SystemParametersInfo(SPI_SETMOUSESPEED, 0, @Vals[0], SPIF_SENDCHANGE);
+}
+end;
+
+procedure Tgeraetesteuerung.WMMoving(var AMsg: TMessage);
+begin
+  if ddfwindow.showing then
+  begin
+    ddfwindow.top  := geraetesteuerung.Top;
+    ddfwindow.left := geraetesteuerung.Left + geraetesteuerung.Width;
+  end;
+end;
+
+procedure Tgeraetesteuerung.RefreshTimerTimer(Sender: TObject);
+begin
+  if mainform.pcdimmerresetting then
+    exit;
+
+  mainform.ScriptInterpreter.CallFunction('FormRefresh', nil, []);
+  RefreshTimer.Enabled := False;
+end;
+
+procedure Tgeraetesteuerung.sliderscroll(Sender: TObject; ScrollCode: TScrollCode; var ScrollPos: integer);
+begin
+  startscript(Sender);
+end;
+
+procedure Tgeraetesteuerung.ColorPickerColorChange(Sender: TObject);
+begin
+  TColor2RGB(colorpicker.SelectedColor, Red, Green, Blue);
+
+  //  R.Position:=Red;
+  //  G.Position:=Green;
+  //  B.position:=Blue;
+
+  startscript(Colorpicker);
+end;
+
+end.

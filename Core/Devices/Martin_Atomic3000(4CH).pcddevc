@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\MARTIN_atomic 3000.png">
+ <information id="PC_DIMMER">
+ <name>Atomic 3000 (4ch)</name>
+ <vendor>Martin</vendor>
+ <author>Colin</author>
+ <description>Neues Gerät</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Intensity" fade="yes" type="dimmer"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Duriation" fade="yes" type="pan"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Rate" fade="yes" type="tilt"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Effect" fade="yes" type="extra"/>
+ </channels>
+ <initvalues 0="-1" 1="-1" 2="-1" 3="-1" />
+ <form width="200" height="290">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="effectbox" top="250" left="10" width="150" height="21" action="effectchange">
+   <item caption="Off" value="0" picture="" />
+   <item caption="Ramp up" value="6" picture="" />
+   <item caption="Ramp down" value="43" picture="" />
+   <item caption="Ramp up-down" value="86" picture="" />
+   <item caption="Random" value="129" picture="" />
+   <item caption="Lightning" value="172" picture="" />
+   <item caption="Spiker" value="215" picture="" />
+  </dropdown>
+  <slider name="slintensity" top="100" left="10" width="180" height="20" action="intensitychange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="slduration" top="150" left="10" width="180" height="20" action="durationchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="slrate" top="200" left="10" width="180" height="20" action="ratechange" startvalue="0" endvalue="255" default="0"/>
+  <label name="intensity" top="80" left="10" width="39" height="13" caption="Intensity"/>
+  <label name="duration" top="130" left="10" width="98" height="13" caption="Duration (0 - 650 ms)"/>
+  <label name="rate" top="180" left="10" width="84" height="13" caption="Rate (0.5 - 25 Hz)"/>
+  <label name="effect" top="230" left="10" width="28" height="13" caption="Effect"/>
+ </form>
+ <code>
+  unit atomic30004ch;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure intensitychange;
+  procedure durationchange;
+  procedure ratechange;
+  procedure effectchange;
+
+  implementation
+
+  var
+    // hier können globale Variablen definiert werden
+  DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte dieses Typs beim Laden des Projekts ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Wert:integer;
+  begin
+    // diese Funktion wird bei jeder Kanaländerung, die das Gerät betrifft, ausgeführt. Schreiben Sie hier eine Funktion, um die Geräteoberfläche bei einer Kanalwertänderung zu aktualisieren. z.B. wie folgt:
+{
+    if not DontRefresh then
+    case channel of
+            0:
+    	begin // Dimmer
+    		if not dontrefresh then
+    		begin
+    			slintensity.position:=get_channel('DIMMER');
+    		end;
+    	end;
+      1:
+    	begin // Pan
+    		if not dontrefresh then
+    		begin
+    			slduration.position:=get_channel('PAN');
+    		end;
+    	end;
+      2:
+    	begin // tilt
+    		if not dontrefresh then
+    		begin
+    			slrate.position:=get_channel('TILT');
+    		end;
+    	end;
+      3:
+	begin // extra
+    	wert:=get_channel('EXTRA');
+				case wert of
+					0..5: effectbox.itemindex:=0;
+					6..42: effectbox.itemindex:=1;
+					43..85: effectbox.itemindex:=2;
+					86..128: effectbox.itemindex:=3;
+					129..171: effectbox.itemindex:=4;
+					172..214: effectbox.itemindex:=5;
+					215..255: effectbox.itemindex:=6;
+				end;
+			end;
+    end;
+DontRefresh:=false;
+}
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure intensitychange;
+  begin
+		dontrefresh:=true;
+    set_channel('DIMMER',-1,slintensity.position,0,0);
+  end;
+  procedure durationchange;
+  begin
+		dontrefresh:=true;
+    set_channel('PAN',-1,slduration.position,0,0);
+  end;
+  procedure ratechange;
+  begin
+		dontrefresh:=true;
+    set_channel('TILT',-1,slrate.position,0,0);
+  end;
+  procedure effectchange;
+  begin
+    case effectbox.itemindex of
+    	0:
+    	begin
+				set_channel('EXTRA',0,0,0);
+    	end;
+    	1:
+    	begin
+				set_channel('EXTRA',6,6,0);
+    	end;
+    	2:
+    	begin
+				set_channel('EXTRA',43,43,0);
+    	end;
+    	3:
+    	begin
+				set_channel('EXTRA',86,86,0);
+    	end;
+    	4:
+    	begin
+				set_channel('EXTRA',129,129,0);
+    	end;
+    	5:
+    	begin
+				set_channel('EXTRA',172,172,0);
+    	end;
+    	6:
+    	begin
+				set_channel('EXTRA',215,215,0);
+    	end;
+    end;
+  end;
+  end.
+ </code>
+</device>

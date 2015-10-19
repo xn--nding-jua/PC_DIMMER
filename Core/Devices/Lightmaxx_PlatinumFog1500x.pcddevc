@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\martin_magnum.png">
+ <information id="PC_DIMMER">
+ <name>Platinum 1500X</name>
+ <vendor>LightmaXX</vendor>
+ <author>Christian Nöding</author>
+ <description>Nebelmaschine</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Nebelausstoß" fade="yes" type="dimmer"/>
+ </channels>
+ <initvalues ch0="-1" />
+ <shutter OpenValue="20" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="20" MinValue="50" MaxValue="72" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="255" OffValue="0" RightMinValue="0" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="233" height="172">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="volumebox" top="140" left="10" width="210" height="21" action="volumeboxchange">
+  </dropdown>
+  <slider name="volumeslider" top="110" left="10" width="210" height="20" action="volumechange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="90" left="10" width="68" height="13" caption="Nebelausstoß:"/>
+ </form>
+ <code>
+  unit magnum1500unit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure volumechange;
+  procedure volumeboxchange;
+
+  implementation
+
+var
+	dontsetslider, dontsetbox:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+	var
+		i:integer;
+  begin
+  	volumebox.items.clear;
+		
+		volumebox.items.add('Nebel aus');
+
+    for i:=1 to 24 do
+    	volumebox.items.add('Nebelstufe '+inttostr(i));
+  end;
+  procedure FormRefresh(channel:Integer);
+	var
+		wert:integer;
+  begin
+		case channel of
+    	0:
+    	begin
+    		wert:=get_channel('dimmer');
+
+		    if not dontsetslider then
+					volumeslider.position:=wert;
+				
+		    if not dontsetbox then
+				case wert of
+					0: volumebox.itemindex:=0;
+					10: volumebox.itemindex:=1;
+					20: volumebox.itemindex:=2;
+					30: volumebox.itemindex:=3;
+					40: volumebox.itemindex:=4;
+					50: volumebox.itemindex:=5;
+					60: volumebox.itemindex:=6;
+					70: volumebox.itemindex:=7;
+					80: volumebox.itemindex:=8;
+					90: volumebox.itemindex:=9;
+					100: volumebox.itemindex:=10;
+					110: volumebox.itemindex:=11;
+					120: volumebox.itemindex:=12;
+					130: volumebox.itemindex:=13;
+					140: volumebox.itemindex:=14;
+					150: volumebox.itemindex:=15;
+					160: volumebox.itemindex:=16;
+					170: volumebox.itemindex:=17;
+					180: volumebox.itemindex:=18;
+					190: volumebox.itemindex:=19;
+					200: volumebox.itemindex:=20;
+					210: volumebox.itemindex:=21;
+					220: volumebox.itemindex:=22;
+					230: volumebox.itemindex:=23;
+					240: volumebox.itemindex:=24;
+				end;    		
+    	end;
+    end;
+		dontsetslider:=false;
+    dontsetbox:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure volumechange;
+  begin
+    dontsetslider:=true;
+		set_channel('dimmer',volumeslider.position,volumeslider.position,0);
+  end;
+  procedure volumeboxchange;
+  begin
+    dontsetbox:=true;
+    case volumebox.itemindex of
+    	0: set_channel('dimmer',0,0,0);
+    	1: set_channel('dimmer',0,10,0);
+    	2: set_channel('dimmer',0,20,0);
+    	3: set_channel('dimmer',0,30,0);
+    	4: set_channel('dimmer',0,40,0);
+    	5: set_channel('dimmer',0,50,0);
+    	6: set_channel('dimmer',0,60,0);
+    	7: set_channel('dimmer',0,70,0);
+    	8: set_channel('dimmer',0,80,0);
+    	9: set_channel('dimmer',0,90,0);
+    	10: set_channel('dimmer',0,100,0);
+    	11: set_channel('dimmer',0,110,0);
+    	12: set_channel('dimmer',0,120,0);
+    	13: set_channel('dimmer',0,130,0);
+    	14: set_channel('dimmer',0,140,0);
+    	15: set_channel('dimmer',0,150,0);
+    	16: set_channel('dimmer',0,160,0);
+    	17: set_channel('dimmer',0,170,0);
+    	18: set_channel('dimmer',0,180,0);
+    	19: set_channel('dimmer',0,190,0);
+    	20: set_channel('dimmer',0,200,0);
+    	21: set_channel('dimmer',0,210,0);
+    	22: set_channel('dimmer',0,220,0);
+    	23: set_channel('dimmer',0,230,0);
+    	24: set_channel('dimmer',0,240,0);
+    end;
+  end;
+  end.
+ </code>
+</device>

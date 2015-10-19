@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\derbydoppelt.png">
+ <information id="PC_DIMMER">
+ <name>Dekker LED (8ch.)</name>
+ <vendor>American DJ</vendor>
+ <author>Martin</author>
+ <description>Dekker LED im 8 Kanal Modus</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Rotation" fade="yes" type="gobo1rot"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Weiß" fade="yes" type="w"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Dimmer" fade="yes" type="dimmer"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Programme" fade="yes" type="gobo1"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Speed" fade="yes" type="speed"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" />
+ <shutter OpenValue="10" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="10" MinValue="11" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="255" LeftMaxValue="128" OffValue="0" RightMinValue="1" RightMaxValue="127" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <gobos>
+  <gobo name="Manual" value="0" valueend="0" filename="Gobo01.png" />
+  <gobo name="4 Farben Fade" value="1" valueend="26" filename="Gobo02.png" />
+  <gobo name="9 Farben Fade" value="27" valueend="51" filename="Gobo03.png" />
+  <gobo name="4 Farben Loop" value="52" valueend="76" filename="Gobo04.png" />
+  <gobo name="9 Farben Loop" value="77" valueend="101" filename="Gobo05.png" />
+  <gobo name="Dim -> Bright" value="102" valueend="126" filename="Gobo06.png" />
+  <gobo name="Bright -> Dim" value="127" valueend="151" filename="Gobo07.png" />
+  <gobo name="Dim -> Bright -> Dim" value="152" valueend="176" filename="Gobo08.png" />
+  <gobo name="Strobe" value="177" valueend="201" filename="Gobo09.png" />
+  <gobo name="9 Farben Strobe" value="202" valueend="226" filename="Gobo10.png" />
+  <gobo name="RGB Strobe" value="227" valueend="254" filename="Gobo11.png" />
+  <gobo name="Programmzyklus" value="255" valueend="255" filename="Gobo12.png" />
+ </gobos>
+ <form width="250" height="490">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorpicker top="240" left="10" />
+  <dropdown name="GOBOBOX1" top="420" left="10" width="150" height="23" action="gobo1change">
+   <item caption="Manual" value="0" picture="Gobo01.bmp" />
+   <item caption="4 Farben Fade" value="0" picture="Gobo02.bmp" />
+   <item caption="9 Farben Fade" value="0" picture="Gobo03.bmp" />
+   <item caption="4 Farben Loop" value="0" picture="Gobo04.bmp" />
+   <item caption="9 Farben Loop" value="0" picture="Gobo05.bmp" />
+   <item caption="Dim -> Bright" value="0" picture="Gobo06.bmp" />
+   <item caption="Bright -> Dim" value="0" picture="Gobo07.bmp" />
+   <item caption="Dim -> Bright -> Dim" value="0" picture="Gobo08.bmp" />
+   <item caption="Strobe" value="0" picture="Gobo09.bmp" />
+   <item caption="9 Farben Strobe" value="0" picture="Gobo10.bmp" />
+   <item caption="RGB Strobe" value="0" picture="Gobo11.bmp" />
+   <item caption="Programmzyklus" value="0" picture="Gobo12.bmp" />
+  </dropdown>
+  <slider name="GOBO1ROTslider0" top="96" left="8" width="217" height="17" action="GOBO1ROTchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Wslider4" top="136" left="8" width="217" height="17" action="Wchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DIMMERslider5" top="176" left="8" width="217" height="17" action="DIMMERchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SPEEDslider7" top="216" left="8" width="217" height="17" action="SPEEDchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="GOBO1ROTlbl0" top="80" left="8" width="40" height="13" caption="Rotation"/>
+  <label name="Wlbl4" top="120" left="8" width="25" height="13" caption="Weiß"/>
+  <label name="DIMMERlbl5" top="160" left="8" width="35" height="13" caption="Dimmer"/>
+  <label name="SPEEDlbl7" top="200" left="8" width="31" height="13" caption="Speed"/>
+  <button name="SwitchColorPickerBtn" top="380" left="10" width="130" height="30" action="SwitchColorPicker" caption="Andere Farbauswahl"/>
+  <button name="Button2" top="450" left="10" width="150" height="30" action="soundactiveclick" caption="Sound Active"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure GOBO1ROTchange;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure SwitchColorPicker;
+  procedure Wchange;
+  procedure DIMMERchange;
+  procedure GOBO1change;
+  procedure SPEEDchange;
+  procedure soundactiveclick;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        GOBO1ROTslider0.position:=get_channel('GOBO1ROT');
+      end;
+      1:
+      begin
+        // RGB-Änderungen werden derzeit nicht im DDF angezeigt
+      end;
+      2:
+      begin
+        // RGB-Änderungen werden derzeit nicht im DDF angezeigt
+      end;
+      3:
+      begin
+        // RGB-Änderungen werden derzeit nicht im DDF angezeigt
+      end;
+      4:
+      begin
+        Wslider4.position:=get_channel('W');
+      end;
+      5:
+      begin
+        DIMMERslider5.position:=get_channel('DIMMER');
+      end;
+      6:
+      begin
+        value:=get_channel('gobo1');
+        case value of
+          0..0: gobobox1.itemindex:=0;
+          1..26: gobobox1.itemindex:=1;
+          27..51: gobobox1.itemindex:=2;
+          52..76: gobobox1.itemindex:=3;
+          77..101: gobobox1.itemindex:=4;
+          102..126: gobobox1.itemindex:=5;
+          127..151: gobobox1.itemindex:=6;
+          152..176: gobobox1.itemindex:=7;
+          177..201: gobobox1.itemindex:=8;
+          202..226: gobobox1.itemindex:=9;
+          227..254: gobobox1.itemindex:=10;
+          255..255: gobobox1.itemindex:=11;
+        end;
+      end;
+      7:
+      begin
+        SPEEDslider7.position:=get_channel('SPEED');
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure GOBO1ROTchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('GOBO1ROT',-1,GOBO1ROTslider0.position,0);
+  end;
+  procedure ColorPickerChange(R, G, B: Byte);
+  begin
+    set_channel('r',-1,r,0);
+    set_channel('g',-1,g,0);
+    set_channel('b',-1,b,0);
+  end;
+  procedure SwitchColorPicker;
+  begin
+    if colorpicker.visible then
+    begin
+      colorpicker.visible:=false;
+      colorpicker2.visible:=true;
+    end else
+    begin
+      colorpicker.visible:=true;
+      colorpicker2.visible:=false;
+    end;
+  end;
+  procedure Wchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('W',-1,Wslider4.position,0);
+  end;
+  procedure DIMMERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('DIMMER',-1,DIMMERslider5.position,0);
+  end;
+  procedure GOBO1change;
+  begin
+    case gobobox1.itemindex of
+      0: set_channel('gobo1', -1, 0, 0);
+      1: set_channel('gobo1', -1, 1, 0);
+      2: set_channel('gobo1', -1, 27, 0);
+      3: set_channel('gobo1', -1, 52, 0);
+      4: set_channel('gobo1', -1, 77, 0);
+      5: set_channel('gobo1', -1, 102, 0);
+      6: set_channel('gobo1', -1, 127, 0);
+      7: set_channel('gobo1', -1, 152, 0);
+      8: set_channel('gobo1', -1, 177, 0);
+      9: set_channel('gobo1', -1, 202, 0);
+      10: set_channel('gobo1', -1, 227, 0);
+      11: set_channel('gobo1', -1, 255, 0);
+    end;
+  end;
+  procedure SPEEDchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPEED',-1,SPEEDslider7.position,0);
+  end;
+  procedure soundactiveclick;
+    // hier ist Platz für eigene Variablen (z.B. "temp: boolean;" oder "temp:string;")
+  begin
+    DontRefresh:=true;
+	  set_channel('SPEED',-1,255,0);//  var
+
+    // bitte hier die eigene Funktion eintragen
+  end;
+  end.
+ </code>
+</device>

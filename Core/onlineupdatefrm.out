@@ -1,0 +1,163 @@
+unit onlineupdatefrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, InternetUpdate, ExtCtrls, ComCtrls, StdCtrls, ShellApi, Registry,
+  JvExControls, JvAnimatedImage, JvGIFCtrl;
+
+type
+  Tonlineupdate = class(TForm)
+    InternetUpdate: TInternetUpdate;
+    GroupBox1:      TGroupBox;
+    Label7:         TLabel;
+    Button1:        TButton;
+    Label1:         TLabel;
+    Label2:         TLabel;
+    Label3:         TLabel;
+    Label4:         TLabel;
+    Label5:         TLabel;
+    Bevel1:         TBevel;
+    ProgressBar1:   TProgressBar;
+    Button2:        TButton;
+    JvGIFAnimator1: TJvGIFAnimator;
+    procedure FormShow(Sender: TObject);
+    procedure InternetUpdateText(Sender: TObject; MessageText: string; ProcessID: integer);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure InternetUpdateDownloadProgress(Sender: TObject; TotalSize, Readed: integer);
+    procedure InternetUpdateDownloadStart(Sender: TObject);
+    procedure InternetUpdateDownloadComplete(Sender: TObject; SetupEXE: string);
+    procedure Button2Click(Sender: TObject);
+  private
+    { Private-Deklarationen }
+    updatedatei: string;
+  public
+    { Public-Deklarationen }
+    updateclose: boolean;
+  end;
+
+var
+  onlineupdate: Tonlineupdate;
+
+implementation
+
+{$R *.dfm}
+
+procedure Tonlineupdate.FormShow(Sender: TObject);
+var
+  LReg: TRegistry;
+begin
+  LReg := TRegistry.Create;
+  LReg.RootKey := HKEY_LOCAL_MACHINE;
+
+  if LReg.OpenKey('Software', True) then
+  begin
+    if not LReg.KeyExists('PHOENIXstudios') then
+      LReg.CreateKey('PHOENIXstudios');
+    if LReg.OpenKey('PHOENIXstudios', True) then
+    begin
+      if not LReg.KeyExists('PC_DIMMER') then
+        LReg.CreateKey('PC_DIMMER');
+      if LReg.OpenKey('PC_DIMMER', True) then
+      begin
+        if LReg.ValueExists('Last Onlineupdatefile') then
+          updatedatei := LReg.ReadString('Last Onlineupdatefile');
+      end;
+    end;
+  end;
+  LReg.CloseKey;
+
+  updateclose := True;
+  label4.Caption := '0.0.0.0';
+  label4.Refresh;
+  progressbar1.Visible := False;
+
+  if fileexists(updatedatei) then
+  begin
+    button2.Visible := True;
+    button2.Hint := 'Führt die bereits heruntergeladene Datei "' + updatedatei + '" aus.';
+  end else
+  if fileexists('C:\temp\PC_DIMMER Update\setup.exe') then
+  begin
+    button2.Visible := True;
+    button2.Hint := 'Führt die bereits heruntergeladene Datei "C:\temp\PC_DIMMER Update\setup.exe" aus.';
+  end else
+    button2.Visible := False;
+
+  InternetUpdate.Execute;
+end;
+
+procedure Tonlineupdate.InternetUpdateText(Sender: TObject; MessageText: string; ProcessID: integer);
+begin
+  if MessageText <> '' then
+    label7.Caption := MessageText;
+  label4.Caption := InternetUpdate.RemoteVersion.Text;
+end;
+
+procedure Tonlineupdate.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  updateclose := False;
+end;
+
+procedure Tonlineupdate.InternetUpdateDownloadProgress(Sender: TObject; TotalSize, Readed: integer);
+begin
+  progressbar1.Max := TotalSize;
+  progressbar1.Position := Readed;
+end;
+
+procedure Tonlineupdate.InternetUpdateDownloadStart(Sender: TObject);
+begin
+  progressbar1.Visible := True;
+end;
+
+procedure Tonlineupdate.InternetUpdateDownloadComplete(Sender: TObject; SetupEXE: string);
+var
+  LReg: TRegistry;
+begin
+  updatedatei := setupexe;
+
+  LReg := TRegistry.Create;
+  LReg.RootKey := HKEY_LOCAL_MACHINE;
+
+  if LReg.OpenKey('Software', True) then
+  begin
+    if not LReg.KeyExists('PHOENIXstudios') then
+      LReg.CreateKey('PHOENIXstudios');
+    if LReg.OpenKey('PHOENIXstudios', True) then
+    begin
+      if not LReg.KeyExists('PC_DIMMER') then
+        LReg.CreateKey('PC_DIMMER');
+      if LReg.OpenKey('PC_DIMMER', True) then
+      begin
+        LReg.WriteString('Last Onlineupdatefile', updatedatei);
+      end;
+    end;
+  end;
+  LReg.CloseKey;
+
+  if fileexists(updatedatei) then
+  begin
+    button2.Visible := True;
+    button2.Hint := 'Führt die bereits heruntergeladene Datei "' + updatedatei + '" aus.';
+  end else
+  if fileexists('C:\temp\PC_DIMMER Update\setup.exe') then
+  begin
+    button2.Visible := True;
+    button2.Hint := 'Führt die bereits heruntergeladene Datei "C:\temp\PC_DIMMER Update\setup.exe" aus.';
+  end else
+    button2.Visible := False;
+
+end;
+
+procedure Tonlineupdate.Button2Click(Sender: TObject);
+begin
+  if fileexists(updatedatei) then
+    shellexecute(application.handle, 'open', PChar(updatedatei), '', PChar(ExtractFilePath(updatedatei)), SW_SHOWNORMAL)
+  else
+  if fileexists('C:\temp\PC_DIMMER Update\setup.exe') then
+    shellexecute(application.handle, 'open', PChar('C:\temp\PC_DIMMER Update\setup.exe'), '', PChar(ExtractFilePath('C:\temp\PC_DIMMER Update\setup.exe')), SW_SHOWNORMAL);
+  application.MainForm.Close;
+end;
+
+end.

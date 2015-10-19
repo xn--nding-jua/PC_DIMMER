@@ -1,0 +1,12 @@
+C:\Documents and Settings\M91369\my documents\visual studio 2010\Projects\MCP2200_demo\MCP2200_demo\bin\Debug\MCP2200_demo.exe.config
+C:\Documents and Settings\M91369\my documents\visual studio 2010\Projects\MCP2200_demo\MCP2200_demo\bin\Debug\MCP2200_demo.exe
+C:\Documents and Settings\M91369\my documents\visual studio 2010\Projects\MCP2200_demo\MCP2200_demo\bin\Debug\MCP2200_demo.pdb
+C:\Documents and Settings\M91369\my documents\visual studio 2010\Projects\MCP2200_demo\MCP2200_demo\bin\Debug\MCP2200_demo.xml
+C:\Documents and Settings\M91369\my documents\visual studio 2010\Projects\MCP2200_demo\MCP2200_demo\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\M91369\my documents\visual studio 2010\Projects\MCP2200_demo\MCP2200_demo\obj\x86\Debug\MCP2200_demo.Form1.resources
+C:\Documents and Settings\M91369\my documents\visual studio 2010\Projects\MCP2200_demo\MCP2200_demo\obj\x86\Debug\MCP2200_demo.Resources.resources
+C:\Documents and Settings\M91369\my documents\visual studio 2010\Projects\MCP2200_demo\MCP2200_demo\obj\x86\Debug\GenerateResource-ResGen.read.1.tlog
+C:\Documents and Settings\M91369\my documents\visual studio 2010\Projects\MCP2200_demo\MCP2200_demo\obj\x86\Debug\GenerateResource-ResGen.write.1.tlog
+C:\Documents and Settings\M91369\my documents\visual studio 2010\Projects\MCP2200_demo\MCP2200_demo\obj\x86\Debug\MCP2200_demo.exe
+C:\Documents and Settings\M91369\my documents\visual studio 2010\Projects\MCP2200_demo\MCP2200_demo\obj\x86\Debug\MCP2200_demo.xml
+C:\Documents and Settings\M91369\my documents\visual studio 2010\Projects\MCP2200_demo\MCP2200_demo\obj\x86\Debug\MCP2200_demo.pdb

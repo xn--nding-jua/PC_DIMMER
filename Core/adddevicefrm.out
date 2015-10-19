@@ -1,0 +1,325 @@
+unit adddevicefrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ComCtrls, StdCtrls, JvSimpleXml, JvComponent, JvOfficeColorPanel,
+  JvAppXMLStorage, deviceformprototypfrm, ExtCtrls, JvAppStorage,
+  JvComponentBase;
+
+type
+  Tadddevice = class(TForm)
+    GroupBox1:    TGroupBox;
+    Button1:      TButton;
+    Button2:      TButton;
+    TreeView1:    TTreeView;
+    ProgressBar1: TProgressBar;
+    XML:          TJvAppXMLFileStorage;
+    GroupBox2:    TGroupBox;
+    Label1:       TLabel;
+    Label2:       TLabel;
+    Label3:       TLabel;
+    Label4:       TLabel;
+    namelabel:    TLabel;
+    vendorlabel:  TLabel;
+    authorlabel:  TLabel;
+    maxchanlabel: TLabel;
+    Label5:       TLabel;
+    beschreibunglabel: TLabel;
+    Button3:      TButton;
+    Label6:       TLabel;
+    dateilabel:   TLabel;
+    Edit1:        TEdit;
+    Edit2:        TEdit;
+    Label7:       TLabel;
+    Edit3:        TEdit;
+    Label8:       TLabel;
+    Label9:       TLabel;
+    lastaddress:  TLabel;
+    procedure TreeView1DblClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure TreeviewRefresh;
+    procedure checkinformations;
+    procedure Button3Click(Sender: TObject);
+    procedure TreeView1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure TreeView1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure Edit1Change(Sender: TObject);
+    procedure Edit1Enter(Sender: TObject);
+    procedure Edit1Exit(Sender: TObject);
+    procedure Edit2Change(Sender: TObject);
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+    NodeGUID: array of array of TGUID;
+    function GetDevicePositionInDeviceArray(ID: TGUID): integer;
+  end;
+
+var
+  adddevice: Tadddevice;
+
+implementation
+
+uses PCDIMMER, geraetesteuerungfrm;
+
+{$R *.dfm}
+
+procedure Tadddevice.TreeView1DblClick(Sender: TObject);
+begin
+  Modalresult := mrOk;
+end;
+
+procedure Tadddevice.FormShow(Sender: TObject);
+var
+  SR: TSearchRec;
+  ddfliste: array of string;
+  dateianzahlinverzeichnis, dateicounter: integer;
+  i, j, k, temp: integer;
+begin
+  Edit2.Text := '1';
+  //  Edit3.Text:='1';
+
+  temp := 0;
+  for i := 0 to length(mainform.Devices) - 1 do
+    if temp < mainform.devices[i].Startaddress + mainform.devices[i].MaxChan - 1 then
+      temp := mainform.devices[i].Startaddress + mainform.devices[i].MaxChan - 1;
+  adddevice.lastaddress.Caption := IntToStr(temp);
+  if Edit3.Enabled = True then
+    Edit3.Text := IntToStr(temp + 1);
+
+  setlength(ddfliste, 0);
+  setlength(geraetesteuerung.DevicePrototyp, 0);
+  setlength(NodeGUID, 0);
+
+  progressbar1.Visible := True;
+
+  // XML-DDFs auflisten
+  dateianzahlinverzeichnis := mainform.CountFiles(mainform.workingdirectory + 'Devices\');
+  dateicounter := 0;
+  if (FindFirst(mainform.workingdirectory + '\Devices\*.xml', faAnyFile - faDirectory, SR) = 0) then
+  begin
+    repeat
+      if (SR.Name <> '.') and (SR.Name <> '..') and (SR.Attr <> faDirectory) then
+      begin
+        setlength(ddfliste, length(ddfliste) + 1);
+        setlength(geraetesteuerung.DevicePrototyp, length(geraetesteuerung.DevicePrototyp) + 1);
+        CreateGUID(geraetesteuerung.DevicePrototyp[length(geraetesteuerung.DevicePrototyp) - 1].ID);
+        ddfliste[length(ddfliste) - 1] := SR.Name;
+        geraetesteuerung.DevicePrototyp[length(geraetesteuerung.DevicePrototyp) - 1].ddffilename := SR.Name;
+        dateicounter := dateicounter + 1;
+        progressbar1.Position := round((dateicounter / dateianzahlinverzeichnis) * 50);
+      end;
+    until FindNext(SR) <> 0;
+    FindClose(SR);
+  end;
+
+  // XML-DDFs laden und auswerten
+  dateicounter := 0;
+  for i := 0 to length(ddfliste) - 1 do
+  begin
+    dateicounter := dateicounter + 1;
+    progressbar1.Position := 50 + round((dateicounter / dateianzahlinverzeichnis) * 50);
+    XML.Xml.LoadFromFile(mainform.workingdirectory + '\Devices\' + ddfliste[i]);
+    geraetesteuerung.DevicePrototyp[i].Bildadresse := XML.XML.Root.Properties.Value('image');
+    for j := 0 to XML.Xml.Root.Items.Count - 1 do
+    begin // <device>
+      if XML.XML.Root.Items[j].Name = 'information' then
+      begin // <information>
+        for k := 0 to XML.XML.Root.Items[j].Items.Count - 1 do
+        begin
+          if XML.XML.Root.Items[j].Items[k].Name = 'name' then
+          begin
+            geraetesteuerung.DevicePrototyp[i].Name := XML.XML.Root.Items[j].Items[k].Value;
+            geraetesteuerung.DevicePrototyp[i].DeviceName := XML.XML.Root.Items[j].Items[k].Value;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name = 'vendor' then
+            geraetesteuerung.DevicePrototyp[i].vendor := XML.XML.Root.Items[j].Items[k].Value;
+          if XML.XML.Root.Items[j].Items[k].Name = 'author' then
+            geraetesteuerung.DevicePrototyp[i].author := XML.XML.Root.Items[j].Items[k].Value;
+          if XML.XML.Root.Items[j].Items[k].Name = 'description' then
+            geraetesteuerung.DevicePrototyp[i].Beschreibung := XML.XML.Root.Items[j].Items[k].Value;
+        end;
+      end;
+      if XML.XML.Root.Items[j].Name = 'channels' then
+      begin // <channels>
+        geraetesteuerung.DevicePrototyp[i].MaxChan := XML.XML.Root.Items[j].Items.Count;
+        setlength(geraetesteuerung.DevicePrototyp[i].kanalminvalue, geraetesteuerung.DevicePrototyp[i].MaxChan);
+        setlength(geraetesteuerung.DevicePrototyp[i].kanalmaxvalue, geraetesteuerung.DevicePrototyp[i].MaxChan);
+        setlength(geraetesteuerung.DevicePrototyp[i].kanaltyp, geraetesteuerung.DevicePrototyp[i].MaxChan);
+        setlength(geraetesteuerung.DevicePrototyp[i].kanalname, geraetesteuerung.DevicePrototyp[i].MaxChan);
+        for k := 0 to XML.XML.Root.Items[j].Items.Count - 1 do
+        begin
+          geraetesteuerung.DevicePrototyp[i].kanalname[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))] := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+          geraetesteuerung.DevicePrototyp[i].kanaltyp[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))]  := XML.XML.Root.Items[j].Items[k].Properties.Value('type');
+          if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type')) = lowercase('DIMMER') then
+            geraetesteuerung.DevicePrototyp[i].hasDimmer := True;
+          if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type')) = lowercase('R') then
+            geraetesteuerung.DevicePrototyp[i].hasRGB := True;
+          if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type')) = lowercase('G') then
+            geraetesteuerung.DevicePrototyp[i].hasRGB := True;
+          if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type')) = lowercase('B') then
+            geraetesteuerung.DevicePrototyp[i].hasRGB := True;
+          if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type')) = lowercase('PAN') then
+            geraetesteuerung.DevicePrototyp[i].hasPANTILT := True;
+          if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type')) = lowercase('TILT') then
+            geraetesteuerung.DevicePrototyp[i].hasPANTILT := True;
+          geraetesteuerung.DevicePrototyp[i].KanalMinValue[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))] := StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('minvalue'));
+          geraetesteuerung.DevicePrototyp[i].KanalMaxValue[StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))] := StrToInt(XML.XML.Root.Items[j].Items[k].Properties.Value('maxvalue'));
+        end;
+      end;
+    end;
+  end;
+
+  progressbar1.Visible := False;
+
+  TreeviewRefresh;
+end;
+
+procedure Tadddevice.TreeviewRefresh;
+var
+  i, j: integer;
+  vendornode, devicenode: TTreenode;
+begin
+  TreeView1.Items.Clear;
+  setlength(NodeGUID, 0);
+
+  for i := 0 to length(geraetesteuerung.DevicePrototyp) - 1 do
+  begin
+    // Herausfinden, ob für Device-Vendor schon ein Top-Node vorhanden ist
+    vendornode := nil;
+    for j := 0 to Treeview1.Items.Count - 1 do
+    begin
+      if (Treeview1.Items[j].Text = geraetesteuerung.DevicePrototyp[i].vendor) and (Treeview1.Items[j].Parent.Index = -1) then
+        vendornode := Treeview1.Items[j];
+    end;
+
+    // Neuen Top-Node erzeugen, wenn noch nicht vorhanden
+    if vendornode = nil then
+    begin
+      vendornode := Treeview1.Items.Add(nil, geraetesteuerung.DevicePrototyp[i].Vendor);
+      vendornode.ImageIndex := 1;
+      vendornode.SelectedIndex := 1;
+      setlength(NodeGUID, length(NodeGUID) + 1);
+    end;
+
+    // Subnode für Gerät erzeugen
+    devicenode := TreeView1.Items.AddChild(vendornode, geraetesteuerung.DevicePrototyp[i].Name);
+    devicenode.ImageIndex := 47;
+    devicenode.SelectedIndex := 47;
+
+    setlength(NodeGUID[vendornode.Index], length(NodeGUID[vendornode.Index]) + 1);
+    NodeGUID[vendornode.Index][devicenode.Index] := geraetesteuerung.DevicePrototyp[i].ID;
+  end;
+end;
+
+procedure Tadddevice.checkinformations;
+begin
+  if Treeview1.Selected.Parent.Index > -1 then
+  begin
+    namelabel.Caption  := geraetesteuerung.DevicePrototyp[GetDevicePositionInDeviceArray(NodeGUID[Treeview1.selected.parent.index][Treeview1.selected.index])].Name;
+    beschreibunglabel.Caption := geraetesteuerung.DevicePrototyp[GetDevicePositionInDeviceArray(NodeGUID[Treeview1.selected.parent.index][Treeview1.selected.index])].Beschreibung;
+    vendorlabel.Caption := geraetesteuerung.DevicePrototyp[GetDevicePositionInDeviceArray(NodeGUID[Treeview1.selected.parent.index][Treeview1.selected.index])].Vendor;
+    authorlabel.Caption := geraetesteuerung.DevicePrototyp[GetDevicePositionInDeviceArray(NodeGUID[Treeview1.selected.parent.index][Treeview1.selected.index])].Author;
+    maxchanlabel.Caption := IntToStr(geraetesteuerung.DevicePrototyp[GetDevicePositionInDeviceArray(NodeGUID[Treeview1.selected.parent.index][Treeview1.selected.index])].MaxChan);
+    dateilabel.Caption := ExtractFileName(geraetesteuerung.DevicePrototyp[GetDevicePositionInDeviceArray(NodeGUID[Treeview1.selected.parent.index][Treeview1.selected.index])].ddffilename);
+  end else
+  begin
+    namelabel.Caption  := '-';
+    beschreibunglabel.Caption := '-';
+    vendorlabel.Caption := '-';
+    authorlabel.Caption := '-';
+    maxchanlabel.Caption := '-';
+    dateilabel.Caption := '-';
+  end;
+end;
+
+function Tadddevice.GetDevicePositionInDeviceArray(ID: TGUID): integer;
+var
+  i: integer;
+begin
+  Result := -1;
+  for i := 0 to length(geraetesteuerung.DevicePrototyp) - 1 do
+  begin
+    if GUIDtoString(ID) = GUIDtoString(geraetesteuerung.DevicePrototyp[i].ID) then
+      Result := i;
+  end;
+end;
+
+procedure Tadddevice.Button3Click(Sender: TObject);
+begin
+  FormShow(nil);
+end;
+
+procedure Tadddevice.TreeView1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  CheckInformations;
+end;
+
+procedure Tadddevice.TreeView1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  checkinformations;
+end;
+
+procedure Tadddevice.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = vk_escape then
+    modalresult := mrCancel;
+end;
+
+procedure Tadddevice.Edit1Change(Sender: TObject);
+var
+  i: integer;
+  Text, Suchtext: string;
+begin
+
+  LockWindow(Treeview1.Handle);
+  Treeview1.FullCollapse;
+  UnLockWindow(Treeview1.Handle);
+  Suchtext := Edit1.Text;
+  for i := 0 to Treeview1.Items.Count - 1 do
+  begin
+    Treeview1.Deselect(Treeview1.Items[i]);
+
+    Text := copy(Treeview1.Items[i].Text, 0, length(Treeview1.Items[i].Text));
+
+    if StrPos(StrLower(PChar(Text)), StrLower(PChar(Suchtext))) <> nil then
+    begin
+      Treeview1.Select(Treeview1.Items[i]);
+      exit;
+    end;
+  end;
+end;
+
+procedure Tadddevice.Edit1Enter(Sender: TObject);
+begin
+  if Edit1.Text = 'Suchtext hier eingeben...' then
+  begin
+    Edit1.Text := '';
+    Edit1.Font.Color := clBlack;
+  end;
+end;
+
+procedure Tadddevice.Edit1Exit(Sender: TObject);
+begin
+  if Edit1.Text = '' then
+  begin
+    Edit1.Text := 'Suchtext hier eingeben...';
+    Edit1.Font.Color := clGray;
+  end;
+end;
+
+procedure Tadddevice.Edit2Change(Sender: TObject);
+var
+  s: string;
+  i: integer;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  mainform.input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+end;
+
+end.

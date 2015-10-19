@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\nebelmaschine.png">
+ <information id="PC_DIMMER">
+ <name>FM 900 DMX</name>
+ <vendor>Involight</vendor>
+ <author>Christian Nöding</author>
+ <description>Nebelmaschine mit einem Steuerkanal</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Nebelausstoß" fade="yes" type="special1"/>
+ </channels>
+ <initvalues ch0="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="132" LeftMaxValue="253" OffValue="132" RightMinValue="132" RightMaxValue="253" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="233" height="172">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <slider name="Slider1" top="100" left="10" width="210" height="20" action="sliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="labeltext" top="80" left="10" width="63" height="13" caption="Nebelmenge:"/>
+  <button name="Button1" top="130" left="120" width="100" height="30" action="buttonclick" caption="100%"/>
+  <button name="Button2" top="130" left="10" width="100" height="30" action="button2click" caption="0%"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure sliderchange;
+  procedure Buttonclick;
+  procedure button2click;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  begin
+    if (channel=0) and not dontrefresh then
+    begin
+    	slider1.position:=get_channel('SPECIAL1');
+    end;
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure sliderchange;
+  begin
+    dontrefresh:=true;
+		set_channel('SPECIAL1',-1,slider1.position,0,0);
+  end;
+  procedure Buttonclick;
+  begin
+    set_channel('SPECIAL1',-1,255,0,0);
+  end;
+  procedure button2click;
+  begin
+    set_channel('SPECIAL1',-1,0,0,0);
+  end;
+  end.
+ </code>
+</device>

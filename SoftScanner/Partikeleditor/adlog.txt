@@ -1,0 +1,19 @@
+[TAdDraw] [Info] AdDraw was created: 15:20:34
+
+[TAdDraw] [Info] AdDraw was created: 15:20:45
+
+[TAdDraw] [Info] AdDraw was created: 15:20:53
+[TAdDraw] [Info] Try to init Andorra OpenGL Plugin.
+[TAdDraw] [Info] Finalize Andorra OpenGL Plugin
+
+[TAdDraw] [Info] AdDraw was created: 15:40:08
+[TAdDraw] [Info] Try to init Andorra OpenGL Plugin.
+[TAdDraw] [Info] Finalize Andorra OpenGL Plugin
+
+[TAdDraw] [Info] AdDraw was created: 18:06:47
+[TAdDraw] [Info] Try to init Andorra OpenGL Plugin.
+[TAdDraw] [Info] Finalize Andorra OpenGL Plugin
+
+[TAdDraw] [Info] AdDraw was created: 23:22:52
+[TAdDraw] [Info] Try to init Andorra OpenGL Plugin.
+[TAdDraw] [Info] Finalize Andorra OpenGL Plugin

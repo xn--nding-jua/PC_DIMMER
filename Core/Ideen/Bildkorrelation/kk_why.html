@@ -1,0 +1,126 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<title>Kreuzkorrelation</title>
+</head><body bgcolor="white">
+[ <a href="http://www.cs.hs-rm.de/%7Elinn/vpdv9900/ortgKorr/snd_bib.html">Vorgänger</a>  | 
+  <a href="http://www.cs.hs-rm.de/%7Elinn/vpdv9900/ortgKorr/kk_fft.html">Nachfolger</a> | 
+  <a href="http://www.cs.hs-rm.de/%7Elinn/vpdv9900/ortgKorr/index.html#toc">Inhaltsverzeichnis</a> ]
+<hr size="1">
+<h1><a name="Allgemein">Generelle Beschreibung der Korrelation</a></h1>
+Die Aufgabe  der Kreuzkorrelation in dieser Anwendung ist es, einen
+Zeitunterschied zwischen zwei Signalen zu ermitteln, die ursprünglich
+aus einem Signal hervorgegangen sind.<p></p>
+
+<div align="center"><table>
+<tbody><tr><td><img src="kk_why-Dateien/signal_schema.gif" alt="Signalweg, schematisch"></td></tr>
+<tr><td align="center">Schematischer Signalweg</td></tr>
+<tr><td><small>
+</small><ul>
+<li><small><b>Signal: </b>Ursprüngliches Signal
+</small></li><li><small><b>dT: </b>Verschiebung um die Zeitspanne dT
+</small></li><li><small><b>R1: </b>Rauschen im linken Kanal
+</small></li><li><small><b>R2: </b>Rauschen im rechten Kanal
+</small></li><li><small><b>R: </b>Mittleres Rauschen beider Kanäle
+</small></li><li><small><b>Links: </b>tatsächlich aufgenommenes Singal des Linken Mikrophons
+</small></li><li><small><b>Rechts: </b>tatsächlich aufgenommenes Singal des Rechten Mikrophons
+</small></li></ul>
+<small></small></td></tr>
+</tbody></table></div>
+
+Es wird angenommen, daß die Rauschanteile R1 und R2 nicht miteinander korreliert
+sind.<p></p>
+
+
+<h1><a name="Verfahren">Verfahren der Kreuzkorrelation</a></h1>
+Die diskrete Kreuzkorrelation zweier Signale ist definiert als:<br><img src="kk_why-Dateien/kk_formel.gif"><br>
+Da das Linke und Rechte Signal aus dem selben Ursprungssignal hervorgegangen
+ist, ist klar, daß die Kreuzkorrelation eigentlich als Autokorrelation eines 
+zeitlich verschobenen Signals zu verstehen ist. <br>
+Die Autokorrelation hat ihr Maximum an der Stelle dT. Somit beschränkt sich die
+Berechnung von dT auf die Maximumsbestimmung der Kreuzkorrelation der beiden
+Signale.<p></p>
+
+<h2><a name="DirekteKK">Direkte Kreuzkorrelation</a></h2>
+Die Kreuzkorrelation laßt sich relativ einfach direkt berechnen:<br><img src="kk_why-Dateien/kk_formel.gif">.<br>
+Dies führt dann zu folgendem Berechnungsschema:
+<div align="center"><table>
+<tbody><tr><td><img src="kk_why-Dateien/kk_direkt.gif" alt="direkte KK"></td></tr>
+<tr><td align="center">direkte Kreuzkorrelation</td></tr>
+<tr><td><small>
+</small><ul>
+<li><small><b>Fenster: </b>betrachtetes Fenster [F], um <i>tau</i> im Linken Signal verschoben
+</small></li></ul>
+<small></small></td></tr>
+<tr><td>Für jedes tau wird KK(tau) berechnet.</td>
+</tr></tbody></table></div>
+<h4>Zeitabschätzung der direkten Kreuzkorrelation</h4>
+Mit tau:[0..Range{A}-F] ist der Definitionsbereich von k, also der Bereich, in
+dem dT liegen kann, ergibt sich die Zeitkomplexizität der direkten KK zu:
+<div align="center"><i>O(n)=(Range{A}-F)*F</i></div>.
+<p></p>
+Der Bereich für tau ergibt sich als maximaler dT, in Samples:<br>
+<u>tau<sub>Range</sub></u> = [Abstand der beiden Mikrophone] /
+[Schallgeschwindigkeit] * [Samplingfrequenz].
+<p></p>
+Bei einem Abstand von 10m, einer Samplingfrequenz von 22kHz und einer
+Schallgeschwindigkeit von 330m/s ergibt sich <u>tau<sub>Range</sub></u> zu ca. 660 Samples.<br>
+
+Es ist offensichtlich, daß je größer F wird desto genauer k(tau) ist. Empirisch
+ermittelte Werte, die eine genügend große Genauigkeit von k(tau), liefern liegen
+bei ca. 200-400<br>
+Somit ergibt sich die Zeit pro KK-Berechnung zu ca. 0.7-1.2 sec (Cyrix-P166).
+
+
+<h2><a name="KKmitFFT">Kreuzkorrelation mit FastFourierTransformation</a></h2>
+Die Kreuzkorrelation kann auch mittels eines Umweges über die
+Fouriertransformation berechnet werden: <br><img src="kk_why-Dateien/kk_theorem.gif"><br>
+Dies führt dann zu folgendem Berechnungsschema:
+
+<div align="center"><table>
+<tbody><tr><td><img src="kk_why-Dateien/kk_fourier.gif" alt="KK-Berechnungsschema mit Fouriertransformation"></td></tr>
+<tr><td align="center">KK-Berechnungsschema mit Fouriertransformation</td></tr>
+<tr><td><small>
+</small><ul>
+<li><small><b>A(n): </b>Fouriertransformierte von Signal a.
+</small></li><li><small><b>B(n): </b>Fouriertransformierte von Signal b.
+</small></li><li><small><b>Z(n): </b>Zwischenwerte
+</small></li><li><small><b>k(tau): </b>Kreuzkorrelationsfuktion
+</small></li><li><small><b>F{}: </b>Fouriertransformation
+</small></li><li><small><b>F-1{}: </b>inverse Fouriertransformation
+</small></li></ul>
+<small></small></td></tr>
+</tbody></table></div>
+<h4>Zeitabschätzung der Kreuzkorrelation mit FastFourierTransformation</h4>
+Mit der Zeitkomplexizität für die FastFourierTransformation (FFT) von
+<i>O(N)=N*ln(N)</i> bei N=2<sup>n</sup>, ergibt sich die Zeitkomplexizität der KK zu
+<div align="center"><i>O(N)=3*N*ln(N)+N = N*ln(N)</i></div><p></p>
+
+Da die beiden Signale um maximal dT, in Samples verschoben sein können ergibt
+sich für a(t) und b(t) als theoretisch minimale Betrachtungsgröße ca
+<u>tau<sub>Range</sub></u>.<br>
+Experimentelle Ergebnisse und die Einschränkung von N=2<sup>n</sup> ergeben sinnvolle
+Werte für N=2k-16k.<br>
+Somit ergibt sich die Zeit pro KK-Berechnung zu ca. 0.05 - 0.7 sec (Cyrix-P166).
+
+
+<h2><a name="Wahl">Wahl des Verfahrens</a></h2>
+Da eine Echtzeitanwendung zu entwickeln ist, ist die Berechnungszeit der
+Kreuzkorrelation von entscheidender Bedeutung. Da die KK mittels der FFT
+<b>wesentlich</b> schneller ist als die direkte KK, wurde selbige implementiert
+und eingesetzt.<p></p>
+Zum Vergleich wurde auch die direkte KK implementiert. Messungen mit kleineren 
+Bereichen für tau ergeben keinen signifikanten Geschwindigkeitsvorteil <b>in der 
+Applikation</b> der direkten KK gegenüber der KK mittels der FFT, da die Zeiten für die 
+Korrelationsmessung klein gegenüber den Zeiten für Darstellung und Applikationsoverhead
+sind. 
+Beide Verfahren liefern die selben Ergebnisse.<br><br><br>
+<p align="right">PS:<i>die Praxis ist manchmal grausam....einfach</i></p>
+
+<hr size="1">
+[ <a href="http://www.cs.hs-rm.de/%7Elinn/vpdv9900/ortgKorr/snd_bib.html">Vorgänger</a>  | 
+  <a href="http://www.cs.hs-rm.de/%7Elinn/vpdv9900/ortgKorr/kk_fft.html">Nachfolger</a> | 
+  <a href="http://www.cs.hs-rm.de/%7Elinn/vpdv9900/ortgKorr/index.html#toc">Inhaltsverzeichnis</a> ]
+<p align="right">Martin Harm, WS 99/00</p>
+
+</body></html>

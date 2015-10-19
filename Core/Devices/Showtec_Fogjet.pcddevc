@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\Showtec Fogjet.png">
+ <information id="PC_DIMMER">
+ <name>Fogjet</name>
+ <vendor>Showtec</vendor>
+ <author>Colin</author>
+ <description>Fogger</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Fog" fade="no" type="shutter"/>
+ </channels>
+ <initvalues 0="0" />
+ <form width="195" height="150">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="10" left="80"/>
+  <deviceadress top="26" left="80"/>
+  <devicedipswitch top="44" left="80"/>
+  <label name="onofflabel" top="84" left="160" width="14" height="13" caption="Off"/>
+  <button name="on" top="100" left="100" width="80" height="40" action="onclick" caption="On"/>
+  <button name="off" top="100" left="10" width="80" height="40" action="offclick" caption="Off"/>
+ </form>
+ <code>
+  unit GenericDimmer;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure onclick;
+  procedure FormClose;
+  procedure offclick;
+
+  implementation
+
+
+
+  procedure InitDevice(Device: String);
+  begin
+    // bitte hier die eigene Funktion eintragen
+  end;  
+  procedure FormShow;
+    begin
+    end;
+  procedure FormRefresh(channel:Integer);
+    begin
+      if get_channel('shutter')>127 then
+        onofflabel.caption:='On'
+      else
+        onofflabel.caption:='Off';
+    end;
+  procedure onclick;
+    begin
+    	set_channel('shutter',-1,255,0);
+ 	  	FormRefresh(0);
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure offclick;
+    begin
+      set_channel('shutter',0,0,0);
+      FormRefresh(0);
+    end;
+  end.
+ </code>
+</device>

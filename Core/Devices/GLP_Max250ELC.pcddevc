@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\prohead250.png">
+ <information id="PC_DIMMER">
+ <name>Max 250 ELC</name>
+ <vendor>GLP</vendor>
+ <author>Christopher Schmitt</author>
+ <description>Kopfbewegter Scheinwerfer mit Endlosfunktion</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Bügel" fade="yes" type="special1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Kopf" fade="yes" type="special2"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Bewegungen" fade="yes" type="moves"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Farben" fade="yes" type="color1"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Gobos" fade="yes" type="gobo1"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+ </channels>
+ <initvalues ch0="128" ch1="128" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" />
+ <colors>
+  <color name="Farbkorrektur 5600K" value="0" valueend="3" r="255" g="251" b="240" />
+  <color name="Blau 107" value="8" valueend="11" r="0" g="0" b="128" />
+  <color name="Blau 110" value="16" valueend="19" r="0" g="0" b="255" />
+  <color name="Blau 101" value="24" valueend="27" r="64" g="64" b="255" />
+  <color name="Cyan 401" value="32" valueend="35" r="0" g="255" b="255" />
+  <color name="Grün 201" value="40" valueend="43" r="0" g="255" b="0" />
+  <color name="Grün 204" value="48" valueend="51" r="0" g="128" b="0" />
+  <color name="Gelb 601" value="56" valueend="59" r="255" g="255" b="0" />
+  <color name="Orange 306" value="64" valueend="67" r="255" g="128" b="0" />
+  <color name="Rot 304" value="72" valueend="75" r="255" g="0" b="0" />
+  <color name="Pink 303" value="80" valueend="83" r="255" g="176" b="216" />
+  <color name="Magenta 501" value="88" valueend="91" r="255" g="0" b="255" />
+  <color name="Magenta 507" value="96" valueend="99" r="128" g="0" b="128" />
+  <color name="Cyan 104" value="104" valueend="107" r="166" g="202" b="240" />
+  <color name="Orange 302" value="112" valueend="115" r="255" g="177" b="100" />
+  <color name="Türkis 208" value="120" valueend="123" r="0" g="128" b="128" />
+  <color name="Pink 301" value="128" valueend="131" r="255" g="128" b="192" />
+  <color name="Gelb 603" value="136" valueend="139" r="255" g="255" b="121" />
+  <color name="UV Blau 108" value="144" valueend="147" r="64" g="0" b="128" />
+  <color name="Rot 301" value="152" valueend="155" r="128" g="0" b="0" />
+  <color name="Offen" value="160" valueend="175" r="255" g="255" b="255" />
+ </colors>
+ <shutter OpenValue="8" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="8" MinValue="24" MaxValue="127" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="176" LeftMaxValue="208" OffValue="176" RightMinValue="176" RightMaxValue="208" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="129" LeftMaxValue="255" OffValue="128" RightMinValue="129" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="450" height="412">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="90" left="10" height="230" width="230" />
+  <colorbox top="240" left="250" height="22" width="190" />
+  <dropdown name="bewegungbox" top="190" left="250" width="190" height="21" action="bewegungenboxchange">
+   <item caption="Kopf Position min / Bügel Position min" value="0" picture="" />
+   <item caption="Kopf Position min / Bügel Position max" value="0" picture="" />
+   <item caption="Kopf Position max / Bügel Position min" value="0" picture="" />
+   <item caption="Kopf Position max / Bügel Position max" value="0" picture="" />
+   <item caption="Kopf Rotation links / Bügel Position min" value="0" picture="" />
+   <item caption="Kopf Rotation links / Bügel Position max" value="0" picture="" />
+   <item caption="Kopf Rotation rechts / Bügel Position min" value="0" picture="" />
+   <item caption="Kopf Rotation rechts / Bügel Position max" value="0" picture="" />
+   <item caption="Kopf Position min / Bügel Position links" value="0" picture="" />
+   <item caption="Kopf Position max / Bügel Position links" value="0" picture="" />
+   <item caption="Kopf Position min / Bügel Position rechts" value="0" picture="" />
+   <item caption="Kopf Position max / Bügel Position rechts" value="0" picture="" />
+   <item caption="Kopf Rotation links / Bügel Rotation links" value="0" picture="" />
+   <item caption="Kopf Rotation rechts / Bügel Rotation rechts" value="0" picture="" />
+   <item caption="Kopf Rotation links / Bügel Rotation rechts" value="0" picture="" />
+   <item caption="Kopf Rotation rechts / Bügel Rotation links" value="0" picture="" />
+   <item caption="Reset für alle Funktionen" value="0" picture="" />
+  </dropdown>
+  <dropdown name="gobobox" top="290" left="250" width="190" height="21" action="goboboxchange">
+  </dropdown>
+  <slider name="buegelspeedslider" top="90" left="250" width="190" height="20" action="buegelspeedsliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="headspeedslider" top="140" left="250" width="190" height="20" action="headspeedsliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="goborotslider" top="340" left="250" width="190" height="20" action="goborotsliderchange" startvalue="176" endvalue="208" default="176"/>
+  <slider name="shutterslider" top="340" left="10" width="230" height="20" action="shuttersliderchange" startvalue="24" endvalue="127" default="24"/>
+  <label name="Label1" top="70" left="250" width="106" height="13" caption="Bügelgeschwindigkeit:"/>
+  <label name="Label2" top="120" left="250" width="101" height="13" caption="Kopfgeschwindigkeit:"/>
+  <label name="Label3" top="170" left="250" width="66" height="13" caption="Bewegungen:"/>
+  <label name="Label4" top="220" left="250" width="36" height="13" caption="Farben:"/>
+  <label name="Label5" top="270" left="250" width="34" height="13" caption="Gobos:"/>
+  <label name="Label6" top="320" left="250" width="72" height="13" caption="Gobo-Rotation:"/>
+  <label name="Label7" top="320" left="10" width="78" height="13" caption="Shutterfrequenz:"/>
+  <button name="Button1" top="20" left="350" width="90" height="30" action="lampoffbtn" caption="Lampe aus"/>
+  <button name="Button2" top="20" left="250" width="90" height="30" action="lamponbtn" caption="Lampe ein"/>
+  <button name="Button3" top="370" left="10" width="80" height="30" action="shutterzu1btn" caption="Shutter zu 1"/>
+  <button name="Button4" top="370" left="100" width="80" height="30" action="shutteroffenbtn" caption="Shutter offen"/>
+  <button name="Button5" top="370" left="190" width="80" height="30" action="shutterzu2btn" caption="Shutter zu 2"/>
+  <button name="Button6" top="370" left="280" width="160" height="30" action="gobocolorslowbtn" caption="Gobo und Farbe langsam"/>
+ </form>
+ <code>
+  unit Max250ELC;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorBoxChange;
+  procedure buegelspeedsliderchange;
+  procedure headspeedsliderchange;
+  procedure bewegungenboxchange;
+  procedure goboboxchange;
+  procedure shuttersliderchange;
+  procedure goborotsliderchange;
+  procedure shutterzu1btn;
+  procedure shutteroffenbtn;
+  procedure shutterzu2btn;
+  procedure gobocolorslowbtn;
+  procedure lamponbtn;
+  procedure lampoffbtn;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  var
+		i:integer;
+	begin
+    gobobox.items.clear;
+    for i:=0 to 20 do
+    	gobobox.items.add('Gobo '+inttostr(i+1));
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+		wert:integer;
+	begin
+    if not dontrefresh then
+		case channel of
+    	0..1:
+    	begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+    	end;
+    	2:
+    	begin
+    		buegelspeedslider.position:=get_channel('SPECIAL1');
+    	end;
+    	3:
+    	begin
+    		headspeedslider.position:=get_channel('SPECIAL2');
+    	end;
+    	4:
+    	begin
+    		wert:=get_channel('moves');
+				bewegungbox.itemindex:=wert div 16;
+    	end;
+    	5:
+    	begin
+    		wert:=get_channel('color1');
+    		colorbox.itemindex:=wert div 8;
+    	end;
+    	6:
+    	begin
+    		wert:=get_channel('gobo1');
+    		case wert of
+    			0..175: gobobox.itemindex:=wert div 8;
+    			176..208: goborotslider.position:=wert;
+    		end;
+				
+    	end;
+    	7:
+    	begin
+    		wert:=get_channel('shutter');
+    		case wert of
+    			24..127: shutterslider.position:=wert;
+    		end;
+    	end;
+    end;
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+	  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  procedure ColorBoxChange;
+  begin
+    dontrefresh:=true;
+    set_channel('color1',-1,colorbox.itemindex*8,0,0);
+  end;
+  procedure buegelspeedsliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('SPECIAL1',-1,buegelspeedslider.position,0,0);
+  end;
+  procedure headspeedsliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('SPECIAL2',-1,headspeedslider.position,0,0);
+  end;
+  procedure bewegungenboxchange;
+  begin
+    dontrefresh:=true;
+    set_channel('moves',-1,bewegungbox.itemindex*16,0,0);
+  end;
+  procedure goboboxchange;
+  begin
+    dontrefresh:=true;
+    set_channel('gobo1',-1,gobobox.itemindex*8,0,0);
+  end;
+  procedure shuttersliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,shutterslider.position,0,0);
+  end;
+  procedure goborotsliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('gobo1',-1,goborotslider.position,0,0);
+  end;
+  procedure shutterzu1btn;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,0,0,0);
+  end;
+  procedure shutteroffenbtn;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,8,0,0);
+  end;
+  procedure shutterzu2btn;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,16,0,0);
+  end;
+  procedure gobocolorslowbtn;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,255,0,0);
+  end;
+  procedure lamponbtn;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,8,0,0);
+  end;
+  procedure lampoffbtn;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,0,0,0);
+  end;
+  end.
+ </code>
+</device>

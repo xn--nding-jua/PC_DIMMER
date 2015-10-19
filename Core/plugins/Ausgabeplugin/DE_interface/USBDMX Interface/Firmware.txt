@@ -1,0 +1,16 @@
+Firmware des Maincontrollers
+============================
+
+
+Wie jeder Mikrocontroller muss auch der Maincontroller dieses Interfaces zunächst einmal programmiert werden. Damit verschiedene Interfaces gleichzeitig an einem PC betrieben werden können, ist es nötig, dass jedes Interface eine eigene Seriennummer erhält. Da diese im Sourcecode eingetragen wird, kann hier leider kein hex-File angeboten werden. Vielmehr befindet sich im Ordner "Firmware" das originale Projekt für dieses Interface. Es wurde mit dem AVR-Studio von Atmel erstellt und muss auch mit diesem assembliert werden. Unter dieser Adresse ist es frei auf der Atmelseite erhältlich:
+http://www.atmel.com/dyn/products/tools.asp?family_id=607
+Nachdem AVR Studio 4 erfolgreich installiert wurde kann mit einem Doppelklick auf die Projektdatei "USB_DMX_Interface.aps" der Sourcecode geöffnet werden. (Im AVR Studio "USB_DMX_Interface -> Assembler -> code.asm") Dort ist die Seriennummer ganz unten unter "STRING3_DESC" im Unicodeformat codiert. Zum ändern müssen die Zeilen 2027 bis 2042 editiert werden. Es wird lediglich immer die Zahl hinter der '3' geändert. Also ".DW 0x35,0x00" entspricht z.B. einer 5. Die unterste Zeile (also 2042) entspricht der Stelle ganz rechts in der Seriennummer.
+Welche Seriennummer verwendet wird ist im Prinzip egal, nur "0000000000000000" ist für ein nicht vorhandenes Interface reserviert. Wichtig ist allerdings, dass die Seriennummern aller Interfaces, die an den selben PC angeschlossen werden unterschiedlich sind. Um zu gewährleisten, dass alle gebauten Interfaces miteinander kompatibel sind biete ich an, eine Liste zu führen und freie Seriennummern zu vergeben. Um eine solche globale Serienummer zu erhalten bitte eine Mail an "info@digital-enlightenment.de" schicken.
+Ist die neue Seriennummer im Code eingetragen, kann dieser mittels dem Drücken der Taste F7 assembliert werden. Die nun neu generierte Datei "usb_dmx_interface.gen" ist das hex-File der Firmware. (gegebenenfalls in .hex umbenennen)
+Nun muss der Controller nur noch geflasht werden. Das kann mit einem einfach aufzubauendem Programmer wie z.B. TwinAVR (http://www.rowalt.de/mc/avr/progd.htm) geschehen. Wichtig dabei ist, dass die Fuses des Controllers auf "external Crystal" gestellt werden. Die richtige Konfiguration zeigt das Bild "fuses.jpg".
+
+
+Stand 08.12.2004
+(c) 2004 Michael Dreschmann
+info@digital-enlightenment.de
+www.digital-enlightenment.de

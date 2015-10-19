@@ -1,0 +1,447 @@
+unit midievent;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Grids, Buttons;
+
+type
+  Tmidieventfrm = class(TForm)
+    GroupBox1:       TGroupBox;
+    okbtn:           TButton;
+    MIDIGrid:        TStringGrid;
+    addmidievent:    TButton;
+    deletemidievent: TButton;
+    editmidievent:   TButton;
+    midiindevicelist: TComboBox;
+    Label1:          TLabel;
+    SpeedButton1:    TSpeedButton;
+    SpeedButton2:    TSpeedButton;
+    SpeedButton3:    TSpeedButton;
+    OpenDialog1:     TOpenDialog;
+    SaveDialog1:     TSaveDialog;
+    procedure FormCreate(Sender: TObject);
+    procedure refreshList(line: integer);
+    procedure editmidieventClick(Sender: TObject);
+    procedure addmidieventClick(Sender: TObject);
+    procedure deletemidieventClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure MIDIGridDblClick(Sender: TObject);
+    procedure SpeedButton3Click(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+  end;
+
+var
+  midieventfrm: Tmidieventfrm;
+
+implementation
+
+uses pcdimmer, editmidievent;
+
+{$R *.dfm}
+
+procedure Tmidieventfrm.FormCreate(Sender: TObject);
+begin
+  midigrid.Cells[0, 0]  := 'Message';
+  midigrid.cells[1, 0]  := 'Data1';
+  midigrid.cells[2, 0]  := 'Data2';
+  midigrid.cells[3, 0]  := 'Typ';
+  midigrid.cells[4, 0]  := 'Wert1';
+  midigrid.cells[5, 0]  := 'Wert2';
+  midigrid.cells[6, 0]  := 'Data1/2';
+  midigrid.ColWidths[0] := 50;
+  midigrid.ColWidths[1] := 50;
+  midigrid.ColWidths[2] := 50;
+  midigrid.ColWidths[3] := 120;
+  midigrid.ColWidths[4] := 50;
+  midigrid.ColWidths[5] := 50;
+  midigrid.ColWidths[6] := 50;
+  midigrid.ColWidths[7] := 15;
+end;
+
+procedure Tmidieventfrm.refreshList(line: integer);
+begin
+  MIDIGrid.cells[0, line] := IntToStr(mainform.MidiEventArray[line - 1].MIDIMessage);  // Message
+
+  if mainform.MidiEventArray[line - 1].Data1orData2 = 2 then
+  begin
+    MIDIGrid.cells[1, line] := IntToStr(mainform.MidiEventArray[line - 1].MIDIData1);  // Data1
+    MIDIGrid.cells[2, line] := '-';
+  end else
+  begin
+    MIDIGrid.cells[1, line] := '-';
+    MIDIGrid.cells[2, line] := '-';//inttostr(mainform.MidiEventArray[line-1].MIDIData2);  // Data2
+  end;
+
+  case mainform.MidiEventArray[line - 1].Typ of        // Typ
+    0: MIDIGrid.cells[3, line]  := 'AEPlayer Start / Stop';
+    1: MIDIGrid.cells[3, line]  := 'AEPlayer Start';
+    2: MIDIGrid.cells[3, line]  := 'AEPlayer Stop';
+    3: MIDIGrid.cells[3, line]  := 'AEPlayer Position';
+    4: MIDIGrid.cells[3, line]  := 'AEPlayer Repeat ein/aus';
+    5: MIDIGrid.cells[3, line]  := 'AEPlayer Rec ein/aus';
+    6: MIDIGrid.cells[3, line]  := 'AEPlayer Effekte ein/aus';
+    //############################
+    20: MIDIGrid.cells[3, line] := 'Szene Start';
+    21: MIDIGrid.cells[3, line] := 'Szene Stop';
+    //############################
+    40: MIDIGrid.cells[3, line] := 'Beat Sync-Taste';
+    41: MIDIGrid.cells[3, line] := 'Beat BPM-Wert setzen';
+    42: MIDIGrid.cells[3, line] := 'Beat BPM-Wert abfragen';
+    43: MIDIGrid.cells[3, line] := 'Beat manueller Impuls';
+    //############################
+    60: MIDIGrid.cells[3, line] := 'Grandmaster auf MIDI-Wert';
+    61: MIDIGrid.cells[3, line] := 'Grandmaster setzen';
+    62: MIDIGrid.cells[3, line] := 'Grandmaster abfragen';
+    63: MIDIGrid.cells[3, line] := 'Flashmaster auf MIDI-Wert';
+    64: MIDIGrid.cells[3, line] := 'Flashmaster setzen';
+    65: MIDIGrid.cells[3, line] := 'Flashmaster abfragen';
+    66: MIDIGrid.cells[3, line] := 'Mute';
+    //############################
+    80: MIDIGrid.cells[3, line] := 'Einzelkanal auf MIDI-Wert schalten';
+    81: MIDIGrid.cells[3, line] := 'Einzelkanal Wert setzen';
+    82: MIDIGrid.cells[3, line] := 'Einzelkanal Wert abfragen';
+    83: MIDIGrid.cells[3, line] := 'Einzelkanal Wert faden';
+    84: MIDIGrid.cells[3, line] := 'Einzelkanal Wert abfragen und dimmen';
+    //############################
+    100: MIDIGrid.cells[3, line] := 'Effekt start/stop';
+    101: MIDIGrid.cells[3, line] := 'Effekt start';
+    102: MIDIGrid.cells[3, line] := 'Effekt stop';
+    103: MIDIGrid.cells[3, line] := 'Effekt nächster Schritt';
+    104: MIDIGrid.cells[3, line] := 'Effekt Intensität setzen';
+    105: MIDIGrid.cells[3, line] := 'Effekt Beschleunigung setzen';
+    106: MIDIGrid.cells[3, line] := 'Effekt Wiederholung ein/aus';
+    107: MIDIGrid.cells[3, line] := 'Effekt Modus setzen';
+    //############################
+    120: MIDIGrid.cells[3, line] := 'Submaster auf MIDI-Wert';
+    121: MIDIGrid.cells[3, line] := 'Submaster Wert schalten';
+    122: MIDIGrid.cells[3, line] := 'Submaster Wert flashen';
+    123: MIDIGrid.cells[3, line] := 'Submaster Wert abfragen';
+    //############################
+    140: MIDIGrid.cells[3, line] := 'Kontrollpanel Button';
+    //############################
+    160: MIDIGrid.cells[3, line] := 'Ausgewähltes Gerät';
+    161: MIDIGrid.cells[3, line] := 'Definiertes Gerät';
+    162: MIDIGrid.cells[3, line] := 'Gerätegruppe';
+  end;
+  MIDIGrid.cells[4, line] := IntToStr(mainform.MidiEventArray[line - 1].Wert1);  // Wert1
+  MIDIGrid.cells[5, line] := IntToStr(mainform.MidiEventArray[line - 1].Wert2);  // Wert2
+  if mainform.MidiEventArray[line - 1].Data1orData2 = 1 then        // Data1 oder Data2
+    MIDIGrid.cells[6, line] := 'Data 1'
+  else
+    MIDIGrid.cells[6, line] := 'Data 2';
+end;
+
+procedure Tmidieventfrm.editmidieventClick(Sender: TObject);
+var
+  i: integer;
+begin
+  // Werte an EditForm übergeben
+  EditMIDIEVENTfrm.Message1a.Caption := IntToStr(mainform.MidiEventArray[MIDIGrid.row - 1].MIDIMessage);
+  EditMIDIEVENTfrm.Data1a.Caption := IntToStr(mainform.MidiEventArray[MIDIGrid.row - 1].MIDIData1);
+  EditMIDIEVENTfrm.Data2a.Caption := IntToStr(mainform.MidiEventArray[MIDIGrid.row - 1].MIDIData2);
+  EditMIDIEVENTfrm.typ.ItemIndex  := (mainform.MidiEventArray[MIDIGrid.row - 1].Typ) div 20;
+  EditMIDIEVENTfrm.typChange(Sender);
+  EditMIDIEVENTfrm.combobox2.ItemIndex := mainform.MidiEventArray[MIDIGrid.row - 1].Typ mod 20;
+
+  EditMIDIEVENTfrm.data1chk.Checked := (mainform.MidiEventArray[MIDIGrid.row - 1].Data1orData2 = 1);
+  EditMIDIEVENTfrm.data2chk.Checked := (mainform.MidiEventArray[MIDIGrid.row - 1].Data1orData2 = 2);
+  EditMIDIEVENTfrm.Argument3 := mainform.MidiEventArray[MIDIGrid.row - 1].ID;
+
+  case EditMIDIEVENTfrm.typ.ItemIndex of
+    5:
+    begin
+      EditMIDIEVENTfrm.combobox2Change(Sender);
+      for i := 0 to length(mainform.effektsequenzereffekte) - 1 do
+      begin
+        if GUIDtoString(EditMIDIEVENTfrm.Argument3) = GUIDtoString(mainform.effektsequenzereffekte[i].ID) then
+          EditMIDIEVENTfrm.effektliste.ItemIndex := i;
+      end;
+      EditMIDIEVENTfrm.effektliste.Visible := True;
+    end;
+    8:
+    begin
+      EditMIDIEVENTfrm.combobox2Change(Sender);
+      case EditMIDIEVENTfrm.combobox2.ItemIndex of
+        1:
+        begin
+          for i := 0 to length(mainform.devices) - 1 do
+          begin
+            if GUIDtoString(EditMIDIEVENTfrm.Argument3) = GUIDtoString(mainform.devices[i].ID) then
+              EditMIDIEVENTfrm.effektliste.ItemIndex := i;
+          end;
+        end;
+        2:
+        begin
+          for i := 0 to length(mainform.devicegroups) - 1 do
+          begin
+            if GUIDtoString(EditMIDIEVENTfrm.Argument3) = GUIDtoString(mainform.devicegroups[i].ID) then
+              EditMIDIEVENTfrm.effektliste.ItemIndex := i;
+          end;
+        end;
+      end;
+      EditMIDIEVENTfrm.effektliste.Visible := True;
+    end;
+  end;
+
+  EditMIDIEVENTfrm.Arg1Edit.Text := IntToStr(mainform.MidiEventArray[MIDIGrid.row - 1].Wert1);
+  EditMIDIEVENTfrm.Arg1Combobox.ItemIndex := mainform.MidiEventArray[MIDIGrid.row - 1].Wert1;
+  EditMIDIEVENTfrm.Arg2Edit.Text := IntToStr(mainform.MidiEventArray[MIDIGrid.row - 1].Wert2);
+
+  if mainform.MidiEventArray[MIDIGrid.row - 1].Wert1 < EditMIDIEVENTfrm.Arg1Combobox.Items.Count then
+    EditMIDIEVENTfrm.Arg1Combobox.ItemIndex := mainform.MidiEventArray[MIDIGrid.row - 1].Wert1;
+
+  // Editform anzeigen
+  EditMIDIEVENTfrm.Showmodal;
+
+  // Werte bei "OK" in Array kopieren und Liste aktualisieren
+  if EditMIDIEVENTfrm.modalresult = mrOk then
+  begin
+    mainform.MidiEventArray[MIDIGrid.row - 1].MIDIMessage := StrToInt(EditMIDIEVENTfrm.Message1a.Caption);
+    mainform.MidiEventArray[MIDIGrid.row - 1].MIDIData1 := StrToInt(EditMIDIEVENTfrm.Data1a.Caption);
+    mainform.MidiEventArray[MIDIGrid.row - 1].MIDIData2 := StrToInt(EditMIDIEVENTfrm.Data2a.Caption);
+    mainform.MidiEventArray[MIDIGrid.row - 1].Typ := EditMIDIEVENTfrm.typ.ItemIndex * 20 + EditMIDIEVENTfrm.combobox2.ItemIndex;
+    ;
+    mainform.MidiEventArray[MIDIGrid.row - 1].Wert1 := StrToInt(EditMIDIEVENTfrm.Arg1Edit.Text);
+    mainform.MidiEventArray[MIDIGrid.row - 1].Wert2 := StrToInt(EditMIDIEVENTfrm.Arg2Edit.Text);
+    if EditMIDIEVENTfrm.data1chk.Checked then
+      mainform.MidiEventArray[MIDIGrid.row - 1].Data1orData2 := 1
+    else
+      mainform.MidiEventArray[MIDIGrid.row - 1].Data1orData2 := 2;
+    mainform.MidiEventArray[MIDIGrid.row - 1].ID := EditMIDIEVENTfrm.Argument3;
+
+    refreshList(MIDIGrid.row);
+  end;
+end;
+
+procedure Tmidieventfrm.addmidieventClick(Sender: TObject);
+begin
+  // EditForm zurücksetzen
+  EditMIDIEVENTfrm.Message1a.Caption := '0';
+  EditMIDIEVENTfrm.Data1a.Caption := '0';
+  EditMIDIEVENTfrm.Data2a.Caption := '0';
+  EditMIDIEVENTfrm.Arg1Edit.Text  := '0';
+  EditMIDIEVENTfrm.Arg2Edit.Text  := '0';
+  EditMIDIEVENTfrm.data2chk.Checked := True;
+
+  // EditForm anzeigen
+  EditMIDIEVENTfrm.Showmodal;
+
+  // Array um eine Position verlängern und Werte aus EditForm in Array kopieren und Liste aktualisieren
+  if EditMIDIEVENTfrm.modalresult = mrOk then
+  begin
+    setlength(mainform.MidiEventArray, length(mainform.MidiEventArray) + 1);
+    if not ((MIDIGrid.rowcount - 1) = length(mainform.MidiEventArray)) then
+    begin
+      MIDIGrid.rowcount := MIDIGrid.rowcount + 1;
+      MIDIGrid.RowHeights[MIDIGrid.rowcount - 1] := 15;
+    end;
+    MIDIGrid.row := MIDIGrid.rowcount - 1;
+    mainform.MidiEventArray[MIDIGrid.row - 1].MIDIMessage := StrToInt(EditMIDIEVENTfrm.Message1a.Caption);
+    mainform.MidiEventArray[MIDIGrid.row - 1].MIDIData1 := StrToInt(EditMIDIEVENTfrm.Data1a.Caption);
+    mainform.MidiEventArray[MIDIGrid.row - 1].MIDIData2 := StrToInt(EditMIDIEVENTfrm.Data2a.Caption);
+    mainform.MidiEventArray[MIDIGrid.row - 1].Typ := EditMIDIEVENTfrm.typ.ItemIndex * 20 + EditMIDIEVENTfrm.combobox2.ItemIndex;
+    ;
+    mainform.MidiEventArray[MIDIGrid.row - 1].Wert1 := StrToInt(EditMIDIEVENTfrm.Arg1Edit.Text);
+    mainform.MidiEventArray[MIDIGrid.row - 1].Wert2 := StrToInt(EditMIDIEVENTfrm.Arg2Edit.Text);
+    if EditMIDIEVENTfrm.data1chk.Checked then
+      mainform.MidiEventArray[MIDIGrid.row - 1].Data1orData2 := 1
+    else
+      mainform.MidiEventArray[MIDIGrid.row - 1].Data1orData2 := 2;
+    mainform.MidiEventArray[MIDIGrid.Row - 1].ID := EditMIDIEVENTfrm.Argument3;
+
+    deletemidievent.Enabled := True;
+    editmidievent.Enabled := True;
+
+    refreshList(MIDIGrid.row);
+  end;
+end;
+
+procedure Tmidieventfrm.deletemidieventClick(Sender: TObject);
+var
+  i, j: integer;
+begin
+  // Ab aktueller Position alle nachfolgenden Einträge um eins nach oben kopieren
+  for i := MIDIGrid.row to MIDIGrid.rowcount - 1 do
+  begin
+    for j := 1 to 7 do
+    begin
+      mainform.MidiEventArray[i - 1].MIDIMessage := mainform.MidiEventArray[i].MIDIMessage;
+      mainform.MidiEventArray[i - 1].MIDIData1 := mainform.MidiEventArray[i].MIDIData1;
+      mainform.MidiEventArray[i - 1].MIDIData2 := mainform.MidiEventArray[i].MIDIData2;
+      mainform.MidiEventArray[i - 1].Typ := mainform.MidiEventArray[i].Typ;
+      mainform.MidiEventArray[i - 1].Wert1 := mainform.MidiEventArray[i].Wert1;
+      mainform.MidiEventArray[i - 1].Wert2 := mainform.MidiEventArray[i].Wert2;
+      mainform.MidiEventArray[i - 1].Data1orData2 := mainform.MidiEventArray[i].Data1orData2;
+      mainform.MidiEventArray[i - 1].ID  := mainform.MidiEventArray[i].ID;
+      //mainform.MidiEventArray[i-1][j]:=mainform.MidiEventArray[i][j];
+    end;
+  end;
+
+  // Letzten Eintrag löschen
+  setlength(mainform.MidiEventArray, length(mainform.MidiEventArray) - 1);
+
+  if MIDIGrid.RowCount > 2 then
+  begin
+    MIDIGrid.rowcount := MIDIGrid.rowcount - 1;
+    // komplette Liste aktualisieren
+    for i := 1 to MIDIGrid.rowcount do
+    begin
+      refreshList(i);
+    end;
+  end else
+  begin
+    MIDIGrid.cells[0, 1]  := '';
+    MIDIGrid.cells[1, 1]  := '';
+    MIDIGrid.cells[2, 1]  := '';
+    MIDIGrid.cells[3, 1]  := '';
+    MIDIGrid.cells[4, 1]  := '';
+    MIDIGrid.cells[5, 1]  := '';
+    MIDIGrid.cells[6, 1]  := '';
+    deletemidievent.Enabled := False;
+    editmidievent.Enabled := False;
+  end;
+end;
+
+procedure Tmidieventfrm.FormShow(Sender: TObject);
+begin
+  MIDIGrid.RowHeights[0] := 15;
+end;
+
+procedure Tmidieventfrm.MIDIGridDblClick(Sender: TObject);
+begin
+  if editmidievent.Enabled then
+    editmidieventClick(Sender);
+end;
+
+procedure Tmidieventfrm.SpeedButton3Click(Sender: TObject);
+begin
+  if messagedlg('Möchten Sie wirklich alle MIDI-Events löschen?', mtConfirmation,
+    [mbYes, mbNo], 0) = mrYes then
+  begin
+    MIDIGrid.RowCount := 2;
+    setlength(mainform.MidiEventArray, 0);
+
+    MIDIGrid.cells[0, 1]  := '';
+    MIDIGrid.cells[1, 1]  := '';
+    MIDIGrid.cells[2, 1]  := '';
+    MIDIGrid.cells[3, 1]  := '';
+    MIDIGrid.cells[4, 1]  := '';
+    MIDIGrid.cells[5, 1]  := '';
+    MIDIGrid.cells[6, 1]  := '';
+    deletemidievent.Enabled := False;
+    editmidievent.Enabled := False;
+  end;
+end;
+
+procedure Tmidieventfrm.SpeedButton2Click(Sender: TObject);
+var
+  CSV: TStrings;
+  temp: string;
+  i: integer;
+begin
+  i := 0;
+  if OpenDialog1.Execute then
+  begin
+    // MIDI-Ereignisse aus CSV-Datei lesen
+    try
+      CSV := TStringList.Create;
+      CSV.LoadFromFile(OpenDialog1.FileName);
+      if csv.Count > 0 then
+      begin
+        setlength(mainform.MidiEventArray, csv.Count);
+        MIDIGrid.RowCount := csv.Count + 1;
+
+        for i := 0 to length(mainform.MidiEventArray) - 1 do
+        begin
+          temp := CSV.Strings[i];
+          mainform.MidiEventArray[i].MIDIMessage := StrToInt(copy(temp, 0, pos(',', temp) - 1));
+          temp := copy(temp, pos(',', temp) + 1, length(temp));
+          mainform.MidiEventArray[i].MIDIData1 := StrToInt(copy(temp, 0, pos(',', temp) - 1));
+          temp := copy(temp, pos(',', temp) + 1, length(temp));
+          mainform.MidiEventArray[i].MIDIData2 := StrToInt(copy(temp, 0, pos(',', temp) - 1));
+          temp := copy(temp, pos(',', temp) + 1, length(temp));
+          mainform.MidiEventArray[i].Typ := StrToInt(copy(temp, 0, pos(',', temp) - 1));
+          temp := copy(temp, pos(',', temp) + 1, length(temp));
+          mainform.MidiEventArray[i].Wert1 := StrToInt(copy(temp, 0, pos(',', temp) - 1));
+          temp := copy(temp, pos(',', temp) + 1, length(temp));
+          mainform.MidiEventArray[i].Wert2 := StrToInt(copy(temp, 0, pos(',', temp) - 1));
+          temp := copy(temp, pos(',', temp) + 1, length(temp));
+          mainform.MidiEventArray[i].Data1orData2 := StrToInt(copy(temp, 0, pos(',', temp) - 1));
+          temp := copy(temp, pos(',', temp) + 1, length(temp));
+          mainform.MidiEventArray[i].ID := StringToGUID(temp);
+          MIDIGrid.RowHeights[i + 1] := 15;
+          refreshList(i + 1);
+        end;
+        CSV.Free;
+      end;
+    except
+      ShowMessage('Beim Laden der Datei "' + OpenDialog1.FileName + '" ist ein Fehler in Zeile ' + IntToStr(i + 1) + ' aufgetreten. Die MIDI-Einstellungen können unter Umständen nicht korrekt geladen werden.');
+
+      // Letzten Eintrag löschen
+      setlength(mainform.MidiEventArray, length(mainform.MidiEventArray) - 1);
+      if MIDIGrid.RowCount > 2 then
+      begin
+        MIDIGrid.rowcount := MIDIGrid.rowcount - 1;
+        // komplette Liste aktualisieren
+        for i := 1 to MIDIGrid.rowcount do
+        begin
+          refreshList(i);
+        end;
+      end else
+      begin
+        MIDIGrid.cells[0, 1]  := '';
+        MIDIGrid.cells[1, 1]  := '';
+        MIDIGrid.cells[2, 1]  := '';
+        MIDIGrid.cells[3, 1]  := '';
+        MIDIGrid.cells[4, 1]  := '';
+        MIDIGrid.cells[5, 1]  := '';
+        MIDIGrid.cells[6, 1]  := '';
+        deletemidievent.Enabled := False;
+        editmidievent.Enabled := False;
+      end;
+    end;
+
+    if length(mainform.MidiEventArray) > 0 then
+    begin
+      editmidievent.Enabled := True;
+      deletemidievent.Enabled := True;
+    end else
+    begin
+      editmidievent.Enabled := False;
+      deletemidievent.Enabled := False;
+    end;
+
+  end;
+end;
+
+procedure Tmidieventfrm.SpeedButton1Click(Sender: TObject);
+var
+  i: integer;
+  CSV: TStrings;
+begin
+  if SaveDialog1.Execute then
+  begin
+    // MIDI-Ereignisse in CSV-Datei schreiben
+    CSV := TStringList.Create;
+    for i := 0 to length(mainform.MidiEventArray) - 1 do
+      CSV.Add(IntToStr(mainform.MidiEventArray[i].MIDIMessage) + ',' + IntToStr(mainform.MidiEventArray[i].MIDIData1) + ',' + IntToStr(mainform.MidiEventArray[i].MIDIData2) + ',' + IntToStr(mainform.MidiEventArray[i].Typ) + ',' + IntToStr(mainform.MidiEventArray[i].Wert1) + ',' + IntToStr(mainform.MidiEventArray[i].Wert2) + ',' + IntToStr(mainform.MidiEventArray[i].Data1orData2) + ',' + GUIDtoString(mainform.MidiEventArray[i].ID));
+    CSV.SaveToFile(SaveDialog1.FileName);
+    CSV.Free;
+  end;
+end;
+
+procedure Tmidieventfrm.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = vk_escape then
+    modalresult := mrOk;
+end;
+
+end.

@@ -1,0 +1,20 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: USBLibExport - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "link.exe libusb.lib /nologo /dll /incremental:no /pdb:"Release/USBLibExport.pdb" /machine:I386 /def:".\USBLibExport.def" /out:"Release/USBLibExport.dll" /implib:"Release/USBLibExport.lib"  ".\Release\StdAfx.obj" ".\Release\USBLibExport.obj" "
+<h3>Output Window</h3>
+Linking...
+   Creating library Release/USBLibExport.lib and object Release/USBLibExport.exp
+
+
+
+<h3>Results</h3>
+USBLibExport.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

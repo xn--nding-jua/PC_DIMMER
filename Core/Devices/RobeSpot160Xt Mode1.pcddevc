@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\RobeSpot160Xt.png">
+ <information id="PC_DIMMER">
+ <name>Spot 160XT</name>
+ <vendor>Robe</vendor>
+ <author>PH</author>
+ <description>Robe Spot 160XT</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="PAN" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Panfine" fade="yes" type="panfine"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Tiltfine" fade="yes" type="tiltfine"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Speed Pan / Tilt" fade="yes" type="speed"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Color 1" fade="yes" type="color1"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Gobo 1" fade="yes" type="gobo1"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Gobo 1 Rotation" fade="yes" type="gobo1rot"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" ch8="-1" />
+ <colors>
+  <color name="Open (white)" value="0" valueend="0" r="255" g="255" b="255" />
+  <color name="Turquoise" value="10" valueend="10" r="0" g="128" b="192" />
+  <color name="Red" value="21" valueend="21" r="255" g="0" b="0" />
+  <color name="Cyan" value="32" valueend="32" r="0" g="255" b="255" />
+  <color name="Light green" value="42" valueend="42" r="128" g="255" b="128" />
+  <color name="Magenta" value="53" valueend="53" r="255" g="128" b="192" />
+  <color name="Light Blue" value="64" valueend="64" r="0" g="128" b="255" />
+  <color name="Yellow" value="74" valueend="74" r="255" g="255" b="0" />
+  <color name="Green" value="85" valueend="85" r="0" g="128" b="0" />
+  <color name="Pink" value="96" valueend="96" r="255" g="0" b="255" />
+  <color name="Blue" value="106" valueend="106" r="0" g="0" b="255" />
+  <color name="Orange" value="117" valueend="117" r="255" g="128" b="0" />
+  <color name="Forwards rainbow" value="128" valueend="189" r="255" g="255" b="255" />
+  <color name="No Rotation" value="190" valueend="193" r="255" g="255" b="255" />
+  <color name="Backwards rainbow" value="194" valueend="255" r="255" g="255" b="255" />
+ </colors>
+ <shutter OpenValue="127" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="96" MaxValue="127" ChannelName="shutter"/>
+ <dimmer OffValue="8" MaxValue="134"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="255" OffValue="0" RightMinValue="0" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <gobos>
+  <gobo name="Open" value="0" valueend="0" filename="Open.png" />
+  <gobo name="Gobo 1" value="12" valueend="23" filename="Planet.png" />
+  <gobo name="Gobo 2" value="24" valueend="35" filename="robe_160xt_gN02.png" />
+  <gobo name="Gobo 3" value="36" valueend="47" filename="robe_160xt_gN03.png" />
+  <gobo name="Gobo 4" value="48" valueend="59" filename="robe_160xt_gN04.png" />
+  <gobo name="Gobo 5" value="60" valueend="71" filename="robe_160xt_gN05.png" />
+  <gobo name="Gobo 6" value="72" valueend="83" filename="robe_160xt_gN06.png" />
+  <gobo name="Gobo 7" value="84" valueend="95" filename="robe_160xt_gN07.png" />
+  <gobo name="Gobo S 1" value="96" valueend="115" filename="robe_160xt_gS01.png" />
+  <gobo name="Gobo S 2" value="116" valueend="135" filename="robe_160xt_gS02.png" />
+  <gobo name="Gobo S 3" value="136" valueend="155" filename="robe_160xt_gS03.png" />
+  <gobo name="Gobo S 4" value="156" valueend="175" filename="robe_160xt_gS04.png" />
+  <gobo name="Gobo S 5" value="176" valueend="195" filename="robe_160xt_gS05.png" />
+  <gobo name="Gobo S 6" value="196" valueend="215" filename="robe_160xt_gS06.png" />
+  <gobo name="Gobo S 7" value="216" valueend="235" filename="robe_160xt_gS07.png" />
+  <gobo name="Gobo wheel rotation" value="236" valueend="255" filename="leer.png" />
+ </gobos>
+ <form width="335" height="445">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="210" left="10" height="230" width="230" />
+  <colorbox top="180" left="90" height="22" width="150" />
+  <slider name="shutterslider" top="80" left="120" width="120" height="20" action="SetShutter" startvalue="0" endvalue="127" default="0"/>
+  <slider name="goboslider" top="105" left="120" width="120" height="20" action="SetGobo" startvalue="0" endvalue="255" default="0"/>
+  <slider name="goborotslider" top="130" left="120" width="120" height="20" action="" startvalue="0" endvalue="255" default="0"/>
+  <slider name="speedslider" top="155" left="120" width="120" height="20" action="SetSpeed" startvalue="0" endvalue="255" default="0"/>
+  <label name="lblSpeed" top="158" left="10" width="31" height="13" caption="Speed"/>
+  <label name="lblGoboRotation" top="132" left="10" width="49" height="13" caption="Gobo Rot."/>
+  <label name="lblshutter" top="86" left="10" width="34" height="13" caption="Shutter"/>
+  <label name="lblValueshutter" top="83" left="70" width="39" height="13" caption="<Value>"/>
+  <label name="lblValueSpeed" top="157" left="75" width="41" height="13" caption="<speed>"/>
+  <label name="lblTitleGobo" top="107" left="10" width="26" height="13" caption="Gobo"/>
+  <label name="lblValueRotGobo" top="132" left="75" width="38" height="13" caption="<value>"/>
+  <label name="lblValueGobo" top="107" left="75" width="38" height="13" caption="<value>"/>
+  <button name="btnReset" top="410" left="250" width="80" height="30" action="ResetDevice" caption="Reset Device"/>
+  <button name="btnStrobeSlow" top="60" left="250" width="80" height="30" action="StrobeSlow" caption="Strobe slow"/>
+  <button name="btnStrobeMedium" top="90" left="250" width="80" height="30" action="StrobeMedium" caption="Strobe medium"/>
+  <button name="btnStrobeFast" top="120" left="250" width="80" height="30" action="StrobeFast" caption="Strobe fast"/>
+  <button name="btnShutterOpen" top="30" left="250" width="80" height="30" action="ShutterOpen" caption="Open"/>
+  <button name="btnShutterClose" top="0" left="250" width="80" height="30" action="ShutterClose" caption="Close"/>
+ </form>
+ <code>
+  unit RobeSpot160XT;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure SetShutter;
+  procedure SetSpeed;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorBoxChange;
+  procedure SetGoboRotation;
+  procedure SetGobo;
+  procedure ResetDevice;
+  procedure ShutterOpen;
+  procedure ShutterClose;
+  procedure StrobeSlow;
+  procedure StrobeMedium;
+  procedure StrobeFast;
+
+  implementation
+
+  var
+    DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    wert:Integer;
+  begin
+    case channel of
+      0..3:
+      begin
+        if not DontRefresh then
+        begin
+          PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+          PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+        end;
+      end;
+      4:
+      begin
+        if not DontRefresh then
+        begin
+          speedslider.position:=get_channel('speed');
+          lblValueSpeed.caption:=levelstr(speedslider.position);
+        end;
+      end;
+      5:
+      begin
+        if not DontRefresh then
+        begin
+          wert:=get_channel('color1');
+          case wert of
+            0..0: colorbox.itemindex:=0;
+            10..10: colorbox.itemindex:=1;
+            21..21: colorbox.itemindex:=2;
+            32..32: colorbox.itemindex:=3;
+            42..42: colorbox.itemindex:=4;
+            53..53: colorbox.itemindex:=5;
+            64..64: colorbox.itemindex:=6;
+            74..74: colorbox.itemindex:=7;
+            85..85: colorbox.itemindex:=8;
+            96..96: colorbox.itemindex:=9;
+            106..106: colorbox.itemindex:=10;
+            117..117: colorbox.itemindex:=11;
+            128..189: colorbox.itemindex:=12;
+            190..193: colorbox.itemindex:=13;
+            194..255: colorbox.itemindex:=14;
+          end;
+        end;
+      end;
+      6:
+      begin
+        if not DontRefresh then
+        begin
+          goboslider.position:=get_channel('gobo1');
+          lblValueGobo.caption:=levelstr(goboslider.position);
+        end;
+      end;
+      7:
+      begin
+        if not DontRefresh then
+        begin
+          goborotslider.position:=get_channel('gobo1rot');
+          lblValueRotGobo.caption:=levelstr(goborotslider.position);
+        end;
+      end;
+      8:
+      begin
+         if not DontRefresh then
+         begin
+           wert:=get_channel('shutter');
+           if (127>=wert) then
+           begin 
+             shutterslider.position:=wert;
+             lblValueshutter.caption:=levelstr(shutterslider.position);
+           end;
+         end;
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure SetShutter;
+  begin
+    DontRefresh:=true;
+    set_channel('SHUTTER',shutterslider.Position,shutterslider.Position,0);
+    lblValueshutter.caption:=levelstr(shutterslider.position);
+  end;
+  procedure SetSpeed;
+  begin
+    DontRefresh:=true;
+    set_channel('SPEED',speedslider.Position,speedslider.Position,0);
+    lblValueSpeed.caption:=levelstr(speedslider.position);
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  var
+    phi,r,x,y:single;
+    pan, tilt, panfine, tiltfine:single;
+  begin
+    if usemhcontrol.checked then
+    begin
+      // Moving-Head-Steuerung (Polarkoordinaten)
+      x:=((PositionXY.Left+(PositionXY.Width div 2)-(fadenkreuz.Width/2))/fadenkreuz.Width)*2;  //-1..0..1
+      y:=((PositionXY.Top+(PositionXY.Height div 2)-(fadenkreuz.Width/2))/fadenkreuz.Height)*2;  //-1..0..1
+      r:=sqrt(x*x+y*y);
+    
+      if (r>0) then
+      begin
+        if (y>=0) then
+          phi:=arccos(x/r)
+        else
+          phi:=6.283185307179586476925286766559-arccos(x/r);
+      end else
+        phi:=64;
+      
+      r:=128-((r/2)*255);
+      phi:=(phi/6.283185307179586476925286766559)*255;
+      if 64>=phi then
+        phi:=phi+191
+      else
+        phi:=phi-64;
+    
+      pan:=255-phi;
+      tilt:=255-r;
+    end else
+    begin
+      // Scannersteuerung (Kartesische Koordinaten)
+      pan:=((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255;
+      tilt:=((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255;
+    end;
+  
+    // Ausgabe
+    if panmirror.checked then
+    begin
+      DontRefresh:=true;
+      set_channel('pan',trunc(255-pan),trunc(255-pan),0);
+      DontRefresh:=true;
+      set_channel('panfine',trunc(frac(255-pan)*255),trunc(frac(255-pan)*255),0);
+    end  else
+    begin
+      DontRefresh:=true;
+      set_channel('pan',trunc(pan),trunc(pan),0);
+      DontRefresh:=true;
+      set_channel('panfine',trunc(frac(pan)*255),trunc(frac(pan)*255),0);
+    end;
+    if tiltmirror.checked then
+    begin
+      DontRefresh:=true;
+      set_channel('tilt',trunc(255-tilt),trunc(255-tilt),0);
+      DontRefresh:=true;
+      set_channel('tiltfine',trunc(frac(255-tilt)*255),trunc(frac(255-tilt)*255),0);
+    end  else
+    begin
+      DontRefresh:=true;
+      set_channel('tilt',trunc(tilt),trunc(tilt),0);
+      DontRefresh:=true;
+      set_channel('tiltfine',trunc(frac(tilt)*255),trunc(frac(tilt)*255),0);
+    end;
+  end;
+  procedure ColorBoxChange;
+  begin
+    DontRefresh:=true;
+    case colorbox.itemindex of
+      0: set_channel('color1', -1, 0, 0);
+      1: set_channel('color1', -1, 10, 0);
+      2: set_channel('color1', -1, 21, 0);
+      3: set_channel('color1', -1, 32, 0);
+      4: set_channel('color1', -1, 42, 0);
+      5: set_channel('color1', -1, 53, 0);
+      6: set_channel('color1', -1, 64, 0);
+      7: set_channel('color1', -1, 74, 0);
+      8: set_channel('color1', -1, 85, 0);
+      9: set_channel('color1', -1, 96, 0);
+      10: set_channel('color1', -1, 106, 0);
+      11: set_channel('color1', -1, 117, 0);
+      12: set_channel('color1', -1, 128, 0);
+      13: set_channel('color1', -1, 190, 0);
+      14: set_channel('color1', -1, 194, 0);
+    end;
+  end;
+  procedure SetGoboRotation;
+  begin
+    DontRefresh:=true;
+    set_channel('GOBO1ROT',goborotslider.Position,goborotslider.Position,0);
+    lblValueRotGobo.caption:=levelstr(goborotslider.position);
+  end;
+  procedure SetGobo;
+  begin
+    DontRefresh:=true;
+    set_channel('GOBO1',goboslider.Position,goboslider.Position,0);
+    lblValueGobo.caption:=levelstr(goboslider.position);
+  end;
+  procedure ResetDevice;
+  begin
+    DontRefresh:=true;
+    set_channel('SHUTTER',128,128,0);
+    lblValueshutter.caption:='Reset';
+  end;
+  procedure ShutterOpen;
+  begin
+    DontRefresh:=true;
+    shutterslider.Position:=64;
+    set_channel('SHUTTER',shutterslider.Position,shutterslider.Position,0);
+    lblValueshutter.caption:=levelstr(shutterslider.position);
+  end;
+  procedure ShutterClose;
+  begin
+    DontRefresh:=true;
+    shutterslider.Position:=0;
+    set_channel('SHUTTER',shutterslider.Position,shutterslider.Position,0);
+    lblValueshutter.caption:=levelstr(shutterslider.position);
+  end;
+  procedure StrobeSlow;
+  begin
+    DontRefresh:=true;
+    shutterslider.Position:=96;
+    set_channel('SHUTTER',shutterslider.Position,shutterslider.Position,0);
+    lblValueshutter.caption:=levelstr(shutterslider.position);
+  end;
+  procedure StrobeMedium;
+  begin
+    DontRefresh:=true;
+    shutterslider.Position:=110;
+    set_channel('SHUTTER',shutterslider.Position,shutterslider.Position,0);
+    lblValueshutter.caption:=levelstr(shutterslider.position);
+  end;
+  procedure StrobeFast;
+  begin
+    DontRefresh:=true;
+    shutterslider.Position:=127;
+    set_channel('SHUTTER',shutterslider.Position,shutterslider.Position,0);
+    lblValueshutter.caption:=levelstr(shutterslider.position);
+  end;
+  end.
+ </code>
+</device>

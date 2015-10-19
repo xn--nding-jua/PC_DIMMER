@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="Mh.gif" initsequence="set 0 127; set 1 0; set 2 127; set 3 0; set 4 0; set 5 128; set 6 255; set 7 255; set 8 255; set 9 0; set 10 128; set 11 128; set 12 255; set 13 0; set 14 0">
+  <information>
+    <name>DSS200 SoftScanner</name>
+    <author>Christian Nöding</author>
+    <vendor>Generic</vendor>
+    <comment>Steuert den per TCP/IP angeschlossenen SoftScanner</comment>
+  </information>
+  <channels>
+    <function channel="0" minvalue="0" maxvalue="255" name="PAN" fade="yes" type="pan"/>
+    <function channel="1" minvalue="0" maxvalue="255" name="PANfine" fade="yes" type="panfine"/>
+    <function channel="2" minvalue="0" maxvalue="255" name="TILT" fade="yes" type="tilt"/>
+    <function channel="3" minvalue="0" maxvalue="255" name="TILTfine" fade="yes" type="tiltfine"/>
+    <function channel="4" minvalue="0" maxvalue="255" name="Gobo" fade="no" type="gobo"/>
+    <function channel="5" minvalue="0" maxvalue="255" name="GoboRotation" fade="no" type="goborot"/>
+    <function channel="6" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+    <function channel="7" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+    <function channel="8" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+    <function channel="9" minvalue="0" maxvalue="255" name="Special 1" fade="no"/>
+    <function channel="10" minvalue="0" maxvalue="255" name="Breite" fade="yes"/>
+    <function channel="11" minvalue="0" maxvalue="255" name="Höhe" fade="yes"/>
+    <function channel="12" minvalue="0" maxvalue="255" name="Dimmer" fade="yes" type="dimmer"/>
+    <function channel="13" minvalue="0" maxvalue="255" name="Special 2" fade="no"/>
+    <function channel="14" minvalue="0" maxvalue="255" name="Special 3" fade="no"/>
+  </channels>
+  <form width="361" height="421">
+    <deviceimage top="0" left="8"/>
+    <devicename top="0" left="48"/>
+    <deviceadress top="16" left="48"/>
+    <position top="40" left="4" height="180" width="180"/>
+    <colorpicker top="40" left="200" height="100" width="150" mode="rgb" layout="1" channel3="8" channel2="7" channel1="6"/>
+    <dropdown top="246" left="8" width="177" name="gobolist" channel="4">
+      <item caption="01 Open" value="0"/>
+      <item caption="02 Circle" value="1"/>
+      <item caption="03 Closed" value="2"/>
+      <item caption="04 Dots in Circle" value="3"/>
+      <item caption="05 Grid" value="4"/>
+      <item caption="06 Pattern" value="5"/>
+      <item caption="07 Turbine" value="6"/>
+      <item caption="08 Churchwindow" value="7"/>
+      <item caption="09 Circlepattern 1" value="8"/>
+      <item caption="10 Circlepattern 2" value="9"/>
+      <item caption="11 Fan" value="10"/>
+      <item caption="12 Big Fan" value="11"/>
+      <item caption="13 Flowers" value="12"/>
+      <item caption="14 Dots in Line" value="13"/>
+      <item caption="15 Klingon" value="14"/>
+      <item caption="16 Lilium" value="15"/>
+      <item caption="17 Fireworks" value="16"/>
+      <item caption="18 Small Dot" value="17"/>
+      <item caption="19 Snowflake" value="18"/>
+      <item caption="20 Spiral" value="19"/>
+      <item caption="21 Star 1" value="20"/>
+      <item caption="22 Star 2" value="21"/>
+      <item caption="23 Sun" value="22"/>
+      <item caption="24 Woolmark" value="23"/>
+      <item caption="25 Stern" value="24"/>
+    </dropdown>
+    <label top="185" left="200" caption="Presets:"/>
+    <dropdown top="200" left="200" width="150" name="presetlist" channel="14">
+      <item caption="0: -= Standard =-" value="0"/>
+      <item caption="1: Sternschnuppe" value="1"/>
+      <item caption="2: Horizontale Verteilung" value="2"/>
+      <item caption="3: Horizonale Explosion" value="3"/>
+      <item caption="4: 3D-Simulation" value="4"/>
+      <item caption="5: Frei" value="5"/>
+      <item caption="6: Frei" value="6"/>
+      <item caption="7: Frei" value="7"/>
+      <item caption="8: Frei" value="8"/>
+      <item caption="9: Frei" value="9"/>
+      <item caption="10: Frei" value="10"/>
+      <item caption="11: Frei" value="11"/>
+      <item caption="12: Frei" value="12"/>
+      <item caption="13: Frei" value="13"/>
+      <item caption="14: Frei" value="14"/>
+      <item caption="15: Frei" value="15"/>
+      <item caption="16: Frei" value="16"/>
+      <item caption="17: Frei" value="17"/>
+      <item caption="18: Frei" value="18"/>
+      <item caption="19: Frei" value="19"/>
+      <item caption="20: Frei" value="20"/>
+      <item caption="21: Frei" value="21"/>
+      <item caption="22: Frei" value="22"/>
+      <item caption="23: Frei" value="23"/>
+      <item caption="24: Frei" value="24"/>
+      <item caption="25: Frei" value="25"/>
+      <item caption="26: Frei" value="26"/>
+      <item caption="27: Frei" value="27"/>
+      <item caption="28: Frei" value="28"/>
+      <item caption="29: Frei" value="29"/>
+      <item caption="30: Frei" value="30"/>
+      <item caption="31: Frei" value="31"/>
+      <item caption="32: Frei" value="32"/>
+      <item caption="33: Frei" value="33"/>
+      <item caption="34: Frei" value="34"/>
+      <item caption="35: Frei" value="35"/>
+      <item caption="36: Frei" value="36"/>
+      <item caption="37: Frei" value="37"/>
+      <item caption="38: Frei" value="38"/>
+      <item caption="39: Frei" value="39"/>
+      <item caption="40: Frei" value="40"/>
+      <item caption="41: Frei" value="41"/>
+      <item caption="42: Frei" value="42"/>
+      <item caption="43: Frei" value="43"/>
+      <item caption="44: Frei" value="44"/>
+      <item caption="45: Frei" value="45"/>
+      <item caption="46: Frei" value="46"/>
+      <item caption="47: Frei" value="47"/>
+      <item caption="48: Frei" value="48"/>
+      <item caption="49: Frei" value="49"/>
+      <item caption="50: Frei" value="50"/>
+      <item caption="51: Frei" value="51"/>
+      <item caption="52: Frei" value="52"/>
+      <item caption="53: Frei" value="53"/>
+      <item caption="54: Frei" value="54"/>
+      <item caption="55: Frei" value="55"/>
+      <item caption="56: Frei" value="56"/>
+      <item caption="57: Frei" value="57"/>
+      <item caption="58: Frei" value="58"/>
+      <item caption="59: Frei" value="59"/>
+      <item caption="60: Frei" value="60"/>
+      <item caption="61: Frei" value="61"/>
+      <item caption="62: Frei" value="62"/>
+      <item caption="63: Frei" value="63"/>
+      <item caption="64: Frei" value="64"/>
+      <item caption="65: Frei" value="65"/>
+      <item caption="66: Frei" value="66"/>
+      <item caption="67: Frei" value="67"/>
+      <item caption="68: Frei" value="68"/>
+      <item caption="69: Frei" value="69"/>
+      <item caption="70: Frei" value="70"/>
+      <item caption="71: Frei" value="71"/>
+      <item caption="72: Frei" value="72"/>
+      <item caption="73: Frei" value="73"/>
+      <item caption="74: Frei" value="74"/>
+      <item caption="75: Frei" value="75"/>
+      <item caption="76: Frei" value="76"/>
+      <item caption="77: Frei" value="77"/>
+      <item caption="78: Frei" value="78"/>
+      <item caption="79: Frei" value="79"/>
+      <item caption="80: Frei" value="80"/>
+      <item caption="81: Frei" value="81"/>
+      <item caption="82: Frei" value="82"/>
+      <item caption="83: Frei" value="83"/>
+      <item caption="84: Frei" value="84"/>
+      <item caption="85: Frei" value="85"/>
+      <item caption="86: Frei" value="86"/>
+      <item caption="87: Frei" value="87"/>
+      <item caption="88: Frei" value="88"/>
+      <item caption="89: Frei" value="89"/>
+      <item caption="90: Frei" value="90"/>
+      <item caption="91: Frei" value="91"/>
+      <item caption="92: Frei" value="92"/>
+      <item caption="93: Frei" value="93"/>
+      <item caption="94: Frei" value="94"/>
+      <item caption="95: Frei" value="95"/>
+      <item caption="96: Frei" value="96"/>
+      <item caption="97: Frei" value="97"/>
+      <item caption="98: Frei" value="98"/>
+      <item caption="99: Frei" value="99"/>
+      <item caption="100: Frei" value="100"/>
+      <item caption="101: Frei" value="101"/>
+      <item caption="102: Frei" value="102"/>
+      <item caption="103: Frei" value="103"/>
+      <item caption="104: Frei" value="104"/>
+      <item caption="105: Frei" value="105"/>
+      <item caption="106: Frei" value="106"/>
+      <item caption="107: Frei" value="107"/>
+      <item caption="108: Frei" value="108"/>
+      <item caption="109: Frei" value="109"/>
+      <item caption="110: Frei" value="110"/>
+      <item caption="111: Frei" value="111"/>
+      <item caption="112: Frei" value="112"/>
+      <item caption="113: Frei" value="113"/>
+      <item caption="114: Frei" value="114"/>
+      <item caption="115: Frei" value="115"/>
+      <item caption="116: Frei" value="116"/>
+      <item caption="117: Frei" value="117"/>
+      <item caption="118: Frei" value="118"/>
+      <item caption="119: Frei" value="119"/>
+      <item caption="120: Frei" value="120"/>
+      <item caption="121: Frei" value="121"/>
+      <item caption="122: Frei" value="122"/>
+      <item caption="123: Frei" value="123"/>
+      <item caption="124: Frei" value="124"/>
+      <item caption="125: Frei" value="125"/>
+      <item caption="126: Frei" value="126"/>
+      <item caption="127: Frei" value="127"/>
+      <item caption="128: Frei" value="128"/>
+      <item caption="129: Frei" value="129"/>
+      <item caption="130: Frei" value="130"/>
+      <item caption="131: Frei" value="131"/>
+      <item caption="132: Frei" value="132"/>
+      <item caption="133: Frei" value="133"/>
+      <item caption="134: Frei" value="134"/>
+      <item caption="135: Frei" value="135"/>
+      <item caption="136: Frei" value="136"/>
+      <item caption="137: Frei" value="137"/>
+      <item caption="138: Frei" value="138"/>
+      <item caption="139: Frei" value="139"/>
+      <item caption="140: Frei" value="140"/>
+      <item caption="141: Frei" value="141"/>
+      <item caption="142: Frei" value="142"/>
+      <item caption="143: Frei" value="143"/>
+      <item caption="144: Frei" value="144"/>
+      <item caption="145: Frei" value="145"/>
+      <item caption="146: Frei" value="146"/>
+      <item caption="147: Frei" value="147"/>
+      <item caption="148: Frei" value="148"/>
+      <item caption="149: Frei" value="149"/>
+      <item caption="150: Frei" value="150"/>
+      <item caption="151: Frei" value="151"/>
+      <item caption="152: Frei" value="152"/>
+      <item caption="153: Frei" value="153"/>
+      <item caption="154: Frei" value="154"/>
+      <item caption="155: Frei" value="155"/>
+      <item caption="156: Frei" value="156"/>
+      <item caption="157: Frei" value="157"/>
+      <item caption="158: Frei" value="158"/>
+      <item caption="159: Frei" value="159"/>
+      <item caption="160: Frei" value="160"/>
+      <item caption="161: Frei" value="161"/>
+      <item caption="162: Frei" value="162"/>
+      <item caption="163: Frei" value="163"/>
+      <item caption="164: Frei" value="164"/>
+      <item caption="165: Frei" value="165"/>
+      <item caption="166: Frei" value="166"/>
+      <item caption="167: Frei" value="167"/>
+      <item caption="168: Frei" value="168"/>
+      <item caption="169: Frei" value="169"/>
+      <item caption="170: Frei" value="170"/>
+      <item caption="171: Frei" value="171"/>
+      <item caption="172: Frei" value="172"/>
+      <item caption="173: Frei" value="173"/>
+      <item caption="174: Frei" value="174"/>
+      <item caption="175: Frei" value="175"/>
+      <item caption="176: Frei" value="176"/>
+      <item caption="177: Frei" value="177"/>
+      <item caption="178: Frei" value="178"/>
+      <item caption="179: Frei" value="179"/>
+      <item caption="180: Frei" value="180"/>
+      <item caption="181: Frei" value="181"/>
+      <item caption="182: Frei" value="182"/>
+      <item caption="183: Frei" value="183"/>
+      <item caption="184: Frei" value="184"/>
+      <item caption="185: Frei" value="185"/>
+      <item caption="186: Frei" value="186"/>
+      <item caption="187: Frei" value="187"/>
+      <item caption="188: Frei" value="188"/>
+      <item caption="189: Frei" value="189"/>
+      <item caption="190: Frei" value="190"/>
+      <item caption="191: Frei" value="191"/>
+      <item caption="192: Frei" value="192"/>
+      <item caption="193: Frei" value="193"/>
+      <item caption="194: Frei" value="194"/>
+      <item caption="195: Frei" value="195"/>
+      <item caption="196: Frei" value="196"/>
+      <item caption="197: Frei" value="197"/>
+      <item caption="198: Frei" value="198"/>
+      <item caption="199: Frei" value="199"/>
+      <item caption="200: Frei" value="200"/>
+      <item caption="201: Frei" value="201"/>
+      <item caption="202: Frei" value="202"/>
+      <item caption="203: Frei" value="203"/>
+      <item caption="204: Frei" value="204"/>
+      <item caption="205: Frei" value="205"/>
+      <item caption="206: Frei" value="206"/>
+      <item caption="207: Frei" value="207"/>
+      <item caption="208: Frei" value="208"/>
+      <item caption="209: Frei" value="209"/>
+      <item caption="210: Frei" value="210"/>
+      <item caption="211: Frei" value="211"/>
+      <item caption="212: Frei" value="212"/>
+      <item caption="213: Frei" value="213"/>
+      <item caption="214: Frei" value="214"/>
+      <item caption="215: Frei" value="215"/>
+      <item caption="216: Frei" value="216"/>
+      <item caption="217: Frei" value="217"/>
+      <item caption="218: Frei" value="218"/>
+      <item caption="219: Frei" value="219"/>
+      <item caption="220: Frei" value="220"/>
+      <item caption="221: Frei" value="221"/>
+      <item caption="222: Frei" value="222"/>
+      <item caption="223: Frei" value="223"/>
+      <item caption="224: Frei" value="224"/>
+      <item caption="225: Frei" value="225"/>
+      <item caption="226: Frei" value="226"/>
+      <item caption="227: Frei" value="227"/>
+      <item caption="228: Frei" value="228"/>
+      <item caption="229: Frei" value="229"/>
+      <item caption="230: Frei" value="230"/>
+      <item caption="231: Frei" value="231"/>
+      <item caption="232: Frei" value="232"/>
+      <item caption="233: Frei" value="233"/>
+      <item caption="234: Frei" value="234"/>
+      <item caption="235: Frei" value="235"/>
+      <item caption="236: Frei" value="236"/>
+      <item caption="237: Frei" value="237"/>
+      <item caption="238: Frei" value="238"/>
+      <item caption="239: Frei" value="239"/>
+      <item caption="240: Frei" value="240"/>
+      <item caption="241: Frei" value="241"/>
+      <item caption="242: Frei" value="242"/>
+      <item caption="243: Frei" value="243"/>
+      <item caption="244: Frei" value="244"/>
+      <item caption="245: Frei" value="245"/>
+      <item caption="246: Frei" value="246"/>
+      <item caption="247: Frei" value="247"/>
+      <item caption="248: Frei" value="248"/>
+      <item caption="249: Frei" value="249"/>
+      <item caption="250: Frei" value="250"/>
+      <item caption="251: Frei" value="251"/>
+      <item caption="252: Frei" value="252"/>
+      <item caption="253: Frei" value="253"/>
+      <item caption="254: Frei" value="254"/>
+      <item caption="255: Frei" value="255"/>
+    </dropdown>
+    <label top="232" left="8" caption="Gobos:"/>
+    <slider top="248" left="192" height="33" width="161" startvalue="0" endvalue="255" channel="5" tickfreq="32"/>
+    <label top="232" left="200" caption="Gobo-Rotation:"/>
+    <label top="280" left="8" caption="Special:"/>
+    <label top="280" left="200" caption="Dimmer:"/>
+    <slider top="296" left="192" height="33" width="161" startvalue="0" endvalue="255" channel="12" tickfreq="32"/>
+    <dropdown top="296" left="8" width="177" channel="9">
+      <item caption="Normale Darstellung" value="0"/>
+      <item caption="Partikelsystem" value="10"/>
+    </dropdown>
+    <label top="328" left="8" caption="Breite:"/>
+    <label top="328" left="200" caption="Höhe:"/>
+    <slider top="344" left="8" height="33" width="169" startvalue="0" endvalue="255" channel="10"/>
+    <slider top="344" left="192" height="33" width="161" startvalue="0" endvalue="255" channel="11"/>
+    <command top="384" left="8" width="128" height="30" caption="Scanner anzeigen" upsequence="set 13 100;"/>
+    <command top="384" left="144" width="80" height="30" caption="Blackout" upsequence="set 13 0;"/>
+    <command top="384" left="232" width="120" height="30" caption="Scanner ausblenden" upsequence="set 13 255;"/>
+  </form>
+  <help>Über ein Programmplugin kann per TCP/IP ein SoftScanner an DMXControl angeschlossen werden. Somit kann über einen Beamer oder eine Projektionswand interessante Figuren erzeugt werden.
+
+Dieses DDF ermöglicht sämtliche Einstellungen des SoftScanner.</help>
+</device>

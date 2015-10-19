@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\color150dmx.png">
+ <information id="PC_DIMMER">
+ <name>AL28-05 R/G</name>
+ <vendor>Mc Crypt</vendor>
+ <author>Pit Regener</author>
+ <description></description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Linienart" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Ablenkung" fade="yes" type="special2"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" />
+ <form width="233" height="305">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <slider name="SPECIAL1slider0" top="96" left="8" width="217" height="17" action="SPECIAL1change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SPECIAL2slider1" top="136" left="8" width="217" height="17" action="SPECIAL2change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SPECIAL1slider0" top="96" left="8" width="217" height="17" action="SPECIAL1change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SPECIAL2slider1" top="136" left="8" width="217" height="17" action="SPECIAL2change" startvalue="0" endvalue="255" default="0"/>
+  <label name="SPECIAL1lbl0" top="80" left="8" width="40" height="13" caption="Linienart"/>
+  <label name="SPECIAL2lbl1" top="120" left="8" width="51" height="13" caption="Ablenkung"/>
+  <label name="SPECIAL1lbl0" top="80" left="8" width="40" height="13" caption="Linienart"/>
+  <label name="SPECIAL2lbl1" top="120" left="8" width="51" height="13" caption="Ablenkung"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure SPECIAL1change;
+  procedure SPECIAL2change;
+  procedure SPECIAL1change;
+  procedure SPECIAL2change;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        SPECIAL1slider0.position:=get_channel('SPECIAL1')
+      end;
+      1:
+      begin
+        SPECIAL2slider1.position:=get_channel('SPECIAL2')
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure SPECIAL1change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL1',-1,SPECIAL1slider0.position,0);
+  end;
+  procedure SPECIAL2change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL2',-1,SPECIAL2slider1.position,0);
+  end;
+  procedure SPECIAL1change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL1',-1,SPECIAL1slider0.position,0);
+  end;
+  procedure SPECIAL2change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL2',-1,SPECIAL2slider1.position,0);
+  end;
+  end.
+ </code>
+</device>

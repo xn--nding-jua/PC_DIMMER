@@ -1,0 +1,213 @@
+unit About;
+
+interface
+
+uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
+  Buttons, ExtCtrls, ComCtrls, CHLabel, jpeg, JvComponent, JvComputerInfoEx,
+  JvExControls, JvGradient, JvComponentBase, JvMRUList, JvAnimatedImage,
+  JvGIFCtrl, JvScrollText;
+
+type
+  TAboutBox = class(TForm)
+    ProgramIcon:     TImage;
+    Version:         TLabel;
+    Copyright:       TLabel;
+    OKButton:        TButton;
+    Image1:          TImage;
+    Label8:          TLabel;
+    ramauslastung_progressbar: TProgressBar;
+    ramauslastung_label: TLabel;
+    RAMAnzeigeTimer: TTimer;
+    CHLabel1:        TCHLabel;
+    Label12:         TLabel;
+    Label16:         TLabel;
+    JvComputerInfoEx1: TJvComputerInfoEx;
+    Panel2:          TPanel;
+    Label1:          TLabel;
+    Label2:          TLabel;
+    Label3:          TLabel;
+    windowsversion:  TLabel;
+    Label11:         TLabel;
+    Label13:         TLabel;
+    Label14:         TLabel;
+    Label15:         TLabel;
+    Panel1:          TPanel;
+    Panel3:          TPanel;
+    JvMruList1:      TJvMruList;
+    JvGradient1:     TJvGradient;
+    Label4:          TLabel;
+    Label5:          TLabel;
+    Label6:          TLabel;
+    Label7:          TLabel;
+    JvGIFAnimator2:  TJvGIFAnimator;
+    Scrolltext:      TPanel;
+    JvScrolltext:    TJvScrollText;
+    Shape1:          TShape;
+    Label9:          TLabel;
+    Label10:         TLabel;
+    Label17:         TLabel;
+    Label18:         TLabel;
+    Label19:         TLabel;
+    Button1:         TButton;
+    procedure OKButtonClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure RAMAnzeigeonTimer(Sender: TObject);
+    procedure FormHide(Sender: TObject);
+    procedure Label16MouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+    procedure Label2Click(Sender: TObject);
+    procedure Label3Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    workingdirectory: string;
+  end;
+
+var
+  AboutBox: TAboutBox;
+
+implementation
+
+uses PCDIMMER, splashscreen;
+
+{$R *.DFM}
+
+function RDTSC: int64; assembler;
+asm
+  RDTSC  // result Int64 in EAX and EDX
+end;
+
+procedure TAboutBox.OKButtonClick(Sender: TObject);
+begin
+  panel1.Visible := True;
+end;
+
+procedure TAboutBox.FormShow(Sender: TObject);
+var
+  x, y: real;
+  memory: TMemoryStatus;
+  Auslastung: integer;
+  Text: string;
+  i: integer;
+begin
+  Label5.Caption := IntToStr(chan) + ' Kanäle';
+  Label7.Caption := IntToStr(mainform.LastChan) + ' Kanäle';
+  i := 0;
+  repeat
+    i := i + 1;
+  until JvComputerInfoEx1.CPU.Name[i] <> ' ';
+  label9.Caption := copy(JvComputerInfoEx1.CPU.Name, i, 32);
+
+  label10.Caption := 'Cores: ' + IntToStr(JvComputerInfoEx1.CPU.PhysicalCore);
+  label17.Caption := 'Frequenz: ' + IntToStr(JvComputerInfoEx1.CPU.NormFreq) + ' MHz';
+  if JvComputerInfoEx1.CPU.Is64Bits then
+    Text := '64bit '
+  else
+    Text := '32bit ';
+  if JvComputerInfoEx1.CPU.MMX then
+    Text := Text + 'MMX ';
+  if JvComputerInfoEx1.CPU._3DNow then
+    Text := Text + '3DNow ';
+  if JvComputerInfoEx1.CPU.SSE = vSSE1 then
+    Text := Text + 'SSE ';
+  if JvComputerInfoEx1.CPU.SSE = vSSE2 then
+    Text := Text + 'SSE2 ';
+  if JvComputerInfoEx1.CPU.SSE = vSSE3 then
+    Text := Text + 'SSE3 ';
+  if JvComputerInfoEx1.CPU.SSE = vSSSE3 then
+    Text := Text + 'SSSE3 ';
+  if JvComputerInfoEx1.CPU.HyperThreadingTechnology then
+    Text := Text + 'HT';
+  label18.Caption := Text;
+
+  memory.dwLength := SizeOf(memory);
+  GlobalMemoryStatus(memory);
+  x := memory.dwTotalPhys - memory.dwAvailPhys;
+  y := memory.dwTotalPhys;
+  Auslastung := round(((x / y) * 100));
+  ramauslastung_label.Caption := 'Speicherauslastung: ' + IntToStr(Auslastung) + '%';
+  ramauslastung_progressbar.Position := Auslastung;
+  ramanzeigetimer.Enabled := True;
+
+  copyright.Visible := True;
+  chlabel1.Visible := True;
+  windowsversion.Visible := True;
+  panel3.Visible  := True;
+  panel1.Visible  := True;
+  label11.Visible := True;
+  label13.Visible := True;
+  label14.Visible := True;
+  label15.Visible := True;
+
+  Scrolltext.Visible := False;
+  Label16MouseMove(nil, [], 0, 0);
+end;
+
+procedure TAboutBox.RAMAnzeigeonTimer(Sender: TObject);
+var
+  x, y: real;
+  memory: TMemoryStatus;
+  Auslastung: integer;
+begin
+  memory.dwLength := SizeOf(memory);
+  GlobalMemoryStatus(memory);
+  x := memory.dwTotalPhys - memory.dwAvailPhys;
+  y := memory.dwTotalPhys;
+  Auslastung := round(((x / y) * 100));
+  ramauslastung_label.Caption := 'Speicherauslastung: ' + IntToStr(Auslastung) + '%';
+  ramauslastung_progressbar.Position := Auslastung;
+
+  Label16MouseMove(nil, [], 0, 0);
+end;
+
+procedure TAboutBox.FormHide(Sender: TObject);
+begin
+  ramanzeigetimer.Enabled := False;
+end;
+
+procedure TAboutBox.Label16MouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+var
+  t, h, min, s, ms: integer;
+begin
+  t  := round(RDTSC / (JvComputerInfoEx1.CPU.RawFreq * 1000));
+  h  := t div 3600000;
+  t  := t mod 3600000;
+  min := t div 60000;
+  t  := t mod 60000;
+  s  := t div 1000;
+  t  := t mod 1000;
+  ms := t;
+  label16.Caption := IntToStr(h) + 'h ' + IntToStr(min) + 'min ' + IntToStr(s) + 's ' + IntToStr(ms) + 'ms';
+end;
+
+procedure TAboutBox.Label2Click(Sender: TObject);
+begin
+  Scrolltext.Visible := False;
+end;
+
+procedure TAboutBox.Label3Click(Sender: TObject);
+begin
+  JvScrolltext.Active := True;
+  Scrolltext.Left := 188;
+  Scrolltext.Visible := True;
+end;
+
+procedure TAboutBox.Button1Click(Sender: TObject);
+begin
+  //  splash:=tsplash.Create(Application,true);
+  splash.versioninfo := 'Version ' + Mainform.GetFileVersion(ParamStr(0)) + ' (' + mainform.osversion + ')';
+  splash.captioninfo := 'Christian Nöding';
+  Splash.AddText('PC_DIMMER2008 v' + Mainform.GetFileVersion(ParamStr(0)));
+  Splash.AddText(mainform.osversion);
+  Splash.AddText('');
+  Splash.AddText('Ich danke meiner Frau für Ihr Verständnis');
+  Splash.AddText('wegen sehr vieler Stunden vor dem Computer :-)');
+  Splash.Button1.Visible := True;
+  Splash.Show;
+  splash.BlendValue := 255;
+  //  splash.Timer1.Enabled:=true;
+  splash.Timer1Timer(nil);
+end;
+
+end.

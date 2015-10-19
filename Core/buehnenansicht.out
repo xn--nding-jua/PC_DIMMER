@@ -1,0 +1,3486 @@
+unit buehnenansicht;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  Dialogs, ComCtrls, StdCtrls, ExtCtrls, Mask, Menus, Buttons, Registry,
+  JvComponent, JvZlibMultiple, JvExExtCtrls, Printers, JvOfficeColorPanel,
+  jpeg, pngimage, JvComponentBase, JvExtComponent, JvPanel, JvAppStorage,
+  JvAppXMLStorage, ddfwindowfrm;
+
+const
+  {$I GlobaleKonstanten.inc}
+
+type
+  // Thread für Ansichtaktualisierung deklarieren
+  TUpdateEvent = procedure() of object;
+
+  TUpdateThread = class(TThread)
+  private
+    FUpdateEvent: TUpdateEvent;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(UpdateEvent: TUpdateEvent);
+  end;
+
+type
+  Tgrafischebuehnenansicht = class(TForm)
+    stage:        TImage;
+    Button5:      TButton;
+    PageControl1: TPageControl;
+    TabSheet1:    TTabSheet;
+    Panel1:       TPanel;
+    Button6:      TButton;
+    Bevel2:       TBevel;
+    Bevel3:       TBevel;
+    OpenDialog1:  TOpenDialog;
+    SaveDialog1:  TSaveDialog;
+    Referenzbild: TImage;
+    Label3:       TLabel;
+    zoom:         TComboBox;
+    Referenzbild2: TImage;
+    CheckBox1:    TCheckBox;
+    PopupMenu1:   TPopupMenu;
+    Panelausblenden1: TMenuItem;
+    N1:           TMenuItem;
+    ffnen1:       TMenuItem;
+    Speichern1:   TMenuItem;
+    Zurcksetzen1: TMenuItem;
+    Schlieen1:    TMenuItem;
+    N2:           TMenuItem;
+    Hintergrundndern1: TMenuItem;
+    extanzeigen1: TMenuItem;
+    Compress:     TJvZlibMultiple;
+    TabSheet3:    TTabSheet;
+    GroupBox1:    TGroupBox;
+    CheckBox3:    TCheckBox;
+    BhnenansichtalsBilddateispeichern1: TMenuItem;
+    Panel2:       TPanel;
+    PaintBox1:    TPaintBox;
+    Bhnenansichtausdrucken1: TMenuItem;
+    Button2:      TButton;
+    Shape1:       TShape;
+    Label1:       TLabel;
+    Label12:      TLabel;
+    Label13:      TLabel;
+    Bevel5:       TBevel;
+    Label15:      TLabel;
+    Label16:      TLabel;
+    Bevel6:       TBevel;
+    Label17:      TLabel;
+    Label18:      TLabel;
+    Label19:      TLabel;
+    Bevel7:       TBevel;
+    Label20:      TLabel;
+    Label21:      TLabel;
+    Bevel8:       TBevel;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    Bevel9:       TBevel;
+    NeuesGerthinzufgen1: TMenuItem;
+    N3:           TMenuItem;
+    devicepicture_popup: TPopupMenu;
+    Gertebildndern1: TMenuItem;
+    Gertlschen1:  TMenuItem;
+    Kanalnummerndern1: TMenuItem;
+    N4:           TMenuItem;
+    Kanalnamenndern1: TMenuItem;
+    colorbox1:    TJvOfficeColorPanel;
+    Label14:      TLabel;
+    CheckBox2:    TCheckBox;
+    GroeFarbanzeige1: TMenuItem;
+    CheckBox4:    TCheckBox;
+    Label22:      TLabel;
+    TrackBar1:    TTrackBar;
+    RotateBtn:    TButton;
+    Bevel10:      TBevel;
+    Bevel11:      TBevel;
+    Label23:      TLabel;
+    FlipHorBtn:   TButton;
+    FlipVerBtn:   TButton;
+    procedure UpdateLevels();
+    procedure FormCreate(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure SpeedButton4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure SpeedButton3Click(Sender: TObject);
+    procedure zoomChange(Sender: TObject);
+    procedure CheckBox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure Panelausblenden1Click(Sender: TObject);
+    procedure FormHide(Sender: TObject);
+    procedure extanzeigen1Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
+    procedure stageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure stageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+    procedure stageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure BhnenansichtalsBilddateispeichern1Click(Sender: TObject);
+    procedure Bhnenansichtausdrucken1Click(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure MSGOpen;
+    procedure openscene(scenefilename: string);
+    procedure savescene(scenefilename: string);
+    procedure createdevices(i: integer);
+    procedure createdeviceicon(ID: TGUID);
+    procedure deletedeviceicon(ID: TGUID);
+    procedure deletealldeviceicon;
+    procedure deletedevice(i: integer);
+    procedure Gertebildndern1Click(Sender: TObject);
+    procedure Gertlschen1Click(Sender: TObject);
+    procedure Kanalnamenndern1Click(Sender: TObject);
+    procedure Kanalnummerndern1Click(Sender: TObject);
+    procedure colorbox1ColorChange(Sender: TObject);
+    procedure colorbox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure CheckBox2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure GroeFarbanzeige1Click(Sender: TObject);
+    procedure NewPanel;
+    procedure CheckBox4MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure Trackbar1Change(Sender: TObject);
+    procedure searchpicture(Device: integer);
+    procedure device_searchpicture(Device: integer; DeviceInStageView: integer);
+    procedure RotateBtnClick(Sender: TObject);
+    procedure SmoothRotate(var aPng: TPNGObject; Angle: extended; Device: integer);
+    procedure SmoothRotateDevice(var aPng: TPNGObject; Angle: extended; Device: integer);
+    procedure FlipHorBtnClick(Sender: TObject);
+    procedure FlipVerBtnClick(Sender: TObject);
+    procedure VertikalSpiegeln(Bitmap: TBitmap; Device: integer);
+    procedure HorizontalSpiegeln(const Bitmap: TBitmap; Device: integer);
+    procedure VertikalSpiegelnDevice(Bitmap: TBitmap; Device: integer);
+    procedure HorizontalSpiegelnDevice(const Bitmap: TBitmap; Device: integer);
+    procedure CreateParams(var Params: TCreateParams); override;
+    procedure RefreshStageView;
+
+    procedure device_pictureMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+    procedure device_progressMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+    procedure device_pictureMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure DeviceLabelMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure DeviceNumberMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure DeviceColorMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+
+    procedure device_device_pictureMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+    procedure device_device_progressMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+    procedure device_device_pictureMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure device_DeviceLabelMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure device_DeviceNumberMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure device_DeviceColorMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    //    procedure loadDDF(ID:TGUID);
+    //    procedure deleteDDFwindow;
+  private
+    { Private-Deklarationen }
+    startingup: boolean;
+  public
+    { Public-Deklarationen }
+    screentimeronline:    boolean;
+    aktualisieren:        boolean;
+    deviceaktualisieren:  boolean;
+    aktualisierechannel:  array[1..chan] of boolean;
+    minonedeviceselected: boolean;
+
+    device_picture:    array of TImage;
+    device_progress:   array of TProgressBar;
+    device_label:      array of TLabel;
+    device_number:     array of TLabel;
+    device_selected:   array of boolean;
+    device_colorshape: array of TShape;
+
+    device_device_picture:    array of TImage;
+    device_device_progress:   array of TProgressBar;
+    device_device_label:      array of TLabel;
+    device_device_number:     array of TLabel;
+    device_device_selected:   array of boolean;
+    device_device_colorshape: array of TShape;
+    device_device_ID:         array of TGUID;
+    device_device_aktualisieren: array of boolean;
+
+    Button:         TButton;
+    scrolling:      boolean;
+    x1, y1, x2, y2: integer;
+    Filestream:     TFileStream;
+    actualdevice:   word;
+    filename, filepath: string;
+    procedure MSGSave;
+  end;
+
+procedure LockWindow(const Handle: HWND);
+procedure UnLockWindow(const Handle: HWND);
+
+var
+  grafischebuehnenansicht: Tgrafischebuehnenansicht;
+
+implementation
+
+uses PCDIMMER, geraetesteuerungfrm;
+
+{$R *.dfm}
+
+procedure Tgrafischebuehnenansicht.VertikalSpiegeln(Bitmap: TBitmap; Device: integer);
+var
+  j, w: integer;
+  help: TBitmap;
+begin
+  mainform.buehnenansichtdevices[Device].pictureflipver := not mainform.buehnenansichtdevices[Device].pictureflipver;
+  help := TBitmap.Create;
+  try
+    help.Width := Bitmap.Width;
+    help.Height := Bitmap.Height;
+    help.PixelFormat := Bitmap.PixelFormat;
+    w := Bitmap.Width * sizeof(TRGBTriple);
+    for j := 0 to Bitmap.Height - 1 do
+      move(Bitmap.Scanline[j]^, Help.Scanline[Bitmap.Height - 1 - j]^, w);
+    Bitmap.Assign(help);
+  finally
+    help.Free;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.HorizontalSpiegeln(const Bitmap: TBitmap; Device: integer);
+type
+  TRGBArray = array[0..0] of TRGBTriple;
+var
+  i, j, w: integer;
+  rowin, rowout: ^TRGBArray;
+begin
+  mainform.buehnenansichtdevices[Device].picturefliphor := not mainform.buehnenansichtdevices[Device].picturefliphor;
+  w := bitmap.Width * sizeof(TRGBTriple);
+  Getmem(rowIn, w);
+  try
+    for j := 0 to Bitmap.Height - 1 do
+    begin
+      move(Bitmap.Scanline[j]^, rowin^, w);
+      rowout := Bitmap.Scanline[j];
+      for i := 0 to Bitmap.Width - 1 do
+        rowout[i] := rowin[Bitmap.Width - 1 - i];
+    end;
+    bitmap.Assign(bitmap);
+  finally
+    Freemem(rowin);
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.VertikalSpiegelnDevice(Bitmap: TBitmap; Device: integer);
+var
+  j, w: integer;
+  help: TBitmap;
+begin
+  mainform.devices[Device].pictureflipver := not mainform.devices[Device].pictureflipver;
+  help := TBitmap.Create;
+  try
+    help.Width := Bitmap.Width;
+    help.Height := Bitmap.Height;
+    help.PixelFormat := Bitmap.PixelFormat;
+    w := Bitmap.Width * sizeof(TRGBTriple);
+    for j := 0 to Bitmap.Height - 1 do
+      move(Bitmap.Scanline[j]^, Help.Scanline[Bitmap.Height - 1 - j]^, w);
+    Bitmap.Assign(help);
+  finally
+    help.Free;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.HorizontalSpiegelnDevice(const Bitmap: TBitmap; Device: integer);
+type
+  TRGBArray = array[0..0] of TRGBTriple;
+var
+  i, j, w: integer;
+  rowin, rowout: ^TRGBArray;
+begin
+  mainform.devices[Device].picturefliphor := not mainform.devices[Device].picturefliphor;
+  w := bitmap.Width * sizeof(TRGBTriple);
+  Getmem(rowIn, w);
+  try
+    for j := 0 to Bitmap.Height - 1 do
+    begin
+      move(Bitmap.Scanline[j]^, rowin^, w);
+      rowout := Bitmap.Scanline[j];
+      for i := 0 to Bitmap.Width - 1 do
+        rowout[i] := rowin[Bitmap.Width - 1 - i];
+    end;
+    bitmap.Assign(bitmap);
+  finally
+    Freemem(rowin);
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.SmoothRotate(var aPng: TPNGObject; Angle: extended; Device: integer);
+
+{Supporting functions}
+  function TrimInt(i, Min, Max: integer): integer;
+  begin
+    if i > Max then
+      Result := Max
+    else if i < Min then
+      Result := Min
+    else
+      Result := i;
+  end;
+
+  function IntToByte(i: integer): byte;
+  begin
+    if i > 255 then
+      Result := 255
+    else if i < 0 then
+      Result := 0
+    else
+      Result := i;
+  end;
+
+  function Min(A, B: double): double;
+  begin
+    if A < B then
+      Result := A
+    else
+      Result := B;
+  end;
+
+  function Max(A, B: double): double;
+  begin
+    if A > B then
+      Result := A
+    else
+      Result := B;
+  end;
+
+  function Ceil(A: double): integer;
+  begin
+    Result := integer(Trunc(A));
+    if Frac(A) > 0 then
+      Inc(Result);
+  end;
+
+  {Calculates the png new size}
+  function newsize: tsize;
+  var
+    fRadians: extended;
+    fCosine, fSine: double;
+    fPoint1x, fPoint1y, fPoint2x, fPoint2y, fPoint3x, fPoint3y: double;
+    fMinx, fMiny, fMaxx, fMaxy: double;
+  begin
+    {Convert degrees to radians}
+    fRadians := (2 * PI * Angle) / 360;
+
+    fCosine := abs(cos(fRadians));
+    fSine := abs(sin(fRadians));
+
+    fPoint1x := (-apng.Height * fSine);
+    fPoint1y := (apng.Height * fCosine);
+    fPoint2x := (apng.Width * fCosine - apng.Height * fSine);
+    fPoint2y := (apng.Height * fCosine + apng.Width * fSine);
+    fPoint3x := (apng.Width * fCosine);
+    fPoint3y := (apng.Width * fSine);
+
+    fMinx := min(0, min(fPoint1x, min(fPoint2x, fPoint3x)));
+    fMiny := min(0, min(fPoint1y, min(fPoint2y, fPoint3y)));
+    fMaxx := max(fPoint1x, max(fPoint2x, fPoint3x));
+    fMaxy := max(fPoint1y, max(fPoint2y, fPoint3y));
+
+    Result.cx := ceil(fMaxx - fMinx);
+    Result.cy := ceil(fMaxy - fMiny);
+  end;
+
+type
+  TFColor = record
+    b, g, r: byte
+  end;
+var
+  Top, Bottom, Left, Right, eww, nsw, fx, fy, wx, wy: extended;
+  cAngle, sAngle: double;
+  xDiff, yDiff, ifx, ify, px, py, ix, iy, x, y, cx, cy: integer;
+  nw, ne, sw, se: TFColor;
+  anw, ane, asw, ase: byte;
+  P1, P2, P3: Pbytearray;
+  A1, A2, A3: pbytearray;
+  dst: TPNGObject;
+  IsAlpha: boolean;
+  new_colortype: integer;
+begin
+  if mainform.buehnenansichtdevices[Device].pictureangle < 3 then
+    mainform.buehnenansichtdevices[Device].pictureangle := mainform.buehnenansichtdevices[Device].pictureangle + 1
+  else
+    mainform.buehnenansichtdevices[Device].pictureangle := 0;
+
+  {Only allows RGB and RGBALPHA images}
+  if not (apng.Header.ColorType in [COLOR_RGBALPHA, COLOR_RGB]) then
+    raise Exception.Create('Only COLOR_RGBALPHA and COLOR_RGB formats' +
+      ' are supported');
+  IsAlpha := apng.Header.ColorType in [COLOR_RGBALPHA];
+  if IsAlpha then
+    new_colortype := COLOR_RGBALPHA
+  else
+    new_colortype := COLOR_RGB;
+
+  {Creates a copy}
+  dst := tpngobject.Create;
+  with newsize do
+    dst.createblank(new_colortype, 8, cx, cy);
+  cx := dst.Width div 2;
+  cy := dst.Height div 2;
+
+  {Gather some variables}
+  Angle  := angle;
+  Angle  := -Angle * Pi / 180;
+  sAngle := Sin(Angle);
+  cAngle := Cos(Angle);
+  xDiff  := (Dst.Width - apng.Width) div 2;
+  yDiff  := (Dst.Height - apng.Height) div 2;
+
+  {Iterates over each line}
+  for y := 0 to Dst.Height - 1 do
+  begin
+    P3 := Dst.scanline[y];
+    if IsAlpha then
+      A3 := Dst.AlphaScanline[y];
+    py := 2 * (y - cy) + 1;
+    {Iterates over each column}
+    for x := 0 to Dst.Width - 1 do
+    begin
+      px  := 2 * (x - cx) + 1;
+      fx  := (((px * cAngle - py * sAngle) - 1) / 2 + cx) - xDiff;
+      fy  := (((px * sAngle + py * cAngle) - 1) / 2 + cy) - yDiff;
+      ifx := Round(fx);
+      ify := Round(fy);
+
+      {Only continues if it does not exceed image boundaries}
+      if (ifx > -1) and (ifx < apng.Width) and (ify > -1) and (ify < apng.Height) then
+      begin
+        {Obtains data to paint the new pixel}
+        eww := fx - ifx;
+        nsw := fy - ify;
+        iy  := TrimInt(ify + 1, 0, apng.Height - 1);
+        ix  := TrimInt(ifx + 1, 0, apng.Width - 1);
+        P1  := apng.scanline[ify];
+        P2  := apng.scanline[iy];
+        if IsAlpha then
+          A1 := apng.alphascanline[ify];
+        if IsAlpha then
+          A2 := apng.alphascanline[iy];
+        nw.r := P1[ifx * 3];
+        nw.g := P1[ifx * 3 + 1];
+        nw.b := P1[ifx * 3 + 2];
+        if IsAlpha then
+          anw := A1[ifx];
+        ne.r := P1[ix * 3];
+        ne.g := P1[ix * 3 + 1];
+        ne.b := P1[ix * 3 + 2];
+        if IsAlpha then
+          ane := A1[ix];
+        sw.r := P2[ifx * 3];
+        sw.g := P2[ifx * 3 + 1];
+        sw.b := P2[ifx * 3 + 2];
+        if IsAlpha then
+          asw := A2[ifx];
+        se.r := P2[ix * 3];
+        se.g := P2[ix * 3 + 1];
+        se.b := P2[ix * 3 + 2];
+        if IsAlpha then
+          ase := A2[ix];
+
+
+        {Defines the new pixel}
+        Top := nw.b + eww * (ne.b - nw.b);
+        Bottom := sw.b + eww * (se.b - sw.b);
+        P3[x * 3 + 2] := IntToByte(Round(Top + nsw * (Bottom - Top)));
+        Top := nw.g + eww * (ne.g - nw.g);
+        Bottom := sw.g + eww * (se.g - sw.g);
+        P3[x * 3 + 1] := IntToByte(Round(Top + nsw * (Bottom - Top)));
+        Top := nw.r + eww * (ne.r - nw.r);
+        Bottom := sw.r + eww * (se.r - sw.r);
+        P3[x * 3] := IntToByte(Round(Top + nsw * (Bottom - Top)));
+
+        {Only for alpha}
+        if IsAlpha then
+        begin
+          Top := anw + eww * (ane - anw);
+          Bottom := asw + eww * (ase - asw);
+          A3[x] := IntToByte(Round(Top + nsw * (Bottom - Top)));
+        end;
+
+      end;
+    end;
+  end;
+
+  apng.Assign(dst);
+  dst.Free;
+end;
+
+procedure Tgrafischebuehnenansicht.SmoothRotateDevice(var aPng: TPNGObject; Angle: extended; Device: integer);
+
+{Supporting functions}
+  function TrimInt(i, Min, Max: integer): integer;
+  begin
+    if i > Max then
+      Result := Max
+    else if i < Min then
+      Result := Min
+    else
+      Result := i;
+  end;
+
+  function IntToByte(i: integer): byte;
+  begin
+    if i > 255 then
+      Result := 255
+    else if i < 0 then
+      Result := 0
+    else
+      Result := i;
+  end;
+
+  function Min(A, B: double): double;
+  begin
+    if A < B then
+      Result := A
+    else
+      Result := B;
+  end;
+
+  function Max(A, B: double): double;
+  begin
+    if A > B then
+      Result := A
+    else
+      Result := B;
+  end;
+
+  function Ceil(A: double): integer;
+  begin
+    Result := integer(Trunc(A));
+    if Frac(A) > 0 then
+      Inc(Result);
+  end;
+
+  {Calculates the png new size}
+  function newsize: tsize;
+  var
+    fRadians: extended;
+    fCosine, fSine: double;
+    fPoint1x, fPoint1y, fPoint2x, fPoint2y, fPoint3x, fPoint3y: double;
+    fMinx, fMiny, fMaxx, fMaxy: double;
+  begin
+    {Convert degrees to radians}
+    fRadians := (2 * PI * Angle) / 360;
+
+    fCosine := abs(cos(fRadians));
+    fSine := abs(sin(fRadians));
+
+    fPoint1x := (-apng.Height * fSine);
+    fPoint1y := (apng.Height * fCosine);
+    fPoint2x := (apng.Width * fCosine - apng.Height * fSine);
+    fPoint2y := (apng.Height * fCosine + apng.Width * fSine);
+    fPoint3x := (apng.Width * fCosine);
+    fPoint3y := (apng.Width * fSine);
+
+    fMinx := min(0, min(fPoint1x, min(fPoint2x, fPoint3x)));
+    fMiny := min(0, min(fPoint1y, min(fPoint2y, fPoint3y)));
+    fMaxx := max(fPoint1x, max(fPoint2x, fPoint3x));
+    fMaxy := max(fPoint1y, max(fPoint2y, fPoint3y));
+
+    Result.cx := ceil(fMaxx - fMinx);
+    Result.cy := ceil(fMaxy - fMiny);
+  end;
+
+type
+  TFColor = record
+    b, g, r: byte
+  end;
+var
+  Top, Bottom, Left, Right, eww, nsw, fx, fy, wx, wy: extended;
+  cAngle, sAngle: double;
+  xDiff, yDiff, ifx, ify, px, py, ix, iy, x, y, cx, cy: integer;
+  nw, ne, sw, se: TFColor;
+  anw, ane, asw, ase: byte;
+  P1, P2, P3: Pbytearray;
+  A1, A2, A3: pbytearray;
+  dst: TPNGObject;
+  IsAlpha: boolean;
+  new_colortype: integer;
+begin
+  if mainform.devices[Device].pictureangle < 3 then
+    mainform.devices[Device].pictureangle := mainform.devices[Device].pictureangle + 1
+  else
+    mainform.devices[Device].pictureangle := 0;
+
+  {Only allows RGB and RGBALPHA images}
+  if not (apng.Header.ColorType in [COLOR_RGBALPHA, COLOR_RGB]) then
+    raise Exception.Create('Only COLOR_RGBALPHA and COLOR_RGB formats' +
+      ' are supported');
+  IsAlpha := apng.Header.ColorType in [COLOR_RGBALPHA];
+  if IsAlpha then
+    new_colortype := COLOR_RGBALPHA
+  else
+    new_colortype := COLOR_RGB;
+
+  {Creates a copy}
+  dst := tpngobject.Create;
+  with newsize do
+    dst.createblank(new_colortype, 8, cx, cy);
+  cx := dst.Width div 2;
+  cy := dst.Height div 2;
+
+  {Gather some variables}
+  Angle  := angle;
+  Angle  := -Angle * Pi / 180;
+  sAngle := Sin(Angle);
+  cAngle := Cos(Angle);
+  xDiff  := (Dst.Width - apng.Width) div 2;
+  yDiff  := (Dst.Height - apng.Height) div 2;
+
+  {Iterates over each line}
+  for y := 0 to Dst.Height - 1 do
+  begin
+    P3 := Dst.scanline[y];
+    if IsAlpha then
+      A3 := Dst.AlphaScanline[y];
+    py := 2 * (y - cy) + 1;
+    {Iterates over each column}
+    for x := 0 to Dst.Width - 1 do
+    begin
+      px  := 2 * (x - cx) + 1;
+      fx  := (((px * cAngle - py * sAngle) - 1) / 2 + cx) - xDiff;
+      fy  := (((px * sAngle + py * cAngle) - 1) / 2 + cy) - yDiff;
+      ifx := Round(fx);
+      ify := Round(fy);
+
+      {Only continues if it does not exceed image boundaries}
+      if (ifx > -1) and (ifx < apng.Width) and (ify > -1) and (ify < apng.Height) then
+      begin
+        {Obtains data to paint the new pixel}
+        eww := fx - ifx;
+        nsw := fy - ify;
+        iy  := TrimInt(ify + 1, 0, apng.Height - 1);
+        ix  := TrimInt(ifx + 1, 0, apng.Width - 1);
+        P1  := apng.scanline[ify];
+        P2  := apng.scanline[iy];
+        if IsAlpha then
+          A1 := apng.alphascanline[ify];
+        if IsAlpha then
+          A2 := apng.alphascanline[iy];
+        nw.r := P1[ifx * 3];
+        nw.g := P1[ifx * 3 + 1];
+        nw.b := P1[ifx * 3 + 2];
+        if IsAlpha then
+          anw := A1[ifx];
+        ne.r := P1[ix * 3];
+        ne.g := P1[ix * 3 + 1];
+        ne.b := P1[ix * 3 + 2];
+        if IsAlpha then
+          ane := A1[ix];
+        sw.r := P2[ifx * 3];
+        sw.g := P2[ifx * 3 + 1];
+        sw.b := P2[ifx * 3 + 2];
+        if IsAlpha then
+          asw := A2[ifx];
+        se.r := P2[ix * 3];
+        se.g := P2[ix * 3 + 1];
+        se.b := P2[ix * 3 + 2];
+        if IsAlpha then
+          ase := A2[ix];
+
+
+        {Defines the new pixel}
+        Top := nw.b + eww * (ne.b - nw.b);
+        Bottom := sw.b + eww * (se.b - sw.b);
+        P3[x * 3 + 2] := IntToByte(Round(Top + nsw * (Bottom - Top)));
+        Top := nw.g + eww * (ne.g - nw.g);
+        Bottom := sw.g + eww * (se.g - sw.g);
+        P3[x * 3 + 1] := IntToByte(Round(Top + nsw * (Bottom - Top)));
+        Top := nw.r + eww * (ne.r - nw.r);
+        Bottom := sw.r + eww * (se.r - sw.r);
+        P3[x * 3] := IntToByte(Round(Top + nsw * (Bottom - Top)));
+
+        {Only for alpha}
+        if IsAlpha then
+        begin
+          Top := anw + eww * (ane - anw);
+          Bottom := asw + eww * (ase - asw);
+          A3[x] := IntToByte(Round(Top + nsw * (Bottom - Top)));
+        end;
+
+      end;
+    end;
+  end;
+
+  apng.Assign(dst);
+  dst.Free;
+end;
+
+function RGB2TColor(const R, G, B: byte): integer;
+begin
+  // convert hexa-decimal values to RGB
+  Result := R + G shl 8 + B shl 16;
+end;
+
+procedure TColor2RGB(const Color: TColor; var R, G, B: byte);
+begin
+  // convert hexa-decimal values to RGB
+  R := Color and $FF;
+  G := (Color shr 8) and $FF;
+  B := (Color shr 16) and $FF;
+end;
+
+procedure LockWindow(const Handle: HWND);
+begin
+  SendMessage(Handle, WM_SETREDRAW, 0, 0);
+end;
+
+procedure UnlockWindow(const Handle: HWND);
+begin
+  SendMessage(Handle, WM_SETREDRAW, 1, 0);
+  RedrawWindow(Handle, nil, 0,
+    RDW_ERASE or RDW_FRAME or RDW_INVALIDATE or RDW_ALLCHILDREN);
+end;
+
+procedure Tgrafischebuehnenansicht.FormCreate(Sender: TObject);
+var
+  LReg: TRegistry;
+begin
+  startingup := True;
+  Paintbox1.canvas.Pen.mode := pmNotXor;
+  Paintbox1.canvas.Pen.style := psDot;
+
+  mainform.workingdirectory := ExtractFilePath(ParamStr(0));
+
+  LReg := TRegistry.Create;
+  LReg.RootKey := HKEY_CURRENT_USER;
+
+  if LReg.OpenKey('Software', True) then
+  begin
+    if not LReg.KeyExists('PHOENIXstudios') then
+      LReg.CreateKey('PHOENIXstudios');
+    if LReg.OpenKey('PHOENIXstudios', True) then
+    begin
+      if not LReg.KeyExists('PC_DIMMER') then
+        LReg.CreateKey('PC_DIMMER');
+      if LReg.OpenKey('PC_DIMMER', True) then
+      begin
+        if not LReg.KeyExists('Buehnenansicht') then
+          LReg.CreateKey('Buehnenansicht');
+        if LReg.OpenKey('Buehnenansicht', True) then
+        begin
+          if not LReg.ValueExists('Stageview Plugin - Last Stage') then
+            LReg.WriteBool('Stageview Plugin - Last Stage', True);
+          CheckBox3.Checked := LReg.ReadBool('Stageview Plugin - Last Stage');
+        end;
+      end;
+    end;
+  end;
+  LReg.CloseKey;
+
+  mainform.buehnenansichtsetup.Buehnenansicht_width  := 700;
+  mainform.buehnenansichtsetup.Buehnenansicht_height := 460;
+  mainform.buehnenansichtsetup.Buehnenansicht_panel  := True;
+
+  TUpdateThread.Create(UpdateLevels);
+  startingup := False;
+end;
+
+procedure Tgrafischebuehnenansicht.device_progressMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  if Shift = [ssLeft] then
+  begin
+    for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+      if Sender = TProgressBar(device_progress[i]) then
+      begin
+        device_progress[i].Position := trunc((x / device_progress[i].Width) * 255);
+        device_progress[i].Position := trunc((x / device_progress[i].Width) * 255) - 1;
+        device_progress[i].Position := trunc((x / device_progress[i].Width) * 255);
+        mainform.Senddata(mainform.buehnenansichtdevices[i].channel, 255 - device_progress[i].Position, 255 - device_progress[i].Position, 0, mainform.Data.names[mainform.buehnenansichtdevices[i].channel]);
+      end;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.device_pictureMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+var
+  i, j, k, l: integer;
+begin
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+    if Sender = TImage(device_picture[i]) then
+    begin
+      device_picture[i].Hint := mainform.Data.names[mainform.buehnenansichtdevices[i].channel] + ' (' + mainform.levelstr(255 - mainform.Data.ch[mainform.buehnenansichtdevices[i].channel]) + '), Kanalicon';
+
+      if Shift = [ssLeft] then
+      begin
+        // Linke Maustaste gedrückt
+        if ((Sender = TImage(device_picture[i])) and (device_selected[i] = False)) then
+        begin
+          // Senderbild
+          if ((device_picture[i].Left + x - (device_picture[i].Width div 2)) >= 0) and ((device_picture[i].Left + x - (device_picture[i].Width div 2)) <= paintbox1.Width - device_picture[i].Width) then
+            device_picture[i].Left := device_picture[i].Left + x - (device_picture[i].Width div 2);
+          if ((device_picture[i].Top + y - (device_picture[i].Height div 2)) >= 0) and ((device_picture[i].Top + y - (device_picture[i].Height div 2)) <= paintbox1.Height - device_picture[i].Height) then
+            device_picture[i].Top := device_picture[i].Top + y - (device_picture[i].Height div 2);
+          device_picture[i].Refresh;
+          mainform.buehnenansichtdevices[i].left := device_picture[i].left;
+          mainform.buehnenansichtdevices[i].top  := device_picture[i].top;
+
+          device_progress[i].Top  := device_picture[i].Top + device_picture[i].Height;
+          device_progress[i].left := device_picture[i].left;
+
+          device_label[i].Top  := device_picture[i].Top + device_picture[i].Height + 8;
+          device_label[i].left := device_picture[i].left;
+
+          device_number[i].Top  := device_picture[i].Top + mainform.buehnenansichtdevices[i].picturesize * 16 - 10;
+          device_number[i].Left := device_picture[i].Left;
+
+          device_colorshape[i].Top  := device_picture[i].Top;
+          device_colorshape[i].Left := device_picture[i].Left + mainform.buehnenansichtdevices[i].picturesize * 16 - 10;
+          // Senderbild Ende
+        end else
+        begin
+          // Andere Selektierte Bilder
+          for k := 0 to length(mainform.buehnenansichtdevices) - 1 do
+          begin
+            if ((device_selected[k])) then
+            begin
+              if ((device_picture[k].Left + x - (device_picture[k].Width div 2)) >= 0) and ((device_picture[k].Left + x - (device_picture[k].Width div 2)) <= (paintbox1.Width - device_picture[k].Width)) then
+                device_picture[k].Left := device_picture[k].Left + x - (mainform.buehnenansichtdevices[k].picturesize * 8);
+              if ((device_picture[k].Top + y - (device_picture[k].Height div 2)) >= 0) and ((device_picture[k].Top + y - (device_picture[k].Height div 2)) <= (paintbox1.Height - device_picture[k].Height)) then
+                device_picture[k].Top := device_picture[k].Top + y - (mainform.buehnenansichtdevices[k].picturesize * 8);
+              device_picture[k].Refresh;
+              mainform.buehnenansichtdevices[k].left := device_picture[k].left;
+              mainform.buehnenansichtdevices[k].top  := device_picture[k].top;
+
+              device_progress[k].Top  := device_picture[k].Top + device_picture[k].Height;
+              device_progress[k].left := device_picture[k].left;
+
+              device_label[k].Top  := device_picture[k].Top + device_picture[k].Height + 8;
+              device_label[k].left := device_picture[k].left;
+
+              device_number[k].Top  := device_picture[k].Top + mainform.buehnenansichtdevices[k].picturesize * 16 - 10;
+              device_number[k].Left := device_picture[k].Left;
+
+              device_colorshape[k].Top  := device_picture[k].Top;
+              device_colorshape[k].Left := device_picture[k].Left + mainform.buehnenansichtdevices[k].picturesize * 16 - 10;
+            end;
+          end;
+          // Andere Selektierte Bilder Ende
+
+          // Andere Selektierte GeräteBilder
+          for k := 0 to length(device_device_picture) - 1 do
+          begin
+            if ((device_device_selected[k])) then
+            begin
+              for j := 0 to length(mainform.devices) - 1 do
+                if GUIDtoString(mainform.devices[j].ID) = GUIDtoString(device_device_ID[k]) then
+                begin
+                  if ((device_device_picture[k].Left + x - (device_device_picture[k].Width div 2)) >= 0) and ((device_device_picture[k].Left + x - (device_device_picture[k].Width div 2)) <= (paintbox1.Width - device_device_picture[k].Width)) then
+                    device_device_picture[k].Left := device_device_picture[k].Left + x - (mainform.devices[j].picturesize * 8);
+                  if ((device_device_picture[k].Top + y - (device_device_picture[k].Height div 2)) >= 0) and ((device_device_picture[k].Top + y - (device_device_picture[k].Height div 2)) <= (paintbox1.Height - device_device_picture[k].Height)) then
+                    device_device_picture[k].Top := device_device_picture[k].Top + y - (mainform.devices[j].picturesize * 8);
+                  device_device_picture[k].Refresh;
+                  mainform.devices[j].left := device_device_picture[k].left;
+                  mainform.devices[j].top  := device_device_picture[k].top;
+
+                  device_device_progress[k].Top  := device_device_picture[k].Top + device_device_picture[k].Height;
+                  device_device_progress[k].left := device_device_picture[k].left;
+
+                  device_device_label[k].Top  := device_device_picture[k].Top + device_device_picture[k].Height + 8;
+                  device_device_label[k].left := device_device_picture[k].left;
+
+                  device_device_number[k].Top  := device_device_picture[k].Top + mainform.devices[j].picturesize * 16 - 10;
+                  device_device_number[k].Left := device_device_picture[k].Left;
+
+                  device_device_colorshape[k].Top  := device_device_picture[k].Top;
+                  device_device_colorshape[k].Left := device_device_picture[k].Left + mainform.devices[j].picturesize * 16 - 10;
+                end;
+            end;
+          end;
+          // Andere selektierte GeräteBilder Ende
+        end;
+        // Linke Maustaste Ende
+      end;
+    end;
+end;
+
+procedure Tgrafischebuehnenansicht.device_pictureMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+    if Sender = TImage(device_picture[i]) then
+    begin
+      actualdevice := i;
+
+      if (Shift = [ssCtrl]) and (Button = mbLeft) then
+        device_selected[i] := not device_selected[i];
+
+      if (Shift = [ssAlt]) and (Button = mbLeft) then
+      begin
+        OpenDialog1.Filter := 'Bilddateien (*.bmp;*.jpg;*.gif;*.ico;*.png)|*.bmp;*.jpg;*.gif;*.ico;*.png|Alle Dateien (*.*)|*.*';
+        OpenDialog1.InitialDir := mainform.workingdirectory + 'Devicepictures';
+        opendialog1.FileName := '';
+        if OpenDialog1.Execute then
+        begin
+          device_picture[actualdevice].Picture.LoadFromFile(OpenDialog1.Filename);
+          mainform.buehnenansichtdevices[actualdevice].picture := OpenDialog1.Filename;
+          if copy(mainform.buehnenansichtdevices[actualdevice].picture, length(mainform.buehnenansichtdevices[actualdevice].picture) - 2, 3) = 'png' then
+            mainform.buehnenansichtdevices[actualdevice].pictureispng := True
+          else
+            mainform.buehnenansichtdevices[actualdevice].pictureispng := False;
+        end;
+      end;
+
+      if device_selected[i] then
+      begin
+        device_label[i].Font.Color  := clRed;
+        device_number[i].Font.Color := clRed;
+      end else
+      begin
+        device_label[i].Font.Color  := clBlack;
+        device_number[i].Font.Color := clBlack;
+      end;
+
+      if (Shift = [ssShift]) and (Button = mbLeft) then
+        deletedevice(i);
+
+      panel2.Refresh;
+    end;
+end;
+
+procedure Tgrafischebuehnenansicht.SpeedButton1Click(Sender: TObject);
+begin
+  if messagedlg('Bühnenansicht zurücksetzen?', mtConfirmation,
+    [mbYes, mbNo], 0) = mrYes then
+  begin
+    NewPanel;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.Button6Click(Sender: TObject);
+begin
+  OpenDialog1.Filter := 'Bilddateien (*.bmp;*.jpg;*.gif;*.ico;*.png)|*.bmp;*.jpg;*.gif;*.ico;*.png|Alle Dateien (*.*)|*.*';
+  OpenDialog1.InitialDir := mainform.workingdirectory + 'Projekt\';
+  if OpenDialog1.Execute then
+  begin
+    Stage.Picture.LoadFromFile(OpenDialog1.Filename);
+    mainform.buehnenansichtsetup.Buehnenansicht_background := OpenDialog1.Filename;
+
+    paintbox1.Canvas.Refresh;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.SpeedButton4Click(Sender: TObject);
+begin
+  opendialog1.Title  := 'PC_DIMMER Bühnenansicht öffnen...';
+  opendialog1.Filter := 'PC_DIMMER Bühnenansicht (*.pcdstge)|*.pcdstge|*.*|*.*';
+  opendialog1.FileName := '';
+  opendialog1.DefaultExt := '*.pcdstge';
+  if opendialog1.Execute then
+    openscene(opendialog1.Filename);
+end;
+
+procedure Tgrafischebuehnenansicht.Button5Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure Tgrafischebuehnenansicht.SpeedButton3Click(Sender: TObject);
+begin
+  savedialog1.Title  := 'PC_DIMMER Bühnenansicht speichern...';
+  savedialog1.Filter := 'PC_DIMMER Bühnenansicht (*.pcdstge)|*.pcdstge|*.*|*.*';
+  savedialog1.FileName := '';
+  savedialog1.DefaultExt := '*.pcdstge';
+  if savedialog1.Execute then
+    savescene(savedialog1.FileName);
+end;
+
+procedure Tgrafischebuehnenansicht.DeviceLabelMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+  //  channelname:string[255];
+begin
+  if Button = mbRight then
+  begin
+    for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+    begin
+      if Sender = TLabel(device_label[i]) then
+      begin
+        mainform.Data.names[mainform.buehnenansichtdevices[i].channel] := InputBox('Beschriftung für "' + mainform.Data.names[mainform.buehnenansichtdevices[i].channel] + '"', 'Bitte geben Sie eine neue Bezeichnung für den aktuellen Kanal ein:', mainform.Data.names[mainform.buehnenansichtdevices[i].channel]);
+        mainform.pluginsaktualisieren(Sender);
+        mainform.UpdateLevels;
+        mainform.effekttimelineundkanaluebersichtaktualisieren(Sender);
+      end;
+    end;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.DeviceNumberMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i, oldvalue, channel: integer;
+begin
+  // Kanalnummer ändern
+  //mainform.buehnenansichtdevices[i].channel
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+    if Sender = TLabel(device_number[i]) then
+    begin
+      oldvalue := mainform.buehnenansichtdevices[i].channel;
+      try
+        channel := StrToInt(InputBox('Kanaleinstellung', 'Welcher Kanal soll für dieses Gerät gelten:', IntToStr(mainform.buehnenansichtdevices[i].channel)));
+        if channel > mainform.lastchan then
+          mainform.buehnenansichtdevices[i].channel := mainform.lastchan
+        else if channel < 1 then
+          mainform.buehnenansichtdevices[i].channel := 1
+        else
+          mainform.buehnenansichtdevices[i].channel := channel;
+
+        //      screenupdate.Enabled:=true;
+        aktualisierechannel[channel] := True;
+        aktualisieren := True;
+      except
+        mainform.buehnenansichtdevices[i].channel := oldvalue;
+      end;
+    end;
+end;
+
+procedure Tgrafischebuehnenansicht.DeviceColorMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  //Farbe ändern
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+    if Sender = TShape(device_colorshape[i]) then
+    begin
+      actualdevice  := i;
+      colorbox1.Top := device_picture[actualdevice].Top;
+      colorbox1.Left := device_picture[actualdevice].Left + 32;
+      colorbox1.SelectedColor := mainform.buehnenansichtdevices[actualdevice].color;
+      colorbox1.BringToFront;
+      colorbox1.Visible := True;
+    end;
+end;
+
+procedure Tgrafischebuehnenansicht.zoomChange(Sender: TObject);
+begin
+  case zoom.ItemIndex of
+    0:
+    begin
+      stage.Stretch := False;
+      stage.Proportional := False;
+    end;
+    1:
+    begin
+      stage.Stretch := True;
+      stage.Proportional := True;
+    end;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.CheckBox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  if checkbox1.Checked then
+  begin
+    for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+      device_label[i].Visible := True;
+    for i := 0 to length(device_device_picture) - 1 do
+      device_device_label[i].Visible := True;
+  end else
+  begin
+    for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+      device_label[i].Visible := False;
+    for i := 0 to length(device_device_picture) - 1 do
+      device_device_label[i].Visible := False;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.Panelausblenden1Click(Sender: TObject);
+begin
+  if panel1.Visible then
+  begin
+    panel1.Visible := False;
+    grafischebuehnenansicht.Width := grafischebuehnenansicht.Width - panel1.Width;
+  end else
+  begin
+    panel1.Visible := True;
+    grafischebuehnenansicht.Width := grafischebuehnenansicht.Width + panel1.Width;
+  end;
+  mainform.buehnenansichtsetup.Buehnenansicht_panel := panel1.Visible;
+  mainform.buehnenansichtsetup.Buehnenansicht_width := grafischebuehnenansicht.Width;
+end;
+
+procedure Tgrafischebuehnenansicht.FormHide(Sender: TObject);
+var
+  LReg: TRegistry;
+begin
+  if not mainform.shutdown then
+  begin
+    LReg := TRegistry.Create;
+    LReg.RootKey := HKEY_CURRENT_USER;
+
+    if LReg.OpenKey('Software', True) then
+    begin
+      if not LReg.KeyExists('PHOENIXstudios') then
+        LReg.CreateKey('PHOENIXstudios');
+      if LReg.OpenKey('PHOENIXstudios', True) then
+      begin
+        if not LReg.KeyExists('PC_DIMMER') then
+          LReg.CreateKey('PC_DIMMER');
+        if LReg.OpenKey('PC_DIMMER', True) then
+        begin
+          LReg.WriteBool('Showing Buehnenansicht', False);
+        end;
+      end;
+    end;
+    LReg.CloseKey;
+  end;
+
+  mainform.buehnenansichtsetup.Buehnenansicht_width  := grafischebuehnenansicht.Width;
+  mainform.buehnenansichtsetup.Buehnenansicht_height := grafischebuehnenansicht.Height;
+  mainform.buehnenansichtsetup.Buehnenansicht_panel  := panel1.Visible;
+end;
+
+procedure Tgrafischebuehnenansicht.extanzeigen1Click(Sender: TObject);
+begin
+  Checkbox1.Checked := not Checkbox1.Checked;
+  CheckBox1MouseUp(Sender, mbLeft, [ssLeft], 0, 0);
+end;
+
+procedure Tgrafischebuehnenansicht.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  MSGSave;
+
+  mainform.buehnenansichtsetup.Buehnenansicht_width  := grafischebuehnenansicht.Width;
+  mainform.buehnenansichtsetup.Buehnenansicht_height := grafischebuehnenansicht.Height;
+  mainform.buehnenansichtsetup.Buehnenansicht_panel  := panel1.Visible;
+end;
+
+procedure Tgrafischebuehnenansicht.FormShow(Sender: TObject);
+var
+  LReg: TRegistry;
+  i, k, temp: integer;
+  x: TPNGObject;
+begin
+  LReg := TRegistry.Create;
+  LReg.RootKey := HKEY_CURRENT_USER;
+
+  if LReg.OpenKey('Software', True) then
+  begin
+    if not LReg.KeyExists('PHOENIXstudios') then
+      LReg.CreateKey('PHOENIXstudios');
+    if LReg.OpenKey('PHOENIXstudios', True) then
+    begin
+      if not LReg.KeyExists('PC_DIMMER') then
+        LReg.CreateKey('PC_DIMMER');
+      if LReg.OpenKey('PC_DIMMER', True) then
+      begin
+        LReg.WriteBool('Showing Buehnenansicht', True);
+
+        if not LReg.KeyExists('Buehnenansicht') then
+          LReg.CreateKey('Buehnenansicht');
+        if LReg.OpenKey('Buehnenansicht', True) then
+        begin
+          if LReg.ValueExists('PosX') then
+          begin
+            if (not (LReg.ReadInteger('PosX') + grafischebuehnenansicht.Width < screen.DesktopLeft)) and (not (LReg.ReadInteger('PosX') > screen.DesktopWidth + screen.DesktopLeft)) then
+              grafischebuehnenansicht.Left := LReg.ReadInteger('PosX')
+            else
+              grafischebuehnenansicht.Left := screen.DesktopLeft;
+          end else
+            grafischebuehnenansicht.Left := screen.DesktopLeft;
+
+          if LReg.ValueExists('PosY') then
+          begin
+            if (not (LReg.ReadInteger('PosY') < screen.DesktopTop)) and (not (LReg.ReadInteger('PosY') > screen.DesktopHeight + screen.DesktopTop)) then
+              grafischebuehnenansicht.Top := LReg.ReadInteger('PosY')
+            else
+              grafischebuehnenansicht.Top := screen.DesktopTop;
+          end else
+            grafischebuehnenansicht.Top := screen.DesktopTop;
+        end;
+      end;
+    end;
+  end;
+  LReg.CloseKey;
+
+  screentimeronline := False;
+  grafischebuehnenansicht.Width := mainform.buehnenansichtsetup.Buehnenansicht_width;
+  grafischebuehnenansicht.Height := mainform.buehnenansichtsetup.Buehnenansicht_height;
+  panel1.Visible := mainform.buehnenansichtsetup.Buehnenansicht_panel;
+
+  // if ((CheckBox3.Checked) and (FileExists(workingdirectory+'Projekt\Bühnenansicht'))) then
+  //    openscene(workingdirectory+'Projekt\Bühnenansicht');
+
+  if pos('\Projekt\', mainform.buehnenansichtsetup.Buehnenansicht_background) > 0 then
+    mainform.buehnenansichtsetup.Buehnenansicht_background := mainform.workingdirectory + copy(mainform.buehnenansichtsetup.Buehnenansicht_background, pos('Projekt\', mainform.buehnenansichtsetup.Buehnenansicht_background), length(mainform.buehnenansichtsetup.Buehnenansicht_background));
+
+  if mainform.buehnenansichtsetup.Buehnenansicht_background <> '' then
+    if FileExists(mainform.buehnenansichtsetup.Buehnenansicht_background) then
+      Stage.Picture.LoadFromFile(mainform.buehnenansichtsetup.Buehnenansicht_background)
+    else
+    if FileExists(filepath + ExtractFileName(mainform.buehnenansichtsetup.Buehnenansicht_background)) then
+      Stage.Picture.LoadFromFile(filepath + ExtractFileName(mainform.buehnenansichtsetup.Buehnenansicht_background))
+    else
+    if messagedlg('Das Hintergrundbild "' + mainform.buehnenansichtsetup.Buehnenansicht_background + '" für die Bühnenansicht wurde nicht gefunden. Möchten Sie jetzt danach suchen?', mtConfirmation,
+      [mbYes, mbNo], 0) = mrYes then
+    begin
+      opendialog1.Title  := 'Bilddatei öffnen...';
+      OpenDialog1.Filter := 'Bilddateien (*.bmp;*.jpg;*.gif;*.ico;*.png)|*.bmp;*.jpg;*.gif;*.ico;*.png|Alle Dateien (*.*)|*.*';
+      opendialog1.FileName := '';
+      opendialog1.DefaultExt := '*.bmp;*.jpg;*.gif;*.ico;*.png';
+      opendialog1.InitialDir := mainform.workingdirectory + 'Projekt\';
+      if OpenDialog1.Execute then
+      begin
+        grafischebuehnenansicht.Stage.Picture.LoadFromFile(OpenDialog1.FileName);
+        mainform.buehnenansichtsetup.Buehnenansicht_background := OpenDialog1.FileName;
+      end;
+    end else
+    begin
+      stage.Picture := Referenzbild2.Picture;
+      mainform.buehnenansichtsetup.Buehnenansicht_background := '';
+    end;
+
+  grafischebuehnenansicht.Width := mainform.buehnenansichtsetup.Buehnenansicht_width;
+  grafischebuehnenansicht.Height := mainform.buehnenansichtsetup.Buehnenansicht_height;
+  //  panel1.Visible:=mainform.buehnenansichtsetup.Buehnenansicht_panel;
+  screentimeronline := True;
+  for i := 1 to mainform.lastchan do
+    aktualisierechannel[i] := True;
+  aktualisieren := True;
+
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+  begin
+    if mainform.buehnenansichtdevices[i].pictureispng then
+    begin
+      // Versuchen die Datei zu drehen (nur wenn PNG)
+      x := device_picture[i].Picture.Graphic as TPNGObject;
+      temp := mainform.buehnenansichtdevices[i].pictureangle;
+      mainform.buehnenansichtdevices[i].pictureangle := 0;
+      for k := 1 to temp do
+        SmoothRotate(x, 90, i);
+    end else
+    begin
+      // Bild ist kein PNG, dann Hor/Ver-Flippen
+      if mainform.buehnenansichtdevices[i].picturefliphor then
+      begin
+        mainform.buehnenansichtdevices[i].picturefliphor := False;
+        HorizontalSpiegeln(device_picture[i].Picture.Bitmap, i);
+      end;
+      if mainform.buehnenansichtdevices[i].pictureflipver then
+      begin
+        mainform.buehnenansichtdevices[i].pictureflipver := False;
+        VertikalSpiegeln(device_picture[i].Picture.Bitmap, i);
+      end;
+    end;
+  end;
+
+  //  grafischebuehnenansicht.DoubleBuffered:=true;
+  //  panel2.DoubleBuffered:=true;
+end;
+
+procedure Tgrafischebuehnenansicht.stageMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  if shift = [ssLeft] then
+  begin
+    minonedeviceselected := False;
+
+    for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+    begin
+      device_selected[i] := False;
+      device_label[i].Font.Color := clBlack;
+      device_number[i].Font.Color := clBlack;
+    end;
+
+    for i := 0 to length(device_device_picture) - 1 do
+    begin
+      device_device_selected[i] := False;
+      device_device_label[i].Font.Color := clBlack;
+      device_device_number[i].Font.Color := clBlack;
+    end;
+
+    Paintbox1.canvas.Brush.Style := bsclear;
+    x1 := X;
+    y1 := Y;
+    x2 := X;
+    y2 := Y;
+    Paintbox1.canvas.Rectangle(x1, y1, x2, y2);
+
+    RotateBtn.Enabled  := minonedeviceselected;
+    FlipHorBtn.Enabled := minonedeviceselected;
+    FlipVerBtn.Enabled := minonedeviceselected;
+    TrackBar1.Enabled  := minonedeviceselected;
+  end;
+end;
+
+
+procedure Tgrafischebuehnenansicht.stageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  if shift = [ssLeft] then
+  begin
+    Paintbox1.canvas.Rectangle(x1, y1, x2, y2);
+    x2 := X;
+    y2 := Y;
+    Paintbox1.canvas.Rectangle(x1, y1, x2, y2);
+
+    minonedeviceselected := False;
+    for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+    begin
+      begin
+        // X1=Links X2=Rechts                                                                      Y1=Oben Y2=Unten
+        if (device_picture[i].Left + (device_picture[i].Width div 2) < x1) and ((device_picture[i].Left + (device_picture[i].Width div 2)) > x2) and (device_picture[i].Top + (device_picture[i].Height div 2) > y1) and ((device_picture[i].Top + (device_picture[i].Height div 2)) < y2) or (device_picture[i].Left + (device_picture[i].Width div 2) > x1) and ((device_picture[i].Left + (device_picture[i].Width div 2)) < x2) and (device_picture[i].Top + (device_picture[i].Height div 2) < y1) and ((device_picture[i].Top + (device_picture[i].Height div 2)) > y2) or (device_picture[i].Left + (device_picture[i].Width div 2) > x1) and ((device_picture[i].Left + (device_picture[i].Width div 2)) < x2) and (device_picture[i].Top + (device_picture[i].Height div 2) > y1) and ((device_picture[i].Top + (device_picture[i].Height div 2)) < y2) or (device_picture[i].Left + (device_picture[i].Width div 2) < x1) and ((device_picture[i].Left + (device_picture[i].Width div 2)) > x2) and (device_picture[i].Top + (device_picture[i].Height div 2) < y1) and ((device_picture[i].Top + (device_picture[i].Height div 2)) > y2) then
+          device_selected[i] := True
+        else
+          device_selected[i] := False;
+        if device_selected[i] then
+        begin
+          minonedeviceselected := True;
+          device_label[i].Font.Color := clRed;
+          device_number[i].Font.Color := clRed;
+        end else
+        begin
+          device_label[i].Font.Color  := clBlack;
+          device_number[i].Font.Color := clBlack;
+        end;
+      end;
+    end;
+
+    for i := 0 to length(device_device_picture) - 1 do
+    begin
+      begin
+        // X1=Links X2=Rechts                                                                      Y1=Oben Y2=Unten
+        if (device_device_picture[i].Left + (device_device_picture[i].Width div 2) < x1) and ((device_device_picture[i].Left + (device_device_picture[i].Width div 2)) > x2) and (device_device_picture[i].Top + (device_device_picture[i].Height div 2) > y1) and ((device_device_picture[i].Top + (device_device_picture[i].Height div 2)) < y2) or (device_device_picture[i].Left + (device_device_picture[i].Width div 2) > x1) and ((device_device_picture[i].Left + (device_device_picture[i].Width div 2)) < x2) and (device_device_picture[i].Top + (device_device_picture[i].Height div 2) < y1) and ((device_device_picture[i].Top + (device_device_picture[i].Height div 2)) > y2) or (device_device_picture[i].Left + (device_device_picture[i].Width div 2) > x1) and ((device_device_picture[i].Left + (device_device_picture[i].Width div 2)) < x2) and (device_device_picture[i].Top + (device_device_picture[i].Height div 2) > y1) and ((device_device_picture[i].Top + (device_device_picture[i].Height div 2)) < y2) or (device_device_picture[i].Left + (device_device_picture[i].Width div 2) < x1) and ((device_device_picture[i].Left + (device_device_picture[i].Width div 2)) > x2) and (device_device_picture[i].Top + (device_device_picture[i].Height div 2) < y1) and ((device_device_picture[i].Top + (device_device_picture[i].Height div 2)) > y2) then
+          device_device_selected[i] := True
+        else
+          device_device_selected[i] := False;
+        if device_device_selected[i] then
+        begin
+          minonedeviceselected := True;
+          device_device_label[i].Font.Color := clRed;
+          device_device_number[i].Font.Color := clRed;
+        end else
+        begin
+          device_device_label[i].Font.Color  := clBlack;
+          device_device_number[i].Font.Color := clBlack;
+        end;
+      end;
+    end;
+
+    RotateBtn.Enabled  := minonedeviceselected;
+    FlipHorBtn.Enabled := minonedeviceselected;
+    FlipVerBtn.Enabled := minonedeviceselected;
+    TrackBar1.Enabled  := minonedeviceselected;
+
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.stageMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  paintbox1.canvas.Rectangle(x1, y1, x2, y2);
+  x1 := X;
+  y1 := Y;
+  x2 := X;
+  y2 := Y;
+  paintbox1.canvas.Rectangle(x1, y1, x2, y2);
+end;
+
+procedure Tgrafischebuehnenansicht.BhnenansichtalsBilddateispeichern1Click(Sender: TObject);
+var
+  image1: TImage;
+begin
+  savedialog1.Title  := 'PC_DIMMER Bühnenansicht speichern...';
+  savedialog1.Filter := 'Windows-Bitmap (*.bmp)|*.bmp|*.*|*.*';
+  savedialog1.FileName := '';
+  savedialog1.DefaultExt := '*.bmp';
+  if savedialog1.Execute then
+  begin
+    image1 := TImage.Create(Self);
+    image1.Width := panel2.Width;
+    image1.Height := panel2.Height;
+    panel2.PaintTo(image1.canvas, 0, 0);
+    image1.Picture.SaveToFile(savedialog1.FileName);
+    image1.Free;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.Bhnenansichtausdrucken1Click(Sender: TObject);
+var
+  image1: TImage;
+begin
+  if messagedlg('Die gesamte Bühnenansicht mit dem Standarddrucker "' + Printer.Printers[Printer.PrinterIndex] + '" ausdrucken?', mtConfirmation,
+    [mbYes, mbNo], 0) = mrYes then
+  begin
+    image1 := TImage.Create(Self);
+    image1.Width := panel2.Width;
+    image1.Height := panel2.Height;
+    panel2.PaintTo(image1.canvas, 0, 0);
+    printer.begindoc;
+    printer.Canvas.StretchDraw(rect(0, 0, image1.Width * 5, image1.Height * 5), image1.Picture.Graphic);
+    printer.enddoc;
+    image1.Free;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.FormResize(Sender: TObject);
+begin
+  paintbox1.Width  := stage.Width;
+  paintbox1.Height := stage.Height;
+end;
+
+procedure Tgrafischebuehnenansicht.Button2Click(Sender: TObject);
+var
+  i: integer;
+begin
+  // Arrays um eine Position erweitern
+  setlength(device_picture, length(device_picture) + 1);
+  setlength(device_progress, length(device_progress) + 1);
+  setlength(device_label, length(device_label) + 1);
+  setlength(device_number, length(device_number) + 1);
+  setlength(device_colorshape, length(device_colorshape) + 1);
+  setlength(device_selected, length(device_selected) + 1);
+  setlength(mainform.buehnenansichtdevices, length(mainform.buehnenansichtdevices) + 1);
+
+  i := length(mainform.buehnenansichtdevices) - 1;
+  mainform.buehnenansichtdevices[i].channel := 1;
+  mainform.buehnenansichtdevices[i].pictureispng := False;
+  mainform.buehnenansichtdevices[i].color := clWhite;
+
+  createdevices(i);
+
+  if FileExists(mainform.workingdirectory + 'Devicepictures\32 x 32\par56silber.png') then
+  begin
+    device_picture[i].Picture.LoadFromFile(mainform.workingdirectory + 'Devicepictures\32 x 32\par56silber.png');
+    mainform.buehnenansichtdevices[i].picture := mainform.workingdirectory + 'Devicepictures\32 x 32\par56silber.png';
+    mainform.buehnenansichtdevices[i].pictureispng := True;
+  end;
+  searchpicture(i);
+end;
+
+procedure Tgrafischebuehnenansicht.openscene(scenefilename: string);
+var
+  i, laenge: integer;
+  errorindevicepicture: boolean;
+begin
+  LockWindow(panel2.Handle);
+  screentimeronline := False;
+  errorindevicepicture := False;
+
+  filename := extractfilename(scenefilename);
+  filepath := extractfilepath(scenefilename);
+
+  // Temp-Verzeichnis reinigen
+  mainform.DeleteDirectory(ExtractFilePath(ParamStr(0)) + 'Temp');
+  CreateDir(ExtractFilePath(ParamStr(0)) + 'Temp');
+
+  if (filepath + filename) <> (ExtractFilePath(ParamStr(0)) + 'Projekt\Bühnenansicht\Bühnenansicht') then
+    Compress.DecompressFile(filepath + filename, ExtractFilePath(ParamStr(0)) + 'Temp\', True, False);
+
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+  begin
+    device_picture[i].Free;
+    device_progress[i].Free;
+    device_label[i].Free;
+    device_number[i].Free;
+    device_colorshape[i].Free;
+  end;
+
+  if fileexists(ExtractFilePath(ParamStr(0)) + 'Temp\Bühnenansicht') then
+    FileStream := TFileStream.Create(ExtractFilePath(ParamStr(0)) + 'Temp\Bühnenansicht', fmOpenRead)
+  else
+    FileStream := TFileStream.Create(ExtractFilePath(ParamStr(0)) + 'Temp\' + filename, fmOpenRead);
+  FileStream.ReadBuffer(mainform.buehnenansichtsetup, sizeof(mainform.buehnenansichtsetup));
+  FileStream.ReadBuffer(laenge, sizeof(laenge));
+  setlength(mainform.buehnenansichtdevices, laenge);
+  setlength(device_picture, laenge);
+  setlength(device_progress, laenge);
+  setlength(device_label, laenge);
+  setlength(device_number, laenge);
+  setlength(device_colorshape, laenge);
+  setlength(device_selected, laenge);
+  for i := 0 to laenge - 1 do
+  begin
+    FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].channel, sizeof(mainform.buehnenansichtdevices[i].channel));
+    FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].color, sizeof(mainform.buehnenansichtdevices[i].color));
+    FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].picture, sizeof(mainform.buehnenansichtdevices[i].picture));
+    FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].picturesize, sizeof(mainform.buehnenansichtdevices[i].picturesize));
+    FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].pictureangle, sizeof(mainform.buehnenansichtdevices[i].pictureangle));
+    FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].picturefliphor, sizeof(mainform.buehnenansichtdevices[i].picturefliphor));
+    FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].pictureflipver, sizeof(mainform.buehnenansichtdevices[i].pictureflipver));
+    FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].pictureispng, sizeof(mainform.buehnenansichtdevices[i].pictureispng));
+    FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].top, sizeof(mainform.buehnenansichtdevices[i].top));
+    FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].left, sizeof(mainform.buehnenansichtdevices[i].left));
+    createdevices(i);
+  end;
+  FileStream.Free;
+
+  // Temp-Verzeichnis reinigen
+  mainform.DeleteDirectory(ExtractFilePath(ParamStr(0)) + 'Temp');
+  CreateDir(ExtractFilePath(ParamStr(0)) + 'Temp');
+
+  if pos('\Projekt\', mainform.buehnenansichtsetup.Buehnenansicht_background) > 0 then
+    mainform.buehnenansichtsetup.Buehnenansicht_background := mainform.workingdirectory + copy(mainform.buehnenansichtsetup.Buehnenansicht_background, pos('Projekt\', mainform.buehnenansichtsetup.Buehnenansicht_background), length(mainform.buehnenansichtsetup.Buehnenansicht_background));
+
+  UnLockWindow(panel2.Handle);
+
+  //{
+  if not startingup then
+  begin
+    if mainform.buehnenansichtsetup.Buehnenansicht_background <> '' then
+      if FileExists(mainform.buehnenansichtsetup.Buehnenansicht_background) then
+        Stage.Picture.LoadFromFile(mainform.buehnenansichtsetup.Buehnenansicht_background)
+      else
+      if FileExists(filepath + ExtractFileName(mainform.buehnenansichtsetup.Buehnenansicht_background)) then
+        Stage.Picture.LoadFromFile(filepath + ExtractFileName(mainform.buehnenansichtsetup.Buehnenansicht_background))
+      else
+      if messagedlg('Das Hintergrundbild "' + mainform.buehnenansichtsetup.Buehnenansicht_background + '" für die Bühnenansicht wurde nicht gefunden. Möchten Sie jetzt danach suchen?', mtConfirmation,
+        [mbYes, mbNo], 0) = mrYes then
+      begin
+        opendialog1.Title  := 'Bilddatei öffnen...';
+        OpenDialog1.Filter := 'Bilddateien (*.bmp;*.jpg;*.gif;*.ico;*.png)|*.bmp;*.jpg;*.gif;*.ico;*.png|Alle Dateien (*.*)|*.*';
+        opendialog1.FileName := '';
+        opendialog1.DefaultExt := '*.bmp;*.jpg;*.gif;*.ico;*.png';
+        if OpenDialog1.Execute then
+        begin
+          grafischebuehnenansicht.Stage.Picture.LoadFromFile(OpenDialog1.FileName);
+          mainform.buehnenansichtsetup.Buehnenansicht_background := OpenDialog1.FileName;
+        end;
+      end else
+      begin
+        stage.Picture := Referenzbild2.Picture;
+        mainform.buehnenansichtsetup.Buehnenansicht_background := '';
+      end;
+  end;
+  //}
+
+  if errorindevicepicture then
+    MessageDlg('Einige Gerätebilder konnten nicht gefunden werden. Fehlende Bilder wurden durch Standardbilder ersetzt.', mtError, [mbOK], 0);
+
+  if not startingup then
+  begin
+    grafischebuehnenansicht.Width := mainform.buehnenansichtsetup.Buehnenansicht_width;
+    grafischebuehnenansicht.Height := mainform.buehnenansichtsetup.Buehnenansicht_height;
+    panel1.Visible := mainform.buehnenansichtsetup.Buehnenansicht_panel;
+    screentimeronline := True;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.savescene(scenefilename: string);
+var
+  i, laenge: integer;
+  filename, filepath: string;
+begin
+  mainform.buehnenansichtsetup.Buehnenansicht_width  := grafischebuehnenansicht.Width;
+  mainform.buehnenansichtsetup.Buehnenansicht_height := grafischebuehnenansicht.Height;
+  mainform.buehnenansichtsetup.Buehnenansicht_panel  := panel1.Visible;
+
+  filename := extractfilename(scenefilename);
+  filepath := extractfilepath(scenefilename);
+
+  if pos('\Projekt\', mainform.buehnenansichtsetup.Buehnenansicht_background) > 0 then
+    mainform.buehnenansichtsetup.Buehnenansicht_background := mainform.workingdirectory + copy(mainform.buehnenansichtsetup.Buehnenansicht_background, pos('Projekt\', mainform.buehnenansichtsetup.Buehnenansicht_background), length(mainform.buehnenansichtsetup.Buehnenansicht_background));
+
+  try
+    // Temp-Verzeichnis reinigen
+    mainform.DeleteDirectory(ExtractFilePath(ParamStr(0)) + 'Temp');
+    CreateDir(ExtractFilePath(ParamStr(0)) + 'Temp');
+
+    FileStream := TFileStream.Create(ExtractFilePath(ParamStr(0)) + 'Temp\Bühnenansicht', fmCreate);
+    FileStream.WriteBuffer(mainform.buehnenansichtsetup, sizeof(mainform.buehnenansichtsetup));
+    laenge := length(mainform.buehnenansichtdevices);
+    FileStream.WriteBuffer(laenge, sizeof(laenge));
+    for i := 0 to laenge - 1 do
+    begin
+      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].channel, sizeof(mainform.buehnenansichtdevices[i].channel));
+      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].color, sizeof(mainform.buehnenansichtdevices[i].color));
+      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].picture, sizeof(mainform.buehnenansichtdevices[i].picture));
+      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].picturesize, sizeof(mainform.buehnenansichtdevices[i].picturesize));
+      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].pictureangle, sizeof(mainform.buehnenansichtdevices[i].pictureangle));
+      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].picturefliphor, sizeof(mainform.buehnenansichtdevices[i].picturefliphor));
+      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].pictureflipver, sizeof(mainform.buehnenansichtdevices[i].pictureflipver));
+      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].pictureispng, sizeof(mainform.buehnenansichtdevices[i].pictureispng));
+      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].top, sizeof(mainform.buehnenansichtdevices[i].top));
+      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].left, sizeof(mainform.buehnenansichtdevices[i].left));
+    end;
+    FileStream.Free;
+
+    if (filepath + filename) <> (ExtractFilePath(ParamStr(0)) + 'Temp\Bühnenansicht') then
+      Compress.CompressDirectory(ExtractFilePath(ParamStr(0)) + 'Temp\', False, filepath + filename);
+
+    // Temp-Verzeichnis reinigen
+    mainform.DeleteDirectory(ExtractFilePath(ParamStr(0)) + 'Temp');
+    CreateDir(ExtractFilePath(ParamStr(0)) + 'Temp');
+  except
+    ShowMessage('Bühnenansicht: Es ist ein Fehler beim Speichern der Szene aufgetreten.');
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.createdevices(i: integer);
+var
+  R, G, B: byte;
+  RGB: integer;
+begin
+  device_picture[i] := TImage.Create(self);
+  if mainform.buehnenansichtdevices[i].picturesize = 0 then
+    mainform.buehnenansichtdevices[i].picturesize := Trackbar1.Position;
+  device_picture[i].Parent := panel2;
+  device_picture[i].PopupMenu := devicepicture_popup;
+  device_picture[i].OnMouseMove := device_pictureMouseMove;
+  device_picture[i].OnMouseUp := device_pictureMouseUp;
+  device_picture[i].Transparent := True;
+  device_picture[i].Top  := mainform.buehnenansichtdevices[i].top;
+  device_picture[i].Left := mainform.buehnenansichtdevices[i].Left;
+  device_picture[i].Height := mainform.buehnenansichtdevices[i].picturesize * 16;
+  device_picture[i].Width := mainform.buehnenansichtdevices[i].picturesize * 16;
+  device_picture[i].Stretch := True;
+  device_picture[i].Proportional := True;
+  device_picture[i].Hint := mainform.Data.names[mainform.buehnenansichtdevices[i].channel] + ' (' + mainform.levelstr(255 - mainform.Data.ch[mainform.buehnenansichtdevices[i].channel]) + '), Kanalicon';
+  device_picture[i].ShowHint := True;
+  if (length(mainform.buehnenansichtdevices[i].picture) > 0) and FileExists(mainform.buehnenansichtdevices[i].picture) then
+    device_picture[i].Picture.LoadFromFile(mainform.buehnenansichtdevices[i].picture)
+  else
+    device_picture[i].Picture := referenzbild.Picture;
+  device_picture[i].Show;
+
+  device_progress[i] := TProgressBar.Create(self);
+  device_progress[i].Parent := panel2;
+  device_progress[i].OnMouseMove := device_progressMouseMove;
+  device_progress[i].Height := 9;
+  device_progress[i].Width := mainform.buehnenansichtdevices[i].picturesize * 16;
+  device_progress[i].Top := device_picture[i].Top + mainform.buehnenansichtdevices[i].picturesize * 16;
+  device_progress[i].Left := device_picture[i].Left;
+  device_progress[i].Max := 255;
+  device_progress[i].Smooth := True;
+  device_progress[i].Enabled := True;
+  device_progress[i].Position := 255 - mainform.Data.ch[mainform.buehnenansichtdevices[i].channel];
+  device_progress[i].Show;
+
+  device_label[i] := TLabel.Create(self);
+  device_label[i].Parent := panel2;
+  device_label[i].OnMouseUp := DeviceLabelMouseUp;
+  device_label[i].Top := device_picture[i].Top + device_picture[i].Height + 8;
+  device_label[i].Left := device_picture[i].Left;
+  device_label[i].Caption := mainform.Data.names[mainform.buehnenansichtdevices[i].channel];
+  device_label[i].Transparent := False;
+  device_label[i].Show;
+
+  device_colorshape[i] := TShape.Create(self);
+  device_colorshape[i].Parent := panel2;
+  device_colorshape[i].OnMouseUp := DeviceColorMouseUp;
+  device_colorshape[i].Shape := stCircle;
+
+  RGB := ColorToRGB(mainform.buehnenansichtdevices[i].color);
+  R := round(GetRValue(RGB) * (255 - mainform.Data.ch[mainform.buehnenansichtdevices[i].channel]) / 255);
+  G := round(GetGValue(RGB) * (255 - mainform.Data.ch[mainform.buehnenansichtdevices[i].channel]) / 255);
+  B := round(GetBValue(RGB) * (255 - mainform.Data.ch[mainform.buehnenansichtdevices[i].channel]) / 255);
+  device_colorshape[i].Brush.Color := RGB2TColor(R, G, B);
+  //    device_colorshape[i].Brush.Color:=mainform.buehnenansichtdevices[i].color;
+
+  if Checkbox2.Checked then
+  begin
+    device_colorshape[i].Height := mainform.buehnenansichtdevices[i].picturesize * 16;
+    device_colorshape[i].Width := mainform.buehnenansichtdevices[i].picturesize * 16;
+    device_colorshape[i].Top  := device_picture[i].Top;
+    device_colorshape[i].Left := device_picture[i].Left;
+  end else
+  begin
+    device_colorshape[i].Height := round(mainform.buehnenansichtdevices[i].picturesize * 16 / 3);
+    device_colorshape[i].Width := round(mainform.buehnenansichtdevices[i].picturesize * 16 / 3);
+    device_colorshape[i].Top  := device_picture[i].Top;
+    device_colorshape[i].Left := device_picture[i].Left + mainform.buehnenansichtdevices[i].picturesize * 16 - 10;
+  end;
+  device_colorshape[i].Show;
+
+  device_number[i] := TLabel.Create(self);
+  device_number[i].Parent := panel2;
+  device_number[i].OnMouseUp := DeviceNumberMouseUp;
+  device_number[i].Caption := IntToStr(mainform.buehnenansichtdevices[i].channel);
+  device_number[i].Font.Name := 'Arial';
+  device_number[i].Font.Size := 7;
+  device_number[i].Top := device_picture[i].Top + mainform.buehnenansichtdevices[i].picturesize * 16 - 10;
+  device_number[i].Left := device_picture[i].Left;
+  device_number[i].Transparent := False;
+  device_number[i].Show;
+
+  if checkbox1.Checked then
+    device_label[i].Visible := True
+  else
+    device_label[i].Visible := False;
+end;
+
+procedure Tgrafischebuehnenansicht.createdeviceicon(ID: TGUID);
+var
+  i, j, k, o, temp: integer;
+  R, G, B: byte;
+  x: TPNGObject;
+begin
+  for k := 0 to length(mainform.Devices) - 1 do
+    if GUIDtoString(mainform.devices[k].ID) = GUIDtoString(ID) then
+    begin
+      // Ist zu erstellendes Gerät bereits vorhanden?
+      for i := 0 to length(device_device_ID) - 1 do
+      begin
+        if GUIDtoString(device_device_ID[i]) = GUIDtoString(ID) then
+        begin
+          exit; // Wenn Gerätebild bereits vorhanden, dann nichts unternehmen
+        end;
+      end;
+
+      setlength(device_device_picture, length(device_device_picture) + 1);
+      setlength(device_device_progress, length(device_device_progress) + 1);
+      setlength(device_device_label, length(device_device_label) + 1);
+      setlength(device_device_number, length(device_device_number) + 1);
+      setlength(device_device_colorshape, length(device_device_colorshape) + 1);
+      setlength(device_device_selected, length(device_device_selected) + 1);
+      setlength(device_device_ID, length(device_device_ID) + 1);
+      setlength(device_device_aktualisieren, length(device_device_aktualisieren) + 1);
+
+      i := length(device_device_picture) - 1;
+
+      device_device_ID[i] := mainform.devices[k].ID;
+
+      device_device_picture[i] := TImage.Create(self);
+      if mainform.devices[k].picturesize = 0 then
+        mainform.devices[k].picturesize := 2;
+      device_device_picture[i].Parent := panel2;
+      device_device_picture[i].OnMouseMove := device_device_pictureMouseMove;
+      device_device_picture[i].OnMouseUp := device_device_pictureMouseUp;
+      device_device_picture[i].Transparent := True;
+      device_device_picture[i].Top  := mainform.devices[k].top;
+      device_device_picture[i].Left := mainform.devices[k].Left;
+      device_device_picture[i].Height := mainform.devices[k].picturesize * 16;
+      device_device_picture[i].Width := mainform.devices[k].picturesize * 16;
+      device_device_picture[i].Stretch := True;
+      device_device_picture[i].Proportional := True;
+      if mainform.devices[k].hasDimmer then
+      begin
+        for j := 0 to length(mainform.devices[k].kanaltyp) - 1 do
+          if lowercase(mainform.devices[k].kanaltyp[j]) = 'dimmer' then
+            device_device_picture[i].Hint := mainform.devices[k].Name + ' (' + mainform.levelstr(255 - mainform.Data.ch[mainform.devices[k].Startaddress + j]) + '), Geräteicon';
+      end else
+      begin
+        device_device_picture[i].Hint := 'Geräteicon, ' + mainform.devices[k].Name;
+      end;
+      device_device_picture[i].ShowHint := True;
+      if FileExists(mainform.workingdirectory + 'Devicepictures\' + mainform.devices[k].Bildadresse) then
+        device_device_picture[i].Picture.LoadFromFile(mainform.workingdirectory + 'Devicepictures\' + mainform.devices[k].Bildadresse)
+      else
+        device_device_picture[i].Picture := referenzbild.Picture;
+
+      if copy(mainform.devices[k].Bildadresse, length(mainform.devices[k].Bildadresse) - 2, 3) = 'png' then
+        mainform.devices[k].pictureispng := True
+      else
+        mainform.devices[k].pictureispng := False;
+
+      device_device_picture[i].Show;
+
+      device_device_progress[i] := TProgressBar.Create(self);
+      device_device_progress[i].Parent := panel2;
+      device_device_progress[i].OnMouseMove := device_device_progressMouseMove;
+      device_device_progress[i].Height := 9;
+      device_device_progress[i].Width := mainform.devices[k].picturesize * 16;
+      device_device_progress[i].Top := device_device_picture[i].Top + mainform.devices[k].picturesize * 16;
+      device_device_progress[i].Left := device_device_picture[i].Left;
+      device_device_progress[i].Max := 255;
+      device_device_progress[i].Smooth := True;
+      device_device_progress[i].Enabled := mainform.devices[k].hasDimmer;
+      device_device_progress[i].Position := geraetesteuerung.get_channel(mainform.devices[k].ID, 'DIMMER');
+      device_device_progress[i].Visible := mainform.devices[k].hasDimmer;
+      if mainform.devices[k].hasDimmer then
+        device_device_progress[i].Show;
+
+      device_device_label[i] := TLabel.Create(self);
+      device_device_label[i].Parent := panel2;
+      device_device_label[i].OnMouseUp := device_DeviceLabelMouseUp;
+      device_device_label[i].Top := device_device_picture[i].Top + device_device_picture[i].Height + 8;
+      device_device_label[i].Left := device_device_picture[i].Left;
+      device_device_label[i].Caption := mainform.devices[k].Name;
+      device_device_label[i].Transparent := False;
+      device_device_label[i].Show;
+
+      // TODO: IF HAS R/G/B IMPLEMENTIEREN
+      device_device_colorshape[i] := TShape.Create(self);
+      device_device_colorshape[i].Parent := panel2;
+      //    device_device_colorshape[i].OnMouseUp:=device_DeviceColorMouseUp;
+      device_device_colorshape[i].Shape := stCircle;
+
+      R := geraetesteuerung.get_channel(mainform.devices[k].ID, 'R');
+      G := geraetesteuerung.get_channel(mainform.devices[k].ID, 'G');
+      B := geraetesteuerung.get_channel(mainform.devices[k].ID, 'B');
+      device_device_colorshape[i].Brush.Color := RGB2TColor(R, G, B);
+      device_device_colorshape[i].Visible := (mainform.devices[k].hasRGB or mainform.devices[k].hasDimmer);
+
+      if Checkbox2.Checked then
+      begin
+        device_device_colorshape[i].Height := mainform.devices[k].picturesize * 16;
+        device_device_colorshape[i].Width := mainform.devices[k].picturesize * 16;
+        device_device_colorshape[i].Top  := device_device_picture[i].Top;
+        device_device_colorshape[i].Left := device_device_picture[i].Left;
+      end else
+      begin
+        device_device_colorshape[i].Height := round(mainform.devices[k].picturesize * 16 / 3);
+        device_device_colorshape[i].Width := round(mainform.devices[k].picturesize * 16 / 3);
+        device_device_colorshape[i].Top  := device_device_picture[i].Top;
+        device_device_colorshape[i].Left := device_device_picture[i].Left + mainform.devices[k].picturesize * 16 - 10;
+      end;
+      if mainform.devices[k].hasRGB then
+      begin
+        device_device_colorshape[i].Show;
+      end;
+
+      device_device_number[i] := TLabel.Create(self);
+      device_device_number[i].Parent := panel2;
+      device_device_number[i].OnMouseUp := device_DeviceNumberMouseUp;
+      device_device_number[i].Caption := IntToStr(mainform.devices[k].Startaddress);
+      device_device_number[i].Font.Name := 'Arial';
+      device_device_number[i].Font.Size := 7;
+      device_device_number[i].Top := device_device_picture[i].Top + mainform.devices[k].picturesize * 16 - 10;
+      device_device_number[i].Left := device_device_picture[i].Left;
+      device_device_number[i].Transparent := False;
+      device_device_number[i].Show;
+
+      if checkbox1.Checked then
+        device_device_label[i].Visible := True
+      else
+        device_device_label[i].Visible := False;
+
+      //      for o:=0 to length(mainform.Devices)-1 do
+      //      if GUIDtoString(mainform.Devices[o].ID)=GUIDtoString(device_device_ID[i]) then
+      if mainform.devices[k].pictureispng then
+      begin
+        // Versuchen die Datei zu drehen (nur wenn PNG)
+        x := device_device_picture[i].Picture.Graphic as TPNGObject;
+        temp := mainform.devices[k].pictureangle;
+        mainform.devices[k].pictureangle := 0;
+        for j := 1 to temp do
+          SmoothRotateDevice(x, 90, k);
+      end else
+      begin
+        // Bild ist kein PNG, dann Hor/Ver-Flippen
+        if mainform.devices[k].picturefliphor then
+        begin
+          mainform.devices[k].picturefliphor := False;
+          HorizontalSpiegelnDevice(device_device_picture[i].Picture.Bitmap, k);
+        end;
+        if mainform.devices[k].pictureflipver then
+        begin
+          mainform.devices[k].pictureflipver := False;
+          VertikalSpiegelnDevice(device_device_picture[i].Picture.Bitmap, k);
+        end;
+      end;
+
+    end;
+end;
+
+procedure Tgrafischebuehnenansicht.deletedeviceicon(ID: TGUID);
+var
+  letzteposition: integer;
+  i, k, PositionInDeviceArray: integer;
+  GeraetNochVorhanden: boolean;
+begin
+  // Ist zu löschendes Gerät bereits gelöscht?
+  GeraetNochVorhanden := False;
+  for k := 0 to length(device_device_ID) - 1 do
+  begin
+    if GUIDtoString(device_device_ID[k]) = GUIDtoString(ID) then
+    begin
+      GeraetNochVorhanden := True;
+    end;
+  end;
+  if GeraetNochVorhanden = False then
+    exit; // Zu löschendes Gerät bereits gelöscht, also exit!
+
+  for i := 0 to length(device_device_ID) - 1 do
+    if GUIDtoString(device_device_ID[i]) = GUIDtoString(ID) then
+    begin
+      LockWindow(panel2.Handle);
+      letzteposition := length(device_device_picture) - 1;
+
+      if (i < letzteposition - 1) then
+      begin
+        device_device_ID[i] := device_device_ID[letzteposition];
+
+        // Arrayposition des Gerätes an letzter Position herausfinden
+        PositionInDeviceArray := 0;
+        for k := 0 to length(mainform.Devices) - 1 do
+          if GUIDtoString(mainform.devices[k].ID) = GUIDtoString(device_device_ID[letzteposition]) then
+            PositionInDeviceArray := k;
+
+        // zu löschende Arrayposition durch letzten Arraywert ersetzen
+        device_device_picture[i].Top  := device_device_picture[letzteposition].Top;
+        device_device_picture[i].Left := device_device_picture[letzteposition].Left;
+        device_device_picture[i].Picture := device_device_picture[letzteposition].Picture;
+        device_device_picture[i].Width := device_device_picture[letzteposition].Width;
+        device_device_picture[i].Height := device_device_picture[letzteposition].Height;
+        device_device_picture[i].Refresh;
+        device_device_progress[i].Top  := device_device_progress[letzteposition].Top;
+        device_device_progress[i].Left := device_device_progress[letzteposition].Left;
+        device_device_progress[i].Width := device_device_progress[letzteposition].Width;
+        device_device_progress[i].Refresh;
+        device_device_label[i].Top  := device_device_label[letzteposition].Top;
+        device_device_label[i].Left := device_device_label[letzteposition].Left;
+        device_device_label[i].refresh;
+        device_device_number[i].Top  := device_device_number[letzteposition].Top;
+        device_device_number[i].Left := device_device_number[letzteposition].Left;
+        device_device_number[i].refresh;
+        device_device_colorshape[i].Top  := device_device_colorshape[letzteposition].Top;
+        device_device_colorshape[i].Left := device_device_colorshape[letzteposition].Left;
+        device_device_colorshape[i].Visible := device_device_colorshape[letzteposition].Visible;
+        device_device_colorshape[i].refresh;
+        device_device_aktualisieren[i] := device_device_aktualisieren[letzteposition];
+
+        device_device_progress[i].Position := geraetesteuerung.get_channel(device_device_ID[i], 'DIMMER');
+        device_device_label[i].Caption  := mainform.devices[PositionInDeviceArray].Name;
+        device_device_number[i].Caption := IntToStr(mainform.devices[PositionInDeviceArray].Startaddress);
+        device_device_colorshape[i].Brush.Color := device_device_colorshape[letzteposition].Brush.Color;
+      end;
+
+      // Komponenten killen
+      device_device_picture[letzteposition].Free;
+      device_device_progress[letzteposition].Free;
+      device_device_label[letzteposition].Free;
+      device_device_number[letzteposition].Free;
+      device_device_colorshape[letzteposition].Free;
+
+      // Alle Arrays um einen Wert kürzen
+      setlength(device_device_picture, length(device_device_picture) - 1);
+      setlength(device_device_progress, length(device_device_progress) - 1);
+      setlength(device_device_label, length(device_device_label) - 1);
+      setlength(device_device_number, length(device_device_number) - 1);
+      setlength(device_device_colorshape, length(device_device_colorshape) - 1);
+      setlength(device_device_selected, length(device_device_selected) - 1);
+      setlength(device_device_ID, length(device_device_ID) - 1);
+      setlength(device_device_aktualisieren, length(device_device_aktualisieren) - 1);
+
+      UnLockWindow(panel2.Handle);
+    end;
+end;
+
+procedure Tgrafischebuehnenansicht.deletealldeviceicon;
+var
+  i, j: integer;
+begin
+  for i := 0 to length(device_device_picture) - 1 do
+  begin
+    LockWindow(panel2.Handle);
+
+    for j := 0 to length(mainform.devices) - 1 do
+      if IsEqualGUID(mainform.devices[j].ID, device_device_ID[i]) then
+        mainform.Devices[j].ShowInStageview := False;
+
+    // Komponenten killen
+    device_device_picture[i].Free;
+    device_device_progress[i].Free;
+    device_device_label[i].Free;
+    device_device_number[i].Free;
+    device_device_colorshape[i].Free;
+
+    UnLockWindow(panel2.Handle);
+  end;
+
+  // Alle Arrays um einen Wert kürzen
+  setlength(device_device_picture, 0);
+  setlength(device_device_progress, 0);
+  setlength(device_device_label, 0);
+  setlength(device_device_number, 0);
+  setlength(device_device_colorshape, 0);
+  setlength(device_device_selected, 0);
+  setlength(device_device_ID, 0);
+  setlength(device_device_aktualisieren, 0);
+end;
+
+procedure Tgrafischebuehnenansicht.deletedevice(i: integer);
+var
+  letzteposition: integer;
+begin
+  //  screenupdate.Enabled:=false;
+
+  LockWindow(panel2.Handle);
+
+  letzteposition := length(mainform.buehnenansichtdevices) - 1;
+
+  if (i <> letzteposition) then
+  begin
+    // zu löschende Arrayposition durch letzten Arraywert ersetzen
+    mainform.buehnenansichtdevices[i].channel := mainform.buehnenansichtdevices[letzteposition].channel;
+    mainform.buehnenansichtdevices[i].color := mainform.buehnenansichtdevices[letzteposition].color;
+    mainform.buehnenansichtdevices[i].top  := mainform.buehnenansichtdevices[letzteposition].top;
+    mainform.buehnenansichtdevices[i].left := mainform.buehnenansichtdevices[letzteposition].left;
+
+    device_picture[i].Top := device_picture[letzteposition].Top;
+    device_picture[i].Left := device_picture[letzteposition].Left;
+    device_progress[i].Top := device_progress[letzteposition].Top;
+    device_progress[i].Left := device_progress[letzteposition].Left;
+    device_label[i].Top  := device_label[letzteposition].Top;
+    device_label[i].Left := device_label[letzteposition].Left;
+    device_number[i].Top := device_number[letzteposition].Top;
+    device_number[i].Left := device_number[letzteposition].Left;
+    device_colorshape[i].Top := device_colorshape[letzteposition].Top;
+    device_colorshape[i].Left := device_colorshape[letzteposition].Left;
+
+    device_progress[i].Position := 255 - mainform.Data.ch[mainform.buehnenansichtdevices[i].channel];
+    device_label[i].Caption  := mainform.Data.names[mainform.buehnenansichtdevices[i].channel];
+    device_number[i].Caption := IntToStr(mainform.buehnenansichtdevices[i].channel);
+    device_colorshape[i].Brush.Color := mainform.buehnenansichtdevices[i].color;
+  end;
+
+  // Komponenten killen
+  device_picture[letzteposition].Free;
+  device_progress[letzteposition].Free;
+  device_label[letzteposition].Free;
+  device_number[letzteposition].Free;
+  device_colorshape[letzteposition].Free;
+
+  // Alle Arrays um einen Wert kürzen
+  setlength(device_picture, length(device_picture) - 1);
+  setlength(device_progress, length(device_progress) - 1);
+  setlength(device_label, length(device_label) - 1);
+  setlength(device_number, length(device_number) - 1);
+  setlength(device_colorshape, length(device_colorshape) - 1);
+  setlength(device_selected, length(device_selected) - 1);
+  setlength(mainform.buehnenansichtdevices, length(mainform.buehnenansichtdevices) - 1);
+
+  UnLockWindow(panel2.Handle);
+end;
+
+procedure Tgrafischebuehnenansicht.Gertebildndern1Click(Sender: TObject);
+begin
+  if (actualdevice <= length(mainform.buehnenansichtdevices) - 1) then
+  begin
+    OpenDialog1.Filter := 'Bilddateien (*.bmp;*.jpg;*.gif;*.ico;*.png)|*.bmp;*.jpg;*.gif;*.ico;*.png|Alle Dateien (*.*)|*.*';
+    OpenDialog1.InitialDir := mainform.workingdirectory + 'Devicepictures';
+    opendialog1.FileName := '';
+    if OpenDialog1.Execute then
+    begin
+      device_picture[actualdevice].Picture.LoadFromFile(OpenDialog1.Filename);
+      mainform.buehnenansichtdevices[actualdevice].picture := OpenDialog1.Filename;
+      if copy(mainform.buehnenansichtdevices[actualdevice].picture, length(mainform.buehnenansichtdevices[actualdevice].picture) - 2, 3) = 'png' then
+        mainform.buehnenansichtdevices[actualdevice].pictureispng := True
+      else
+        mainform.buehnenansichtdevices[actualdevice].pictureispng := False;
+    end;
+    panel2.Refresh;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.Gertlschen1Click(Sender: TObject);
+begin
+  if (actualdevice <= length(mainform.buehnenansichtdevices) - 1) then
+  begin
+    deletedevice(actualdevice);
+    panel2.Refresh;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.Kanalnamenndern1Click(Sender: TObject);
+begin
+  if (actualdevice <= length(mainform.buehnenansichtdevices) - 1) then
+  begin
+    mainform.Data.names[mainform.buehnenansichtdevices[actualdevice].channel] := InputBox('Beschriftung für "' + mainform.Data.names[mainform.buehnenansichtdevices[actualdevice].channel] + '"', 'Bitte geben Sie eine neue Bezeichnung für den aktuellen Kanal ein:', mainform.Data.names[mainform.buehnenansichtdevices[actualdevice].channel]);
+    mainform.pluginsaktualisieren(Sender);
+    mainform.UpdateLevels;
+    mainform.effekttimelineundkanaluebersichtaktualisieren(Sender);
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.Kanalnummerndern1Click(Sender: TObject);
+var
+  oldvalue, channel: integer;
+begin
+  if (actualdevice <= length(mainform.buehnenansichtdevices) - 1) then
+  begin
+    oldvalue := mainform.buehnenansichtdevices[actualdevice].channel;
+    try
+      channel := StrToInt(InputBox('Kanaleinstellung', 'Welcher Kanal soll für dieses Gerät gelten:', IntToStr(mainform.buehnenansichtdevices[actualdevice].channel)));
+      if channel > mainform.lastchan then
+        mainform.buehnenansichtdevices[actualdevice].channel := mainform.lastchan
+      else if channel < 1 then
+        mainform.buehnenansichtdevices[actualdevice].channel := 1
+      else
+        mainform.buehnenansichtdevices[actualdevice].channel := channel;
+
+      //        screenupdate.Enabled:=true;
+      aktualisieren := True;
+    except
+      mainform.buehnenansichtdevices[actualdevice].channel := oldvalue;
+    end;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.colorbox1ColorChange(Sender: TObject);
+var
+  R, G, B: byte;
+  RGB: integer;
+begin
+  mainform.buehnenansichtdevices[actualdevice].color := colorbox1.SelectedColor;
+
+  RGB := ColorToRGB(mainform.buehnenansichtdevices[actualdevice].color);
+  R := round(GetRValue(RGB) * (255 - mainform.Data.ch[mainform.buehnenansichtdevices[actualdevice].channel]) / 255);
+  G := round(GetGValue(RGB) * (255 - mainform.Data.ch[mainform.buehnenansichtdevices[actualdevice].channel]) / 255);
+  B := round(GetBValue(RGB) * (255 - mainform.Data.ch[mainform.buehnenansichtdevices[actualdevice].channel]) / 255);
+  device_colorshape[actualdevice].Brush.Color := RGB2TColor(R, G, B);
+
+  colorbox1.Visible := False;
+  //  screenupdate.Enabled:=true;
+  aktualisieren := True;
+end;
+
+procedure Tgrafischebuehnenansicht.colorbox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  colorbox1.Visible := False;
+end;
+
+procedure Tgrafischebuehnenansicht.CheckBox2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i, k: integer;
+begin
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+  begin
+    if Checkbox2.Checked then
+    begin
+      device_colorshape[i].Height := mainform.buehnenansichtdevices[i].picturesize * 16;
+      device_colorshape[i].Width := mainform.buehnenansichtdevices[i].picturesize * 16;
+      device_colorshape[i].Top  := device_picture[i].Top;
+      device_colorshape[i].Left := device_picture[i].Left;
+    end else
+    begin
+      device_colorshape[i].Height := round(mainform.buehnenansichtdevices[i].picturesize * 16 / 3);
+      device_colorshape[i].Width := round(mainform.buehnenansichtdevices[i].picturesize * 16 / 3);
+      device_colorshape[i].Top  := device_picture[i].Top;
+      device_colorshape[i].Left := device_picture[i].Left + mainform.buehnenansichtdevices[i].picturesize * 16 - 10;
+    end;
+    //    device_colorshape[i].Refresh;
+  end;
+
+  for i := 0 to length(device_device_picture) - 1 do
+  begin
+    for k := 0 to length(mainform.devices) - 1 do
+      if GUIDtoString(mainform.devices[k].ID) = GUIDtoString(device_device_ID[i]) then
+      begin
+        if Checkbox2.Checked then
+        begin
+          device_device_colorshape[i].Height := mainform.devices[k].picturesize * 16;
+          device_device_colorshape[i].Width := mainform.devices[k].picturesize * 16;
+          device_device_colorshape[i].Top  := device_device_picture[i].Top;
+          device_device_colorshape[i].Left := device_device_picture[i].Left;
+        end else
+        begin
+          device_device_colorshape[i].Height := round(mainform.devices[k].picturesize * 16 / 3);
+          device_device_colorshape[i].Width := round(mainform.devices[k].picturesize * 16 / 3);
+          device_device_colorshape[i].Top  := device_device_picture[i].Top;
+          device_device_colorshape[i].Left := device_device_picture[i].Left + mainform.devices[k].picturesize * 16 - 10;
+        end;
+      end;
+    //    device_device_colorshape[i].Refresh;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.GroeFarbanzeige1Click(Sender: TObject);
+begin
+  Checkbox2.Checked := not Checkbox2.Checked;
+  CheckBox2MouseUp(Sender, mbLeft, [ssLeft], 0, 0);
+end;
+
+procedure Tgrafischebuehnenansicht.NewPanel;
+var
+  i: integer;
+begin
+  screentimeronline := False;
+  application.ProcessMessages;
+  sleep(100);
+
+  LockWindow(panel2.Handle);
+  stage.Picture  := Referenzbild2.Picture;
+  zoom.ItemIndex := 0;
+
+  trackbar1.Position := 2;
+  mainform.buehnenansichtsetup.Buehnenansicht_background := '';
+  mainform.buehnenansichtsetup.Buehnenansicht_width := 700;
+  mainform.buehnenansichtsetup.Buehnenansicht_height := 460;
+  mainform.buehnenansichtsetup.Buehnenansicht_panel := True;
+
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+  begin
+    device_picture[i].Free;
+    device_progress[i].Free;
+    device_label[i].Free;
+    device_number[i].Free;
+    device_colorshape[i].Free;
+  end;
+
+  setlength(mainform.buehnenansichtdevices, 0);
+  setlength(device_picture, 0);
+  setlength(device_progress, 0);
+  setlength(device_label, 0);
+  setlength(device_number, 0);
+  setlength(device_colorshape, 0);
+  setlength(device_selected, 0);
+  UnLockWindow(panel2.Handle);
+
+  if ddfwindow.Showing then
+    ddfwindow.Close;
+
+  //    if messagedlg('Sollen ebenfalls alle Geräteicons gelöscht werden (können über die Gerätesteuerung wieder angezeigt werden)?',mtWarning,
+  //      [mbYes,mbNo],0)=mrYes then
+  deletealldeviceicon;
+
+  grafischebuehnenansicht.Width := mainform.buehnenansichtsetup.Buehnenansicht_width;
+  grafischebuehnenansicht.Height := mainform.buehnenansichtsetup.Buehnenansicht_height;
+  panel1.Visible := mainform.buehnenansichtsetup.Buehnenansicht_panel;
+
+  screentimeronline := True;
+end;
+
+//-------------------------------------------------
+
+constructor TUpdateThread.Create(UpdateEvent: TUpdateEvent);
+begin
+  inherited Create(False);
+  FUpdateEvent := UpdateEvent;
+  Priority := tpLowest;
+  FreeOnTerminate := True;
+end;
+
+procedure TUpdateThread.Execute;
+begin
+  inherited;
+  mainform.Thread_closed[3] := False;
+  grafischebuehnenansicht.UpdateLevels();
+  mainform.Thread_closed[3] := True;
+  Terminate;
+end;
+
+procedure Tgrafischebuehnenansicht.UpdateLevels();
+var
+  R, G, B: byte;
+  RGB: integer;
+  i, j, k, l, o: integer;
+begin
+  repeat
+    if (grafischebuehnenansicht.Visible and screentimeronline and aktualisieren) and (not startingup) and (not mainform.shutdown) then
+    begin
+      aktualisieren := False;
+
+      for k := 1 to mainform.lastchan do
+      begin
+        if aktualisierechannel[k] then
+        begin
+          aktualisierechannel[k] := False;
+          // Kanalicons aktualisieren
+          for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+          begin
+            if (mainform.buehnenansichtdevices[i].channel = k) then
+            begin
+              device_progress[i].Position := (255 - mainform.Data.ch[mainform.buehnenansichtdevices[i].channel]);
+              device_progress[i].Position := (255 - mainform.Data.ch[mainform.buehnenansichtdevices[i].channel] - 1);
+              device_progress[i].Position := (255 - mainform.Data.ch[mainform.buehnenansichtdevices[i].channel]);
+              device_label[i].Caption  := mainform.Data.names[mainform.buehnenansichtdevices[i].channel];
+              device_number[i].Caption := IntToStr(mainform.buehnenansichtdevices[i].channel);
+
+              RGB := ColorToRGB(mainform.buehnenansichtdevices[i].color);
+              R := round(GetRValue(RGB) * (255 - mainform.Data.ch[mainform.buehnenansichtdevices[i].channel]) / 255);
+              G := round(GetGValue(RGB) * (255 - mainform.Data.ch[mainform.buehnenansichtdevices[i].channel]) / 255);
+              B := round(GetBValue(RGB) * (255 - mainform.Data.ch[mainform.buehnenansichtdevices[i].channel]) / 255);
+              device_colorshape[i].Brush.Color := RGB2TColor(R, G, B);
+            end;
+          end;
+
+          for i := 0 to length(device_device_picture) - 1 do
+          begin
+            for j := 0 to length(mainform.devices) - 1 do
+            begin
+              if GUIDtoString(mainform.devices[j].ID) = GUIDtoString(device_device_ID[i]) then
+              begin // richtiges Gerät gefunden
+                if (k >= mainform.devices[j].Startaddress) and (k <= mainform.devices[j].Startaddress + mainform.devices[j].MaxChan) then
+                begin
+                  // zu aktualisierender Kanal liegt auf aktuellem Gerät
+                  device_device_label[i].Caption := mainform.devices[j].Name;
+                  if mainform.devices[j].hasDIMMER then
+                  begin
+                    device_device_progress[i].Position := geraetesteuerung.get_channel(mainform.devices[j].ID, 'DIMMER');
+                    RGB := ColorToRGB(mainform.devices[j].color);
+                    R := round(GetRValue(RGB) * geraetesteuerung.get_channel(mainform.devices[j].ID, 'DIMMER') / 255);
+                    G := round(GetGValue(RGB) * geraetesteuerung.get_channel(mainform.devices[j].ID, 'DIMMER') / 255);
+                    B := round(GetBValue(RGB) * geraetesteuerung.get_channel(mainform.devices[j].ID, 'DIMMER') / 255);
+                    device_device_colorshape[i].Brush.Color := RGB2TColor(R, G, B);
+                  end;
+                  if mainform.devices[j].hasRGB then
+                  begin
+                    device_device_colorshape[i].Brush.Color := RGB2TColor(geraetesteuerung.get_channel(mainform.devices[j].ID, 'R'), geraetesteuerung.get_channel(mainform.devices[j].ID, 'G'), geraetesteuerung.get_channel(mainform.devices[j].ID, 'B'));
+                  end;
+                end;
+              end;
+            end;
+          end;
+        end;
+      end;
+    end;
+    sleep(1);
+  until mainform.shutdown;
+end;
+
+//-------------------------------------------------
+
+procedure Tgrafischebuehnenansicht.CheckBox4MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+    device_colorshape[i].Visible := Checkbox4.Checked;
+end;
+
+procedure Tgrafischebuehnenansicht.Trackbar1Change(Sender: TObject);
+var
+  i, j: integer;
+begin
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+  begin
+    if (device_selected[i]) then
+    begin
+      mainform.buehnenansichtdevices[i].picturesize := TrackBar1.Position;
+      searchpicture(i);
+    end;
+  end;
+
+  for i := 0 to length(device_device_picture) - 1 do
+  begin
+    if (device_device_selected[i]) then
+    begin
+      for j := 0 to length(mainform.devices) - 1 do
+        if GUIDtoString(mainform.devices[j].ID) = GUIDtoString(device_device_ID[i]) then
+        begin
+          mainform.devices[j].picturesize := TrackBar1.Position;
+          device_searchpicture(j, i);
+        end;
+    end;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.searchpicture(Device: integer);
+var
+  bildname, bildpfad: string;
+  i: integer;
+begin
+  i := Device;
+  bildname := ExtractFileName(mainform.buehnenansichtdevices[i].picture);
+  bildpfad := ExtractFilePath(mainform.buehnenansichtdevices[i].picture);
+  if (mainform.buehnenansichtdevices[i].picturesize * 16) <= 32 then
+  begin
+    if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname;
+    end;
+  end
+  else if (mainform.buehnenansichtdevices[i].picturesize * 16) <= 64 then
+  begin
+    if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname;
+    end;
+  end
+  else if (mainform.buehnenansichtdevices[i].picturesize * 16) <= 96 then
+  begin
+    if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname;
+    end;
+  end
+  else if (mainform.buehnenansichtdevices[i].picturesize * 16) <= 128 then
+  begin
+    if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname) then
+    begin
+      device_picture[i].Picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname);
+      mainform.buehnenansichtdevices[i].picture := copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname;
+    end;
+  end;
+
+  device_colorshape[i].Top  := device_picture[i].Top;
+  device_colorshape[i].Left := device_picture[i].Left + mainform.buehnenansichtdevices[i].picturesize * 16 - 10;
+  device_colorshape[i].Height := round(mainform.buehnenansichtdevices[i].picturesize * 16 / 3);
+  device_colorshape[i].Width := round(mainform.buehnenansichtdevices[i].picturesize * 16 / 3);
+
+  device_picture[i].Width  := mainform.buehnenansichtdevices[i].picturesize * 16;
+  device_picture[i].Height := mainform.buehnenansichtdevices[i].picturesize * 16;
+
+  device_progress[i].Width := mainform.buehnenansichtdevices[i].picturesize * 16;
+  device_progress[i].Top  := device_picture[i].Top + device_picture[i].Height;
+  device_progress[i].left := device_picture[i].left;
+
+  device_label[i].Top  := device_picture[i].Top + device_picture[i].Height + 8;
+  device_label[i].left := device_picture[i].left;
+
+  device_number[i].Top  := device_picture[i].Top + mainform.buehnenansichtdevices[i].picturesize * 16 - 10;
+  device_number[i].Left := device_picture[i].Left;
+end;
+
+procedure Tgrafischebuehnenansicht.device_searchpicture(Device: integer; DeviceInStageView: integer);
+var
+  bildname, bildpfad: string;
+  i: integer;
+begin
+  i := DeviceInStageView;
+
+  bildname := ExtractFileName(mainform.workingdirectory + 'Devicepictures\' + mainform.devices[Device].Bildadresse);
+  bildpfad := ExtractFilePath(mainform.workingdirectory + 'Devicepictures\' + mainform.devices[Device].Bildadresse);
+
+  if (mainform.devices[Device].picturesize * 16) <= 32 then
+  begin
+    if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname);
+      mainform.devices[Device].Bildadresse := '32 x 32\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname);
+      mainform.devices[Device].Bildadresse := '64 x 64\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname);
+      mainform.devices[Device].Bildadresse := '96 x 96\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname);
+      mainform.devices[Device].Bildadresse := '128x128\' + bildname;
+    end;
+  end
+  else if (mainform.devices[Device].picturesize * 16) <= 64 then
+  begin
+    if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname);
+      mainform.devices[Device].Bildadresse := '64 x 64\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname);
+      mainform.devices[Device].Bildadresse := '96 x 96\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname);
+      mainform.devices[Device].Bildadresse := '128x128\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname);
+      mainform.devices[Device].Bildadresse := '32 x 32\' + bildname;
+    end;
+  end
+  else if (mainform.devices[Device].picturesize * 16) <= 96 then
+  begin
+    if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname);
+      mainform.devices[Device].Bildadresse := '96 x 96\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname);
+      mainform.devices[Device].Bildadresse := '128x128\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname);
+      mainform.devices[Device].Bildadresse := '64 x 64\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname);
+      mainform.devices[Device].Bildadresse := '32 x 32\' + bildname;
+    end;
+  end
+  else if (mainform.devices[Device].picturesize * 16) <= 128 then
+  begin
+    if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '128x128\' + bildname);
+      mainform.devices[Device].Bildadresse := '128x128\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '96 x 96\' + bildname);
+      mainform.devices[Device].Bildadresse := '96 x 96\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '64 x 64\' + bildname);
+      mainform.devices[Device].Bildadresse := '64 x 64\' + bildname;
+    end
+    else if FileExists(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname) then
+    begin
+      device_device_picture[i].picture.LoadFromFile(copy(bildpfad, 0, length(bildpfad) - 8) + '32 x 32\' + bildname);
+      mainform.devices[Device].Bildadresse := '32 x 32\' + bildname;
+    end;
+  end;
+
+  device_device_colorshape[i].Top  := device_device_picture[i].Top;
+  device_device_colorshape[i].Left := device_device_picture[i].Left + mainform.devices[Device].picturesize * 16 - 10;
+  device_device_colorshape[i].Height := round(mainform.devices[Device].picturesize * 16 / 3);
+  device_device_colorshape[i].Width := round(mainform.devices[Device].picturesize * 16 / 3);
+
+  device_device_picture[i].Width  := mainform.devices[Device].picturesize * 16;
+  device_device_picture[i].Height := mainform.devices[Device].picturesize * 16;
+
+  device_device_progress[i].Width := mainform.devices[Device].picturesize * 16;
+  device_device_progress[i].Top  := device_device_picture[i].Top + device_device_picture[i].Height;
+  device_device_progress[i].left := device_device_picture[i].left;
+
+  device_device_label[i].Top  := device_device_picture[i].Top + device_device_picture[i].Height + 8;
+  device_device_label[i].left := device_device_picture[i].left;
+
+  device_device_number[i].Top  := device_device_picture[i].Top + mainform.devices[Device].picturesize * 16 - 10;
+  device_device_number[i].Left := device_device_picture[i].Left;
+end;
+
+procedure Tgrafischebuehnenansicht.RotateBtnClick(Sender: TObject);
+var
+  x: TPNGObject;
+  i, j: integer;
+begin
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+  begin
+    if (device_selected[i]) then
+    begin
+      if mainform.buehnenansichtdevices[i].pictureispng then
+      begin
+        x := device_picture[i].Picture.Graphic as TPNGObject;
+        SmoothRotate(x, 90, i);
+        device_picture[i].Refresh;
+      end else
+      begin
+        ShowMessage('Leider können derzeit nur PNG-Dateien rotiert werden...' + #13#10#13#10 + 'Bitte benutzen Sie die Spiegelfunktionen, um das Bild horizontal und vertikal zu Spiegeln');
+      end;
+    end;
+  end;
+
+  for i := 0 to length(device_device_picture) - 1 do
+  begin
+    if (device_device_selected[i]) then
+    begin
+      for j := 0 to length(mainform.devices) - 1 do
+        if GUIDtoString(device_device_ID[i]) = GUIDtoString(mainform.devices[j].ID) then
+        begin
+          if mainform.devices[j].pictureispng then
+          begin
+            x := device_device_picture[i].Picture.Graphic as TPNGObject;
+            SmoothRotateDevice(x, 90, i);
+            device_device_picture[i].Refresh;
+          end else
+          begin
+            ShowMessage('Leider können derzeit nur PNG-Dateien rotiert werden...' + #13#10#13#10 + 'Bitte benutzen Sie die Spiegelfunktionen, um das Bild horizontal und vertikal zu Spiegeln');
+          end;
+        end;
+    end;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.FlipHorBtnClick(Sender: TObject);
+var
+  i, j: integer;
+begin
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+  begin
+    if (device_selected[i]) then
+    begin
+      if not mainform.buehnenansichtdevices[i].pictureispng then
+        HorizontalSpiegeln(device_picture[i].Picture.Bitmap, i)
+      else
+        ShowMessage('Derzeit können PNG Dateien nicht gespiegelt werden.' + #13#10#13#10 + 'Bitte benutzen Sie stattdessen die Rotationsfunktion.');
+    end;
+  end;
+
+  for i := 0 to length(device_device_picture) - 1 do
+  begin
+    if (device_device_selected[i]) then
+    begin
+      for j := 0 to length(mainform.devices) - 1 do
+        if GUIDtoString(device_device_ID[i]) = GUIDtoString(mainform.devices[j].ID) then
+        begin
+          if not mainform.devices[j].pictureispng then
+            HorizontalSpiegelnDevice(device_device_picture[i].Picture.Bitmap, i)
+          else
+            ShowMessage('Derzeit können PNG Dateien nicht gespiegelt werden.' + #13#10#13#10 + 'Bitte benutzen Sie stattdessen die Rotationsfunktion.');
+        end;
+    end;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.FlipVerBtnClick(Sender: TObject);
+var
+  i, j: integer;
+begin
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+  begin
+    if (device_selected[i]) then
+    begin
+      if not mainform.buehnenansichtdevices[i].pictureispng then
+        VertikalSpiegeln(device_picture[i].Picture.Bitmap, i)
+      else
+        ShowMessage('Derzeit können PNG Dateien nicht gespiegelt werden.' + #13#10#13#10 + 'Bitte benutzen Sie stattdessen die Rotationsfunktion.');
+    end;
+  end;
+
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+  begin
+    if (device_selected[i]) then
+    begin
+      for j := 0 to length(mainform.devices) - 1 do
+        if GUIDtoString(device_device_ID[i]) = GUIDtoString(mainform.devices[j].ID) then
+        begin
+          if not mainform.devices[j].pictureispng then
+            VertikalSpiegelnDevice(device_device_picture[i].Picture.Bitmap, i)
+          else
+            ShowMessage('Derzeit können PNG Dateien nicht gespiegelt werden.' + #13#10#13#10 + 'Bitte benutzen Sie stattdessen die Rotationsfunktion.');
+        end;
+    end;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.CreateParams(var Params: TCreateParams);
+begin
+
+  inherited;// CreateParams(Params);
+  Params.ExStyle := WS_EX_APPWINDOW; // Params.ExStyle sorgt dafür, dass das Form einen eigenen Taskbareintrag erhält
+  grafischebuehnenansicht.ParentWindow := GetDesktopWindow;
+  //  Params.Caption:=PChar(kontrollpanel.Caption);//'Kontrollpanel';
+
+{
+  inherited CreateParams(Params);
+  Params.WndParent := GetDesktopWindow;
+}
+end;
+
+procedure Tgrafischebuehnenansicht.RefreshStageView;
+var
+  i: integer;
+  errorindevicepicture: boolean;
+begin
+  setlength(grafischebuehnenansicht.device_picture, length(mainform.buehnenansichtdevices));
+  setlength(grafischebuehnenansicht.device_progress, length(mainform.buehnenansichtdevices));
+  setlength(grafischebuehnenansicht.device_label, length(mainform.buehnenansichtdevices));
+  setlength(grafischebuehnenansicht.device_number, length(mainform.buehnenansichtdevices));
+  setlength(grafischebuehnenansicht.device_colorshape, length(mainform.buehnenansichtdevices));
+  setlength(grafischebuehnenansicht.device_selected, length(mainform.buehnenansichtdevices));
+
+
+  LockWindow(panel2.Handle);
+  screentimeronline := False;
+  errorindevicepicture := False;
+
+  filename := '';
+  filepath := '';
+
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+  begin
+    createdevices(i);
+  end;
+
+  if pos('\Projekt\', mainform.buehnenansichtsetup.Buehnenansicht_background) > 0 then
+    mainform.buehnenansichtsetup.Buehnenansicht_background := mainform.workingdirectory + copy(mainform.buehnenansichtsetup.Buehnenansicht_background, pos('Projekt\', mainform.buehnenansichtsetup.Buehnenansicht_background), length(mainform.buehnenansichtsetup.Buehnenansicht_background));
+
+  UnLockWindow(panel2.Handle);
+
+  //{
+  if not startingup then
+  begin
+    if mainform.buehnenansichtsetup.Buehnenansicht_background <> '' then
+      if FileExists(mainform.buehnenansichtsetup.Buehnenansicht_background) then
+        Stage.Picture.LoadFromFile(mainform.buehnenansichtsetup.Buehnenansicht_background)
+      else
+      if FileExists(filepath + ExtractFileName(mainform.buehnenansichtsetup.Buehnenansicht_background)) then
+        Stage.Picture.LoadFromFile(filepath + ExtractFileName(mainform.buehnenansichtsetup.Buehnenansicht_background))
+      else
+      if messagedlg('Das Hintergrundbild "' + mainform.buehnenansichtsetup.Buehnenansicht_background + '" für die Bühnenansicht wurde nicht gefunden. Möchten Sie jetzt danach suchen?', mtConfirmation,
+        [mbYes, mbNo], 0) = mrYes then
+      begin
+        opendialog1.Title  := 'Bilddatei öffnen...';
+        OpenDialog1.Filter := 'Bilddateien (*.bmp;*.jpg;*.gif;*.ico;*.png)|*.bmp;*.jpg;*.gif;*.ico;*.png|Alle Dateien (*.*)|*.*';
+        opendialog1.FileName := '';
+        opendialog1.DefaultExt := '*.bmp;*.jpg;*.gif;*.ico;*.png';
+        if OpenDialog1.Execute then
+        begin
+          grafischebuehnenansicht.Stage.Picture.LoadFromFile(OpenDialog1.FileName);
+          mainform.buehnenansichtsetup.Buehnenansicht_background := OpenDialog1.FileName;
+        end;
+      end else
+      begin
+        stage.Picture := Referenzbild2.Picture;
+        mainform.buehnenansichtsetup.Buehnenansicht_background := '';
+      end;
+  end;
+  //}
+
+  if errorindevicepicture then
+    MessageDlg('Einige Gerätebilder konnten nicht gefunden werden. Fehlende Bilder wurden durch Standardbilder ersetzt.', mtError, [mbOK], 0);
+
+  if not startingup then
+  begin
+    grafischebuehnenansicht.Width := mainform.buehnenansichtsetup.Buehnenansicht_width;
+    grafischebuehnenansicht.Height := mainform.buehnenansichtsetup.Buehnenansicht_height;
+    panel1.Visible := mainform.buehnenansichtsetup.Buehnenansicht_panel;
+    screentimeronline := True;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.MSGOpen;
+var
+  i: integer;
+  errorindevicepicture: boolean;
+begin
+  LockWindow(panel2.Handle);
+  screentimeronline := False;
+  errorindevicepicture := False;
+
+  screentimeronline := False;
+
+  setlength(device_picture, length(mainform.buehnenansichtdevices));
+  setlength(device_progress, length(mainform.buehnenansichtdevices));
+  setlength(device_label, length(mainform.buehnenansichtdevices));
+  setlength(device_number, length(mainform.buehnenansichtdevices));
+  setlength(device_colorshape, length(mainform.buehnenansichtdevices));
+  setlength(device_selected, length(mainform.buehnenansichtdevices));
+
+  for i := 0 to length(mainform.buehnenansichtdevices) - 1 do
+    createdevices(i);
+
+  for i := 0 to length(mainform.devices) - 1 do
+    if mainform.devices[i].ShowInStageview then
+      createdeviceicon(mainform.devices[i].ID);
+
+  if pos('\Projekt\', mainform.buehnenansichtsetup.Buehnenansicht_background) > 0 then
+    mainform.buehnenansichtsetup.Buehnenansicht_background := mainform.workingdirectory + copy(mainform.buehnenansichtsetup.Buehnenansicht_background, pos('Projekt\', mainform.buehnenansichtsetup.Buehnenansicht_background), length(mainform.buehnenansichtsetup.Buehnenansicht_background));
+
+  UnLockWindow(panel2.Handle);
+
+  //{
+  if not startingup then
+  begin
+    if mainform.buehnenansichtsetup.Buehnenansicht_background <> '' then
+      if FileExists(mainform.buehnenansichtsetup.Buehnenansicht_background) then
+        Stage.Picture.LoadFromFile(mainform.buehnenansichtsetup.Buehnenansicht_background)
+      else
+      if FileExists(filepath + ExtractFileName(mainform.buehnenansichtsetup.Buehnenansicht_background)) then
+        Stage.Picture.LoadFromFile(filepath + ExtractFileName(mainform.buehnenansichtsetup.Buehnenansicht_background))
+      else
+      if messagedlg('Das Hintergrundbild "' + mainform.buehnenansichtsetup.Buehnenansicht_background + '" für die Bühnenansicht wurde nicht gefunden. Möchten Sie jetzt danach suchen?', mtConfirmation,
+        [mbYes, mbNo], 0) = mrYes then
+      begin
+        opendialog1.Title  := 'Bilddatei öffnen...';
+        OpenDialog1.Filter := 'Bilddateien (*.bmp;*.jpg;*.gif;*.ico;*.png)|*.bmp;*.jpg;*.gif;*.ico;*.png|Alle Dateien (*.*)|*.*';
+        opendialog1.FileName := '';
+        opendialog1.DefaultExt := '*.bmp;*.jpg;*.gif;*.ico;*.png';
+        if OpenDialog1.Execute then
+        begin
+          grafischebuehnenansicht.Stage.Picture.LoadFromFile(OpenDialog1.FileName);
+          mainform.buehnenansichtsetup.Buehnenansicht_background := OpenDialog1.FileName;
+        end;
+      end else
+      begin
+        stage.Picture := Referenzbild2.Picture;
+        mainform.buehnenansichtsetup.Buehnenansicht_background := '';
+      end;
+  end;
+  //}
+
+  if errorindevicepicture then
+    MessageDlg('Einige Gerätebilder konnten nicht gefunden werden. Fehlende Bilder wurden durch Standardbilder ersetzt.', mtError, [mbOK], 0);
+
+  grafischebuehnenansicht.Width := mainform.buehnenansichtsetup.Buehnenansicht_width;
+  grafischebuehnenansicht.Height := mainform.buehnenansichtsetup.Buehnenansicht_height;
+  panel1.Visible := mainform.buehnenansichtsetup.Buehnenansicht_panel;
+  screentimeronline := True;
+end;
+
+procedure Tgrafischebuehnenansicht.device_device_progressMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  if Shift = [ssLeft] then
+  begin
+    for i := 0 to length(device_device_picture) - 1 do
+      if Sender = TProgressBar(device_device_progress[i]) then
+      begin
+        device_device_progress[i].Position := trunc((x / device_device_progress[i].Width) * 255) - 1;
+        device_device_progress[i].Position := trunc((x / device_device_progress[i].Width) * 255);
+        geraetesteuerung.set_channel(device_device_ID[i], 'DIMMER', device_device_progress[i].Position, device_device_progress[i].Position, 0);
+      end;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.device_device_pictureMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+var
+  i, j, k, l: integer;
+begin
+  for i := 0 to length(device_device_picture) - 1 do
+    if Sender = TImage(device_device_picture[i]) then
+    begin
+      for j := 0 to length(mainform.devices) - 1 do
+        if GUIDtoString(mainform.devices[j].ID) = GUIDtoString(device_device_ID[i]) then
+        begin
+          if mainform.devices[j].hasDimmer then
+          begin
+            for k := 0 to length(mainform.devices[j].kanaltyp) - 1 do
+              if lowercase(mainform.devices[j].kanaltyp[k]) = 'dimmer' then
+                device_device_picture[i].Hint := mainform.devices[j].Name + ' (' + mainform.levelstr(255 - mainform.Data.ch[mainform.devices[j].Startaddress + k]) + '), Geräteicon';
+          end else
+          begin
+            device_device_picture[i].Hint := 'Geräteicon, ' + mainform.devices[j].Name;
+          end;
+
+          if Shift = [ssLeft] then
+          begin
+            // Linke Maustaste
+            if (device_device_selected[i] = False) then
+            begin
+              // Sender GeräteBild
+              if ((device_device_picture[i].Left + x - (device_device_picture[i].Width div 2)) >= 0) and ((device_device_picture[i].Left + x - (device_device_picture[i].Width div 2)) <= paintbox1.Width - device_device_picture[i].Width) then
+                device_device_picture[i].Left := device_device_picture[i].Left + x - (device_device_picture[i].Width div 2);
+              if ((device_device_picture[i].Top + y - (device_device_picture[i].Height div 2)) >= 0) and ((device_device_picture[i].Top + y - (device_device_picture[i].Height div 2)) <= paintbox1.Height - device_device_picture[i].Height) then
+                device_device_picture[i].Top := device_device_picture[i].Top + y - (device_device_picture[i].Height div 2);
+              device_device_picture[i].Refresh;
+              mainform.devices[j].left := device_device_picture[i].left;
+              mainform.devices[j].top  := device_device_picture[i].top;
+
+              device_device_progress[i].Top  := device_device_picture[i].Top + device_device_picture[i].Height;
+              device_device_progress[i].left := device_device_picture[i].left;
+
+              device_device_label[i].Top  := device_device_picture[i].Top + device_device_picture[i].Height + 8;
+              device_device_label[i].left := device_device_picture[i].left;
+
+              device_device_number[i].Top  := device_device_picture[i].Top + mainform.devices[j].picturesize * 16 - 10;
+              device_device_number[i].Left := device_device_picture[i].Left;
+
+              device_device_colorshape[i].Top  := device_device_picture[i].Top;
+              device_device_colorshape[i].Left := device_device_picture[i].Left + mainform.devices[j].picturesize * 16 - 10;
+              // Sender GeräteBild Ende
+            end else
+            begin
+              // Andere GeräteBilder
+              for k := 0 to length(device_device_picture) - 1 do
+              begin
+                if ((device_device_selected[k])) then
+                begin
+                  if ((device_device_picture[k].Left + x - (device_device_picture[k].Width div 2)) >= 0) and ((device_device_picture[k].Left + x - (device_device_picture[k].Width div 2)) <= (paintbox1.Width - device_device_picture[k].Width)) then
+                    device_device_picture[k].Left := device_device_picture[k].Left + x - (mainform.devices[j].picturesize * 8);
+                  if ((device_device_picture[k].Top + y - (device_device_picture[k].Height div 2)) >= 0) and ((device_device_picture[k].Top + y - (device_device_picture[k].Height div 2)) <= (paintbox1.Height - device_device_picture[k].Height)) then
+                    device_device_picture[k].Top := device_device_picture[k].Top + y - (mainform.devices[j].picturesize * 8);
+                  device_device_picture[k].Refresh;
+                  mainform.devices[j].left := device_device_picture[k].left;
+                  mainform.devices[j].top  := device_device_picture[k].top;
+
+                  device_device_progress[k].Top  := device_device_picture[k].Top + device_device_picture[k].Height;
+                  device_device_progress[k].left := device_device_picture[k].left;
+
+                  device_device_label[k].Top  := device_device_picture[k].Top + device_device_picture[k].Height + 8;
+                  device_device_label[k].left := device_device_picture[k].left;
+
+                  device_device_number[k].Top  := device_device_picture[k].Top + mainform.devices[j].picturesize * 16 - 10;
+                  device_device_number[k].Left := device_device_picture[k].Left;
+
+                  device_device_colorshape[k].Top  := device_device_picture[k].Top;
+                  device_device_colorshape[k].Left := device_device_picture[k].Left + mainform.devices[j].picturesize * 16 - 10;
+                end;
+              end;
+              // Andere GeräteBilder Ende
+
+              // Andere Bilder
+              for k := 0 to length(mainform.buehnenansichtdevices) - 1 do
+              begin
+                if ((device_selected[k])) then
+                begin
+                  if ((device_picture[k].Left + x - (device_picture[k].Width div 2)) >= 0) and ((device_picture[k].Left + x - (device_picture[k].Width div 2)) <= (paintbox1.Width - device_picture[k].Width)) then
+                    device_picture[k].Left := device_picture[k].Left + x - (mainform.buehnenansichtdevices[k].picturesize * 8);
+                  if ((device_picture[k].Top + y - (device_picture[k].Height div 2)) >= 0) and ((device_picture[k].Top + y - (device_picture[k].Height div 2)) <= (paintbox1.Height - device_picture[k].Height)) then
+                    device_picture[k].Top := device_picture[k].Top + y - (mainform.buehnenansichtdevices[k].picturesize * 8);
+                  device_picture[k].Refresh;
+                  mainform.buehnenansichtdevices[k].left := device_picture[k].left;
+                  mainform.buehnenansichtdevices[k].top  := device_picture[k].top;
+
+                  device_progress[k].Top  := device_picture[k].Top + device_picture[k].Height;
+                  device_progress[k].left := device_picture[k].left;
+
+                  device_label[k].Top  := device_picture[k].Top + device_picture[k].Height + 8;
+                  device_label[k].left := device_picture[k].left;
+
+                  device_number[k].Top  := device_picture[k].Top + mainform.buehnenansichtdevices[k].picturesize * 16 - 10;
+                  device_number[k].Left := device_picture[k].Left;
+
+                  device_colorshape[k].Top  := device_picture[k].Top;
+                  device_colorshape[k].Left := device_picture[k].Left + mainform.buehnenansichtdevices[k].picturesize * 16 - 10;
+                end;
+              end;
+              // Andere Bilder Ende
+            end;
+            // Ende von Linke Maustaste
+          end;
+        end;
+    end;
+end;
+
+procedure Tgrafischebuehnenansicht.device_DeviceLabelMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i, j: integer;
+begin
+  if Button = mbRight then
+  begin
+    for i := 0 to length(device_device_picture) - 1 do
+      if Sender = TLabel(device_device_label[i]) then
+      begin
+        for j := 0 to length(mainform.devices) - 1 do
+          if GUIDtoString(mainform.devices[j].ID) = GUIDtoString(device_device_ID[i]) then
+          begin
+            mainform.Devices[j].Name := InputBox('Beschriftung für "' + mainform.Devices[j].Name + '"', 'Bitte geben Sie eine neue Bezeichnung für das aktuelle Gerät ein:', mainform.Devices[j].Name);
+
+            device_device_label[i].Caption := mainform.Devices[j].Name;
+          end;
+      end;
+  end;
+end;
+
+procedure Tgrafischebuehnenansicht.device_DeviceNumberMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i, j, oldvalue, channel: integer;
+begin
+  // Kanalnummer ändern
+  for i := 0 to length(device_device_picture) - 1 do
+    if Sender = TLabel(device_device_number[i]) then
+      for j := 0 to length(mainform.devices) - 1 do
+        if GUIDtoString(device_device_ID[i]) = GUIDtoString(mainform.devices[j].ID) then
+        begin
+          oldvalue := mainform.devices[j].Startaddress;
+          try
+            channel := StrToInt(InputBox('Kanaleinstellung', 'Welcher Kanal soll für dieses Gerät gelten:', IntToStr(mainform.devices[j].Startaddress)));
+            if channel > mainform.lastchan then
+              mainform.devices[j].Startaddress := mainform.lastchan
+            else if channel < 1 then
+              mainform.devices[j].Startaddress := 1
+            else
+              mainform.devices[j].Startaddress := channel;
+          except
+            mainform.devices[j].Startaddress := oldvalue;
+          end;
+          device_device_number[i].Caption := IntToStr(mainform.devices[j].Startaddress);
+        end;
+end;
+
+procedure Tgrafischebuehnenansicht.device_DeviceColorMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i, j: integer;
+begin
+  //Farbe ändern
+  for i := 0 to length(device_device_picture) - 1 do
+    if Sender = TShape(device_device_colorshape[i]) then
+      for j := 0 to length(mainform.Devices) - 1 do
+        if GUIDtoString(mainform.Devices[j].ID) = GUIDtoString(device_device_ID[i]) then
+        begin
+          colorbox1.Top  := device_device_picture[i].Top;
+          colorbox1.Left := device_device_picture[i].Left + 32;
+          colorbox1.SelectedColor := mainform.devices[j].color;
+          colorbox1.BringToFront;
+          colorbox1.Visible := True;
+        end;
+end;
+
+procedure Tgrafischebuehnenansicht.device_device_pictureMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  for i := 0 to length(device_device_picture) - 1 do
+  begin
+    if Sender = TImage(device_device_picture[i]) then
+    begin
+      // Strg+Klick
+      if (Shift = [ssCtrl]) and (Button = mbLeft) then
+      begin
+        device_device_selected[i] := not device_device_selected[i];
+
+        if device_device_selected[i] then
+        begin
+          device_device_label[i].Font.Color  := clRed;
+          device_device_number[i].Font.Color := clRed;
+        end else
+        begin
+          device_device_label[i].Font.Color  := clBlack;
+          device_device_number[i].Font.Color := clBlack;
+        end;
+        panel2.Refresh;
+      end;
+
+      // Nur Linksklick
+      if (Button = mbRight) then
+      begin
+        if ddfwindow.Showing then
+          ddfwindow.Close;
+        ddfwindow.Top  := grafischebuehnenansicht.Top + panel2.Top + 16 + device_device_picture[i].Top + (device_device_picture[i].Height div 2);
+        ddfwindow.Left := grafischebuehnenansicht.Left + panel2.left + device_device_picture[i].Left + (device_device_picture[i].Width div 2);
+        ddfwindow.loadDDF(device_device_ID[i]);
+      end;
+    end;
+  end;
+end;
+
+{
+procedure Tgrafischebuehnenansicht.loadDDF(ID:TGUID);
+var
+  i,j,k,l:integer;
+  DevicePrototypPosition:integer;
+begin
+  LockWindow(ddfwindow.Handle);
+
+  DevicePrototypPosition:=0;
+  deleteDDFwindow;
+
+  for i:=0 to length(mainform.devices)-1 do
+  if GUIDtoString(mainform.devices[i].ID)=GUIDtoString(ID) then
+  begin
+    for j:=0 to length(geraetesteuerung.DevicePrototyp)-1 do
+    begin
+      if mainform.devices[i].DeviceName=geraetesteuerung.deviceprototyp[j].DeviceName then
+        DevicePrototypPosition:=j;
+    end;
+
+  with ddfwindow do
+  begin
+    ddfwindow.DeviceID:=mainform.devices[i].ID;
+
+    XML.Xml.LoadFromFile(mainform.workingdirectory+'\Devices\'+geraetesteuerung.deviceprototyp[DevicePrototypPosition].ddffilename);
+    for j:=0 to XML.Xml.Root.Items.Count-1 do
+    begin // <device>
+      if XML.XML.Root.Items[j].Name='form' then
+      begin // <form>
+        DDFWindow.Width:=XML.XML.Root.Items[j].Properties.IntValue('width');
+        DDFWindow.Height:=XML.XML.Root.Items[j].Properties.IntValue('height');
+        for k:=0 to XML.XML.Root.Items[j].Items.Count-1 do
+        begin
+          if XML.XML.Root.Items[j].Items[k].Name='deviceimage' then
+          begin
+            if FileExists(mainform.workingdirectory+'Devicepictures\'+'64 x 64'+copy(mainform.devices[i].Bildadresse,8,length(mainform.devices[i].Bildadresse))) then
+            begin
+              // versuche 64x64 Bild zu laden
+              ddfwindow.deviceimage.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\'+'64 x 64'+copy(mainform.devices[i].Bildadresse,8,length(mainform.devices[i].Bildadresse)));
+            end else
+            if FileExists(mainform.workingdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse) then
+            begin
+              // 64x64 existiert nicht, eingestelltes Bild laden
+              ddfwindow.deviceimage.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse);
+            end else
+            begin
+              // Gerätebild nicht verfügbar, Gerätegruppenbild laden
+              try
+                ddfwindow.deviceimage.Picture.LoadFromFile(mainform.workingdirectory+'\Devicepictures\'+geraetesteuerung.deviceprototyp[DevicePrototypPosition].Bildadresse);
+              except
+                // Gerätegruppenbild nicht verfügbar, Standardbild laden
+                ShowMessage('Das Bild "'+geraetesteuerung.deviceprototyp[DevicePrototypPosition].Bildadresse+'" welches in der DDF Datei referenziert ist, wurde nicht gefunden!');
+              end;
+            end;
+
+            ddfwindow.deviceimage.Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            ddfwindow.deviceimage.Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            ddfwindow.deviceimage.Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+            ddfwindow.deviceimage.Height:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+            ddfwindow.deviceimage.Visible:=true;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name='devicename' then
+          begin
+            ddfwindow.devicename.Caption:=mainform.Devices[i].Name;
+            ddfwindow.Caption:='Gerät: '+mainform.Devices[i].DeviceName;
+            ddfwindow.devicename.Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            ddfwindow.devicename.Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+//              devicename.Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+//              devicename.Height:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+            ddfwindow.devicename.Visible:=true;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name='deviceadress' then
+          begin
+            ddfwindow.deviceadress.Caption:='Startadresse: '+inttostr(mainform.Devices[i].Startaddress);
+            ddfwindow.deviceadress.Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            ddfwindow.deviceadress.Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+//              deviceadress.Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+//              deviceadress.Height:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+            ddfwindow.deviceadress.Visible:=true;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name='position' then
+          begin
+            ddfwindow.fadenkreuz.Visible:=true;
+            ddfwindow.fadenkreuz.top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            ddfwindow.fadenkreuz.left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            ddfwindow.fadenkreuz.width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+            ddfwindow.fadenkreuz.height:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+            ddfwindow.Bevel1.Left:=fadenkreuz.Width div 2;
+            ddfwindow.Bevel1.Height:=fadenkreuz.Height;
+            ddfwindow.Bevel2.Top:=fadenkreuz.Height div 2;
+            ddfwindow.Bevel2.Width:=fadenkreuz.Width;
+            ddfwindow.PositionXY.Top:=(fadenkreuz.Height div 2)-(PositionXY.Height div 2);
+            ddfwindow.PositionXY.Left:=(fadenkreuz.Width div 2)-(PositionXY.Width div 2);
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name='label' then
+          begin
+            setlength(Labels,length(Labels)+1);
+            ddfwindow.Labels[length(Labels)-1]:=TLabel.Create(self);
+            ddfwindow.Labels[length(Labels)-1].Parent:=DDFWindow;
+            ddfwindow.Labels[length(Labels)-1].Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            ddfwindow.Labels[length(Labels)-1].Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            ddfwindow.Labels[length(Labels)-1].Caption:=XML.XML.Root.Items[j].Items[k].Properties.Value('caption');
+            ddfwindow.Labels[length(Labels)-1].name:=XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+            ddfwindow.Labels[length(Labels)-1].Visible:=true;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name='slider' then
+          begin
+            setlength(Sliders,length(Sliders)+1);
+            setlength(sliderproperties,length(sliderproperties)+1);
+            Sliders[length(Sliders)-1]:=TTrackbar.Create(self);
+            Sliders[length(Sliders)-1].Parent:=DDFWindow;
+            if XML.XML.Root.Items[j].Items[k].Properties.Value('name')<>'' then
+              Sliders[length(Sliders)-1].Name:=XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+            sliderproperties[length(sliderproperties)-1].name:=XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+            sliderproperties[length(sliderproperties)-1].channel:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+            sliderproperties[length(sliderproperties)-1].actionname:=XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+            Sliders[length(Sliders)-1].Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            Sliders[length(Sliders)-1].Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            Sliders[length(Sliders)-1].Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+            Sliders[length(Sliders)-1].Height:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+            Sliders[length(Sliders)-1].Min:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('startvalue');
+            Sliders[length(Sliders)-1].Max:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('endvalue');
+            Sliders[length(Sliders)-1].position:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('default');
+            Sliders[length(Sliders)-1].Visible:=true;
+            Sliders[length(Sliders)-1].OnChange:=startscript;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name='dropdown' then
+          begin
+            setlength(Comboboxs,length(Comboboxs)+1);
+            setlength(comboboxproperties,length(comboboxproperties)+1);
+            Comboboxs[length(Comboboxs)-1]:=TCombobox.Create(self);
+            Comboboxs[length(Comboboxs)-1].Parent:=DDFWindow;
+            Comboboxs[length(Comboboxs)-1].Style:=csDropDownList;
+            if XML.XML.Root.Items[j].Items[k].Properties.Value('name')<>'' then
+              Comboboxs[length(Comboboxs)-1].Name:=XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+            comboboxproperties[length(comboboxproperties)-1].name:=XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+            comboboxproperties[length(comboboxproperties)-1].channel:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+            comboboxproperties[length(comboboxproperties)-1].actionname:=XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+            Comboboxs[length(Comboboxs)-1].Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            Comboboxs[length(Comboboxs)-1].Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            Comboboxs[length(Comboboxs)-1].Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+            Comboboxs[length(Comboboxs)-1].Visible:=true;
+            setlength(comboboxproperties[length(comboboxproperties)-1].itemvalue,XML.XML.Root.Items[j].Items[k].Items.Count);
+            for l:=0 to XML.XML.Root.Items[j].Items[k].Items.Count-1 do
+            begin
+              comboboxproperties[length(comboboxproperties)-1].itemvalue[l]:=XML.XML.Root.Items[j].Items[k].Items[l].Properties.IntValue('value');
+              Comboboxs[length(Comboboxs)-1].Items.Add(XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('caption'));
+            end;
+            Comboboxs[length(Comboboxs)-1].ItemIndex:=0;
+            Comboboxs[length(Comboboxs)-1].OnSelect:=startscript;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name='line' then
+          begin
+            setlength(Shapes,length(Shapes)+1);
+            Shapes[length(Shapes)-1]:=TShape.Create(self);
+            Shapes[length(Shapes)-1].Parent:=DDFWindow;
+            Shapes[length(Shapes)-1].Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('x1');
+            Shapes[length(Shapes)-1].Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('x2')-Shapes[length(Shapes)-1].Left;
+            Shapes[length(Shapes)-1].Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('y1');
+            Shapes[length(Shapes)-1].Height:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('y2')-Shapes[length(Shapes)-1].Top+1;
+            Shapes[length(Shapes)-1].Visible:=true;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name='colorpicker' then
+          begin
+            Colorpicker.Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            R.Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top')+140;
+            G.Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top')+157;
+            B.Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top')+174;
+            Colorpicker.Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            R.Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left')+6;
+            G.Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left')+6;
+            B.Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left')+6;
+            Colorpicker.Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+            Colorpicker.Height:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+            Colorpickerchannel[0]:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel1');
+            Colorpickerchannel[1]:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel2');
+            Colorpickerchannel[2]:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel3');
+            Colorpicker.Visible:=true;
+            R.Visible:=true;
+            G.Visible:=true;
+            B.Visible:=true;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name='colorpicker2' then
+          begin
+            Colorpicker2.Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            R.Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top')+140;
+            G.Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top')+157;
+            B.Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top')+174;
+            Colorpicker2.Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left')+7;
+            R.Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left')+6;
+            G.Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left')+6;
+            B.Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left')+6;
+            Colorpickerchannel[0]:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel1');
+            Colorpickerchannel[1]:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel2');
+            Colorpickerchannel[2]:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel3');
+            Colorpicker2.Visible:=true;
+            R.Visible:=true;
+            G.Visible:=true;
+            B.Visible:=true;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name='button' then
+          begin
+            setlength(Buttons,length(Buttons)+1);
+            setlength(buttonproperties,length(buttonproperties)+1);
+            Buttons[length(Buttons)-1]:=TButton.Create(self);
+            Buttons[length(Buttons)-1].Parent:=DDFWindow;
+            if XML.XML.Root.Items[j].Items[k].Properties.Value('name')<>'' then
+              Buttons[length(Buttons)-1].Name:=XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+            Buttonproperties[length(Buttonproperties)-1].name:=XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+            Buttonproperties[length(Buttonproperties)-1].channel:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+            Buttonproperties[length(Buttonproperties)-1].onvalue:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('onvalue');
+            Buttonproperties[length(Buttonproperties)-1].offvalue:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('offvalue');
+            Buttonproperties[length(Buttonproperties)-1].actionname:=XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+            Buttons[length(Buttons)-1].Caption:=XML.XML.Root.Items[j].Items[k].Properties.Value('caption');
+            Buttons[length(Buttons)-1].Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+            Buttons[length(Buttons)-1].Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            Buttons[length(Buttons)-1].Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+            Buttons[length(Buttons)-1].Height:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+            Buttons[length(Buttons)-1].Visible:=true;
+            Buttons[length(Buttons)-1].OnClick:=startscript;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name='options' then
+          begin
+            setlength(Radiobuttons,length(Radiobuttons)+1);
+            setlength(radiobuttonproperties,length(radiobuttonproperties)+1);
+            Radiobuttons[length(Radiobuttons)-1]:=TRadioGroup.Create(self);
+            Radiobuttons[length(Radiobuttons)-1].Parent:=DDFWindow;
+            if XML.XML.Root.Items[j].Items[k].Properties.Value('name')<>'' then
+              Radiobuttons[length(Radiobuttons)-1].Name:=XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+            radiobuttonproperties[length(radiobuttonproperties)-1].name:=XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+            radiobuttonproperties[length(radiobuttonproperties)-1].channel:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+            radiobuttonproperties[length(radiobuttonproperties)-1].actionname:=XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+            Radiobuttons[length(Radiobuttons)-1].Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top',50);
+            Radiobuttons[length(Radiobuttons)-1].Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            Radiobuttons[length(Radiobuttons)-1].Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width',100);
+            Radiobuttons[length(Radiobuttons)-1].Visible:=true;
+            setlength(radiobuttonproperties[length(radiobuttonproperties)-1].itemvalue,XML.XML.Root.Items[j].Items[k].Items.Count);
+            for l:=0 to XML.XML.Root.Items[j].Items[k].Items.Count-1 do
+            begin
+              radiobuttonproperties[length(radiobuttonproperties)-1].itemvalue[l]:=XML.XML.Root.Items[j].Items[k].Items[l].Properties.IntValue('value');
+              Radiobuttons[length(Radiobuttons)-1].Items.Add(XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('caption'));
+              if XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('default')='true' then
+                Radiobuttons[length(Radiobuttons)-1].ItemIndex:=l;
+            end;
+            Radiobuttons[length(Radiobuttons)-1].OnClick:=startscript;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name='checkbox' then
+          begin
+            setlength(checkboxs,length(checkboxs)+1);
+            setlength(checkboxproperties,length(checkboxproperties)+1);
+            checkboxs[length(checkboxs)-1]:=TCheckbox.Create(self);
+            Checkboxs[length(checkboxs)-1].Parent:=DDFWindow;
+            if XML.XML.Root.Items[j].Items[k].Properties.Value('name')<>'' then
+              checkboxs[length(checkboxs)-1].Name:=XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+            Checkboxproperties[length(Checkboxproperties)-1].name:=XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+            Checkboxproperties[length(Checkboxproperties)-1].channel:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+            Checkboxproperties[length(Checkboxproperties)-1].actionname:=XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+            Checkboxs[length(Checkboxs)-1].Caption:=XML.XML.Root.Items[j].Items[k].Properties.Value('caption');
+            Checkboxs[length(Checkboxs)-1].checked:=XML.XML.Root.Items[j].Items[k].Properties.Value('checked')='true';
+            Checkboxs[length(Checkboxs)-1].Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top',50);
+            Checkboxs[length(Checkboxs)-1].Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            Checkboxs[length(Checkboxs)-1].Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width',100);
+            Checkboxs[length(Checkboxs)-1].Visible:=true;
+            Checkboxs[length(Checkboxs)-1].OnClick:=startscript;
+          end;
+          if XML.XML.Root.Items[j].Items[k].Name='edit' then
+          begin
+            setlength(edits,length(Edits)+1);
+            setlength(editproperties,length(editproperties)+1);
+            Edits[length(Edits)-1]:=TEdit.Create(self);
+            Edits[length(Edits)-1].Parent:=DDFWindow;
+            if XML.XML.Root.Items[j].Items[k].Properties.Value('name')<>'' then
+              Edits[length(Edits)-1].Name:=XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+            Editproperties[length(Editproperties)-1].name:=XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+            Editproperties[length(Editproperties)-1].channel:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+            Editproperties[length(Editproperties)-1].actionname:=XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+            Edits[length(Edits)-1].text:=XML.XML.Root.Items[j].Items[k].Properties.Value('text');
+            Edits[length(Edits)-1].Top:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('top',50);
+            Edits[length(Edits)-1].Left:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+            Edits[length(Edits)-1].Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width',100);
+            Edits[length(Edits)-1].Visible:=true;
+            Edits[length(Edits)-1].OnChange:=startscript;
+          end;
+        end;
+      end;
+      if XML.XML.Root.Items[j].Name='code' then
+      begin // <code>
+        funktionen:=XML.XML.Root.Items[j].Value;
+        mainform.ScriptInterpreter.Pas.Text:=XML.XML.Root.Items[j].Value;
+        mainform.ScriptInterpreter.Compile;
+      end;
+    end;
+  end;
+  end;
+
+  ddfwindow.Show;
+  mainform.ScriptInterpreter.CallFunction('FormShow',nil,[]);
+
+  UnLockWindow(DDFWindow.Handle);
+end;
+}
+
+{
+procedure Tgrafischebuehnenansicht.deleteDDFwindow;
+var
+  i:integer;
+begin
+  with DDFWindow do
+  begin
+  deviceimage.Width:=128;
+  deviceimage.Height:=128;
+  deviceimage.Picture.LoadFromFile(mainform.workingdirectory+'\Devicepictures\128x128\par56silber.png');
+
+  devicename.Top:=150;
+  devicename.Left:=8;
+  devicename.Caption:='PC_DIMMER Gerätesteuerung';
+  deviceadress.Top:=165;
+  deviceadress.Left:=8;
+  deviceadress.Caption:='Derzeit keine Geräte selektiert.';
+
+  // zunächst alle Controls der Form löschen
+  for i:=0 to length(Edits)-1 do
+    Edits[i].Free;
+  setlength(Edits,0);
+  setlength(editproperties,0);
+
+  for i:=0 to length(CheckBoxs)-1 do
+    CheckBoxs[i].Free;
+  setlength(Checkboxs,0);
+  setlength(checkboxproperties,0);
+
+  for i:=0 to length(ComboBoxs)-1 do
+    ComboBoxs[i].Free;
+  setlength(Comboboxs,0);
+  setlength(comboboxproperties,0);
+
+  for i:=0 to length(Labels)-1 do
+    Labels[i].Free;
+  setlength(Labels,0);
+
+  for i:=0 to length(Sliders)-1 do
+    Sliders[i].Free;
+  setlength(Sliders,0);
+  setlength(sliderproperties,0);
+
+  for i:=0 to length(Shapes)-1 do
+    Shapes[i].Free;
+  setlength(Shapes,0);
+
+  for i:=0 to length(Buttons)-1 do
+    Buttons[i].Free;
+  setlength(Buttons,0);
+  setlength(buttonproperties,0);
+
+  for i:=0 to length(Radiobuttons)-1 do
+    Radiobuttons[i].Free;
+  setlength(Radiobuttons,0);
+  setlength(radiobuttonproperties,0);
+
+  Colorpicker.Visible:=false;
+  R.Visible:=false;
+  G.Visible:=false;
+  B.Visible:=false;
+
+  fadenkreuz.Visible:=false;
+  end;
+end;
+}
+
+procedure Tgrafischebuehnenansicht.MSGSave;
+var
+  LReg: TRegistry;
+begin
+  LReg := TRegistry.Create;
+  LReg.RootKey := HKEY_CURRENT_USER;
+
+  if LReg.OpenKey('Software', True) then
+  begin
+    if not LReg.KeyExists('PHOENIXstudios') then
+      LReg.CreateKey('PHOENIXstudios');
+    if LReg.OpenKey('PHOENIXstudios', True) then
+    begin
+      if not LReg.KeyExists('PC_DIMMER') then
+        LReg.CreateKey('PC_DIMMER');
+      if LReg.OpenKey('PC_DIMMER', True) then
+      begin
+        if not LReg.KeyExists('Buehnenansicht') then
+          LReg.CreateKey('Buehnenansicht');
+        if LReg.OpenKey('Buehnenansicht', True) then
+        begin
+          LReg.WriteBool('Stageview Plugin - Last Stage', CheckBox3.Checked);
+          LReg.WriteInteger('PosX', grafischebuehnenansicht.Left);
+          LReg.WriteInteger('PosY', grafischebuehnenansicht.Top);
+        end;
+      end;
+    end;
+  end;
+  LReg.CloseKey;
+  LReg.Free;
+end;
+
+end.

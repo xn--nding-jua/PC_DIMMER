@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\scanner2.png">
+ <information id="PC_DIMMER">
+ <name>VaryScan 4 575 HMI (8 Kanal)</name>
+ <vendor>JBLighting</vendor>
+ <author>Christian Nöding</author>
+ <description>VaryScan 4 Compact Plus 575 HMI</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Gobos" fade="yes" type="gobo1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Farben" fade="yes" type="color1"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Shutter / Dimmer" fade="yes" type="dimmer"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Iris" fade="yes" type="iris"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Goborotation" fade="yes" type="gobo1rot"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Effektrad" fade="yes" type="extra"/>
+ </channels>
+ <initvalues ch0="127" ch1="127" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" />
+ <colors>
+  <color name="Weiß" value="0" valueend="7" r="255" g="255" b="255" />
+  <color name="Rot" value="16" valueend="23" r="255" g="0" b="0" />
+  <color name="Gelb" value="32" valueend="39" r="255" g="255" b="0" />
+  <color name="Pink" value="48" valueend="55" r="255" g="0" b="255" />
+  <color name="Grün" value="64" valueend="71" r="0" g="255" b="0" />
+  <color name="Orange" value="80" valueend="87" r="255" g="128" b="0" />
+  <color name="Blau" value="96" valueend="103" r="0" g="0" b="255" />
+  <color name="Türkis" value="112" valueend="119" r="0" g="128" b="128" />
+ </colors>
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="255" OffValue="0" RightMinValue="0" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="400" height="322">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="90" left="10" height="180" width="180" />
+  <colorbox top="140" left="200" height="22" width="190" />
+  <slider name="goboslider" top="90" left="200" width="190" height="20" action="gobosliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="dimmerslider" top="190" left="200" width="190" height="20" action="dimmersliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="irisslider" top="240" left="200" width="190" height="20" action="irissliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="goborotslider" top="290" left="200" width="190" height="20" action="goborotsliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="effektslider" top="290" left="10" width="180" height="20" action="effektsliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="70" left="200" width="44" height="13" caption="Goborad:"/>
+  <label name="Label2" top="120" left="200" width="30" height="13" caption="Farbe:"/>
+  <label name="Label3" top="170" left="200" width="83" height="13" caption="Shutter / Dimmer:"/>
+  <label name="Label4" top="220" left="200" width="16" height="13" caption="Iris:"/>
+  <label name="Label5" top="270" left="200" width="64" height="13" caption="Goborotation:"/>
+  <label name="Label6" top="270" left="10" width="46" height="13" caption="Effektrad:"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorBoxChange;
+  procedure gobosliderchange;
+  procedure dimmersliderchange;
+  procedure irissliderchange;
+  procedure goborotsliderchange;
+  procedure effektsliderchange;
+
+  implementation
+
+  var
+    // hier können globale Variablen definiert werden
+  DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte dieses Typs beim Laden des Projekts ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Wert:integer;
+  begin
+    // diese Funktion wird bei jeder Kanaländerung, die das Gerät betrifft, ausgeführt. Schreiben Sie hier eine Funktion, um die Geräteoberfläche bei einer Kanalwertänderung zu aktualisieren. z.B. wie folgt:
+
+    if not DontRefresh then
+    case channel of
+      0..1:
+			begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+			end;
+      2:
+			begin
+		    goboslider.position:=get_channel('gobo1');
+			end;
+      3:
+			begin
+		    wert:=get_channel('color1');
+		    case wert of
+		      0..7: colorbox.itemindex:=0;
+		      16..23: colorbox.itemindex:=1;
+		      32..39: colorbox.itemindex:=2;
+		      48..55: colorbox.itemindex:=3;
+		      64..71: colorbox.itemindex:=4;
+		      80..87: colorbox.itemindex:=5;
+		      96..103: colorbox.itemindex:=6;
+		      112..119: colorbox.itemindex:=7;
+		    end;
+			end;
+      4:
+			begin
+		    dimmerslider.position:=get_channel('dimmer');
+			end;
+      5:
+			begin
+		    irisslider.position:=get_channel('iris');
+			end;
+      6:
+			begin
+		    goborotslider.position:=get_channel('gobo1rot');
+			end;
+      7:
+			begin
+		    effektslider.position:=get_channel('extra');
+			end;
+    end;
+		DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  var
+	phi,r,x,y:single;
+	pan, tilt, panfine, tiltfine:single;
+  begin
+	if usemhcontrol.checked then
+	begin
+		// Moving-Head-Steuerung (Polarkoordinaten)
+		x:=((PositionXY.Left+(PositionXY.Width div 2)-(fadenkreuz.Width/2))/fadenkreuz.Width)*2;	//-1..0..1
+		y:=((PositionXY.Top+(PositionXY.Height div 2)-(fadenkreuz.Width/2))/fadenkreuz.Height)*2;	//-1..0..1
+		r:=sqrt(x*x+y*y);
+	
+		if (r>0) then
+		begin
+			if (y>=0) then
+				phi:=arccos(x/r)
+			else
+				phi:=6.283185307179586476925286766559-arccos(x/r);
+		end else
+			phi:=64;
+		
+		r:=128-((r/2)*255);
+		phi:=(phi/6.283185307179586476925286766559)*255;
+		if 64>=phi then
+			phi:=phi+191
+		else
+			phi:=phi-64;
+	
+		pan:=255-phi;
+		tilt:=255-r;
+	end else
+	begin
+		// Scannersteuerung (Kartesische Koordinaten)
+		pan:=((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255;
+		tilt:=((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255;
+	end;
+
+	// Ausgabe
+	if panmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(255-pan),trunc(255-pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(255-pan)*255),trunc(frac(255-pan)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(pan),trunc(pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(pan)*255),trunc(frac(pan)*255),0);
+	end;
+	if tiltmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(255-tilt),trunc(255-tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(255-tilt)*255),trunc(frac(255-tilt)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(tilt),trunc(tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(tilt)*255),trunc(frac(tilt)*255),0);
+	end;
+  end;
+  procedure ColorBoxChange;
+  begin
+    // Werten Sie hier die eingestellte Farbe der Farbbox aus. z.B. wie folgt:
+    case colorbox.itemindex of
+      0: set_channel('COLOR1', -1, 0, 0);
+      1: set_channel('COLOR1', -1, 16, 0);
+      2: set_channel('COLOR1', -1, 32, 0);
+      3: set_channel('COLOR1', -1, 48, 0);
+      4: set_channel('COLOR1', -1, 64, 0);
+      5: set_channel('COLOR1', -1, 80, 0);
+      6: set_channel('COLOR1', -1, 96, 0);
+      7: set_channel('COLOR1', -1, 112, 0);
+    end;
+  end;
+  procedure gobosliderchange;
+  begin
+    DontRefresh:=true;
+
+		set_channel('GOBO1',-1,goboslider.position,0,0);
+  end;
+  procedure dimmersliderchange;
+  begin
+    DontRefresh:=true;
+
+		set_channel('DIMMER',-1,dimmerslider.position,0,0);
+  end;
+  procedure irissliderchange;
+  begin
+    DontRefresh:=true;
+
+		set_channel('IRIS',-1,irisslider.position,0,0);
+  end;
+  procedure goborotsliderchange;
+  begin
+    DontRefresh:=true;
+
+		set_channel('GOBO1ROT',-1,goborotslider.position,0,0);
+  end;
+  procedure effektsliderchange;
+  begin
+    DontRefresh:=true;
+
+		set_channel('EXTRA',-1,effektslider.position,0,0);
+  end;
+  end.
+ </code>
+</device>

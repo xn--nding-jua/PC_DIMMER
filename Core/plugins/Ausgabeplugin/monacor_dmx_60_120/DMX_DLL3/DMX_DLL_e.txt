@@ -1,0 +1,151 @@
+
+
+
+For all users, who want to program a special controlling software for DMX-60 and DMX-120 converters, we have created Dynamic Link Libraries (DLL). They work with nearly every programming software tool under Windows (32bit). The DLLs should be copied to the same directory as the new software. The file 'ZLPORTIO.SYS' must be copied to the same directory.
+
+DMX-120 DLL declaration with Borland Delphi:
+
+//************************
+implementation
+
+{$R *.DFM}
+
+function OutDMX(a,b: byte): boolean; stdcall external 'DMX120.dll';
+//************************
+
+Example of the variables deklaration:
+//************************
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+
+  end;
+
+var
+  Form1: TForm1;
+  dmxout:array[0..119] of byte;  //Array with 120 data elements
+//************************
+
+Example of the DMX data assignments:
+//************************
+procedure TForm1.FormCreate(Sender: TObject);
+var n:integer;
+begin
+ for n:=0 to 119 do
+  begin
+   dmxout[n]:=0; //  all of the 120 channels set to zero
+  end;
+end;
+//************************
+
+DLL call and DMX data output:
+//************************
+procedure TForm1.Timer1Timer(Sender: TObject); // the Timer should set with an interrupt of 30-55 milliseconds
+var ok:boolean;
+    i:byte;
+begin
+  // Example with 5 Faders for the first 5 DMX channels:
+   dmxout[0]:=trackbar1.position;
+   dmxout[1]:=trackbar2.position;
+   dmxout[2]:=trackbar3.position;
+   dmxout[3]:=trackbar4.position;
+   dmxout[4]:=trackbar5.position;
+
+   for i:=0 to 119 do
+    ok:=OutDMX(i,dmxout[i]); // DLL call and output of the data array
+                            // i= channel number and dmxout[i]= output value of the corresponding DMX channel
+                            // Attention: The DLL is waiting until the last channel 120 (i=119) was received,
+                             //  then DMX data will be sent  !!!!!
+end;
+//************************
+
+--------------------------------------------------------------------------------------------------------------
+DMX-60 DLL declaration with Borland Delphi:
+
+Deklaration in the Implementation section:
+
+//************************
+implementation
+
+{$R *.DFM}
+
+function OutDMX(a,b: byte): boolean; stdcall external 'DMX60.dll';
+//************************
+
+Example of the variables deklaration:
+//************************
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+
+  end;
+
+var
+  Form1: TForm1;
+  dmxout:array[0..63] of byte;  //Array with 64 data elements
+//************************
+
+Example of the DMX data assignments:
+//************************
+procedure TForm1.FormCreate(Sender: TObject);
+var n:integer;
+begin
+ for n:=0 to 63 do
+  begin
+   dmxout[n]:=0; //  all of the 64 channels set to zero
+  end;
+end;
+//************************
+
+DLL call and DMX data output:
+//************************
+procedure TForm1.Timer1Timer(Sender: TObject); // the Timer should set with an interrupt of 30-55 milliseconds
+var ok:boolean;
+     i:byte;
+begin
+  // Example with 5 Faders for the first 5 DMX channels:
+   dmxout[0]:=trackbar1.position;
+   dmxout[1]:=trackbar2.position;
+   dmxout[2]:=trackbar3.position;
+   dmxout[3]:=trackbar4.position;
+   dmxout[4]:=trackbar5.position;
+   for i:=0 to 63 do
+   ok:=OutDMX(i,dmxout[i]); // DLL call and output of the data array
+                            // i= channel number and dmxout[i]= output value of the corresponding DMX channel
+                            // Attention: The DLL is waiting until the last channel 64 (i=63) was received,
+                             //  then DMX data will be sent  !!!!!
+end;
+//************************
+
+--------------------------------------------------------------------------------------------------------------
+
+
+MS-Visual Basic (6) example:
+
+Variable declaration in the Basic Modul:
+
+Declare Function senddmx Lib "DMX120.dll" Alias "OutDMX" (ByVal a As Byte, ByVal b As Byte) As Boolean
+
+
+Form example:
+
+Create a new Form with following components:
+
+Timer1 (Timer)
+Slider1 (Slider)
+
+
+Basic-Code  for the timer:
+
+Private Sub Timer1_Timer()
+Dim m As Boolean
+Dim bt, n As Byte
+n = 0
+bt = Slider1.Value
+ For n = 0 To 119
+  m = senddmx(n, bt)
+ Next n
+ If m = False Then MsgBox ("No DMX")
+End Sub

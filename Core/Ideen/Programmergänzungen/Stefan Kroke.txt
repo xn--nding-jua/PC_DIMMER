@@ -1,0 +1,14 @@
+Kontrollpanell
+•	Deutlichere Markierung der aktiven Effekte (der rote Rand eines aktivierten Buttons verschwindet, sobald ich einen anderen Effekt per Button starte).
+•	Formatiermöglichkeiten der Button-Textfelder im Kontrollpanel (z.B. erste Textzeile Fett schreiben)
+•	Textfelder der Buttons im Kontrollpanel sollten sich in der Größe anpassen, wenn man die Buttongröße ändert. Derzeit finde ich die Textfelder zu schmal, dadurch wird der Text zerstückelt.
+
+Beattool
+•	die Empfindlichkeit der Beatkurve zur Steuerung der Sound-to-light Funktion lässt sich nur mit dem winzig kleinen Schieberegler einstellen. Da die Pegel der Musikstücke oft sehr verschieden sind, muss hier häufig nachgeregelt werden. Schön wäre, wenn man per Midi oder auch per Tastatur oder per Button vom Touchscreen (+/-) Zugriff auf den Schieberegler hätte.
+•	Gut wäre auch, wenn man die Empfindlichkeit zusätzlich im Party Mucken Modul regeln könnte. So kann man sich das Beattool-Fenster sparen...
+
+
+Fenster
+•	Die Fensterpositionen werden bei Einsatz von 2 Monitoren nicht alle gespeichert. Nach jedem Neustart muss ich das Kontroll-Panell neu auf den Touchscreen schieben. Wäre schön, wenn alle Fensterpositionen gespeichert würden.
+
+•	Es wäre schön, wenn man einzelne Fenster aneinander heften könnte (wie magnetisch)...

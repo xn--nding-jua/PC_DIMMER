@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\derbydoppelt.png">
+ <information id="PC_DIMMER">
+ <name>Goboflower</name>
+ <vendor>Generic</vendor>
+ <author>Christian Nöding</author>
+ <description>Goboflower mit 2 Kanälen</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="GOBO1" fade="yes" type="gobo1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Geschwindigkeit" fade="yes" type="speed"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="speed"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="127" LeftMaxValue="0" OffValue="128" RightMinValue="129" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="231" height="182">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="GoboBox" top="100" left="10" width="210" height="21" action="GoboChange">
+   <item caption="Offen" value="0" picture="" />
+   <item caption="Gobo 1" value="0" picture="" />
+   <item caption="Gobo 2" value="0" picture="" />
+   <item caption="Gobo 3" value="0" picture="" />
+   <item caption="Gobo 4" value="0" picture="" />
+   <item caption="Gobo 5" value="0" picture="" />
+   <item caption="Gobo 6" value="0" picture="" />
+   <item caption="Gobo 7" value="0" picture="" />
+   <item caption="Gobo 8" value="0" picture="" />
+   <item caption="Gobo 9" value="0" picture="" />
+  </dropdown>
+  <slider name="SpeedSlider" top="150" left="10" width="210" height="20" action="SpeedChange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="130" left="10" width="81" height="13" caption="Geschwindigkeit:"/>
+  <label name="Label2" top="80" left="10" width="29" height="13" caption="Gobo:"/>
+ </form>
+ <code>
+  unit GoboFlower;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure SpeedChange;
+  procedure GoboChange;
+
+  implementation
+
+  var
+		dontsetvalue:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+		wert:integer;
+	begin
+		case channel of
+			0:
+			begin
+				if not dontsetvalue then
+				begin
+					wert:=get_channel('GOBO1');
+					case wert of
+						0..31: GoboBox.Itemindex:=0;
+						32..59: GoboBox.Itemindex:=1;
+						60..81: GoboBox.Itemindex:=2;
+						82..108: GoboBox.Itemindex:=3;
+						109..142: GoboBox.Itemindex:=4;
+						143..166: GoboBox.Itemindex:=5;
+						167..192: GoboBox.Itemindex:=6;
+						193..212: GoboBox.Itemindex:=7;
+						213..233: GoboBox.Itemindex:=8;
+						234..255: GoboBox.Itemindex:=9;
+					end;
+				end;
+			end;
+			1:
+			begin
+				if not dontsetvalue then
+				begin
+					SpeedSlider.position:=get_channel('SPEED');
+				end;
+			end;
+		end;
+		
+    dontsetvalue:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure SpeedChange;
+  begin
+		dontsetvalue:=true;
+    set_channel('SPEED',SpeedSlider.position,SpeedSlider.position,0);
+  end;
+  procedure GoboChange;
+  begin
+    dontsetvalue:=true;
+		case GoboBox.Itemindex of
+    	0: set_channel('GOBO1',0,0,0);
+    	1: set_channel('GOBO1',32,32,0);
+    	2: set_channel('GOBO1',60,60,0);
+    	3: set_channel('GOBO1',82,82,0);
+    	4: set_channel('GOBO1',109,109,0);
+    	5: set_channel('GOBO1',143,143,0);
+    	6: set_channel('GOBO1',167,167,0);
+    	7: set_channel('GOBO1',193,193,0);
+    	8: set_channel('GOBO1',213,213,0);
+    	9: set_channel('GOBO1',234,234,0);
+    end;
+  end;
+  end.
+ </code>
+</device>

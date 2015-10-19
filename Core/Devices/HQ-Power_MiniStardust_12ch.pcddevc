@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\microspot.png">
+ <information id="PC_DIMMER">
+ <name>Mini Stardust III (12Ch)</name>
+ <vendor>HQ-Power/Velleman</vendor>
+ <author>Christian Nöding/GD</author>
+ <description>Small LED moving head Wash 12channel mode</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="PanFine" fade="yes" type="panfine"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="TiltFine" fade="yes" type="tiltfine"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="PanTiltSpeed" fade="yes" type="speed"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Dimmer/Strobe" fade="yes" type="shutter"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Red" fade="yes" type="r"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Green" fade="yes" type="g"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Blue" fade="yes" type="b"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="Color" fade="yes" type="color1"/>
+  <function channel="10" minvalue="0" maxvalue="255" name="LED-Speed" fade="yes" type="extra"/>
+  <function channel="11" minvalue="0" maxvalue="255" name="Movement macros" fade="yes" type="special1"/>
+ </channels>
+ <initvalues 0="128" 1="-1" 2="128" 3="-1" 4="-1" 5="-1" 6="-1" 7="-1" 8="-1" 9="-1" 10="-1" 11="-1" />
+ <colors>
+  <color name="No function" value="0" valueend="7" r="0" g="0" b="0" />
+  <color name="White" value="8" valueend="21" r="255" g="255" b="255" />
+  <color name="Red" value="22" valueend="35" r="255" g="0" b="0" />
+  <color name="Green" value="36" valueend="49" r="0" g="128" b="0" />
+  <color name="Blue/UV" value="50" valueend="63" r="0" g="0" b="255" />
+  <color name="Cyan" value="64" valueend="77" r="0" g="255" b="255" />
+  <color name="Magenta" value="78" valueend="91" r="255" g="0" b="255" />
+  <color name="Yellow" value="92" valueend="105" r="255" g="255" b="0" />
+  <color name="Purple" value="106" valueend="119" r="128" g="0" b="128" />
+  <color name="Orange" value="120" valueend="133" r="255" g="128" b="64" />
+  <color name="Chartreuse" value="134" valueend="147" r="128" g="255" b="0" />
+  <color name="Pink" value="148" valueend="161" r="255" g="128" b="255" />
+  <color name="Brown/CTC1" value="162" valueend="175" r="128" g="64" b="64" />
+  <color name="Gold/CTC2" value="176" valueend="189" r="128" g="128" b="0" />
+  <color name="Crimson/CTC3" value="190" valueend="203" r="128" g="0" b="0" />
+  <color name="Violet/CTC4" value="204" valueend="217" r="128" g="0" b="255" />
+  <color name="Grape/CTC5" value="218" valueend="231" r="0" g="0" b="160" />
+  <color name="ColorChange" value="232" valueend="255" r="192" g="192" b="192" />
+ </colors>
+ <form width="450" height="462">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorpicker top="320" left="27" />
+  <position top="90" left="10" height="230" width="230" />
+  <colorbox top="230" left="250" height="22" width="190" />
+  <dropdown name="autobox" top="430" left="250" width="190" height="21" action="autoboxchange">
+   <item caption="No function" value="0" picture="" />
+   <item caption="Autoprogram 1" value="0" picture="" />
+   <item caption="Autoprogram 2" value="0" picture="" />
+   <item caption="Autoprogram 3" value="0" picture="" />
+   <item caption="Autoprogram 4" value="0" picture="" />
+   <item caption="Autoprogram 5" value="0" picture="" />
+   <item caption="Autoprogram 6" value="0" picture="" />
+   <item caption="Autoprogram 7" value="0" picture="" />
+   <item caption="Autoprogram 8" value="0" picture="" />
+   <item caption="Music controlled 1" value="0" picture="" />
+   <item caption="Music controlled 2" value="0" picture="" />
+   <item caption="Music controlled 3" value="0" picture="" />
+   <item caption="Music controlled 4" value="0" picture="" />
+   <item caption="Music controlled 5" value="0" picture="" />
+   <item caption="Music controlled 6" value="0" picture="" />
+   <item caption="Music controlled 7" value="0" picture="" />
+   <item caption="Music controlled 8" value="0" picture="" />
+  </dropdown>
+  <slider name="shutterslider" top="90" left="250" width="190" height="20" action="shuttersliderchange" startvalue="8" endvalue="134" default="134"/>
+  <slider name="shuttereffectslider" top="180" left="250" width="190" height="20" action="shuttereffectsliderchange" startvalue="135" endvalue="239" default="135"/>
+  <slider name="pantiltspeedslider" top="330" left="250" width="190" height="20" action="pantiltspeedsliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="ledspeedslider" top="380" left="250" width="190" height="20" action="ledspeedsliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="50" left="250" width="40" height="20" caption="Dimmer:"/>
+  <label name="Label2" top="160" left="250" width="34" height="13" caption="Strobe:"/>
+  <label name="Label3" top="210" left="250" width="33" height="13" caption="Colour:"/>
+  <label name="Label5" top="290" left="250" width="80" height="20" caption="Pan/Tilt Speed:"/>
+  <label name="Label6" top="360" left="250" width="100" height="13" caption="Colorchanger Speed:"/>
+  <label name="Label7" top="410" left="250" width="63" height="13" caption="Autoprogram:"/>
+  <label name="Label8" top="70" left="420" width="20" height="20" caption="Zero"/>
+  <label name="Label9" top="70" left="250" width="30" height="20" caption="Full"/>
+  <label name="Label10" top="310" left="250" width="50" height="20" caption="Normal"/>
+  <label name="Label11" top="310" left="410" width="30" height="20" caption="Slow"/>
+  <button name="Button1" top="120" left="250" width="90" height="30" action="shutteroffenbtn" caption="Shutter open"/>
+  <button name="Button2" top="120" left="350" width="90" height="30" action="shutterclosebtn" caption="Shutter closed"/>
+  <button name="colorchangebtn" top="330" left="180" width="60" height="120" action="colorchangebtnclick" caption="<>"/>
+ </form>
+ <code>
+  unit HQPowerMiniStardust12ch;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorBoxChange;
+  procedure shuttersliderchange;
+  procedure shutteroffenbtn;
+  procedure shutterclosebtn;
+  procedure shuttereffectsliderchange;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure pantiltspeedsliderchange;
+  procedure ledspeedsliderchange;
+  procedure autoboxchange;
+  procedure colorchangebtnclick;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+		wert:integer;
+		r,phi,temp:extended;
+	begin
+		if not dontrefresh then
+		case channel of
+    	0..3:
+    	begin
+		if usemhcontrol.checked then
+			begin
+				// Moving-Head-Steuerung
+				temp:=get_channel('tilt')+(get_channel('tiltfine')/256);
+				case round(temp) of
+					0..127: r:=((127-temp)/127);
+					128..255: r:=((temp-128)/127);
+				end;
+				phi:=(get_channel('pan')+(get_channel('panfine')/256))/255*6.283185307179586476925286766559;	//(X/255)*PI
+				PositionXY.Left:=round(r*sin(phi)*(Fadenkreuz.Width/2)+(Fadenkreuz.Width/2)-(PositionXY.Width div 2));
+				PositionXY.Top:=round(r*cos(phi)*(Fadenkreuz.Height/2)+(Fadenkreuz.Height/2)-(PositionXY.Width div 2));
+			end else
+			begin
+				// Scanner-Steuerung
+				PositionXY.Left:=round(Fadenkreuz.Width * (get_channel('pan')+get_channel('panfine')/256)/255)-(PositionXY.Width div 2);
+				PositionXY.Top:=round(Fadenkreuz.Height * (get_channel('tilt')+get_channel('tiltfine')/256)/255)-(PositionXY.Height div 2);
+			end;
+			end;
+    	4:
+    	begin
+    		pantiltspeedslider.position:=get_channel('speed');
+    	end;
+	5:
+    	begin
+    		wert:=get_channel('shutter');
+    		case wert of
+    			8..134: shutterslider.position:=wert;
+    			135..239: shuttereffectslider.position:=wert;
+    		end;
+    	end;
+    	6..8:
+    	begin
+    	end;
+			9:
+    	begin
+    		wert:=get_channel('color1');
+    		case wert of
+    			0..7: colorbox.itemindex:=0;
+    			8..21: colorbox.itemindex:=1;
+    			22..35: colorbox.itemindex:=2;
+    			36..49: colorbox.itemindex:=3;
+    			50..63: colorbox.itemindex:=4;
+    			64..77: colorbox.itemindex:=5;
+    			78..91: colorbox.itemindex:=6;
+    			92..105: colorbox.itemindex:=7;
+    			106..119: colorbox.itemindex:=8;
+    			120..133: colorbox.itemindex:=9;
+    			134..147: colorbox.itemindex:=10;
+    			148..161: colorbox.itemindex:=11;
+    			162..189: colorbox.itemindex:=12;
+    			190..203: colorbox.itemindex:=13;
+    			204..217: colorbox.itemindex:=14;
+    			218..231: colorbox.itemindex:=15;
+    			232..255: colorbox.itemindex:=16;
+    		end;
+    	end;
+    	10:
+    	begin
+    		ledspeedslider.position:=get_channel('extra');
+    	end;
+    	11:
+    	begin
+    		wert:=get_channel('special1');
+    		case wert of
+    			0..7: autobox.itemindex:=0;
+    			8..22: autobox.itemindex:=1;
+    			23..37: autobox.itemindex:=2;
+    			38..52: autobox.itemindex:=3;
+    			53..67: autobox.itemindex:=4;
+    			68..82: autobox.itemindex:=5;
+    			83..97: autobox.itemindex:=6;
+    			98..112: autobox.itemindex:=7;
+    			113..127: autobox.itemindex:=8;
+    			128..142: autobox.itemindex:=9;
+    			143..157: autobox.itemindex:=10;
+    			158..172: autobox.itemindex:=11;
+    			173..187: autobox.itemindex:=12;
+    			188..202: autobox.itemindex:=13;
+    			203..217: autobox.itemindex:=14;
+    			218..232: autobox.itemindex:=15;
+    			233..255: autobox.itemindex:=16;
+    		end;
+    	end;
+    end;
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  var
+	phi,r,x,y:Extended;
+	pan, tilt, panfine, tiltfine:Extended;
+  begin
+	if usemhcontrol.checked then
+	begin
+		// Moving-Head-Steuerung (Polarkoordinaten)
+		x:=((PositionXY.Left+(PositionXY.Width div 2)-(fadenkreuz.Width/2))/fadenkreuz.Width)*2;	//-1..0..1
+		y:=((PositionXY.Top+(PositionXY.Height div 2)-(fadenkreuz.Width/2))/fadenkreuz.Height)*2;	//-1..0..1
+		r:=sqrt(x*x+y*y);
+	
+		if (r>0) then
+		begin
+			if (y>=0) then
+				phi:=arccos(x/r)
+			else
+				phi:=6.283185307179586476925286766559-arccos(x/r);
+		end else
+			phi:=64;
+		
+		r:=128-((r/2)*255);
+		phi:=(phi/6.283185307179586476925286766559)*255;
+		if 64>=phi then
+			phi:=phi+191
+		else
+			phi:=phi-64;
+	
+		pan:=255-phi;
+		tilt:=255-r;
+	end else
+	begin
+		// Scannersteuerung (Kartesische Koordinaten)
+		pan:=((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255;
+		tilt:=((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255;
+	end;
+	
+	// Ausgabe
+	if panmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(255-pan),trunc(255-pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(255-pan)*255),trunc(frac(255-pan)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(pan),trunc(pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(pan)*255),trunc(frac(pan)*255),0);
+	end;
+	if tiltmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(255-tilt),trunc(255-tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(255-tilt)*255),trunc(frac(255-tilt)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(tilt),trunc(tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(tilt)*255),trunc(frac(tilt)*255),0);
+	end;
+  end;
+  procedure ColorBoxChange;
+  begin
+    dontrefresh:=true;
+		case colorbox.itemindex of
+			0: set_channel('color1',-1,0,0,0);
+			1: set_channel('color1',-1,8,0,0);
+			2: set_channel('color1',-1,22,0,0);
+			3: set_channel('color1',-1,36,0,0);
+			4: set_channel('color1',-1,50,0,0);
+			5: set_channel('color1',-1,64,0,0);
+			6: set_channel('color1',-1,78,0,0);
+			7: set_channel('color1',-1,92,0,0);
+			8: set_channel('color1',-1,106,0,0);
+			9: set_channel('color1',-1,120,0,0);
+			10: set_channel('color1',-1,134,0,0);
+			11: set_channel('color1',-1,148,0,0);
+			12: set_channel('color1',-1,162,0,0);
+			13: set_channel('color1',-1,176,0,0);
+			14: set_channel('color1',-1,190,0,0);
+			15: set_channel('color1',-1,204,0,0);
+			16: set_channel('color1',-1,218,0,0);
+			17: set_channel('color1',-1,232,0,0);
+		end;
+  end;
+  procedure shuttersliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,shutterslider.position,0,0);
+  end;
+  procedure shutteroffenbtn;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,255,0,0);
+    shutterslider.position:=8
+  end;
+  procedure shutterclosebtn;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,0,0,0);
+    shutterslider.position:=134
+  end;
+  procedure shuttereffectsliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,shuttereffectslider.position,0,0);
+  end;
+  procedure ColorPickerChange(R, G, B: Byte);
+    begin
+        dontrefresh:=true;
+        set_channel('r',-1,r,0);
+        dontrefresh:=true;
+        set_channel('g',-1,g,0);
+        dontrefresh:=true;
+        set_channel('b',-1,b,0);
+    end;
+  procedure pantiltspeedsliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('speed',-1,pantiltspeedslider.position,0,0);
+  end;
+  procedure ledspeedsliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('extra',-1,ledspeedslider.position,0,0);
+  end;
+  procedure autoboxchange;
+  begin
+		dontrefresh:=true;
+    case autobox.itemindex of
+    	0: set_channel('special1',-1,0,0,0); 
+    	1: set_channel('special1',-1,8,0,0); 
+    	2: set_channel('special1',-1,23,0,0); 
+    	3: set_channel('special1',-1,38,0,0); 
+    	4: set_channel('special1',-1,53,0,0); 
+    	5: set_channel('special1',-1,68,0,0); 
+    	6: set_channel('special1',-1,83,0,0); 
+    	7: set_channel('special1',-1,98,0,0); 
+    	8: set_channel('special1',-1,113,0,0); 
+    	9: set_channel('special1',-1,128,0,0); 
+    	10: set_channel('special1',-1,143,0,0); 
+    	11: set_channel('special1',-1,158,0,0); 
+    	12: set_channel('special1',-1,173,0,0); 
+    	13: set_channel('special1',-1,188,0,0); 
+    	14: set_channel('special1',-1,203,0,0); 
+    	15: set_channel('special1',-1,218,0,0); 
+    	16: set_channel('special1',-1,233,0,0); 
+    end;
+  end;
+  procedure colorchangebtnclick;
+  begin
+      if colorpicker.visible then
+      begin
+        colorpicker.visible:=false;
+        colorpicker2.visible:=true;
+      end else
+      begin
+        colorpicker.visible:=true;
+        colorpicker2.visible:=false;
+      end;
+  end;
+  end.
+ </code>
+</device>

@@ -1,0 +1,1 @@
+link.exe /machine:I386 /nologo C:\win\devel\okdmx31_wdk_1_7\dll\old\parzic_exe\parzic.OBJ /ENTRY:__vbaS /OUT:C:\win\devel\okdmx31_wdk_1_7\dll\old\parzic_exe\parzic.exe /BASE:0x400000 /SUBSYSTEM:WINDOWS,4.0 /VERSION:1.0 /INCREMENTAL:NO /OPT:REF /MERGE:.rdata=.text /IGNORE:4078  > log.txt 

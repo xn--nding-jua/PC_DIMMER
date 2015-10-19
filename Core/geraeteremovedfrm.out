@@ -1,0 +1,41 @@
+unit geraeteremovedfrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ExtCtrls, ComCtrls;
+
+type
+  Tgeraetremoved = class(TForm)
+    Button1:         TButton;
+    Label1:          TLabel;
+    Label3:          TLabel;
+    Label4:          TLabel;
+    Label5:          TLabel;
+    Label6:          TLabel;
+    devicenamelabel: TLabel;
+    startadresselabel: TLabel;
+    Bevel1:          TBevel;
+    Image1:          TImage;
+    Button2:         TButton;
+    Bevel2:          TBevel;
+    Label2:          TLabel;
+    devicedescription: TLabel;
+    TreeView1:       TTreeView;
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+  end;
+
+var
+  geraetremoved: Tgeraetremoved;
+
+implementation
+
+uses PCDIMMER;
+
+{$R *.dfm}
+
+end.

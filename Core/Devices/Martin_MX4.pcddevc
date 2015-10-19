@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\ts255.png">
+ <information id="PC_DIMMER">
+ <name>MX4</name>
+ <vendor>Martin</vendor>
+ <author>Christian Nöding</author>
+ <description></description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Farbrad" fade="yes" type="color1"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Gobo" fade="yes" type="gobo1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="PAN" fade="yes" type="pan"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Geschwindigkeit" fade="yes" type="speed"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="127" ch4="127" ch5="-1" />
+ <colors>
+  <color name="Weiß" value="5" valueend="5" r="255" g="255" b="255" />
+  <color name="Hellblau" value="17" valueend="17" r="166" g="202" b="240" />
+  <color name="Farngrün" value="29" valueend="29" r="0" g="128" b="0" />
+  <color name="Rot" value="41" valueend="41" r="255" g="0" b="0" />
+  <color name="Gelb" value="53" valueend="53" r="255" g="255" b="0" />
+  <color name="Magenta" value="65" valueend="65" r="255" g="0" b="128" />
+  <color name="Mittelblau" value="77" valueend="77" r="0" g="77" b="255" />
+  <color name="Tieforange" value="89" valueend="89" r="255" g="128" b="0" />
+  <color name="Hellgrün" value="101" valueend="101" r="0" g="255" b="0" />
+  <color name="Cyan" value="113" valueend="113" r="0" g="172" b="255" />
+  <color name="Pink" value="125" valueend="125" r="255" g="0" b="255" />
+  <color name="Blau" value="137" valueend="137" r="0" g="0" b="255" />
+  <color name="Bernsteinfarbengelb" value="149" valueend="149" r="255" g="204" b="0" />
+  <color name="Rot" value="161" valueend="161" r="128" g="0" b="0" />
+  <color name="Grün" value="173" valueend="173" r="0" g="170" b="0" />
+  <color name="Orange" value="185" valueend="185" r="255" g="158" b="62" />
+  <color name="Split-Color 1" value="197" valueend="197" r="128" g="128" b="0" />
+  <color name="Split-Color 2" value="204" valueend="204" r="128" g="128" b="64" />
+  <color name="Remote Stand-Alone" value="210" valueend="210" r="1" g="1" b="1" />
+ </colors>
+ <shutter OpenValue="20" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="20" MinValue="0" MaxValue="59" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="192" LeftMaxValue="255" OffValue="224" RightMinValue="192" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="400" height="350">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="72" left="8" height="226" width="226" />
+  <colorbox top="70" left="240" height="22" width="150" />
+  <dropdown name="gobobox" top="120" left="240" width="150" height="21" action="gobochange">
+   <item caption="Offen" value="0" picture="" />
+   <item caption="Position 1" value="0" picture="" />
+   <item caption="Position 2" value="0" picture="" />
+   <item caption="Position 3" value="0" picture="" />
+   <item caption="Position 4" value="0" picture="" />
+   <item caption="Position 5" value="0" picture="" />
+   <item caption="Position 6" value="0" picture="" />
+   <item caption="Position 7" value="0" picture="" />
+   <item caption="Position 8" value="0" picture="" />
+   <item caption="Position 9" value="0" picture="" />
+   <item caption="Position 10" value="0" picture="" />
+   <item caption="Position 11" value="0" picture="" />
+   <item caption="Position 12" value="0" picture="" />
+   <item caption="Position 13" value="0" picture="" />
+   <item caption="Position 14" value="0" picture="" />
+   <item caption="Position 15" value="0" picture="" />
+   <item caption="Position 16" value="0" picture="" />
+   <item caption="Position 17" value="0" picture="" />
+   <item caption="Position 18" value="0" picture="" />
+   <item caption="Position 19" value="0" picture="" />
+   <item caption="Remote Stand-Alone" value="0" picture="" />
+  </dropdown>
+  <dropdown name="shutterbox" top="170" left="240" width="150" height="21" action="shutterchange">
+   <item caption="Shutter geschlossen" value="0" picture="" />
+   <item caption="Shutter offen" value="0" picture="" />
+   <item caption="Stroboskop" value="0" picture="" />
+   <item caption="Stand-Alone (Musik-Trigger)" value="0" picture="" />
+   <item caption="Stand-Alone (Auto-Trigger)" value="0" picture="" />
+  </dropdown>
+  <slider name="trackingslider" top="280" left="240" width="150" height="20" action="speedchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="stroboslider" top="220" left="240" width="150" height="20" action="strobochange" startvalue="0" endvalue="59" default="0"/>
+  <slider name="colorslider" top="50" left="280" width="110" height="20" action="colorsliderchange" startvalue="0" endvalue="6" default="0"/>
+  <label name="Label1" top="50" left="240" width="30" height="13" caption="Farbe:"/>
+  <label name="Label2" top="100" left="240" width="29" height="13" caption="Gobo:"/>
+  <label name="Label3" top="150" left="240" width="37" height="13" caption="Shutter:"/>
+  <label name="Label4" top="260" left="240" width="126" height="13" caption="Tracking-Geschwindigkeit:"/>
+  <label name="Label5" top="200" left="240" width="115" height="13" caption="Strobo-Geschwindigkeit:"/>
+  <label name="zustandlbl" top="50" left="80" width="9" height="13" caption="..."/>
+  <button name="Button1" top="310" left="270" width="120" height="30" action="doreset" caption="Reset"/>
+  <button name="Button2" top="310" left="140" width="120" height="30" action="lampon" caption="Lampe ein"/>
+  <button name="Button3" top="310" left="10" width="120" height="30" action="lampoff" caption="Lampe aus"/>
+ </form>
+ <code>
+  unit MX4;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorBoxChange;
+  procedure gobochange;
+  procedure shutterchange;
+  procedure speedchange;
+  procedure lampoff;
+  procedure lampon;
+  procedure doreset;
+  procedure strobochange;
+  procedure colorsliderchange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    stroboslider.enabled:=false;
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    wert:integer;
+  begin
+    case channel of
+    	0: // Shutter / Special
+    	begin
+				wert:=get_channel('shutter');
+				if not dontrefresh then
+				  stroboslider.enabled:=false;
+
+				case wert of
+					0..9: shutterbox.itemindex:=0;
+					20..99: shutterbox.itemindex:=1;
+					100..159:
+					begin
+						if not dontrefresh then
+						begin
+							shutterbox.itemindex:=2;
+							stroboslider.enabled:=true;
+							stroboslider.position:=wert-100;
+						end;
+					end;
+					180..204: shutterbox.itemindex:=3;
+					205..229: shutterbox.itemindex:=4;
+				end;
+				case wert of
+					0..9: zustandlbl.caption:='Shutter geschlossen';
+					10..19: zustandlbl.caption:='Lampe an';
+					20..99: zustandlbl.caption:='Shutter offen';
+					100..159: zustandlbl.caption:='Stroboskop';
+					160..179: zustandlbl.caption:='Shutter geschlossen';
+					180..204: zustandlbl.caption:='Stand-Alone (Musik)';
+					205..229: zustandlbl.caption:='Stand-Alone (Auto)';
+					230..239: zustandlbl.caption:='Shutter geschlossen';
+					240..249: zustandlbl.caption:='Reset (mind. 5s warten)';
+					250..255: zustandlbl.caption:='Lampe aus';
+				end;
+    	end;
+    	1: // Farbrad
+    	begin
+		if not dontrefresh then
+		begin
+		wert:=get_channel('color1');
+    		case wert of
+    			0..5: colorbox.itemindex:=0;
+    			12..17: colorbox.itemindex:=1;
+    			24..29: colorbox.itemindex:=2;
+    			36..41: colorbox.itemindex:=3;
+    			48..53: colorbox.itemindex:=4;
+    			60..65: colorbox.itemindex:=5;
+    			72..77: colorbox.itemindex:=6;
+    			84..89: colorbox.itemindex:=7;
+    			96..101: colorbox.itemindex:=8;
+    			108..113: colorbox.itemindex:=9;
+    			120..125: colorbox.itemindex:=10;
+    			132..137: colorbox.itemindex:=11;
+    			144..149: colorbox.itemindex:=12;
+    			156..161: colorbox.itemindex:=13;
+    			168..173: colorbox.itemindex:=14;
+    			180..185: colorbox.itemindex:=15;
+    			192..197: colorbox.itemindex:=16;
+    			204..209: colorbox.itemindex:=17;
+    			210..255: colorbox.itemindex:=18;
+    		end;
+    		case wert of
+    			6..11: colorslider.position:=wert-6;
+    			18..23: colorslider.position:=wert-18;
+    			30..35: colorslider.position:=wert-30;
+    			42..47: colorslider.position:=wert-42;
+    			54..59: colorslider.position:=wert-54;
+    			66..71: colorslider.position:=wert-66;
+    			78..83: colorslider.position:=wert-78;
+    			90..95: colorslider.position:=wert-90;
+    			102..107: colorslider.position:=wert-102;
+    			114..119: colorslider.position:=wert-114;
+    			126..131: colorslider.position:=wert-126;
+    			138..143: colorslider.position:=wert-138;
+    			150..155: colorslider.position:=wert-150;
+    			162..167: colorslider.position:=wert-162;
+    			174..179: colorslider.position:=wert-174;
+    			189..191: colorslider.position:=wert-189;
+    			198..203: colorslider.position:=wert-198;
+    		end;
+		end;
+    	end;
+    	2: // Goborad
+    	begin
+		if not dontrefresh then
+		begin
+				wert:=get_channel('gobo1');
+				case wert of
+					0..11: Gobobox.itemindex:=0;
+					12..23: Gobobox.itemindex:=1;
+					24..35: Gobobox.itemindex:=2;
+					36..47: Gobobox.itemindex:=3;
+					48..59: Gobobox.itemindex:=4;
+					60..71: Gobobox.itemindex:=5;
+					72..83: Gobobox.itemindex:=6;
+					84..95: Gobobox.itemindex:=7;
+					96..107: Gobobox.itemindex:=8;
+					108..119: Gobobox.itemindex:=9;
+					120..131: Gobobox.itemindex:=10;
+					132..143: Gobobox.itemindex:=11;
+					144..155: Gobobox.itemindex:=12;
+					156..167: Gobobox.itemindex:=13;
+					168..179: Gobobox.itemindex:=14;
+					180..191: Gobobox.itemindex:=15;
+					192..203: Gobobox.itemindex:=16;
+					204..215: Gobobox.itemindex:=17;
+					216..227: Gobobox.itemindex:=18;
+					228..239: Gobobox.itemindex:=19;
+					240..255: Gobobox.itemindex:=20;
+				end;
+		end;
+    	end;
+    	3..4: // PAN/TILT
+    	begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+    	end;
+    	5: // Geschwindigkeit
+    	begin
+				if not dontrefresh then
+	    		trackingslider.position:=get_channel('speed');
+    	end;
+    end;
+		dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  procedure ColorBoxChange;
+  begin
+		dontrefresh:=true;
+    case colorbox.itemindex of
+    	0: set_channel('color1',5+colorslider.position,5+colorslider.position,0);
+    	1: set_channel('color1',17+colorslider.position,17+colorslider.position,0);
+    	2: set_channel('color1',29+colorslider.position,29+colorslider.position,0);
+    	3: set_channel('color1',41+colorslider.position,41+colorslider.position,0);
+    	4: set_channel('color1',53+colorslider.position,53+colorslider.position,0);
+    	5: set_channel('color1',65+colorslider.position,65+colorslider.position,0);
+    	6: set_channel('color1',77+colorslider.position,77+colorslider.position,0);
+    	7: set_channel('color1',89+colorslider.position,89+colorslider.position,0);
+    	8: set_channel('color1',101+colorslider.position,101+colorslider.position,0);
+    	9: set_channel('color1',113+colorslider.position,113+colorslider.position,0);
+    	10: set_channel('color1',125+colorslider.position,125+colorslider.position,0);
+    	11: set_channel('color1',137+colorslider.position,137+colorslider.position,0);
+    	12: set_channel('color1',149+colorslider.position,149+colorslider.position,0);
+    	13: set_channel('color1',161+colorslider.position,161+colorslider.position,0);
+    	14: set_channel('color1',173+colorslider.position,173+colorslider.position,0);
+    	15: set_channel('color1',185+colorslider.position,185+colorslider.position,0);
+    	16: set_channel('color1',197+colorslider.position,197+colorslider.position,0);
+    	17: set_channel('color1',204,204,0);
+    	18: set_channel('color1',210,210,0);
+    end;
+  end;
+  procedure gobochange;
+  begin
+	dontrefresh:=true;
+    case gobobox.itemindex of
+    	0: set_channel('gobo1',0,0,0);
+    	1: set_channel('gobo1',12,12,0);
+    	2: set_channel('gobo1',24,24,0);
+    	3: set_channel('gobo1',36,36,0);
+    	4: set_channel('gobo1',48,48,0);
+    	5: set_channel('gobo1',60,60,0);
+    	6: set_channel('gobo1',72,72,0);
+    	7: set_channel('gobo1',84,84,0);
+    	8: set_channel('gobo1',96,96,0);
+    	9: set_channel('gobo1',108,108,0);
+    	10: set_channel('gobo1',120,120,0);
+    	11: set_channel('gobo1',132,132,0);
+    	12: set_channel('gobo1',144,144,0);
+    	13: set_channel('gobo1',156,156,0);
+    	14: set_channel('gobo1',168,168,0);
+    	15: set_channel('gobo1',180,180,0);
+    	16: set_channel('gobo1',192,192,0);
+    	17: set_channel('gobo1',204,204,0);
+    	18: set_channel('gobo1',216,216,0);
+    	19: set_channel('gobo1',228,228,0);
+    	20: set_channel('gobo1',240,240,0);
+    end;
+  end;
+  procedure shutterchange;
+  begin
+		dontrefresh:=true;
+    case shutterbox.itemindex of
+    	0: begin stroboslider.enabled:=false; set_channel('shutter',0,0,0); end;
+    	1: begin stroboslider.enabled:=false; set_channel('shutter',20,20,0); end;
+    	2: begin stroboslider.enabled:=true; set_channel('shutter',100+stroboslider.position,100+stroboslider.position,0); end;
+    	3: begin stroboslider.enabled:=false; set_channel('shutter',180,180,0); end;
+    	4: begin stroboslider.enabled:=false; set_channel('shutter',205,205,0); end;
+    end;
+  end;
+  procedure speedchange;
+  begin
+		dontrefresh:=true;
+    set_channel('speed',trackingslider.position,trackingslider.position,0);
+  end;
+  procedure lampoff;
+  begin
+    if MessageDlg('Soll die Lampe des MX4 ausgeschaltet werden?',mtConfirmation,[mbYes,mbNo],0)=mrYes then
+    begin
+	    set_channel('color1',255,255,0);
+	    set_channel('gobo1',255,255,0);
+	    set_channel('shutter',255,255,0);
+    end;
+  end;
+  procedure lampon;
+  begin
+		set_channel('shutter',10,10,0);
+  end;
+  procedure doreset;
+  begin
+    if MessageDlg('Soll ein Reset durchgeführt werden?',mtConfirmation,[mbYes,mbNo],0)=mrYes then
+    begin
+	    set_channel('shutter',240,240,0);
+    end;
+  end;
+  procedure strobochange;
+  begin
+		dontrefresh:=true;
+    shutterchange;
+  end;
+  procedure colorsliderchange;
+  begin
+		dontrefresh:=true;
+    colorboxchange;
+  end;
+  end.
+ </code>
+</device>

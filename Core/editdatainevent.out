@@ -1,0 +1,642 @@
+unit editdatainevent;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ExtCtrls, szenenverwaltung, befehleditorform;
+
+type
+  Teditdataineventfrm = class(TForm)
+    GroupBox1:    TGroupBox;
+    GroupBox2:    TGroupBox;
+    okbtn:        TButton;
+    cancelbtn:    TButton;
+    typ:          TComboBox;
+    typcaption:   TLabel;
+    Label2:       TLabel;
+    Label3:       TLabel;
+    recorddatain: TCheckBox;
+    message1b:    TLabel;
+    data1b:       TLabel;
+    Bevel1:       TBevel;
+    Bevel2:       TBevel;
+    Label5:       TLabel;
+    Label6:       TLabel;
+    ComboBox2:    TComboBox;
+    effektliste:  TComboBox;
+    Optionen1Box: TGroupBox;
+    Arg1Label:    TLabel;
+    Arg1Edit:     TEdit;
+    Arg1Combobox: TComboBox;
+    ZeitBox:      TGroupBox;
+    Label7:       TLabel;
+    Label8:       TLabel;
+    Label9:       TLabel;
+    Label10:      TLabel;
+    hEdit:        TEdit;
+    minEdit:      TEdit;
+    sEdit:        TEdit;
+    msEdit:       TEdit;
+    Optionen2Box: TGroupBox;
+    Arg2Label:    TLabel;
+    Arg2Edit:     TEdit;
+    data1a:       TEdit;
+    message1a:    TEdit;
+    procedure typChange(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure effektlisteChange(Sender: TObject);
+    procedure ComboBox2Change(Sender: TObject);
+    procedure Arg1ComboboxChange(Sender: TObject);
+    procedure Arg2EditChange(Sender: TObject);
+    procedure Arg1EditChange(Sender: TObject);
+    procedure hEditChange(Sender: TObject);
+    procedure okbtnClick(Sender: TObject);
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+    Argument1, Argument2: integer;
+    Argument3: TGUID;
+    ID:        TGUID;
+  end;
+
+var
+  editdataineventfrm: Teditdataineventfrm;
+
+implementation
+
+uses PCDIMMER;
+
+{$R *.dfm}
+
+procedure Teditdataineventfrm.typChange(Sender: TObject);
+var
+  i: integer;
+begin
+  effektliste.Visible := False;
+  Optionen1Box.Visible := False;
+  Optionen2Box.Visible := False;
+  ZeitBox.Visible := False;
+
+  case typ.ItemIndex of
+    0: // Audioeffektplayer
+    begin
+      Combobox2.Clear;
+      Combobox2.Items.Add('Start / Stop');
+      Combobox2.Items.Add('Start');
+      Combobox2.Items.Add('Stop');
+      Combobox2.Items.Add('Springe zu Position');
+      Combobox2.Items.Add('Repeat ein/aus');
+      Combobox2.Items.Add('Aufnahme ein/aus');
+      Combobox2.Items.Add('Effekte ein/aus');
+      Combobox2.ItemIndex := 0;
+    end;
+    1: // Szenen
+    begin
+      Combobox2.Clear;
+      Combobox2.Items.Add('Start');
+      Combobox2.Items.Add('Stop');
+    end;
+    2: // Beat-Tool
+    begin
+      Combobox2.Clear;
+      Combobox2.Items.Add('Sync-Button');
+      Combobox2.Items.Add('BPM-Wert setzen');
+      Combobox2.Items.Add('BPM-Wert abfragen');
+      Combobox2.Items.Add('Manueller Impuls');
+      Combobox2.ItemIndex := 0;
+    end;
+    3: // Master
+    begin
+      Combobox2.Clear;
+      Combobox2.Items.Add('Grandmaster auf DataIn-Wert');
+      Combobox2.Items.Add('Grandmaster setzen');
+      Combobox2.Items.Add('Grandmaster abfragen');
+      Combobox2.Items.Add('Flashmaster auf DataIn-Wert');
+      Combobox2.Items.Add('Flashmaster setzen');
+      Combobox2.Items.Add('Flashmaster abfragen');
+      Combobox2.Items.Add('Audio-Mute ein/aus');
+      Combobox2.ItemIndex := 0;
+    end;
+    4: // Kanal
+    begin
+      Combobox2.Clear;
+      Combobox2.Items.Add('Auf DataIn-Wert schalten');
+      Combobox2.Items.Add('Auf festen Wert schalten');
+      Combobox2.Items.Add('Auf abgefragten Wert schalten');
+      Combobox2.Items.Add('Auf festen Wert dimmen');
+      Combobox2.Items.Add('Auf abgefragten Wert dimmen');
+      Combobox2.ItemIndex := 0;
+    end;
+    5: // Effekte
+    begin
+      Combobox2.Clear;
+      Combobox2.Items.Add('Start / Stop');
+      Combobox2.Items.Add('Start');
+      Combobox2.Items.Add('Stop');
+      Combobox2.Items.Add('Nächster Schritt');
+      Combobox2.Items.Add('Intensität setzen');
+      Combobox2.Items.Add('Beschleunigung setzen');
+      Combobox2.Items.Add('Wiederholung ein/aus');
+      Combobox2.Items.Add('Modus setzen');
+      Combobox2.ItemIndex := 0;
+      effektliste.Clear;
+      for i := 0 to length(mainform.effektsequenzereffekte) - 1 do
+        effektliste.Items.Add(mainform.effektsequenzereffekte[i].Name);
+      effektliste.Visible := True;
+    end;
+    6: // Submaster
+    begin
+      Combobox2.Clear;
+      Combobox2.Items.Add('Auf DataIn-Wert schalten');
+      Combobox2.Items.Add('Auf festen Wert schalten');
+      Combobox2.Items.Add('Auf festen Wert flashen');
+      Combobox2.Items.Add('Auf abgefragten Wert schalten');
+      Combobox2.ItemIndex := 0;
+    end;
+    7: // Kontrollpanel
+    begin
+      Combobox2.Clear;
+      Combobox2.Items.Add('Button schalten');
+      Combobox2.ItemIndex := 0;
+    end;
+    8: // Geräte
+    begin
+      Combobox2.Clear;
+      Combobox2.Items.Add('Ausgewählte Geräte');
+      Combobox2.Items.Add('Definiertes Gerät');
+      Combobox2.Items.Add('Gerätegruppe');
+      Combobox2.ItemIndex := 0;
+    end;
+  end;
+  Combobox2Change(nil);
+end;
+
+procedure Teditdataineventfrm.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = vk_escape then
+    modalresult := mrCancel;
+end;
+
+procedure Teditdataineventfrm.effektlisteChange(Sender: TObject);
+begin
+  case typ.ItemIndex of
+    5: Argument3 := mainform.effektsequenzereffekte[effektliste.ItemIndex].ID;
+    8:
+    begin
+      case Combobox2.ItemIndex of
+        1: Argument3 := mainform.devices[effektliste.ItemIndex].ID;
+        2: Argument3 := mainform.devicegroups[effektliste.ItemIndex].ID;
+      end;
+    end;
+  end;
+end;
+
+procedure Teditdataineventfrm.ComboBox2Change(Sender: TObject);
+var
+  i, j: integer;
+  cancel: boolean;
+begin
+  cancel := False;
+  effektliste.Visible := False;
+  Optionen1Box.Visible := False;
+  Optionen2Box.Visible := False;
+  ZeitBox.Visible := False;
+  Arg1Combobox.Visible := False;
+
+  case typ.ItemIndex of
+    0: // Audioeffektplayer
+    begin
+      case Combobox2.ItemIndex of
+        3: ZeitBox.Visible := True; // Auf Position springen
+      end;
+    end;
+    1: // Szenen
+    begin
+      case Combobox2.ItemIndex of
+        0: // Szene starten
+        begin
+          if (Sender = Combobox2) then
+          begin
+            setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) + 1);
+            szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1] := Tszenenverwaltungform.Create(self);
+
+            szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Position := Argument3;
+            szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].showmodal;
+            if szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].ModalResult = mrOk then
+            begin
+              case szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].TreeView1.Selected.Parent.Index of
+                0:
+                begin
+                  // Einfache Szene
+                  Argument3 := mainform.EinfacheSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+                end;
+                1:
+                begin
+                  // Geräteszenen
+                  Argument3 := mainform.DeviceScenes[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+                end;
+                2:
+                begin
+                  // Audioszene
+                  Argument3 := mainform.AudioSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+                end;
+                3:
+                begin
+                  // Bewegungsszene
+                  Argument3 := mainform.BewegungsSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+                end;
+                4:
+                begin
+                  // Befehl
+                  cancel := False;
+                  for i := 0 to length(befehlseditor_array) - 1 do
+                  begin
+                    if GUIDtoString(befehlseditor_array[i].ID) = GUIDtoString(mainform.Befehle[szenenverwaltung_formarray[length(befehlseditor_array) - 1].Treeview1.Selected.Index].ID) then
+                    begin
+                      MessageDlg('Es wird gerade versucht einen sich selbst aufrufenden Befehl zu erstellen.' + #10 + 'Da dies zu einer Endlosschleife führen würde, wird der Vorgang automatisch abgebrochen.', mtError, [mbOK], 0);
+                      cancel := True;
+                    end;
+                  end;
+                  if not cancel then
+                  begin
+                    Argument3 := mainform.Befehle[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+                  end;
+                end;
+                5:
+                begin
+                  // Kompositionsszene
+                  for i := 0 to length(mainform.Kompositionsszenen) - 1 do
+                    if GUIDtoString(mainform.Kompositionsszenen[i].ID) = GUIDtoString(mainform.Kompositionsszenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID) then
+                      for j := 0 to length(mainform.Kompositionsszenen[i].IDs) - 1 do
+                      begin
+                        if (GUIDtoString(mainform.Kompositionsszenen[i].IDs[j]) = GUIDtoString(ID)) and (GUIDtoString(ID) <> '{00000000-0000-0000-0000-000000000000}') then
+                        begin
+                          MessageDlg('Es wird gerade versucht einen sich selbst aufrufenden Befehl zu erstellen.' + #10 + 'Da dies zu einer Endlosschleife führen würde, wird der Vorgang automatisch abgebrochen.', mtError, [mbOK], 0);
+                          cancel := True;
+                        end;
+                      end;
+                  if not cancel then
+                  begin
+                    ShowMessage('Bitte stellen Sie sicher, dass die Kombinationsszene die Sie gerade hinzufügen möchten nicht den gerade zu bearbeitenden Befehl aufruft.' + #10 + 'Ringaufrufe können nicht vollständig erkannt werden und führen zum Absturz.');
+                    Argument3 := mainform.Kompositionsszenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+                  end;
+                end;
+              end;
+            end;
+            szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Free;
+            setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) - 1);
+          end;
+        end;
+        1: // Szene stoppen
+        begin
+          if (Sender = Combobox2) then
+          begin
+            setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) + 1);
+            szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1] := Tszenenverwaltungform.Create(self);
+
+            szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].showmodal;
+            if szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].ModalResult = mrOk then
+            begin
+              case szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].TreeView1.Selected.Parent.Index of
+                0:
+                begin
+                  // Einfache Szene
+                  Argument3 := mainform.EinfacheSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+                end;
+                1:
+                begin
+                  // Geräteszene
+                  Argument3 := mainform.Devicescenes[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+                end;
+                2:
+                begin
+                  // Audioszene
+                  Argument3 := mainform.AudioSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+                end;
+                3:
+                begin
+                  // Bewegungsszene
+                  Argument3 := mainform.BewegungsSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+                end;
+                4:
+                begin
+                  // Befehl
+                  ShowMessage('Befehle können derzeit noch nicht explizit gestoppt werden.');
+                  //                  Argument3:=mainform.Befehle[szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].Treeview1.Selected.Index].ID;
+                end;
+                5:
+                begin
+                  // Kompositionsszene
+                  Argument3 := mainform.Kompositionsszenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+                end;
+              end;
+            end;
+            szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Free;
+            setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) - 1);
+          end;
+        end;
+      end;
+    end;
+    2: // Beat-Tool
+    begin
+      case Combobox2.ItemIndex of
+        1: // BPM-Wert
+        begin
+          Optionen1Box.Visible := True;
+          Arg1Label.Caption := 'BPM-Wert [Wert in BPM]:';
+          Arg2Edit.Text := IntToStr(Argument1);
+        end;
+      end;
+    end;
+    3: // Master
+    begin
+      case Combobox2.ItemIndex of
+        1: // Grandmaster setzen
+        begin
+          Optionen1Box.Visible := True;
+          Arg1Label.Caption := 'Wert [0..100]';
+          Arg2Edit.Text := IntToStr(Argument1);
+        end;
+        4: // Flashmaster setzen
+        begin
+          Optionen1Box.Visible := True;
+          Arg1Label.Caption := 'Wert [0..100]';
+          Arg2Edit.Text := IntToStr(Argument1);
+        end;
+      end;
+    end;
+    4: // Einzelkanaländerung
+    begin
+      case Combobox2.ItemIndex of
+        0: // Auf Kanalwert setzen
+        begin
+          Optionen1Box.Visible := True;
+          Optionen2Box.Visible := False;
+          Arg1Label.Caption := 'Kanal:';
+          Arg2Label.Caption := '';
+          Arg1Edit.Text := IntToStr(Argument1);
+          Arg2Edit.Text := IntToStr(Argument2);
+        end;
+        1: // Auf festen Wert setzen
+        begin
+          Optionen1Box.Visible := True;
+          Optionen2Box.Visible := True;
+          Arg1Label.Caption := 'Kanal:';
+          Arg2Label.Caption := 'Wert [0..100]:';
+          Arg1Edit.Text := IntToStr(Argument1);
+          Arg2Edit.Text := IntToStr(Argument2);
+        end;
+        2: // Auf abgefragten Wert schalten
+        begin
+          Optionen1Box.Visible := True;
+          Arg1Label.Caption := 'Kanal:';
+          Arg2Edit.Text := IntToStr(Argument1);
+        end;
+        3: // Auf festen Wert dimmen
+        begin
+          Optionen1Box.Visible := True;
+          Optionen2Box.Visible := True;
+          Arg1Label.Caption := 'Kanal:';
+          Arg2Label.Caption := 'Wert [0..100]:';
+          Arg1Edit.Text  := IntToStr(Argument1);
+          Arg2Edit.Text  := IntToStr(Argument2);
+          Label8.Caption := 'Die Fadezeit wird in der Kanalübersicht angegeben.';
+          Label8.Visible := True;
+        end;
+        4: // Auf abgefragten Wert dimmen
+        begin
+          Optionen1Box.Visible := True;
+          Arg1Label.Caption := 'Kanal:';
+          Arg2Edit.Text  := IntToStr(Argument1);
+          Label8.Caption := 'Die Fadezeit wird in der Kanalübersicht angegeben.';
+          Label8.Visible := True;
+        end;
+      end;
+    end;
+    5: // Effekte
+    begin
+      case Combobox2.ItemIndex of
+        0: // Start / Stop
+        begin
+          Optionen1Box.Visible := False;
+          Optionen2Box.Visible := False;
+          effektliste.Visible  := True;
+        end;
+        1: // Start
+        begin
+          Optionen1Box.Visible := False;
+          Optionen2Box.Visible := False;
+          effektliste.Visible  := True;
+        end;
+        2: // Stop
+        begin
+          Optionen1Box.Visible := False;
+          Optionen2Box.Visible := False;
+          effektliste.Visible  := True;
+        end;
+        3: // Nächster Schritt
+        begin
+          Optionen1Box.Visible := False;
+          Optionen2Box.Visible := False;
+          effektliste.Visible  := True;
+        end;
+        4: // Intensität setzen
+        begin
+          Optionen1Box.Visible := True;
+          Optionen2Box.Visible := False;
+          Arg1Label.Caption := 'Intensität [0..255]:';
+          Arg2Label.Caption := 'Wert [0..255]:';
+          Arg1Edit.Text := IntToStr(Argument1);
+          Arg2Edit.Text := IntToStr(Argument2);
+          effektliste.Visible := True;
+        end;
+        5: // Beschleunigung setzen
+        begin
+          Optionen1Box.Visible := True;
+          Optionen2Box.Visible := False;
+          Arg1Label.Caption := 'Beschleunigung [0..128..255]:';
+          Arg2Label.Caption := 'Wert [0..255]:';
+          Arg1Edit.Text := IntToStr(Argument1);
+          Arg2Edit.Text := IntToStr(Argument2);
+          effektliste.Visible := True;
+        end;
+        6: // Wiederholung ein/aus
+        begin
+          Optionen1Box.Visible := False;
+          Optionen2Box.Visible := False;
+          effektliste.Visible  := True;
+        end;
+        7: // Modus setzen
+        begin
+          Optionen1Box.Visible := True;
+          Optionen2Box.Visible := False;
+          Arg1Combobox.Visible := True;
+          Arg1Combobox.Clear;
+          Arg1Combobox.Items.Add('Aufwärts');
+          Arg1Combobox.Items.Add('Abwärts');
+          Arg1Combobox.Items.Add('Pendeln');
+          Arg1Combobox.Items.Add('Zufällig');
+          Arg1Label.Caption := 'Modus:';
+          Arg2Label.Caption := 'Optionen:';
+          Arg1Edit.Text := IntToStr(Argument1);
+          Arg2Edit.Text := IntToStr(Argument2);
+          effektliste.Visible := True;
+        end;
+      end;
+    end;
+    6: // Submaster
+    begin
+      case Combobox2.ItemIndex of
+        0: // Fader auf Kanalwert
+        begin
+          Optionen1Box.Visible := True;
+          Arg1Label.Caption := 'Fader:';
+          Arg2Label.Caption := 'Optionen:';
+          Arg1Edit.Text := IntToStr(Argument1);
+          Arg2Edit.Text := IntToStr(Argument2);
+        end;
+        1: // Fader setzen
+        begin
+          Optionen1Box.Visible := True;
+          Optionen2Box.Visible := True;
+          Arg1Label.Caption := 'Fader:';
+          Arg2Label.Caption := 'Wert [0..255]:';
+          Arg1Edit.Text := IntToStr(Argument1);
+          Arg2Edit.Text := IntToStr(Argument2);
+        end;
+        2: // Fader setzen
+        begin
+          Optionen1Box.Visible := True;
+          Optionen2Box.Visible := True;
+          Arg1Label.Caption := 'Fader:';
+          Arg2Label.Caption := 'Wert [0..255]:';
+          Arg1Edit.Text := IntToStr(Argument1);
+          Arg2Edit.Text := IntToStr(Argument2);
+        end;
+        3: // Faderwert abfragen
+        begin
+          Optionen1Box.Visible := True;
+          Optionen2Box.Visible := False;
+          Arg1Label.Caption := 'Fader:';
+          Arg2Label.Caption := 'Wert [0..255]:';
+          Arg1Edit.Text := IntToStr(Argument1);
+          Arg2Edit.Text := IntToStr(Argument2);
+        end;
+      end;
+    end;
+    7: // Kontrollpanel
+    begin
+      case Combobox2.ItemIndex of
+        0: // Button drücken
+        begin
+          Optionen1Box.Visible := True;
+          Optionen2Box.Visible := True;
+          Arg1Label.Caption := 'Reihe:';
+          Arg2Label.Caption := 'Spalte:';
+          Arg1Edit.Text := IntToStr(Argument1);
+          Arg2Edit.Text := IntToStr(Argument2);
+        end;
+      end;
+    end;
+    8: // Geräte
+    begin
+      case Combobox2.ItemIndex of
+        0: // Selektierte Geräte
+        begin
+          Optionen1Box.Visible := True;
+          Optionen2Box.Visible := False;
+          Arg1Label.Caption := 'Kanal:';
+          Arg1Combobox.Visible := True;
+          Arg1Combobox.Clear;
+          for i := 0 to length(mainform.DeviceChannelNames) - 1 do
+            Arg1Combobox.Items.Add(mainform.DeviceChannelNames[i]);
+          Arg1Edit.Text := IntToStr(Argument1);
+        end;
+        1: // Definiertes Gerät
+        begin
+          Optionen1Box.Visible := True;
+          Optionen2Box.Visible := False;
+          Arg1Label.Caption := 'Kanal:';
+          Arg1Combobox.Visible := True;
+          Arg1Combobox.Clear;
+          for i := 0 to length(mainform.DeviceChannelNames) - 1 do
+            Arg1Combobox.Items.Add(mainform.DeviceChannelNames[i]);
+          Arg1Edit.Text := IntToStr(Argument1);
+          effektliste.Clear;
+          for i := 0 to length(mainform.devices) - 1 do
+            effektliste.Items.Add(mainform.devices[i].Name);
+          effektliste.Visible := True;
+        end;
+        2: // Gerätegruppe
+        begin
+          Optionen1Box.Visible := True;
+          Optionen2Box.Visible := False;
+          Arg1Label.Caption := 'Kanal:';
+          Arg1Combobox.Visible := True;
+          Arg1Combobox.Clear;
+          for i := 0 to length(mainform.DeviceChannelNames) - 1 do
+            Arg1Combobox.Items.Add(mainform.DeviceChannelNames[i]);
+          Arg1Edit.Text := IntToStr(Argument1);
+          effektliste.Clear;
+          for i := 0 to length(mainform.DeviceGroups) - 1 do
+            effektliste.Items.Add(mainform.DeviceGroups[i].Name);
+          effektliste.Visible := True;
+        end;
+      end;
+    end;
+  end;
+end;
+
+procedure Teditdataineventfrm.Arg1ComboboxChange(Sender: TObject);
+begin
+  Arg1Edit.Text := IntToStr(Arg1Combobox.ItemIndex);
+end;
+
+procedure Teditdataineventfrm.Arg2EditChange(Sender: TObject);
+var
+  s: string;
+  i: integer;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  mainform.input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+  Argument2 := StrToInt(Arg2Edit.Text);
+end;
+
+procedure Teditdataineventfrm.Arg1EditChange(Sender: TObject);
+var
+  s: string;
+  i: integer;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  mainform.input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+  Argument1 := StrToInt(Arg1Edit.Text);
+end;
+
+procedure Teditdataineventfrm.hEditChange(Sender: TObject);
+var
+  s: string;
+  i: integer;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  mainform.input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+  Argument1 := StrToInt(msEdit.Text) + StrToInt(sEdit.Text) * 1000 + StrToInt(minEdit.Text) * 60 * 1000 + StrToInt(hEdit.Text) * 60 * 60 * 1000;
+end;
+
+procedure Teditdataineventfrm.okbtnClick(Sender: TObject);
+begin
+  if Arg1Combobox.Visible then
+    Arg1Edit.Text := IntToStr(Arg1Combobox.ItemIndex);
+end;
+
+end.

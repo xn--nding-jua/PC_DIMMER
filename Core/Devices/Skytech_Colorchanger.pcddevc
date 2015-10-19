@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\Colorflood.PNG">
+ <information id="PC_DIMMER">
+ <name>ColorchangerRGB</name>
+ <vendor>Skytec</vendor>
+ <author>Geert</author>
+ <description>Colorchanger with 7 colors</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Intensity" fade="yes" type="dimmer"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Color" fade="yes" type="color1"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Fadespeed" fade="yes" type="speed"/>
+ </channels>
+ <initvalues 0="-1" 1="-1" 2="-1" />
+ <colors>
+  <color name="Red" value="1" valueend="37" r="255" g="0" b="0" />
+  <color name="yellow" value="38" valueend="75" r="255" g="255" b="0" />
+  <color name="Green" value="76" valueend="113" r="0" g="255" b="0" />
+  <color name="Cyan" value="114" valueend="151" r="0" g="255" b="255" />
+  <color name="Blue" value="152" valueend="189" r="0" g="0" b="255" />
+  <color name="Magenta" value="190" valueend="227" r="255" g="0" b="255" />
+  <color name="White" value="228" valueend="255" r="255" g="255" b="255" />
+ </colors>
+ <form width="210" height="133">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorbox top="100" left="10" height="22" width="190" />
+  <label name="" top="80" left="10" width="30" height="13" caption="Farbe:"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+
+  implementation
+
+
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  begin
+    // diese Funktion wird bei jeder Kanaländerung, die das Gerät betrifft, ausgeführt.
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  end.
+ </code>
+</device>

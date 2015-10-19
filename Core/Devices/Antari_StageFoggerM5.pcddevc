@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\nebelmaschine.png">
+ <information id="PC_DIMMER">
+ <name>StageFogger M-5</name>
+ <vendor>Antari</vendor>
+ <author>Christian Nöding</author>
+ <description>Nebelmaschine mit regulierbarem Ausstoß</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Nebelausstoß" fade="yes" type="dimmer"/>
+ </channels>
+ <initvalues ch0="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="8" MinValue="16" MaxValue="131" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="233" height="180">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <slider name="volumeslider" top="110" left="10" width="210" height="20" action="volumechange" startvalue="5" endvalue="251" default="5"/>
+  <label name="Label1" top="90" left="10" width="68" height="13" caption="Nebelausstoß:"/>
+  <button name="fullbtn" top="140" left="170" width="50" height="30" action="fullbtnclick" caption="100%"/>
+  <button name="offbtn" top="140" left="10" width="50" height="30" action="offbtnclick" caption="Aus"/>
+  <button name="halfbtn" top="140" left="120" width="40" height="30" action="halfbtnclick" caption="50%"/>
+  <button name="minbtn" top="140" left="70" width="40" height="30" action="mintbtnclick" caption="5%"/>
+ </form>
+ <code>
+  unit antarim5;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure volumechange;
+  procedure offbtnclick;
+  procedure halfbtnclick;
+  procedure fullbtnclick;
+  procedure mintbtnclick;
+
+  implementation
+
+var
+	dontsetslider, dontsetbox:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+	var
+		wert:integer;
+  begin
+		case channel of
+    	0:
+    	begin
+    		wert:=get_channel('dimmer');
+
+		    if not dontsetslider then
+				begin
+					volumeslider.position:=wert;
+				end;
+    	end;
+    end;
+		dontsetslider:=false;
+    dontsetbox:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure volumechange;
+  begin
+    dontsetslider:=true;
+		set_channel('dimmer',volumeslider.position,volumeslider.position,0);
+  end;
+  procedure offbtnclick;
+  begin
+		set_channel('dimmer',0,0,0);
+  end;
+  procedure halfbtnclick;
+  begin
+		set_channel('dimmer',127,127,0);
+  end;
+  procedure fullbtnclick;
+  begin
+		set_channel('dimmer',255,255,0);
+  end;
+  procedure mintbtnclick;
+  begin
+		set_channel('dimmer',6,6,0);
+  end;
+  end.
+ </code>
+</device>

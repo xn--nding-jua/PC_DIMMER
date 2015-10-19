@@ -1,0 +1,32 @@
+This driver and source code for test applications is provided as is.
+In case of trouble contact driver@lighting-solutions.de.
+
+The Makefile now contains to sections to build the driver for either
+kernel 2.4.x or 2.6.x. The build for kernel 2.4 is done using the target
+k24 while for kernel 2.6.x the target k26 has to be used. In addition to the
+two build targets two clean targets (clean24 and clean26) are provided.
+Please note that no module is build by default anymore. Please use the
+proper target.
+
+INSTALL:
+> make [k24|k26]
+> make 
+
+which should compile you the driver (usbdmx.o/usbdmx.ko) and demo code.
+The driver uses major 180, minor 192+. To create the devices used to
+access the interfaces, type as root:
+
+> mknod -m a=rw /dev/usbdmx0 c 180 192
+> mknod -m a=rw /dev/usbdmx1 c 180 193
+> mknod -m a=rw /dev/usbdmx2 c 180 194
+> mknod -m a=rw /dev/usbdmx3 c 180 195
+...
+
+The driver supports up to 16 devices in the moment.
+To use the driver load it via 
+
+> insmod [usbdmx.o|usbdmx.ko]
+
+USAGE:
+For usage information consult the demo source code demo.c and the include
+file "usbdmx.h".

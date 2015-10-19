@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\MARTIN_atomic 3000.png">
+ <information id="PC_DIMMER">
+ <name>Atomic 3000 (3ch)</name>
+ <vendor>Martin</vendor>
+ <author>Colin</author>
+ <description>Neues Gerät</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Intensity" fade="yes" type="dimmer"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Duriation" fade="yes" type="pan"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Rate" fade="yes" type="tilt"/>
+ </channels>
+ <initvalues 0="-1" 1="-1" 2="-1" />
+ <form width="200" height="240">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <slider name="slintensity" top="100" left="10" width="180" height="20" action="intensitychange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="slduration" top="150" left="10" width="180" height="20" action="durationchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="slrate" top="200" left="10" width="180" height="20" action="ratechange" startvalue="0" endvalue="255" default="0"/>
+  <label name="intensity" top="80" left="10" width="39" height="13" caption="Intensity"/>
+  <label name="duration" top="130" left="10" width="98" height="13" caption="Duration (0 - 650 ms)"/>
+  <label name="rate" top="180" left="10" width="84" height="13" caption="Rate (0.5 - 25 Hz)"/>
+ </form>
+ <code>
+  unit atomic30004ch;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure intensitychange;
+  procedure durationchange;
+  procedure ratechange;
+
+  implementation
+
+  var
+    // hier können globale Variablen definiert werden
+  DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte dieses Typs beim Laden des Projekts ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Wert:integer;
+  begin
+    // diese Funktion wird bei jeder Kanaländerung, die das Gerät betrifft, ausgeführt. Schreiben Sie hier eine Funktion, um die Geräteoberfläche bei einer Kanalwertänderung zu aktualisieren. z.B. wie folgt:
+{
+    if not DontRefresh then
+    case channel of
+            0:
+    	begin // Dimmer
+    		if not dontrefresh then
+    		begin
+    			slintensity.position:=get_channel('DIMMER');
+    		end;
+    	end;
+      1:
+    	begin // Pan
+    		if not dontrefresh then
+    		begin
+    			slduration.position:=get_channel('PAN');
+    		end;
+    	end;
+      2:
+    	begin // tilt
+    		if not dontrefresh then
+    		begin
+    			slrate.position:=get_channel('TILT');
+    		end;
+    	end;
+    end;
+DontRefresh:=false;
+}
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure intensitychange;
+  begin
+		dontrefresh:=true;
+    set_channel('DIMMER',-1,slintensity.position,0,0);
+  end;
+  procedure durationchange;
+  begin
+		dontrefresh:=true;
+    set_channel('PAN',-1,slduration.position,0,0);
+  end;
+  procedure ratechange;
+  begin
+		dontrefresh:=true;
+    set_channel('TILT',-1,slrate.position,0,0);
+  end;
+  end.
+ </code>
+</device>

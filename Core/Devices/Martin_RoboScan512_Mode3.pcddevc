@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\pocketscan.png">
+ <information id="PC_DIMMER">
+ <name>RoboScan 512 (Mode 3)</name>
+ <vendor>Martin</vendor>
+ <author>Christian Nöding</author>
+ <description>Kleiner 150W Scanner</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Funktionen" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Farben" fade="yes" type="color1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Gobos" fade="yes" type="gobo1"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Effektrad" fade="yes" type="gobo2"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="PanFine" fade="yes" type="panfine"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="TiltFine" fade="yes" type="tiltfine"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="127" ch5="127" ch6="127" ch7="-1" ch8="-1" />
+ <colors>
+  <color name="Weiß" value="0" valueend="0" r="255" g="255" b="255" />
+  <color name="Pink" value="8" valueend="8" r="255" g="202" b="202" />
+  <color name="Magenta" value="16" valueend="16" r="255" g="0" b="255" />
+  <color name="Primärrot" value="24" valueend="24" r="255" g="0" b="0" />
+  <color name="Flammrot" value="32" valueend="32" r="255" g="64" b="0" />
+  <color name="Dunkelorange" value="40" valueend="40" r="128" g="64" b="0" />
+  <color name="Orange" value="48" valueend="48" r="255" g="128" b="0" />
+  <color name="Gelb" value="56" valueend="56" r="255" g="255" b="0" />
+  <color name="Hellgrün" value="64" valueend="64" r="0" g="255" b="0" />
+  <color name="Farngrün" value="72" valueend="72" r="0" g="174" b="0" />
+  <color name="Türkis" value="80" valueend="80" r="0" g="128" b="128" />
+  <color name="Cyan" value="88" valueend="88" r="0" g="191" b="191" />
+  <color name="Hellblau" value="96" valueend="96" r="0" g="255" b="255" />
+  <color name="Dunkelviolett" value="104" valueend="104" r="128" g="0" b="128" />
+  <color name="Dunkelblau" value="112" valueend="112" r="0" g="0" b="128" />
+  <color name="UV Pass" value="120" valueend="120" r="64" g="0" b="64" />
+  <color name="Multicolor 1" value="128" valueend="128" r="26" g="26" b="26" />
+  <color name="Multicolor 2" value="136" valueend="136" r="37" g="37" b="37" />
+ </colors>
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="192" LeftMaxValue="255" OffValue="224" RightMinValue="192" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="491" height="332">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="90" left="10" height="230" width="230" />
+  <colorbox top="140" left="250" height="22" width="110" />
+  <dropdown name="gobobox" top="140" left="370" width="110" height="21" action="goboboxchange">
+   <item caption="Offen" value="0" picture="" />
+   <item caption="Gobo 1" value="0" picture="" />
+   <item caption="Gobo 2" value="0" picture="" />
+   <item caption="Gobo 3" value="0" picture="" />
+   <item caption="Gobo 4" value="0" picture="" />
+   <item caption="Gobo 5" value="0" picture="" />
+  </dropdown>
+  <dropdown name="functionbox" top="90" left="250" width="230" height="21" action="functionboxchange">
+   <item caption="Normal" value="0" picture="" />
+   <item caption="Lüfter langsam" value="0" picture="" />
+   <item caption="Strobe langsam" value="0" picture="" />
+   <item caption="Strobe mittel" value="0" picture="" />
+   <item caption="Strobe schnell" value="0" picture="" />
+   <item caption="Stand-Alone Autotrigger" value="0" picture="" />
+   <item caption="Stand-Alone Musiktrigger" value="0" picture="" />
+   <item caption="Reset" value="0" picture="" />
+  </dropdown>
+  <dropdown name="effektbox" top="240" left="250" width="230" height="21" action="effektboxchange">
+   <item caption="Offen" value="0" picture="" />
+   <item caption="CTC 5500-3400K" value="0" picture="" />
+   <item caption="Frostfilter" value="0" picture="" />
+   <item caption="Dreiseitprisma" value="0" picture="" />
+  </dropdown>
+  <slider name="dimmerslider" top="190" left="250" width="230" height="20" action="dimmersliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label3" top="120" left="250" width="30" height="13" caption="Farbe:"/>
+  <label name="Label4" top="120" left="370" width="34" height="13" caption="Gobos:"/>
+  <label name="Label7" top="70" left="250" width="44" height="13" caption="Funktion:"/>
+  <label name="Label8" top="170" left="250" width="46" height="13" caption="Helligkeit:"/>
+  <label name="Label9" top="220" left="250" width="46" height="13" caption="Effektrad:"/>
+  <button name="lampoffbtn" top="20" left="370" width="110" height="30" action="lampoffbtnclick" caption="Lampe aus"/>
+  <button name="lamponbtn" top="20" left="250" width="110" height="30" action="lamponbtnclick" caption="Lampe ein"/>
+ </form>
+ <code>
+  unit Roboscan812;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorBoxChange;
+  procedure dimmersliderchange;
+  procedure functionboxchange;
+  procedure lamponbtnclick;
+  procedure lampoffbtnclick;
+  procedure goboboxchange;
+  procedure effektboxchange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+	var
+		wert:integer;
+  begin
+    if not dontrefresh then
+    case channel of
+    	0:
+    	begin
+    		wert:=get_channel('SPECIAL1');
+    		case wert of
+    			0..5: functionbox.itemindex:=0;
+    			6..10: functionbox.itemindex:=1;
+    			11..40: functionbox.itemindex:=2;
+    			41..80: functionbox.itemindex:=3;
+    			81..138: functionbox.itemindex:=4;
+    			139..170: functionbox.itemindex:=5;
+    			171..202: functionbox.itemindex:=6;
+    			203..235: functionbox.itemindex:=7;
+    		end;
+    	end;
+    	1:
+    	begin
+    		dimmerslider.position:=get_channel('DIMMER');
+    	end;
+    	2:
+    	begin
+    		colorbox.itemindex:=trunc(get_channel('COLOR1')/8);
+    	end;
+    	3:
+    	begin
+    		wert:=get_channel('GOBO1');
+				case wert of
+					0: gobobox.itemindex:=0;
+					1..51: gobobox.itemindex:=1;
+					52..102: gobobox.itemindex:=2;
+					103..153: gobobox.itemindex:=3;
+					154..204: gobobox.itemindex:=4;
+					205..255: gobobox.itemindex:=5;
+    		end;
+    	end;
+    	4:
+    	begin
+    		wert:=get_channel('GOBO2');
+    		case wert of
+    			0..63: effektbox.itemindex:=0;
+    			64..127: effektbox.itemindex:=1;
+    			128..191: effektbox.itemindex:=2;
+    			192..255: effektbox.itemindex:=3;
+    		end;
+    	end;
+    	5..8:
+    	begin
+				// Scanner-Steuerung
+				PositionXY.Left:=round(Fadenkreuz.Width * (get_channel('pan')+get_channel('panfine')/256)/255)-(PositionXY.Width div 2);
+				PositionXY.Top:=round(Fadenkreuz.Height * (get_channel('tilt')+get_channel('tiltfine')/256)/255)-(PositionXY.Height div 2);
+    	end;
+    end;
+    
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  var
+		pan, tilt, panfine, tiltfine:single;
+  begin
+		// Scannersteuerung (Kartesische Koordinaten)
+		pan:=((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255;
+		tilt:=((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255;
+
+		// Ausgabe
+		if panmirror.checked then
+		begin
+			dontrefresh:=true;
+			set_channel('pan',trunc(255-pan),trunc(255-pan),0);
+			dontrefresh:=true;
+			set_channel('panfine',trunc(frac(255-pan)*255),trunc(frac(255-pan)*255),0);
+		end	else
+		begin
+			dontrefresh:=true;
+			set_channel('pan',trunc(pan),trunc(pan),0);
+			dontrefresh:=true;
+			set_channel('panfine',trunc(frac(pan)*255),trunc(frac(pan)*255),0);
+		end;
+		if tiltmirror.checked then
+		begin
+			dontrefresh:=true;
+			set_channel('tilt',trunc(255-tilt),trunc(255-tilt),0);
+			dontrefresh:=true;
+			set_channel('tiltfine',trunc(frac(255-tilt)*255),trunc(frac(255-tilt)*255),0);
+		end	else
+		begin
+			dontrefresh:=true;
+			set_channel('tilt',trunc(tilt),trunc(tilt),0);
+			dontrefresh:=true;
+			set_channel('tiltfine',trunc(frac(tilt)*255),trunc(frac(tilt)*255),0);
+		end;
+  end;
+  procedure ColorBoxChange;
+  begin
+    dontrefresh:=true;
+		set_channel('COLOR1',-1,colorbox.itemindex*8,0);
+  end;
+  procedure dimmersliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('DIMMER',-1,dimmerslider.position,0);
+  end;
+  procedure functionboxchange;
+  begin
+    dontrefresh:=true;
+    case functionbox.itemindex of
+    	0: set_channel('SPECIAL1',-1,0,0);
+    	1: set_channel('SPECIAL1',-1,6,0);
+    	2: set_channel('SPECIAL1',-1,11,0);
+    	3: set_channel('SPECIAL1',-1,60,0);
+    	4: set_channel('SPECIAL1',-1,138,0);
+    	5: set_channel('SPECIAL1',-1,139,0);
+    	6: set_channel('SPECIAL1',-1,171,0);
+    	7: set_channel('SPECIAL1',-1,203,0);
+    end;
+  end;
+  procedure lamponbtnclick;
+  begin
+    dontrefresh:=true;
+    set_channel('SPECIAL1',-1,236,0);
+  end;
+  procedure lampoffbtnclick;
+  begin
+    dontrefresh:=true;
+    set_channel('COLOR1',-1,120,0);
+    dontrefresh:=true;
+    set_channel('GOBO2',-1,64,0);
+    dontrefresh:=true;
+    set_channel('SPECIAL1',-1,253,0);
+  end;
+  procedure goboboxchange;
+  begin
+    dontrefresh:=true;
+    case gobobox.itemindex of
+    	0: set_channel('GOBO1',-1,0,0);
+    	1: set_channel('GOBO1',-1,25,0);
+    	2: set_channel('GOBO1',-1,76,0);
+    	3: set_channel('GOBO1',-1,127,0);
+    	4: set_channel('GOBO1',-1,178,0);
+    	5: set_channel('GOBO1',-1,229,0);
+    end;
+  end;
+  procedure effektboxchange;
+  begin
+    dontrefresh:=true;
+    case effektbox.itemindex of
+    	0: set_channel('GOBO2',-1,0,0);
+    	1: set_channel('GOBO2',-1,64,0);
+    	2: set_channel('GOBO2',-1,128,0);
+    	3: set_channel('GOBO2',-1,192,0);
+    end;
+  end;
+  end.
+ </code>
+</device>

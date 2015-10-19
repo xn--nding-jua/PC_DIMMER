@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\el60g.png">
+ <information id="PC_DIMMER">
+ <name>AL28-05RG</name>
+ <vendor>McCrypt</vendor>
+ <author>Christian Nöding</author>
+ <description>Laser mit 2 Steuerkanälen</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Linienart" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Ablenkungsrichtung" fade="yes" type="special2"/>
+ </channels>
+ <initvalues ch0="0" ch1="0" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="233" height="212">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="linienbox" top="100" left="10" width="210" height="21" action="SPECIAL1change">
+   <item caption="Ausgeschaltet" value="0" picture="" />
+   <item caption="Dauerstrich" value="0" picture="" />
+   <item caption="Gestrichelt Typ 1" value="0" picture="" />
+   <item caption="Gestrichelt Typ 2" value="0" picture="" />
+   <item caption="Gestrichelt Typ 3" value="0" picture="" />
+   <item caption="Wechsel alle 3s" value="0" picture="" />
+   <item caption="Wechsel alle 5s" value="0" picture="" />
+  </dropdown>
+  <dropdown name="ablenkungsbox" top="150" left="10" width="210" height="21" action="SPECIAL2change">
+   <item caption="Ablenkung entsprechend Slider" value="0" picture="" />
+   <item caption="Schnell nach Oben" value="0" picture="" />
+   <item caption="Mittel nach Oben" value="0" picture="" />
+   <item caption="Langsam nach Oben" value="0" picture="" />
+   <item caption="Keine Ablenkung" value="0" picture="" />
+   <item caption="Langsam nach Unten" value="0" picture="" />
+   <item caption="Mittel nach Unten" value="0" picture="" />
+   <item caption="Schnell nach Unten" value="0" picture="" />
+   <item caption="Musikgesteuert" value="0" picture="" />
+  </dropdown>
+  <slider name="ablenkungsslider" top="180" left="10" width="210" height="20" action="ablenkungssliderchange" startvalue="0" endvalue="200" default="0"/>
+  <label name="SPECIAL1lbl0" top="80" left="10" width="40" height="13" caption="Linienart"/>
+  <label name="SPECIAL2lbl1" top="130" left="10" width="94" height="13" caption="Ablenkungsrichtung"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure SPECIAL1change;
+  procedure SPECIAL2change;
+  procedure ablenkungssliderchange;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+	      value:=get_channel('SPECIAL1');
+				case value of
+					0: linienbox.itemindex:=0;
+					1..52: linienbox.itemindex:=1;
+					53..104: linienbox.itemindex:=2;
+					105..156: linienbox.itemindex:=3;
+					157..207: linienbox.itemindex:=4;
+					208..225: linienbox.itemindex:=5;
+					226..255: linienbox.itemindex:=6;
+				end;
+      end;
+      1:
+      begin
+        value:=get_channel('SPECIAL2');
+				case value of
+					0..200:
+					begin
+						ablenkungsslider.position:=value;
+						ablenkungsbox.itemindex:=0;
+					end;
+					201..204: ablenkungsbox.itemindex:=1;
+					205..208: ablenkungsbox.itemindex:=2;
+					209..212: ablenkungsbox.itemindex:=3;
+					213..215: ablenkungsbox.itemindex:=4;
+					216..219: ablenkungsbox.itemindex:=5;
+					220..223: ablenkungsbox.itemindex:=6;
+					224..227: ablenkungsbox.itemindex:=7;
+					228..255: ablenkungsbox.itemindex:=8;
+				end;
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure SPECIAL1change;
+  begin
+    DontRefresh:=true;
+
+		case linienbox.itemindex of
+			0: set_channel('SPECIAL1',-1,0,0);
+			1: set_channel('SPECIAL1',-1,25,0);
+			2: set_channel('SPECIAL1',-1,75,0);
+			3: set_channel('SPECIAL1',-1,125,0);
+			4: set_channel('SPECIAL1',-1,175,0);
+			5: set_channel('SPECIAL1',-1,215,0);
+			6: set_channel('SPECIAL1',-1,255,0);
+		end;
+  end;
+  procedure SPECIAL2change;
+  begin
+    DontRefresh:=true;
+
+    case ablenkungsbox.itemindex of
+    	0: set_channel('SPECIAL2',-1,ablenkungsslider.position,0);
+    	1: set_channel('SPECIAL2',-1,203,0);
+    	2: set_channel('SPECIAL2',-1,207,0);
+    	3: set_channel('SPECIAL2',-1,211,0);
+    	4: set_channel('SPECIAL2',-1,214,0);
+    	5: set_channel('SPECIAL2',-1,218,0);
+    	6: set_channel('SPECIAL2',-1,222,0);
+    	7: set_channel('SPECIAL2',-1,225,0);
+    	8: set_channel('SPECIAL2',-1,240,0);
+    end;
+  end;
+  procedure ablenkungssliderchange;
+  begin
+    DontRefresh:=true;
+
+		ablenkungsbox.itemindex:=0;
+    set_channel('SPECIAL2',-1,ablenkungsslider.position,0);
+  end;
+  end.
+ </code>
+</device>

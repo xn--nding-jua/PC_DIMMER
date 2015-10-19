@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\scanner2.png">
+ <information id="PC_DIMMER">
+ <name>DJ Scan 200</name>
+ <vendor>Futurelight</vendor>
+ <author>Christian Nöding</author>
+ <description>Scanner mit Gobo- und Farbrad sowie Shutter</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Farbe" fade="no" type="color1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="GOBO1" fade="no" type="gobo1"/>
+ </channels>
+ <initvalues ch0="127" ch1="127" ch2="-1" ch3="-1" />
+ <colors>
+  <color name="Weiß" value="0" valueend="0" r="255" g="255" b="255" />
+  <color name="Dunkelrot" value="11" valueend="11" r="128" g="0" b="0" />
+  <color name="Gelb" value="22" valueend="22" r="255" g="255" b="0" />
+  <color name="Dunkelblau" value="33" valueend="33" r="0" g="0" b="128" />
+  <color name="Hellgrün" value="44" valueend="44" r="0" g="255" b="0" />
+  <color name="Pink" value="55" valueend="55" r="255" g="128" b="192" />
+  <color name="Tiefblau" value="66" valueend="66" r="0" g="0" b="117" />
+  <color name="Rot" value="77" valueend="77" r="255" g="0" b="0" />
+  <color name="Hellgelb" value="88" valueend="88" r="255" g="255" b="185" />
+  <color name="Hellblau" value="99" valueend="99" r="0" g="255" b="255" />
+  <color name="Rot" value="110" valueend="110" r="255" g="53" b="53" />
+  <color name="Dunkelgrün" value="121" valueend="121" r="0" g="128" b="0" />
+ </colors>
+ <shutter OpenValue="8" CloseValue="0" ChannelName="gobo1"/>
+ <strobe OffValue="8" MinValue="160" MaxValue="220" ChannelName="gobo1"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="140" LeftMaxValue="255" OffValue="0" RightMinValue="5" RightMaxValue="120" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="0" RightMinValue="0" RightMaxValue="0" ChannelName="gobo2rot"/>
+ <form width="391" height="272">
+  <deviceimage top="0" left="10" width="64" height="64"/>
+  <devicename top="8" left="80"/>
+  <deviceadress top="24" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="80" left="10" height="180" width="180" />
+  <colorbox top="80" left="200" height="22" width="180" />
+  <dropdown name="gobobox" top="130" left="200" width="180" height="21" action="setgobo">
+   <item caption="Geschlossen" value="0" picture="" />
+   <item caption="Offen" value="0" picture="" />
+   <item caption="Gobo 1" value="0" picture="" />
+   <item caption="Gobo 2" value="0" picture="" />
+   <item caption="Gobo 3" value="0" picture="" />
+   <item caption="Gobo 4" value="0" picture="" />
+   <item caption="Gobo 5" value="0" picture="" />
+   <item caption="Gobo 6" value="0" picture="" />
+   <item caption="Gobo 7" value="0" picture="" />
+   <item caption="Gobo 8" value="0" picture="" />
+   <item caption="Gobo 9" value="0" picture="" />
+   <item caption="Gobo 10" value="0" picture="" />
+   <item caption="Gobo 11" value="0" picture="" />
+   <item caption="Gobo 12" value="0" picture="" />
+   <item caption="Gobo 13" value="0" picture="" />
+   <item caption="Gobo 14" value="0" picture="" />
+  </dropdown>
+  <slider name="stroboslider1" top="180" left="200" width="180" height="20" action="strobosliderchange" startvalue="160" endvalue="200" default="160"/>
+  <slider name="stroboslider2" top="230" left="200" width="180" height="20" action="stroboslider2change" startvalue="201" endvalue="250" default="201"/>
+  <label name="label1" top="60" left="200" width="27" height="13" caption="Farbe"/>
+  <label name="label2" top="110" left="200" width="26" height="13" caption="Gobo"/>
+  <label name="label3" top="160" left="200" width="61" height="13" caption="Strobeeffekt:"/>
+  <label name="Label4" top="210" left="200" width="96" height="13" caption="Strobeeffekt (Zufall):"/>
+  <button name="resetbtn" top="10" left="300" width="80" height="20" action="resetbtnclick" caption="Reset"/>
+ </form>
+ <code>
+  unit DJScan250;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:String);
+  procedure ColorBoxChange;
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure setgobo;
+  procedure resetbtnclick;
+  procedure strobosliderchange;
+  procedure stroboslider2change;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // bitte hier die eigene Funktion eintragen
+  end;
+  procedure FormShow;
+    begin
+    end;
+  procedure FormRefresh(channel:String);
+    var
+      wert:integer;
+    begin
+      case channel of
+      0..1:
+      begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+      end;
+      2:
+      begin
+        wert:=get_channel('color1');
+				colorbox.itemindex:=trunc(wert/11);
+      end;
+      3:
+      begin
+        if not dontrefresh then
+        begin
+          wert:=get_channel('gobo1');
+         	case wert of
+         		0..127: gobobox.itemindex:=trunc(wert/8);
+       			160..200: stroboslider1.position:=wert;
+       			201..250: stroboslider2.position:=wert;
+         	end;
+        end;
+      end;
+      end;
+      dontrefresh:=false;
+    end;
+  procedure ColorBoxChange;
+    begin
+      dontrefresh:=true;
+      set_channel('color1',-1,colorbox.itemindex*11,0);
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure PositionXYChange(Top, Left: Integer);
+    var
+      x,y:byte;
+    begin
+				x:=((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255;
+        y:=((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255;
+        set_channel('pan',x,x,0);
+        set_channel('tilt',y,y,0);
+    end;
+  procedure setgobo;
+    begin
+      dontrefresh:=true;
+      set_channel('gobo1',-1,gobobox.itemindex*8,0);
+    end;
+  procedure resetbtnclick;
+  begin
+    set_channel('GOBO1',-1,133,0);
+  end;
+  procedure strobosliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('GOBO1',-1,stroboslider1.position,0);
+  end;
+  procedure stroboslider2change;
+  begin
+    dontrefresh:=true;
+    set_channel('GOBO1',-1,stroboslider2.position,0);
+  end;
+  end.
+ </code>
+</device>

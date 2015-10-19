@@ -1,0 +1,573 @@
+unit datainevent;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Grids, Buttons, CheckLst;
+
+type
+  Tdataineventfrm = class(TForm)
+    GroupBox1:       TGroupBox;
+    okbtn:           TButton;
+    DataGrid:        TStringGrid;
+    adddatainevent:  TButton;
+    deletedatainevent: TButton;
+    editdatainevent: TButton;
+    SpeedButton1:    TSpeedButton;
+    SpeedButton2:    TSpeedButton;
+    SpeedButton3:    TSpeedButton;
+    OpenDialog1:     TOpenDialog;
+    SaveDialog1:     TSaveDialog;
+    GroupBox2:       TGroupBox;
+    CheckListBox1:   TCheckListBox;
+    Label1:          TLabel;
+    Label2:          TLabel;
+    Button1:         TButton;
+    Listbox1:        TCheckListBox;
+    Button2:         TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure refreshList(line: integer);
+    procedure editdataineventClick(Sender: TObject);
+    procedure adddataineventClick(Sender: TObject);
+    procedure deletedataineventClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure DataGridDblClick(Sender: TObject);
+    procedure SpeedButton3Click(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure ListBox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure Button2Click(Sender: TObject);
+    procedure CheckListBox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure Button1Click(Sender: TObject);
+    procedure checklistbox;
+    procedure Listbox1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+  end;
+
+var
+  dataineventfrm: Tdataineventfrm;
+
+implementation
+
+uses pcdimmer, editdatainevent;
+
+{$R *.dfm}
+
+procedure Tdataineventfrm.FormCreate(Sender: TObject);
+begin
+  DataGrid.Cells[0, 0]  := 'Kanal';
+  DataGrid.cells[1, 0]  := 'Wert';
+  DataGrid.cells[2, 0]  := 'Typ';
+  DataGrid.cells[3, 0]  := 'Wert1';
+  DataGrid.cells[4, 0]  := 'Wert2';
+  DataGrid.cells[5, 0]  := 'Aktuell';
+  DataGrid.ColWidths[0] := 50;
+  DataGrid.ColWidths[1] := 50;
+  DataGrid.ColWidths[2] := 150;
+  DataGrid.ColWidths[3] := 50;
+  DataGrid.ColWidths[4] := 50;
+  DataGrid.ColWidths[5] := 50;
+end;
+
+procedure Tdataineventfrm.refreshList(line: integer);
+begin
+  DataGrid.cells[0, line] := IntToStr(mainform.dataineventArray[line - 1].Channel);  // Kanal
+
+  DataGrid.cells[1, line] := IntToStr(mainform.dataineventArray[line - 1].Value);  // Wert
+
+  case mainform.dataineventArray[line - 1].Typ of        // Typ
+    0: DataGrid.cells[2, line]  := 'AEPlayer Start / Stop';
+    1: DataGrid.cells[2, line]  := 'AEPlayer Start';
+    2: DataGrid.cells[2, line]  := 'AEPlayer Stop';
+    3: DataGrid.cells[2, line]  := 'AEPlayer Position';
+    4: DataGrid.cells[2, line]  := 'AEPlayer Repeat ein/aus';
+    5: DataGrid.cells[2, line]  := 'AEPlayer Rec ein/aus';
+    6: DataGrid.cells[2, line]  := 'AEPlayer Effekte ein/aus';
+    //############################
+    20: DataGrid.cells[2, line] := 'Szene Start';
+    21: DataGrid.cells[2, line] := 'Szene Stop';
+    //############################
+    40: DataGrid.cells[2, line] := 'Beat Sync-Taste';
+    41: DataGrid.cells[2, line] := 'Beat BPM-Wert setzen';
+    42: DataGrid.cells[2, line] := 'Beat BPM-Wert abfragen';
+    43: DataGrid.cells[2, line] := 'Beat manueller Impuls';
+    //############################
+    60: DataGrid.cells[2, line] := 'Grandmaster auf Kanalwert';
+    61: DataGrid.cells[2, line] := 'Grandmaster setzen';
+    62: DataGrid.cells[2, line] := 'Grandmaster abfragen';
+    63: DataGrid.cells[2, line] := 'Flashmaster auf Kanalwert';
+    64: DataGrid.cells[2, line] := 'Flashmaster setzen';
+    65: DataGrid.cells[2, line] := 'Flashmaster abfragen';
+    66: DataGrid.cells[2, line] := 'Mute';
+    //############################
+    80: DataGrid.cells[2, line] := 'Einzelkanal auf Kanalwert schalten';
+    81: DataGrid.cells[2, line] := 'Einzelkanal Wert setzen';
+    82: DataGrid.cells[2, line] := 'Einzelkanal Wert abfragen';
+    83: DataGrid.cells[2, line] := 'Einzelkanal Wert faden';
+    84: DataGrid.cells[2, line] := 'Einzelkanal Wert abfragen und dimmen';
+    //############################
+    100: DataGrid.cells[2, line] := 'Effekt start/stop';
+    101: DataGrid.cells[2, line] := 'Effekt start';
+    102: DataGrid.cells[2, line] := 'Effekt stop';
+    103: DataGrid.cells[2, line] := 'Effekt nächster Schritt';
+    104: DataGrid.cells[2, line] := 'Effekt Intensität setzen';
+    105: DataGrid.cells[2, line] := 'Effekt Beschleunigung setzen';
+    106: DataGrid.cells[2, line] := 'Effekt Wiederholung ein/aus';
+    107: DataGrid.cells[2, line] := 'Effekt Modus setzen';
+    //############################
+    120: DataGrid.cells[2, line] := 'Submaster auf Kanalwert';
+    121: DataGrid.cells[2, line] := 'Submaster Wert schalten';
+    122: DataGrid.cells[2, line] := 'Submaster Wert flashen';
+    123: DataGrid.cells[2, line] := 'Submaster Wert abfragen';
+    //############################
+    140: DataGrid.cells[2, line] := 'Kontrollpanel Button';
+    //############################
+    160: DataGrid.cells[2, line] := 'Ausgewähltes Gerät';
+    161: DataGrid.cells[2, line] := 'Definiertes Gerät';
+    162: DataGrid.cells[2, line] := 'Gerätegruppe';
+  end;
+  DataGrid.cells[3, line] := IntToStr(mainform.dataineventArray[line - 1].Wert1);  // Wert1
+  DataGrid.cells[4, line] := IntToStr(mainform.dataineventArray[line - 1].Wert2);  // Wert2
+end;
+
+procedure Tdataineventfrm.editdataineventClick(Sender: TObject);
+var
+  i: integer;
+begin
+  // Werte an EditForm übergeben
+  Editdataineventfrm.Message1a.Text := IntToStr(mainform.dataineventArray[DataGrid.row - 1].Channel);
+  Editdataineventfrm.Data1a.Text := IntToStr(mainform.dataineventArray[DataGrid.row - 1].Value);
+  Editdataineventfrm.typ.ItemIndex := (mainform.dataineventArray[DataGrid.row - 1].Typ) div 20;
+  Editdataineventfrm.typChange(Sender);
+  Editdataineventfrm.combobox2.ItemIndex := mainform.dataineventArray[DataGrid.row - 1].Typ mod 20;
+
+  Editdataineventfrm.Argument3 := mainform.dataineventArray[DataGrid.row - 1].ID;
+
+  case Editdataineventfrm.typ.ItemIndex of
+    5:
+    begin
+      Editdataineventfrm.combobox2Change(Sender);
+      for i := 0 to length(mainform.effektsequenzereffekte) - 1 do
+      begin
+        if GUIDtoString(Editdataineventfrm.Argument3) = GUIDtoString(mainform.effektsequenzereffekte[i].ID) then
+          Editdataineventfrm.effektliste.ItemIndex := i;
+      end;
+      Editdataineventfrm.effektliste.Visible := True;
+    end;
+    8:
+    begin
+      Editdataineventfrm.combobox2Change(Sender);
+      case Editdataineventfrm.Combobox2.ItemIndex of
+        1:
+        begin
+          for i := 0 to length(mainform.devices) - 1 do
+          begin
+            if GUIDtoString(Editdataineventfrm.Argument3) = GUIDtoString(mainform.devices[i].ID) then
+              Editdataineventfrm.effektliste.ItemIndex := i;
+          end;
+        end;
+        2:
+        begin
+          for i := 0 to length(mainform.DeviceGroups) - 1 do
+          begin
+            if GUIDtoString(Editdataineventfrm.Argument3) = GUIDtoString(mainform.DeviceGroups[i].ID) then
+              Editdataineventfrm.effektliste.ItemIndex := i;
+          end;
+        end;
+      end;
+      Editdataineventfrm.effektliste.Visible := True;
+    end;
+  end;
+
+  Editdataineventfrm.Arg1Edit.Text := IntToStr(mainform.dataineventArray[DataGrid.row - 1].Wert1);
+  Editdataineventfrm.Arg1Combobox.ItemIndex := mainform.dataineventArray[DataGrid.row - 1].Wert1;
+  Editdataineventfrm.Arg2Edit.Text := IntToStr(mainform.dataineventArray[DataGrid.row - 1].Wert2);
+
+  if mainform.dataineventArray[DataGrid.row - 1].Wert1 < Editdataineventfrm.Arg1Combobox.Items.Count then
+    Editdataineventfrm.Arg1Combobox.ItemIndex := mainform.dataineventArray[DataGrid.row - 1].Wert1;
+
+  // Editform anzeigen
+  Editdataineventfrm.Showmodal;
+
+  // Werte bei "OK" in Array kopieren und Liste aktualisieren
+  if Editdataineventfrm.modalresult = mrOk then
+  begin
+    mainform.dataineventArray[DataGrid.row - 1].Channel := StrToInt(Editdataineventfrm.Message1a.Text);
+    mainform.dataineventArray[DataGrid.row - 1].Value := StrToInt(Editdataineventfrm.Data1a.Text);
+    mainform.dataineventArray[DataGrid.row - 1].Typ := Editdataineventfrm.typ.ItemIndex * 20 + Editdataineventfrm.combobox2.ItemIndex;
+    ;
+    mainform.dataineventArray[DataGrid.row - 1].Wert1 := StrToInt(Editdataineventfrm.Arg1Edit.Text);
+    mainform.dataineventArray[DataGrid.row - 1].Wert2 := StrToInt(Editdataineventfrm.Arg2Edit.Text);
+    mainform.dataineventArray[DataGrid.row - 1].ID := Editdataineventfrm.Argument3;
+
+    refreshList(DataGrid.row);
+  end;
+end;
+
+procedure Tdataineventfrm.adddataineventClick(Sender: TObject);
+begin
+  // EditForm zurücksetzen
+  Editdataineventfrm.Message1a.Text := '0';
+  Editdataineventfrm.Data1a.Text := '0';
+  Editdataineventfrm.Arg1Edit.Text := '0';
+  Editdataineventfrm.Arg2Edit.Text := '0';
+
+  // EditForm anzeigen
+  Editdataineventfrm.Showmodal;
+
+  // Array um eine Position verlängern und Werte aus EditForm in Array kopieren und Liste aktualisieren
+  if Editdataineventfrm.modalresult = mrOk then
+  begin
+    setlength(mainform.dataineventArray, length(mainform.dataineventArray) + 1);
+    if not ((DataGrid.rowcount - 1) = length(mainform.dataineventArray)) then
+    begin
+      DataGrid.rowcount := DataGrid.rowcount + 1;
+      DataGrid.RowHeights[DataGrid.rowcount - 1] := 15;
+    end;
+    DataGrid.row := DataGrid.rowcount - 1;
+    mainform.dataineventArray[DataGrid.row - 1].Channel := StrToInt(Editdataineventfrm.Message1a.Text);
+    mainform.dataineventArray[DataGrid.row - 1].Value := StrToInt(Editdataineventfrm.Data1a.Text);
+    mainform.dataineventArray[DataGrid.row - 1].Typ := Editdataineventfrm.typ.ItemIndex * 20 + Editdataineventfrm.combobox2.ItemIndex;
+    ;
+    mainform.dataineventArray[DataGrid.row - 1].Wert1 := StrToInt(Editdataineventfrm.Arg1Edit.Text);
+    mainform.dataineventArray[DataGrid.row - 1].Wert2 := StrToInt(Editdataineventfrm.Arg2Edit.Text);
+    mainform.dataineventArray[DataGrid.Row - 1].ID := Editdataineventfrm.Argument3;
+
+    deletedatainevent.Enabled := True;
+    editdatainevent.Enabled := True;
+
+    refreshList(DataGrid.row);
+  end;
+end;
+
+procedure Tdataineventfrm.deletedataineventClick(Sender: TObject);
+var
+  i, j: integer;
+begin
+  // Ab aktueller Position alle nachfolgenden Einträge um eins nach oben kopieren
+  for i := DataGrid.row to DataGrid.rowcount - 1 do
+  begin
+    for j := 1 to 7 do
+    begin
+      mainform.dataineventArray[i - 1].Channel := mainform.dataineventArray[i].Channel;
+      mainform.dataineventArray[i - 1].Value := mainform.dataineventArray[i].Value;
+      mainform.dataineventArray[i - 1].Typ := mainform.dataineventArray[i].Typ;
+      mainform.dataineventArray[i - 1].Wert1 := mainform.dataineventArray[i].Wert1;
+      mainform.dataineventArray[i - 1].Wert2 := mainform.dataineventArray[i].Wert2;
+      mainform.dataineventArray[i - 1].ID  := mainform.dataineventArray[i].ID;
+    end;
+  end;
+
+  // Letzten Eintrag löschen
+  setlength(mainform.dataineventArray, length(mainform.dataineventArray) - 1);
+
+  if DataGrid.RowCount > 2 then
+  begin
+    DataGrid.rowcount := DataGrid.rowcount - 1;
+    // komplette Liste aktualisieren
+    for i := 1 to DataGrid.rowcount do
+    begin
+      refreshList(i);
+    end;
+  end else
+  begin
+    DataGrid.cells[0, 1] := '';
+    DataGrid.cells[1, 1] := '';
+    DataGrid.cells[2, 1] := '';
+    DataGrid.cells[3, 1] := '';
+    DataGrid.cells[4, 1] := '';
+    DataGrid.cells[5, 1] := '';
+    DataGrid.cells[6, 1] := '';
+    deletedatainevent.Enabled := False;
+    editdatainevent.Enabled := False;
+  end;
+end;
+
+procedure Tdataineventfrm.FormShow(Sender: TObject);
+var
+  i, j: integer;
+begin
+  DataGrid.RowHeights[0] := 15;
+
+  Listbox1.Items.Clear;
+  CheckListbox1.Items.Clear;
+  for i := 1 to mainform.MaximumChan do
+  begin
+    Listbox1.items.Add(IntToStr(i) + ' - ' + mainform.Data.names[i]);
+    CheckListbox1.Items.Add(IntToStr(i) + ' - ' + mainform.Data.names[i]);
+  end;
+  Listbox1.ItemIndex := 0;
+
+  for i := 0 to length(mainform.Softpatch) - 1 do
+  begin
+    // Alle Softpatch-Kanäle markieren
+    listbox1.Checked[mainform.Softpatch[i].Channel - 1] := True;
+    if mainform.Softpatch[i].Channel - 1 = 0 then
+    begin
+      for j := 0 to length(mainform.Softpatch[i].RouteToInputChan) - 1 do
+      begin
+        Checklistbox1.Checked[mainform.Softpatch[i].RouteToInputChan[j] - 1] := True;
+      end;
+    end;
+  end;
+end;
+
+procedure Tdataineventfrm.DataGridDblClick(Sender: TObject);
+begin
+  if editdatainevent.Enabled then
+    editdataineventClick(Sender);
+end;
+
+procedure Tdataineventfrm.SpeedButton3Click(Sender: TObject);
+begin
+  if messagedlg('Möchten Sie wirklich alle DataIn-Events löschen?', mtConfirmation,
+    [mbYes, mbNo], 0) = mrYes then
+  begin
+    DataGrid.RowCount := 2;
+    setlength(mainform.dataineventArray, 0);
+
+    DataGrid.cells[0, 1] := '';
+    DataGrid.cells[1, 1] := '';
+    DataGrid.cells[2, 1] := '';
+    DataGrid.cells[3, 1] := '';
+    DataGrid.cells[4, 1] := '';
+    DataGrid.cells[5, 1] := '';
+    DataGrid.cells[6, 1] := '';
+    deletedatainevent.Enabled := False;
+    editdatainevent.Enabled := False;
+  end;
+end;
+
+procedure Tdataineventfrm.SpeedButton2Click(Sender: TObject);
+var
+  CSV: TStrings;
+  temp: string;
+  i: integer;
+begin
+  i := 0;
+  if OpenDialog1.Execute then
+  begin
+    // DataIn-Ereignisse aus CSV-Datei lesen
+    try
+      CSV := TStringList.Create;
+      CSV.LoadFromFile(OpenDialog1.FileName);
+      if csv.Count > 0 then
+      begin
+        setlength(mainform.dataineventArray, csv.Count);
+        DataGrid.RowCount := csv.Count + 1;
+
+        for i := 0 to length(mainform.dataineventArray) - 1 do
+        begin
+          temp := CSV.Strings[i];
+          mainform.dataineventArray[i].Channel := StrToInt(copy(temp, 0, pos(',', temp) - 1));
+          temp := copy(temp, pos(',', temp) + 1, length(temp));
+          mainform.dataineventArray[i].Value := StrToInt(copy(temp, 0, pos(',', temp) - 1));
+          temp := copy(temp, pos(',', temp) + 1, length(temp));
+          mainform.dataineventArray[i].Typ := StrToInt(copy(temp, 0, pos(',', temp) - 1));
+          temp := copy(temp, pos(',', temp) + 1, length(temp));
+          mainform.dataineventArray[i].Wert1 := StrToInt(copy(temp, 0, pos(',', temp) - 1));
+          temp := copy(temp, pos(',', temp) + 1, length(temp));
+          mainform.dataineventArray[i].Wert2 := StrToInt(copy(temp, 0, pos(',', temp) - 1));
+          temp := copy(temp, pos(',', temp) + 1, length(temp));
+          mainform.dataineventArray[i].ID := StringToGUID(temp);
+          DataGrid.RowHeights[i + 1] := 15;
+          refreshList(i + 1);
+        end;
+        CSV.Free;
+      end;
+    except
+      ShowMessage('Beim Laden der Datei "' + OpenDialog1.FileName + '" ist ein Fehler in Zeile ' + IntToStr(i + 1) + ' aufgetreten. Die Data-In-Einstellungen können unter Umständen nicht korrekt geladen werden.');
+
+      // Letzten Eintrag löschen
+      setlength(mainform.dataineventArray, length(mainform.dataineventArray) - 1);
+      if DataGrid.RowCount > 2 then
+      begin
+        DataGrid.rowcount := DataGrid.rowcount - 1;
+        // komplette Liste aktualisieren
+        for i := 1 to DataGrid.rowcount do
+        begin
+          refreshList(i);
+        end;
+      end else
+      begin
+        DataGrid.cells[0, 1] := '';
+        DataGrid.cells[1, 1] := '';
+        DataGrid.cells[2, 1] := '';
+        DataGrid.cells[3, 1] := '';
+        DataGrid.cells[4, 1] := '';
+        DataGrid.cells[5, 1] := '';
+        DataGrid.cells[6, 1] := '';
+        deletedatainevent.Enabled := False;
+        editdatainevent.Enabled := False;
+      end;
+    end;
+
+    if length(mainform.dataineventArray) > 0 then
+    begin
+      editdatainevent.Enabled := True;
+      deletedatainevent.Enabled := True;
+    end else
+    begin
+      editdatainevent.Enabled := False;
+      deletedatainevent.Enabled := False;
+    end;
+
+  end;
+end;
+
+procedure Tdataineventfrm.SpeedButton1Click(Sender: TObject);
+var
+  i: integer;
+  CSV: TStrings;
+begin
+  if SaveDialog1.Execute then
+  begin
+    // Data-In-Ereignisse in CSV-Datei schreiben
+    CSV := TStringList.Create;
+    for i := 0 to length(mainform.dataineventArray) - 1 do
+      CSV.Add(IntToStr(mainform.dataineventArray[i].Channel) + ',' + IntToStr(mainform.dataineventArray[i].Value) + ',' + IntToStr(mainform.dataineventArray[i].Typ) + ',' + IntToStr(mainform.dataineventArray[i].Wert1) + ',' + IntToStr(mainform.dataineventArray[i].Wert2) + ',' + GUIDtoString(mainform.dataineventArray[i].ID));
+    CSV.SaveToFile(SaveDialog1.FileName);
+    CSV.Free;
+  end;
+end;
+
+procedure Tdataineventfrm.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = vk_escape then
+    modalresult := mrOk;
+end;
+
+procedure Tdataineventfrm.ListBox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  checklistbox;
+end;
+
+procedure Tdataineventfrm.Button2Click(Sender: TObject);
+var
+  i: integer;
+begin
+  setlength(mainform.Softpatch, 0);
+
+  for i := 0 to listbox1.Items.Count - 1 do
+    Listbox1.Checked[i] := False;
+end;
+
+procedure Tdataineventfrm.CheckListBox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i, j: integer;
+begin
+  for i := 0 to length(mainform.Softpatch) - 1 do
+  begin
+    if mainform.Softpatch[i].Channel = Listbox1.ItemIndex + 1 then
+    begin
+      // Richtiges Softpatch gefunden
+      setlength(mainform.Softpatch[i].RouteToInputChan, 0);
+
+      for j := 0 to CheckListbox1.Items.Count - 1 do
+      begin
+        if checklistbox1.Checked[j] then
+        begin
+          // Unterarray um eins erweitern und den aktuellen Kanal hinzufügen
+          setlength(mainform.Softpatch[i].RouteToInputChan, length(mainform.Softpatch[i].RouteToInputChan) + 1);
+          mainform.Softpatch[i].RouteToInputChan[length(mainform.Softpatch[i].RouteToInputChan) - 1] := j + 1;
+        end;
+      end;
+    end;
+  end;
+end;
+
+procedure Tdataineventfrm.Button1Click(Sender: TObject);
+var
+  i: integer;
+begin
+  setlength(mainform.Softpatch[listbox1.ItemIndex + 1].RouteToInputChan, 0);
+  for i := 0 to checklistbox1.items.Count - 1 do
+    Checklistbox1.Checked[i] := False;
+end;
+
+procedure Tdataineventfrm.checklistbox;
+var
+  i, j, k:  integer;
+  channelexists: boolean;
+  position: integer;
+begin
+  if Listbox1.Checked[listbox1.ItemIndex] then
+  begin
+    // Aktueller Kanal ist aktiviert
+    // Herausfinden, ob der Kanal bereits im Array vorhanden ist
+    channelexists := False;
+    for i := 0 to length(mainform.Softpatch) - 1 do
+    begin
+      if mainform.Softpatch[i].Channel = listbox1.ItemIndex + 1 then
+      begin
+        channelexists := True;
+        position := i;
+      end;
+    end;
+    if not channelexists then
+    begin
+      // Kanal existiert noch nicht, also hinzufügen
+      setlength(mainform.Softpatch, length(mainform.Softpatch) + 1);
+      mainform.Softpatch[length(mainform.Softpatch) - 1].Channel := listbox1.ItemIndex + 1;
+      for j := 0 to length(mainform.Softpatch[length(mainform.Softpatch) - 1].RouteToInputChan) - 1 do
+      begin
+        for k := 0 to Checklistbox1.Items.Count - 1 do
+          Checklistbox1.Checked[k] := (k + 1 = mainform.Softpatch[length(mainform.Softpatch) - 1].RouteToInputChan[j]);
+      end;
+    end else
+    begin
+      // Alle Markierungen auf der rechten Seite löschen
+      for k := 0 to Checklistbox1.Items.Count - 1 do
+        Checklistbox1.Checked[k] := False;
+
+      // Selektionen in rechter Box anzeigen
+      for j := 0 to length(mainform.Softpatch[position].RouteToInputChan) - 1 do
+      begin
+        for k := 0 to Checklistbox1.Items.Count - 1 do
+          Checklistbox1.Checked[k] := (k + 1 = mainform.Softpatch[position].RouteToInputChan[j]);
+      end;
+    end;
+  end else
+  begin
+    // Aktueller Kanal nicht selektiert
+    // Herausfinden, ob der Kanal bereits im Array gelöscht wurde
+    channelexists := False;
+    for i := 0 to length(mainform.Softpatch) - 1 do
+    begin
+      if mainform.Softpatch[i].Channel = listbox1.ItemIndex + 1 then
+      begin
+        channelexists := True;
+        position := i;
+      end;
+    end;
+    if channelexists then
+    begin
+      // Kanal existiert noch, also löschen (letzte Arrayposition auf aktuelle und letzte löschen)
+      // Letzte Arrayposition auf aktuelle Position kopieren
+      mainform.Softpatch[position].Channel := mainform.Softpatch[length(mainform.Softpatch) - 1].Channel;
+      setlength(mainform.Softpatch[position].RouteToInputChan, length(mainform.Softpatch[length(mainform.Softpatch) - 1].RouteToInputChan));
+      for i := 0 to length(mainform.Softpatch[length(mainform.Softpatch) - 1].RouteToInputChan) - 1 do
+      begin
+        mainform.Softpatch[position].RouteToInputChan[i] := mainform.Softpatch[length(mainform.Softpatch) - 1].RouteToInputChan[i];
+      end;
+      // Letzte Arrayposition löschen
+      setlength(mainform.Softpatch, length(mainform.Softpatch) - 1);
+    end;
+
+    // Alle Markierungen auf der rechten Seite löschen
+    for k := 0 to Checklistbox1.Items.Count - 1 do
+      Checklistbox1.Checked[k] := False;
+  end;
+end;
+
+procedure Tdataineventfrm.Listbox1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  checklistbox;
+end;
+
+end.

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\par36.png">
+ <information id="PC_DIMMER">
+ <name>Pinspot PST-9</name>
+ <vendor>Eurolite</vendor>
+ <author>Martin</author>
+ <description>9 W RGB Pinspot mit 6° Abstrahlwinkel für Spiegelkugeln</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="G" fade="yes" type="g"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Masterdimmer" fade="yes" type="dimmer"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Shutter / Strobe" fade="yes" type="shutter"/>
+ </channels>
+ <initvalues ch0="255" ch1="255" ch2="255" ch3="255" ch4="-1" />
+ <shutter OpenValue="7" CloseValue="3" ChannelName="shutter"/>
+ <strobe OffValue="7" MinValue="11" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="230" height="400">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorpicker top="170" left="40" />
+  <slider name="DIMMERslider3" top="96" left="8" width="217" height="17" action="DIMMERchange" startvalue="0" endvalue="255" default="255"/>
+  <slider name="SHUTTERslider4" top="136" left="8" width="217" height="17" action="SHUTTERchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="DIMMERlbl3" top="80" left="8" width="65" height="13" caption="Masterdimmer"/>
+  <label name="SHUTTERlbl4" top="120" left="8" width="76" height="13" caption="Shutter / Strobe"/>
+  <button name="SwitchColorPickerBtn" top="310" left="40" width="150" height="30" action="SwitchColorPicker" caption="Andere Farbauswahl"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure SwitchColorPicker;
+  procedure DIMMERchange;
+  procedure SHUTTERchange;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        // RGB-Änderungen werden derzeit nicht im DDF angezeigt
+      end;
+      1:
+      begin
+        // RGB-Änderungen werden derzeit nicht im DDF angezeigt
+      end;
+      2:
+      begin
+        // RGB-Änderungen werden derzeit nicht im DDF angezeigt
+      end;
+      3:
+      begin
+        DIMMERslider3.position:=get_channel('DIMMER');
+      end;
+      4:
+      begin
+        SHUTTERslider4.position:=get_channel('SHUTTER');
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure ColorPickerChange(R, G, B: Byte);
+  begin
+    set_channel('r',-1,r,0);
+    set_channel('g',-1,g,0);
+    set_channel('b',-1,b,0);
+  end;
+  procedure SwitchColorPicker;
+  begin
+    if colorpicker.visible then
+    begin
+      colorpicker.visible:=false;
+      colorpicker2.visible:=true;
+    end else
+    begin
+      colorpicker.visible:=true;
+      colorpicker2.visible:=false;
+    end;
+  end;
+  procedure DIMMERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('DIMMER',-1,DIMMERslider3.position,0);
+  end;
+  procedure SHUTTERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SHUTTER',-1,SHUTTERslider4.position,0);
+  end;
+  end.
+ </code>
+</device>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\wash2.png">
+ <information id="PC_DIMMER">
+ <name>WL-575</name>
+ <vendor>MOVITEC</vendor>
+ <author>markus</author>
+ <description>Washlight</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Horizont" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Horizont fein" fade="yes" type="panfine"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Vertikal" fade="yes" type="tilt"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Vertikal fein" fade="yes" type="tiltfine"/>
+  <function channel="4" minvalue="0" maxvalue="1" name="Hor/Vert Speed" fade="yes" type="speed"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Fan-Speed, Lamp i/o, reset" fade="yes" type="extra"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Colours" fade="yes" type="color1"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Cyan" fade="yes" type="r"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Magenta" fade="yes" type="g"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="Yellow" fade="yes" type="b"/>
+  <function channel="10" minvalue="0" maxvalue="255" name="Speed CYM / Dimmer" fade="yes" type="speed"/>
+  <function channel="11" minvalue="0" maxvalue="255" name="Colours Macro" fade="yes" type="color2"/>
+  <function channel="12" minvalue="0" maxvalue="255" name="FX Wheel" fade="yes" type="special1"/>
+  <function channel="13" minvalue="0" maxvalue="255" name="Zoom" fade="yes" type="zoom"/>
+  <function channel="14" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+  <function channel="15" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+ </channels>
+ <initvalues 0="128" 1="-1" 2="128" 3="-1" 4="0" 5="-1" 6="0" 7="-1" 8="-1" 9="-1" 10="-1" 11="-1" 12="-1" 13="25" 14="-1" 15="-1" />
+ <colors>
+  <color name="white" value="0" valueend="15" r="0" g="0" b="0" />
+  <color name="deep red" value="16" valueend="31" r="0" g="0" b="0" />
+  <color name="blue" value="32" valueend="47" r="0" g="0" b="0" />
+  <color name="green" value="48" valueend="63" r="0" g="0" b="0" />
+  <color name="orange" value="64" valueend="79" r="0" g="0" b="0" />
+  <color name="3200k" value="80" valueend="95" r="0" g="0" b="0" />
+  <color name="5600k" value="96" valueend="111" r="0" g="0" b="0" />
+  <color name="uv" value="112" valueend="127" r="0" g="0" b="0" />
+  <color name="fwd rainbow" value="128" valueend="190" r="0" g="0" b="0" />
+  <color name="no rotation" value="191" valueend="192" r="0" g="0" b="0" />
+  <color name="bwd rainbow" value="193" valueend="255" r="0" g="0" b="0" />
+ </colors>
+ <form width="233" height="305">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+
+  implementation
+
+  var
+    // hier können globale Variablen definiert werden
+  DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte dieses Typs beim Laden des Projekts ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Wert:integer;
+  begin
+    // diese Funktion wird bei jeder Kanaländerung, die das Gerät betrifft, ausgeführt. Schreiben Sie hier eine Funktion, um die Geräteoberfläche bei einer Kanalwertänderung zu aktualisieren. z.B. wie folgt:
+{
+    if not DontRefresh then
+    case channel of
+      0: ; // irgendwas machen
+    end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  end.
+ </code>
+</device>

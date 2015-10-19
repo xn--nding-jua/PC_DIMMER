@@ -1,0 +1,470 @@
+unit insscene;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ExtCtrls, Grids, Buttons;
+
+const
+  {$I GlobaleKonstanten.inc}
+
+type
+  Tinsscenedlg = class(TForm)
+    OKBtn:       TButton;
+    CancelBtn:   TButton;
+    Szenenname:  TLabeledEdit;
+    scenefade_time: TEdit;
+    scenefade_timelabel: TLabel;
+    scenefade_time_min: TEdit;
+    scenefade_time_h: TEdit;
+    scenefade_time_msec: TEdit;
+    a:           TLabel;
+    GroupBox1:   TGroupBox;
+    StringGrid1: TStringGrid;
+    OpenDialog1: TOpenDialog;
+    SaveDialog1: TSaveDialog;
+    ListBox1:    TListBox;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    Label1:      TLabel;
+    JumpToChannel: TEdit;
+    Szenenbeschreibung: TLabeledEdit;
+    Button1:     TButton;
+    refreshonlyactivechannels: TCheckBox;
+    Button2:     TButton;
+    ChangedChannels: TTimer;
+    GroupBox2:   TGroupBox;
+    ListBox2:    TListBox;
+    Button3:     TButton;
+    procedure SzenennameChange(Sender: TObject);
+    procedure input_number(var pos: integer; var s: string);
+    procedure SzenennameKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure Edit1Change(Sender: TObject);
+    procedure Edit1Exit(Sender: TObject);
+    procedure StringGrid1DrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
+    procedure StringGrid1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure FormShow(Sender: TObject);
+    procedure StringGrid1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure StringGrid1GetEditMask(Sender: TObject; ACol, ARow: integer; var Value: string);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton3Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure JumpToChannelKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure OKBtnClick(Sender: TObject);
+    procedure ChangedChannelsTimer(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+  private
+    { Private declarations }
+    resetchangedchannels: boolean;
+  public
+    { Public declarations }
+    active: array[1..chan] of boolean;
+  end;
+
+var
+  insscenedlg: Tinsscenedlg;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  pcdimmer;
+
+function levelstr(pos, max: integer): string;
+begin
+  Result := '';
+  case MainForm.levelanzeigeoptionen of
+    0: Result := IntToStr(round((pos * 100) / max)) + '%';
+    1: Result := IntToStr(round((pos * 100) / max)) + '.' + copy(IntToStr((pos * 100) mod max), 0, 1) + '%';
+    2: Result := IntToStr(pos);
+  end;
+end;
+
+procedure Tinsscenedlg.SzenennameChange(Sender: TObject);
+begin
+  if length(Szenenname.Text) > 0 then
+    okbtn.Enabled := True
+  else
+    okbtn.Enabled := False;
+  if length(Szenenname.Text) > 255 then
+  begin
+    messagedlg('Sie können maximal 255 Zeichen eingeben', mtWarning, [mbOK], 0);
+    Szenenname.Text := copy(Szenenname.Text, 0, 255);
+  end;
+end;
+
+procedure Tinsscenedlg.SzenennameKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  case key of
+    vk_return: if okbtn.Enabled then
+        okbtn.Click;
+    vk_escape: cancelbtn.Click;
+  end;
+end;
+
+procedure Tinsscenedlg.input_number(var pos: integer; var s: string);
+var
+  i: integer;
+begin
+  i := 1;
+  while i <= length(s) do
+  begin
+    if (s[i] < '0') or (s[i] > '9') then
+    begin
+      Delete(s, i, 1);
+      Dec(pos);
+    end
+    else
+      Inc(i);
+  end;
+end;
+
+procedure Tinsscenedlg.Edit1Change(Sender: TObject);
+var
+  i: integer;
+  s: string;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+
+  if length(TEdit(Sender).Text) > 0 then
+  begin
+    if StrToInt(scenefade_time_h.Text) > 4 then
+      scenefade_time_h.Text := '4';
+    if StrToInt(scenefade_time_min.Text) > 59 then
+      scenefade_time_min.Text := '59';
+    if StrToInt(scenefade_time.Text) > 59 then
+      scenefade_time.Text := '59';
+    if StrToInt(scenefade_time_msec.Text) > 999 then
+      scenefade_time_msec.Text := '999';
+  end;
+end;
+
+procedure Tinsscenedlg.Edit1Exit(Sender: TObject);
+begin
+  if length(TEdit(Sender).Text) <= 0 then
+    TEdit(Sender).Text := '0';
+end;
+
+procedure Tinsscenedlg.StringGrid1DrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
+var
+  AOffSet: TPoint;
+  AHaken1: TPoint;
+  AHaken2: TPoint;
+  AHaken3: TPoint;
+  ARect: TRect;
+begin
+  with StringGrid1.Canvas do
+  begin
+    if Rect.Top = 0 then
+    begin
+      Brush.Color := clBtnFace;
+      FillRect(Rect);
+      Pen.Color := clWhite;
+      Rectangle(Rect);
+      TextOut(Rect.Left, Rect.Top, StringGrid1.Cells[ACol, ARow]);
+      Exit;
+    end;
+
+    if (ACol = Stringgrid1.Col) and (ARow = Stringgrid1.Row) then
+    begin
+      Brush.Color := clHighlight;
+      Font.Color  := clHighlightText;
+    end else
+    begin
+      Brush.Color := clWhite;
+      Font.Color  := clWindowText;
+    end;
+    FillRect(Rect);
+    TextOut(Rect.Left, Rect.Top, StringGrid1.Cells[ACol, ARow]);
+
+    if (ARow > 0) and (ACol = 0) then
+    begin
+      //Kasten zeichnen
+      AOffSet.X := (Rect.Right - Rect.Left - 11) div 2;
+      AOffSet.Y := (Rect.Bottom - Rect.Top - 11) div 2;
+
+      ARect.Left := AOffSet.X + Rect.Left;
+      ARect.Top  := AOffSet.Y + Rect.Top;
+      ARect.Right := AOffSet.X + Rect.Left + 11;
+      ARect.Bottom := AOffSet.Y + Rect.Top + 11;
+
+      Pen.Color := clGray;
+      Rectangle(ARect);
+
+      // Abfrage ob Haken zeichnen oder nicht
+      if (ARow > 0) then
+        if active[ARow] then
+        begin
+          //Haken zeichnen
+          AHaken1.X := ARect.Left + 2;
+          AHaken1.Y := ARect.Top + 6;
+          AHaken2.X := ARect.Left + 4;
+          AHaken2.Y := ARect.Top + 8;
+          AHaken3.X := ARect.Left + 9;
+          AHaken3.Y := ARect.Top + 3;
+
+          Pen.Color := clBlack; // Farbe des Häkchens
+
+          MoveTo(AHaken1.X, AHaken1.Y - 0);
+          LineTo(AHaken2.X, AHaken2.Y - 0);
+          LineTo(AHaken3.X, AHaken3.Y - 0);
+
+          MoveTo(AHaken1.X, AHaken1.Y - 1);
+          LineTo(AHaken2.X, AHaken2.Y - 1);
+          LineTo(AHaken3.X, AHaken3.Y - 1);
+
+          MoveTo(AHaken1.X, AHaken1.Y - 2);
+          LineTo(AHaken2.X, AHaken2.Y - 2);
+          LineTo(AHaken3.X, AHaken3.Y - 2);
+        end;
+    end;
+    TextOut(Rect.Left, Rect.Top, StringGrid1.Cells[ACol, ARow]);
+  end;
+end;
+
+procedure Tinsscenedlg.StringGrid1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i, highest: integer;
+  allchecked: boolean;
+begin
+  if StringGrid1.Col = 0 then
+  begin
+    if Shift = [ssCtrl] then
+    begin
+      for i := 1 to mainform.MaximumChan do
+        active[i] := True;
+    end else if Shift = [ssAlt] then
+    begin
+      for i := 1 to mainform.MaximumChan do
+        active[i] := False;
+    end else if Button = mbRight then
+    begin
+      i := StringGrid1.Row - 1;
+      repeat
+        i := i + 1;
+      until (i mod 8 = 0);
+      highest := i;
+      allchecked := True;
+      for i := highest - 7 to highest do
+        if not active[i] then
+        begin
+          active[i]  := True;
+          allchecked := False;
+        end;
+
+      if allchecked then
+        for i := highest - 7 to highest do
+          active[i] := False;
+    end else
+    begin
+      active[StringGrid1.Row] := not active[StringGrid1.Row];
+    end;
+
+    StringGrid1.Refresh;
+  end;
+end;
+
+procedure Tinsscenedlg.FormShow(Sender: TObject);
+begin
+  resetchangedchannels := False;
+  stringgrid1.Cols[1].Strings[0] := 'Kanal';
+  stringgrid1.Cols[2].Strings[0] := 'Kanalname';
+  stringgrid1.Cols[3].Strings[0] := 'Wert [%]';
+  StringGrid1.Col := 1;
+end;
+
+procedure Tinsscenedlg.StringGrid1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if stringgrid1.Col = 3 then
+    try
+      if StrToInt(stringgrid1.Cells[stringgrid1.Col, stringgrid1.Row]) > 100 then
+        stringgrid1.Cells[stringgrid1.Col, stringgrid1.Row] := '100';
+      if StrToInt(stringgrid1.Cells[stringgrid1.Col, stringgrid1.Row]) < 0 then
+        stringgrid1.Cells[stringgrid1.Col, stringgrid1.Row] := '0';
+    except
+      stringgrid1.Cells[stringgrid1.Col, stringgrid1.Row] := '0';
+    end;
+
+  if stringgrid1.Col = 2 then
+  begin
+    mainform.Data.Names[stringgrid1.row] := stringgrid1.Cells[stringgrid1.Col, stringgrid1.row];
+    mainform.pluginsaktualisieren(nil);
+    mainform.UpdateLevels;
+    mainform.effekttimelineundkanaluebersichtaktualisieren(nil);
+  end;
+end;
+
+procedure Tinsscenedlg.StringGrid1GetEditMask(Sender: TObject; ACol, ARow: integer; var Value: string);
+var
+  Text: string;
+begin
+  if ACol = 1 then
+    Text := StringGrid1.Cells[ACol, ARow];
+
+  if (ACol = 0) or (ACol = 1) then
+    StringGrid1.EditorMode := False
+  else
+    StringGrid1.EditorMode := True;
+
+  if ACol = 1 then
+    StringGrid1.Cells[ACol, ARow] := Text;
+end;
+
+procedure Tinsscenedlg.SpeedButton2Click(Sender: TObject);
+var
+  i: integer;
+begin
+  if Opendialog1.Execute then
+  begin
+    listbox1.Items.LoadFromFile(opendialog1.FileName);
+    for i := 1 to StringGrid1.RowCount - 1 do
+    begin
+      if listbox1.Items.Strings[i] <> '-1' then
+      begin
+        active[i] := True;
+        StringGrid1.Cells[3, i] := IntToStr(round((StrToInt(listbox1.Items.Strings[i])) * 100 / 255));
+      end else
+      begin
+        active[i] := False;
+        StringGrid1.Cells[3, i] := '0';
+      end;
+    end;
+    StringGrid1.Refresh;
+  end;
+end;
+
+procedure Tinsscenedlg.SpeedButton3Click(Sender: TObject);
+var
+  i: integer;
+begin
+  if Savedialog1.Execute then
+  begin
+    listbox1.Clear;
+    for i := 1 to StringGrid1.RowCount - 1 do
+      if active[i] then
+        listbox1.Items.Add(IntToStr(round((StrToInt(StringGrid1.Cells[3, i])) * 255 / 100)))
+      else
+        listbox1.Items.Add('-1');
+    listbox1.Items.Insert(0, IntToStr(StringGrid1.RowCount - 1));
+    listbox1.Items.SaveToFile(savedialog1.FileName);
+  end;
+end;
+
+procedure Tinsscenedlg.SpeedButton1Click(Sender: TObject);
+var
+  i: integer;
+begin
+  if messagedlg('Komplette Szene zurücksetzen?', mtConfirmation,
+    [mbYes, mbNo], 0) = mrYes then
+    for i := 1 to StringGrid1.RowCount - 1 do
+    begin
+      active[i] := False;
+      StringGrid1.Cells[3, i] := '0';
+    end;
+  StringGrid1.Refresh;
+end;
+
+procedure Tinsscenedlg.JumpToChannelKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+var
+  s: string;
+  i: integer;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+  if (JumpToChannel.Text <> '') and (StrToInt(JumpToChannel.Text) > 0) and (StrToInt(JumpToChannel.Text) <= mainform.lastchan) then
+    StringGrid1.TopRow := StrToInt(JumpToChannel.Text);
+end;
+
+procedure Tinsscenedlg.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = vk_escape then
+    modalresult := mrCancel;
+end;
+
+procedure Tinsscenedlg.Button1Click(Sender: TObject);
+var
+  i: integer;
+begin
+  for i := 1 to mainform.lastchan do
+  begin
+    if refreshonlyactivechannels.Checked then
+    begin
+      if active[i] then
+        Stringgrid1.Cells[3, i] := IntToStr(round((255 - mainform.Data.ch[i]) * 100 / 255));
+    end else
+    begin
+      Stringgrid1.Cells[3, i] := IntToStr(round((255 - mainform.Data.ch[i]) * 100 / 255));
+    end;
+  end;
+end;
+
+procedure Tinsscenedlg.Button2Click(Sender: TObject);
+var
+  i: integer;
+begin
+  for i := 1 to mainform.MaximumChan do
+    active[i] := mainform.changedchannels[i];
+
+  for i := 1 to mainform.lastchan do
+  begin
+    if refreshonlyactivechannels.Checked then
+    begin
+      if active[i] then
+        Stringgrid1.Cells[3, i] := IntToStr(round((255 - mainform.Data.ch[i]) * 100 / 255));
+    end else
+    begin
+      Stringgrid1.Cells[3, i] := IntToStr(round((255 - mainform.Data.ch[i]) * 100 / 255));
+    end;
+  end;
+
+  resetchangedchannels := True;
+  StringGrid1.Refresh;
+end;
+
+procedure Tinsscenedlg.OKBtnClick(Sender: TObject);
+var
+  i: integer;
+begin
+  if resetchangedchannels then
+    for i := 1 to mainform.MaximumChan do
+      mainform.changedchannels[i] := False;
+end;
+
+procedure Tinsscenedlg.ChangedChannelsTimer(Sender: TObject);
+var
+  i: integer;
+begin
+  ChangedChannels.Enabled := False;
+  LockWindow(Listbox2.Handle);
+  Listbox2.Clear;
+  for i := 1 to mainform.MaximumChan do
+  begin
+    if mainform.changedchannels[i] then
+      Listbox2.Items.Add('Kanal ' + IntToStr(i) + ' auf ' + levelstr(round(((100 - mainform.GrandMaster.Position) / 100) * (mainform.channel_value[i])), maxres));
+  end;
+  UnlockWindow(Listbox2.Handle);
+end;
+
+procedure Tinsscenedlg.Button3Click(Sender: TObject);
+var
+  i: integer;
+begin
+  for i := 1 to mainform.MaximumChan do
+    mainform.changedchannels[i] := False;
+  ChangedChannelsTimer(nil);
+end;
+
+end.

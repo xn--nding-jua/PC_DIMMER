@@ -1,0 +1,99 @@
+; Installation file for Phoenix RodinT driver
+; Copyright (C) 2003-20012 by Peperoni/Lighting-Solutions
+; All rights reserved
+
+[Version]
+Signature                = $Windows NT$
+Class                    = BocatecUSBDMXInterfaceClass
+ClassGuid                = {F8E665DE-EA6B-478e-B540-47B45A78AA92}
+Provider                 = %MFGNAME%
+CatalogFile              = pusbdmx.cat
+DriverPackageType        = PlugAndPlay
+DriverPackageDisplayName = %DESC%
+DriverVer                = 11/12/2012,6.0.0.0
+
+[DestinationDirs]
+DefaultDestDir=10,System32\Drivers
+DriverCopyFiles=10,System32\Drivers
+LibraryCopyFiles=10,System
+
+; ================= Class section =====================
+
+[ClassInstall]
+AddReg=ClassAddReg
+
+[ClassInstall32]
+AddReg=ClassAddReg
+
+[ClassAddReg]
+HKR,,,,"%CLASSNAME%"
+HKR,,Icon,,-20
+HKR,,SilentInstall,,1
+
+; ================= Device section =====================
+[Manufacturer]
+%MFGNAME%=DeviceList, NTx86, NTia64, NTamd64
+
+; === Win 98/ME/2k
+[DeviceList]
+%DESCRIPTION20%=DriverInstall,USB\VID_0CE1&PID_0020
+
+; === Win XP and later
+[DeviceList.NTx86]
+%DESCRIPTION20%=DriverInstall,USB\VID_0CE1&PID_0020
+
+[DeviceList.NTia64]
+%DESCRIPTION20%=DriverInstall,USB\VID_0CE1&PID_0020
+
+[DeviceList.NTamd64]
+%DESCRIPTION20%=DriverInstall,USB\VID_0CE1&PID_0020
+
+; ============ Win 2k and later section ================
+[DriverInstall.NT]
+CopyFiles=DriverCopyFiles,LibraryCopyFiles
+
+[DriverInstall.NT.Services]
+AddService=PUSBDMX,2,DriverService
+
+[DriverInstall64.NT]
+CopyFiles=DriverCopyFiles,LibraryCopyFiles
+
+[DriverInstall64.NT.Services]
+AddService=PUSBDMX,2,DriverService
+
+[DriverCopyFiles]
+pusbdmx.sys,,,2
+
+[LibraryCopyFiles]
+pusbdmx.dll,,,2
+
+; ================= Service section =====================
+[DriverService]
+DisplayName   = %SVCDESC%
+ServiceType   = 1
+StartType     = 3
+ErrorControl  = 1
+ServiceBinary = %10%\system32\drivers\pusbdmx.sys
+
+; ================= Source section =====================
+[SourceDisksFiles]
+pusbdmx.sys=1
+pusbdmx.dll=1
+
+[SourceDisksNames]
+1=%INSTDISK%,,,\i386
+
+[SourceDisksNames.ia64]
+1 = %INSTDISK%,,,\ia64
+
+[SourceDisksNames.amd64]
+1 = %INSTDISK%,,,\amd64
+
+; ================= String section =====================
+[Strings]
+MFGNAME       = "PHOENIX"
+CLASSNAME     = "PHOENIX-T DMX-Interfaces"
+DESC          = "PHOENIX-T USBDMX driver"
+INSTDISK      = "PHOENIX-T DMX-Interface Installation Disc"
+SVCDESC       = "PHOENIX-T DMX-Interface driver (pusbdmx.sys)"
+DESCRIPTION20 = "PHOENIX-T DMX-Interface"

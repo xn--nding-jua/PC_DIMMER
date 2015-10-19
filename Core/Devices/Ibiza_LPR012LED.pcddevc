@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\ledpar64.png">
+ <information id="PC_DIMMER">
+  <name>LPR-012LED</name>
+  <vendor>Ibiza</vendor>
+  <author>Christian Nöding</author>
+  <description>Generische RGB-Lampe</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Dimmer" fade="yes" type="dimmer"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+ </channels>
+ <initvalues 0="-1" 1="-1" 2="-1" 3="-1" />
+ <form width="180" height="300">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="8" left="80"/>
+  <deviceadress top="24" left="80"/>
+  <devicedipswitch top="40" left="70"/>
+  <colorpicker top="75" left="14" />
+  <label name="label1" top="240" left="8" caption="Zeit [ms]:" />
+  <edit name="fadezeit" top="238" left="58" width="40" text="3000" action="fadezeitchange"/>
+  <checkbox name="usefadezeit" top="240" left="116" caption="Faden" action="usefadezeitchange"/>
+  <button name="changecolorpicker" caption="Wechsle Farbwahlbox" top="210" left="8" width="160" height="21" action="onchangecolorpicker" hint="Schaltet zwischen zwei möglichen Farbwahlboxen um"/>
+  <label name="label2" top="270" left="8" caption="Dimmer:" />
+  <slider name="dimmerslider" top="270" left="10" width="164" height="20" action="dimmersliderchange" startvalue="0" endvalue="255" default="0"/>
+ </form>
+  <code>
+    unit RGBLamp;
+
+    interface
+
+    procedure InitDevice(Device: String);
+    procedure FormShow;
+    procedure FormRefresh(channel:Integer);
+    procedure FormClose;
+    procedure ColorPickerChange(R, G, B: Byte);
+    procedure fadezeitchange;
+    procedure usefadezeitchange;
+    procedure onchangecolorpicker;
+    procedure dimmersliderchange;
+
+    implementation
+
+    var
+      dontrefresh:boolean;
+
+    procedure InitDevice(Device: String);
+    begin
+      // bitte hier die eigene Funktion eintragen
+    end;
+    procedure FormShow;
+    begin
+      usefadezeit.checked:=true;
+    end;
+
+    procedure onchangecolorpicker;
+    begin
+      if colorpicker.visible then
+      begin
+        colorpicker.visible:=false;
+        colorpicker2.visible:=true;
+      end else
+      begin
+        colorpicker.visible:=true;
+        colorpicker2.visible:=false;
+      end;
+    end;
+
+    procedure FormRefresh(channel:Integer);
+    var
+      red,green,blue:byte;
+      modusposition:integer;
+      wahr:integer;
+    begin
+      case channel of
+      0:
+      begin
+        if not dontrefresh then
+          dimmerslider.position:=get_channel('dimmer');
+      end;
+      1..3:
+      begin
+        red:=get_channel('r');
+        green:=get_channel('g');
+        blue:=get_channel('b');
+//        colorpicker2.SelectedColor:=red + green shl 8 + blue shl 16;
+      end;
+      end;
+      dontrefresh:=false;
+    end;
+
+    procedure FormClose;
+    begin
+    end;
+
+    procedure ColorPickerChange(R, G, B: Byte);
+    var
+      zeit:integer;
+//      red,green,blue:byte;
+    begin
+      if usefadezeit.checked then
+        zeit:=strtoint(fadezeit.text)
+      else
+        zeit:=0;
+
+//        red:=colorpicker.selectedcolor and $FF;
+//        green := (colorpicker.selectedcolor shr 8) and $FF;
+//        blue := (colorpicker.selectedcolor shr 16) and $FF;
+        set_channel('r',-1,r,zeit);
+        set_channel('g',-1,g,zeit);
+        set_channel('b',-1,b,zeit);
+    end;
+    procedure fadezeitchange;
+    begin
+    end;
+    procedure usefadezeitchange;
+    begin
+    end;
+    procedure dimmersliderchange;
+    begin
+      dontrefresh:=true;
+      set_channel('dimmer',dimmerslider.position,dimmerslider.position,0);  
+    end;
+
+    end.
+  </code>
+</device>

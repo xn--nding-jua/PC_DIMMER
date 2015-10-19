@@ -1,0 +1,90 @@
+Hauptkomponenten:
+-----------------
+
+Bauteil				Anzahl	Bestellnummer		Preis		Beschreibung
+
+IC1				1	ATMEGA 8515-16 D	 3.45€		Maincontroller (AVR)
+IC2				1	74HC 573		 0.33€		8 Bit Latch für ext. RAM
+IC3				1	6264-70			 1.45€		SRAM 8Kx8 70ns (8KByte)
+IC4				1	USB N9604-28M		 4.70€		USB Controller
+IC5, IC7			2	6N 137			 0.98€		Optokoppler
+IC6, IC8			2	SN 75176BP		 2.20€		RS485 Bustreiber
+IC9				1	SIM2-0505S SIL7		 6.20€		DC-DC Wandler Modul
+IC10				1	µA 7805			 0.17€		5V Linearregler
+
+T1				1	BC 369			 0.06€		PNP Transistor
+
+D1,D2,D3,D4			4	SB 150			 0.56€		Schottky Diode
+
+X1				1	Q 24,0-GW (Segor)	 1.30€		24MHz Grundton Quarz
+
+C3,C4				2	KERKO 15P		 0.08€		15pF Keramikkondensator
+C1,C6,C7,C8,C10,C13		6	KERKO 100N		 0.42€		100nF Keramikkondensator
+C2				1	TANTAL 1,0/35		 0.15€		1µF Tantalkondensator
+C5,C9				2	RAD 10/35		 0.08€		10µF Elektrolytkondensator
+C11				1	RAD 470/25		 0.11€		470µF Elektrolytkondensator
+C12, C14			2	RAD 47/16		 0.08€		47µF Elektrolytkondensator
+
+R1,R2,R3,R4,R5,R6		6	METALL 10,0		 0.48€		Metallschichtwiderstand 10 Ohm
+R12, R13			2	METALL 22,0		 0.16€		Metallschichtwiderstand 22 Ohm
+R10				1	METALL 100		 0.08€		Metallschichtwiderstand 100 Ohm
+R7				1	METALL 120		 0.08€		Metallschichtwiderstand 120 Ohm
+R17				1	METALL 220		 0.08€		Metallschichtwiderstand 220 Ohm
+R8,R11,R18			3	METALL 470		 0.24€		Metallschichtwiderstand 470 Ohm
+R14				1	METALL 1,50K		 0.08€		Metallschichtwiderstand 1.5K Ohm
+R19,R22				2	METALL 2,20K		 0.16€		Metallschichtwiderstand 2.2K Ohm
+R9,R16				2	METALL 10,0K		 0.16€		Metallschichtwiderstand 10K Ohm
+R20,R21				2	METALL 47,0K		 0.16€		Metallschichtwiderstand 47K Ohm
+R15				1	METALL 1,00M		 0.08€		Metallschichtwiderstand 1M Ohm
+
+F1				1	PICO 0,375A		 0.87€		Sicherung 0.375A
+
+				1	SL 1X36G 2,54		 0.17€		Stiftleiste vergoldet (für CON1 - CON5)
+CON1				1						DMX In Connector (Pin 1: DMX+; Pin 2: DMX-; Pin 3: GND)
+CON2				1						DMX Out Connector (Pin 1: DMX+; Pin 2: DMX-; Pin 3: GND)
+CON3				1						Transceiver LED (rot) Connector (Pin 1: Signal; Pin 2: GND)
+CON4				1						Ext Power Connector (Pin 1: +9V; Pin 2: GND)
+CON5				1						USB LED (blau) Connector (Pin 1: Signal; Pin 2: GND)
+CON6				1	USB BW			 0.24€		USB B-Buchse Print 4pol (USB Connector)
+
+				1	GS-KO 20P		 0.65€		IC-Fassung mit Abblockkondensator
+				1	GS-KO 28P		 0.82€		IC-Fassung mit Abblockkondensator
+				1	GS-KO 40P		 1.00€		IC-Fassung mit Abblockkondensator
+				4	GS 8			 0.12€		IC-Fassung
+
+				1	SLK 3mm rt		 0.07€		LED 3mm rot
+				1	SLK 3mm bl		 0.49€		LED 3mm blau
+
+								------
+								28.86€
+
+
+Eventuell benötigtes Material:
+------------------------------
+
+Bauteil				Anzahl	Bestellnummer		Preis		Beschreibung
+
+				1	BEL 75x100-1		 0.92€		Einseitig beschichtetes Basismaterial
+
+				1	AWG 28-08G 3M		 1.25€		8pol Flachband Kabel, 1m (Leitung zu XLR Stecker, LED Verlängerung usw.)
+
+				1	AK 672/2-2,0		 0.60€		USB Kabel 1,8m
+
+				1	XLR 5ES			 2.05€		XLR Einbaustecker (5pol)
+				2	XLR 5EB			 4.90€		XLR Einbaubuchse (5pol)
+				1	HEBG 25			 0.20€		Einbauhohlbuchse
+
+								------
+								38.78€
+
+
+Die Bestellnummern und Preise gelten für Reichelt (www.reichelt.de).
+Der 24MHz Grundton Quarz ist dort leider nicht erhältlich. Die angegebene Bestellnummer gilt für SEGOR-electronics (www.segor.de).
+Wichtig ist, dass ein Grundton Quarz verwendet wird, nicht ein Oberton Quarz.
+Der Maincontroller (ATMEGA 8515) muss extra für dieses Projekt programmiert werden. Dazu bitte die Informationen in "Firmware.txt" beachten.
+
+
+Stand 11.07.2005
+(c) 2004 Michael Dreschmann
+info@digital-enlightenment.de
+www.digital-enlightenment.de

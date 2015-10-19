@@ -1,0 +1,14 @@
+LIBRARY      "PC_DIMMER"
+DESCRIPTION  'PC_DIMMER Windows Dynamic Link Library'
+
+EXPORTS
+  ; Explizite Exporte können hier eingefügt werden
+  DLLCreate           @1
+  DLLStart            @2
+  DLLDestroy          @3
+  DLLIdentify         @4
+  DLLGetVersion       @5
+  DLLGetName          @6
+  DLLShow             @7
+  DLLSendData         @8
+  DLLSendMessage      @9

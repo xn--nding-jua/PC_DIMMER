@@ -1,0 +1,36 @@
+unit arbeitsbereichfrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ExtCtrls;
+
+type
+  Tarbeitsbereichform = class(TForm)
+    Bevel1:    TBevel;
+    Button1:   TButton;
+    Button2:   TButton;
+    Edit1:     TEdit;
+    ComboBox1: TComboBox;
+    procedure Edit1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+  end;
+
+var
+  arbeitsbereichform: Tarbeitsbereichform;
+
+implementation
+
+{$R *.dfm}
+
+procedure Tarbeitsbereichform.Edit1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if key = vk_return then
+    modalresult := mrOk;
+end;
+
+end.

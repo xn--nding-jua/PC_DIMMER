@@ -1,0 +1,260 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Français (France) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)
+#ifdef _WIN32
+LANGUAGE LANG_FRENCH, SUBLANG_FRENCH
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 12, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\slmini.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.fra\\afxres.rc""          // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\slmini.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_SLMINI_DIALOG DIALOGEX 0, 0, 387, 233
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Intelligent Usb Dmx Interface"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    SCROLLBAR       IDC_DMXVALUE,195,22,20,94,SBS_VERT
+    SCROLLBAR       IDC_DMXCHANNEL,25,84,118,18
+    LTEXT           "DMX Channel: 1",IDC_STATIC_CHANNEL,27,106,84,11,
+                    SS_CENTERIMAGE
+    CTEXT           "DMX\nValue\n255",IDC_STATIC_VALUE,167,55,23,30
+    GROUPBOX        "PORTS  (ref. SIUDI)",IDC_CADRE_PORT,13,136,218,88
+    GROUPBOX        "DMX OUPUT   (Ref. SIUDI, SIUDI-EC)",IDC_CADRE_DMXOUT,13,
+                    7,218,122
+    COMBOBOX        IDC_COMBO_PORT,178,152,46,93,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Input",IDC_INPUT,"Button",BS_AUTORADIOBUTTON,134,185,44,
+                    11
+    CONTROL         "Output",IDC_OUTPUT,"Button",BS_AUTORADIOBUTTON,134,199,
+                    44,11
+    CONTROL         "ON",IDC_ON,"Button",BS_AUTORADIOBUTTON,187,190,29,10
+    CONTROL         "OFF",IDC_OFF,"Button",BS_AUTORADIOBUTTON,187,201,29,10
+    GROUPBOX        "State",IDC_STATIC,182,177,38,39
+    LTEXT           "NEXT button :  ON\n\nPREVIOUS button : OFF",
+                    IDC_NEXTPREVIOUS,22,188,87,29
+    CTEXT           "Ports 1-8",IDC_STATIC_PORT,131,153,43,12,SS_CENTERIMAGE
+    GROUPBOX        "Easy View (3D vizualization)",IDC_CADRE_DEMO3D,246,171,
+                    132,53
+    PUSHBUTTON      "Demo 3D",IDC_BUT_DEMO3D,280,191,66,19
+    GROUPBOX        "DMX INPUT   (Ref. SIUDI-IN)",IDC_CADRE_DMXIN,245,7,133,
+                    150
+    SCROLLBAR       IDC_DMXCHANNELIN,256,111,109,18
+    LTEXT           "DMX Starting Channel: 1",IDC_STATIC_CHANNEL2,269,136,90,
+                    11,SS_CENTERIMAGE | NOT WS_GROUP
+    CONTROL         "000",IDC_STATIC_VALUE_DMXIN,"Static",SS_LEFTNOWORDWRAP | 
+                    WS_GROUP,274,64,13,8
+    LTEXT           "NO INTERFACE !",IDC_STATIC_INFO_OUT,21,22,101,20
+    LTEXT           "NO INTERFACE !",IDC_STATIC_INFO_IN,251,22,115,20
+    LTEXT           "NO INTERFACE !",IDC_STATIC_INFO_PORT,19,152,101,20
+    CONTROL         "000",IDC_STATIC_VALUE_DMXIN1,"Static",SS_LEFTNOWORDWRAP | 
+                    WS_GROUP,294,64,13,8
+    CONTROL         "000",IDC_STATIC_VALUE_DMXIN2,"Static",SS_LEFTNOWORDWRAP | 
+                    WS_GROUP,314,64,13,8
+    CONTROL         "000",IDC_STATIC_VALUE_DMXIN3,"Static",SS_LEFTNOWORDWRAP | 
+                    WS_GROUP,334,64,13,8
+    CONTROL         "000",IDC_STATIC_VALUE_DMXIN4,"Static",SS_LEFTNOWORDWRAP | 
+                    WS_GROUP,354,64,13,8
+    LTEXT           "DMX INPUT channels: ",IDC_STATIC_NB_CHANNEL,253,84,100,
+                    12
+    CONTROL         "000",IDC_STATIC_VALUE_CH_DMXIN,"Static",
+                    SS_LEFTNOWORDWRAP | WS_GROUP,274,49,13,8
+    CONTROL         "000",IDC_STATIC_VALUE_CH_DMXIN1,"Static",
+                    SS_LEFTNOWORDWRAP | WS_GROUP,294,49,13,8
+    CONTROL         "000",IDC_STATIC_VALUE_CH_DMXIN2,"Static",
+                    SS_LEFTNOWORDWRAP | WS_GROUP,314,49,13,8
+    CONTROL         "000",IDC_STATIC_VALUE_CH_DMXIN3,"Static",
+                    SS_LEFTNOWORDWRAP | WS_GROUP,334,49,13,8
+    CONTROL         "000",IDC_STATIC_VALUE_CH_DMXIN4,"Static",
+                    SS_LEFTNOWORDWRAP | WS_GROUP,354,49,13,8
+    LTEXT           "Ch",IDC_STATIC_CH,253,49,10,8
+    CONTROL         "",IDC_STATIC_BAR,"Static",SS_BLACKFRAME,252,59,115,1
+    LTEXT           "Dmx",IDC_STATIC_DMXV,253,64,15,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040c04b0"
+        BEGIN
+            VALUE "FileDescription", "Application MFC slmini"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "slmini"
+            VALUE "LegalCopyright", "Copyright (C) DAS 2000"
+            VALUE "OriginalFilename", "slmini.EXE"
+            VALUE "ProductName", "Application slmini"
+            VALUE "ProductVersion", "1, 0, 0, 1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x40c, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_SLMINI_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 13
+        RIGHTMARGIN, 378
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 224
+        HORZGUIDE, 22
+        HORZGUIDE, 129
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_SLMINI_DIALOG DLGINIT
+BEGIN
+    IDC_COMBO_PORT, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO_PORT, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO_PORT, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO_PORT, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO_PORT, 0x403, 2, 0
+0x0035, 
+    IDC_COMBO_PORT, 0x403, 2, 0
+0x0036, 
+    IDC_COMBO_PORT, 0x403, 2, 0
+0x0037, 
+    IDC_COMBO_PORT, 0x403, 2, 0
+0x0038, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_CURSOR1             CURSOR                  "res\\cursor1.cur"
+#endif    // Français (France) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)
+#ifdef _WIN32
+LANGUAGE 12, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\slmini.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.fra\afxres.rc"          // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

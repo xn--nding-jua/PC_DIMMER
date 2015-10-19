@@ -1,0 +1,83 @@
+Procedure InsertionSortForQuickSort; 
+var i,j,v : Integer; 
+Begin 
+
+  For i:= ErstesElement+1 To LetztesElement Do 
+  Begin 
+    v:= Data[i]; 
+    j:= i; 
+    While (j > 1) and (Data[j-1] > v) Do 
+    Begin 
+      Data[j]:= Data[j-1]; 
+      dec( j ); 
+    End; 
+    Data[j]:= v; 
+  End; 
+End; 
+
+Procedure QuickSortOptimal( l, r : Integer ); 
+var i, j, p, q, v, k : Integer; 
+Begin 
+  i:= l-1; 
+  p:= l-1; 
+  j:= r; 
+  q:= r; 
+  v:= Data[r]; 
+
+  If (r - l) > 20 Then 
+  Begin 
+
+    Repeat 
+      inc( i ); 
+      While (Data[i] < v) Do 
+      Begin 
+        inc( i ); 
+      End; 
+
+      dec( j ); 
+      While (v < Data[j]) Do 
+      Begin 
+        dec( j ); 
+        If (j < l) Then Break; 
+      End; 
+
+      If (i >= j) Then Break; 
+      SwapValues(i, j); 
+
+      If (Data[i] = v) Then 
+      Begin 
+        inc( p ); 
+        SwapValues( p, i ); 
+      End; 
+
+      If (Data[j] = v) Then 
+      Begin 
+        dec( q ); 
+        SwapValues( j, q ); 
+      End; 
+    until (j < i); 
+
+    SwapValues( i, r ); 
+    j:= i-1; 
+    inc( i ); 
+
+    k:= l; 
+    While (k < p) Do 
+    Begin 
+      inc( k ); 
+      dec( j ); 
+      SwapValues( k, j ); 
+    End; 
+
+    k:= r-1; 
+    While (k > q) Do 
+    Begin 
+      dec( k ); 
+      inc( i ); 
+      SwapValues( i, k ); 
+    End; 
+
+    QuickSortOptimal( l, j); 
+    QuickSortOptimal( i, r); 
+  End; 
+End;

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\Par56silber.png">
+ <information id="PC_DIMMER">
+ <name>Switch</name>
+ <vendor>Generic</vendor>
+ <author>Christian Nöding</author>
+ <description>Stellt einen normalen Switchkanal dar</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="DIMMER" fade="no" type="dimmer"/>
+ </channels>
+ <initvalues ch0="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="32" MinValue="64" MaxValue="95" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="191" LeftMaxValue="128" OffValue="192" RightMinValue="193" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="195" height="150">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="16" left="80"/>
+  <deviceadress top="32" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <label name="onofflabel" top="85" left="160" width="18" height="13" caption="Aus"/>
+  <button name="on" top="100" left="100" width="80" height="40" action="onclick" caption="Ein"/>
+  <button name="off" top="100" left="10" width="80" height="40" action="offclick" caption="Aus"/>
+ </form>
+ <code>
+  unit GenericDimmer;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure onclick;
+  procedure offclick;
+
+  implementation
+
+
+
+  procedure InitDevice(Device: String);
+  begin
+    // bitte hier die eigene Funktion eintragen
+  end;
+  procedure FormShow;
+    begin
+    end;
+  procedure FormRefresh(channel:Integer);
+    begin
+      if get_channel('dimmer')>127 then
+        onofflabel.caption:='Ein'
+      else
+        onofflabel.caption:='Aus';
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure onclick;
+    begin
+      set_channel('dimmer',255,255,0);
+      FormRefresh(0);
+    end;
+  procedure offclick;
+    begin
+      set_channel('dimmer',0,0,0);
+      FormRefresh(0);
+    end;
+  end.
+ </code>
+</device>

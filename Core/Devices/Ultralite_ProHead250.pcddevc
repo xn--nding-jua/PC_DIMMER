@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\prohead250.png">
+ <information id="PC_DIMMER">
+ <name>ProHead250</name>
+ <vendor>Ultralite</vendor>
+ <author>Christian Nöding</author>
+ <description>MovingHead mit Prisma, Farbrad, Goborad und Dimmer</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Pan (fine)" fade="yes" type="panfine"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Tilt (fine)" fade="yes" type="tiltfine"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Pan/Tilt Geschwindigkeit" fade="yes" type="speed"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Lampe / Reset / Lüfter" fade="yes" type="special1"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Farben" fade="yes" type="color1"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="n/a" fade="yes" type="special3"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Prisma" fade="yes" type="prisma"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="Rotierendes Prisma" fade="yes" type="prismarot"/>
+  <function channel="10" minvalue="0" maxvalue="255" name="Gobos" fade="yes" type="gobo1"/>
+  <function channel="11" minvalue="0" maxvalue="255" name="Goboindizierung" fade="yes" type="gobo1rot"/>
+  <function channel="12" minvalue="0" maxvalue="255" name="n/a" fade="yes" type="special3"/>
+  <function channel="13" minvalue="0" maxvalue="255" name="Fokus" fade="yes" type="focus"/>
+  <function channel="14" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+  <function channel="15" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+ </channels>
+ <initvalues 0="127" 1="127" 2="-1" 3="-1" 4="-1" 5="-1" 6="-1" 7="-1" 8="-1" 9="-1" 10="-1" 11="-1" 12="-1" 13="-1" 14="-1" 15="-1" />
+ <colors>
+  <color name="Weiß" value="0" r="255" g="255" b="255" />
+  <color name="Türkis" value="10" r="0" g="128" b="128" />
+  <color name="Rot" value="21" r="255" g="0" b="0" />
+  <color name="Cyan" value="32" r="255" g="0" b="255" />
+  <color name="Grün" value="42" r="0" g="255" b="0" />
+  <color name="Magenta" value="53" r="128" g="0" b="128" />
+  <color name="Hellblau" value="64" r="166" g="202" b="240" />
+  <color name="Gelb" value="74" r="255" g="255" b="0" />
+  <color name="Grün" value="85" r="0" g="128" b="0" />
+  <color name="Pink" value="96" r="128" g="0" b="128" />
+  <color name="Blau" value="106" r="0" g="0" b="255" />
+  <color name="Orange" value="117" r="255" g="128" b="0" />
+ </colors>
+ <shutter OpenValue="32" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="32" MinValue="64" MaxValue="95" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="128" LeftMaxValue="255" OffValue="128" RightMinValue="128" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="630" height="375">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <position top="80" left="10" height="230" width="230" />
+  <colorbox top="30" left="250" height="22" width="180" />
+  <dropdown name="PanTiltSpeed" top="340" left="10" width="230" height="21" action="SetPanTiltMovement">
+   <item caption="Maximal (Tracking Modus)" value="0" picture="" />
+   <item caption="Maximal (Vektor Modus)" value="1" picture="" />
+   <item caption="Minimal (Vektor Modus)" value="249" picture="" />
+   <item caption="Maximal (B/O bei PAN/TILT, Farbe) (Tracking)" value="255" picture="" />
+  </dropdown>
+  <dropdown name="PrismaSetup" top="80" left="250" width="180" height="21" action="SetPrisma">
+   <item caption="Offen" value="0" picture="" />
+   <item caption="3-fach Prisma" value="255" picture="" />
+  </dropdown>
+  <dropdown name="GoboSetup" top="190" left="250" width="180" height="21" action="SetGobo">
+   <item caption="Offen" value="0" picture="" />
+   <item caption="Gobo 1 (Multicolor Dichro)" value="32" picture="" />
+   <item caption="Gobo 2 (Glas)" value="64" picture="" />
+   <item caption="Gobo 3 (Metall)" value="96" picture="" />
+   <item caption="Gobo 4 (Metall)" value="128" picture="" />
+   <item caption="Gobo 5 (Metall)" value="160" picture="" />
+   <item caption="Gobo 6 (Metall)" value="192" picture="" />
+   <item caption="Durchlauf" value="224" picture="" />
+  </dropdown>
+  <dropdown name="ShutterBox" top="80" left="440" width="180" height="21" action="SetShutter">
+   <item caption="Geschlossen" value="0" picture="" />
+   <item caption="Offen" value="32" picture="" />
+   <item caption="Strobe-Effekt" value="64" picture="" />
+   <item caption="Puls-Effekt (Sequenzen)" value="128" picture="" />
+   <item caption="Strobe-Effekt (Zufall)" value="192" picture="" />
+  </dropdown>
+  <slider name="PrismaRotSlider" top="130" left="250" width="180" height="20" action="SetPrismaRotation" startvalue="1" endvalue="255" default="1"/>
+  <slider name="GoboSpeedSlider" top="240" left="250" width="180" height="20" action="SetGoboWheelSpeed" startvalue="224" endvalue="255" default="224"/>
+  <slider name="GoboRotSlider" top="290" left="250" width="180" height="20" action="SetGoboSpeed" startvalue="128" endvalue="255" default="128"/>
+  <slider name="GoboIndSlider" top="340" left="250" width="180" height="20" action="SetGoboIndizierung" startvalue="0" endvalue="127" default="0"/>
+  <slider name="FocusSlider" top="30" left="440" width="180" height="20" action="SetFocus" startvalue="0" endvalue="255" default="0"/>
+  <slider name="ShutterSlider" top="130" left="440" width="180" height="20" action="SetShutterSpeed" startvalue="0" endvalue="100" default="0"/>
+  <slider name="DimmerSlider" top="190" left="440" width="180" height="20" action="SetDimmer" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="320" left="10" width="122" height="13" caption="Pan/Tilt-Geschwindigkeit:"/>
+  <label name="Label2" top="220" left="440" width="67" height="13" caption="Lampensetup:"/>
+  <label name="Label3" top="10" left="250" width="39" height="13" caption="Farbrad:"/>
+  <label name="Label4" top="60" left="250" width="34" height="13" caption="Prisma:"/>
+  <label name="Label5" top="170" left="250" width="34" height="13" caption="Gobos:"/>
+  <label name="Label6" top="110" left="250" width="77" height="13" caption="Prisma-Rotation:"/>
+  <label name="Label7" top="220" left="250" width="120" height="13" caption="Goboradgeschwindigkeit:"/>
+  <label name="Label8" top="270" left="250" width="72" height="13" caption="Gobo-Rotation:"/>
+  <label name="Label9" top="320" left="250" width="83" height="13" caption="Gobo-Indizierung:"/>
+  <label name="Label10" top="10" left="440" width="32" height="13" caption="Fokus:"/>
+  <label name="Label11" top="60" left="440" width="37" height="13" caption="Shutter:"/>
+  <label name="Label12" top="170" left="440" width="38" height="13" caption="Dimmer:"/>
+  <label name="Label13" top="110" left="440" width="118" height="13" caption="Shutter-Geschwindigkeit:"/>
+  <label name="LampenAnzeige" top="220" left="550" width="53" height="13" caption="Lampe Aus"/>
+  <button name="Button1" top="240" left="440" width="180" height="30" action="LampOn" caption="Lampe einschalten / Reset"/>
+  <button name="Button2" top="330" left="440" width="180" height="30" action="LampOff" caption="Lampe ausschalten"/>
+  <button name="Button3" top="270" left="440" width="180" height="30" action="LampOpenMaximum" caption="Lampe offen (Lüfter maximum)"/>
+  <button name="Button4" top="300" left="440" width="180" height="30" action="LampOpenMinimum" caption="Lampe offen (Lüfter mimimum)"/>
+ </form>
+ <code>
+  unit ProHead250;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorBoxChange;
+  procedure LampOff;
+  procedure LampOn;
+  procedure LampOpenMaximum;
+  procedure LampOpenMinimum;
+  procedure SetDimmer;
+  procedure SetFocus;
+  procedure SetPanTiltMovement;
+  procedure SetPrisma;
+  procedure SetPrismaRotation;
+  procedure SetGobo;
+  procedure SetGoboSpeed;
+  procedure SetGoboWheelSpeed;
+  procedure SetGoboIndizierung;
+  procedure SetShutter;
+  procedure SetShutterSpeed;
+
+  implementation
+
+
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // FormShow
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    wert:integer;
+  begin
+    case channel of
+      0..1: // PAN/TILT
+      begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+      end;
+    	2..3: // PANFINE/TILTFINE
+    	begin
+    	end;
+    	4: // PAN/TILT Speed
+    	begin
+    		wert:=get_channel('speed');
+    		case wert of
+    			0: PanTiltSpeed.itemindex:=0;
+    			1: PanTiltSpeed.itemindex:=1;
+    			249: PanTiltSpeed.itemindex:=2;
+    			250..255: PanTiltSpeed.itemindex:=3;
+    		end;
+    	end;
+    	5: // Lampe / Reset / Lüfter
+    	begin
+    		wert:=get_channel('special1');
+    		case wert of
+    			0: LampenAnzeige.caption:='Offen/Max';
+    			127: LampenAnzeige.caption:='Offen/Min';
+    			128..139: LampenAnzeige.caption:='Zünden/Reset';
+    			230..239: LampenAnzeige.caption:='Ausschalten';
+    		end;
+    	end;
+    	6: // Farben
+    	begin
+    		wert:=get_channel('color1');
+    		case wert of
+    			0: colorbox.itemindex:=0;
+    			10: colorbox.itemindex:=1;
+    			21: colorbox.itemindex:=2;
+    			32: colorbox.itemindex:=3;
+    			42: colorbox.itemindex:=4;
+    			53: colorbox.itemindex:=5;
+    			64: colorbox.itemindex:=6;
+    			74: colorbox.itemindex:=7;
+    			85: colorbox.itemindex:=8;
+    			96: colorbox.itemindex:=9;
+    			106: colorbox.itemindex:=10;
+    			117: colorbox.itemindex:=11;
+//    			128..190: ;
+//    			191..192: ;
+//    			193..255: ;
+    		end;
+    	end;
+    	7: // n/a
+    	begin
+    	end;
+    	8: // Prisma
+    	begin
+    		wert:=get_channel('prisma');
+    		case wert of
+    			0..95:
+					begin
+						PrismaSetup.itemindex:=0;
+						PrismaRotSlider.enabled:=false;
+					end;
+    			96..255:
+					begin
+						PrismaSetup.itemindex:=1;
+						PrismaRotSlider.enabled:=true;
+					end;
+    		end;
+    	end;
+    	9: // Rotierendes Prisma
+    	begin
+    		wert:=get_channel('prismarot');
+    		if PrismaSetup.itemindex=1 then 
+				case wert of
+					1..126: PrismaRotSlider.position:=wert;
+					127..128: PrismaRotSlider.position:=wert;
+					129..255: PrismaRotSlider.position:=wert;
+    		end;
+    	end;
+    	10: // Gobos
+    	begin
+				wert:=get_channel('gobo1');
+				case wert of
+					0..31: GoboSetup.itemindex:=0;
+					32..63: GoboSetup.itemindex:=1;
+					64..95: GoboSetup.itemindex:=2;
+					96..127: GoboSetup.itemindex:=3;
+					128..159: GoboSetup.itemindex:=4;
+					160..191: GoboSetup.itemindex:=5;
+					192..223: GoboSetup.itemindex:=6;
+					224..255: GoboSetup.itemindex:=7;
+				end;
+		    case GoboSetup.itemindex of
+	  	  	0..6:
+	    		begin
+						GoboSpeedSlider.enabled:=false;
+    			end;
+		    	7:
+	  	  	begin
+						GoboSpeedSlider.min:=224;
+						GoboSpeedSlider.max:=255;
+						GoboSpeedSlider.position:=wert;
+						GoboSpeedSlider.enabled:=true;
+  		  	end;
+		    end;
+    	end;
+    	11: // Goborotation
+    	begin
+				wert:=get_channel('gobo1rot');
+				case wert of
+					0..127: GoboIndSlider.position:=wert;
+					128..255: GoboRotSlider.position:=wert;
+				end;
+    	end;
+    	12: // n/a
+    	begin
+    	end;
+    	13: // Fokus
+    	begin
+				FocusSlider.position:=get_channel('focus');
+    	end;
+    	14: // Shutter
+    	begin
+    		wert:=get_channel('shutter');
+    		case wert of
+    			0..31: ShutterBox.itemindex:=0;
+    			32..63: ShutterBox.itemindex:=1;
+					// Strobe
+    			64..95:
+					begin
+						ShutterBox.itemindex:=2;
+						ShutterSlider.max:=255;
+						ShutterSlider.min:=0;
+						ShutterSlider.max:=95;
+						ShutterSlider.min:=64;
+						ShutterSlider.position:=wert;
+					end;
+    			96..127: ShutterBox.itemindex:=1;
+					// Puls
+    			128..159:
+					begin
+						ShutterBox.itemindex:=3;
+						ShutterSlider.max:=255;
+						ShutterSlider.min:=0;
+						ShutterSlider.max:=159;
+						ShutterSlider.min:=128;
+						ShutterSlider.position:=wert;
+					end;
+    			160..191: ShutterBox.itemindex:=1;
+					// Strobe
+    			192..223:
+					begin
+						ShutterBox.itemindex:=4;
+						ShutterSlider.max:=255;
+						ShutterSlider.min:=0;
+						ShutterSlider.max:=223;
+						ShutterSlider.min:=192;
+						ShutterSlider.position:=wert;
+					end;
+    			224..255: ShutterBox.itemindex:=1;
+    		end;
+    	end;
+    	15: // Dimmer
+    	begin
+    		DimmerSlider.position:=get_channel('dimmer');
+    	end;
+    end;
+    // Ende von Case
+	end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  procedure ColorBoxChange;
+  begin
+    case colorbox.itemindex of
+    	0: set_channel('color1',0,0,0);
+    	1: set_channel('color1',10,10,0);
+    	2: set_channel('color1',21,21,0);                               
+    	3: set_channel('color1',32,32,0);
+    	4: set_channel('color1',42,42,0);
+    	5: set_channel('color1',53,53,0);
+    	6: set_channel('color1',64,64,0);
+    	7: set_channel('color1',74,74,0);
+    	8: set_channel('color1',85,85,0);
+    	9: set_channel('color1',96,96,0);
+    	10: set_channel('color1',106,106,0);
+    	11: set_channel('color1',117,117,0);
+    end;
+  end;
+  procedure LampOff;
+  begin
+    if MessageDlg('Soll die Lampe des ProHead250 ausgeschaltet werden?',mtConfirmation,[mbYes,mbNo],0)=mrYes then
+    begin
+		  set_channel('special1',230,230,0);
+ 			LampenAnzeige.caption:='Ausschalten';
+		end;			
+  end;
+  procedure LampOn;
+  begin
+    set_channel('special1',128,128,0);
+    LampenAnzeige.caption:='Zünden/Reset';
+  end;
+  procedure LampOpenMaximum;
+  begin
+		set_channel('special1',0,0,0);
+    LampenAnzeige.caption:='Offen/Max';
+  end;
+  procedure LampOpenMinimum;
+  begin
+		set_channel('special1',127,127,0);
+    LampenAnzeige.caption:='Offen/Min';
+  end;
+  procedure SetDimmer;
+  begin
+		set_channel('dimmer',DimmerSlider.position,DimmerSlider.position,0);
+  end;
+  procedure SetFocus;
+  begin
+    set_channel('focus',FocusSlider.position,FocusSlider.position,0);
+  end;
+  procedure SetPanTiltMovement;
+  begin
+		case PanTiltSpeed.itemindex of
+			0: set_channel('speed',0,0,0);
+			1: set_channel('speed',1,1,0);
+			2: set_channel('speed',249,249,0);
+			3: set_channel('speed',255,255,0);
+		end;
+  end;
+  procedure SetPrisma;
+  begin
+    case PrismaSetup.itemindex of
+    	0:
+			begin
+				set_channel('prisma',0,0,0);
+				PrismaRotSlider.enabled:=false;
+			end;
+    	1:
+			begin
+				set_channel('prisma',255,255,0);
+				PrismaRotSlider.enabled:=true;
+			end;
+    end;
+  end;
+  procedure SetPrismaRotation;
+  begin
+    set_channel('prismarot',PrismaRotSlider.position,PrismaRotSlider.position,0);
+  end;
+  procedure SetGobo;
+  begin
+    case GoboSetup.itemindex of
+    	0: set_channel('gobo1',0,0,0);
+    	1: set_channel('gobo1',32,32,0);
+    	2: set_channel('gobo1',64,64,0);
+    	3: set_channel('gobo1',96,96,0);
+    	4: set_channel('gobo1',128,128,0);
+    	5: set_channel('gobo1',160,160,0);
+    	6: set_channel('gobo1',192,192,0);
+    	7: set_channel('gobo1',224,224,0);
+    end;
+    case GoboSetup.itemindex of
+    	0..6:
+    	begin
+				GoboSpeedSlider.enabled:=false;
+    	end;
+    	7:
+    	begin
+				GoboSpeedSlider.min:=224;
+				GoboSpeedSlider.max:=255;
+				GoboSpeedSlider.enabled:=true;
+    	end;
+    end;
+  end;
+  procedure SetGoboSpeed;
+  begin
+    set_channel('gobo1rot',GoboRotSlider.position,GoboRotSlider.position,0);
+  end;
+  procedure SetGoboWheelSpeed;
+  begin
+    set_channel('gobo1',GoboSpeedSlider.position,GoboSpeedSlider.position,0);
+  end;
+  procedure SetGoboIndizierung;
+  begin
+    set_channel('gobo1rot',GoboIndSlider.position,GoboIndSlider.position,0);
+  end;
+  procedure SetShutter;
+  begin
+		case ShutterBox.itemindex of
+			0:
+			begin
+				set_channel('shutter',0,0,0);
+				ShutterSlider.enabled:=false;
+			end;
+			1:
+			begin
+				set_channel('shutter',32,32,0);
+				ShutterSlider.enabled:=false;
+			end;
+			2:
+			begin
+				set_channel('shutter',64,64,0);
+				ShutterSlider.max:=255;
+				ShutterSlider.min:=0;
+				ShutterSlider.max:=95;
+				ShutterSlider.min:=64;
+				ShutterSlider.enabled:=true;
+			end;
+			3:
+			begin
+				set_channel('shutter',128,128,0);
+				ShutterSlider.max:=255;
+				ShutterSlider.min:=0;
+				ShutterSlider.max:=159;
+				ShutterSlider.min:=128;
+				ShutterSlider.enabled:=true;
+			end;
+			4:
+			begin
+				set_channel('shutter',192,192,0);
+				ShutterSlider.max:=255;
+				ShutterSlider.min:=0;
+				ShutterSlider.max:=223;
+				ShutterSlider.min:=192;
+				ShutterSlider.enabled:=true;
+			end;
+		end;
+  end;
+  procedure SetShutterSpeed;
+  begin
+    set_channel('shutter',ShutterSlider.position,ShutterSlider.position,0);
+  end;
+  end.
+ </code>
+</device>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\schuko.png">
+ <information id="PC_DIMMER">
+ <name>K8055 USB Box</name>
+ <vendor>Velleman</vendor>
+ <author>Christian Nöding</author>
+ <description>USB Input-/Output-Box</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Digital 1" fade="no" type="moves"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Digital 2" fade="no" type="speed"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Digital 3" fade="no" type="gobo1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Digital 4" fade="no" type="gobo1rot"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Digital 5" fade="no" type="gobo2"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Digital 6" fade="no" type="gobo2rot"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Digital 7" fade="no" type="gobo3"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Digital 8" fade="no" type="extra"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Analog 1" fade="yes" type="iris"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="Analog 2" fade="yes" type="shutter"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" ch8="-1" ch9="-1" />
+ <shutter OpenValue="248" CloseValue="8" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="128" LeftMaxValue="255" OffValue="128" RightMinValue="128" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="201" height="272">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <checkbox name="Checkbox1" top="80" left="10" width="70" height="17" caption="Digital 1" action="CheckBoxChange" checked="false"/>
+  <checkbox name="Checkbox2" top="100" left="10" width="70" height="17" caption="Digital 2" action="CheckBoxChange" checked="false"/>
+  <checkbox name="Checkbox3" top="120" left="10" width="70" height="17" caption="Digital 3" action="CheckBoxChange" checked="false"/>
+  <checkbox name="Checkbox4" top="140" left="10" width="70" height="17" caption="Digital 4" action="CheckBoxChange" checked="false"/>
+  <checkbox name="Checkbox5" top="80" left="110" width="70" height="17" caption="Digital 5" action="CheckBoxChange" checked="false"/>
+  <checkbox name="Checkbox6" top="100" left="110" width="70" height="17" caption="Digital 6" action="CheckBoxChange" checked="false"/>
+  <checkbox name="Checkbox7" top="120" left="110" width="70" height="17" caption="Digital 7" action="CheckBoxChange" checked="false"/>
+  <checkbox name="Checkbox8" top="140" left="110" width="70" height="17" caption="Digital 8" action="CheckBoxChange" checked="false"/>
+  <slider name="Slider1" top="190" left="10" width="180" height="20" action="ADC1Change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider2" top="240" left="10" width="180" height="20" action="ADC2Change" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="170" left="10" width="80" height="13" caption="Analog 1 Output:"/>
+  <label name="Label2" top="220" left="10" width="80" height="13" caption="Analog 2 Output:"/>
+ </form>
+ <code>
+  unit K8055;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure CheckBoxChange;
+  procedure ADC1Change;
+  procedure ADC2Change;
+
+  implementation
+
+  var
+    dontrefreshvalue:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  begin
+    case Channel of
+    	0..7:
+    	begin
+    		Checkbox1.Checked:=Get_Channel('MOVES')>127;
+    		Checkbox2.Checked:=Get_Channel('SPEED')>127;
+    		Checkbox3.Checked:=Get_Channel('GOBO1')>127;
+    		Checkbox4.Checked:=Get_Channel('GOBO1ROT')>127;
+    		Checkbox5.Checked:=Get_Channel('GOBO2')>127;
+    		Checkbox6.Checked:=Get_Channel('GOBO2ROT')>127;
+    		Checkbox7.Checked:=Get_Channel('GOBO3')>127;
+    		Checkbox8.Checked:=Get_Channel('EXTRA')>127;
+    	end;
+			8:
+    	begin
+    		if not dontrefreshvalue then
+    			Slider1.position:=get_channel('IRIS');
+    	end;
+    	9:
+    	begin
+    		if not dontrefreshvalue then
+    			Slider2.position:=get_channel('SHUTTER');
+    	end;
+    end;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure CheckBoxChange;
+  begin
+    if Checkbox1.checked then	Set_Channel('MOVES', 255, 255, 0) else	Set_Channel('MOVES', 0, 0, 0);
+    if Checkbox2.checked then	Set_Channel('SPEED', 255, 255, 0) else	Set_Channel('SPEED', 0, 0, 0);
+    if Checkbox3.checked then	Set_Channel('GOBO1', 255, 255, 0) else	Set_Channel('GOBO1', 0, 0, 0);
+    if Checkbox4.checked then	Set_Channel('GOBO1ROT', 255, 255, 0) else	Set_Channel('GOBO1ROT', 0, 0, 0);
+    if Checkbox5.checked then	Set_Channel('GOBO2', 255, 255, 0) else	Set_Channel('GOBO2', 0, 0, 0);
+    if Checkbox6.checked then	Set_Channel('GOBO2ROT', 255, 255, 0) else	Set_Channel('GOBO2ROT', 0, 0, 0);
+    if Checkbox7.checked then	Set_Channel('GOBO3', 255, 255, 0) else	Set_Channel('GOBO3', 0, 0, 0);
+    if Checkbox8.checked then	Set_Channel('EXTRA', 255, 255, 0) else	Set_Channel('EXTRA', 0, 0, 0);
+  end;
+  procedure ADC1Change;
+  begin
+    dontrefreshvalue:=true;
+		Set_Channel('IRIS', Slider1.position, Slider1.position, 0);
+  end;
+  procedure ADC2Change;
+  begin
+    dontrefreshvalue:=true;
+		Set_Channel('SHUTTER', Slider2.position, Slider2.position, 0);
+  end;
+  end.
+ </code>
+</device>

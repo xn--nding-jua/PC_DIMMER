@@ -1,0 +1,39 @@
+Hardware Aufbauanleitung
+========================
+
+
+Die Bauteile:
+-------------
+Alle für dieses Projekt benötigten Teile sind in der Datei "Bauteil-Liste.txt" aufgeführt. Die Hauptkomponenten werden auf jeden Fall für dieses Projekt benötigt. Unter "Eventuell benötigtes Material" verbergen sich Teile, die für den Einbau in ein Gehäuse zusätzlich noch ganz sinnvoll wären.
+
+
+Die Platine:
+------------
+Zunächst muss natürlich die Platine her. Als einseitiges Layout lässt sie sich gut selbst fertigen, aber auch eine industriell gefertigte Platine (z.B. www.pcb-pool.com) wird ihren Dienst tun. ;-)
+Bei entsprechender Nachfrage kann man auch mal über Sammelbestellungen bei so einem Hersteller nachdenken.
+Das Layout liegt in den zwei Dateien "Layout.pdf" und "Layout.ps" bei. Je nach Druckmöglichkeit kann so die passende davon gewählt werden. Beide Dateien enthalten das gleiche Layout.
+Wichtig beim Ausdruck auf Folie ist, dass das Layout in keinerweise skaliert wird. Es ist für eine Platinengrösse von 75x100 mm entworfen und dementsprechend müssen auch die Maße des Ausdrucks sein.
+Die fertige Platine sollte noch einmal genau auf Leiterbahnunterbrechungen und Kurzschlüsse untersucht werden. Um die galvanische Trennung des Tranceivers vom Rest der Schaltung zu gewährleisten bitte auch gerade den Platinenrand auf eventuelle Kupferreste untersuchen.
+
+
+Die Bestückung:
+---------------
+Das Bestücken erfolgt anhand der Datei "Bestückung.jpg". Die zugehörigen Bauteilwerte finden sich in der Bauteilliste.
+Die roten Linien stellen dabei Drahtbrücken auf der Platinenoberseite dar. IC4 ist ein SMD Bauteil, welches auf der Platinenunterseite bestückt wird. Pin 1 ist im Bestückungsbild gekennzeichnet.
+Für alle anderen ICs natürlich nur den passenden Sockel einlöten und den IC aufstecken.
+Etwas heikel sind die Drahtbrücken, die unter IC4 enden. Die Lötstellen müssen sehr flach sein damit IC4 auch richtig aufliegen kann. Vorsichtig abfeilen hat bei mir ganz gut funktioniert.
+
+!ACHTUNG!: Seit dem 16.05.2006 ist ein neues Layout online, welches zwei zusätzliche Kondensatoren (C12, C13) zur Spannungsstabilisierung enthält.
+!ACHTUNG!: Am 31.01.2007 gab es wieder eine kleine Layoutänderung welche einen weiteren Kondensator (C14) enthält.
+Probleme beim Booten des Interface sollten damit hoffentlich der Vergangenheit angehören.
+
+
+Das Gehäuse:
+------------
+Falls das Gerät in ein Gehäuse eingebaut werden soll muss darauf geachtet werden, dass die Abschirmung der DMX und USB Buchsen nicht verbunden wird, da ansonsten die galvanische Trennung nutzlos ist. Daher am Besten ein Plastikgehäuse verwenden. Empfehlen kann ich das "Kunstoff Kleingehäuse schwarz" (Bestell-Nr.: EUROBOX SW) von Reichelt. Die Platine passt zusammen mit drei DMX Buchsen genau dort hinein.
+
+
+Stand 31.01.2007
+(c) 2004 Michael Dreschmann
+info@digital-enlightenment.de
+www.digital-enlightenment.de

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\Eurolite-TF5.png">
+ <information id="PC_DIMMER">
+ <name>LED MAT-Bar (10-Kanal-Modus)</name>
+ <vendor>Eurolite</vendor>
+ <author>Christian Nöding</author>
+ <description>Strobe-Combo</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="special2"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="special3"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Weiß" fade="yes" type="special4"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Bernstein" fade="yes" type="special5"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Chaser 1" fade="yes" type="special6"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Chaser 2" fade="yes" type="special7"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Programme" fade="yes" type="special8"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Geschwindigkeit" fade="yes" type="speed"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="Strobe" fade="yes" type="shutter"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="0" ch1="0" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" ch8="0" ch9="0" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="1" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="241" height="380">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <checkbox name="rbox" top="130" left="10" width="50" height="20" caption="Rot" action="rchange" checked="false"/>
+  <checkbox name="gbox" top="130" left="70" width="60" height="20" caption="Grün" action="gchange" checked="false"/>
+  <checkbox name="bbox" top="130" left="130" width="50" height="20" caption="Blau" action="bchange" checked="false"/>
+  <checkbox name="wbox" top="150" left="10" width="60" height="20" caption="Weiß" action="wchange" checked="false"/>
+  <checkbox name="ybox" top="150" left="70" width="100" height="20" caption="Bernsteinfarben" action="ychange" checked="false"/>
+  <dropdown name="autobox" top="300" left="10" width="220" height="23" action="SPECIAL1change">
+   <item caption="Keine Funktion" value="0" valueend="0" picture="" />
+   <item caption="Programm 1" value="0" valueend="0" picture="" />
+   <item caption="Programm 2" value="0" valueend="0" picture="" />
+   <item caption="Programm 3" value="0" valueend="0" picture="" />
+   <item caption="Programm 4" value="0" valueend="1" picture="" />
+   <item caption="Programm 5" value="0" valueend="0" picture="" />
+   <item caption="Programm 6" value="0" valueend="0" picture="" />
+   <item caption="Programm 7" value="0" valueend="0" picture="" />
+   <item caption="Programm 8" value="0" valueend="0" picture="" />
+   <item caption="Sound-2-Light" value="0" valueend="0" picture="" />
+  </dropdown>
+  <slider name="SHUTTERslider1" top="100" left="10" width="220" height="20" action="SHUTTERchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="chaser1" top="200" left="10" width="220" height="20" action="chaser1change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="chaser2" top="250" left="10" width="220" height="20" action="chaser2change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="speed" top="350" left="10" width="220" height="20" action="speedchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="SPECIAL1lbl0" top="280" left="10" width="80" height="10" caption="Auto-Programme:"/>
+  <label name="SHUTTERlbl1" top="80" left="10" width="30" height="20" caption="Strobe:"/>
+  <label name="Label3_311" top="180" left="10" width="45" height="13" caption="Chaser 1:"/>
+  <label name="Label4_934" top="230" left="10" width="45" height="13" caption="Chaser 2:"/>
+  <label name="Label5_775" top="330" left="10" width="131" height="13" caption="Programm-Geschwindigkeit:"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure SPECIAL1change;
+  procedure SHUTTERchange;
+  procedure rchange;
+  procedure gchange;
+  procedure bchange;
+  procedure wchange;
+  procedure ychange;
+  procedure chaser1change;
+  procedure chaser2change;
+  procedure speedchange;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+			0: rbox.checked:=get_channel('SPECIAL1')>9;
+			1: gbox.checked:=get_channel('SPECIAL2')>9;
+			2: bbox.checked:=get_channel('SPECIAL3')>9;
+			3: wbox.checked:=get_channel('SPECIAL4')>9;
+			4: ybox.checked:=get_channel('SPECIAL5')>9;
+			5:
+			begin
+				chaser1.position:=get_channel('SPECIAL6');
+			end;
+			6:
+			begin
+				chaser2.position:=get_channel('SPECIAL7');
+			end;
+      7:
+      begin
+	      value:=get_channel('SPECIAL8');
+        case value of
+        	0..5: autobox.itemindex:=0;
+        	6..39: autobox.itemindex:=1;
+        	40..69: autobox.itemindex:=2;
+        	70..99: autobox.itemindex:=3;
+        	100..129: autobox.itemindex:=4;
+        	130..159: autobox.itemindex:=5;
+        	160..189: autobox.itemindex:=6;
+        	190..219: autobox.itemindex:=7;
+        	220..249: autobox.itemindex:=8;
+        	250..255: autobox.itemindex:=9;
+				end; 
+      end;
+      8:
+      begin
+        speed.position:=get_channel('SPEED');
+      end;
+      9:
+      begin
+        SHUTTERslider1.position:=get_channel('SHUTTER');
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure SPECIAL1change;
+  begin
+    DontRefresh:=true;
+
+		case autobox.itemindex of
+			0: set_channel('SPECIAL8',-1,0,0);
+			1: set_channel('SPECIAL8',-1,6,0);
+			2: set_channel('SPECIAL8',-1,40,0);
+			3: set_channel('SPECIAL8',-1,70,0); 
+			4: set_channel('SPECIAL8',-1,100,0);
+			5: set_channel('SPECIAL8',-1,130,0);
+			6: set_channel('SPECIAL8',-1,160,0);
+			7: set_channel('SPECIAL8',-1,190,0);
+			8: set_channel('SPECIAL8',-1,220,0);
+			9: set_channel('SPECIAL8',-1,250,0);
+		end;
+  end;
+  procedure SHUTTERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SHUTTER',-1,SHUTTERslider1.position,0);
+  end;
+  procedure rchange;
+  begin
+    DontRefresh:=true;
+
+    if rbox.checked then
+    	set_channel('SPECIAL1',-1,255,0,0)
+   	else
+    	set_channel('SPECIAL1',-1,0,0,0);
+  end;
+  procedure gchange;
+  begin
+    DontRefresh:=true;
+
+    if gbox.checked then
+    	set_channel('SPECIAL2',-1,255,0,0)
+   	else
+    	set_channel('SPECIAL2',-1,0,0,0);
+  end;
+  procedure bchange;
+  begin
+    DontRefresh:=true;
+
+    if bbox.checked then
+    	set_channel('SPECIAL3',-1,255,0,0)
+   	else
+    	set_channel('SPECIAL3',-1,0,0,0);
+  end;
+  procedure wchange;
+  begin
+    DontRefresh:=true;
+
+    if wbox.checked then
+    	set_channel('SPECIAL4',-1,255,0,0)
+   	else
+    	set_channel('SPECIAL4',-1,0,0,0);
+  end;
+  procedure ychange;
+  begin
+    DontRefresh:=true;
+
+    if ybox.checked then
+    	set_channel('SPECIAL5',-1,255,0,0)
+   	else
+    	set_channel('SPECIAL5',-1,0,0,0);
+  end;
+  procedure chaser1change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL6',-1,chaser1.position,0,0);
+  end;
+  procedure chaser2change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL7',-1,chaser2.position,0,0);
+  end;
+  procedure speedchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPEED',-1,speed.position,0,0);
+  end;
+  end.
+ </code>
+</device>

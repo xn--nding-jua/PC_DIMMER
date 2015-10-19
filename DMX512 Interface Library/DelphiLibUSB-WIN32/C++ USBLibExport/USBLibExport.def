@@ -1,0 +1,31 @@
+LIBRARY USBLibExport.DLL
+EXPORTS
+libusb_open= _libusb_open@4
+libusb_close=_libusb_close@4
+libusb_get_string=_libusb_get_string@20
+libusb_get_string_simple=_libusb_get_string_simple@16
+
+libusb_get_descriptor_by_endpoint=_libusb_get_descriptor_by_endpoint@24
+libusb_get_descriptor=_libusb_get_descriptor@20
+
+libusb_bulk_write=_libusb_bulk_write@20
+libusb_bulk_read=_libusb_bulk_read@20
+libusb_interrupt_write=_libusb_interrupt_write@20
+libusb_interrupt_read=_libusb_interrupt_read@20
+libusb_control_msg=_libusb_control_msg@32
+libusb_set_configuration=_libusb_set_configuration@8
+libusb_claim_interface=_libusb_claim_interface@8
+libusb_release_interface=_libusb_release_interface@8
+libusb_set_altinterface=_libusb_set_altinterface@8
+libusb_resetep=_libusb_resetep@8
+libusb_clear_halt=_libusb_clear_halt@8
+libusb_reset=_libusb_reset@4
+
+libusb_strerror=_libusb_strerror@0
+
+libusb_init=_libusb_init@0
+libusb_set_debug=_libusb_set_debug@4
+libusb_find_busses=_libusb_find_busses@0
+libusb_find_devices=_libusb_find_devices@0
+libusb_device=_libusb_device@4
+libusb_get_busses=_libusb_get_busses@0

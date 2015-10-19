@@ -1,0 +1,860 @@
+unit devicescenefrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ComCtrls, StdCtrls, ExtCtrls;
+
+type
+  Tdevicesceneform = class(TForm)
+    scenefade_timelabel: TLabel;
+    Szenenname: TLabeledEdit;
+    scenefade_time: TEdit;
+    scenefade_time_min: TEdit;
+    scenefade_time_h: TEdit;
+    scenefade_time_msec: TEdit;
+    Szenenbeschreibung: TLabeledEdit;
+    OKBtn:     TButton;
+    TreeView1: TTreeView;
+    Edit1:     TEdit;
+    GroupBox1: TGroupBox;
+    CheckBox1: TCheckBox;
+    Label1:    TLabel;
+    Edit2:     TEdit;
+    CheckBox2: TCheckBox;
+    Label2:    TLabel;
+    Label3:    TLabel;
+    Label4:    TLabel;
+    Label5:    TLabel;
+    Button2:   TButton;
+    GroupBox2: TGroupBox;
+    Button3:   TButton;
+    Button1:   TButton;
+    Edit3:     TEdit;
+    Label6:    TLabel;
+    Button4:   TButton;
+    procedure Edit1Change(Sender: TObject);
+    procedure Edit1Enter(Sender: TObject);
+    procedure Edit1Exit(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure TreeView1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure CheckBox2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure TreeView1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure CheckBox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure input_number(var pos: integer; var s: string);
+    procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure Button1Click(Sender: TObject);
+    procedure Edit2KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure Button3Click(Sender: TObject);
+    procedure TreeView1DblClick(Sender: TObject);
+    procedure TreeView1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure Edit3KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure Button4Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  private
+    { Private-Deklarationen }
+    NodeGUID:        array of array of array of TGUID;
+    NodeIndex:       array of array of array of TTreenode;
+    lastclick:       TTreeNode;
+    ActualNodeIndex: integer;
+    procedure CheckButtons;
+    procedure RefreshTree;
+    procedure WMMoving(var AMsg: TMessage); message WM_MOVING;
+  public
+    { Public-Deklarationen }
+    aktuelleszene: integer;
+  end;
+
+procedure LockWindow(const Handle: HWND);
+procedure UnLockWindow(const Handle: HWND);
+
+var
+  devicesceneform: Tdevicesceneform;
+
+implementation
+
+uses PCDIMMER, geraetesteuerungfrm, buehnenansicht, ddfwindowfrm;
+
+{$R *.dfm}
+
+procedure LockWindow(const Handle: HWND);
+begin
+  SendMessage(Handle, WM_SETREDRAW, 0, 0);
+end;
+
+procedure UnlockWindow(const Handle: HWND);
+begin
+  SendMessage(Handle, WM_SETREDRAW, 1, 0);
+  RedrawWindow(Handle, nil, 0,
+    RDW_ERASE or RDW_FRAME or RDW_INVALIDATE or RDW_ALLCHILDREN);
+end;
+
+procedure Tdevicesceneform.Edit1Change(Sender: TObject);
+var
+  i: integer;
+  Text, Suchtext: string;
+begin
+  LockWindow(Treeview1.Handle);
+  Treeview1.FullCollapse;
+  UnLockWindow(Treeview1.Handle);
+  Suchtext := Edit1.Text;
+  for i := 0 to Treeview1.Items.Count - 1 do
+  begin
+    Treeview1.Deselect(Treeview1.Items[i]);
+
+    Text := copy(Treeview1.Items[i].Text, 0, length(Treeview1.Items[i].Text));
+
+    if StrPos(StrLower(PChar(Text)), StrLower(PChar(Suchtext))) <> nil then
+    begin
+      Treeview1.Select(Treeview1.Items[i]);
+      CheckButtons;
+      exit;
+    end;
+  end;
+end;
+
+procedure Tdevicesceneform.Edit1Enter(Sender: TObject);
+begin
+  if Edit1.Text = 'Suchtext hier eingeben...' then
+  begin
+    Edit1.Text := '';
+    Edit1.Font.Color := clBlack;
+  end;
+end;
+
+procedure Tdevicesceneform.Edit1Exit(Sender: TObject);
+begin
+  if Edit1.Text = '' then
+  begin
+    Edit1.Text := 'Suchtext hier eingeben...';
+    Edit1.Font.Color := clGray;
+  end;
+end;
+
+procedure Tdevicesceneform.FormShow(Sender: TObject);
+var
+  i, j: integer;
+begin
+  mainform.AktuelleDeviceScene.ID := mainform.devicescenes[aktuelleszene].ID;
+  mainform.AktuelleDeviceScene.Name := mainform.devicescenes[aktuelleszene].Name;
+  mainform.AktuelleDeviceScene.Beschreibung := mainform.devicescenes[aktuelleszene].Beschreibung;
+  mainform.AktuelleDeviceScene.Fadetime := mainform.devicescenes[aktuelleszene].Fadetime;
+  setlength(mainform.AktuelleDeviceScene.Devices, length(mainform.devicescenes[aktuelleszene].Devices));
+  for i := 0 to length(mainform.devicescenes[aktuelleszene].Devices) - 1 do
+  begin
+    mainform.AktuelleDeviceScene.Devices[i].ID := mainform.devicescenes[aktuelleszene].Devices[i].ID;
+    setlength(mainform.AktuelleDeviceScene.Devices[i].ChanActive, length(mainform.devicescenes[aktuelleszene].Devices[i].ChanActive));
+    setlength(mainform.AktuelleDeviceScene.Devices[i].ChanValue, length(mainform.devicescenes[aktuelleszene].Devices[i].ChanValue));
+    for j := 0 to length(mainform.devicescenes[aktuelleszene].Devices[i].ChanActive) - 1 do
+    begin
+      mainform.AktuelleDeviceScene.Devices[i].ChanActive[j] := mainform.devicescenes[aktuelleszene].Devices[i].ChanActive[j];
+      mainform.AktuelleDeviceScene.Devices[i].ChanValue[j]  := mainform.devicescenes[aktuelleszene].Devices[i].ChanValue[j];
+    end;
+  end;
+  RefreshTree;
+end;
+
+procedure Tdevicesceneform.TreeView1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  lastclick := Treeview1.Selected;
+  CheckButtons;
+
+{
+  if (Button=mbLeft) then
+  begin
+    if Treeview1.SelectionCount>0 then
+    begin
+      if Treeview1.Selected=lastclick then
+      begin
+        Checkbox1.Checked:=not checkbox1.Checked;
+        Checkbox1Mouseup(nil,mbLeft,[],0,0);
+      end;
+      lastclick:=Treeview1.Selected;
+    end;
+    CheckButtons;
+  end;
+}
+end;
+
+procedure Tdevicesceneform.CheckBox2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i, j, k: integer;
+  vorhanden: boolean;
+begin
+  for i := 0 to Treeview1.SelectionCount - 1 do
+  begin
+    if TreeView1.Selections[i].Parent.Index > -1 then // kein Vendor-Item
+    begin
+      if TreeView1.Selections[i].Parent.Parent.Index > -1 then // kein Gruppen-Item
+      begin
+        if Treeview1.Selections[i].Parent.Parent.Parent.Index = -1 then
+        begin
+          // ist ein Gerät
+          if Checkbox2.Checked then
+          begin
+            // #PRÜFEN OB GERÄT NICHT SCHON VORHANDEN#
+            vorhanden := False;
+            for k := 0 to length(mainform.AktuelleDeviceScene.Devices) - 1 do
+            begin
+              if GUIDtoString(mainform.AktuelleDeviceScene.Devices[k].ID) = GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.Selections[i].index])].ID) then
+                vorhanden := True;
+            end;
+            if not vorhanden then
+            begin
+              // Gerät hinzufügen
+              setlength(mainform.AktuelleDeviceScene.Devices, length(mainform.AktuelleDeviceScene.Devices) + 1);
+              setlength(mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices) - 1].ChanActive, mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.Selections[i].index])].MaxChan);
+              setlength(mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices) - 1].ChanValue, mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.Selections[i].index])].MaxChan);
+              mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices) - 1].ID := mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.Selections[i].index])].ID;
+            end;
+
+            Treeview1.Selections[i].ImageIndex := 51;
+            Treeview1.Selections[i].SelectedIndex := 51;
+          end else
+          begin
+            // #PRÜFEN OB GERÄT ÜBERHAUPT NOCH VORHANDEN#
+            vorhanden := False;
+            for k := 0 to length(mainform.AktuelleDeviceScene.Devices) - 1 do
+            begin
+              if GUIDtoString(mainform.AktuelleDeviceScene.Devices[k].ID) = GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.Selections[i].index])].ID) then
+                vorhanden := True;
+            end;
+            if vorhanden then
+            begin
+              // Aktuelles Gerät löschen
+              for k := 0 to Treeview1.Selections[i].Count - 1 do
+              begin
+                Treeview1.Selections[i].Item[k].ImageIndex := 50;
+                Treeview1.Selections[i].Item[k].SelectedIndex := 50;
+              end;
+
+              for k := 0 to length(mainform.AktuelleDeviceScene.Devices) - 1 do
+                if GUIDtoString(mainform.AktuelleDeviceScene.Devices[k].ID) = GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[i].Parent.Parent.Index][TreeView1.Selections[i].Parent.Index][Treeview1.Selections[i].index])].ID) then
+                begin
+                  // Gerät in Array gefunden
+                  if i < length(mainform.AktuelleDeviceScene.Devices) - 1 then
+                  begin
+                    // letztes Element hier einfügen
+                    mainform.AktuelleDeviceScene.Devices[k].ID := mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices) - 1].ID;
+                    setlength(mainform.AktuelleDeviceScene.Devices[k].ChanActive, length(mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices) - 1].ChanActive));
+                    for j := 0 to length(mainform.AktuelleDeviceScene.Devices[k].ChanActive) - 1 do
+                      mainform.AktuelleDeviceScene.Devices[k].ChanActive[j] := mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices) - 1].ChanActive[j];
+
+                    setlength(mainform.AktuelleDeviceScene.Devices[k].ChanValue, length(mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices) - 1].ChanValue) - 1);
+                    for j := 0 to length(mainform.AktuelleDeviceScene.Devices[k].ChanValue) - 1 do
+                      mainform.AktuelleDeviceScene.Devices[k].ChanValue[j] := mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices) - 1].ChanValue[j];
+                  end;
+                  // Array um eins kürzen
+                  setlength(mainform.AktuelleDeviceScene.Devices, length(mainform.AktuelleDeviceScene.Devices) - 1);
+                end;
+            end;
+            Treeview1.Selections[i].ImageIndex := 47;
+            Treeview1.Selections[i].SelectedIndex := 47;
+          end;
+        end;
+      end;
+    end;
+  end;
+
+  Treeview1.Refresh;
+{
+  if Treeview1.SelectionCount>0 then
+  if Treeview1.Selected.Parent.Index>-1 then // kein Vendor-Item
+  begin
+    if Treeview1.Selected.Parent.Parent.Index>-1 then // kein Device-Item
+    begin
+      if Treeview1.Selected.Parent.Parent.Parent.Index=-1 then
+      begin
+        // ist ein Gerät
+        if Checkbox2.Checked then
+        begin
+          // Gerät hinzufügen
+          setlength(mainform.AktuelleDeviceScene.Devices,length(mainform.AktuelleDeviceScene.Devices)+1);
+          setlength(mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ChanActive,mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.Selected.index])].MaxChan);
+          setlength(mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ChanValue,mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.Selected.index])].MaxChan);
+          mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ID:=mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.Selected.index])].ID;
+          Treeview1.Selected.ImageIndex:=51;
+          Treeview1.Selected.SelectedIndex:=51;
+          Treeview1.Refresh;
+        end else
+        begin
+          // Aktuelles Gerät löschen
+          Treeview1.Selected.ImageIndex:=47;
+          Treeview1.Selected.SelectedIndex:=47;
+          Treeview1.Refresh;
+
+          for i:=0 to Treeview1.Selected.Count-1 do
+          begin
+            Treeview1.Selected.Item[i].ImageIndex:=50;
+            Treeview1.Selected.Item[i].SelectedIndex:=50;
+          end;
+
+          for i:=0 to length(mainform.AktuelleDeviceScene.Devices)-1 do
+          if GUIDtoString(mainform.AktuelleDeviceScene.Devices[i].ID)=GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.Selected.index])].ID) then
+          begin
+            // Gerät in Array gefunden
+            if i<length(mainform.AktuelleDeviceScene.Devices)-1 then
+            begin
+              // letztes Element hier einfügen
+              mainform.AktuelleDeviceScene.Devices[i].ID:=mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ID;
+              setlength(mainform.AktuelleDeviceScene.Devices[i].ChanActive,length(mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ChanActive));
+              for j:=0 to length(mainform.AktuelleDeviceScene.Devices[i].ChanActive)-1 do
+                mainform.AktuelleDeviceScene.Devices[i].ChanActive[j]:=mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ChanActive[j];
+
+              setlength(mainform.AktuelleDeviceScene.Devices[i].ChanValue,length(mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ChanValue)-1);
+              for j:=0 to length(mainform.AktuelleDeviceScene.Devices[i].ChanValue)-1 do
+                mainform.AktuelleDeviceScene.Devices[i].ChanValue[j]:=mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ChanValue[j];
+            end;
+            // Array um eins kürzen
+            setlength(mainform.AktuelleDeviceScene.Devices,length(mainform.AktuelleDeviceScene.Devices)-1);
+          end;
+        end;
+      end;
+
+      if Treeview1.Selected.Parent.Parent.Parent.Index>-1 then
+      begin
+        // ist ein Kanal
+        if Checkbox2.Checked then
+        begin
+          // Gerät hinzufügen
+          setlength(mainform.AktuelleDeviceScene.Devices,length(mainform.AktuelleDeviceScene.Devices)+1);
+          setlength(mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ChanActive,mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Parent.Index][TreeView1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.index])].MaxChan);
+          setlength(mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ChanValue,mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Parent.Index][TreeView1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.index])].MaxChan);
+          mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ID:=mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Parent.Index][TreeView1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.index])].ID;
+          Treeview1.Selected.Parent.ImageIndex:=51;
+          Treeview1.Selected.Parent.SelectedIndex:=51;
+          Treeview1.Refresh;
+        end else
+        begin
+          // Aktuelles Gerät löschen
+          Treeview1.Selected.ImageIndex:=47;
+          Treeview1.Selected.SelectedIndex:=47;
+          Treeview1.Refresh;
+
+          for i:=0 to length(mainform.AktuelleDeviceScene.Devices)-1 do
+          if GUIDtoString(mainform.AktuelleDeviceScene.Devices[i].ID)=GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Parent.Index][TreeView1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.index])].ID) then
+          begin
+            // Gerät in Array gefunden
+            if i<length(mainform.AktuelleDeviceScene.Devices)-1 then
+            begin
+              // letztes Element hier einfügen
+              mainform.AktuelleDeviceScene.Devices[i].ID:=mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ID;
+              setlength(mainform.AktuelleDeviceScene.Devices[i].ChanActive,length(mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ChanActive));
+              for j:=0 to length(mainform.AktuelleDeviceScene.Devices[i].ChanActive)-1 do
+                mainform.AktuelleDeviceScene.Devices[i].ChanActive[j]:=mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ChanActive[j];
+
+              setlength(mainform.AktuelleDeviceScene.Devices[i].ChanValue,length(mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ChanValue)-1);
+              for j:=0 to length(mainform.AktuelleDeviceScene.Devices[i].ChanValue)-1 do
+                mainform.AktuelleDeviceScene.Devices[i].ChanValue[j]:=mainform.AktuelleDeviceScene.Devices[length(mainform.AktuelleDeviceScene.Devices)-1].ChanValue[j];
+            end;
+            // Array um eins kürzen
+            setlength(mainform.AktuelleDeviceScene.Devices,length(mainform.AktuelleDeviceScene.Devices)-1);
+          end;
+        end;
+      end;
+    end;
+  end;
+}
+end;
+
+procedure Tdevicesceneform.CheckButtons;
+var
+  i, j, k: integer;
+begin
+  label3.Caption := '...';
+  label5.Caption := '...';
+
+  checkbox1.Checked := False;
+  checkbox2.Checked := False;
+  edit2.Text := '0';
+  edit3.Text := '0';
+  edit2.Enabled := False;
+  edit3.Enabled := False;
+
+  if Treeview1.SelectionCount > 0 then
+    if Treeview1.Selected.Parent.Index > -1 then // kein Vendor-Item
+      if Treeview1.Selected.Parent.Parent.Index > -1 then // kein Device-Item
+      begin
+        if Treeview1.Selected.Parent.Parent.Parent.Index = -1 then
+        begin
+          // ist ein Gerät
+          label3.Caption := mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.Selected.index])].Name;
+
+          if Treeview1.SelectionCount > 0 then
+            if Treeview1.Selected.Parent.Index > -1 then // kein Vendor-Item
+              if Treeview1.Selected.Parent.Parent.Index > -1 then // kein Device-Item
+              begin
+                if Treeview1.Selected.Parent.Parent.Parent.Index > -1 then
+                begin
+                  // ist ein Kanal
+                  ddfwindow.top  := devicesceneform.Top;
+                  ddfwindow.left := devicesceneform.Left + devicesceneform.Width;
+                  ddfwindow.loadddf(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Parent.Index][TreeView1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.index])].ID);
+                  devicesceneform.SetFocus;
+                end else
+                begin
+                  // Ist ein Gerät
+                  ddfwindow.top  := devicesceneform.Top;
+                  ddfwindow.left := devicesceneform.Left + devicesceneform.Width;
+                  ddfwindow.loadddf(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.Selected.index])].ID);
+                  devicesceneform.SetFocus;
+                end;
+              end;
+
+          for i := 0 to length(mainform.AktuelleDeviceScene.Devices) - 1 do
+          begin
+            if GUIDtoString(mainform.AktuelleDeviceScene.Devices[i].ID) = GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.Selected.index])].ID) then
+            begin
+              Checkbox2.Checked := True;
+            end;
+          end;
+        end;
+
+        if Treeview1.Selected.Parent.Parent.Parent.Index > -1 then
+        begin
+          // ist ein Kanal
+          label3.Caption := mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Parent.Index][TreeView1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.index])].Name;
+          label5.Caption := mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Parent.Index][TreeView1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.index])].Kanalname[Treeview1.Selected.index];
+
+          if Treeview1.SelectionCount > 0 then
+            if Treeview1.Selected.Parent.Index > -1 then // kein Vendor-Item
+              if Treeview1.Selected.Parent.Parent.Index > -1 then // kein Device-Item
+              begin
+                if Treeview1.Selected.Parent.Parent.Parent.Index > -1 then
+                begin
+                  // ist ein Kanal
+                  ddfwindow.top  := devicesceneform.Top;
+                  ddfwindow.left := devicesceneform.Left + devicesceneform.Width;
+                  ddfwindow.loadddf(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Parent.Index][TreeView1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.index])].ID);
+                  devicesceneform.SetFocus;
+                end else
+                begin
+                  // Ist ein Gerät
+                  ddfwindow.top  := devicesceneform.Top;
+                  ddfwindow.left := devicesceneform.Left + devicesceneform.Width;
+                  ddfwindow.loadddf(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.Selected.index])].ID);
+                  devicesceneform.SetFocus;
+                end;
+              end;
+
+          for i := 0 to length(mainform.AktuelleDeviceScene.Devices) - 1 do
+          begin
+            if GUIDtoString(mainform.AktuelleDeviceScene.Devices[i].ID) = GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Parent.Index][TreeView1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.index])].ID) then
+            begin
+              Checkbox2.Checked := True;
+
+              Checkbox1.Checked := mainform.AktuelleDeviceScene.Devices[i].ChanActive[Treeview1.Selected.Index];
+              edit2.Enabled := Checkbox1.Checked;
+              edit2.Text := IntToStr(round(mainform.AktuelleDeviceScene.Devices[i].ChanValue[Treeview1.Selected.Index] / 255 * 100));
+              edit3.Enabled := Checkbox1.Checked;
+              edit3.Text := IntToStr(mainform.AktuelleDeviceScene.Devices[i].ChanValue[Treeview1.Selected.Index]);
+            end;
+          end;
+        end;
+      end;
+end;
+
+procedure Tdevicesceneform.TreeView1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = vk_space then
+  begin
+    Checkbox1.Checked := not checkbox1.Checked;
+    Checkbox1Mouseup(nil, mbLeft, [], 0, 0);
+  end;
+
+  CheckButtons;
+end;
+
+procedure Tdevicesceneform.CheckBox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i, j, k: integer;
+begin
+  for k := 0 to Treeview1.SelectionCount - 1 do
+  begin
+    if Treeview1.Selections[k].Parent.Index > -1 then // kein Vendor-Item
+      if Treeview1.Selections[k].Parent.Parent.Index > -1 then // kein Device-Item
+      begin
+        if Treeview1.Selections[k].Parent.Parent.Parent.Index > -1 then // kein Device
+        begin
+          // ist ein Kanal
+          for i := 0 to length(mainform.AktuelleDeviceScene.Devices) - 1 do
+          begin
+            if GUIDtoString(mainform.AktuelleDeviceScene.Devices[i].ID) = GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selections[k].Parent.Parent.Parent.Index][TreeView1.Selections[k].Parent.Parent.Index][Treeview1.Selections[k].Parent.index])].ID) then
+            begin
+              mainform.AktuelleDeviceScene.Devices[i].ChanActive[TreeView1.Selections[k].Index] := Checkbox1.Checked;
+              edit2.Enabled := Checkbox1.Checked;
+              edit2.Text := IntToStr(round(mainform.AktuelleDeviceScene.Devices[i].ChanValue[TreeView1.Selections[k].Index] / 255 * 100));
+              edit3.Enabled := Checkbox1.Checked;
+              edit3.Text := IntToStr(mainform.AktuelleDeviceScene.Devices[i].ChanValue[TreeView1.Selections[k].Index]);
+              if checkbox1.Checked then
+              begin
+                Treeview1.Selections[k].ImageIndex := 49;
+                Treeview1.Selections[k].SelectedIndex := 49;
+
+                for j := 0 to length(mainform.devices) - 1 do
+                  if IsEqualGUID(mainform.devices[j].ID, mainform.AktuelleDeviceScene.Devices[i].ID) then
+                    Treeview1.Selections[k].Text := mainform.devices[j].kanalname[Treeview1.Selections[k].Index] + ' (' + mainform.levelstr(mainform.AktuelleDeviceScene.Devices[i].ChanValue[Treeview1.Selections[k].Index]) + ')';
+              end else
+              begin
+                Treeview1.Selections[k].ImageIndex := 50;
+                Treeview1.Selections[k].SelectedIndex := 50;
+
+                for j := 0 to length(mainform.devices) - 1 do
+                  if IsEqualGUID(mainform.devices[j].ID, mainform.AktuelleDeviceScene.Devices[i].ID) then
+                    Treeview1.Selections[k].Text := mainform.devices[j].kanalname[Treeview1.Selections[k].Index];
+              end;
+            end;
+          end;
+        end;
+      end;
+  end;
+
+  Treeview1.Refresh;
+
+{
+  if Treeview1.SelectionCount>0 then
+  if Treeview1.Selected.Parent.Index>-1 then // kein Vendor-Item
+    if Treeview1.Selected.Parent.Parent.Index>-1 then // kein Device-Item
+    begin
+      if Treeview1.Selected.Parent.Parent.Parent.Index>-1 then
+      begin
+        // ist ein Kanal
+        for i:=0 to length(mainform.AktuelleDeviceScene.Devices)-1 do
+        begin
+          if GUIDtoString(mainform.AktuelleDeviceScene.Devices[i].ID)=GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Parent.Index][TreeView1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.index])].ID) then
+          begin
+            mainform.AktuelleDeviceScene.Devices[i].ChanActive[TreeView1.Selected.Index]:=Checkbox1.Checked;
+            edit2.Enabled:=Checkbox1.Checked;
+            edit2.Text:=inttostr(round(mainform.AktuelleDeviceScene.Devices[i].ChanValue[TreeView1.Selected.Index]/255*100));
+            if checkbox1.Checked then
+            begin
+              Treeview1.Selected.ImageIndex:=49;
+              Treeview1.Selected.SelectedIndex:=49;
+              Treeview1.Refresh;
+            end else
+            begin
+              Treeview1.Selected.ImageIndex:=50;
+              Treeview1.Selected.SelectedIndex:=50;
+              Treeview1.Refresh;
+            end;
+          end;
+        end;
+      end;
+    end;
+}
+end;
+
+procedure Tdevicesceneform.input_number(var pos: integer; var s: string);
+var
+  i: integer;
+begin
+  i := 1;
+  while i <= length(s) do
+  begin
+    if (s[i] < '0') or (s[i] > '9') then
+    begin
+      Delete(s, i, 1);
+      Dec(pos);
+    end
+    else
+      Inc(i);
+  end;
+end;
+
+procedure Tdevicesceneform.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = vk_escape then
+    modalresult := mrCancel;
+end;
+
+procedure Tdevicesceneform.Button1Click(Sender: TObject);
+begin
+  if messagedlg('Alle Geräte dieser Szene werden deaktiviert. Dabei gehen alle eingestellten Gerätewerte der Szene verloren. Fortfahren?', mtConfirmation,
+    [mbYes, mbNo], 0) = mrYes then
+  begin
+    setlength(mainform.AktuelleDeviceScene.Devices, 0);
+    ActualNodeIndex := Treeview1.Selected.AbsoluteIndex;
+    RefreshTree;
+    CheckButtons;
+  end;
+end;
+
+procedure Tdevicesceneform.Edit2KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+var
+  i, j: integer;
+  s: string;
+begin
+  if (TEdit(Sender).Text = '') then
+    exit;
+
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+
+  if StrToInt(TEdit(Sender).Text) > 100 then
+    TEdit(Sender).Text := '100';
+
+  if Treeview1.SelectionCount > 0 then
+    if Treeview1.Selected.Parent.Index > -1 then // kein Vendor-Item
+      if Treeview1.Selected.Parent.Parent.Index > -1 then // kein Device-Item
+      begin
+        if Treeview1.Selected.Parent.Parent.Parent.Index > -1 then
+        begin
+          // ist ein Kanal
+          for i := 0 to length(mainform.AktuelleDeviceScene.Devices) - 1 do
+          begin
+            if GUIDtoString(mainform.AktuelleDeviceScene.Devices[i].ID) = GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Parent.Index][TreeView1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.index])].ID) then
+            begin
+              mainform.AktuelleDeviceScene.Devices[i].ChanValue[TreeView1.Selected.Index] := round(StrToInt(Edit2.Text) / 100 * 255);
+              edit3.Text := IntToStr(round(StrToInt(Edit2.Text) / 100 * 255));
+              for j := 0 to length(mainform.devices) - 1 do
+                if GUIDtoString(mainform.devices[j].ID) = GUIDtoString(mainform.AktuelleDeviceScene.Devices[i].ID) then//GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.Selected.index])].ID) then
+                  Treeview1.Selected.Text := mainform.devices[j].kanalname[Treeview1.Selected.Index] + ' (' + mainform.levelstr(mainform.AktuelleDeviceScene.Devices[i].ChanValue[Treeview1.Selected.Index]) + ')';
+            end;
+          end;
+        end;
+      end;
+end;
+
+procedure Tdevicesceneform.Button3Click(Sender: TObject);
+var
+  i, j, k: integer;
+begin
+  if messagedlg('Die Werte aller aktivierten Geräte werden auf die aktuellen Werte gesetzt. Fortfahren?', mtConfirmation,
+    [mbYes, mbNo], 0) = mrYes then
+  begin
+    for i := 0 to length(mainform.AktuelleDeviceScene.Devices) - 1 do
+    begin
+      for j := 0 to length(mainform.devices) - 1 do
+        if GUIDtoString(mainform.devices[j].ID) = GUIDtoString(mainform.AktuelleDeviceScene.Devices[i].ID) then
+        begin
+          for k := 0 to length(mainform.AktuelleDeviceScene.Devices[i].ChanActive) - 1 do
+            if mainform.AktuelleDeviceScene.Devices[i].ChanActive[k] then
+            begin
+              mainform.AktuelleDeviceScene.Devices[i].ChanValue[k] := 255 - mainform.Data.ch[mainform.devices[j].Startaddress + k];
+            end;
+        end;
+    end;
+    ActualNodeIndex := Treeview1.Selected.AbsoluteIndex;
+    RefreshTree;
+    CheckButtons;
+  end;
+end;
+
+procedure Tdevicesceneform.TreeView1DblClick(Sender: TObject);
+var
+  i: integer;
+begin
+  if Treeview1.SelectionCount > 0 then
+  begin
+    if Treeview1.Selected = lastclick then
+    begin
+      Checkbox1.Checked := not checkbox1.Checked;
+      Checkbox1Mouseup(nil, mbLeft, [], 0, 0);
+    end;
+  end;
+  CheckButtons;
+end;
+
+procedure Tdevicesceneform.TreeView1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  i: integer;
+begin
+  if Button = mbRight then
+  begin
+    for i := 0 to Treeview1.items.Count - 1 do
+      Treeview1.Deselect(Treeview1.items[i]);
+  end;
+end;
+
+procedure Tdevicesceneform.RefreshTree;
+var
+  i, j, k, l, m: integer;
+  vendornode, devicenode, subnode, channelnode: TTreenode;
+begin
+  label3.Caption := '...';
+  label5.Caption := '...';
+
+  checkbox1.Checked := False;
+  checkbox2.Checked := False;
+  edit2.Text := '0';
+  edit2.Enabled := False;
+  edit3.Text := '0';
+  edit3.Enabled := False;
+
+
+  TreeView1.Items.Clear;
+
+  setlength(NodeGUID, 0);
+  setlength(NodeIndex, 0);
+
+  for i := 0 to length(mainform.devices) - 1 do
+  begin
+    vendornode := nil;
+    devicenode := nil;
+
+    // Herausfinden, ob für Device-Vendor schon ein Top-Node vorhanden ist
+    for j := 0 to Treeview1.Items.Count - 1 do
+    begin
+      if (Treeview1.Items[j].Text = mainform.devices[i].vendor) and (Treeview1.Items[j].Parent.Index = -1) then
+        vendornode := Treeview1.Items[j];
+    end;
+    // Wenn kein DeviceVendorNode verfügbar -> erstellen
+    if vendornode = nil then
+    begin
+      vendornode := Treeview1.Items.Add(nil, mainform.devices[i].Vendor);
+      setlength(NodeGUID, length(NodeGUID) + 1);
+      setlength(NodeIndex, length(NodeIndex) + 1);
+    end;
+
+    vendornode.ImageIndex := 46;
+    vendornode.SelectedIndex := 46;
+
+    // Herausfinden, ob für DeviceTyp schon ein Sub-Node vorhanden ist
+    for j := 0 to Treeview1.Items.Count - 1 do
+    begin
+      if (Treeview1.Items[j].Text = mainform.devices[i].DeviceName) and (Treeview1.Items[j].Parent.Index <> -1) then
+        if (Treeview1.Items[j].Parent.Parent.Index = -1) then
+          devicenode := Treeview1.Items[j];
+    end;
+    // Wenn kein DeviceTypNode verfügbar -> erstellen
+    if devicenode = nil then
+    begin
+      devicenode := Treeview1.Items.AddChild(vendornode, mainform.devices[i].DeviceName);
+      setlength(NodeGUID[vendornode.index], length(NodeGUID[vendornode.index]) + 1);
+      setlength(NodeIndex[vendornode.index], length(NodeIndex[vendornode.index]) + 1);
+    end;
+
+    devicenode.ImageIndex := 1;
+    devicenode.SelectedIndex := 1;
+
+    // Neuen Device-SubSubNode für Gerät erstellen
+    subnode := TreeView1.Items.AddChild(devicenode, mainform.devices[i].Name);
+    setlength(NodeGUID[vendornode.Index][devicenode.index], length(NodeGUID[vendornode.Index][devicenode.index]) + 1);
+    setlength(NodeIndex[vendornode.Index][devicenode.index], length(NodeIndex[vendornode.Index][devicenode.index]) + 1);
+    NodeGUID[vendornode.Index][devicenode.index][length(NodeGUID[vendornode.index][devicenode.Index]) - 1] := mainform.devices[i].ID;
+    NodeIndex[vendornode.Index][devicenode.index][length(NodeIndex[vendornode.index][devicenode.Index]) - 1] := subnode;
+
+    subnode.ImageIndex := 47;
+    subnode.SelectedIndex := 47;
+
+    // Kanäle des Gerätes hinzufügen
+    for j := 0 to length(mainform.devices[i].kanalname) - 1 do
+    begin
+      //      channelnode:=TreeView1.Items.AddChild(subnode,mainform.devices[i].kanalname[j]+' ('+inttostr(geraetesteuerung.get_channel(mainform.devices[i].ID,mainform.devices[i].kanaltyp[j]))+'%)');
+      channelnode := TreeView1.Items.AddChild(subnode, mainform.devices[i].kanalname[j]);
+
+      channelnode.ImageIndex := 50;
+      channelnode.SelectedIndex := 50;
+
+      for k := 0 to length(mainform.AktuelleDeviceScene.Devices) - 1 do
+      begin
+        if GUIDtoString(mainform.AktuelleDeviceScene.Devices[k].ID) = GUIDtoString(mainform.devices[i].ID) then
+        begin // Gerät gefunden
+          subnode.ImageIndex := 51;
+          subnode.SelectedIndex := 51;
+
+          channelnode.Text := mainform.devices[i].kanalname[j] + ' (' + mainform.levelstr(mainform.AktuelleDeviceScene.Devices[k].ChanValue[channelnode.Index]) + ')';
+
+          // Falls Kanal aktiviert, dann dies anzeigen
+          if mainform.AktuelleDeviceScene.Devices[k].ChanActive[channelnode.Index] then
+          begin
+            channelnode.ImageIndex := 49;
+            channelnode.SelectedIndex := 49;
+          end;
+        end;
+      end;
+    end;
+  end;
+
+  Treeview1.Refresh;
+  Treeview1.Select(Treeview1.Items[ActualNodeIndex]);
+end;
+
+procedure Tdevicesceneform.Edit3KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+var
+  i, j: integer;
+  s: string;
+begin
+  if (TEdit(Sender).Text = '') then
+    exit;
+
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+
+  if StrToInt(TEdit(Sender).Text) > 255 then
+    TEdit(Sender).Text := '255';
+
+  if Treeview1.SelectionCount > 0 then
+    if Treeview1.Selected.Parent.Index > -1 then // kein Vendor-Item
+      if Treeview1.Selected.Parent.Parent.Index > -1 then // kein Device-Item
+      begin
+        if Treeview1.Selected.Parent.Parent.Parent.Index > -1 then
+        begin
+          // ist ein Kanal
+          for i := 0 to length(mainform.AktuelleDeviceScene.Devices) - 1 do
+          begin
+            if GUIDtoString(mainform.AktuelleDeviceScene.Devices[i].ID) = GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Parent.Index][TreeView1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.index])].ID) then
+            begin
+              mainform.AktuelleDeviceScene.Devices[i].ChanValue[TreeView1.Selected.Index] := StrToInt(Edit3.Text);
+              edit2.Text := IntToStr(round(StrToInt(Edit3.Text) * 100 / 255));
+              for j := 0 to length(mainform.devices) - 1 do
+                if GUIDtoString(mainform.devices[j].ID) = GUIDtoString(mainform.AktuelleDeviceScene.Devices[i].ID) then//GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Index][TreeView1.Selected.Parent.Index][Treeview1.Selected.index])].ID) then
+                  Treeview1.Selected.Text := mainform.devices[j].kanalname[Treeview1.Selected.Index] + ' (' + mainform.levelstr(mainform.AktuelleDeviceScene.Devices[i].ChanValue[Treeview1.Selected.Index]) + ')';
+            end;
+          end;
+        end;
+      end;
+end;
+
+procedure Tdevicesceneform.Button4Click(Sender: TObject);
+var
+  i, j, k: integer;
+begin
+  if Treeview1.SelectionCount > 0 then
+    if Treeview1.Selected.Parent.Index > -1 then // kein Vendor-Item
+      if Treeview1.Selected.Parent.Parent.Index > -1 then // kein Device-Item
+      begin
+        if Treeview1.Selected.Parent.Parent.Parent.Index > -1 then
+        begin
+          // ist ein Kanal
+          for i := 0 to length(mainform.AktuelleDeviceScene.Devices) - 1 do
+          begin
+            if GUIDtoString(mainform.AktuelleDeviceScene.Devices[i].ID) = GUIDtoString(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(NodeGUID[TreeView1.Selected.Parent.Parent.Parent.Index][TreeView1.Selected.Parent.Parent.Index][Treeview1.Selected.Parent.index])].ID) then
+            begin
+              for j := 0 to length(mainform.devices) - 1 do
+                if GUIDtoString(mainform.devices[j].ID) = GUIDtoString(mainform.AktuelleDeviceScene.Devices[i].ID) then
+                begin
+                  mainform.AktuelleDeviceScene.Devices[i].ChanValue[TreeView1.Selected.Index] := geraetesteuerung.get_channel(mainform.devices[j].ID, mainform.devices[j].kanaltyp[Treeview1.Selected.Index]);
+                  Treeview1.Selected.Text := mainform.devices[j].kanalname[Treeview1.Selected.Index] + ' (' + mainform.levelstr(mainform.AktuelleDeviceScene.Devices[i].ChanValue[Treeview1.Selected.Index]) + ')';
+                end;
+            end;
+          end;
+        end;
+      end;
+end;
+
+procedure Tdevicesceneform.WMMoving(var AMsg: TMessage);
+begin
+  if ddfwindow.showing then
+  begin
+    ddfwindow.top  := devicesceneform.Top;
+    ddfwindow.left := devicesceneform.Left + devicesceneform.Width;
+  end;
+end;
+
+procedure Tdevicesceneform.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  if ddfwindow.showing then
+    ddfwindow.Close;
+end;
+
+end.

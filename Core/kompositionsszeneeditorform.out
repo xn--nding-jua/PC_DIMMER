@@ -1,0 +1,172 @@
+unit kompositionsszeneeditorform;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, szenenverwaltung;
+
+type
+  TAktuelleKompositionsszene = record
+    ID:           TGUID;
+    Name:         string[255];
+    Beschreibung: string[255];
+    IDs:          array of TGUID;
+  end;
+
+  Tkompositionsszeneeditor = class(TForm)
+    GroupBox1: TGroupBox;
+    Button1:   TButton;
+    ListBox1:  TListBox;
+    Button3:   TButton;
+    Button4:   TButton;
+    Edit1:     TEdit;
+    Edit2:     TEdit;
+    Label1:    TLabel;
+    Label4:    TLabel;
+    Button2:   TButton;
+    Button5:   TButton;
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Edit1Change(Sender: TObject);
+    procedure Edit2Change(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure Button5Click(Sender: TObject);
+  private
+    { Private-Deklarationen }
+    cancel: boolean;
+  public
+    { Public-Deklarationen }
+    AktuelleKompositionsszene: TAktuelleKompositionsszene;
+  end;
+
+var
+  //  kompositionsszeneeditor: Tkompositionsszeneeditor;
+  kompositionsszeneeditor_array: array of Tkompositionsszeneeditor;
+
+implementation
+
+uses PCDIMMER;
+
+{$R *.dfm}
+
+procedure Tkompositionsszeneeditor.Button3Click(Sender: TObject);
+var
+  i, arrayposition: integer;
+begin
+  setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) + 1);
+  arrayposition := length(szenenverwaltung_formarray) - 1;
+  szenenverwaltung_formarray[arrayposition] := Tszenenverwaltungform.Create(self);
+
+  szenenverwaltung_formarray[arrayposition].showmodal;
+  if szenenverwaltung_formarray[arrayposition].ModalResult = mrOk then
+  begin
+    setlength(AktuelleKompositionsszene.IDs, length(AktuelleKompositionsszene.IDs) + 1);
+    case szenenverwaltung_formarray[arrayposition].TreeView1.Selected.Parent.Index of
+      0:
+      begin
+        // Einfache Szene
+        AktuelleKompositionsszene.IDs[length(AktuelleKompositionsszene.IDs) - 1] := mainform.EinfacheSzenen[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].ID;
+        Listbox1.Items.Add(mainform.EinfacheSzenen[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].Name);
+      end;
+      1:
+      begin
+        // Geräteszene
+        AktuelleKompositionsszene.IDs[length(AktuelleKompositionsszene.IDs) - 1] := mainform.Devicescenes[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].ID;
+        Listbox1.Items.Add(mainform.Devicescenes[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].Name);
+      end;
+      2:
+      begin
+        // Audioszene
+        AktuelleKompositionsszene.IDs[length(AktuelleKompositionsszene.IDs) - 1] := mainform.AudioSzenen[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].ID;
+        Listbox1.Items.Add(mainform.AudioSzenen[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].Name);
+      end;
+      3:
+      begin
+        // Bewegungsszene
+        AktuelleKompositionsszene.IDs[length(AktuelleKompositionsszene.IDs) - 1] := mainform.BewegungsSzenen[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].ID;
+        Listbox1.Items.Add(mainform.BewegungsSzenen[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].Name);
+      end;
+      4:
+      begin
+        // Befehl
+        for i := 0 to length(mainform.Befehle) - 1 do
+          if GUIDtoString(mainform.Befehle[i].ID) = GUIDtoString(mainform.Befehle[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].ID) then
+            if (GUIDtoString(mainform.Befehle[i].Arg3) = GUIDtoString(AktuelleKompositionsszene.ID)) and (GUIDtoString(AktuelleKompositionsszene.ID) <> '{00000000-0000-0000-0000-000000000000}') then
+            begin
+              MessageDlg('Es wird gerade versucht eine sich selbst aufrufende Kompositionsszene zu erstellen.' + #10 + 'Da dies zu einer Endlosschleife führen würde, wird der Vorgang automatisch abgebrochen.', mtError, [mbOK], 0);
+              cancel := True;
+            end;
+        if not cancel then
+        begin
+          ShowMessage('Bitte stellen Sie sicher, dass der Befehl den Sie gerade hinzufügen möchten nicht die zu bearbeitende Kombinationsszene aufruft.' + #10 + 'Ringaufrufe können nicht vollständig erkannt werden und führen zum Absturz.');
+          AktuelleKompositionsszene.IDs[length(AktuelleKompositionsszene.IDs) - 1] := mainform.Befehle[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].ID;
+          Listbox1.Items.Add(mainform.Befehle[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].Name);
+        end;
+      end;
+      5:
+      begin
+        // Komposition
+        cancel := False;
+        for i := 0 to length(kompositionsszeneeditor_array) - 1 do
+        begin
+          if GUIDtoString(kompositionsszeneeditor_array[i].AktuelleKompositionsszene.ID) = GUIDtoString(mainform.Kompositionsszenen[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].ID) then
+          begin
+            MessageDlg('Es wird gerade versucht eine sich selbst aufrufende Kombinationsszene zu erstellen.' + #10 + 'Da dies zu einer Endlosschleife führen würde, wird der Vorgang automatisch abgebrochen.', mtError, [mbOK], 0);
+            cancel := True;
+          end;
+        end;
+        if not cancel then
+        begin
+          AktuelleKompositionsszene.IDs[length(AktuelleKompositionsszene.IDs) - 1] := mainform.Kompositionsszenen[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].ID;
+          Listbox1.Items.Add(mainform.Kompositionsszenen[szenenverwaltung_formarray[arrayposition].Treeview1.Selected.Index].Name);
+        end;
+      end;
+    end;
+  end;
+  szenenverwaltung_formarray[arrayposition].Free;
+  setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) - 1); // müsste eigentlich funktionieren, wenn alle vorherigen Fenster schön brav ihre erzeugten Forms auch wieder beendet haben
+end;
+
+procedure Tkompositionsszeneeditor.Button4Click(Sender: TObject);
+var
+  i: integer;
+begin
+  if Listbox1.Items.Count > 0 then
+  begin
+    if Listbox1.Items.Count > 1 then
+    begin
+      for i := Listbox1.ItemIndex to Listbox1.Items.Count - 2 do
+      begin
+        AktuelleKompositionsszene.IDs[i] := AktuelleKompositionsszene.IDs[i + 1];
+        Listbox1.Items.Strings[i] := Listbox1.Items.Strings[i + 1];
+      end;
+    end;
+    Listbox1.Items.Delete(Listbox1.Items.Count - 1);
+    setlength(AktuelleKompositionsszene.IDs, length(AktuelleKompositionsszene.IDs) - 1);
+  end;
+end;
+
+procedure Tkompositionsszeneeditor.Edit1Change(Sender: TObject);
+begin
+  AktuelleKompositionsszene.Name := Edit1.Text;
+end;
+
+procedure Tkompositionsszeneeditor.Edit2Change(Sender: TObject);
+begin
+  AktuelleKompositionsszene.Beschreibung := Edit2.Text;
+end;
+
+procedure Tkompositionsszeneeditor.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = vk_escape then
+    modalresult := mrCancel;
+end;
+
+procedure Tkompositionsszeneeditor.Button5Click(Sender: TObject);
+begin
+  if Listbox1.ItemIndex > -1 then
+    mainform.EditScene(AktuelleKompositionsszene.IDs[Listbox1.ItemIndex]);
+end;
+
+end.

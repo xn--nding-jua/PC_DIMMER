@@ -1,0 +1,1558 @@
+unit effektsequenzerfrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ComCtrls, Registry, szenenverwaltung, Buttons,
+  PngBitBtn;
+
+type
+  Teffektsequenzer = class(TForm)
+    TreeView1:       TTreeView;
+    GroupBox1:       TGroupBox;
+    GroupBox2:       TGroupBox;
+    GroupBox3:       TGroupBox;
+    Button1:         TButton;
+    Edit1:           TEdit;
+    Edit2:           TEdit;
+    Label1:          TLabel;
+    Label2:          TLabel;
+    Label3:          TLabel;
+    ComboBox1:       TComboBox;
+    GroupBox5:       TGroupBox;
+    Label4:          TLabel;
+    Label5:          TLabel;
+    Label6:          TLabel;
+    Edit5:           TEdit;
+    Label9:          TLabel;
+    Edit6:           TEdit;
+    Edit7:           TEdit;
+    Label11:         TLabel;
+    einblendzeit_s:  TEdit;
+    einblendzeit_min: TEdit;
+    einblendzeit_h:  TEdit;
+    einblendzeit_ms: TEdit;
+    wartezeit_h:     TEdit;
+    wartezeit_min:   TEdit;
+    wartezeit_s:     TEdit;
+    wartezeit_ms:    TEdit;
+    CheckBox1:       TCheckBox;
+    intensity:       TTrackBar;
+    speed:           TTrackBar;
+    Label12:         TLabel;
+    Label10:         TLabel;
+    Button8:         TButton;
+    Button9:         TButton;
+    Button11:        TButton;
+    Label13:         TLabel;
+    Label14:         TLabel;
+    OpenEffectsBtn:  TSpeedButton;
+    NewEffectsBtn:   TSpeedButton;
+    SaveEffectsBtn:  TSpeedButton;
+    OpenDialog1:     TOpenDialog;
+    SaveDialog1:     TSaveDialog;
+    EditBtn:         TPngBitBtn;
+    deletestepbtn:   TPngBitBtn;
+    Edit3:           TEdit;
+    Label15:         TLabel;
+    CheckBox2:       TCheckBox;
+    Button5:         TPngBitBtn;
+    movestepupbtn:   TPngBitBtn;
+    movestepdownbtn: TPngBitBtn;
+    Button2:         TPngBitBtn;
+    Button4:         TPngBitBtn;
+    Button10:        TPngBitBtn;
+    Button6:         TPngBitBtn;
+    Label17:         TLabel;
+    ComboBox2:       TComboBox;
+    Button3:         TPngBitBtn;
+    deleteeffectbtn: TPngBitBtn;
+    CheckBox3:       TCheckBox;
+    CheckBox4:       TCheckBox;
+    procedure Button1Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure TreeView1Change(Sender: TObject; Node: TTreeNode);
+    procedure ComboBox1Change(Sender: TObject);
+    procedure movestepupbtnClick(Sender: TObject);
+    procedure movestepdownbtnClick(Sender: TObject);
+    procedure deleteeffectbtnClick(Sender: TObject);
+    procedure deletestepbtnClick(Sender: TObject);
+    procedure checkbuttons;
+    procedure Button2Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Edit5KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure Edit6KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure Edit1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure Edit2KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure Edit7KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure Edit7Change(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormHide(Sender: TObject);
+    procedure TreeView1AdvancedCustomDrawItem(Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState; Stage: TCustomDrawStage; var PaintImages, DefaultDraw: boolean);
+    procedure RefreshTreeView;
+    procedure EditBtnClick(Sender: TObject);
+    procedure einblendzeit_hChange(Sender: TObject);
+    procedure einblendzeit_hKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure wartezeit_hKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure CheckBox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure intensityChange(Sender: TObject);
+    procedure speedChange(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
+    procedure CreateParams(var Params: TCreateParams); override;
+    procedure Button11Click(Sender: TObject);
+    procedure TreeView1DblClick(Sender: TObject);
+    procedure TreeView1Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure NewEffectsBtnClick(Sender: TObject);
+    procedure OpenEffectsBtnClick(Sender: TObject);
+    procedure SaveEffectsBtnClick(Sender: TObject);
+    procedure Edit3Change(Sender: TObject);
+    procedure Edit3KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure CheckBox2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure ComboBox2Select(Sender: TObject);
+    procedure CheckBox3MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure CheckBox4MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+  private
+    { Private-Deklarationen }
+    LastNode:   TTreeNode;
+    FileStream: TFileStream;
+  public
+    { Public-Deklarationen }
+    procedure NewFile;
+    procedure MSGOpen;
+    procedure MSGSave;
+    procedure AddFile(filename: string);
+    procedure OpenFile(filename: string);
+    procedure SaveFile(filename: string);
+  end;
+
+var
+  effektsequenzer: Teffektsequenzer;
+
+implementation
+
+uses PCDIMMER, kontrollpanelform, insscene;
+
+{$R *.dfm}
+
+procedure Teffektsequenzer.Button1Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure Teffektsequenzer.Button3Click(Sender: TObject);
+begin
+  setlength(mainform.effektsequenzereffekte, length(mainform.effektsequenzereffekte) + 1);
+  setlength(mainform.effektsequenzereffekte[length(mainform.effektsequenzereffekte) - 1].Effektschritte, 0);
+  setlength(mainform.AktuellerEffekt, length(mainform.AktuellerEffekt) + 1);
+  mainform.Effektsequenzereffekte[length(mainform.effektsequenzereffekte) - 1].Name := 'Neuer Effekt (' + IntToStr(length(mainform.effektsequenzereffekte)) + ')';
+  mainform.Effektsequenzereffekte[length(mainform.effektsequenzereffekte) - 1].AnzahlderDurchlaufe := -1;
+  mainform.Effektsequenzereffekte[length(mainform.effektsequenzereffekte) - 1].Repeating := True;
+  mainform.Effektsequenzereffekte[length(mainform.effektsequenzereffekte) - 1].speed := 128;
+  mainform.Effektsequenzereffekte[length(mainform.effektsequenzereffekte) - 1].intensitaet := 255;
+  CreateGUID(mainform.Effektsequenzereffekte[length(mainform.effektsequenzereffekte) - 1].ID);
+  LastNode := TreeView1.Items.Add(nil, mainform.Effektsequenzereffekte[length(mainform.effektsequenzereffekte) - 1].Name);
+  TreeView1.Select(LastNode);
+  checkbuttons;
+end;
+
+function levelstr(pos, max: integer): string;
+begin
+  Result := '';
+  case MainForm.levelanzeigeoptionen of
+    0: Result := IntToStr(round((pos * 100) / max)) + '%';
+    1: Result := IntToStr(round((pos * 100) / max)) + '.' + copy(IntToStr((pos * 100) mod max), 0, 1) + '%';
+    2: Result := IntToStr(pos);
+  end;
+end;
+
+procedure Teffektsequenzer.FormShow(Sender: TObject);
+var
+  LReg: TRegistry;
+begin
+  LReg := TRegistry.Create;
+  LReg.RootKey := HKEY_CURRENT_USER;
+
+  if LReg.OpenKey('Software', True) then
+  begin
+    if not LReg.KeyExists('PHOENIXstudios') then
+      LReg.CreateKey('PHOENIXstudios');
+    if LReg.OpenKey('PHOENIXstudios', True) then
+    begin
+      if not LReg.KeyExists('PC_DIMMER') then
+        LReg.CreateKey('PC_DIMMER');
+      if LReg.OpenKey('PC_DIMMER', True) then
+      begin
+        LReg.WriteBool('Showing Effektsequenzer', True);
+
+        if not LReg.KeyExists('Effektsequenzer') then
+          LReg.CreateKey('Effektsequenzer');
+        if LReg.OpenKey('Effektsequenzer', True) then
+        begin
+          if LReg.ValueExists('PosX') then
+          begin
+            if (not (LReg.ReadInteger('PosX') + Effektsequenzer.Width < screen.DesktopLeft)) and (not (LReg.ReadInteger('PosX') > screen.DesktopWidth + screen.DesktopLeft)) then
+              Effektsequenzer.Left := LReg.ReadInteger('PosX')
+            else
+              Effektsequenzer.Left := screen.DesktopLeft;
+          end else
+            Effektsequenzer.Left := screen.DesktopLeft;
+
+          if LReg.ValueExists('PosY') then
+          begin
+            if (not (LReg.ReadInteger('PosY') < screen.DesktopTop)) and (not (LReg.ReadInteger('PosY') > screen.DesktopHeight + screen.DesktopTop)) then
+              Effektsequenzer.Top := LReg.ReadInteger('PosY')
+            else
+              Effektsequenzer.Top := screen.DesktopTop;
+          end else
+            Effektsequenzer.Top := screen.DesktopTop;
+        end;
+      end;
+    end;
+  end;
+  LReg.CloseKey;
+
+  TreeView1.doublebuffered := True;
+  RefreshTreeView;
+  Checkbuttons;
+end;
+
+procedure Teffektsequenzer.Button5Click(Sender: TObject);
+var
+  i: integer;
+  NewSubNode: TTreeNode;
+begin
+  NewSubNode := nil;
+  if (Treeview1.Selected.Parent.Index = -1) then // Toplevel
+  begin
+    mainform.AktuellerEffekt[TreeView1.Selected.Index].Aktiv := False;
+    setlength(mainform.effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte, length(mainform.effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte) + 1);
+    mainform.Effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte[length(mainform.effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte) - 1].Name := 'Neuer Effektschritt (' + IntToStr(length(mainform.effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte)) + ')';
+    mainform.Effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte[length(mainform.effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte) - 1].wartezeit := 1000;
+    mainform.Effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte[length(mainform.effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte) - 1].DeactivateLastScene := True;
+
+    for i := 1 to mainform.MaximumChan do
+    begin
+      mainform.Effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte[length(mainform.effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte) - 1].kanal[i] := 0;
+      mainform.Effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte[length(mainform.effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte) - 1].kanalaktiv[i] := False;
+    end;
+    NewSubNode := TreeView1.Items.AddChild(LastNode, mainform.Effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte[length(mainform.Effektsequenzereffekte[TreeView1.Selected.Index].Effektschritte) - 1].Name);
+  end else
+  if (Treeview1.Selected.Parent.Index > -1) then // Sublevel
+  begin
+    mainform.AktuellerEffekt[TreeView1.Selected.Parent.Index].Aktiv := False;
+    setlength(mainform.effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte, length(mainform.effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte) + 1);
+    mainform.Effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte[length(mainform.effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte) - 1].Name := 'Neuer Effektschritt (' + IntToStr(length(mainform.effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte)) + ')';
+    mainform.Effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte[length(mainform.effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte) - 1].wartezeit := 1000;
+    mainform.Effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte[length(mainform.effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte) - 1].DeactivateLastScene := True;
+
+    for i := 1 to mainform.MaximumChan do
+    begin
+      mainform.Effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte[length(mainform.effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte) - 1].kanal[i] := 0;
+      mainform.Effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte[length(mainform.effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte) - 1].kanalaktiv[i] := False;
+    end;
+    NewSubNode := TreeView1.Items.AddChild(LastNode, mainform.Effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte[length(mainform.Effektsequenzereffekte[TreeView1.Selected.Parent.Index].Effektschritte) - 1].Name);
+  end;
+  if NewSubNode <> nil then
+    TreeView1.Select(NewSubNode);
+  checkbuttons;
+end;
+
+procedure Teffektsequenzer.TreeView1Change(Sender: TObject; Node: TTreeNode);
+var
+  t, h, min, s, ms: integer;
+begin
+  if (Sender = TreeView1) and (Treeview1.SelectionCount > 0) then
+  begin
+    if (Treeview1.Selected.Parent.Index > -1) then // wenn innerhalb der Unterobjekte
+    begin
+      LastNode := Treeview1.Selected.Parent;
+      edit1.Text := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Name;
+      edit2.Text := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Beschreibung;
+      Combobox1.ItemIndex := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].modus;
+      edit7.Text := IntToStr(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].AnzahlderDurchlaufe);
+
+      case mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Typ of
+        0: Combobox2.ItemIndex := 1;
+        1: Combobox2.ItemIndex := 2;
+        2: Combobox2.ItemIndex := 3;
+        3: Combobox2.ItemIndex := 0;
+      end;
+
+      Checkbox2.Checked := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].ActivateTimecontrol;
+      CheckBox3.Checked := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].DeactivateLastScene;
+
+      intensity.Position := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].intensitaet;
+      speed.Position := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].speed;
+      checkbox1.Checked := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Repeating;
+      checkbox4.Checked := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].startwithstepone;
+
+      edit5.Text := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Name;
+      edit6.Text := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Beschreibung;
+      edit3.Text := IntToStr(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].AnzahlBeats);
+
+      t  := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Einblendzeit;
+      h  := t div 3600000;
+      t  := t mod 3600000;
+      min := t div 60000;
+      t  := t mod 60000;
+      s  := t div 1000;
+      ms := t mod 1000;
+      einblendzeit_h.Text := IntToStr(h);
+      einblendzeit_min.Text := IntToStr(min);
+      einblendzeit_s.Text := IntToStr(s);
+      einblendzeit_ms.Text := IntToStr(ms);
+
+      t  := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Wartezeit;
+      h  := t div 3600000;
+      t  := t mod 3600000;
+      min := t div 60000;
+      t  := t mod 60000;
+      s  := t div 1000;
+      ms := t mod 1000;
+      wartezeit_h.Text := IntToStr(h);
+      wartezeit_min.Text := IntToStr(min);
+      wartezeit_s.Text := IntToStr(s);
+      wartezeit_ms.Text := IntToStr(ms);
+
+      if (length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte) > 1) and (Treeview1.Selected.Index > 0) then
+        movestepupbtn.Enabled := True
+      else
+        movestepupbtn.Enabled := False;
+
+      if (length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte) > 1) and (Treeview1.Selected.Index < length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte) - 1) then
+        movestepdownbtn.Enabled := True
+      else
+        movestepdownbtn.Enabled := False;
+
+      if Treeview1.Selected.Index < length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte) then
+        deletestepbtn.Enabled := True
+      else
+        deletestepbtn.Enabled := False;
+
+      Combobox2.Enabled := True;
+      EditBtn.Enabled := True;
+
+      einblendzeit_h.Enabled := True;
+      einblendzeit_min.Enabled := True;
+      einblendzeit_s.Enabled := True;
+      einblendzeit_ms.Enabled := True;
+      wartezeit_h.Enabled := True;
+      wartezeit_min.Enabled := True;
+      wartezeit_s.Enabled := True;
+      wartezeit_ms.Enabled := True;
+      button8.Enabled := True;
+      button9.Enabled := True;
+      Checkbox2.Enabled := True;
+
+      Edit5.Enabled := True;
+      Edit6.Enabled := True;
+      Edit3.Enabled := True;
+
+      deleteeffectbtn.Enabled := True;
+    end else if (Treeview1.Selected.Index > -1) and (Treeview1.Selected.Parent.Index = -1) then // wenn Toplevel
+    begin
+      LastNode := Treeview1.Selected;
+      edit1.Text := mainform.Effektsequenzereffekte[Treeview1.Selected.Index].Name;
+      edit2.Text := mainform.Effektsequenzereffekte[Treeview1.Selected.Index].Beschreibung;
+      Combobox1.ItemIndex := mainform.Effektsequenzereffekte[Treeview1.Selected.Index].modus;
+      edit7.Text := IntToStr(mainform.Effektsequenzereffekte[Treeview1.Selected.Index].AnzahlderDurchlaufe);
+      intensity.Position := mainform.Effektsequenzereffekte[Treeview1.Selected.Index].intensitaet;
+      speed.Position := mainform.Effektsequenzereffekte[Treeview1.Selected.Index].speed;
+      checkbox1.Checked := mainform.Effektsequenzereffekte[Treeview1.Selected.Index].Repeating;
+      checkbox4.Checked := mainform.Effektsequenzereffekte[Treeview1.Selected.Index].startwithstepone;
+
+      Combobox2.Enabled := False;
+      EditBtn.Enabled := False;
+      DeleteStepBtn.Enabled := False;
+
+      einblendzeit_h.Enabled := False;
+      einblendzeit_min.Enabled := False;
+      einblendzeit_s.Enabled := False;
+      einblendzeit_ms.Enabled := False;
+      wartezeit_h.Enabled := False;
+      wartezeit_min.Enabled := False;
+      wartezeit_s.Enabled := False;
+      wartezeit_ms.Enabled := False;
+      button8.Enabled := False;
+      button9.Enabled := False;
+      Checkbox2.Enabled := False;
+
+      Edit5.Enabled := False;
+      Edit6.Enabled := False;
+      Edit3.Enabled := False;
+
+      movestepupbtn.Enabled := False;
+      movestepdownbtn.Enabled := False;
+      deletestepbtn.Enabled := False;
+      deleteeffectbtn.Enabled := True;
+    end else
+    begin
+      deleteeffectbtn.Enabled := False;
+    end;
+  end;
+  checkbuttons;
+end;
+
+procedure Teffektsequenzer.ComboBox1Change(Sender: TObject);
+begin
+  if Sender = Combobox1 then
+  begin
+    if (Treeview1.Selected.Parent.Index > -1) then
+    begin
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].modus := Combobox1.ItemIndex;
+    end else
+    begin
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Index].modus := Combobox1.ItemIndex;
+    end;
+  end;
+end;
+
+procedure Teffektsequenzer.movestepupbtnClick(Sender: TObject);
+var
+  oldtext: string;
+  newtext: string;
+  i: integer;
+  aktuellereffekt, aktuellereffektschritt: integer;
+  aktuellereffektnode, aktuellereffektschrittnode: TTreeNode;
+begin
+  aktuellereffekt := TreeView1.Selected.Parent.Index;
+  aktuellereffektschritt := TreeView1.Selected.Index;
+  aktuellereffektnode := TreeView1.Selected.Parent;
+  aktuellereffektschrittnode := TreeView1.Selected;
+  mainform.AktuellerEffekt[aktuellereffekt].Aktiv := False;
+
+  // Array um eins erhöhen
+  setlength(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte, length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) + 1);
+
+  // Obere Arrayposition in letztes Element kopieren
+  oldtext := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].Name;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].Typ := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].Typ;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].Name := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].Name;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].Beschreibung := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].Beschreibung;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].einblendzeit := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].einblendzeit;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].wartezeit := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].wartezeit;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].AnzahlBeats := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].AnzahlBeats;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].kanal := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].kanal;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].kanalaktiv := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].kanalaktiv;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].ActivateTimecontrol := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].ActivateTimecontrol;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].DeactivateLastScene := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].DeactivateLastScene;
+  setlength(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].IDs, length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].IDs));
+  for i := 0 to length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].IDs) - 1 do
+    mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].IDs[i] := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].IDs[i];
+
+  // Aktuelles Element eine Position nach oben kopieren
+  newtext := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Name;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].Typ := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Typ;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].Name := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Name;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].Beschreibung := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Beschreibung;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].einblendzeit := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].einblendzeit;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].wartezeit := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].wartezeit;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].AnzahlBeats := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].AnzahlBeats;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].kanal := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].kanal;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].kanalaktiv := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].kanalaktiv;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].ActivateTimecontrol := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].ActivateTimecontrol;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].DeactivateLastScene := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].DeactivateLastScene;
+  setlength(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].IDs, length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].IDs));
+  for i := 0 to length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].IDs) - 1 do
+    mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt - 1].IDs[i] := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].IDs[i];
+
+  // Letzte Position auf aktuelle Position kopieren
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Typ := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].Typ;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Name := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].Name;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Beschreibung := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].Beschreibung;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].einblendzeit := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].einblendzeit;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].wartezeit := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].wartezeit;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].AnzahlBeats := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].AnzahlBeats;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].kanal := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].kanal;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].kanalaktiv := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].kanalaktiv;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].ActivateTimecontrol := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].ActivateTimecontrol;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].DeactivateLastScene := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].DeactivateLastScene;
+  setlength(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].IDs, length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].IDs));
+  for i := 0 to length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].IDs) - 1 do
+    mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].IDs[i] := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].IDs[i];
+
+  // Array um eins kürzen
+  setlength(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte, length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1);
+
+  aktuellereffektnode.Item[aktuellereffektschritt].Text := oldtext;
+  aktuellereffektnode.Item[aktuellereffektschritt - 1].Text := newtext;
+  Treeview1.Select(aktuellereffektnode.Item[aktuellereffektschritt - 1]);
+
+  //  RefreshTreeView;
+  //  Treeview1.Select(Treeview1.Items[aktuellereffekt].Item[aktuellereffektschritt]);
+  checkbuttons;
+end;
+
+procedure Teffektsequenzer.movestepdownbtnClick(Sender: TObject);
+var
+  oldtext: string;
+  newtext: string;
+  i: integer;
+  aktuellereffekt, aktuellereffektschritt: integer;
+  aktuellereffektnode, aktuellereffektschrittnode: TTreeNode;
+begin
+  aktuellereffekt := TreeView1.Selected.Parent.Index;
+  aktuellereffektschritt := TreeView1.Selected.Index;
+  aktuellereffektnode := TreeView1.Selected.Parent;
+  aktuellereffektschrittnode := TreeView1.Selected;
+  mainform.AktuellerEffekt[aktuellereffekt].Aktiv := False;
+
+  // Array um eins erhöhen
+  setlength(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte, length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) + 1);
+
+  // Untere Arrayposition in letztes Element kopieren
+  oldtext := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].Name;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].Typ := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].Typ;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].Name := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].Name;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].Beschreibung := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].Beschreibung;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].einblendzeit := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].einblendzeit;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].wartezeit := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].wartezeit;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].AnzahlBeats := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].AnzahlBeats;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].kanal := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].kanal;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].kanalaktiv := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].kanalaktiv;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].ActivateTimecontrol := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].ActivateTimecontrol;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].DeactivateLastScene := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].DeactivateLastScene;
+  setlength(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].IDs, length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].IDs));
+  for i := 0 to length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].IDs) - 1 do
+    mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].IDs[i] := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].IDs[i];
+
+  // Aktuelles Element eine Position nach unten kopieren
+  newtext := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Name;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].Typ := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Typ;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].Name := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Name;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].Beschreibung := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Beschreibung;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].einblendzeit := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].einblendzeit;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].wartezeit := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].wartezeit;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].AnzahlBeats := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].AnzahlBeats;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].kanal := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].kanal;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].kanalaktiv := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].kanalaktiv;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].ActivateTimecontrol := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].ActivateTimecontrol;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].DeactivateLastScene := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].DeactivateLastScene;
+  setlength(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].IDs, length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].IDs));
+  for i := 0 to length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].IDs) - 1 do
+    mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt + 1].IDs[i] := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].IDs[i];
+
+  // Letzte Position auf aktuelle Position kopieren
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Typ := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].Typ;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Name := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].Name;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].Beschreibung := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].Beschreibung;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].einblendzeit := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].einblendzeit;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].wartezeit := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].wartezeit;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].AnzahlBeats := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].AnzahlBeats;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].kanal := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].kanal;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].kanalaktiv := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].kanalaktiv;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].ActivateTimecontrol := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].ActivateTimecontrol;
+  mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].DeactivateLastScene := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].DeactivateLastScene;
+  setlength(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].IDs, length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].IDs));
+  for i := 0 to length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].IDs) - 1 do
+    mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[aktuellereffektschritt].IDs[i] := mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte[length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1].IDs[i];
+
+  // Array um eins kürzen
+  setlength(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte, length(mainform.Effektsequenzereffekte[aktuellereffekt].Effektschritte) - 1);
+
+
+  aktuellereffektnode.Item[aktuellereffektschritt].Text := oldtext;
+  aktuellereffektnode.Item[aktuellereffektschritt + 1].Text := newtext;
+  Treeview1.Select(aktuellereffektnode.Item[aktuellereffektschritt + 1]);
+
+  //  RefreshTreeView;
+  //  Treeview1.Select(Treeview1.Items[aktuellereffekt].Item[aktuellereffektschritt]);
+  checkbuttons;
+end;
+
+procedure Teffektsequenzer.deleteeffectbtnClick(Sender: TObject);
+var
+  i, k: integer;
+  oldindex: integer;
+begin
+  oldindex := -1;
+  if (Treeview1.Items.Count > 0) and (Treeview1.SelectionCount > 0) then
+  begin
+    if (Treeview1.Selected.Parent.Index > -1) then // Sublevel
+    begin
+      oldindex := Treeview1.Selected.Parent.Index - 1;
+      if (length(mainform.Effektsequenzereffekte) > 1) and (Treeview1.Selected.Parent.Index < length(mainform.Effektsequenzereffekte) - 1) then
+        for i := Treeview1.Selected.Parent.Index to length(mainform.Effektsequenzereffekte) - 2 do
+        begin
+          mainform.Effektsequenzereffekte[i].Name  := mainform.Effektsequenzereffekte[i + 1].Name;
+          mainform.Effektsequenzereffekte[i].Beschreibung := mainform.Effektsequenzereffekte[i + 1].Beschreibung;
+          mainform.Effektsequenzereffekte[i].modus := mainform.Effektsequenzereffekte[i + 1].modus;
+          setlength(mainform.Effektsequenzereffekte[i].Effektschritte, length(mainform.Effektsequenzereffekte[i + 1].Effektschritte));
+          for k := 0 to length(mainform.Effektsequenzereffekte[i + 1].effektschritte) - 1 do
+            mainform.Effektsequenzereffekte[i].effektschritte[k] := mainform.Effektsequenzereffekte[i + 1].effektschritte[k];
+        end;
+      setlength(mainform.Effektsequenzereffekte, length(mainform.Effektsequenzereffekte) - 1);
+    end else if (Treeview1.Selected.Index > -1) then // Toplevel
+    begin
+      oldindex := Treeview1.Selected.Index - 1;
+      if (length(mainform.Effektsequenzereffekte) > 1) and (Treeview1.Selected.Index < length(mainform.Effektsequenzereffekte) - 1) then
+        for i := Treeview1.Selected.Index to length(mainform.Effektsequenzereffekte) - 2 do
+        begin
+          mainform.Effektsequenzereffekte[i].Name  := mainform.Effektsequenzereffekte[i + 1].Name;
+          mainform.Effektsequenzereffekte[i].Beschreibung := mainform.Effektsequenzereffekte[i + 1].Beschreibung;
+          mainform.Effektsequenzereffekte[i].modus := mainform.Effektsequenzereffekte[i + 1].modus;
+          setlength(mainform.Effektsequenzereffekte[i].Effektschritte, length(mainform.Effektsequenzereffekte[i + 1].Effektschritte));
+          for k := 0 to length(mainform.Effektsequenzereffekte[i + 1].effektschritte) - 1 do
+            mainform.Effektsequenzereffekte[i].effektschritte[k] := mainform.Effektsequenzereffekte[i + 1].effektschritte[k];
+        end;
+      setlength(mainform.Effektsequenzereffekte, length(mainform.Effektsequenzereffekte) - 1);
+    end;
+    RefreshTreeView;
+    if oldindex > -1 then
+      for i := 0 to Treeview1.Items.Count - 1 do
+        if Treeview1.Items[i].Index = oldindex then
+          Treeview1.Select(Treeview1.Items[i]);
+    checkbuttons;
+  end;
+end;
+
+procedure Teffektsequenzer.deletestepbtnClick(Sender: TObject);
+var
+  i: integer;
+  oldindex: integer;
+  oldparentindex: integer;
+begin
+  oldindex := Treeview1.Selected.Index - 1;
+  oldparentindex := Treeview1.Selected.Parent.Index;
+  mainform.AktuellerEffekt[TreeView1.Selected.Parent.Index].Aktiv := False;
+  if length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte) > 1 then
+    for i := Treeview1.Selected.Index to length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte) - 2 do
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[i] := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[i + 1];
+  setlength(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte, length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte) - 1);
+  deletestepbtn.Enabled := False;
+  RefreshTreeView;
+  if oldindex > -1 then
+  begin
+    for i := 0 to Treeview1.Items.Count - 1 do
+      if Treeview1.Items[i].Index = oldindex then
+        Treeview1.Select(Treeview1.Items[i]);
+  end else if oldparentindex > -1 then
+  begin
+    for i := 0 to Treeview1.Items.Count - 1 do
+      if Treeview1.Items[i].Index = oldparentindex then
+        Treeview1.Select(Treeview1.Items[i]);
+  end;
+  checkbuttons;
+end;
+
+procedure Teffektsequenzer.checkbuttons;
+begin
+  if (length(mainform.Effektsequenzereffekte) > 0) then
+  begin
+    if (Treeview1.SelectionCount > 0) then
+    begin
+      deleteeffectbtn.Enabled := True;
+      Button5.Enabled  := True;
+      Button2.Enabled  := True;
+      Button4.Enabled  := True;
+      Button6.Enabled  := True;
+      Button10.Enabled := True;
+
+      intensity.Enabled := True;
+      speed.Enabled := True;
+      groupbox3.Enabled := True;
+
+      if (Treeview1.Selected.Parent.Index > -1) then // wenn innerhalb der Unterobjekte
+      begin
+        if length(mainform.Effektsequenzereffekte) > 0 then
+        begin
+          if (length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte) > 1) and (Treeview1.Selected.Index > 0) then
+            movestepupbtn.Enabled := True
+          else
+            movestepupbtn.Enabled := False;
+
+          if (length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte) > 1) and (Treeview1.Selected.Index < length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte) - 1) then
+            movestepdownbtn.Enabled := True
+          else
+            movestepdownbtn.Enabled := False;
+
+          if Treeview1.Selected.Index < length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte) then
+            deletestepbtn.Enabled := True
+          else
+            deletestepbtn.Enabled := False;
+        end;
+
+        deleteeffectbtn.Enabled := True;
+        EditBtn.Enabled := True;
+      end else if (Treeview1.Selected.Index > -1) and (Treeview1.Selected.Parent.Index = -1) then // wenn Toplevel
+      begin
+        movestepupbtn.Enabled := False;
+        movestepdownbtn.Enabled := False;
+        deletestepbtn.Enabled := False;
+        deleteeffectbtn.Enabled := True;
+      end else
+      begin
+        deleteeffectbtn.Enabled := False;
+      end;
+    end else
+    begin
+      deleteeffectbtn.Enabled := False;
+      Button5.Enabled := False;
+      intensity.Enabled := False;
+      speed.Enabled := False;
+      groupbox3.Enabled := False;
+      EditBtn.Enabled := False;
+      deletestepbtn.Enabled := False;
+
+      Button2.Enabled  := False;
+      Button4.Enabled  := False;
+      Button6.Enabled  := False;
+      Button10.Enabled := False;
+    end;
+  end else
+  begin // keine Elemente mehr im TreeView
+    deleteeffectbtn.Enabled := False;
+    Button5.Enabled := False;
+    intensity.Enabled := False;
+    speed.Enabled := False;
+    groupbox3.Enabled := False;
+    EditBtn.Enabled := False;
+    deletestepbtn.Enabled := False;
+
+    Button2.Enabled  := False;
+    Button4.Enabled  := False;
+    Button6.Enabled  := False;
+    Button10.Enabled := False;
+  end;
+end;
+
+procedure Teffektsequenzer.Button2Click(Sender: TObject);
+begin
+  if (Treeview1.SelectionCount > 0) then
+    if (Treeview1.Selected.Parent.Index > -1) then // Sublevel
+    begin
+      if length(mainform.Effektsequenzereffekte) > 0 then
+      begin
+        mainform.StartEffekt(mainform.effektsequenzereffekte[Treeview1.Selected.Parent.Index].ID);
+      end;
+    end else if (Treeview1.Selected.Index > -1) then // Toplevel
+    begin
+      if length(mainform.Effektsequenzereffekte) > 0 then
+      begin
+        mainform.StartEffekt(mainform.effektsequenzereffekte[Treeview1.Selected.Index].ID);
+      end;
+    end;
+  TreeView1.Refresh;
+end;
+
+procedure Teffektsequenzer.Button4Click(Sender: TObject);
+begin
+  if (Treeview1.SelectionCount > 0) then
+    if (Treeview1.Selected.Parent.Index > -1) then // Sublevel
+    begin
+      mainform.stopeffekt(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].ID);
+{
+    if length(mainform.Effektsequenzereffekte)>0 then
+    begin
+//      mainform.AktuellerEffekt[Treeview1.Selected.Parent.Index].Aktiv:=false;
+      mainform.StopScene(mainform.AktuellerEffekt[Treeview1.Selected.Parent.Index].LastScene);
+    end;
+}
+    end else if (Treeview1.Selected.Index > -1) then // Toplevel
+    begin
+      mainform.stopeffekt(mainform.Effektsequenzereffekte[Treeview1.Selected.Index].ID);
+{
+    if length(mainform.Effektsequenzereffekte)>0 then
+    begin
+//      mainform.AktuellerEffekt[Treeview1.Selected.Index].Aktiv:=false;
+      mainform.StopScene(mainform.AktuellerEffekt[Treeview1.Selected.Index].LastScene);
+    end;
+}
+    end;
+  TreeView1.Refresh;
+end;
+
+procedure Teffektsequenzer.Edit5KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if (Treeview1.Selected.Parent.Index > -1) then
+  begin
+    mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Name := edit5.Text;
+    Treeview1.Selected.Text := edit5.Text;
+  end;
+end;
+
+procedure Teffektsequenzer.Edit6KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if (Treeview1.Selected.Parent.Index > -1) then
+  begin
+    mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].beschreibung := edit6.Text;
+  end;
+end;
+
+procedure Teffektsequenzer.Edit1KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if (Treeview1.Selected.Parent.Index > -1) then
+  begin
+    mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Name := edit1.Text;
+    Treeview1.Selected.Text := edit1.Text;
+  end else
+  begin
+    mainform.Effektsequenzereffekte[Treeview1.Selected.Index].Name := edit1.Text;
+    Treeview1.Selected.Text := edit1.Text;
+  end;
+end;
+
+procedure Teffektsequenzer.Edit2KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if (Treeview1.Selected.Parent.Index > -1) then
+  begin
+    mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Beschreibung := edit2.Text;
+  end else
+  begin
+    mainform.Effektsequenzereffekte[Treeview1.Selected.Index].Beschreibung := edit2.Text;
+  end;
+end;
+
+procedure Teffektsequenzer.Edit7KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if key = vk_return then
+  begin
+    if StrToInt(Edit7.Text) = 0 then
+      Edit7.Text := '1';
+
+    if Sender = Edit7 then
+    begin
+      if (Treeview1.Selected.Parent.Index > -1) then
+      begin
+        mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].AnzahlderDurchlaufe := StrToInt(Edit7.Text);
+      end else
+      begin
+        mainform.Effektsequenzereffekte[Treeview1.Selected.Index].AnzahlderDurchlaufe := StrToInt(Edit7.Text);
+      end;
+    end;
+  end;
+end;
+
+procedure Teffektsequenzer.Edit7Change(Sender: TObject);
+var
+  s: string;
+  i: integer;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  mainform.input_number_minus(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+end;
+
+procedure Teffektsequenzer.Button10Click(Sender: TObject);
+begin
+  if (Treeview1.SelectionCount > 0) then
+    if (Treeview1.Selected.Parent.Index > -1) then // Sublevel
+    begin
+      if length(mainform.Effektsequenzereffekte) > 0 then
+      begin
+        mainform.EffektSchaltvorgang(Treeview1.Selected.Parent.Index, Sender);
+      end;
+    end else if (Treeview1.Selected.Index > -1) then // Toplevel
+    begin
+      if length(mainform.Effektsequenzereffekte) > 0 then
+      begin
+        mainform.EffektSchaltvorgang(Treeview1.Selected.Index, Sender);
+      end;
+    end;
+  TreeView1.Refresh;
+end;
+
+procedure Teffektsequenzer.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  MSGSave;
+end;
+
+procedure Teffektsequenzer.FormHide(Sender: TObject);
+var
+  LReg: TRegistry;
+begin
+  if not mainform.shutdown then
+  begin
+    LReg := TRegistry.Create;
+    LReg.RootKey := HKEY_CURRENT_USER;
+
+    if LReg.OpenKey('Software', True) then
+    begin
+      if not LReg.KeyExists('PHOENIXstudios') then
+        LReg.CreateKey('PHOENIXstudios');
+      if LReg.OpenKey('PHOENIXstudios', True) then
+      begin
+        if not LReg.KeyExists('PC_DIMMER') then
+          LReg.CreateKey('PC_DIMMER');
+        if LReg.OpenKey('PC_DIMMER', True) then
+        begin
+          LReg.WriteBool('Showing Effektsequenzer', False);
+        end;
+      end;
+    end;
+    LReg.CloseKey;
+  end;
+end;
+
+procedure Teffektsequenzer.TreeView1AdvancedCustomDrawItem(Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState; Stage: TCustomDrawStage; var PaintImages, DefaultDraw: boolean);
+begin
+  if Treeview1.Items.Count > 0 then
+    if Node.HasChildren and (Node.Parent.Index = -1) then
+    begin // Toplevel
+      if mainform.AktuellerEffekt[Node.Index].Aktiv then
+      begin
+        Sender.Canvas.Font.Style := [fsBold];
+        Sender.Canvas.Font.Color := clGreen;
+      end else
+      begin
+        Sender.Canvas.Font.Style := [];
+        Sender.Canvas.Font.Color := clBlack;
+      end;
+    end else if (not Node.HasChildren) and (Node.Parent.Index > -1) then
+    begin // Sublevel
+      if mainform.AktuellerEffekt[Node.Parent.Index].AktuellerSchritt = Node.Index then
+      begin
+        // Aktuelles Element
+        Sender.Canvas.Font.Style := [fsBold];
+        //      Sender.Canvas.Font.Color:=clRed;
+      end else
+      begin
+        Sender.Canvas.Font.Style := [];
+        Sender.Canvas.Font.Color := clBlack;
+      end;
+    end;
+end;
+
+procedure Teffektsequenzer.RefreshTreeView;
+var
+  i, k: integer;
+  TempNode: TTreeNode;
+  expanded: array of boolean;
+begin
+  LockWindow(TreeView1.Handle);
+
+  setlength(expanded, TreeView1.Items.Count);
+  for i := 0 to TreeView1.Items.Count - 1 do
+    expanded[i] := TreeView1.Items.Item[i].Expanded;
+
+  TreeView1.Items.Clear;
+
+  for i := 0 to length(mainform.Effektsequenzereffekte) - 1 do
+  begin
+    TempNode := TreeView1.Items.Add(nil, mainform.Effektsequenzereffekte[i].Name);
+    for k := 0 to length(mainform.Effektsequenzereffekte[i].Effektschritte) - 1 do
+    begin
+      TreeView1.Items.AddChild(TempNode, mainform.Effektsequenzereffekte[i].Effektschritte[k].Name);
+    end;
+  end;
+
+  setlength(expanded, TreeView1.Items.Count);
+  for i := 0 to TreeView1.Items.Count - 1 do
+    if expanded[i] then
+      TreeView1.Items.Item[i].Expanded := True
+    else
+      TreeView1.Items.Item[i].Expanded := False;
+
+  UnLockWindow(TreeView1.Handle);
+end;
+
+procedure Teffektsequenzer.EditBtnClick(Sender: TObject);
+var
+  i, j, t, h, min, s, ms: integer;
+begin
+  if Sender = EditBtn then
+  begin
+    if (Treeview1.Selected.Parent.Index > -1) and (Treeview1.Selected.Index > -1) then
+    begin
+      if mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Typ = 1 then
+      begin
+        // Szene aus Verwaltung editieren
+        setlength(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs, 1);
+        setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) + 1);
+        szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1] := Tszenenverwaltungform.Create(self);
+        szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].multiselect := True;
+
+        szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].position := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs[0];
+
+{
+  setlength(szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].positionen,length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs));
+  for i:=0 to length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs)-1 do
+  begin
+    szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].positionen[i]:=mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs[i];
+  end;
+}
+
+        if szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].ShowModal = mrOk then
+        begin
+          //    setlength(SzenenablaufArray[SzenenablaufListe.itemindex],length(SzenenablaufArray[SzenenablaufListe.itemindex])+1);
+          case szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].TreeView1.Selected.Parent.Index of
+            0:
+            begin
+              // Einfache Szene
+              setlength(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs, 1);
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs[0] := mainform.EinfacheSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Name := mainform.EinfacheSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].beschreibung := mainform.EinfacheSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].beschreibung;
+            end;
+            1:
+            begin
+              // Geräteszene
+              setlength(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs, 1);
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs[0] := mainform.Devicescenes[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Name := mainform.Devicescenes[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].beschreibung := mainform.Devicescenes[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].beschreibung;
+            end;
+            2:
+            begin
+              // Audioszene
+              setlength(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs, 1);
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs[0] := mainform.AudioSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Name := mainform.AudioSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].beschreibung := mainform.AudioSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].beschreibung;
+            end;
+            3:
+            begin
+              // Bewegungsszene
+              setlength(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs, 1);
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs[0] := mainform.BewegungsSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Name := mainform.BewegungsSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].beschreibung := mainform.BewegungsSzenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].beschreibung;
+            end;
+            4:
+            begin
+              // Befehl
+              setlength(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs, 1);
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs[0] := mainform.Befehle[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Name := mainform.Befehle[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].beschreibung := mainform.Befehle[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].beschreibung;
+            end;
+            5:
+            begin
+              // Kompositionsszene
+              setlength(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs, 1);
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs[0] := mainform.Kompositionsszenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].ID;
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Name := mainform.Kompositionsszenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].Name;
+              mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].beschreibung := mainform.Kompositionsszenen[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selected.Index].beschreibung;
+            end;
+          end;
+
+          szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Free;
+          setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) - 1);
+        end;
+      end else if mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Typ = 0 then
+      begin
+        // Direktszene bearbeiten
+
+        insscenedlg.Szenenname.Text := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Name;
+
+        // Kanalnamen in Dialogfeld schreiben
+        for j := 1 to mainform.MaximumChan do
+          insscenedlg.active[j] := False;
+
+        insscenedlg.StringGrid1.RowCount := mainform.lastchan + 1;
+
+        for j := 1 to mainform.lastchan do
+        begin
+          insscenedlg.active[j] := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].kanalaktiv[j];
+          insscenedlg.StringGrid1.Cells[1, j] := IntToStr(j);
+          insscenedlg.StringGrid1.Cells[2, j] := mainform.Data.Names[j];
+          insscenedlg.StringGrid1.Cells[3, j] := IntToStr(round((mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].kanal[j]) * 100 / 255));
+        end;
+
+        // Fadezeit in Dialogfeld schreiben
+        t := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].einblendzeit;
+
+        h  := t div 3600000;
+        t  := t mod 3600000;
+        min := t div 60000;
+        t  := t mod 60000;
+        s  := t div 1000;
+        t  := t mod 1000;
+        ms := t;
+
+        insscenedlg.scenefade_time_h.Text := IntToStr(h);
+        insscenedlg.scenefade_time_min.Text := IntToStr(min);
+        insscenedlg.scenefade_time.Text := IntToStr(s);
+        insscenedlg.scenefade_time_msec.Text := IntToStr(ms);
+
+        insscenedlg.Caption := 'Effekt bearbeiten';
+        if Insscenedlg.Showmodal = mrOk then
+        begin
+          // Fade-Endwerte in Speicher schreiben
+          for j := 1 to mainform.lastchan do
+          begin
+            mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].kanal[j] := round((StrToInt(insscenedlg.StringGrid1.Cells[3, j])) * 255 / 100);
+            mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].kanalaktiv[j] := insscenedlg.active[j];
+          end;
+
+          h  := StrToInt(insscenedlg.scenefade_time_h.Text);
+          min := StrToInt(insscenedlg.scenefade_time_min.Text);
+          s  := StrToInt(insscenedlg.scenefade_time.Text);
+          ms := StrToInt(insscenedlg.scenefade_time_msec.Text);
+
+          t := (h * 3600) + (min * 60) + s;
+          t := t * 1000;
+          t := t + ms;
+
+          mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].einblendzeit := t;
+        end;
+      end else if mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Typ = 2 then
+      begin
+        // Effekt bearbeiten
+        setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) + 1);
+        szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1] := Tszenenverwaltungform.Create(self);
+
+        szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Effektmodus := True;
+        szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].multiselect := True;
+        szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].ActualEffekt := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].ID;
+        setlength(szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].positionen, length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs));
+        for i := 0 to length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs) - 1 do
+        begin
+          szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].positionen[i] := mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs[i];
+        end;
+
+        if szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].ShowModal = mrOk then
+        begin
+          case szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].TreeView1.Selected.Parent.Index of
+            0:
+            begin
+              // Effekt
+              setlength(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs, 0);
+              for i := 0 to szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.SelectionCount - 1 do
+              begin
+                if not (GUIDtoString(mainform.Effektsequenzereffekte[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selections[i].Index].ID) = GUIDtoString(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].ID)) then
+                begin
+                  setlength(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs, length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs) + 1);
+                  mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs[length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].IDs) - 1] := mainform.Effektsequenzereffekte[szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Treeview1.Selections[i].Index].ID;
+                end else
+                begin
+                  ShowMessage('Kein Effektschritt darf den eigenen Effekt wiederaufrufen, da sonst eine Endlosschleife erzeugt wird!');
+                end;
+              end;
+            end;
+          end;
+        end;
+
+        szenenverwaltung_formarray[length(szenenverwaltung_formarray) - 1].Free;
+        setlength(szenenverwaltung_formarray, length(szenenverwaltung_formarray) - 1);
+      end;
+    end;
+  end;
+end;
+
+procedure Teffektsequenzer.einblendzeit_hChange(Sender: TObject);
+var
+  s: string;
+  i: integer;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  mainform.input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+end;
+
+procedure Teffektsequenzer.einblendzeit_hKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if key = vk_return then
+    if (Treeview1.Selected.Parent.Index > -1) then
+    begin
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Einblendzeit := StrToInt(einblendzeit_h.Text) * 60 * 60 * 1000 + StrToInt(einblendzeit_min.Text) * 60 * 1000 + StrToInt(einblendzeit_s.Text) * 1000 + StrToInt(einblendzeit_ms.Text);
+    end;
+end;
+
+procedure Teffektsequenzer.wartezeit_hKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if key = vk_return then
+    if (Treeview1.Selected.Parent.Index > -1) then
+    begin
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Wartezeit := StrToInt(wartezeit_h.Text) * 60 * 60 * 1000 + StrToInt(wartezeit_min.Text) * 60 * 1000 + StrToInt(wartezeit_s.Text) * 1000 + StrToInt(wartezeit_ms.Text);
+      ;
+      if mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].einblendzeit + mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].wartezeit < 10 then
+        wartezeit_ms.Text := '10';
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Wartezeit := StrToInt(wartezeit_h.Text) * 60 * 60 * 1000 + StrToInt(wartezeit_min.Text) * 60 * 1000 + StrToInt(wartezeit_s.Text) * 1000 + StrToInt(wartezeit_ms.Text);
+      ;
+    end;
+end;
+
+procedure Teffektsequenzer.CheckBox1MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  if (Treeview1.Selected.Parent.Index > -1) then
+  begin
+    mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Repeating := CheckBox1.Checked;
+  end else
+  begin
+    mainform.Effektsequenzereffekte[Treeview1.Selected.Index].Repeating := CheckBox1.Checked;
+  end;
+end;
+
+procedure Teffektsequenzer.intensityChange(Sender: TObject);
+begin
+  if Sender = intensity then
+  begin
+    if (Treeview1.Selected.Parent.Index > -1) then
+    begin
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].intensitaet := intensity.position;
+    end else
+    begin
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Index].intensitaet := intensity.Position;
+    end;
+  end;
+  label13.Caption := levelstr(intensity.Position, maxres);
+end;
+
+procedure Teffektsequenzer.speedChange(Sender: TObject);
+begin
+  if Sender = speed then
+  begin
+    if (Treeview1.Selected.Parent.Index > -1) then
+    begin
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].speed := speed.position;
+    end else
+    begin
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Index].speed := speed.Position;
+    end;
+  end;
+  label14.Caption := IntToStr(speed.Position - 128);
+end;
+
+procedure Teffektsequenzer.Button8Click(Sender: TObject);
+var
+  i: integer;
+begin
+  if (Treeview1.Selected.Parent.Index > -1) then
+  begin
+    for i := 0 to length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.index].Effektschritte) - 1 do
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.index].Effektschritte[i].einblendzeit := StrToInt(einblendzeit_h.Text) * 60 * 60 * 1000 + StrToInt(einblendzeit_min.Text) * 60 * 1000 + StrToInt(einblendzeit_s.Text) * 1000 + StrToInt(einblendzeit_ms.Text);
+  end else
+  begin
+    for i := 0 to length(mainform.Effektsequenzereffekte[Treeview1.Selected.index].Effektschritte) - 1 do
+      mainform.Effektsequenzereffekte[Treeview1.Selected.index].Effektschritte[i].einblendzeit := StrToInt(einblendzeit_h.Text) * 60 * 60 * 1000 + StrToInt(einblendzeit_min.Text) * 60 * 1000 + StrToInt(einblendzeit_s.Text) * 1000 + StrToInt(einblendzeit_ms.Text);
+  end;
+end;
+
+procedure Teffektsequenzer.Button9Click(Sender: TObject);
+var
+  i: integer;
+begin
+  if (Treeview1.Selected.Parent.Index > -1) then
+  begin
+    for i := 0 to length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.index].Effektschritte) - 1 do
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.index].Effektschritte[i].wartezeit := StrToInt(wartezeit_h.Text) * 60 * 60 * 1000 + StrToInt(wartezeit_min.Text) * 60 * 1000 + StrToInt(wartezeit_s.Text) * 1000 + StrToInt(wartezeit_ms.Text);
+    ;
+  end else
+  begin
+    for i := 0 to length(mainform.Effektsequenzereffekte[Treeview1.Selected.index].Effektschritte) - 1 do
+      mainform.Effektsequenzereffekte[Treeview1.Selected.index].Effektschritte[i].wartezeit := StrToInt(wartezeit_h.Text) * 60 * 60 * 1000 + StrToInt(wartezeit_min.Text) * 60 * 1000 + StrToInt(wartezeit_s.Text) * 1000 + StrToInt(wartezeit_ms.Text);
+    ;
+  end;
+end;
+
+procedure Teffektsequenzer.CreateParams(var Params: TCreateParams);
+begin
+
+  inherited;// CreateParams(Params);
+  Params.ExStyle := WS_EX_APPWINDOW; // Params.ExStyle sorgt dafür, dass das Form einen eigenen Taskbareintrag erhält
+  effektsequenzer.ParentWindow := GetDesktopWindow;
+  //  Params.Caption:=PChar(geraetesteuerung.Caption);
+  //  Params.WndParent:=GetDesktopWindow; // Params.WndParent sorgt dafür, dass das Fenster zum Desktop und nicht zur Application gehört
+
+{
+  inherited CreateParams(Params);
+  Params.WndParent := GetDesktopWindow;
+}
+end;
+
+procedure Teffektsequenzer.Button11Click(Sender: TObject);
+begin
+  if speed.Enabled then
+  begin
+    speed.Position := 128;
+
+    if (Treeview1.Selected.Parent.Index > -1) then
+    begin
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].speed := speed.position;
+    end else
+    begin
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Index].speed := speed.Position;
+    end;
+  end;
+end;
+
+procedure Teffektsequenzer.TreeView1DblClick(Sender: TObject);
+begin
+  if EditBtn.Enabled then
+    EditBtn.Click;
+end;
+
+procedure Teffektsequenzer.TreeView1Click(Sender: TObject);
+begin
+  checkbuttons;
+end;
+
+procedure Teffektsequenzer.Button6Click(Sender: TObject);
+var
+  i: integer;
+begin
+  if Treeview1.SelectionCount > 0 then
+    if (Treeview1.Selected.Parent.Index > -1) and (Treeview1.Selected.Index > -1) then // Sublevel
+    begin
+      if length(mainform.Effektsequenzereffekte) > 0 then
+      begin
+        for i := 0 to length(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].effektschritte[mainform.AktuellerEffekt[Treeview1.Selected.Parent.Index].AktuellerSchritt].IDs) - 1 do
+          mainform.StopScene(mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].effektschritte[mainform.AktuellerEffekt[Treeview1.Selected.Parent.Index].AktuellerSchritt].IDs[i]);
+      end;
+    end;
+  TreeView1.Refresh;
+end;
+
+procedure Teffektsequenzer.MSGopen;
+begin
+  RefreshTreeView;
+  Checkbuttons;
+end;
+
+procedure Teffektsequenzer.MSGSave;
+var
+  LReg: TRegistry;
+begin
+  LReg := TRegistry.Create;
+  LReg.RootKey := HKEY_CURRENT_USER;
+
+  if LReg.OpenKey('Software', True) then
+  begin
+    if not LReg.KeyExists('PHOENIXstudios') then
+      LReg.CreateKey('PHOENIXstudios');
+    if LReg.OpenKey('PHOENIXstudios', True) then
+    begin
+      if not LReg.KeyExists('PC_DIMMER') then
+        LReg.CreateKey('PC_DIMMER');
+      if LReg.OpenKey('PC_DIMMER', True) then
+      begin
+        if not LReg.KeyExists('Effektsequenzer') then
+          LReg.CreateKey('Effektsequenzer');
+        if LReg.OpenKey('Effektsequenzer', True) then
+        begin
+          LReg.WriteInteger('PosX', effektsequenzer.Left);
+          LReg.WriteInteger('PosY', effektsequenzer.Top);
+        end;
+      end;
+    end;
+  end;
+  LReg.CloseKey;
+end;
+
+procedure Teffektsequenzer.NewEffectsBtnClick(Sender: TObject);
+begin
+  if messagedlg('Möchten Sie wirklich alle Effekte zurücksetzen?', mtWarning,
+    [mbYes, mbNo], 0) = mrYes then
+    NewFile;
+end;
+
+procedure Teffektsequenzer.OpenEffectsBtnClick(Sender: TObject);
+begin
+  case mainform.mymessagedlg('Wie sollen die Effekte aus der Datei geladen werden?', mtConfirmation, [mbYes, mbAll, mbCancel], ['&Hinzufügen', '&Ersetzen', 'Ab&brechen']) of
+    mrYes:
+      if OpenDialog1.Execute then
+        AddFile(OpenDialog1.filename);
+    mrCancel:
+      if OpenDialog1.Execute then
+        OpenFile(OpenDialog1.filename);
+  end;
+end;
+
+procedure Teffektsequenzer.SaveEffectsBtnClick(Sender: TObject);
+begin
+  if SaveDialog1.Execute then
+  begin
+    SaveFile(SaveDialog1.FileName);
+  end;
+end;
+
+procedure Teffektsequenzer.AddFile(filename: string);
+var
+  i, k, Count, Count2, startposition: integer;
+begin
+  FileStream := TFileStream.Create(FileName, fmOpenRead);
+
+  startposition := length(mainform.Effektsequenzereffekte);
+  Filestream.ReadBuffer(Count, sizeof(Count));
+  setlength(mainform.Effektsequenzereffekte, length(mainform.Effektsequenzereffekte) + Count);
+  setlength(mainform.AktuellerEffekt, length(mainform.Effektsequenzereffekte) + Count);
+  for i := startposition to length(mainform.Effektsequenzereffekte) - 1 do
+  begin
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].ID, sizeof(mainform.Effektsequenzereffekte[i].ID));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Name, sizeof(mainform.Effektsequenzereffekte[i].Name));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Beschreibung, sizeof(mainform.Effektsequenzereffekte[i].Beschreibung));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].AnzahlderDurchlaufe, sizeof(mainform.Effektsequenzereffekte[i].AnzahlderDurchlaufe));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].modus, sizeof(mainform.Effektsequenzereffekte[i].modus));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Repeating, sizeof(mainform.Effektsequenzereffekte[i].Repeating));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].intensitaet, sizeof(mainform.Effektsequenzereffekte[i].intensitaet));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].speed, sizeof(mainform.Effektsequenzereffekte[i].speed));
+
+    Filestream.ReadBuffer(Count2, sizeof(Count2));
+    setlength(mainform.Effektsequenzereffekte[i].effektschritte, Count2);
+    for k := 0 to Count2 - 1 do
+    begin
+      Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].effektschritte[k], sizeof(mainform.Effektsequenzereffekte[i].effektschritte[k]));
+    end;
+  end;
+  FileStream.Free;
+
+  RefreshTreeView;
+  Checkbuttons;
+end;
+
+procedure Teffektsequenzer.OpenFile(filename: string);
+var
+  i, k, Count, Count2: integer;
+begin
+  FileStream := TFileStream.Create(FileName, fmOpenRead);
+
+  Filestream.ReadBuffer(Count, sizeof(Count));
+  setlength(mainform.Effektsequenzereffekte, Count);
+  setlength(mainform.AktuellerEffekt, Count);
+  for i := 0 to Count - 1 do
+  begin
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].ID, sizeof(mainform.Effektsequenzereffekte[i].ID));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Name, sizeof(mainform.Effektsequenzereffekte[i].Name));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Beschreibung, sizeof(mainform.Effektsequenzereffekte[i].Beschreibung));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].AnzahlderDurchlaufe, sizeof(mainform.Effektsequenzereffekte[i].AnzahlderDurchlaufe));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].modus, sizeof(mainform.Effektsequenzereffekte[i].modus));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Repeating, sizeof(mainform.Effektsequenzereffekte[i].Repeating));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].intensitaet, sizeof(mainform.Effektsequenzereffekte[i].intensitaet));
+    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].speed, sizeof(mainform.Effektsequenzereffekte[i].speed));
+
+    Filestream.ReadBuffer(Count2, sizeof(Count2));
+    setlength(mainform.Effektsequenzereffekte[i].effektschritte, Count2);
+    for k := 0 to Count2 - 1 do
+    begin
+      Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].effektschritte[k], sizeof(mainform.Effektsequenzereffekte[i].effektschritte[k]));
+    end;
+  end;
+  FileStream.Free;
+
+  RefreshTreeView;
+  Checkbuttons;
+end;
+
+procedure Teffektsequenzer.SaveFile(filename: string);
+var
+  i, k, Count, Count2: integer;
+begin
+  FileStream := TFileStream.Create(FileName, fmCreate);
+
+  Count := length(mainform.Effektsequenzereffekte);
+  Filestream.WriteBuffer(Count, sizeof(Count));
+  for i := 0 to Count - 1 do
+  begin
+    Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].ID, sizeof(mainform.Effektsequenzereffekte[i].ID));
+    Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].Name, sizeof(mainform.Effektsequenzereffekte[i].Name));
+    Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].Beschreibung, sizeof(mainform.Effektsequenzereffekte[i].Beschreibung));
+    Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].AnzahlderDurchlaufe, sizeof(mainform.Effektsequenzereffekte[i].AnzahlderDurchlaufe));
+    Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].modus, sizeof(mainform.Effektsequenzereffekte[i].modus));
+    Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].Repeating, sizeof(mainform.Effektsequenzereffekte[i].Repeating));
+    Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].intensitaet, sizeof(mainform.Effektsequenzereffekte[i].intensitaet));
+    Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].speed, sizeof(mainform.Effektsequenzereffekte[i].speed));
+
+    Count2 := length(mainform.Effektsequenzereffekte[i].effektschritte);
+    Filestream.WriteBuffer(Count2, sizeof(Count2));
+    for k := 0 to Count2 - 1 do
+    begin
+      Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].effektschritte[k], sizeof(mainform.Effektsequenzereffekte[i].effektschritte[k]));
+    end;
+  end;
+
+  FileStream.Free;
+end;
+
+procedure Teffektsequenzer.NewFile;
+var
+  i: integer;
+begin
+  for i := 0 to length(mainform.effektsequenzereffekte) - 1 do
+    mainform.AktuellerEffekt[i].Aktiv := False;
+
+  TreeView1.Items.Clear;
+
+  deleteeffectbtn.Enabled := False;
+  Button5.Enabled := False;
+  intensity.Enabled := False;
+  speed.Enabled := False;
+  groupbox3.Enabled := False;
+  EditBtn.Enabled := False;
+  deletestepbtn.Enabled := False;
+
+  Button2.Enabled  := False;
+  Button4.Enabled  := False;
+  Button6.Enabled  := False;
+  Button10.Enabled := False;
+
+  setlength(mainform.effektsequenzereffekte, 0);
+  setlength(mainform.AktuellerEffekt, 0);
+
+  //  RefreshTreeView;
+  //  Checkbuttons;
+end;
+
+procedure Teffektsequenzer.Edit3Change(Sender: TObject);
+var
+  s: string;
+  i: integer;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  mainform.input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+end;
+
+procedure Teffektsequenzer.Edit3KeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if key = vk_return then
+    if (Treeview1.Selected.Parent.Index > -1) then
+    begin
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].AnzahlBeats := StrToInt(Edit3.Text);
+      if mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].AnzahlBeats < 1 then
+        Edit3.Text := '1';
+      mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].AnzahlBeats := StrToInt(Edit3.Text);
+    end;
+end;
+
+procedure Teffektsequenzer.CheckBox2MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  if (Treeview1.Selected.Parent.Index > -1) then
+    mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].ActivateTimecontrol := CheckBox2.Checked;
+end;
+
+procedure Teffektsequenzer.ComboBox2Select(Sender: TObject);
+begin
+  EditBtn.Enabled := True;
+
+  if (Treeview1.Selected.Parent.Index > -1) and (Treeview1.SelectionCount > 0) then
+  begin
+    case Combobox2.ItemIndex of
+      0: mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Typ := 3;
+      1: mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Typ := 0;
+      2: mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Typ := 1;
+      3: mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].Typ := 2;
+    end;
+  end;
+end;
+
+procedure Teffektsequenzer.CheckBox3MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  if (Treeview1.Selected.Parent.Index > -1) then
+    mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].Effektschritte[Treeview1.Selected.Index].DeactivateLastScene := CheckBox3.Checked;
+end;
+
+procedure Teffektsequenzer.CheckBox4MouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  if (Treeview1.Selected.Parent.Index > -1) then
+  begin
+    mainform.Effektsequenzereffekte[Treeview1.Selected.Parent.Index].startwithstepone := CheckBox4.Checked;
+  end else
+  begin
+    mainform.Effektsequenzereffekte[Treeview1.Selected.Index].startwithstepone := CheckBox4.Checked;
+  end;
+end;
+
+end.

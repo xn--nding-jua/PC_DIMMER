@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\microspot.png">
+ <information id="PC_DIMMER">
+ <name>Micro Spot LED (5-Kanal)</name>
+ <vendor>Showtec</vendor>
+ <author>Christian Nöding</author>
+ <description>Kleiner MovingHead im 5-Kanal-Modus</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Farben" fade="yes" type="color1"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Gobos" fade="yes" type="gobo1"/>
+ </channels>
+ <initvalues ch0="128" ch1="128" ch2="-1" ch3="-1" ch4="-1" />
+ <colors>
+  <color name="Geschlossen" value="0" valueend="7" r="0" g="0" b="0" />
+  <color name="Weiß" value="8" valueend="21" r="255" g="255" b="255" />
+  <color name="Rot" value="22" valueend="35" r="255" g="0" b="0" />
+  <color name="Grün" value="36" valueend="49" r="0" g="128" b="0" />
+  <color name="UV" value="50" valueend="63" r="128" g="0" b="128" />
+  <color name="Hellblau" value="64" valueend="77" r="166" g="202" b="240" />
+  <color name="Pink" value="78" valueend="91" r="255" g="128" b="192" />
+  <color name="Gelb" value="92" valueend="105" r="255" g="255" b="0" />
+  <color name="Magenta" value="106" valueend="119" r="255" g="0" b="255" />
+  <color name="Farbkorrektur 1" value="120" valueend="133" r="255" g="251" b="240" />
+  <color name="Hellgrün" value="134" valueend="147" r="0" g="255" b="0" />
+  <color name="Farbkorrektur 2" value="148" valueend="161" r="255" g="255" b="215" />
+  <color name="Farbkorrektur 3" value="162" valueend="189" r="255" g="255" b="174" />
+  <color name="Hellpink" value="190" valueend="203" r="255" g="166" b="255" />
+  <color name="Farbkorrektur 4" value="204" valueend="217" r="255" g="255" b="157" />
+  <color name="Farbkorrektur 5" value="218" valueend="231" r="255" g="255" b="117" />
+  <color name="Regenbogeneffekt" value="232" valueend="255" r="192" g="220" b="192" />
+ </colors>
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="255" MinValue="0" MaxValue="134" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="128" LeftMaxValue="255" OffValue="128" RightMinValue="128" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="450" height="332">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="90" left="10" height="230" width="230" />
+  <colorbox top="230" left="250" height="22" width="190" />
+  <dropdown name="gobobox" top="280" left="250" width="190" height="21" action="goboboxchange">
+   <item caption="Offen" value="0" picture="" />
+   <item caption="Blitze" value="0" picture="" />
+   <item caption="3D-Kreis" value="0" picture="" />
+   <item caption="Kleeblatt" value="0" picture="" />
+   <item caption="Kreisquirl" value="0" picture="" />
+   <item caption="Punkte" value="0" picture="" />
+   <item caption="Punkt-Kreis" value="0" picture="" />
+   <item caption="Quirl" value="0" picture="" />
+   <item caption="Punkt-Strich" value="0" picture="" />
+   <item caption="Netze" value="0" picture="" />
+  </dropdown>
+  <slider name="shutterslider" top="90" left="250" width="190" height="20" action="shuttersliderchange" startvalue="0" endvalue="134" default="0"/>
+  <slider name="shuttereffectslider" top="180" left="250" width="190" height="20" action="shuttereffectsliderchange" startvalue="135" endvalue="239" default="135"/>
+  <label name="Label1" top="70" left="250" width="37" height="13" caption="Shutter:"/>
+  <label name="Label2" top="160" left="250" width="70" height="13" caption="Shuttereffekte:"/>
+  <label name="Label3" top="210" left="250" width="30" height="13" caption="Farbe:"/>
+  <label name="Label4" top="260" left="250" width="34" height="13" caption="Gobos:"/>
+  <button name="Button1" top="120" left="250" width="90" height="30" action="shutteroffenbtn" caption="Shutter offen"/>
+  <button name="Button2" top="120" left="350" width="90" height="30" action="shutterclosebtn" caption="Shutter zu"/>
+ </form>
+ <code>
+  unit ShowtecMiniSpot;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorBoxChange;
+  procedure shuttersliderchange;
+  procedure shutteroffenbtn;
+  procedure shutterclosebtn;
+  procedure shuttereffectsliderchange;
+  procedure goboboxchange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+		wert:integer;
+		r,phi,temp:single;
+	begin
+		if not dontrefresh then
+		case channel of
+    	0..1:
+    	begin
+		if usemhcontrol.checked then
+			begin
+				// Moving-Head-Steuerung
+				temp:=get_channel('tilt')+(get_channel('tiltfine')/256);
+				case round(temp) of
+					0..127: r:=((127-temp)/127);
+					128..255: r:=((temp-128)/127);
+				end;
+				phi:=(get_channel('pan')+(get_channel('panfine')/256))/255*6.283185307179586476925286766559;	//(X/255)*PI
+				PositionXY.Left:=round(r*sin(phi)*(Fadenkreuz.Width/2)+(Fadenkreuz.Width/2)-(PositionXY.Width div 2));
+				PositionXY.Top:=round(r*cos(phi)*(Fadenkreuz.Height/2)+(Fadenkreuz.Height/2)-(PositionXY.Width div 2));
+			end else
+			begin
+				// Scanner-Steuerung
+				PositionXY.Left:=round(Fadenkreuz.Width * (get_channel('pan')+get_channel('panfine')/256)/255)-(PositionXY.Width div 2);
+				PositionXY.Top:=round(Fadenkreuz.Height * (get_channel('tilt')+get_channel('tiltfine')/256)/255)-(PositionXY.Height div 2);
+			end;
+		end;
+    	2:
+    	begin
+    		wert:=get_channel('shutter');
+    		case wert of
+    			0..134: shutterslider.position:=wert;
+    			135..239: shuttereffectslider.position:=wert;
+    		end;
+    	end;
+    	3:
+    	begin
+    		wert:=get_channel('color1');
+    		case wert of
+    			0..7: colorbox.itemindex:=0;
+    			8..21: colorbox.itemindex:=1;
+    			22..35: colorbox.itemindex:=2;
+    			36..49: colorbox.itemindex:=3;
+    			50..63: colorbox.itemindex:=4;
+    			64..77: colorbox.itemindex:=5;
+    			78..91: colorbox.itemindex:=6;
+    			92..105: colorbox.itemindex:=7;
+    			106..119: colorbox.itemindex:=8;
+    			120..133: colorbox.itemindex:=9;
+    			134..147: colorbox.itemindex:=10;
+    			148..161: colorbox.itemindex:=11;
+    			162..189: colorbox.itemindex:=12;
+    			190..203: colorbox.itemindex:=13;
+    			204..217: colorbox.itemindex:=14;
+    			218..231: colorbox.itemindex:=15;
+    			232..255: colorbox.itemindex:=16;
+    		end;
+    	end;
+    	4:
+    	begin
+    		wert:=get_channel('gobo1');
+    		gobobox.itemindex:=wert div 13;
+    	end;
+    end;
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  var
+	phi,r,x,y:single;
+	pan, tilt, panfine, tiltfine:single;
+  begin
+	if usemhcontrol.checked then
+	begin
+		// Moving-Head-Steuerung (Polarkoordinaten)
+		x:=((PositionXY.Left+(PositionXY.Width div 2)-(fadenkreuz.Width/2))/fadenkreuz.Width)*2;	//-1..0..1
+		y:=((PositionXY.Top+(PositionXY.Height div 2)-(fadenkreuz.Width/2))/fadenkreuz.Height)*2;	//-1..0..1
+		r:=sqrt(x*x+y*y);
+	
+		if (r>0) then
+		begin
+			if (y>=0) then
+				phi:=arccos(x/r)
+			else
+				phi:=6.283185307179586476925286766559-arccos(x/r);
+		end else
+			phi:=64;
+		
+		r:=128-((r/2)*255);
+		phi:=(phi/6.283185307179586476925286766559)*255;
+		if 64>=phi then
+			phi:=phi+191
+		else
+			phi:=phi-64;
+	
+		pan:=255-phi;
+		tilt:=255-r;
+	end else
+	begin
+		// Scannersteuerung (Kartesische Koordinaten)
+		pan:=((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255;
+		tilt:=((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255;
+	end;
+	
+	// Ausgabe
+	if panmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(255-pan),trunc(255-pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(255-pan)*255),trunc(frac(255-pan)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(pan),trunc(pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(pan)*255),trunc(frac(pan)*255),0);
+	end;
+	if tiltmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(255-tilt),trunc(255-tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(255-tilt)*255),trunc(frac(255-tilt)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(tilt),trunc(tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(tilt)*255),trunc(frac(tilt)*255),0);
+	end;
+  end;
+  procedure ColorBoxChange;
+  begin
+    dontrefresh:=true;
+		case colorbox.itemindex of
+			0: set_channel('color1',-1,0,0,0);
+			1: set_channel('color1',-1,8,0,0);
+			2: set_channel('color1',-1,22,0,0);
+			3: set_channel('color1',-1,36,0,0);
+			4: set_channel('color1',-1,50,0,0);
+			5: set_channel('color1',-1,64,0,0);
+			6: set_channel('color1',-1,78,0,0);
+			7: set_channel('color1',-1,92,0,0);
+			8: set_channel('color1',-1,106,0,0);
+			9: set_channel('color1',-1,120,0,0);
+			10: set_channel('color1',-1,134,0,0);
+			11: set_channel('color1',-1,148,0,0);
+			12: set_channel('color1',-1,162,0,0);
+			13: set_channel('color1',-1,190,0,0);
+			14: set_channel('color1',-1,204,0,0);
+			15: set_channel('color1',-1,218,0,0);
+			16: set_channel('color1',-1,232,0,0);
+		end;
+  end;
+  procedure shuttersliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,shutterslider.position,0,0);
+  end;
+  procedure shutteroffenbtn;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,255,0,0);
+  end;
+  procedure shutterclosebtn;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,0,0,0);
+  end;
+  procedure shuttereffectsliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,shuttereffectslider.position,0,0);
+  end;
+  procedure goboboxchange;
+  begin
+    dontrefresh:=true;
+    set_channel('gobo1',-1,gobobox.itemindex*13,0,0);
+  end;
+  end.
+ </code>
+</device>

@@ -1,0 +1,36 @@
+usbdmxsi.dll - Schnittstellenbeschreibung
+=========================================
+
+-----------
+Funktionen:
+-----------
+
+OpenInterface(DMXOutArray: PDMXArray; DMXInArray: PDMXArray; Mode: byte): DWORD;
+CloseInterface: DWORD;
+
+OpenInterface öffnet einen Link zum ersten angeschlossenen Interface im angegebenen Mode.
+DMXOutArray und DMXInArray sind Buffer von 512 Byte welche Zugriff auf die Ausgabe- bzw. Eingabedaten ermöglichen.
+CloseInterace schliesst den Link zum Interface.
+
+//Visual Basic Code Example
+
+//I created a simple dll-Version (usbdmxsi.dll) wich only provides the basic functions. This dll uses the original usbdmx.dll for interface access.
+//Simply call OpenInterface with the correct mode ('2' for DMX Out, '6' for DMX Out and DMX In, look at spec for details)
+//and the pointer to both DMX Arrays (In and Out).
+//Then you can write to the DMXOut-Array to send data on the DMX-Out line or read the DMXIn-Array to receive data from the DMX-In line.
+//To close the interface call CloseInterface. The returnvalues of both functions indicates if the operation was successfully or not.
+//I don't have any knowledge in Visual Basic. I hope this code part is correct. Contact me if there is an problem or when I should test your integration.
+
+//Deklaration Part
+
+Public DMXIn(512) As Byte
+Public DMXOut(512) As Byte
+Public InterfaceMode As Byte
+
+Public Declare Function OpenInterface Lib "usbdmxsi.dll" (ByVal PtrDMXOutArray As Long, ByVal PtrDMXInArray As Long, ByVal Mode As Byte) As Long
+Public Declare Function CloseInterface Lib "usbdmxsi.dll"  () As Long
+
+//Code Part Example
+
+ret = OpenInterface(VarPtr(DMXOut(0)), VarPtr(DMXIn(0)), InterfaceMode)
+ret = CloseInterface

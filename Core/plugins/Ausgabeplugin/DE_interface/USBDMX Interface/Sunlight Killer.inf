@@ -1,0 +1,39 @@
+[Version]
+Signature="$CHICAGO$"
+Class=HID
+ClassGUID={745a17a0-74d3-11d0-b6fe-00a0c90f57da}
+provider=%Provider%
+LayoutFile=layout.inf, layout1.inf
+
+[ClassInstall]
+Addreg=Class.AddReg
+
+[Class.AddReg]
+HKR,,Installer,,mmci.dll
+
+[Manufacturer]
+%MfgName%=DigitalEnlightenment
+
+[DigitalEnlightenment]
+%USB\VID_04B4&PID_0F1F.DeviceDesc%=DMXControllHID,USB\VID_04B4&PID_0F1F
+
+[DestinationDirs]
+USBHID.CopyList = 11
+
+[DMXControllHID]
+CopyFiles=DMXControllHID.CopyList
+AddReg=DMXControllHID.AddReg
+
+[DMXControllHID.CopyList]
+hidusb.sys
+hidclass.sys
+hidparse.sys
+
+[DMXControllHID.AddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,"hidusb.sys"
+
+[Strings]
+Provider="Digital Enlightenment"
+MfgName="Digital Enlightenment"
+USB\VID_04B4&PID_0F1F.DeviceDesc="Sunlight Killer"

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\kls200.png">
+ <information id="PC_DIMMER">
+ <name>KLS-200 (Steuerung)</name>
+ <vendor>Eurolite</vendor>
+ <author>Christian Nöding</author>
+ <description>Vierfache RGB-Bar</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Programme" fade="yes" type="extra"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Stroboskop" fade="yes" type="shutter"/>
+ </channels>
+ <initvalues ch0="-1" ch1="255" ch2="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="191" height="232">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <slider name="programslider" top="100" left="10" width="170" height="20" action="programsliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="masterslider" top="150" left="10" width="170" height="20" action="mastersliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="stroboslider" top="200" left="10" width="170" height="20" action="strobosliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="80" left="10" width="135" height="13" caption="Eingespeicherte Programme:"/>
+  <label name="Label2" top="130" left="10" width="68" height="13" caption="Masterdimmer:"/>
+  <label name="Label3" top="180" left="10" width="57" height="13" caption="Stroboskop:"/>
+ </form>
+ <code>
+  unit kls200;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure programsliderchange;
+  procedure mastersliderchange;
+  procedure strobosliderchange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  begin
+    if not dontrefresh then
+		case channel of
+    	0: programslider.position:=get_channel('EXTRA');
+    	1: masterslider.position:=get_channel('DIMMER');
+    	2: stroboslider.position:=get_channel('SHUTTER');
+    end;
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure programsliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('EXTRA',-1,programslider.position,0,0);
+  end;
+  procedure mastersliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('DIMMER',-1,masterslider.position,0,0);
+  end;
+  procedure strobosliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('SHUTTER',-1,stroboslider.position,0,0);
+  end;
+  end.
+ </code>
+</device>

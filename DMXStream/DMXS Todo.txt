@@ -1,0 +1,41 @@
+-> Der Stream sollte mit einem Keyframe beginnen
+
+-> Delphi arbeitet im LittleEndian Format (LSB MSB). DMXS sollte aber im BigEndian Format (MSB LSB) abgespeichert werden
+
+function ChangeEndian16(X: WORD): WORD; register; //oder auch Swap
+asm
+  xchg AL, AH
+end;
+
+function ChangeEndian32(X: DWORD): DWORD; register;
+asm
+  bswap EAX //konvertiert Endian
+end;
+
+procedure ChangeEndian64(P: Pointer); register;
+asm
+  mov EDX, [EAX]
+  bswap EDX
+  mov EBX, [EAX + $04]
+  bswap EBX
+  mov [EAX], EBX
+  mov [EAX + $04], EDX
+end; 
+
+
+// ALTERNATIV
+function EndianWord(w : word) : word;
+begin
+  result := swap(w);
+end;
+
+function EndianInt(i : integer) : integer;
+begin
+  result := swap(i);
+end;
+
+function EndianLong(L : longint) : longint;
+begin
+  result := swap(L shr 16) or
+  (longint(swap(L and $ffff)) shl 16);
+end;

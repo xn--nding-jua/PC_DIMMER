@@ -1,0 +1,5 @@
+Die optimalen Fuses für DE-Interface:
+
+HIGH: 0xD9
+LOW:  0xBF
+EXT:  0x00

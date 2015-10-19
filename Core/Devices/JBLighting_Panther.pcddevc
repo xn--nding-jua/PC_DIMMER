@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\pocketscan.png">
+ <information id="PC_DIMMER">
+ <name>Panther</name>
+ <vendor>JBLighting</vendor>
+ <author>Christian Nöding</author>
+ <description>Scanner</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Gobo" fade="yes" type="gobo1"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Reflektor" fade="yes" type="special1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="128" ch3="128" ch4="128" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="199"/>
+ <gobo1rot LeftMinValue="128" LeftMaxValue="255" OffValue="128" RightMinValue="128" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="491" height="322">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="80" left="10" height="230" width="230" />
+  <dropdown name="gobobox" top="200" left="250" width="230" height="21" action="goboboxchange">
+   <item caption="Blackout" value="0" picture="" />
+   <item caption="Offen" value="0" picture="" />
+   <item caption="Gobo 1 / Multicolor" value="0" picture="" />
+   <item caption="Gobo 2 / Blau" value="0" picture="" />
+   <item caption="Gobo 3 / Gelb" value="0" picture="" />
+   <item caption="Gobo 4 / Grün" value="0" picture="" />
+   <item caption="Gobo 5 / Orange" value="0" picture="" />
+   <item caption="Gobo 6 / Rot" value="0" picture="" />
+   <item caption="Gobo 7 / Magenta" value="0" picture="" />
+   <item caption="Gobo 8 / Hellblau" value="0" picture="" />
+   <item caption="Gobo 9 / Pink" value="0" picture="" />
+   <item caption="Gobo 10 / Magenta" value="0" picture="" />
+   <item caption="Gobo 11 / Orange" value="0" picture="" />
+   <item caption="Gobo 12 / Blau" value="0" picture="" />
+   <item caption="Gobo 13 / Weiß" value="0" picture="" />
+   <item caption="Gobo 14 / Grün+Pink" value="0" picture="" />
+   <item caption="Rotation" value="0" picture="" />
+  </dropdown>
+  <slider name="shakeslider" top="100" left="250" width="230" height="20" action="shakesliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="reflectorslider" top="150" left="250" width="230" height="20" action="reflectorsliderchange" startvalue="0" endvalue="255" default="128"/>
+  <slider name="rotationslider" top="250" left="250" width="230" height="20" action="rotationsliderchange" startvalue="128" endvalue="255" default="128"/>
+  <label name="Label1" top="80" left="250" width="84" height="13" caption="Shaking / Strobo:"/>
+  <label name="Label2" top="180" left="250" width="72" height="13" caption="Gobos/Farben:"/>
+  <label name="Label3" top="130" left="250" width="46" height="13" caption="Reflektor:"/>
+  <label name="Label4" top="230" left="250" width="43" height="13" caption="Rotation:"/>
+ </form>
+ <code>
+  unit panther;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure shakesliderchange;
+  procedure reflectorsliderchange;
+  procedure goboboxchange;
+  procedure rotationsliderchange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+		wert:integer;
+	begin
+    case channel of
+    	0:
+    	begin
+    		if not dontrefresh then
+    		begin
+    			shakeslider.position:=get_channel('SHUTTER');
+    		end;
+    	end;
+    	1:
+    	begin
+    		if not dontrefresh then
+    		begin
+    			wert:=get_channel('GOBO1');
+    			case wert of
+    				0..7: gobobox.itemindex:=0;
+    				8..15: gobobox.itemindex:=1;
+    				16..23: gobobox.itemindex:=2;
+    				24..31: gobobox.itemindex:=3;
+    				32..39: gobobox.itemindex:=4;
+    				40..47: gobobox.itemindex:=5;
+    				48..55: gobobox.itemindex:=6;
+    				56..63: gobobox.itemindex:=7;
+    				64..71: gobobox.itemindex:=8;
+    				72..79: gobobox.itemindex:=9;
+    				80..87: gobobox.itemindex:=10;
+    				88..95: gobobox.itemindex:=11;
+    				96..103: gobobox.itemindex:=12;
+    				104..111: gobobox.itemindex:=13;
+    				112..119: gobobox.itemindex:=14;
+    				120..127: gobobox.itemindex:=15;
+    				128..255:
+						begin
+							gobobox.itemindex:=16;
+							rotationslider.position:=wert;
+						end;
+    			end;
+    		end;
+    	end;
+    	2:
+    	begin
+    		if not dontrefresh then
+    		begin
+    			reflectorslider.position:=get_channel('SPECIAL1');
+    		end;
+    	end;
+    	3..4:
+    	begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+    	end;
+    end;
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  procedure shakesliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('SHUTTER', -1, shakeslider.position, 0, 0);
+  end;
+  procedure reflectorsliderchange;
+  begin
+	  dontrefresh:=true;
+    set_channel('SPECIAL1', -1, reflectorslider.position, 0, 0);
+  end;
+  procedure goboboxchange;
+  begin
+    case gobobox.itemindex of
+    	0: set_channel('GOBO1', -1, 0, 0, 0);
+    	1: set_channel('GOBO1', -1, 8, 0, 0);
+    	2: set_channel('GOBO1', -1, 16, 0, 0);
+    	3: set_channel('GOBO1', -1, 24, 0, 0);
+    	4: set_channel('GOBO1', -1, 32, 0, 0);
+    	5: set_channel('GOBO1', -1, 40, 0, 0);
+    	6: set_channel('GOBO1', -1, 48, 0, 0);
+    	7: set_channel('GOBO1', -1, 56, 0, 0);
+    	8: set_channel('GOBO1', -1, 64, 0, 0);
+    	9: set_channel('GOBO1', -1, 72, 0, 0);
+    	10: set_channel('GOBO1', -1, 80, 0, 0);
+    	11: set_channel('GOBO1', -1, 88, 0, 0);
+    	12: set_channel('GOBO1', -1, 96, 0, 0);
+    	13: set_channel('GOBO1', -1, 104, 0, 0);
+    	14: set_channel('GOBO1', -1, 112, 0, 0);
+    	15: set_channel('GOBO1', -1, 120, 0, 0);
+    	16: set_channel('GOBO1', -1, rotationslider.position, 0, 0);
+    end;
+  end;
+  procedure rotationsliderchange;
+  begin
+	  dontrefresh:=true;
+    gobobox.itemindex:=16;
+		set_channel('GOBO1', -1, rotationslider.position, 0, 0);
+  end;
+  end.
+ </code>
+</device>

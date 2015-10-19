@@ -1,0 +1,242 @@
+object exceptionform: Texceptionform
+  Left = 505
+  Top = 217
+  BorderIcons = []
+  BorderStyle = bsSingle
+  Caption = 'Fehlerbericht'
+  ClientHeight = 321
+  ClientWidth = 489
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  FormStyle = fsStayOnTop
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label4: TLabel
+    Left = 8
+    Top = 152
+    Width = 46
+    Height = 13
+    Caption = 'Fehlertyp:'
+  end
+  object Label5: TLabel
+    Left = 8
+    Top = 168
+    Width = 60
+    Height = 13
+    Caption = 'Verursacher:'
+  end
+  object Shape4: TShape
+    Left = 0
+    Top = 280
+    Width = 489
+    Height = 41
+    Align = alBottom
+    Pen.Style = psClear
+  end
+  object Shape1: TShape
+    Left = 0
+    Top = 280
+    Width = 489
+    Height = 1
+  end
+  object Bevel1: TBevel
+    Left = -8
+    Top = 184
+    Width = 497
+    Height = 6
+    Shape = bsTopLine
+  end
+  object ListBox1: TListBox
+    Left = 8
+    Top = 328
+    Width = 497
+    Height = 209
+    ItemHeight = 13
+    TabOrder = 4
+    Visible = False
+  end
+  object Memo1: TMemo
+    Left = 8
+    Top = 48
+    Width = 473
+    Height = 97
+    BorderStyle = bsNone
+    Color = clBtnFace
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clRed
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    Lines.Strings = (
+      'Fehlermeldung')
+    ParentFont = False
+    ReadOnly = True
+    TabOrder = 1
+  end
+  object Button1: TButton
+    Left = 16
+    Top = 288
+    Width = 75
+    Height = 25
+    Caption = 'OK'
+    ModalResult = 1
+    TabOrder = 0
+  end
+  object DetailsMemo: TMemo
+    Left = 8
+    Top = 328
+    Width = 497
+    Height = 209
+    BevelInner = bvNone
+    BevelOuter = bvNone
+    Ctl3D = False
+    ParentCtl3D = False
+    ReadOnly = True
+    ScrollBars = ssBoth
+    TabOrder = 2
+    WantReturns = False
+  end
+  object Button2: TButton
+    Left = 400
+    Top = 288
+    Width = 75
+    Height = 25
+    Caption = 'Details >>'
+    TabOrder = 3
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 168
+    Top = 288
+    Width = 227
+    Height = 25
+    Caption = 'Fehlerbericht in Zwischenablage kopieren'
+    TabOrder = 5
+    OnClick = Button3Click
+  end
+  object RadioGroup1: TRadioGroup
+    Left = 8
+    Top = 192
+    Width = 473
+    Height = 81
+    Caption = 
+      ' Wie soll zuk'#252'nftig mit Fehlern umgegangen werden (kann in den O' +
+      'ptionen eingestellt werden) '
+    ItemIndex = 0
+    Items.Strings = (
+      'Alle Fehler melden'
+      'Nur schwere Fehler melden'
+      
+        'Keine Fehler melden, nur Eintrag in Protokolldatei (nicht empfoh' +
+        'len)')
+    TabOrder = 6
+    OnClick = RadioGroup1Click
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 489
+    Height = 49
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 7
+    object JvGradient1: TJvGradient
+      Left = 0
+      Top = 0
+      Width = 489
+      Height = 49
+      Style = grVertical
+      StartColor = clWhite
+      EndColor = clBtnFace
+    end
+    object Image2: TImage
+      Left = 8
+      Top = 8
+      Width = 33
+      Height = 33
+      Picture.Data = {
+        0B546478504E47496D61676589504E470D0A1A0A0000000D4948445200000020
+        0000001C080600000000C2BD22000000017352474200AECE1CE9000000046741
+        4D410000B18F0BFC6105000000206348524D00007A26000080840000FA000000
+        80E8000075300000EA6000003A98000017709CBA513C00000009704859730000
+        2E2100002E2101075BFCFF000005CE49444154484BD5976B4C536718C7DB2177
+        8A9718352104464616C3800831C46C418DE0342EFBA0062F44F1C35CB26C1A63
+        1615756810A29119A22C0B2828D7522606B9C9048B203751100E65A5B4454058
+        2902A5C54E41339FFDDF434BA00774977E59935FDEF71C4ECEFF7F9EF779DFE7
+        414C44A2FFF54F2C168B2223233F5BB264491AC858BC78B1004F4FCF4C2F2FAF
+        E455AB5605E0631DECFAC12E2E2EA2F5EBD75FD8B973A761DFBE7DA6E8E86801
+        B83FB175EB56BD8F8FCFD730EC6E5703CB962D73DDB66D5B0F96F29DBFF6F676
+        5ABE7C7915C43F061FD8CD84BBBBBB270CA8DF6740A150908787470384C3C022
+        BB19C04B251B366C5077767612A3A3A3438046A3A1E2E2628259A10189442272
+        757515632D6770767616FF4D444B972E95848585A9EEDCB943151515545E5E2E
+        402E97535A5A1A41A7DEC1C1619DA3A3A393250262D1C68D1B13222222649B36
+        45146004910591919B67D8BC797ACEC6693E9F61CB962DB2F0F0F05B3030D1D0
+        D0404D4D4DC4465B5A5B5B29272787BCBDBD9F070606CAB11BBE8201677E47F8
+        FAFAAAA5D27CAAAC2CC10BCAE9C91339715C2DC2F80021AD27A5B289BABA9AA9
+        BBFB31A9D5ADA4D5B6514F0F477D7D0AD2687EA3478F1E51545414B5B4B4F0A1
+        67C9668B5AADA6CCCC4C8A8D8DA5A2A22242146E43DC17B888828282B8B6B626
+        CACFEFA3A347C7E8F8F1E778504F274FEAC0209D3AF58C4E9FEE033D1417A701
+        6A3A73A60BF73BE8EEDD4132994668FFFEFDA452A9A8B7B717E67A040C0D0D91
+        4C26A3F3E7CFF3869D9C9CD86E08061EA2C0C0204EA37948870F3FC79138090C
+        6008F40335508056D008EE83BBA018E4D19123CDF4E2C530C5C4C4D0E0E0208D
+        8C8CD0F0F0B000B3D94CA5A5A5949090C02FCF1C03C1C1C15C7F7F3BBE5C6F11
+        D761EC05DD36E235B8AE0465E016C8A663C7A60D1C3C7890DEBC79F3CE9D585F
+        5F4F898989C4C63906D6AC59C3E9744A3A71E277BCD42AAEC2BC03B458BEDC2A
+        5E6A11CFC7780DA61BE8D5AB71DAB1630749A5522A2C2C9C17B6EE67CF9EE50D
+        0822C00CE8F52AACFB80E5CB678B37CC0A3B132F045290095260A00E5FFD9A02
+        0202702D7A2FCC407373B36D0442B8E1E16E18E8C30BACE28F319F2D5E62239E
+        86EB2444ED3E4D4E4ED0AE5DBBF833A0BABA9AD89EB7A5B6B6962E5DBA347F04
+        424242B891112D32FE295ECA01AB7835E6BF82D9E23770CDC45340220CC8E9E5
+        4B239F039393937C0EBC7DFB5600BB5F5757C727A120079881D1D1A7D8561ABC
+        B419D403AB38CBF69B200F30F1547005FC087E40D42A21FC820E1C88A1FEFE7E
+        D2EBF5A4D3E904984C26FE289E7717300363636C9FB3F03F00725001ACE2B998
+        5FB7885FB68827623C060315306026945BBE0E68B55A1C566A010303037C922E
+        6020941B1F7F860828F152B6C7CB411190811C900E7E06C9E0028807A7C17748
+        C2529A9AFA83F6EEDDCB1FC36D6D6DC48E5D5BBABABA283D3D7D7E03A1A1A19C
+        D13880D3AD93DCDCCA50B16E835F400ECA67064805974112480467482289C5DF
+        BFC1D62AA1D7AF5FD1EEDDD349585353C327A22D8D8D8D949C9CCC1B60F339E7
+        C0DAB56BB98909230D0D9971868F92423186708EA1068CA106185003C611522B
+        469CFF2684DA88FB06329BFFE4136FCF9EDD545656C6677F5555950096804949
+        4974F1E245D4196EAE017F7F7F554ACA4F9491711505238DB2B2AE5276F63590
+        4EB9B9D7292FEF06D62F0BB5221BE7792E1514E40129DDBC29C3984FA9A9A9B4
+        7DFB761A1D1D25A3D148068341C0D4D414DDBB778F5FAAB8B83866408E732388
+        AF05A8D1D1985C015920F31F7203CFE7E0301B572A950B36242C31592D80F033
+        3C7F0BFDC0F7183F04AEAC2F70015EC0EF5FE08326F3133F3F3F2D5BDF73E7CE
+        517C7CBC0056050F1D3A44687A1E42E34BE06D11FFEFBD21DA2C09DA32ED8A15
+        2B68E5CA95F3820684D0BC12BAAC2608AF038E76EB09F17FC0223435ACBE636B
+        2E0C9A1066AE04110BE13B217BFE56AF5EFD052251877C6A079C2D087D2722F0
+        D0CDCDED5B4BF8C5F6D4B7E6913F269F82F00560A1FFC8927333FA7F010FFBA0
+        668EE12E900000000049454E44AE426082}
+    end
+    object Label1: TLabel
+      Left = 48
+      Top = 6
+      Width = 124
+      Height = 22
+      Caption = 'Fehlerbericht'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Transparent = True
+    end
+    object Label2: TLabel
+      Left = 48
+      Top = 28
+      Width = 183
+      Height = 13
+      Caption = 'Im Programm ist ein Fehler aufgetreten:'
+      Transparent = True
+    end
+  end
+end

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\nebelmaschine.png">
+ <information id="PC_DIMMER">
+ <name>Z-Serie</name>
+ <vendor>Antari</vendor>
+ <author>Christian Nöding</author>
+ <description>Nebelmaschine mit DMX Steuerung</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Nebelausstoß" fade="yes" type="dimmer"/>
+ </channels>
+ <initvalues ch0="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="8" MinValue="16" MaxValue="131" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="233" height="142">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <slider name="volumeslider" top="110" left="10" width="210" height="20" action="volumechange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="90" left="10" width="68" height="13" caption="Nebelausstoß:"/>
+ </form>
+ <code>
+  unit magnum1500unit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure volumechange;
+
+  implementation
+
+var
+	dontsetslider:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  begin
+		case channel of
+    	0:
+    	begin
+		    if not dontsetslider then
+					volumeslider.position:=get_channel('dimmer');
+    	end;
+    end;
+		dontsetslider:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure volumechange;
+  begin
+    dontsetslider:=true;
+		set_channel('dimmer',volumeslider.position,volumeslider.position,0);
+  end;
+  end.
+ </code>
+</device>

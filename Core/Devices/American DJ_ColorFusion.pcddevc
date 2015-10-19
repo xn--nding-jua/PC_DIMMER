@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\colorwash.png">
+ <information id="PC_DIMMER">
+ <name>ColorFusion</name>
+ <vendor>American DJ</vendor>
+ <author>Christian Nöding</author>
+ <description>Multifunktionale Farblampe mit RGB-Mischung</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Farbe" fade="yes" type="color1"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Stroboskop" fade="yes" type="shutter"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Modus" fade="yes" type="special1"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="361" height="270">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="16" left="80"/>
+  <deviceadress top="32" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorpicker top="70" left="10" />
+  <edit name="fadezeit" top="238" left="58" width="40" height="21" text="3000" action="fadezeitchange"/>
+  <checkbox name="usefadezeit" top="240" left="116" width="100" height="17" caption="Faden" action="usefadezeitchange" checked="false"/>
+  <dropdown name="modebox" top="230" left="190" width="160" height="21" action="modeboxchange">
+   <item caption="Blackout" value="0" picture="" />
+   <item caption="Rainbow Strobe" value="0" picture="" />
+   <item caption="Slow Rainbow Flutter" value="0" picture="" />
+   <item caption="Fast Rainbow Flutter" value="0" picture="" />
+   <item caption="Green" value="0" picture="" />
+  </dropdown>
+  <slider name="dimmerslider" top="80" left="190" width="160" height="20" action="dimmersliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="colorslider" top="130" left="190" width="160" height="20" action="colorsliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="shutterslider" top="180" left="190" width="160" height="20" action="shuttersliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="label1" top="240" left="8" width="43" height="13" caption="Zeit [ms]:"/>
+  <label name="Label2" top="60" left="190" width="46" height="13" caption="Helligkeit:"/>
+  <label name="Label3" top="110" left="190" width="69" height="13" caption="Farbmischung:"/>
+  <label name="Label4" top="210" left="190" width="35" height="13" caption="Modus:"/>
+  <label name="Label5" top="160" left="190" width="37" height="13" caption="Shutter:"/>
+  <button name="changecolorpicker" top="210" left="8" width="160" height="21" action="onchangecolorpicker" caption="Wechsle Farbwahlbox"/>
+ </form>
+ <code>
+  unit colorfusion;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure onchangecolorpicker;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure fadezeitchange;
+  procedure usefadezeitchange;
+  procedure dimmersliderchange;
+  procedure colorsliderchange;
+  procedure modeboxchange;
+  procedure shuttersliderchange;
+
+  implementation
+
+var
+	dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+    begin
+      // bitte hier die eigene Funktion eintragen
+    end;
+  procedure FormShow;
+    begin
+      usefadezeit.checked:=true;
+    end;
+  procedure onchangecolorpicker;
+    begin
+      if colorpicker.visible then
+      begin
+        colorpicker.visible:=false;
+        colorpicker2.visible:=true;
+      end else
+      begin
+        colorpicker.visible:=true;
+        colorpicker2.visible:=false;
+      end;
+    end;
+  procedure FormRefresh(channel:Integer);
+    var
+      red,green,blue:byte;
+      modusposition,wert:integer;
+      wahr:integer;
+    begin
+      case channel of
+	      0..2:
+  	    begin
+    	    red:=get_channel('r');
+      	  green:=get_channel('g');
+        	blue:=get_channel('b');
+//        colorpicker2.SelectedColor:=red + green shl 8 + blue shl 16;
+	      end;
+	      3:
+	      begin
+	      	if not dontrefresh then
+	      		colorslider.position:=get_channel('COLOR1');
+	      end;
+	      4:
+	      begin
+	      	if not dontrefresh then
+	      		dimmerslider.position:=get_channel('DIMMER');
+	      end;
+	      5:
+	      begin
+	      	if not dontrefresh then
+	      		shutterslider.position:=get_channel('SHUTTER');
+	      end;
+	      6:
+	      begin
+	      	if not dontrefresh then
+	      	begin
+						wert:=get_channel('SPECIAL1');
+						case wert of
+							0..127: modebox.itemindex:=0;
+							128..159: modebox.itemindex:=1;
+							160..191: modebox.itemindex:=2;
+							192..223: modebox.itemindex:=3;
+							224..255: modebox.itemindex:=4;
+						end;
+					end;
+	      end;
+      end;
+      dontrefresh:=false;
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure ColorPickerChange(R, G, B: Byte);
+    var
+      zeit:integer;
+//      red,green,blue:byte;
+    begin
+      if usefadezeit.checked then
+        zeit:=strtoint(fadezeit.text)
+      else
+        zeit:=0;
+
+//        red:=colorpicker.selectedcolor and $FF;
+//        green := (colorpicker.selectedcolor shr 8) and $FF;
+//        blue := (colorpicker.selectedcolor shr 16) and $FF;
+        set_channel('r',-1,r,zeit);
+        set_channel('g',-1,g,zeit);
+        set_channel('b',-1,b,zeit);
+    end;
+  procedure fadezeitchange;
+    begin
+    end;
+  procedure usefadezeitchange;
+    begin
+    end;
+  procedure dimmersliderchange;
+  begin
+    dontrefresh:=true;
+		set_channel('DIMMER',-1,dimmerslider.position,0,0);
+  end;
+  procedure colorsliderchange;
+  begin
+    dontrefresh:=true;
+		set_channel('COLOR1',-1,colorslider.position,0,0);
+  end;
+  procedure modeboxchange;
+  begin
+    case modebox.itemindex of
+    	0: set_channel('SPECIAL1',-1,0,0);
+    	1: set_channel('SPECIAL1',-1,128,0);
+    	2: set_channel('SPECIAL1',-1,160,0);
+    	3: set_channel('SPECIAL1',-1,192,0);
+    	4: set_channel('SPECIAL1',-1,224,0);
+    end;
+  end;
+  procedure shuttersliderchange;
+  begin
+    dontrefresh:=true;
+		set_channel('SHUTTER',-1,shutterslider.position,0,0);
+  end;
+  end.
+ </code>
+</device>

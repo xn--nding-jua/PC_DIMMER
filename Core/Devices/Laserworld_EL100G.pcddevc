@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\el60g.png">
+ <information id="PC_DIMMER">
+ <name>EL-100G DMX v2</name>
+ <vendor>Laserworld</vendor>
+ <author>Christian Nöding</author>
+ <description>Laser mit steuerbarer X/Y-Ablenkeinheit</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Steuerung" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Muster" fade="yes" type="extra"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Punktgeschwindigkeit" fade="yes" type="speed"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Liniengeschwindigkeit" fade="yes" type="special2"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Größe" fade="yes" type="zoom"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="127" LeftMaxValue="0" OffValue="128" RightMinValue="129" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="430" height="305">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="72" left="8" height="226" width="226" />
+  <dropdown name="Combobox1" top="70" left="240" width="180" height="21" action="Controlchange">
+   <item caption="Soundsteuerung" value="0" picture="" />
+   <item caption="DMX Modus" value="0" picture="" />
+   <item caption="Automatikmodus" value="0" picture="" />
+   <item caption="Blanking" value="0" picture="" />
+  </dropdown>
+  <slider name="Slider1" top="120" left="240" width="180" height="20" action="Musterchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider2" top="170" left="240" width="180" height="20" action="Pointspeedchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider3" top="220" left="240" width="180" height="20" action="Linespeedchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider4" top="270" left="240" width="180" height="20" action="Zoomchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="50" left="240" width="69" height="13" caption="Steuerungsart:"/>
+  <label name="Label2" top="100" left="240" width="104" height="13" caption="Muster / Animationen:"/>
+  <label name="Label3" top="150" left="240" width="107" height="13" caption="Punktgeschwindigkeit:"/>
+  <label name="Label4" top="200" left="240" width="107" height="13" caption="Liniengeschwindigkeit:"/>
+  <label name="Label5" top="250" left="240" width="32" height="13" caption="Größe:"/>
+ </form>
+ <code>
+  unit EL60G;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure Controlchange;
+  procedure Musterchange;
+  procedure Pointspeedchange;
+  procedure Linespeedchange;
+  procedure Zoomchange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    wert:integer;
+  begin
+		case channel of
+			0:
+			begin
+				if not dontrefresh then
+				begin
+					wert:=get_channel('SPECIAL1');
+					case wert of
+						0..63: Combobox1.Itemindex:=0;
+						64..127: Combobox1.Itemindex:=1;
+						128..191: Combobox1.Itemindex:=2;
+						192..255: Combobox1.Itemindex:=3;
+					end;
+				end;
+			end;
+			1:
+			begin
+				if not dontrefresh then
+					Slider1.position:=get_channel('EXTRA');
+			end;
+			2:
+			begin
+				if not dontrefresh then
+					Slider2.position:=get_channel('SPEED');
+			end;
+			3:
+			begin
+				if not dontrefresh then
+					Slider3.position:=get_channel('SPECIAL2');
+			end;
+			4..5:
+			begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+			end;
+			6:
+			begin
+				if not dontrefresh then
+					Slider4.position:=get_channel('ZOOM');
+			end;
+		end;
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  procedure Controlchange;
+  begin
+		dontrefresh:=true;
+    case Combobox1.Itemindex of
+    	0: set_channel('SPECIAL1', 0, 0, 0);
+    	1: set_channel('SPECIAL1', 64, 64, 0);
+    	2: set_channel('SPECIAL1', 128, 128, 0);
+    	3: set_channel('SPECIAL1', 192, 192, 0);
+    end;
+  end;
+  procedure Musterchange;
+  begin
+		dontrefresh:=true;
+    set_channel('EXTRA', Slider1.position, Slider1.position, 0);
+  end;
+  procedure Pointspeedchange;
+  begin
+		dontrefresh:=true;
+    set_channel('SPEED', Slider2.position, Slider2.position, 0);
+  end;
+  procedure Linespeedchange;
+  begin
+		dontrefresh:=true;
+    set_channel('SPECIAL2', Slider3.position, Slider3.position, 0);
+  end;
+  procedure Zoomchange;
+  begin
+		dontrefresh:=true;
+    set_channel('ZOOM', Slider4.position, Slider4.position, 0);
+  end;
+  end.
+ </code>
+</device>

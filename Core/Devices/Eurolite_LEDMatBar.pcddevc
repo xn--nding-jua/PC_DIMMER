@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\Eurolite-TF5.png">
+ <information id="PC_DIMMER">
+ <name>LED MAT-Bar (2-Kanal-Modus)</name>
+ <vendor>Eurolite</vendor>
+ <author>Christian Nöding</author>
+ <description>Strobe-Combo</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Auto-Programme" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="SHUTTER" fade="yes" type="shutter"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="0" ch1="0" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="1" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="241" height="180">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="autobox" top="100" left="10" width="220" height="23" action="SPECIAL1change">
+   <item caption="Blackout" value="0" valueend="0" picture="" />
+   <item caption="Autoprogramm langsam" value="0" valueend="0" picture="" />
+   <item caption="Autoprogramm mittel" value="0" valueend="0" picture="" />
+   <item caption="Autoprogramm schnell" value="0" valueend="0" picture="" />
+   <item caption="Autoprogramm Sound-2-Light" value="0" valueend="0" picture="" />
+  </dropdown>
+  <slider name="SHUTTERslider1" top="150" left="10" width="220" height="20" action="SHUTTERchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="SPECIAL1lbl0" top="80" left="8" width="81" height="13" caption="Auto-Programme:"/>
+  <label name="SHUTTERlbl1" top="130" left="10" width="34" height="13" caption="Strobe:"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure SPECIAL1change;
+  procedure SHUTTERchange;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+	      value:=get_channel('SPECIAL1');
+        case value of
+        	0..15: autobox.itemindex:=0;
+        	16..89: autobox.itemindex:=1;
+        	90..164: autobox.itemindex:=2;
+        	165..240: autobox.itemindex:=3;
+        	241..255: autobox.itemindex:=4;
+				end; 
+      end;
+      1:
+      begin
+        SHUTTERslider1.position:=get_channel('SHUTTER');
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure SPECIAL1change;
+  begin
+    DontRefresh:=true;
+
+		case autobox.itemindex of
+			0: set_channel('SPECIAL1',-1,0,0);
+			1: set_channel('SPECIAL1',-1,16,0);
+			2: set_channel('SPECIAL1',-1,90,0);
+			3: set_channel('SPECIAL1',-1,165,0); 
+			4: set_channel('SPECIAL1',-1,255,0);
+		end;
+  end;
+  procedure SHUTTERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SHUTTER',-1,SHUTTERslider1.position,0);
+  end;
+  end.
+ </code>
+</device>

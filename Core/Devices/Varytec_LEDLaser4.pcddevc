@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\color150dmx.png">
+ <information id="PC_DIMMER">
+ <name>LED-Laser 4</name>
+ <vendor>Varytec</vendor>
+ <author>Christian Nöding</author>
+ <description>LED-RGB-Laser</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="On/Off" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Programme" fade="yes" type="special2"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Geschwindigkeit" fade="yes" type="speed"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="360" height="242">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorpicker top="60" left="200" />
+  <dropdown name="Combobox1" top="210" left="10" width="180" height="23" action="programchange">
+   <item caption="Helligkeit" value="0" picture="" />
+   <item caption="Programm 1" value="0" picture="" />
+   <item caption="Programm 2" value="0" picture="" />
+   <item caption="Programm 3" value="0" picture="" />
+   <item caption="Programm 4" value="0" picture="" />
+   <item caption="Programm 5" value="0" picture="" />
+   <item caption="Programm 6" value="0" picture="" />
+   <item caption="Programm 7" value="0" picture="" />
+   <item caption="Programm 8" value="0" picture="" />
+   <item caption="Programm 9" value="0" picture="" />
+   <item caption="Programm 10" value="0" picture="" />
+   <item caption="Programm 11" value="0" picture="" />
+   <item caption="Programm 12" value="0" picture="" />
+   <item caption="Programm 13" value="0" picture="" />
+   <item caption="Programm 14" value="0" picture="" />
+   <item caption="Programm 15" value="0" picture="" />
+   <item caption="Programm 16" value="0" picture="" />
+   <item caption="Programm 17" value="0" picture="" />
+   <item caption="Programm 18" value="0" picture="" />
+   <item caption="Programm 19" value="0" picture="" />
+   <item caption="Programm 20" value="0" picture="" />
+   <item caption="Programm 21" value="0" picture="" />
+   <item caption="Programm 22" value="0" picture="" />
+   <item caption="Programm 23" value="0" picture="" />
+   <item caption="Programm 24" value="0" picture="" />
+   <item caption="Programm 25" value="0" picture="" />
+   <item caption="Programm 26" value="0" picture="" />
+   <item caption="Programm 27" value="0" picture="" />
+   <item caption="Programm 28" value="0" picture="" />
+   <item caption="Programm 29" value="0" picture="" />
+   <item caption="Programm 30" value="0" picture="" />
+   <item caption="Programm 31" value="0" picture="" />
+   <item caption="Programm 32" value="0" picture="" />
+   <item caption="Programm 33" value="0" picture="" />
+   <item caption="Programm 34" value="0" picture="" />
+   <item caption="Programm 35" value="0" picture="" />
+  </dropdown>
+  <slider name="SPEEDslider" top="160" left="10" width="180" height="20" action="speedchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="DIMMERlbl4" top="140" left="10" width="81" height="13" caption="Geschwindigkeit:"/>
+  <label name="SPECIAL2lbl5" top="190" left="10" width="121" height="13" caption="Vorinstallierte Programme:"/>
+  <label name="Label4" top="80" left="10" width="67" height="13" caption="Ausgeschaltet"/>
+  <button name="SwitchColorPickerBtn" top="200" left="200" width="150" height="30" action="SwitchColorPicker" caption="Andere Farbauswahl"/>
+  <button name="Button2" top="100" left="10" width="80" height="30" action="onbtnclick" caption="Ein"/>
+  <button name="Button3" top="100" left="110" width="80" height="30" action="offbtnclick" caption="Aus"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure SwitchColorPicker;
+  procedure speedchange;
+  procedure onbtnclick;
+  procedure offbtnclick;
+  procedure programchange;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+				case get_channel('SPECIAL1') of
+					0..110: Label4.caption:='Ausgeschaltet';
+					120..255: Label4.caption:='Eingeschaltet';
+				end;
+      end;
+      1:
+      begin
+        // RGB-Änderungen werden derzeit nicht im DDF angezeigt
+      end;
+      2:
+      begin
+        // RGB-Änderungen werden derzeit nicht im DDF angezeigt
+      end;
+      3:
+      begin
+        // RGB-Änderungen werden derzeit nicht im DDF angezeigt
+      end;
+      4:
+      begin
+        value:=get_channel('SPECIAL2');
+        case value of
+        	0: Combobox1.itemindex:=0;
+        	1: Combobox1.itemindex:=1;
+        	2..8: Combobox1.itemindex:=2;
+        	9..29: Combobox1.itemindex:=3;
+        	30..37: Combobox1.itemindex:=4;
+        	38..47: Combobox1.itemindex:=5;
+        	48..50: Combobox1.itemindex:=6;
+        	51..58: Combobox1.itemindex:=7;
+        	59..69: Combobox1.itemindex:=8;
+        	70..73: Combobox1.itemindex:=9;
+        	74..78: Combobox1.itemindex:=10;
+        	79..84: Combobox1.itemindex:=11;
+        	85..95: Combobox1.itemindex:=12;
+        	96..100: Combobox1.itemindex:=13;
+        	101..110: Combobox1.itemindex:=14;
+        	111..115: Combobox1.itemindex:=15;
+        	116..120: Combobox1.itemindex:=16;
+        	121..130: Combobox1.itemindex:=17;
+        	131..135: Combobox1.itemindex:=18;
+        	136..140: Combobox1.itemindex:=19;
+        	141..150: Combobox1.itemindex:=20;
+        	151..160: Combobox1.itemindex:=21;
+        	161..170: Combobox1.itemindex:=22;
+        	171..178: Combobox1.itemindex:=23;
+        	179..185: Combobox1.itemindex:=24;
+        	186..190: Combobox1.itemindex:=25;
+        	191..200: Combobox1.itemindex:=26;
+        	201..205: Combobox1.itemindex:=27;
+        	206..210: Combobox1.itemindex:=28;
+        	211..220: Combobox1.itemindex:=29;
+        	221..225: Combobox1.itemindex:=30;
+        	226..230: Combobox1.itemindex:=31;
+        	231..240: Combobox1.itemindex:=32;
+        	241..245: Combobox1.itemindex:=33;
+        	246..250: Combobox1.itemindex:=34;
+        	251..255: Combobox1.itemindex:=35;
+        end;
+      end;
+      5:
+      begin
+        SPEEDslider.position:=get_channel('SPEED');
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure ColorPickerChange(R, G, B: Byte);
+  begin
+    set_channel('r',-1,r,0);
+    set_channel('g',-1,g,0);
+    set_channel('b',-1,b,0);
+  end;
+  procedure SwitchColorPicker;
+  begin
+    if colorpicker.visible then
+    begin
+      colorpicker.visible:=false;
+      colorpicker2.visible:=true;
+    end else
+    begin
+      colorpicker.visible:=true;
+      colorpicker2.visible:=false;
+    end;
+  end;
+  procedure speedchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPEED',-1,SPEEDslider.position,0);
+  end;
+  procedure onbtnclick;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL1',-1,255,0);
+    Label4.caption:='Eingeschaltet';
+  end;
+  procedure offbtnclick;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL1',-1,0,0);
+    Label4.caption:='Ausgeschaltet';
+  end;
+  procedure programchange;
+  begin
+    DontRefresh:=true;
+
+		case Combobox1.itemindex of
+			0: set_channel('SPECIAL2',-1,0,0);
+			1: set_channel('SPECIAL2',-1,1,0);
+			2: set_channel('SPECIAL2',-1,8,0);
+			3: set_channel('SPECIAL2',-1,29,0);
+			4: set_channel('SPECIAL2',-1,37,0);
+			5: set_channel('SPECIAL2',-1,47,0);
+			6: set_channel('SPECIAL2',-1,50,0);
+			7: set_channel('SPECIAL2',-1,58,0);
+			8: set_channel('SPECIAL2',-1,69,0);
+			9: set_channel('SPECIAL2',-1,73,0);
+			10: set_channel('SPECIAL2',-1,78,0);
+			11: set_channel('SPECIAL2',-1,84,0);
+			12: set_channel('SPECIAL2',-1,95,0);
+			13: set_channel('SPECIAL2',-1,100,0);
+			14: set_channel('SPECIAL2',-1,110,0);
+			15: set_channel('SPECIAL2',-1,115,0);
+			16: set_channel('SPECIAL2',-1,120,0);
+			17: set_channel('SPECIAL2',-1,130,0);
+			18: set_channel('SPECIAL2',-1,135,0);
+			19: set_channel('SPECIAL2',-1,140,0);
+			20: set_channel('SPECIAL2',-1,150,0);
+			21: set_channel('SPECIAL2',-1,160,0);
+			22: set_channel('SPECIAL2',-1,170,0);
+			23: set_channel('SPECIAL2',-1,178,0);
+			24: set_channel('SPECIAL2',-1,185,0);
+			25: set_channel('SPECIAL2',-1,190,0);
+			26: set_channel('SPECIAL2',-1,200,0);
+			27: set_channel('SPECIAL2',-1,205,0);
+			28: set_channel('SPECIAL2',-1,210,0);
+			29: set_channel('SPECIAL2',-1,220,0);
+			30: set_channel('SPECIAL2',-1,225,0);
+			31: set_channel('SPECIAL2',-1,230,0);
+			32: set_channel('SPECIAL2',-1,240,0);
+			33: set_channel('SPECIAL2',-1,245,0);
+			34: set_channel('SPECIAL2',-1,250,0);
+			35: set_channel('SPECIAL2',-1,255,0);
+		end;
+  end;
+  end.
+ </code>
+</device>

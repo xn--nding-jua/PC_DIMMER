@@ -1,0 +1,135 @@
+; Installation file for Peperoni/Lighting-Solutions USB DMX512 interface driver
+; Copyright (C) 2003-2010 by Peperoni/Lighting-Solutions
+; All rights reserved
+
+[Version]
+Signature=$Windows NT$
+Class=PeperoniUSBDMXInterfaceClass
+ClassGuid={269871D6-B4F2-429f-9704-54390B91F409}
+Provider=%MFGNAME%
+CatalogFile=usbdmx.cat
+DriverPackageType=PlugAndPlay
+DriverPackageDisplayName=%DESC%
+DriverVer=06/16/2010,6.0.5.1
+
+[DestinationDirs]
+DefaultDestDir=10,System32\Drivers
+DriverCopyFiles=10,System32\Drivers
+LibraryCopyFiles=10,System
+
+; ================= Class section =====================
+
+[ClassInstall]
+AddReg=ClassAddReg
+
+[ClassInstall32]
+AddReg=ClassAddReg
+
+[ClassAddReg]
+HKR,,,,"%CLASSNAME%"
+HKR,,Icon,,-20
+HKR,,SilentInstall,,1
+
+; ================= Device section =====================
+
+[Manufacturer]
+%MFGNAME%=DeviceList, NTx86, NTia64, NTamd64
+
+; === Win 98/ME/2k
+[DeviceList]
+%DESCRIPTION01% = DriverInstall, USB\VID_0CE1&PID_0001
+%DESCRIPTION02% = DriverInstall, USB\VID_0CE1&PID_0002
+%DESCRIPTION03% = DriverInstall, USB\VID_0CE1&PID_0003
+%DESCRIPTION04% = DriverInstall, USB\VID_0CE1&PID_0004
+%DESCRIPTION08% = DriverInstall, USB\VID_0CE1&PID_0008
+%DESCRIPTION10% = DriverInstall, USB\VID_0CE1&PID_0010
+%DESCRIPTION11% = DriverInstall, USB\VID_0CE1&PID_0011
+
+; === Win XP and later
+[DeviceList.NTx86]
+%DESCRIPTION01% = DriverInstall, USB\VID_0CE1&PID_0001
+%DESCRIPTION02% = DriverInstall, USB\VID_0CE1&PID_0002
+%DESCRIPTION03% = DriverInstall, USB\VID_0CE1&PID_0003
+%DESCRIPTION04% = DriverInstall, USB\VID_0CE1&PID_0004
+%DESCRIPTION08% = DriverInstall, USB\VID_0CE1&PID_0008
+%DESCRIPTION10% = DriverInstall, USB\VID_0CE1&PID_0010
+%DESCRIPTION11% = DriverInstall, USB\VID_0CE1&PID_0011
+
+[DeviceList.NTia64]
+%DESCRIPTION01% = DriverInstall64, USB\VID_0CE1&PID_0001
+%DESCRIPTION02% = DriverInstall64, USB\VID_0CE1&PID_0002
+%DESCRIPTION03% = DriverInstall64, USB\VID_0CE1&PID_0003
+%DESCRIPTION04% = DriverInstall64, USB\VID_0CE1&PID_0004
+%DESCRIPTION08% = DriverInstall64, USB\VID_0CE1&PID_0008
+%DESCRIPTION10% = DriverInstall64, USB\VID_0CE1&PID_0010
+%DESCRIPTION11% = DriverInstall64, USB\VID_0CE1&PID_0011
+
+[DeviceList.NTamd64]
+%DESCRIPTION01% = DriverInstall64, USB\VID_0CE1&PID_0001
+%DESCRIPTION02% = DriverInstall64, USB\VID_0CE1&PID_0002
+%DESCRIPTION03% = DriverInstall64, USB\VID_0CE1&PID_0003
+%DESCRIPTION04% = DriverInstall64, USB\VID_0CE1&PID_0004
+%DESCRIPTION08% = DriverInstall64, USB\VID_0CE1&PID_0008
+%DESCRIPTION10% = DriverInstall64, USB\VID_0CE1&PID_0010
+%DESCRIPTION11% = DriverInstall64, USB\VID_0CE1&PID_0011
+
+; ============ Win 2k and later section ================
+
+[DriverInstall.NT]
+CopyFiles=DriverCopyFiles,LibraryCopyFiles
+
+[DriverInstall64.NT]
+CopyFiles=DriverCopyFiles,LibraryCopyFiles,Library64CopyFiles
+
+[DriverInstall.NT.Services]
+AddService=USBDMX,2,DriverService
+
+[DriverCopyFiles]
+usbdmx.sys,,,2
+
+[LibraryCopyFiles]
+usbdmx.dll,,,2
+
+[Library64CopyFiles]
+usbdmx64.dll,,,2
+
+; ================= Service section =====================
+
+[DriverService]
+DisplayName   = %SVCDESC%
+ServiceType   = 1               ; SERVICE_KERNEL_DRIVER
+StartType     = 3               ; SERVICE_DEMAND_START 
+ErrorControl  = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary = %10%\system32\drivers\usbdmx.sys
+
+; ================= Source section =====================
+[SourceDisksFiles]
+usbdmx.sys=1
+usbdmx.dll=1
+usbdmx64.dll=2
+
+[SourceDisksNames]
+1 = %INSTDISK%,,,\i386
+
+[SourceDisksNames.ia64]
+1 = %INSTDISK%,,,\ia64
+2 = %INSTDISK%,,,\ia64
+
+[SourceDisksNames.amd64]
+1 = %INSTDISK%,,,\amd64
+2 = %INSTDISK%,,,\amd64
+
+; ================= String section =====================
+[Strings]
+MFGNAME   ="Peperoni"
+CLASSNAME ="Peperoni USBDMX Interfaces"
+DESC      ="USBDMX driver"
+INSTDISK  ="Peperoni USBDMX Installation Disc"
+SVCDESC   ="Peperoni USBDMX driver (usbdmx.sys)"
+DESCRIPTION01="Peperoni USBDMX X-Switch"
+DESCRIPTION02="Peperoni Rodin1"
+DESCRIPTION03="Peperoni Rodin2"
+DESCRIPTION04="Peperoni USBDMX21"
+DESCRIPTION08="Peperoni RodinT"
+DESCRIPTION10="Peperoni Rodin Fallback"
+DESCRIPTION11="Peperoni EBox"

@@ -1,0 +1,672 @@
+unit ddfwindowfrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ExtCtrls, StdCtrls, ComCtrls, JvExExtCtrls, JvExtComponent,
+  JvPanel, JvOfficeColorPanel, HSLColorPicker, JvComponentBase,
+  JvAppStorage, JvAppXMLStorage;
+
+type
+  Teditproperties = record
+    Name:       string;
+    channel:    integer;
+    actionname: string;
+  end;
+
+  Tcheckboxproperties = record
+    Name:       string;
+    channel:    integer;
+    actionname: string;
+  end;
+
+  Tcomboboxproperties = record
+    Name:       string;
+    channel:    integer;
+    actionname: string;
+    itemvalue:  array of integer;
+  end;
+
+  Tsliderproperties = record
+    Name:       string;
+    channel:    integer;
+    actionname: string;
+  end;
+
+  Tbuttonproperties = record
+    Name:       string;
+    channel:    integer;
+    onvalue:    integer;
+    offvalue:   integer;
+    actionname: string;
+  end;
+
+  Tradiobuttonproperties = record
+    Name:       string;
+    channel:    integer;
+    actionname: string;
+    itemvalue:  array of integer;
+  end;
+
+  TDDFWindow = class(TForm)
+    deviceimage: TImage;
+    devicename: TLabel;
+    deviceadress: TLabel;
+    fadenkreuz: TPanel;
+    Bevel1:     TBevel;
+    Bevel2:     TBevel;
+    PositionXY: TShape;
+    ColorPicker: TJvOfficeColorPanel;
+    R:          TScrollBar;
+    G:          TScrollBar;
+    B:          TScrollBar;
+    panmirror:  TCheckBox;
+    tiltmirror: TCheckBox;
+    ColorPicker2: THSLColorPicker;
+    XML:        TJvAppXMLFileStorage;
+    RefreshTimer: TTimer;
+    procedure FormActivate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure BScroll(Sender: TObject; ScrollCode: TScrollCode; var ScrollPos: integer);
+    procedure fadenkreuzMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure fadenkreuzMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+    procedure PositionXYMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+    procedure ColorPicker2Change(Sender: TObject);
+    procedure RefreshTimerTimer(Sender: TObject);
+    procedure ColorPickerColorChange(Sender: TObject);
+  private
+    { Private-Deklarationen }
+    Red, Green, Blue: byte;
+  public
+    { Public-Deklarationen }
+    // Arrays für DDF Darstellung
+    Edits:          array of TEdit;
+    CheckBoxs:      array of TCheckBox;
+    ComboBoxs:      array of TComboBox;
+    Labels:         array of TLabel;
+    Sliders:        array of TScrollbar;
+    Shapes:         array of TShape;
+    Buttons:        array of TButton;
+    Radiobuttons:   array of TRadioGroup;
+    // DDF-Control-Eigenschaften
+    checkboxproperties: array of Tcheckboxproperties;
+    comboboxproperties: array of Tcomboboxproperties;
+    sliderproperties: array of Tsliderproperties;
+    buttonproperties: array of Tbuttonproperties;
+    radiobuttonproperties: array of Tradiobuttonproperties;
+    editproperties: array of Teditproperties;
+    funktionen:     string;
+    Colorpickerchannel: array[0..2] of integer;
+    DeviceID:       TGUID;
+    procedure startscript(Sender: TObject);
+    procedure sliderscroll(Sender: TObject; ScrollCode: TScrollCode; var ScrollPos: integer);
+    procedure loadDDF(ID: TGUID);
+    procedure deleteDDFwindow;
+  end;
+
+var
+  DDFWindow: TDDFWindow;
+
+implementation
+
+uses PCDIMMER, geraetesteuerungfrm;
+
+{$R *.dfm}
+
+procedure TColor2RGB(const Color: TColor; var R, G, B: byte);
+begin
+  // convert hexa-decimal values to RGB
+  R := Color and $FF;
+  G := (Color shr 8) and $FF;
+  B := (Color shr 16) and $FF;
+end;
+
+procedure TDDFWindow.FormActivate(Sender: TObject);
+begin
+  mainform.ddfsource := 1;
+end;
+
+procedure TDDFWindow.FormShow(Sender: TObject);
+begin
+  mainform.ddfsource := 1;
+  RefreshTimer.Enabled := True;
+end;
+
+procedure TDDFWindow.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  mainform.ScriptInterpreter.CallFunction('FormClose', nil, []);
+  mainform.ddfsource := 0;
+end;
+
+procedure TDDFWindow.startscript(Sender: TObject);
+var
+  i: integer;
+begin
+  //  mainform.ScriptInterpreter.Pas.Text:=funktionen;
+  //  mainform.ScriptInterpreter.Compile;
+
+  for i := 0 to length(Edits) - 1 do
+  begin
+    if Sender = Edits[i] then
+    begin
+      if editproperties[i].actionname <> '' then
+        mainform.ScriptInterpreter.CallFunction(editproperties[i].actionname, nil, [edits[i].Text]);
+    end;
+  end;
+
+  for i := 0 to length(CheckBoxs) - 1 do
+  begin
+    if Sender = CheckBoxs[i] then
+    begin
+      if checkboxproperties[i].actionname <> '' then
+        mainform.ScriptInterpreter.CallFunction(checkboxproperties[i].actionname, nil, [Checkboxs[i].Checked]);
+    end;
+  end;
+
+  for i := 0 to length(ComboBoxs) - 1 do
+  begin
+    if Sender = ComboBoxs[i] then
+    begin
+      if comboboxproperties[i].actionname <> '' then
+        mainform.ScriptInterpreter.CallFunction(comboboxproperties[i].actionname, nil, [Comboboxs[i].ItemIndex]);
+    end;
+  end;
+
+  for i := 0 to length(Sliders) - 1 do
+  begin
+    if Sender = Sliders[i] then
+    begin
+      if sliderproperties[i].actionname <> '' then
+        mainform.ScriptInterpreter.CallFunction(sliderproperties[i].actionname, nil, [Sliders[i].Position]);
+    end;
+  end;
+
+  for i := 0 to length(Buttons) - 1 do
+  begin
+    if Sender = Buttons[i] then
+    begin
+      if buttonproperties[i].actionname <> '' then
+        mainform.ScriptInterpreter.CallFunction(buttonproperties[i].actionname, nil, []);
+    end;
+  end;
+
+  for i := 0 to length(Radiobuttons) - 1 do
+  begin
+    if Sender = Radiobuttons[i] then
+    begin
+      if radiobuttonproperties[i].actionname <> '' then
+        mainform.ScriptInterpreter.CallFunction(radiobuttonproperties[i].actionname, nil, [radiobuttons[i].ItemIndex]);
+    end;
+  end;
+
+  if Sender = Colorpicker then
+  begin
+    mainform.ScriptInterpreter.CallFunction('colorchange', nil, [colorpicker.SelectedColor]);
+  end;
+
+  if Sender = PositionXY then
+  begin
+    mainform.ScriptInterpreter.CallFunction('positionchange', nil, []);
+  end;
+end;
+
+procedure TDDFWindow.BScroll(Sender: TObject; ScrollCode: TScrollCode; var ScrollPos: integer);
+begin
+  startscript(Colorpicker);
+end;
+
+procedure TDDFWindow.fadenkreuzMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  if Button = mbLeft then
+  begin
+    PositionXY.Top  := Y - PositionXY.Height div 2;
+    PositionXY.Left := X - PositionXY.Width div 2;
+  end else
+  begin
+    PositionXY.Top  := (fadenkreuz.Height div 2) - (PositionXY.Height div 2);
+    PositionXY.Left := (fadenkreuz.Width div 2) - (PositionXY.Width div 2);
+  end;
+  startscript(positionxy);
+end;
+
+procedure TDDFWindow.fadenkreuzMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+begin
+  if Shift = [ssLeft] then
+  begin
+    if ((x - (PositionXY.Width div 2)) >= 0 - (PositionXY.Width div 2)) and ((x - (PositionXY.Width div 2)) <= fadenkreuz.Width - (PositionXY.Width div 2)) then
+      PositionXY.Left := x - (PositionXY.Width div 2);
+    if ((y - (PositionXY.Height div 2)) >= 0 - (PositionXY.Height div 2)) and ((y - (PositionXY.Height div 2)) <= fadenkreuz.Height - (PositionXY.Height div 2)) then
+      PositionXY.Top := y - (PositionXY.Height div 2);
+    PositionXY.Refresh;
+
+    startscript(positionxy);
+  end;
+end;
+
+procedure TDDFWindow.PositionXYMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+begin
+  if Shift = [ssLeft] then
+  begin
+    if ((PositionXY.Left + x - (PositionXY.Width div 2)) >= 0 - (PositionXY.Width div 2)) and ((PositionXY.Left + x - (PositionXY.Width div 2)) <= fadenkreuz.Width - (PositionXY.Width div 2)) then
+      PositionXY.Left := PositionXY.Left + x - (PositionXY.Width div 2);
+    if ((PositionXY.Top + y - (PositionXY.Height div 2)) >= 0 - (PositionXY.Height div 2)) and ((PositionXY.Top + y - (PositionXY.Height div 2)) <= fadenkreuz.Height - (PositionXY.Height div 2)) then
+      PositionXY.Top := PositionXY.Top + y - (PositionXY.Height div 2);
+    PositionXY.Refresh;
+
+    startscript(positionxy);
+  end;
+end;
+
+procedure TDDFWindow.ColorPicker2Change(Sender: TObject);
+begin
+  if ColorPicker2.Visible then
+  begin
+    TColor2RGB(ColorPicker2.SelectedColor, Red, Green, Blue);
+
+    R.Position := Red;
+    G.Position := Green;
+    B.position := Blue;
+
+    startscript(Colorpicker);
+  end;
+end;
+
+procedure TDDFWindow.loadDDF(ID: TGUID);
+var
+  i, j, k, l: integer;
+  DevicePrototypPosition: integer;
+begin
+  LockWindow(ddfwindow.Handle);
+
+  DevicePrototypPosition := 0;
+  deleteDDFwindow;
+
+  for i := 0 to length(mainform.devices) - 1 do
+    if GUIDtoString(mainform.devices[i].ID) = GUIDtoString(ID) then
+    begin
+      for j := 0 to length(geraetesteuerung.DevicePrototyp) - 1 do
+      begin
+        if mainform.devices[i].DeviceName = geraetesteuerung.deviceprototyp[j].DeviceName then
+          DevicePrototypPosition := j;
+      end;
+
+      with ddfwindow do
+      begin
+        ddfwindow.DeviceID := mainform.devices[i].ID;
+
+        XML.Xml.LoadFromFile(mainform.workingdirectory + '\Devices\' + geraetesteuerung.deviceprototyp[DevicePrototypPosition].ddffilename);
+        for j := 0 to XML.Xml.Root.Items.Count - 1 do
+        begin // <device>
+          if XML.XML.Root.Items[j].Name = 'form' then
+          begin // <form>
+            DDFWindow.Width  := XML.XML.Root.Items[j].Properties.IntValue('width');
+            DDFWindow.Height := XML.XML.Root.Items[j].Properties.IntValue('height');
+            for k := 0 to XML.XML.Root.Items[j].Items.Count - 1 do
+            begin
+              if XML.XML.Root.Items[j].Items[k].Name = 'deviceimage' then
+              begin
+                if FileExists(mainform.workingdirectory + 'Devicepictures\' + '64 x 64' + copy(mainform.devices[i].Bildadresse, 8, length(mainform.devices[i].Bildadresse))) then
+                begin
+                  // versuche 64x64 Bild zu laden
+                  ddfwindow.deviceimage.Picture.LoadFromFile(mainform.workingdirectory + 'Devicepictures\' + '64 x 64' + copy(mainform.devices[i].Bildadresse, 8, length(mainform.devices[i].Bildadresse)));
+                end else
+                if FileExists(mainform.workingdirectory + 'Devicepictures\' + mainform.devices[i].Bildadresse) then
+                begin
+                  // 64x64 existiert nicht, eingestelltes Bild laden
+                  ddfwindow.deviceimage.Picture.LoadFromFile(mainform.workingdirectory + 'Devicepictures\' + mainform.devices[i].Bildadresse);
+                end else
+                begin
+                  // Gerätebild nicht verfügbar, Gerätegruppenbild laden
+                  try
+                    ddfwindow.deviceimage.Picture.LoadFromFile(mainform.workingdirectory + '\Devicepictures\' + geraetesteuerung.deviceprototyp[DevicePrototypPosition].Bildadresse);
+                  except
+                    // Gerätegruppenbild nicht verfügbar, Standardbild laden
+                    ShowMessage('Das Bild "' + geraetesteuerung.deviceprototyp[DevicePrototypPosition].Bildadresse + '" welches in der DDF Datei referenziert ist, wurde nicht gefunden!');
+                  end;
+                end;
+
+                ddfwindow.deviceimage.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+                ddfwindow.deviceimage.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+                ddfwindow.deviceimage.Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+                ddfwindow.deviceimage.Height := XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+                ddfwindow.deviceimage.Visible := True;
+              end;
+              if XML.XML.Root.Items[j].Items[k].Name = 'devicename' then
+              begin
+                ddfwindow.devicename.Caption := mainform.Devices[i].Name;
+                ddfwindow.Caption := 'Gerät: ' + mainform.Devices[i].DeviceName;
+                ddfwindow.devicename.Top := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+                ddfwindow.devicename.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+                //              devicename.Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+                //              devicename.Height:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+                ddfwindow.devicename.Visible := True;
+              end;
+              if XML.XML.Root.Items[j].Items[k].Name = 'deviceadress' then
+              begin
+                ddfwindow.deviceadress.Caption := 'Startadresse: ' + IntToStr(mainform.Devices[i].Startaddress);
+                ddfwindow.deviceadress.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+                ddfwindow.deviceadress.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+                //              deviceadress.Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+                //              deviceadress.Height:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+                ddfwindow.deviceadress.Visible := True;
+              end;
+              if XML.XML.Root.Items[j].Items[k].Name = 'position' then
+              begin
+                ddfwindow.fadenkreuz.Visible := True;
+                ddfwindow.fadenkreuz.top := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+                ddfwindow.fadenkreuz.left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+                ddfwindow.fadenkreuz.Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+                ddfwindow.fadenkreuz.Height := XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+                ddfwindow.Bevel1.Left := fadenkreuz.Width div 2;
+                ddfwindow.Bevel1.Height := fadenkreuz.Height;
+                ddfwindow.Bevel2.Top  := fadenkreuz.Height div 2;
+                ddfwindow.Bevel2.Width := fadenkreuz.Width;
+                ddfwindow.PositionXY.Top := (fadenkreuz.Height div 2) - (PositionXY.Height div 2);
+                ddfwindow.PositionXY.Left := (fadenkreuz.Width div 2) - (PositionXY.Width div 2);
+              end;
+              if XML.XML.Root.Items[j].Items[k].Name = 'label' then
+              begin
+                setlength(Labels, length(Labels) + 1);
+                ddfwindow.Labels[length(Labels) - 1] := TLabel.Create(self);
+                ddfwindow.Labels[length(Labels) - 1].Parent := DDFWindow;
+                ddfwindow.Labels[length(Labels) - 1].Top := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+                ddfwindow.Labels[length(Labels) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+                ddfwindow.Labels[length(Labels) - 1].Caption := XML.XML.Root.Items[j].Items[k].Properties.Value('caption');
+                ddfwindow.Labels[length(Labels) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+                ddfwindow.Labels[length(Labels) - 1].Visible := True;
+              end;
+              if XML.XML.Root.Items[j].Items[k].Name = 'slider' then
+              begin
+                setlength(Sliders, length(Sliders) + 1);
+                setlength(sliderproperties, length(sliderproperties) + 1);
+                Sliders[length(Sliders) - 1] := TScrollbar.Create(self);
+                Sliders[length(Sliders) - 1].Parent := DDFWindow;
+                if XML.XML.Root.Items[j].Items[k].Properties.Value('name') <> '' then
+                  Sliders[length(Sliders) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+                sliderproperties[length(sliderproperties) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+                sliderproperties[length(sliderproperties) - 1].channel := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+                sliderproperties[length(sliderproperties) - 1].actionname := XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+                Sliders[length(Sliders) - 1].Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+                Sliders[length(Sliders) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+                Sliders[length(Sliders) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+                Sliders[length(Sliders) - 1].Height := XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+                Sliders[length(Sliders) - 1].Min  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('startvalue');
+                Sliders[length(Sliders) - 1].Max  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('endvalue');
+                Sliders[length(Sliders) - 1].position := XML.XML.Root.Items[j].Items[k].Properties.IntValue('default');
+                Sliders[length(Sliders) - 1].Visible := True;
+                Sliders[length(Sliders) - 1].OnScroll := sliderscroll;
+              end;
+              if XML.XML.Root.Items[j].Items[k].Name = 'dropdown' then
+              begin
+                setlength(Comboboxs, length(Comboboxs) + 1);
+                setlength(comboboxproperties, length(comboboxproperties) + 1);
+                Comboboxs[length(Comboboxs) - 1] := TCombobox.Create(self);
+                Comboboxs[length(Comboboxs) - 1].Parent := DDFWindow;
+                Comboboxs[length(Comboboxs) - 1].Style := csDropDownList;
+                if XML.XML.Root.Items[j].Items[k].Properties.Value('name') <> '' then
+                  Comboboxs[length(Comboboxs) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+                comboboxproperties[length(comboboxproperties) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+                comboboxproperties[length(comboboxproperties) - 1].channel := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+                comboboxproperties[length(comboboxproperties) - 1].actionname := XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+                Comboboxs[length(Comboboxs) - 1].Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+                Comboboxs[length(Comboboxs) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+                Comboboxs[length(Comboboxs) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+                Comboboxs[length(Comboboxs) - 1].Visible := True;
+                setlength(comboboxproperties[length(comboboxproperties) - 1].itemvalue, XML.XML.Root.Items[j].Items[k].Items.Count);
+                for l := 0 to XML.XML.Root.Items[j].Items[k].Items.Count - 1 do
+                begin
+                  comboboxproperties[length(comboboxproperties) - 1].itemvalue[l] := XML.XML.Root.Items[j].Items[k].Items[l].Properties.IntValue('value');
+                  Comboboxs[length(Comboboxs) - 1].Items.Add(XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('caption'));
+                end;
+                Comboboxs[length(Comboboxs) - 1].ItemIndex := 0;
+                Comboboxs[length(Comboboxs) - 1].OnSelect  := startscript;
+              end;
+              if XML.XML.Root.Items[j].Items[k].Name = 'line' then
+              begin
+                setlength(Shapes, length(Shapes) + 1);
+                Shapes[length(Shapes) - 1] := TShape.Create(self);
+                Shapes[length(Shapes) - 1].Parent := DDFWindow;
+                Shapes[length(Shapes) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('x1');
+                Shapes[length(Shapes) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('x2') - Shapes[length(Shapes) - 1].Left;
+                Shapes[length(Shapes) - 1].Top := XML.XML.Root.Items[j].Items[k].Properties.IntValue('y1');
+                Shapes[length(Shapes) - 1].Height := XML.XML.Root.Items[j].Items[k].Properties.IntValue('y2') - Shapes[length(Shapes) - 1].Top + 1;
+                Shapes[length(Shapes) - 1].Visible := True;
+              end;
+              if XML.XML.Root.Items[j].Items[k].Name = 'colorpicker' then
+              begin
+                Colorpicker.Top := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+                R.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top') + 140;
+                G.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top') + 157;
+                B.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top') + 174;
+                Colorpicker.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+                R.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 6;
+                G.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 6;
+                B.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 6;
+                Colorpicker.Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+                Colorpicker.Height := XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+                Colorpickerchannel[0] := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel1');
+                Colorpickerchannel[1] := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel2');
+                Colorpickerchannel[2] := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel3');
+                Colorpicker.Visible := True;
+{
+            R.Visible:=true;
+            G.Visible:=true;
+            B.Visible:=true;
+}
+              end;
+              if XML.XML.Root.Items[j].Items[k].Name = 'colorpicker2' then
+              begin
+                Colorpicker2.Top := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+                R.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top') + 140;
+                G.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top') + 157;
+                B.Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top') + 174;
+                Colorpicker2.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 7;
+                R.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 6;
+                G.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 6;
+                B.Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left') + 6;
+{
+            Colorpicker2.Width:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+            Colorpicker2.Height:=XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+}
+                Colorpickerchannel[0] := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel1');
+                Colorpickerchannel[1] := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel2');
+                Colorpickerchannel[2] := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel3');
+                Colorpicker2.Visible := True;
+{
+            R.Visible:=true;
+            G.Visible:=true;
+            B.Visible:=true;
+}
+              end;
+              if XML.XML.Root.Items[j].Items[k].Name = 'button' then
+              begin
+                setlength(Buttons, length(Buttons) + 1);
+                setlength(buttonproperties, length(buttonproperties) + 1);
+                Buttons[length(Buttons) - 1] := TButton.Create(self);
+                Buttons[length(Buttons) - 1].Parent := DDFWindow;
+                if XML.XML.Root.Items[j].Items[k].Properties.Value('name') <> '' then
+                  Buttons[length(Buttons) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+                Buttonproperties[length(Buttonproperties) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+                Buttonproperties[length(Buttonproperties) - 1].channel := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+                Buttonproperties[length(Buttonproperties) - 1].onvalue := XML.XML.Root.Items[j].Items[k].Properties.IntValue('onvalue');
+                Buttonproperties[length(Buttonproperties) - 1].offvalue := XML.XML.Root.Items[j].Items[k].Properties.IntValue('offvalue');
+                Buttonproperties[length(Buttonproperties) - 1].actionname := XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+                Buttons[length(Buttons) - 1].Caption := XML.XML.Root.Items[j].Items[k].Properties.Value('caption');
+                Buttons[length(Buttons) - 1].Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top');
+                Buttons[length(Buttons) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+                Buttons[length(Buttons) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width');
+                Buttons[length(Buttons) - 1].Height := XML.XML.Root.Items[j].Items[k].Properties.IntValue('height');
+                Buttons[length(Buttons) - 1].Visible := True;
+                Buttons[length(Buttons) - 1].OnClick := startscript;
+              end;
+              if XML.XML.Root.Items[j].Items[k].Name = 'options' then
+              begin
+                setlength(Radiobuttons, length(Radiobuttons) + 1);
+                setlength(radiobuttonproperties, length(radiobuttonproperties) + 1);
+                Radiobuttons[length(Radiobuttons) - 1] := TRadioGroup.Create(self);
+                Radiobuttons[length(Radiobuttons) - 1].Parent := DDFWindow;
+                if XML.XML.Root.Items[j].Items[k].Properties.Value('name') <> '' then
+                  Radiobuttons[length(Radiobuttons) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+                radiobuttonproperties[length(radiobuttonproperties) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+                radiobuttonproperties[length(radiobuttonproperties) - 1].channel := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+                radiobuttonproperties[length(radiobuttonproperties) - 1].actionname := XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+                Radiobuttons[length(Radiobuttons) - 1].Top := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top', 50);
+                Radiobuttons[length(Radiobuttons) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+                Radiobuttons[length(Radiobuttons) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width', 100);
+                Radiobuttons[length(Radiobuttons) - 1].Visible := True;
+                setlength(radiobuttonproperties[length(radiobuttonproperties) - 1].itemvalue, XML.XML.Root.Items[j].Items[k].Items.Count);
+                for l := 0 to XML.XML.Root.Items[j].Items[k].Items.Count - 1 do
+                begin
+                  radiobuttonproperties[length(radiobuttonproperties) - 1].itemvalue[l] := XML.XML.Root.Items[j].Items[k].Items[l].Properties.IntValue('value');
+                  Radiobuttons[length(Radiobuttons) - 1].Items.Add(XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('caption'));
+                  if XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('default') = 'true' then
+                    Radiobuttons[length(Radiobuttons) - 1].ItemIndex := l;
+                end;
+                Radiobuttons[length(Radiobuttons) - 1].OnClick := startscript;
+              end;
+              if XML.XML.Root.Items[j].Items[k].Name = 'checkbox' then
+              begin
+                setlength(checkboxs, length(checkboxs) + 1);
+                setlength(checkboxproperties, length(checkboxproperties) + 1);
+                checkboxs[length(checkboxs) - 1] := TCheckbox.Create(self);
+                Checkboxs[length(checkboxs) - 1].Parent := DDFWindow;
+                if XML.XML.Root.Items[j].Items[k].Properties.Value('name') <> '' then
+                  checkboxs[length(checkboxs) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+                Checkboxproperties[length(Checkboxproperties) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+                Checkboxproperties[length(Checkboxproperties) - 1].channel := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+                Checkboxproperties[length(Checkboxproperties) - 1].actionname := XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+                Checkboxs[length(Checkboxs) - 1].Caption := XML.XML.Root.Items[j].Items[k].Properties.Value('caption');
+                Checkboxs[length(Checkboxs) - 1].Checked := XML.XML.Root.Items[j].Items[k].Properties.Value('checked') = 'true';
+                Checkboxs[length(Checkboxs) - 1].Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top', 50);
+                Checkboxs[length(Checkboxs) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+                Checkboxs[length(Checkboxs) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width', 100);
+                Checkboxs[length(Checkboxs) - 1].Visible := True;
+                Checkboxs[length(Checkboxs) - 1].OnClick := startscript;
+              end;
+              if XML.XML.Root.Items[j].Items[k].Name = 'edit' then
+              begin
+                setlength(edits, length(Edits) + 1);
+                setlength(editproperties, length(editproperties) + 1);
+                Edits[length(Edits) - 1] := TEdit.Create(self);
+                Edits[length(Edits) - 1].Parent := DDFWindow;
+                if XML.XML.Root.Items[j].Items[k].Properties.Value('name') <> '' then
+                  Edits[length(Edits) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+                Editproperties[length(Editproperties) - 1].Name := XML.XML.Root.Items[j].Items[k].Properties.Value('name');
+                Editproperties[length(Editproperties) - 1].channel := XML.XML.Root.Items[j].Items[k].Properties.IntValue('channel');
+                Editproperties[length(Editproperties) - 1].actionname := XML.XML.Root.Items[j].Items[k].Properties.Value('action');
+                Edits[length(Edits) - 1].Text := XML.XML.Root.Items[j].Items[k].Properties.Value('text');
+                Edits[length(Edits) - 1].Top  := XML.XML.Root.Items[j].Items[k].Properties.IntValue('top', 50);
+                Edits[length(Edits) - 1].Left := XML.XML.Root.Items[j].Items[k].Properties.IntValue('left');
+                Edits[length(Edits) - 1].Width := XML.XML.Root.Items[j].Items[k].Properties.IntValue('width', 100);
+                Edits[length(Edits) - 1].Visible := True;
+                Edits[length(Edits) - 1].OnChange := startscript;
+              end;
+            end;
+          end;
+          if XML.XML.Root.Items[j].Name = 'code' then
+          begin // <code>
+            funktionen := XML.XML.Root.Items[j].Value;
+            mainform.ScriptInterpreter.Pas.Text := XML.XML.Root.Items[j].Value;
+            mainform.ScriptInterpreter.Compile;
+          end;
+        end;
+      end;
+    end;
+
+  ddfwindow.Show;
+  mainform.ScriptInterpreter.CallFunction('FormShow', nil, []);
+
+  UnLockWindow(DDFWindow.Handle);
+end;
+
+procedure TDDFWindow.deleteDDFwindow;
+var
+  i: integer;
+begin
+  with DDFWindow do
+  begin
+    deviceimage.Width  := 128;
+    deviceimage.Height := 128;
+    deviceimage.Picture.LoadFromFile(mainform.workingdirectory + '\Devicepictures\128x128\par56silber.png');
+
+    devicename.Top  := 150;
+    devicename.Left := 8;
+    devicename.Caption := 'PC_DIMMER Gerätesteuerung';
+    deviceadress.Top := 165;
+    deviceadress.Left := 8;
+    deviceadress.Caption := 'Derzeit keine Geräte selektiert.';
+
+    // zunächst alle Controls der Form löschen
+    for i := 0 to length(Edits) - 1 do
+      Edits[i].Free;
+    setlength(Edits, 0);
+    setlength(editproperties, 0);
+
+    for i := 0 to length(CheckBoxs) - 1 do
+      CheckBoxs[i].Free;
+    setlength(Checkboxs, 0);
+    setlength(checkboxproperties, 0);
+
+    for i := 0 to length(ComboBoxs) - 1 do
+      ComboBoxs[i].Free;
+    setlength(Comboboxs, 0);
+    setlength(comboboxproperties, 0);
+
+    for i := 0 to length(Labels) - 1 do
+      Labels[i].Free;
+    setlength(Labels, 0);
+
+    for i := 0 to length(Sliders) - 1 do
+      Sliders[i].Free;
+    setlength(Sliders, 0);
+    setlength(sliderproperties, 0);
+
+    for i := 0 to length(Shapes) - 1 do
+      Shapes[i].Free;
+    setlength(Shapes, 0);
+
+    for i := 0 to length(Buttons) - 1 do
+      Buttons[i].Free;
+    setlength(Buttons, 0);
+    setlength(buttonproperties, 0);
+
+    for i := 0 to length(Radiobuttons) - 1 do
+      Radiobuttons[i].Free;
+    setlength(Radiobuttons, 0);
+    setlength(radiobuttonproperties, 0);
+
+    Colorpicker.Visible := False;
+{
+  R.Visible:=false;
+  G.Visible:=false;
+  B.Visible:=false;
+}
+    fadenkreuz.Visible  := False;
+  end;
+end;
+
+procedure TDDFWindow.RefreshTimerTimer(Sender: TObject);
+begin
+  mainform.ScriptInterpreter.CallFunction('FormRefresh', nil, []);
+  RefreshTimer.Enabled := False;
+end;
+
+procedure TDDFWindow.sliderscroll(Sender: TObject; ScrollCode: TScrollCode; var ScrollPos: integer);
+begin
+  startscript(Sender);
+end;
+
+procedure TDDFWindow.ColorPickerColorChange(Sender: TObject);
+begin
+  TColor2RGB(colorpicker.SelectedColor, Red, Green, Blue);
+
+  //  R.Position:=Red;
+  //  G.Position:=Green;
+  //  B.position:=Blue;
+
+  startscript(Colorpicker);
+end;
+
+end.

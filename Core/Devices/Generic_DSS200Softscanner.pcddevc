@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\ts255.png">
+ <information id="PC_DIMMER">
+ <name>DSS200 SoftScanner</name>
+ <vendor>Generic</vendor>
+ <author>Christian Nöding</author>
+ <description>Scanner-Emulation über herkömmlichen Beamer</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="PanFine" fade="yes" type="panfine"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="TiltFine" fade="no" type="tiltfine"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="GOBO1" fade="yes" type="gobo1"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="GoboRotation" fade="yes" type="gobo1rot"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="Steuerung 1" fade="yes" type="special1"/>
+  <function channel="10" minvalue="0" maxvalue="255" name="Breite" fade="yes" type="iris"/>
+  <function channel="11" minvalue="0" maxvalue="255" name="Höhe" fade="yes" type="shutter"/>
+  <function channel="12" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+  <function channel="13" minvalue="0" maxvalue="255" name="Ansicht" fade="yes" type="special2"/>
+  <function channel="14" minvalue="0" maxvalue="255" name="Presets" fade="yes" type="special3"/>
+ </channels>
+ <initvalues ch0="127" ch1="0" ch2="127" ch3="0" ch4="0" ch5="128" ch6="255" ch7="255" ch8="255" ch9="10" ch10="128" ch11="128" ch12="255" ch13="0" ch14="0" />
+ <colors>
+  <color name="Weiß" value="0" valueend="0" r="255" g="255" b="255" />
+  <color name="Rot" value="50" valueend="50" r="255" g="0" b="0" />
+  <color name="Gelb" value="80" valueend="80" r="255" g="255" b="0" />
+  <color name="Violett" value="110" valueend="110" r="128" g="0" b="128" />
+  <color name="Grün" value="140" valueend="140" r="0" g="255" b="0" />
+  <color name="Orange" value="170" valueend="170" r="255" g="128" b="0" />
+  <color name="Blau" value="210" valueend="210" r="0" g="0" b="255" />
+  <color name="Pink" value="250" valueend="250" r="255" g="0" b="255" />
+ </colors>
+ <shutter OpenValue="255" CloseValue="0" ChannelName="special1"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="special1"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="127" LeftMaxValue="0" OffValue="128" RightMinValue="129" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="370" height="472">
+  <deviceimage top="0" left="0" width="64" height="64"/>
+  <devicename top="8" left="80"/>
+  <deviceadress top="24" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorpicker top="40" left="210" />
+  <position top="40" left="10" height="180" width="180" />
+  <edit name="fadetime" top="210" left="290" width="40" height="21" text="1" action=""/>
+  <checkbox name="Checkbox1" top="400" left="170" width="20" height="17" caption="" action="" checked="false"/>
+  <checkbox name="Checkbox2" top="210" left="340" width="20" height="17" caption="" action="" checked="false"/>
+  <dropdown name="gobolist" top="250" left="10" width="160" height="21" action="setgobo">
+   <item caption="01 Open" value="0" picture="" />
+   <item caption="02 Circle" value="1" picture="" />
+   <item caption="03 Closed" value="2" picture="" />
+   <item caption="04 Dots in Circle" value="3" picture="" />
+   <item caption="05 Grid" value="4" picture="" />
+   <item caption="06 Pattern" value="5" picture="" />
+   <item caption="07 Turbine" value="6" picture="" />
+   <item caption="08 Churchwindow" value="7" picture="" />
+   <item caption="09 Circlepattern 1" value="8" picture="" />
+   <item caption="10 Circlepattern 2" value="9" picture="" />
+   <item caption="11 Fan" value="10" picture="" />
+   <item caption="12 Big Fan" value="11" picture="" />
+   <item caption="13 Flowers" value="12" picture="" />
+   <item caption="14 Dots in Line" value="13" picture="" />
+   <item caption="15 Klingon" value="14" picture="" />
+   <item caption="16 Lilium" value="15" picture="" />
+   <item caption="17 Fireworks" value="16" picture="" />
+   <item caption="18 Small Dot" value="17" picture="" />
+   <item caption="19 Snowflake" value="18" picture="" />
+   <item caption="20 Spiral" value="19" picture="" />
+   <item caption="21 Star 1" value="20" picture="" />
+   <item caption="22 Star 2" value="21" picture="" />
+   <item caption="23 Sun" value="22" picture="" />
+   <item caption="24 Woolmark" value="23" picture="" />
+   <item caption="25 Stern" value="24" picture="" />
+   <item caption="26 PHS200" value="25" picture="" />
+   <item caption="27 Stars" value="26" picture="" />
+   <item caption="28 Balken" value="27" picture="" />
+   <item caption="29 Palme" value="28" picture="" />
+   <item caption="30 Kugelstriche" value="29" picture="" />
+   <item caption="31 Dreieck" value="30" picture="" />
+   <item caption="32 Splash" value="31" picture="" />
+   <item caption="33 Balkenspirale" value="32" picture="" />
+   <item caption="34 Wald" value="33" picture="" />
+  </dropdown>
+  <dropdown name="special" top="300" left="10" width="160" height="21" action="setspecial">
+   <item caption="Normal" value="0" picture="" />
+   <item caption="Partikel" value="10" picture="" />
+  </dropdown>
+  <dropdown name="presetlist" top="350" left="10" width="340" height="21" action="setpreset">
+   <item caption="0: -= Standard =-" value="0" picture="" />
+   <item caption="1: Sternschnuppe" value="1" picture="" />
+   <item caption="2: Horizontale Verteilung" value="2" picture="" />
+   <item caption="3: Horizonale Explosion" value="3" picture="" />
+   <item caption="4: 3D-Simulation" value="4" picture="" />
+   <item caption="5: Frei" value="5" picture="" />
+   <item caption="6: Frei" value="6" picture="" />
+   <item caption="7: Frei" value="7" picture="" />
+   <item caption="8: Frei" value="8" picture="" />
+   <item caption="9: Frei" value="9" picture="" />
+   <item caption="10: Frei" value="10" picture="" />
+   <item caption="11: Frei" value="11" picture="" />
+   <item caption="12: Frei" value="12" picture="" />
+   <item caption="13: Frei" value="13" picture="" />
+   <item caption="14: Frei" value="14" picture="" />
+   <item caption="15: Frei" value="15" picture="" />
+   <item caption="16: Frei" value="16" picture="" />
+   <item caption="17: Frei" value="17" picture="" />
+   <item caption="18: Frei" value="18" picture="" />
+   <item caption="19: Frei" value="19" picture="" />
+   <item caption="20: Frei" value="20" picture="" />
+   <item caption="21: Frei" value="21" picture="" />
+   <item caption="22: Frei" value="22" picture="" />
+   <item caption="23: Frei" value="23" picture="" />
+   <item caption="24: Frei" value="24" picture="" />
+   <item caption="25: Frei" value="25" picture="" />
+   <item caption="26: Frei" value="26" picture="" />
+   <item caption="27: Frei" value="27" picture="" />
+   <item caption="28: Frei" value="28" picture="" />
+   <item caption="29: Frei" value="29" picture="" />
+   <item caption="30: Frei" value="30" picture="" />
+   <item caption="31: Frei" value="31" picture="" />
+   <item caption="32: Frei" value="32" picture="" />
+   <item caption="33: Frei" value="33" picture="" />
+   <item caption="34: Frei" value="34" picture="" />
+   <item caption="35: Frei" value="35" picture="" />
+   <item caption="36: Frei" value="36" picture="" />
+   <item caption="37: Frei" value="37" picture="" />
+   <item caption="38: Frei" value="38" picture="" />
+   <item caption="39: Frei" value="39" picture="" />
+   <item caption="40: Frei" value="40" picture="" />
+   <item caption="41: Frei" value="41" picture="" />
+   <item caption="42: Frei" value="42" picture="" />
+   <item caption="43: Frei" value="43" picture="" />
+   <item caption="44: Frei" value="44" picture="" />
+   <item caption="45: Frei" value="45" picture="" />
+   <item caption="46: Frei" value="46" picture="" />
+   <item caption="47: Frei" value="47" picture="" />
+   <item caption="48: Frei" value="48" picture="" />
+   <item caption="49: Frei" value="49" picture="" />
+   <item caption="50: Frei" value="50" picture="" />
+   <item caption="51: Frei" value="51" picture="" />
+   <item caption="52: Frei" value="52" picture="" />
+   <item caption="53: Frei" value="53" picture="" />
+   <item caption="54: Frei" value="54" picture="" />
+   <item caption="55: Frei" value="55" picture="" />
+   <item caption="56: Frei" value="56" picture="" />
+   <item caption="57: Frei" value="57" picture="" />
+   <item caption="58: Frei" value="58" picture="" />
+   <item caption="59: Frei" value="59" picture="" />
+   <item caption="60: Frei" value="60" picture="" />
+   <item caption="61: Frei" value="61" picture="" />
+   <item caption="62: Frei" value="62" picture="" />
+   <item caption="63: Frei" value="63" picture="" />
+   <item caption="64: Frei" value="64" picture="" />
+   <item caption="65: Frei" value="65" picture="" />
+   <item caption="66: Frei" value="66" picture="" />
+   <item caption="67: Frei" value="67" picture="" />
+   <item caption="68: Frei" value="68" picture="" />
+   <item caption="69: Frei" value="69" picture="" />
+   <item caption="70: Frei" value="70" picture="" />
+   <item caption="71: Frei" value="71" picture="" />
+   <item caption="72: Frei" value="72" picture="" />
+   <item caption="73: Frei" value="73" picture="" />
+   <item caption="74: Frei" value="74" picture="" />
+   <item caption="75: Frei" value="75" picture="" />
+   <item caption="76: Frei" value="76" picture="" />
+   <item caption="77: Frei" value="77" picture="" />
+   <item caption="78: Frei" value="78" picture="" />
+   <item caption="79: Frei" value="79" picture="" />
+   <item caption="80: Frei" value="80" picture="" />
+   <item caption="81: Frei" value="81" picture="" />
+   <item caption="82: Frei" value="82" picture="" />
+   <item caption="83: Frei" value="83" picture="" />
+   <item caption="84: Frei" value="84" picture="" />
+   <item caption="85: Frei" value="85" picture="" />
+   <item caption="86: Frei" value="86" picture="" />
+   <item caption="87: Frei" value="87" picture="" />
+   <item caption="88: Frei" value="88" picture="" />
+   <item caption="89: Frei" value="89" picture="" />
+   <item caption="90: Frei" value="90" picture="" />
+   <item caption="91: Frei" value="91" picture="" />
+   <item caption="92: Frei" value="92" picture="" />
+   <item caption="93: Frei" value="93" picture="" />
+   <item caption="94: Frei" value="94" picture="" />
+   <item caption="95: Frei" value="95" picture="" />
+   <item caption="96: Frei" value="96" picture="" />
+   <item caption="97: Frei" value="97" picture="" />
+   <item caption="98: Frei" value="98" picture="" />
+   <item caption="99: Frei" value="99" picture="" />
+   <item caption="100: Frei" value="100" picture="" />
+   <item caption="101: Frei" value="101" picture="" />
+   <item caption="102: Frei" value="102" picture="" />
+   <item caption="103: Frei" value="103" picture="" />
+   <item caption="104: Frei" value="104" picture="" />
+   <item caption="105: Frei" value="105" picture="" />
+   <item caption="106: Frei" value="106" picture="" />
+   <item caption="107: Frei" value="107" picture="" />
+   <item caption="108: Frei" value="108" picture="" />
+   <item caption="109: Frei" value="109" picture="" />
+   <item caption="110: Frei" value="110" picture="" />
+   <item caption="111: Frei" value="111" picture="" />
+   <item caption="112: Frei" value="112" picture="" />
+   <item caption="113: Frei" value="113" picture="" />
+   <item caption="114: Frei" value="114" picture="" />
+   <item caption="115: Frei" value="115" picture="" />
+   <item caption="116: Frei" value="116" picture="" />
+   <item caption="117: Frei" value="117" picture="" />
+   <item caption="118: Frei" value="118" picture="" />
+   <item caption="119: Frei" value="119" picture="" />
+   <item caption="120: Frei" value="120" picture="" />
+   <item caption="121: Frei" value="121" picture="" />
+   <item caption="122: Frei" value="122" picture="" />
+   <item caption="123: Frei" value="123" picture="" />
+   <item caption="124: Frei" value="124" picture="" />
+   <item caption="125: Frei" value="125" picture="" />
+   <item caption="126: Frei" value="126" picture="" />
+   <item caption="127: Frei" value="127" picture="" />
+   <item caption="128: Frei" value="128" picture="" />
+   <item caption="129: Frei" value="129" picture="" />
+   <item caption="130: Frei" value="130" picture="" />
+   <item caption="131: Frei" value="131" picture="" />
+   <item caption="132: Frei" value="132" picture="" />
+   <item caption="133: Frei" value="133" picture="" />
+   <item caption="134: Frei" value="134" picture="" />
+   <item caption="135: Frei" value="135" picture="" />
+   <item caption="136: Frei" value="136" picture="" />
+   <item caption="137: Frei" value="137" picture="" />
+   <item caption="138: Frei" value="138" picture="" />
+   <item caption="139: Frei" value="139" picture="" />
+   <item caption="140: Frei" value="140" picture="" />
+   <item caption="141: Frei" value="141" picture="" />
+   <item caption="142: Frei" value="142" picture="" />
+   <item caption="143: Frei" value="143" picture="" />
+   <item caption="144: Frei" value="144" picture="" />
+   <item caption="145: Frei" value="145" picture="" />
+   <item caption="146: Frei" value="146" picture="" />
+   <item caption="147: Frei" value="147" picture="" />
+   <item caption="148: Frei" value="148" picture="" />
+   <item caption="149: Frei" value="149" picture="" />
+   <item caption="150: Frei" value="150" picture="" />
+   <item caption="151: Frei" value="151" picture="" />
+   <item caption="152: Frei" value="152" picture="" />
+   <item caption="153: Frei" value="153" picture="" />
+   <item caption="154: Frei" value="154" picture="" />
+   <item caption="155: Frei" value="155" picture="" />
+   <item caption="156: Frei" value="156" picture="" />
+   <item caption="157: Frei" value="157" picture="" />
+   <item caption="158: Frei" value="158" picture="" />
+   <item caption="159: Frei" value="159" picture="" />
+   <item caption="160: Frei" value="160" picture="" />
+   <item caption="161: Frei" value="161" picture="" />
+   <item caption="162: Frei" value="162" picture="" />
+   <item caption="163: Frei" value="163" picture="" />
+   <item caption="164: Frei" value="164" picture="" />
+   <item caption="165: Frei" value="165" picture="" />
+   <item caption="166: Frei" value="166" picture="" />
+   <item caption="167: Frei" value="167" picture="" />
+   <item caption="168: Frei" value="168" picture="" />
+   <item caption="169: Frei" value="169" picture="" />
+   <item caption="170: Frei" value="170" picture="" />
+   <item caption="171: Frei" value="171" picture="" />
+   <item caption="172: Frei" value="172" picture="" />
+   <item caption="173: Frei" value="173" picture="" />
+   <item caption="174: Frei" value="174" picture="" />
+   <item caption="175: Frei" value="175" picture="" />
+   <item caption="176: Frei" value="176" picture="" />
+   <item caption="177: Frei" value="177" picture="" />
+   <item caption="178: Frei" value="178" picture="" />
+   <item caption="179: Frei" value="179" picture="" />
+   <item caption="180: Frei" value="180" picture="" />
+   <item caption="181: Frei" value="181" picture="" />
+   <item caption="182: Frei" value="182" picture="" />
+   <item caption="183: Frei" value="183" picture="" />
+   <item caption="184: Frei" value="184" picture="" />
+   <item caption="185: Frei" value="185" picture="" />
+   <item caption="186: Frei" value="186" picture="" />
+   <item caption="187: Frei" value="187" picture="" />
+   <item caption="188: Frei" value="188" picture="" />
+   <item caption="189: Frei" value="189" picture="" />
+   <item caption="190: Frei" value="190" picture="" />
+   <item caption="191: Frei" value="191" picture="" />
+   <item caption="192: Frei" value="192" picture="" />
+   <item caption="193: Frei" value="193" picture="" />
+   <item caption="194: Frei" value="194" picture="" />
+   <item caption="195: Frei" value="195" picture="" />
+   <item caption="196: Frei" value="196" picture="" />
+   <item caption="197: Frei" value="197" picture="" />
+   <item caption="198: Frei" value="198" picture="" />
+   <item caption="199: Frei" value="199" picture="" />
+   <item caption="200: Frei" value="200" picture="" />
+   <item caption="201: Frei" value="201" picture="" />
+   <item caption="202: Frei" value="202" picture="" />
+   <item caption="203: Frei" value="203" picture="" />
+   <item caption="204: Frei" value="204" picture="" />
+   <item caption="205: Frei" value="205" picture="" />
+   <item caption="206: Frei" value="206" picture="" />
+   <item caption="207: Frei" value="207" picture="" />
+   <item caption="208: Frei" value="208" picture="" />
+   <item caption="209: Frei" value="209" picture="" />
+   <item caption="210: Frei" value="210" picture="" />
+   <item caption="211: Frei" value="211" picture="" />
+   <item caption="212: Frei" value="212" picture="" />
+   <item caption="213: Frei" value="213" picture="" />
+   <item caption="214: Frei" value="214" picture="" />
+   <item caption="215: Frei" value="215" picture="" />
+   <item caption="216: Frei" value="216" picture="" />
+   <item caption="217: Frei" value="217" picture="" />
+   <item caption="218: Frei" value="218" picture="" />
+   <item caption="219: Frei" value="219" picture="" />
+   <item caption="220: Frei" value="220" picture="" />
+   <item caption="221: Frei" value="221" picture="" />
+   <item caption="222: Frei" value="222" picture="" />
+   <item caption="223: Frei" value="223" picture="" />
+   <item caption="224: Frei" value="224" picture="" />
+   <item caption="225: Frei" value="225" picture="" />
+   <item caption="226: Frei" value="226" picture="" />
+   <item caption="227: Frei" value="227" picture="" />
+   <item caption="228: Frei" value="228" picture="" />
+   <item caption="229: Frei" value="229" picture="" />
+   <item caption="230: Frei" value="230" picture="" />
+   <item caption="231: Frei" value="231" picture="" />
+   <item caption="232: Frei" value="232" picture="" />
+   <item caption="233: Frei" value="233" picture="" />
+   <item caption="234: Frei" value="234" picture="" />
+   <item caption="235: Frei" value="235" picture="" />
+   <item caption="236: Frei" value="236" picture="" />
+   <item caption="237: Frei" value="237" picture="" />
+   <item caption="238: Frei" value="238" picture="" />
+   <item caption="239: Frei" value="239" picture="" />
+   <item caption="240: Frei" value="240" picture="" />
+   <item caption="241: Frei" value="241" picture="" />
+   <item caption="242: Frei" value="242" picture="" />
+   <item caption="243: Frei" value="243" picture="" />
+   <item caption="244: Frei" value="244" picture="" />
+   <item caption="245: Frei" value="245" picture="" />
+   <item caption="246: Frei" value="246" picture="" />
+   <item caption="247: Frei" value="247" picture="" />
+   <item caption="248: Frei" value="248" picture="" />
+   <item caption="249: Frei" value="249" picture="" />
+   <item caption="250: Frei" value="250" picture="" />
+   <item caption="251: Frei" value="251" picture="" />
+   <item caption="252: Frei" value="252" picture="" />
+   <item caption="253: Frei" value="253" picture="" />
+   <item caption="254: Frei" value="254" picture="" />
+   <item caption="255: Frei" value="255" picture="" />
+  </dropdown>
+  <slider name="dimmer" top="300" left="190" width="160" height="20" action="setdimmer" startvalue="0" endvalue="255" default="255"/>
+  <slider name="rotation_speed" top="250" left="190" width="160" height="20" action="setrotation" startvalue="0" endvalue="255" default="128"/>
+  <slider name="heightslider" top="400" left="190" width="160" height="20" action="setheight" startvalue="0" endvalue="255" default="128"/>
+  <slider name="widthslider" top="400" left="10" width="160" height="20" action="setwidth" startvalue="0" endvalue="255" default="128"/>
+  <label name="label2" top="230" left="10" width="26" height="13" caption="Gobo"/>
+  <label name="label3" top="280" left="190" width="38" height="13" caption="Dimmer:"/>
+  <label name="label4" top="230" left="190" width="72" height="13" caption="Gobo-Rotation:"/>
+  <label name="moduslbl" top="280" left="10" width="35" height="13" caption="Modus:"/>
+  <label name="Label5" top="380" left="190" width="29" height="13" caption="Höhe:"/>
+  <label name="Label6" top="380" left="10" width="30" height="13" caption="Breite:"/>
+  <label name="Label7" top="210" left="210" width="74" height="13" caption="Einblendzeit [s]:"/>
+  <label name="Label8" top="330" left="10" width="72" height="13" caption="Partikelpresets:"/>
+  <button name="changecolorpicker" top="180" left="210" width="140" height="20" action="onchangecolorpicker" caption="Wechsle Farbwahlbox"/>
+  <button name="Button2" top="430" left="10" width="120" height="30" action="showscanner" caption="Scanner anzeigen"/>
+  <button name="Button3" top="430" left="140" width="80" height="30" action="blackout" caption="Blackout"/>
+  <button name="Button4" top="430" left="230" width="120" height="30" action="hidescanner" caption="Scanner ausblenden"/>
+  <button name="Button5" top="320" left="260" width="60" height="20" action="resetsettings" caption="Reset"/>
+ </form>
+ <code>
+  unit SoftScanner;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:String);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure setgobo;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure onchangecolorpicker;
+  procedure setrotation;
+  procedure setdimmer;
+  procedure setspecial;
+  procedure setwidth;
+  procedure setheight;
+  procedure showscanner;
+  procedure blackout;
+  procedure hidescanner;
+  procedure resetsettings;
+  procedure setpreset;
+
+  implementation
+
+var
+	dontsetvalues:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // bitte hier die eigene Funktion eintragen
+  end;
+  procedure FormShow;
+    begin
+    end;
+  procedure FormRefresh(channel:String);
+    var
+      wert:integer;
+    begin
+      if not dontsetvalues then
+			case channel of
+      0..3:
+      begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+      end;
+      4:
+      begin
+        wert:=get_channel('gobo1');
+				if not (wert >= gobolist.items.count) then gobolist.itemindex:=wert;
+      end;
+      5:
+      begin
+        wert:=get_channel('gobo1rot');
+        rotation_speed.position:=wert;
+      end;
+      9:
+      begin
+        wert:=get_channel('special1');
+        if wert>=10 then special.itemindex:=1 else
+        if wert>=0 then special.itemindex:=0;
+      end;
+      10:
+      begin
+        wert:=get_channel('iris');
+        widthslider.position:=wert;
+      end;
+      11:
+      begin
+        wert:=get_channel('shutter');
+        heightslider.position:=wert;
+      end;
+      12:
+      begin
+        wert:=get_channel('dimmer');
+        dimmer.position:=wert;
+      end;
+      14:
+      begin
+        wert:=get_channel('special3');
+				if not (wert >= presetlist.items.count) then presetlist.itemindex:=wert;
+      end;
+      end;
+      dontsetvalues:=false;
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure PositionXYChange(Top, Left: Integer);
+    begin
+      if panmirror.checked then
+        set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+      else
+        set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+
+      if tiltmirror.checked then
+        set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+      else
+        set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+    end;
+  procedure setgobo;
+    begin
+      dontsetvalues:=true;
+			set_channel('gobo1',gobolist.itemindex,gobolist.itemindex,0);
+    end;
+  procedure ColorPickerChange(R, G, B: Byte);
+  begin
+    if Checkbox2.checked then
+    begin
+	    set_channel('r',-1,r,inttostr(fadetime.text)*1000);
+  	  set_channel('g',-1,g,inttostr(fadetime.text)*1000);
+    	set_channel('b',-1,b,inttostr(fadetime.text)*1000);
+   	end else
+   	begin
+	    set_channel('r',-1,r,0);
+  	  set_channel('g',-1,g,0);
+    	set_channel('b',-1,b,0);
+   	end;
+  end;
+  procedure onchangecolorpicker;
+    begin
+      if colorpicker.visible then
+      begin
+        colorpicker.visible:=false;
+        colorpicker2.visible:=true;
+      end else
+      begin
+        colorpicker.visible:=true;
+        colorpicker2.visible:=false;
+      end;
+    end;
+  procedure setrotation;
+    begin
+      dontsetvalues:=true;
+      set_channel('gobo1rot',-1,rotation_speed.position,0);
+    end;
+  procedure setdimmer;
+    begin
+      dontsetvalues:=true;
+      set_channel('dimmer',-1,dimmer.position,0);
+    end;
+  procedure setspecial;
+  begin
+      dontsetvalues:=true;
+      case special.itemindex of
+        0: set_channel('special1',0,0,0);
+        1: set_channel('special1',10,10,0);
+      end;
+  end;
+  procedure setwidth;
+    begin
+      dontsetvalues:=true;
+      set_channel('iris',-1,widthslider.position,0);
+      if Checkbox1.checked then
+	      set_channel('shutter',-1,widthslider.position,0);
+    end;
+  procedure setheight;
+    begin
+      dontsetvalues:=true;
+      set_channel('shutter',-1,heightslider.position,0);
+      if Checkbox1.checked then
+	      set_channel('iris',-1,heightslider.position,0);
+    end;
+  procedure showscanner;
+  begin
+    set_channel('special2',-1,100,0)
+  end;
+  procedure blackout;
+  begin
+    set_channel('special2',-1,0,0)
+  end;
+  procedure hidescanner;
+  begin
+    set_channel('special2',-1,200,0)
+  end;
+  procedure resetsettings;
+  begin
+		rotation_speed.position:=128;
+		setrotation;
+		dimmer.position:=255;
+		setdimmer;
+		widthslider.position:=128;
+		setwidth;
+		heightslider.position:=128;
+		setheight;
+		fadetime.text:='1';
+  end;
+  procedure setpreset;
+  begin
+    dontsetvalues:=true;
+    set_channel('SPECIAL3',presetlist.itemindex,presetlist.itemindex,0);
+  end;
+  end.
+ </code>
+</device>

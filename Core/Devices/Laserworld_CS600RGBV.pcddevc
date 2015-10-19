@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\600RGBV.png">
+ <information id="PC_DIMMER">
+ <name>CS-600 RGBV</name>
+ <vendor>Laserworld</vendor>
+ <author>Colin</author>
+ <description>CS-600 RGBV</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Mode" fade="no" type="option"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Pattern" fade="no" type="special1"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Strobe" fade="no" type="special2"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Horizontal Movement" fade="no" type="special3"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Vertical Movement" fade="no" type="special4"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Zoom" fade="no" type="zoom"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Width" fade="no" type="special5"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Height" fade="no" type="special6"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Rotation" fade="no" type="special7"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="Blanking" fade="no" type="special8"/>
+  <function channel="10" minvalue="0" maxvalue="255" name="Wave" fade="no" type="special9"/>
+  <function channel="11" minvalue="0" maxvalue="255" name="Color" fade="no" type="color1"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" ch8="-1" ch9="-1" ch10="-1" ch11="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="470" height="572">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="modebox" top="96" left="8" width="150" height="21" action="modeboxchange">
+   <item caption="Laser off" value="0" picture="" />
+   <item caption="Sound mode" value="0" picture="" />
+   <item caption="Animated mode" value="0" picture="" />
+   <item caption="DMX mode" value="0" picture="" />
+  </dropdown>
+  <dropdown name="cbox" top="216" left="8" width="217" height="21" action="ColorBoxchange">
+   <item caption="White" value="0" picture="" />
+   <item caption="Red" value="0" picture="" />
+   <item caption="Green" value="0" picture="" />
+   <item caption="Violet" value="0" picture="" />
+   <item caption="Yellow" value="0" picture="" />
+   <item caption="Pink" value="0" picture="" />
+   <item caption="Cyan" value="0" picture="" />
+   <item caption="Green, White, Red Static" value="0" picture="" />
+   <item caption="Pink, Cyan, Yellow Static" value="0" picture="" />
+   <item caption="all Colors Static" value="0" picture="" />
+   <item caption="Green, White, Red Rotation" value="0" picture="" />
+   <item caption="Pink, Cyan, Yellow Rotation" value="0" picture="" />
+   <item caption="All Colors Rotation" value="0" picture="" />
+   <item caption="Sound Color Rotation" value="0" picture="" />
+  </dropdown>
+  <slider name="special1slider1" top="136" left="8" width="217" height="17" action="special1change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="special2slider2" top="176" left="8" width="217" height="17" action="special2change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="special3slider3" top="256" left="8" width="217" height="17" action="special3change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="special4slider4" top="296" left="8" width="217" height="17" action="special4change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="zoomslider5" top="336" left="8" width="217" height="17" action="zoomchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="special5slider6" top="376" left="8" width="217" height="17" action="special5change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="special6slider7" top="416" left="8" width="217" height="17" action="special6change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="special7slider8" top="456" left="8" width="217" height="17" action="special7change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="special8slider9" top="496" left="8" width="217" height="17" action="special8change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="special9slider10" top="536" left="8" width="217" height="17" action="special9change" startvalue="0" endvalue="255" default="0"/>
+  <label name="special1val" top="136" left="245" width="9" height="13" caption="..."/>
+  <label name="special2val" top="176" left="245" width="9" height="13" caption="..."/>
+  <label name="special3val" top="256" left="245" width="9" height="13" caption="..."/>
+  <label name="special3sta" top="256" left="270" width="9" height="13" caption="..."/>
+  <label name="special4val" top="296" left="245" width="9" height="13" caption="..."/>
+  <label name="special4sta" top="296" left="270" width="9" height="13" caption="..."/>
+  <label name="zoomval" top="336" left="245" width="9" height="13" caption="..."/>
+  <label name="zoomsta" top="336" left="270" width="9" height="13" caption="..."/>
+  <label name="special5val" top="376" left="245" width="9" height="13" caption="..."/>
+  <label name="special5sta" top="376" left="270" width="9" height="13" caption="..."/>
+  <label name="special6val" top="416" left="245" width="9" height="13" caption="..."/>
+  <label name="special6sta" top="416" left="270" width="9" height="13" caption="..."/>
+  <label name="special7val" top="456" left="245" width="9" height="13" caption="..."/>
+  <label name="special7sta" top="456" left="270" width="9" height="13" caption="..."/>
+  <label name="special8val" top="496" left="245" width="9" height="13" caption="..."/>
+  <label name="special8sta" top="496" left="270" width="9" height="13" caption="..."/>
+  <label name="special9val" top="536" left="245" width="9" height="13" caption="..."/>
+  <label name="optionlbl0" top="80" left="8" width="27" height="13" caption="Mode"/>
+  <label name="special1lbl1" top="120" left="8" width="34" height="13" caption="Pattern"/>
+  <label name="special2lbl2" top="160" left="8" width="31" height="13" caption="Strobe"/>
+  <label name="colorlbl1" top="200" left="8" width="24" height="13" caption="Color"/>
+  <label name="special3lbl3" top="240" left="8" width="100" height="13" caption="Horizontal Movement"/>
+  <label name="special4lbl4" top="280" left="8" width="88" height="13" caption="Vertical Movement"/>
+  <label name="zoomlbl5" top="320" left="8" width="27" height="13" caption="Zoom"/>
+  <label name="special5lbl6" top="360" left="8" width="28" height="13" caption="Width"/>
+  <label name="special6lbl7" top="400" left="8" width="31" height="13" caption="Height"/>
+  <label name="special7lbl8" top="440" left="8" width="40" height="13" caption="Rotation"/>
+  <label name="special8lbl9" top="480" left="8" width="41" height="13" caption="Blanking"/>
+  <label name="special9lbl10" top="520" left="8" width="29" height="13" caption="Wave"/>
+ </form>
+ <code>
+  unit cs600rgbv;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure modeboxchange;
+  procedure special1change;
+  procedure SPECIAL2change;
+  procedure SPECIAL3change;
+  procedure SPECIAL4change;
+  procedure ZOOMchange;
+  procedure SPECIAL5change;
+  procedure SPECIAL6change;
+  procedure SPECIAL7change;
+  procedure SPECIAL8change;
+  procedure SPECIAL9change;
+  procedure ColorBoxChange;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+    vmode:integer;
+    vcolor:integer;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin // mode
+	  	vmode:=get_channel('option');
+    	
+		case vmode of
+    			0..69: modebox.itemindex:=0;
+    			70..139: modebox.itemindex:=1;
+    			140..209: modebox.itemindex:=2;
+    			210..255: modebox.itemindex:=3;
+    		end;
+      end;
+      1:
+      begin
+        special1slider1.position:=get_channel('SPECIAL1');
+	special1val.caption:=levelstr(special1slider1.position);
+      end;
+      2:
+      begin
+        special2slider2.position:=get_channel('SPECIAL2');
+	special2val.caption:=levelstr(special2slider2.position*(100/255));
+      end;
+      3:
+      begin
+        special3slider3.position:=get_channel('special3');
+		case special3slider3.position of
+    			0..0:
+				begin
+					special3sta.caption:='No effect';
+					special3val.caption:='';
+				end;
+    			1..167:
+				begin
+					special3sta.caption:='Fixed Movement';
+					special3val.caption:=round((special3slider3.position-1)*(100/166));
+				end;
+    			168..188:
+				begin
+					special3sta.caption:='Animated Movement left to right';
+					special3val.caption:=round((special3slider3.position-168)*(100/20));
+				end;
+    			189..209:
+				begin
+					special3sta.caption:='DTO right to left';
+					special3val.caption:=round((special3slider3.position-189)*(100/20));
+				end;
+    			210..255:
+				begin
+					special3sta.caption:='DTO left to right and back';
+					special3val.caption:=round((special3slider3.position-210)*(100/45));
+				end;
+    		end
+      end;
+      4:
+      begin
+        special4slider4.position:=get_channel('special4');
+		case special4slider4.position of
+    			0..0:
+				begin
+					special4sta.caption:='No effect';
+					special4val.caption:='';
+				end;
+    			1..167:
+				begin
+					special4sta.caption:='Fixed Movement';
+					special4val.caption:=round((special4slider4.position-1)*(100/166));
+				end;
+    			168..188:
+				begin
+					special4sta.caption:='Animated Movement left to right';
+					special4val.caption:=round((special4slider4.position-168)*(100/20));
+				end;
+    			189..209:
+				begin
+					special4sta.caption:='DTO right to left';
+					special4val.caption:=round((special4slider4.position-189)*(100/20));
+				end;
+    			210..255:
+				begin
+					special4sta.caption:='DTO left to right and back';
+					special4val.caption:=round((special4slider4.position-210)*(100/45));
+				end;
+    		end
+      end;
+      5:
+      begin
+        zoomslider5.position:=get_channel('zoom');
+		case zoomslider5.position of
+    			0..10:
+				begin
+					zoomsta.caption:='No effect';
+					zoomval.caption:='';
+				end;
+    			11..104:
+				begin
+					zoomsta.caption:='Increasing Size';
+					zoomval.caption:=round((zoomslider5.position-11)*(100/93));
+				end;
+    			105..154:
+				begin
+					zoomsta.caption:='Growing with increasing speed';
+					zoomval.caption:=round((zoomslider5.position-105)*(100/49));
+				end;
+    			155..204:
+				begin
+					zoomsta.caption:='DTO shrinking';
+					zoomval.caption:=round((zoomslider5.position-155)*(100/49));
+				end;
+    			205..255:
+				begin
+					zoomsta.caption:='DTO growing/shrinking';
+					zoomval.caption:=round((zoomslider5.position-205)*(100/50));
+				end;
+    		end
+      end;
+      6:
+      begin
+        special5slider6.position:=get_channel('special5');
+		case special5slider6.position of
+    			0..150:
+				begin
+					special5sta.caption:='Fixed Rotation';
+					special5val.caption:=round((special5slider6.position)*(100/150));
+				end;
+    			151..255:
+				begin
+					special5sta.caption:='Automatic rotation with incr. speed';
+					special5val.caption:=round((special5slider6.position-150)*(100/99));
+				end;
+    		end
+      end;
+      7:
+      begin
+        special6slider7.position:=get_channel('special6');
+		case special6slider7.position of
+    			0..150:
+				begin
+					special6sta.caption:='Fixed Rotation';
+					special6val.caption:=round((special6slider7.position)*(100/150));
+				end;
+    			151..255:
+				begin
+					special6sta.caption:='Automatic rotation with incr. speed';
+					special6val.caption:=round((special6slider7.position-150)*(100/99));
+				end;
+    		end
+      end;
+      8:
+      begin
+        special7slider8.position:=get_channel('special7');
+		case special7slider8.position of
+    			0..180:
+				begin
+					special7sta.caption:='Fixed Rotation';
+					special7val.caption:=round((special7slider8.position)*(100/180));
+				end;
+    			181..217:
+				begin
+					special7sta.caption:='Automatic with incr.speed clockwise';
+					special7val.caption:=round((special7slider8.position-181)*(100/36));
+				end;
+    			218..255:
+				begin
+					special7sta.caption:='Do. counter clockwise';
+					special7val.caption:=round((special7slider8.position-218)*(100/37));
+				end;
+    		end
+      end;
+      9:
+      begin
+        special8slider9.position:=get_channel('special8');
+		case special8slider9.position of
+    			0..70:
+				begin
+					special8sta.caption:='No effect';
+					special8val.caption:='';
+				end;
+    			71..139:
+				begin
+					special8sta.caption:='Points are brighter';
+					special8val.caption:=round((special8slider9.position-71)*(100/68));
+				end;
+    			140..209:
+				begin
+					special8sta.caption:='Dashed lines';
+					special8val.caption:=round((special8slider9.position-140)*(100/69));
+				end;
+    			210..255:
+				begin
+					special8sta.caption:='points only';
+					special8val.caption:=round((special8slider9.position-210)*(100/45));
+				end;
+    		end
+      end;
+      10:
+      begin
+        special9slider10.position:=get_channel('special9');
+	special9val.caption:=levelstr(special9slider10.position*(100/255));
+      end;
+      11:
+      begin
+	vcolor:=get_channel('COLOR1');
+        case vcolor of
+          0..18: cbox.itemindex:=0;
+          19..37: cbox.itemindex:=1;
+          38..56: cbox.itemindex:=2;
+          57..75: cbox.itemindex:=3;
+          76..94: cbox.itemindex:=4;
+          95..113: cbox.itemindex:=5;
+          114..132: cbox.itemindex:=6;
+          133..151: cbox.itemindex:=7;
+          152..170: cbox.itemindex:=8;
+          171..189: cbox.itemindex:=9;
+          190..208: cbox.itemindex:=10;
+          209..227: cbox.itemindex:=11;
+          228..246: cbox.itemindex:=12;
+          247..255: cbox.itemindex:=13;
+        end;
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure modeboxchange;
+  begin
+    case modebox.itemindex of
+    	0: set_channel('option',-1,0,0,0);
+    	1: set_channel('option',-1,70,0,0);
+    	2: set_channel('option',-1,140,0,0);
+    	3: set_channel('option',-1,210,0,0);
+    end;
+  end;
+  procedure special1change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL1',-1,special1slider1.position,0);
+    special1val.caption:=levelstr(special1slider1.position);
+  end;
+  procedure SPECIAL2change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL2',-1,SPECIAL2slider2.position,0);
+    special2val.caption:=levelstr(special2slider2.position*(100/255));
+  end;
+  procedure SPECIAL3change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL3',-1,SPECIAL3slider3.position,0);
+		case special3slider3.position of
+    			0..0:
+				begin
+					special3sta.caption:='No effect';
+					special3val.caption:='';
+				end;
+    			1..167:
+				begin
+					special3sta.caption:='Fixed Movement';
+					special3val.caption:=round((special3slider3.position-1)*(100/166));
+				end;
+    			168..188:
+				begin
+					special3sta.caption:='Animated Movement left to right';
+					special3val.caption:=round((special3slider3.position-168)*(100/20));
+				end;
+    			189..209:
+				begin
+					special3sta.caption:='DTO right to left';
+					special3val.caption:=round((special3slider3.position-189)*(100/20));
+				end;
+    			210..255:
+				begin
+					special3sta.caption:='DTO left to right and back';
+					special3val.caption:=round((special3slider3.position-210)*(100/45));
+				end;
+    		end
+  end;
+  procedure SPECIAL4change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL4',-1,SPECIAL4slider4.position,0);
+		case special4slider4.position of
+    			0..0:
+				begin
+					special4sta.caption:='No effect';
+					special4val.caption:='';
+				end;
+    			1..167:
+				begin
+					special4sta.caption:='Fixed Movement';
+					special4val.caption:=round((special4slider4.position-1)*(100/166));
+				end;
+    			168..188:
+				begin
+					special4sta.caption:='Animated Movement left to right';
+					special4val.caption:=round((special4slider4.position-168)*(100/20));
+				end;
+    			189..209:
+				begin
+					special4sta.caption:='DTO right to left';
+					special4val.caption:=round((special4slider4.position-189)*(100/20));
+				end;
+    			210..255:
+				begin
+					special4sta.caption:='DTO left to right and back';
+					special4val.caption:=round((special4slider4.position-210)*(100/45));
+				end;
+    		end
+  end;
+  procedure ZOOMchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('ZOOM',-1,ZOOMslider5.position,0);
+		case zoomslider5.position of
+    			0..10:
+				begin
+					zoomsta.caption:='No effect';
+					zoomval.caption:='';
+				end;
+    			11..104:
+				begin
+					zoomsta.caption:='Increasing Size';
+					zoomval.caption:=round((zoomslider5.position-11)*(100/93));
+				end;
+    			105..154:
+				begin
+					zoomsta.caption:='Growing with increasing speed';
+					zoomval.caption:=round((zoomslider5.position-105)*(100/49));
+				end;
+    			155..204:
+				begin
+					zoomsta.caption:='DTO shrinking';
+					zoomval.caption:=round((zoomslider5.position-155)*(100/49));
+				end;
+    			205..255:
+				begin
+					zoomsta.caption:='DTO growing/shrinking';
+					zoomval.caption:=round((zoomslider5.position-205)*(100/50));
+				end;
+    		end
+  end;
+  procedure SPECIAL5change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL5',-1,SPECIAL5slider6.position,0);
+		case special5slider6.position of
+    			0..150:
+				begin
+					special5sta.caption:='Fixed Rotation';
+					special5val.caption:=round((special5slider6.position)*(100/150));
+				end;
+    			151..255:
+				begin
+					special5sta.caption:='Automatic rotation with incr. speed';
+					special5val.caption:=round((special5slider6.position-150)*(100/99));
+				end;
+    		end
+  end;
+  procedure SPECIAL6change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL6',-1,SPECIAL6slider7.position,0);
+		case special6slider7.position of
+    			0..150:
+				begin
+					special6sta.caption:='Fixed Rotation';
+					special6val.caption:=round((special6slider7.position)*(100/150));
+				end;
+    			151..255:
+				begin
+					special6sta.caption:='Automatic rotation with incr. speed';
+					special6val.caption:=round((special6slider7.position-150)*(100/99));
+				end;
+    		end
+  end;
+  procedure SPECIAL7change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL7',-1,SPECIAL7slider8.position,0);
+		case special7slider8.position of
+    			0..180:
+				begin
+					special7sta.caption:='Fixed Rotation';
+					special7val.caption:=round((special7slider8.position)*(100/180));
+				end;
+    			181..217:
+				begin
+					special7sta.caption:='Automatic with incr.speed clockwise';
+					special7val.caption:=round((special7slider8.position-181)*(100/36));
+				end;
+    			218..255:
+				begin
+					special7sta.caption:='Do. counter clockwise';
+					special7val.caption:=round((special7slider8.position-218)*(100/37));
+				end;
+    		end
+  end;
+  procedure SPECIAL8change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL8',-1,SPECIAL8slider9.position,0);
+		case special8slider9.position of
+    			0..70:
+				begin
+					special8sta.caption:='No effect';
+					special8val.caption:='';
+				end;
+    			71..139:
+				begin
+					special8sta.caption:='Points are brighter';
+					special8val.caption:=round((special8slider9.position-71)*(100/68));
+				end;
+    			140..209:
+				begin
+					special8sta.caption:='Dashed lines';
+					special8val.caption:=round((special8slider9.position-140)*(100/69));
+				end;
+    			210..255:
+				begin
+					special8sta.caption:='points only';
+					special8val.caption:=round((special8slider9.position-210)*(100/45));
+				end;
+    		end
+  end;
+  procedure SPECIAL9change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL9',-1,SPECIAL9slider10.position,0);
+    special9val.caption:=levelstr(special9slider10.position*(100/255));
+  end;
+  procedure ColorBoxChange;
+  begin
+    case cbox.itemindex of
+      0: set_channel('color1', -1, 0, 0);
+      1: set_channel('color1', -1, 19, 0);
+      2: set_channel('color1', -1, 38, 0);
+      3: set_channel('color1', -1, 57, 0);
+      4: set_channel('color1', -1, 76, 0);
+      5: set_channel('color1', -1, 95, 0);
+      6: set_channel('color1', -1, 114, 0);
+      7: set_channel('color1', -1, 133, 0);
+      8: set_channel('color1', -1, 152, 0);
+      9: set_channel('color1', -1, 171, 0);
+      10: set_channel('color1', -1, 190, 0);
+      11: set_channel('color1', -1, 209, 0);
+      12: set_channel('color1', -1, 228, 0);
+      13: set_channel('color1', -1, 247, 0);
+    end;
+  end;
+  end.
+ </code>
+</device>

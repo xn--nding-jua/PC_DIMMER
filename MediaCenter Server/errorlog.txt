@@ -1,0 +1,13 @@
+14:44:26, 28.09.2008 Video Input Device 0: Trust WB-1400T Webcam
+14:44:27, 28.09.2008 MediaCenter Server erfolgreich gestartet.
+14:44:33, 28.09.2008 Client Connected (localhost, 127.0.0.1)
+14:45:32, 28.09.2008 Client Disconnected (localhost, 127.0.0.1)
+14:45:46, 28.09.2008 Client Connected (localhost, 127.0.0.1)
+14:48:46, 28.09.2008 Video Input Device 0: Trust WB-1400T Webcam
+14:48:47, 28.09.2008 Video Input Device 0: Trust WB-1400T Webcam
+14:51:02, 28.09.2008 Video Input Device 0: Trust WB-1400T Webcam
+14:51:03, 28.09.2008 Video Input Device 0: Trust WB-1400T Webcam
+14:51:23, 28.09.2008 Video Input Device 0: Trust WB-1400T Webcam
+14:51:30, 28.09.2008 Client Disconnected (localhost, 127.0.0.1)
+14:51:46, 28.09.2008 Client Connected (localhost, 127.0.0.1)
+14:52:04, 28.09.2008 Client Disconnected (localhost, 127.0.0.1)

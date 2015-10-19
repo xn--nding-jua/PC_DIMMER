@@ -1,0 +1,506 @@
+// Hier kommt der Dimmerkernel
+procedure ExecuteDimmerkernelEvent;
+var
+  i,j,k,tempvalue,tempvalue1,tempvalue2:integer;
+  actualvalue,startvalue,endvalue,inkrement:integer;
+  channel_value_afterdimmcurve:Single;
+  volume:single;
+  dTime1, dTime2: Double;
+begin
+  if mainform.pcdimmerresetting then exit;
+
+  with mainform do
+  begin
+    dTime1:=0;
+    if MeasureKernelLaufzeit then
+    begin
+      dTime1 := GetTime();
+    end;
+
+    if length(DimmerKernelChannelArray)>0 then
+    for i:=length(DimmerKernelChannelArray)-1 downto 0 do
+    if i<length(DimmerKernelChannelArray) then
+    begin
+      pDimmerKernelChannel:=DimmerKernelChannelArray[i];
+      if pDimmerKernelChannel<>nil then
+      if not (pDimmerKernelChannel.DeleteChannel) then
+      begin
+        if (pDimmerKernelChannel.channel_delay>0) then
+        begin
+          // Delay noch vorhanden, also um einen Punkt dekrementieren
+          pDimmerKernelChannel.channel_delay:=pDimmerKernelChannel.channel_delay-1;
+        end else
+        begin
+          // Delay ist um. Jetzt Paket verarbeiten
+          case pDimmerKernelChannel.ChannelType of
+            0: // Normaler Lichtkanal
+            begin
+              if not pDimmerKernelChannel.DontSetValues then
+              begin
+                // Kanal ist das erste Mal an der Reihe (nach Ablauf des Delay oder bei Delay=0)
+                pDimmerKernelChannel.DontSetValues:=true;
+
+                // Zunächst alle anderen Dimmerkanäle mit gleicher Adresse zum Löschen freigeben, sofern sie bereits dimmen
+                for j:=length(DimmerKernelChannelArray)-1 downto 0 do
+                begin
+                  pDimmerKernelChannel2:=DimmerKernelChannelArray[j];
+                  if (pDimmerKernelChannel2.channel=pDimmerKernelChannel.channel) and not (pDimmerKernelChannel2=pDimmerKernelChannel) and not (pDimmerKernelChannel2.channel_delay>0) then
+                  begin
+                    // Delay ist vorbei, Kanal hat gleiche Adresse und ist nicht identisch mit gleich auszuführendem. Also kann gelöscht werden.
+                    channel_endvalue[pDimmerKernelChannel2.channel]:=channel_value[pDimmerKernelChannel2.channel];
+                    pDimmerKernelChannel2.DeleteChannel:=true;
+                  end;
+                end;
+                // Nun die neuen Dimmerwerte setzen
+                channel_value_beforedimmcurve[pDimmerKernelChannel.channel]:=channel_value[pDimmerKernelChannel.channel]*257;
+                channel_endvalue[pDimmerKernelChannel.channel]:=pDimmerKernelChannel.channel_endvalue;
+                pDimmerKernelChannel.channel_steps := round(Abs(channel_value[pDimmerKernelChannel.channel] - pDimmerKernelChannel.channel_endvalue))*257;
+
+                if pDimmerKernelChannel.IsDelayedChan then
+                begin
+                  if pDimmerKernelChannel.SetStartvalue then
+                  begin
+                    Senddata(pDimmerKernelChannel.channel, maxres-pDimmerKernelChannel.channel_startvalue, maxres-pDimmerKernelChannel.channel_startvalue, 0, 0);
+                    Senddata(pDimmerKernelChannel.channel, maxres-pDimmerKernelChannel.channel_startvalue, maxres-pDimmerKernelChannel.channel_endvalue,pDimmerKernelChannel.channel_fadetime*DimmerKernelResolution);
+                  end else
+                  begin
+                    pDimmerKernelChannel.channel_startvalue:=channel_value[pDimmerKernelChannel.channel];
+                    Senddata(pDimmerKernelChannel.channel,-1,maxres-pDimmerKernelChannel.channel_endvalue,pDimmerKernelChannel.channel_fadetime*DimmerKernelResolution);
+                  end;
+
+                  // da in der oberen Zeile ein neues Dimmerkernelobjekt erstellt wird, kann dieses hier gelöscht werden
+                  pDimmerKernelChannel.DeleteChannel:=true;
+                end;
+              end;
+
+              if not pDimmerKernelChannel.DeleteChannel then
+              if (pDimmerKernelChannel.channel_fadetime=0) then
+              begin
+                // Fadetime=0
+                channel_value_beforedimmcurve[pDimmerKernelChannel.channel]:=pDimmerKernelChannel.channel_endvalue*257;
+                channel_value[pDimmerKernelChannel.channel]:=pDimmerKernelChannel.channel_endvalue;
+                channel_endvalue[pDimmerKernelChannel.channel]:=pDimmerKernelChannel.channel_endvalue;
+
+                data.ch[pDimmerKernelChannel.channel]:=maxres-channel_value[pDimmerKernelChannel.channel];
+
+                tempvalue1:=pDimmerKernelChannel.channel;
+                tempvalue2:=channel_value[pDimmerKernelChannel.channel];
+                SendMSG(MSG_ACTUALCHANNELVALUE,tempvalue1,tempvalue2);
+                pDimmerKernelChannel.DeleteChannel:=true;
+              end else if (pDimmerKernelChannel.channel_fadetime>0) then
+              begin
+                // Fadetime>0
+                if pDimmerKernelChannel.channel_steps>0 then
+                begin
+                  if (trunc(channel_value_beforedimmcurve[pDimmerKernelChannel.channel]/257)<channel_endvalue[pDimmerKernelChannel.channel]) and ((pDimmerKernelChannel.FadeDirection=255) or (pDimmerKernelChannel.FadeDirection=0)) then
+                  begin
+                    // Nach oben Dimmen
+                    pDimmerKernelChannel.FadeDirection:=255;
+                    channel_value_beforedimmcurve[pDimmerKernelChannel.channel]:=channel_value_beforedimmcurve[pDimmerKernelChannel.channel]+(pDimmerKernelChannel.channel_steps/pDimmerKernelChannel.channel_fadetime);//+1;
+                    actualvalue:=trunc(channel_value_beforedimmcurve[pDimmerKernelChannel.channel]/257);
+                    startvalue:=pDimmerKernelChannel.channel_startvalue;
+                    endvalue:=channel_endvalue[pDimmerKernelChannel.channel];
+                  end else if (trunc(channel_value_beforedimmcurve[pDimmerKernelChannel.channel]/257)>channel_endvalue[pDimmerKernelChannel.channel]) and ((pDimmerKernelChannel.FadeDirection=128) or (pDimmerKernelChannel.FadeDirection=0)) then
+                  begin
+                    // Nach unten Dimmen
+                    pDimmerKernelChannel.FadeDirection:=128;
+                    channel_value_beforedimmcurve[pDimmerKernelChannel.channel]:=channel_value_beforedimmcurve[pDimmerKernelChannel.channel]-(pDimmerKernelChannel.channel_steps/pDimmerKernelChannel.channel_fadetime);//-1;
+                    actualvalue:=trunc(channel_value_beforedimmcurve[pDimmerKernelChannel.channel]/257);
+                    startvalue:=channel_endvalue[pDimmerKernelChannel.channel];
+                    endvalue:=pDimmerKernelChannel.channel_startvalue;
+                  end else
+                  begin
+                    pDimmerKernelChannel.DeleteChannel:=true;
+                    actualvalue:=trunc(channel_value_beforedimmcurve[pDimmerKernelChannel.channel]/257);
+                    startvalue:=channel_endvalue[pDimmerKernelChannel.channel];
+                    endvalue:=pDimmerKernelChannel.channel_startvalue;
+                  end;
+
+                  if channel_value_beforedimmcurve[pDimmerKernelChannel.channel]>65535 then channel_value_beforedimmcurve[pDimmerKernelChannel.channel]:=65535;
+                  if channel_value_beforedimmcurve[pDimmerKernelChannel.channel]<0 then channel_value_beforedimmcurve[pDimmerKernelChannel.channel]:=0;
+
+{
+                  //  Viertel-Sinus
+                  //  sin((x/150)*(pi/2))*150+64-64*sin((x/150)*(pi/2))
+                  //  sin((actualvalue/endvalue)*(pi/2))*endvalue+startvalue-startvalue*sin((actualvalue/endvalue)*(pi/2))
+                  //  Viertel-Sinus Invertiert
+                  //  (150-(sin(((150-x)/150)*(pi/2))*150))+(64-64*(1-(sin(((150-x)/150)*(pi/2)))));
+                  //  (endvalue-(sin(((endvalue-actualvalue)/endvalue)*(pi/2))*endvalue))+(startvalue-startvalue*(1-(sin(((endvalue-actualvalue)/endvalue)*(pi/2)))));
+                  //  Halber Cosinus
+                  //  ((cos((( 150-x)/150)*pi)+1)/2)*150+64-64*((cos(((150-x)/150)*pi)+1)/2);
+                  //  ((cos(((endvalue-actualvalue)/endvalue)*pi)+1)/2)*endvalue+startvalue-startvalue*((cos(((endvalue-actualvalue)/endvalue)*pi)+1)/2);
+
+                  // Dimmkurve anwenden
+                  channel_value_afterdimmcurve:=channel_value_beforedimmcurve[pDimmerKernelChannel.channel];
+                  case channel_dimmcurve[pDimmerKernelChannel.channel] of
+                    0: channel_value_afterdimmcurve:=channel_value_beforedimmcurve[pDimmerKernelChannel.channel];  // Linear
+                    1: if channel_value_beforedimmcurve[pDimmerKernelChannel.channel] < 32768 then channel_value_afterdimmcurve:=0 else channel_value_afterdimmcurve:=65535; // Schalten
+                    2: // Viertel-Sinus
+                    begin
+                      //  sin((x/150)*(pi/2))*150+64-64*sin((x/150)*(pi/2))
+                      //  sin((actualvalue/endvalue)*(pi/2))*endvalue+startvalue-startvalue*sin((actualvalue/endvalue)*(pi/2))
+                      actualvalue:=round(((actualvalue-startvalue)/(endvalue-startvalue))*maxres);
+                      channel_value_afterdimmcurve:=round((sin((actualvalue/maxres)*(pi/2))*endvalue+startvalue-startvalue*sin((actualvalue/maxres)*(pi/2)))*257);
+                    end;
+                    3: // Viertel-Sinus Invertiert
+                    begin
+                      //  150-(sin(((150-x)/150)*(pi/2))*150+64-64*sin(((150-x)/150)*(pi/2)))+64
+                      //  endvalue-(sin(((endvalue-actualvalue)/endvalue)*(pi/2))*endvalue+startvalue-startvalue*sin(((endvalue-actualvalue)/endvalue)*(pi/2)))+startvalue
+                      actualvalue:=round(((actualvalue-startvalue)/(endvalue-startvalue))*maxres);
+                      channel_value_afterdimmcurve:=round((endvalue-(sin(((maxres-actualvalue)/maxres)*(pi/2))*endvalue+startvalue-startvalue*sin(((maxres-actualvalue)/maxres)*(pi/2)))+startvalue)*257);
+                    end;
+                    4:
+                    begin
+                      //  ((cos(((maxres*256-x)/maxres*256)*pi)+1)/2)*150+64-64*((cos(((maxres*256-x)/maxres*256)*pi)+1)/2)
+                      //  ((cos(((maxres*256-actualvalue)/maxres*256)*pi)+1)/2)*endvalue+startvalue-startvalue*((cos(((maxres*256-actualvalue)/maxres*256)*pi)+1)/2)
+                      actualvalue:=round(((actualvalue-startvalue)/(endvalue-startvalue))*maxres);
+                      channel_value_afterdimmcurve:=round((((cos(((maxres-actualvalue)/maxres)*pi)+1)/2)*endvalue+startvalue-startvalue*((cos(((maxres-actualvalue)/maxres)*pi)+1)/2))*257); // Halber Cosinus
+                    end;
+                    5:
+                    begin
+                      actualvalue:=round(((actualvalue-startvalue)/(endvalue-startvalue))*maxres);
+                      channel_value_afterdimmcurve:=round((power(((cos(power(((maxres-actualvalue)/maxres),2)*pi)+1)/2),4)*endvalue+startvalue-startvalue*power(((cos(power(((maxres-actualvalue)/maxres),2)*pi)+1)/2),4))*257); // Gestauchter halber Cosinus
+                    end;
+                    6:
+                    begin
+                      //  (((x-127)/25.266)^3+127)
+                      //  (power(((actualvalue-127)/25.266),3)+127)
+                      actualvalue:=round(((actualvalue-startvalue)/(endvalue-startvalue))*maxres);
+                      channel_value_afterdimmcurve:=round(((power(((actualvalue-127)/25.266),3)+127)/maxres*endvalue+startvalue-startvalue*(power(((actualvalue-127)/25.266),3)+127)/maxres)*257);
+                    end;
+                    7:
+                    begin
+                      if (actualvalue>=0) and (actualvalue<51) then channel_value_afterdimmcurve:=0;
+                      if (actualvalue>=51) and (actualvalue<102) then channel_value_afterdimmcurve:=51*257;
+                      if (actualvalue>=102) and (actualvalue<153) then channel_value_afterdimmcurve:=102*257;
+                      if (actualvalue>=153) and (actualvalue<204) then channel_value_afterdimmcurve:=153*257;
+                      if (actualvalue>=204) and (actualvalue<maxres*256) then channel_value_afterdimmcurve:=204*257;
+                      if (actualvalue>=255) then channel_value_afterdimmcurve:=255*257;
+                    end;
+                    8:
+                    begin
+                      //  x+sin(x/4)*10;
+                      //  round(actualvalue+sin(actualvalue/4)*10)
+                      channel_value_afterdimmcurve:=round((actualvalue+sin(actualvalue/4)*10)*257);
+                    end;
+                    9:
+                    begin
+                      //  x+sin(x/4)*10;
+                      //  round(actualvalue+sin(actualvalue/4)*40)
+                      channel_value_afterdimmcurve:=round((actualvalue+sin(actualvalue/4)*40)*257);
+                    end;
+                  end;
+
+                  if channel_value_afterdimmcurve>65535 then channel_value_afterdimmcurve:=65535;
+                  if channel_value_afterdimmcurve<0 then channel_value_afterdimmcurve:=0;
+}
+
+                  // Coarse-Kanal setzen
+                  tempvalue1:=pDimmerKernelChannel.channel;
+                  tempvalue2:=trunc(channel_value_afterdimmcurve/257);
+                  if channel_value[tempvalue1]<>tempvalue2 then
+                  begin
+                    channel_value[tempvalue1]:=tempvalue2;
+                    data.ch[tempvalue1]:=maxres-tempvalue2;
+                    SendMSG(MSG_ACTUALCHANNELVALUE,tempvalue1,tempvalue2);
+                  end;
+
+                  // Fine-Kanal, sofern vorhanden, setzen
+                  if pDimmerKernelChannel.IsPanTiltChannel then
+                  begin
+                    tempvalue1:=pDimmerKernelChannel.FineChannel;
+                    tempvalue2:=trunc(frac(channel_value_afterdimmcurve/257)*255);
+                    if channel_value[tempvalue1]<>tempvalue2 then
+                    begin
+                      channel_value[tempvalue1]:=tempvalue2;
+                      data.ch[tempvalue1]:=maxres-tempvalue2;
+                      SendMSG(MSG_ACTUALCHANNELVALUE,tempvalue1,tempvalue2);
+                    end;
+                  end;
+                end;
+              end else
+              begin
+                // nichts zu tun, da Schritte zwischen Ist- und Sollwert bereits =0
+                pDimmerKernelChannel.DeleteChannel:=true;
+              end;
+
+              if not pDimmerKernelChannel.DeleteChannel then
+              if channel_value_beforedimmcurve[pDimmerKernelChannel.channel]=channel_endvalue[pDimmerKernelChannel.channel] Then
+              begin
+                // DDF-Fenster aktualisieren
+                for j:=0 to length(DDFWindows)-1 do
+                  DDFWindows[j].refreshchannel[pDimmerKernelChannel.channel]:=true;
+                // DeviceScene-Fenster aktualisieren
+                if DDFWindowDeviceScene.Showing then
+                  DDFWindowDeviceScene.refreshchannel[pDimmerKernelChannel.channel]:=true;
+                // Gerätesteuerungsfenster aktualisieren
+                if geraetesteuerung.Showing then
+                  geraetesteuerung.refreshchannel[pDimmerKernelChannel.channel]:=true;
+
+                // Dimmerkanal löschen, da fertig gedimmt
+                pDimmerKernelChannel.DeleteChannel:=true;
+              end;
+            end;
+            1: // Audiodatei faden
+            begin
+              if not pDimmerKernelChannel.DontSetValues then
+              begin
+                // Kanal ist das erste Mal an der Reihe
+                pDimmerKernelChannel.DontSetValues:=true;
+
+                // Zunächst alle anderen Dimmerkanäle mit gleicher Adresse zum Löschen freigeben, sofern sie bereits dimmen
+                for j:=length(DimmerKernelChannelArray)-1 downto 0 do
+                begin
+                  pDimmerKernelChannel2:=DimmerKernelChannelArray[j];
+                  if (pDimmerKernelChannel2.Index=pDimmerKernelChannel.Index) and not (pDimmerKernelChannel2=pDimmerKernelChannel) and not (pDimmerKernelChannel2.channel_delay>0) then
+                  begin
+                    // Delay ist vorbei, Kanal hat gleiche Adresse und ist nicht identisch mit gleich auszuführendem. Also kann gelöscht werden.
+                    pDimmerKernelChannel2.DeleteChannel:=true;
+                  end;
+                end;
+              end else
+              begin
+                BASS_ChannelGetAttribute(AudioszenenCHAN[pDimmerKernelChannel.Index].MixerHandle, BASS_ATTRIB_VOL, volume);
+
+                if pDimmerKernelChannel.Start then
+                begin
+                  // Audiodatei soll gestartet werden
+                  if not (BASS_ChannelIsActive(AudioszenenCHAN[pDimmerKernelChannel.Index].MixerHandle)=BASS_ACTIVE_PLAYING) then
+                  begin
+                    BASS_ChannelPlay(AudioszenenCHAN[pDimmerKernelChannel.Index].MixerHandle, False);
+                    volume:=0;
+                    BASS_ChannelSetAttribute(AudioszenenCHAN[pDimmerKernelChannel.Index].MixerHandle, BASS_ATTRIB_VOL, volume);
+                  end;
+
+                  if (pDimmerKernelChannel.channel_steps>0) then
+                  begin
+                    // Einblenden
+                    if volume+(pDimmerKernelChannel.channel_steps/(65535/DimmerKernelResolution))<=1 then
+                      volume:=volume+(pDimmerKernelChannel.channel_steps/(65535/DimmerKernelResolution))
+                    else
+                      volume:=pDimmerKernelChannel.channel_endvalue/65535;
+                  end else
+                  begin
+                    volume:=pDimmerKernelChannel.channel_endvalue/65535;
+                  end;
+                  pDimmerKernelChannel.channel_increase:=round(volume*65535);
+                  BASS_ChannelSetAttribute(AudioszenenCHAN[pDimmerKernelChannel.Index].MixerHandle, BASS_ATTRIB_VOL, volume);
+
+                  // Wenn Endwert erreicht oder überschritten, dann DimmerKanal löschen
+                  if (volume>=(pDimmerKernelChannel.channel_endvalue/65535)) or (volume>=1) then
+                  begin
+                    pDimmerKernelChannel.DeleteChannel:=true;
+                  end;
+                end else
+                begin
+                  // Audiodatei soll beendet werden
+                  if (pDimmerKernelChannel.channel_steps>0) then
+                  begin
+                    // Ausblenden
+                    if volume-(pDimmerKernelChannel.channel_steps/(65535/DimmerKernelResolution))>=0 then
+                      volume:=volume-(pDimmerKernelChannel.channel_steps/(65535/DimmerKernelResolution))
+                    else
+                      volume:=0;
+                  end else
+                  begin
+                    volume:=0;
+                  end;
+                  pDimmerKernelChannel.channel_increase:=round(volume*65535);
+                  BASS_ChannelSetAttribute(AudioszenenCHAN[pDimmerKernelChannel.Index].MixerHandle, BASS_ATTRIB_VOL, volume);
+
+                  // Wenn Endwert erreicht oder unterschritten, dann Datei beenden und DimmerKanal löschen
+                  if (volume<=(pDimmerKernelChannel.channel_endvalue/65535)) or (volume<=0) then
+                  begin
+                    BASS_ChannelStop(AudioszenenCHAN[pDimmerKernelChannel.Index].MixerHandle);
+                    BASS_Mixer_ChannelRemove(AudioszenenCHAN[pDimmerKernelChannel.Index].StandardHandle);
+                    BASS_StreamFree(AudioszenenCHAN[pDimmerKernelChannel.Index].StandardHandle);
+                    BASS_StreamFree(AudioszenenCHAN[pDimmerKernelChannel.Index].MixerHandle);
+                    AudioszenenCHAN[pDimmerKernelChannel.Index].StandardHandle:=0;
+                    AudioszenenCHAN[pDimmerKernelChannel.Index].MixerHandle:=0;
+                    pDimmerKernelChannel.DeleteChannel:=true;
+                  end;
+                end;
+              end; // Ende von DontSetValues
+            end; // Ende von Audiodatei faden
+            2: // Szenenbefehl faden
+            begin
+              if not pDimmerKernelChannel.DontSetValues then
+              begin
+                // Kanal ist das erste Mal an der Reihe (nach Ablauf des Delay oder bei Delay=0)
+                pDimmerKernelChannel.DontSetValues:=true;
+
+{
+                // Zunächst alle anderen Dimmerkanäle mit gleicher Adresse zum Löschen freigeben, sofern sie bereits dimmen
+                for j:=length(DimmerKernelChannelArray)-1 downto 0 do
+                begin
+                  pDimmerKernelChannel2:=DimmerKernelChannelArray[j];
+                  if IsEqualGUID(pDimmerKernelChannel2.BefehlTyp, pDimmerKernelChannel.BefehlTyp) and not (pDimmerKernelChannel2=pDimmerKernelChannel) and not (pDimmerKernelChannel2.channel_delay>0) then
+                  begin
+                    // Delay ist vorbei, Kanal hat gleiche Adresse und ist nicht identisch mit gleich auszuführendem. Also kann gelöscht werden.
+                    pDimmerKernelChannel2.DeleteChannel:=true;
+                  end;
+                end;
+}
+                // Nun die neuen Dimmerwerte setzen
+                for j:=0 to length(mainform.Befehlssystem)-1 do
+                begin
+                  for k:=0 to length(mainform.Befehlssystem[j].Steuerung)-1 do
+                  begin
+                    if IsEqualGUID(Befehlssystem[j].Steuerung[k].GUID, pDimmerKernelChannel.BefehlTyp) then
+                    begin
+                      pDimmerKernelChannel.channel_steps:=Abs(mainform.Befehlssystem[j].Steuerung[k].CurrentValue - pDimmerKernelChannel.channel_endvalue);
+                      pDimmerKernelChannel.channel_startvalue:=mainform.Befehlssystem[j].Steuerung[k].CurrentValue;
+                      pDimmerKernelChannel.CurrentValue:=mainform.Befehlssystem[j].Steuerung[k].CurrentValue;
+                      mainform.StartBefehl(pDimmerKernelChannel.IndexGUID, pDimmerKernelChannel.CurrentValue);
+                      break;
+                    end;
+                  end;
+                end;
+
+                if pDimmerKernelChannel.IsDelayedChan then
+                begin
+                  StartDeviceSceneBefehl(pDimmerKernelChannel.IndexGUID, pDimmerKernelChannel.BefehlTyp, pDimmerKernelChannel.channel_endvalue, pDimmerKernelChannel.channel_fadetime*DimmerKernelResolution, 0);
+
+                  // da in der oberen Zeile ein neues Dimmerkernelobjekt erstellt wird, kann dieses hier gelöscht werden
+                  pDimmerKernelChannel.DeleteChannel:=true;
+                end;
+              end;
+
+              if not pDimmerKernelChannel.DeleteChannel then
+              if (pDimmerKernelChannel.channel_fadetime=0) then
+              begin
+                // Fadetime=0
+{
+                for j:=0 to length(mainform.Befehlssystem)-1 do
+                begin
+                  for k:=0 to length(mainform.Befehlssystem[j].Steuerung)-1 do
+                  begin
+                    if IsEqualGUID(mainform.Befehlssystem[j].Steuerung[k].GUID, pDimmerKernelChannel.BefehlTyp) then
+                    begin
+}
+                      pDimmerKernelChannel.CurrentValue:=pDimmerKernelChannel.channel_endvalue;
+                      mainform.StartBefehl(pDimmerKernelChannel.IndexGUID, pDimmerKernelChannel.CurrentValue);
+{
+                      break;
+                    end;
+                  end;
+                end;
+}
+
+                pDimmerKernelChannel.DeleteChannel:=true;
+              end else if (pDimmerKernelChannel.channel_fadetime>0) then
+              begin
+                // Fadetime>0
+                pDimmerKernelChannel.channel_increase:=pDimmerKernelChannel.channel_increase+1;
+                if pDimmerKernelChannel.channel_steps>0 then
+                begin
+                  if pDimmerKernelChannel.channel_increase >= Round(pDimmerKernelChannel.channel_fadetime / pDimmerKernelChannel.channel_steps) then
+                  begin
+                    pDimmerKernelChannel.channel_increase:=0;
+
+                    if (pDimmerKernelChannel.CurrentValue<pDimmerKernelChannel.channel_endvalue) and ((pDimmerKernelChannel.FadeDirection=255) or (pDimmerKernelChannel.FadeDirection=0)) then
+                    begin
+                      // Nach oben Dimmen
+                      pDimmerKernelChannel.FadeDirection:=255;
+                      if pDimmerKernelChannel.channel_fadetime<(10000/DimmerkernelResolution) then
+                      begin
+                        inkrement:=Round(pDimmerKernelChannel.channel_steps / pDimmerKernelChannel.channel_fadetime);
+                        if inkrement<1 then
+                          inkrement:=1;
+
+                        if pDimmerKernelChannel.CurrentValue+inkrement<255 then
+                          pDimmerKernelChannel.CurrentValue:=pDimmerKernelChannel.CurrentValue+inkrement//1 // TODO: da 255 Schritte durchfahren werden, werden hier mindestens 255*20ms=5100ms=5.1s benötigt. Kleinere Fadezeiten sind derzeit nicht möglich!!!
+                        else
+                          pDimmerKernelChannel.CurrentValue:=255;
+                      end else
+                      begin
+                        if pDimmerKernelChannel.CurrentValue+1<255 then
+                          pDimmerKernelChannel.CurrentValue:=pDimmerKernelChannel.CurrentValue+1//1 // TODO: da 255 Schritte durchfahren werden, werden hier mindestens 255*20ms=5100ms=5.1s benötigt. Kleinere Fadezeiten sind derzeit nicht möglich!!!
+                        else
+                          pDimmerKernelChannel.CurrentValue:=255;
+                      end;
+                    end else if (pDimmerKernelChannel.CurrentValue>pDimmerKernelChannel.channel_endvalue) and ((pDimmerKernelChannel.FadeDirection=128) or (pDimmerKernelChannel.FadeDirection=0)) then
+                    begin
+                      // Nach unten Dimmen
+                      pDimmerKernelChannel.FadeDirection:=128;
+                      if pDimmerKernelChannel.channel_fadetime<(10000/DimmerkernelResolution) then
+                      begin
+                        inkrement:=Round(pDimmerKernelChannel.channel_steps / pDimmerKernelChannel.channel_fadetime);
+                        if inkrement<1 then
+                          inkrement:=1;
+
+                        if pDimmerKernelChannel.CurrentValue-inkrement>0 then
+                          pDimmerKernelChannel.CurrentValue:=pDimmerKernelChannel.CurrentValue-inkrement//1 // TODO: da 255 Schritte durchfahren werden, werden hier mindestens 255*20ms=5100ms=5.1s benötigt. Kleinere Fadezeiten sind derzeit nicht möglich!!!
+                        else
+                          pDimmerKernelChannel.CurrentValue:=0;
+                      end else
+                      begin
+                        if pDimmerKernelChannel.CurrentValue-1>0 then
+                          pDimmerKernelChannel.CurrentValue:=pDimmerKernelChannel.CurrentValue-1//1 // TODO: da 255 Schritte durchfahren werden, werden hier mindestens 255*20ms=5100ms=5.1s benötigt. Kleinere Fadezeiten sind derzeit nicht möglich!!!
+                        else
+                          pDimmerKernelChannel.CurrentValue:=0;
+                      end;
+                    end else
+                    begin
+                      pDimmerKernelChannel.DeleteChannel:=true;
+                    end;
+
+                    StartBefehl(pDimmerKernelChannel.IndexGUID, pDimmerKernelChannel.CurrentValue);
+                  end;
+                end else
+                begin
+                  // nichts zu tun, da Schritte zwischen Ist- und Sollwert bereits =0
+                  pDimmerKernelChannel.DeleteChannel:=true;
+                end;
+              end;
+
+              if not pDimmerKernelChannel.DeleteChannel then
+              if pDimmerKernelChannel.CurrentValue=pDimmerKernelChannel.channel_endvalue Then
+              begin
+                // Kanal löschen, da fertig gedimmt
+                pDimmerKernelChannel.DeleteChannel:=true;
+              end;
+            end; // Ende von Befehl faden
+          end; // Ende von Case DimmerChannelTyp
+        end;
+      end else // Ende von "if not Delete then"
+      begin
+      end; // Ende von "if not Delete then else"
+    end; // Ende von DimmerkernelChannel ForToDo
+
+    // Garbage-Collector: Alle zum Löschen freigegebenen Kanäle löschen
+    for j:=length(DimmerKernelChannelArray)-1 downto 0 do
+    begin
+      pDimmerKernelChannel2:=DimmerKernelChannelArray[j];
+      if pDimmerKernelChannel2<>nil then
+      begin
+        if (pDimmerKernelChannel2.DeleteChannel) then
+        begin
+          dispose(pDimmerKernelChannel2);
+          DimmerKernelChannelArray[j]:=DimmerKernelChannelArray[length(DimmerKernelChannelArray)-1];
+          setlength(DimmerKernelChannelArray,length(DimmerKernelChannelArray)-1);
+        end else if (pDimmerKernelChannel2.channel_endvalue=channel_value[pDimmerKernelChannel2.channel]) and (not pDimmerKernelChannel2.IsDelayedChan) then
+        begin
+          // Endwert des Kanals ist erreicht -> Löschen
+{
+          // ist glaube ich nicht notwendig
+          dispose(pDimmerKernelChannel2);
+          DimmerKernelChannelArray[j]:=DimmerKernelChannelArray[length(DimmerKernelChannelArray)-1];
+          setlength(DimmerKernelChannelArray,length(DimmerKernelChannelArray)-1);
+}
+        end;
+      end else
+      begin
+        // Letztes Element auf freiwerdenden Platz und letztes Element löschen
+        DimmerKernelChannelArray[j]:=DimmerKernelChannelArray[length(DimmerKernelChannelArray)-1];
+        setlength(DimmerKernelChannelArray,length(DimmerKernelChannelArray)-1);
+      end;
+    end;
+
+    if MeasureKernelLaufzeit then
+    begin
+      dTime2 := GetTime();
+      KernelLaufzeit:=dTime2-dTime1;
+    end;
+  end; // end von with mainform
+end;

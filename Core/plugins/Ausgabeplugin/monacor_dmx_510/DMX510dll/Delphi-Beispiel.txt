@@ -1,0 +1,121 @@
+// Delphi Beispiel, um die DMX510.DLL anzusteuern
+// Achtung: die Datei MPUSBAPI.DLL muss sich im gleichen Verzeichnis wie die DMX510.DLL befinden
+
+unit test1; //
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Controls, Forms, Dialogs,
+  StdCtrls, ComCtrls, ExtCtrls;
+
+// in der dazugehörigen Form müssen folgende Objekte erstellt werden:
+// Textfenster Edit1 (TEdit) für den DMX-Wert
+// Textfenster Edit2 (TEdit) für Versionsanzeige
+// Einen Timer Timer1(TTimer) zur Aktualisierung der DMX-Werte, Intervall=25ms
+// Fünf Trackbars,TrackBar1-TrackBar5 (TTrackBar) als Schiebepotis für fünf Kanäle
+//  Eigenschaften der Trackbars: Min=0; Max=255; LineSize=1; Frequency=5
+// Einen Befehlsbutton Button1 (TButton) um die Version (Namen) aus der DLL zu holen
+// Einen Befehlsbutton Button2 (TButton) um  die Anwendung zu beenden
+type
+  TForm1 = class(TForm)
+    Edit1: TEdit;
+    Button1: TButton;
+    Button2: TButton;
+    Edit2: TEdit;
+    TrackBar1: TTrackBar;
+    Timer1: TTimer;
+    TrackBar2: TTrackBar;
+    TrackBar3: TTrackBar;
+    TrackBar4: TTrackBar;
+    TrackBar5: TTrackBar;
+    procedure Button2Click(Sender: TObject);
+
+    procedure Button1Click(Sender: TObject);
+    procedure TrackBar1Change(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+   n:integer;
+   i:integer;
+  end;
+
+var
+  Form1: TForm1;
+  dmxout:array of byte; // für alle 510 DMX-Kanäle
+
+implementation
+
+{$R *.DFM}
+
+// hier die nötigen DLL-Deklarationen:
+function GetDMXInterface: pchar; stdcall; external 'DMX510.dll';
+function SetLevel(a: array of byte): boolean; stdcall; external 'DMX510.dll';
+function GetMaxChannels: integer; external 'DMX510.dll';
+
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+ application.Terminate ;
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var s:integer;
+st:shortstring;
+begin
+//s:=GetMaxChannels;
+st :=GetDMXInterface;
+//edit1.Text :=inttostr(s);
+edit1.Text :=st;
+end;
+
+procedure TForm1.TrackBar1Change(Sender: TObject);
+begin
+ edit2.text:=inttostr(trackbar1.position); // DMX-Wert 0-255 wird angezeigt
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+var m:integer;
+begin
+SetLength(dmxout,510);  // Länge des Arrays festlegen
+ for m:=0 to HIGH(dmxout) do
+  begin
+   dmxout[m]:=0; //alle Kanäle initialisieren
+  end;
+ i:=1;
+ n:=0;
+end;
+
+procedure TForm1.Timer1Timer(Sender: TObject); // wird alle 25ms aufgerufen
+var
+    ok:boolean;
+begin
+// um Kanäle 3 und 4 automatisch zu inkrementieren und dekrementieren
+// müssen die nachfolgenden Doppel-Schrägstriche entfernt werden
+
+//n:=n+i;
+//if n<0 then n:=0;
+//if n=0 then i:=1;
+//if n=255 then i:=-1;
+//if n>255 then n:=0;
+
+   dmxout[0]:=trackbar1.position;
+   dmxout[1]:=trackbar2.position;
+   dmxout[2]:=trackbar3.position;
+   dmxout[3]:=trackbar4.position;
+   dmxout[4]:=trackbar5.position;
+
+//   dmxout[3]:=n;
+//   dmxout[4]:=n;
+   //dmxout[255]:=trackbar5.position;  // Beispiel für einen höheren Kanal
+   ok:=SetLevel(dmxout);  // Ausgaberoutine aufrufen
+   if ok= false then showmessage('USB Error');
+end;
+
+
+
+end.

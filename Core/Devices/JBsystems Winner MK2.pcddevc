@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\JBsystems_winner_MK2.png">
+ <information id="PC_DIMMER">
+ <name>Winner MK2</name>
+ <vendor>JB systems</vendor>
+ <author>Colin</author>
+ <description>Scanner</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Gobo" fade="yes" type="gobo1"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Color" fade="yes" type="color1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+ </channels>
+ <initvalues 0="0" 1="0" 2="0" 3="127" 4="127" />
+ <colors>
+  <color name="White" value="0" valueend="11" r="255" g="255" b="255" />
+  <color name="Geen" value="11" valueend="21" r="0" g="128" b="0" />
+  <color name="Orange" value="22" valueend="32" r="255" g="128" b="0" />
+  <color name="Light Blue" value="33" valueend="43" r="0" g="255" b="255" />
+  <color name="Amber" value="44" valueend="54" r="253" g="234" b="2" />
+  <color name="Red" value="55" valueend="65" r="255" g="0" b="0" />
+  <color name="Purple" value="66" valueend="76" r="128" g="0" b="128" />
+  <color name="Pink" value="77" valueend="87" r="255" g="128" b="192" />
+  <color name="Light Green" value="88" valueend="98" r="0" g="255" b="0" />
+  <color name="Blue" value="99" valueend="109" r="0" g="0" b="255" />
+  <color name="Yellow" value="110" valueend="120" r="255" g="255" b="0" />
+  <color name="Magenta" value="121" valueend="127" r="255" g="0" b="255" />
+  <color name="Rotation" value="128" valueend="255" r="192" g="192" b="192" />
+ </colors>
+ <gobos>
+  <gobo name="Blackout" value="0" valueend="7" filename="bluevbar1.png" />
+  <gobo name="Open" value="8" valueend="15" filename="Open.png" />
+  <gobo name="Gobo 1" value="16" valueend="23" filename="Open5.png" />
+  <gobo name="Gobo 2" value="24" valueend="31" filename="square1.png" />
+  <gobo name="Gobo 3" value="32" valueend="39" filename="Cone.png" />
+  <gobo name="Gobo 4" value="40" valueend="47" filename="dotcircle2.png" />
+  <gobo name="Gobo 5" value="48" valueend="55" filename="Burst4.png" />
+  <gobo name="Gobo 6" value="56" valueend="63" filename="Cones.png" />
+  <gobo name="Gobo 7" value="64" valueend="71" filename="4beam.png" />
+  <gobo name="Gobo 8" value="72" valueend="79" filename="Hand.png" />
+  <gobo name="Gobo 9" value="80" valueend="87" filename="BreakGlass.png" />
+  <gobo name="Gobo 10" value="88" valueend="95" filename="pling.png" />
+  <gobo name="Gobo 11" value="96" valueend="103" filename="Whirl1.png" />
+  <gobo name="Gobo 12" value="104" valueend="111" filename="Holes.png" />
+  <gobo name="Gobo 13" value="112" valueend="119" filename="StarCP.png" />
+  <gobo name="Gobo 14" value="120" valueend="127" filename="Turbine4.png" />
+  <gobo name="Rotation" value="128" valueend="255" filename="Question.png" />
+ </gobos>
+ <form width="410" height="330">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="90" left="10" height="230" width="230" />
+  <colorbox top="146" left="250" height="22" width="150" />
+  <dropdown name="gobobox" top="226" left="250" width="150" height="21" action="goboboxchange">
+   <item caption="Blackout" value="0" picture="" />
+   <item caption="Open" value="0" picture="" />
+   <item caption="Open Small" value="0" picture="" />
+   <item caption="Square" value="0" picture="" />
+   <item caption="Cone" value="0" picture="" />
+   <item caption="Dot Circle" value="0" picture="" />
+   <item caption="Burst" value="0" picture="" />
+   <item caption="Cones" value="0" picture="" />
+   <item caption="4 Beam" value="0" picture="" />
+   <item caption="Hand" value="0" picture="" />
+   <item caption="Broken Glass" value="0" picture="" />
+   <item caption="Pling" value="0" picture="" />
+   <item caption="Whirl" value="0" picture="" />
+   <item caption="Holes" value="0" picture="" />
+   <item caption="Star" value="0" picture="" />
+   <item caption="Turbine" value="0" picture="" />
+   <item caption="Rotation" value="0" picture="" />
+  </dropdown>
+  <slider name="shutterslider" top="110" left="250" width="150" height="20" action="shuttersliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="colorrotationslider" top="190" left="250" width="150" height="20" action="colorrotationsliderchange" startvalue="128" endvalue="255" default="128"/>
+  <slider name="goborotationslider" top="270" left="250" width="150" height="20" action="goborotationsliderchange" startvalue="128" endvalue="255" default="128"/>
+  <label name="Shake" top="90" left="250" width="31" height="13" caption="Shake"/>
+  <label name="Color" top="130" left="250" width="24" height="13" caption="Color"/>
+  <label name="Color2" top="170" left="250" width="67" height="13" caption="Color Rotation"/>
+  <label name="Gobo" top="210" left="250" width="26" height="13" caption="Gobo"/>
+  <label name="Gobo2" top="250" left="250" width="69" height="13" caption="Gobo Rotation"/>
+  <label name="statuslbl" top="90" left="300" width="9" height="13" caption="..."/>
+ </form>
+ <code>
+  unit Winnermk2;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorBoxChange;
+  procedure goboboxchange;
+  procedure shuttersliderchange;
+  procedure goborotationsliderchange;
+  procedure colorrotationsliderchange;
+
+  implementation
+
+  var
+    // hier können globale Variablen definiert werden
+  DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+//  var
+    // hier ist Platz für eigene Variablen (z.B. "temp: boolean;" oder "temp:string;")
+  begin
+
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    vshutter:integer;
+    vgobo:integer;
+    vcolor:integer;
+  begin
+    // diese Funktion wird bei jeder Kanaländerung, die das Gerät betrifft, ausgeführt. Schreiben Sie hier eine Funktion, um die Geräteoberfläche bei einer Kanalwertänderung zu aktualisieren. z.B. wie folgt:
+    case channel of
+    	0:
+    	begin // Shutter
+				vshutter:=get_channel('SHUTTER');
+  		  
+		    case vshutter of
+					0..7:
+					begin
+		    		statuslbl.caption:='(Off)';
+						if not dontrefresh then
+   	 			begin
+		    			shutterslider.position:=get_channel('SHUTTER');
+		    		end;
+		    	end;
+		    	8..91:
+					begin
+		    		statuslbl.caption:='(Color+Gobo)';
+						if not dontrefresh then
+		    		begin
+		    			shutterslider.position:=get_channel('SHUTTER');
+		    		end;
+		    	end;
+		    	92..173:
+					begin
+		    		statuslbl.caption:='(Color)';
+						if not dontrefresh then
+		    		begin
+		    			shutterslider.position:=get_channel('SHUTTER');
+		    		end;
+		    	end;
+		    	173..255:
+						begin
+		    		statuslbl.caption:='(Gobo)';
+						if not dontrefresh then
+		    		begin
+		    			shutterslider.position:=get_channel('SHUTTER');
+		    		end;
+		    	end;
+				end;
+    	end;
+    	1:
+    	begin // Gobo
+	  	vgobo:=get_channel('GOBO1');
+    	
+		case vgobo of
+    			0..7: gobobox.itemindex:=0;
+    			8..15: gobobox.itemindex:=1;
+    			16..23: gobobox.itemindex:=2;
+    			24..31: gobobox.itemindex:=3;
+	    		32..39: gobobox.itemindex:=4;
+  	  		40..47: gobobox.itemindex:=5;
+    			48..55: gobobox.itemindex:=6;
+    			56..63: gobobox.itemindex:=7;
+    			64..71: gobobox.itemindex:=8;
+	    		72..79: gobobox.itemindex:=9;
+  	  		80..87: gobobox.itemindex:=10;
+    			88..95: gobobox.itemindex:=11;
+    			96..103: gobobox.itemindex:=12;
+    			104..111: gobobox.itemindex:=13;
+    			112..119: gobobox.itemindex:=14;
+	    		120..127: gobobox.itemindex:=15;
+	    		128..255: 
+					begin
+		    		gobobox.itemindex:=16;
+		    		begin
+		    			goborotationslider.position:=vgobo;
+		    		end;
+		    	end;
+    		end;
+    	end;
+    	2:
+    	begin // Color
+    		vcolor:=get_channel('COLOR1');
+    		
+		    case vcolor of
+	  	  	0..10: colorbox.itemindex:=0;
+    			11..21: colorbox.itemindex:=1;
+    			22..32: colorbox.itemindex:=2;
+	  	  	33..43: colorbox.itemindex:=3;
+  		  	44..54: colorbox.itemindex:=4;
+	    		55..65: colorbox.itemindex:=5;
+    			66..76: colorbox.itemindex:=6;
+	    		77..87: colorbox.itemindex:=7;
+  		  	88..98: colorbox.itemindex:=8;
+  	  		99..109: colorbox.itemindex:=9;
+	    		110..120: colorbox.itemindex:=10;
+	    		121..127: colorbox.itemindex:=11;
+	    		128..255:
+		    	begin
+		    		colorbox.itemindex:=12;
+		    		begin
+		    			colorrotationslider.position:=vcolor;
+		    		end;
+		    	end;
+	  	  end;
+    	end;
+    	3..4:
+    	begin // PAN/TILT
+	      PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+    	end;
+    end;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  procedure ColorBoxChange;
+  begin
+    case colorbox.itemindex of
+    	0: set_channel('COLOR1',-1,0,0,0);
+    	1: set_channel('COLOR1',-1,11,0,0);
+    	2: set_channel('COLOR1',-1,22,0,0);
+    	3: set_channel('COLOR1',-1,33,0,0);
+    	4: set_channel('COLOR1',-1,44,0,0);
+    	5: set_channel('COLOR1',-1,55,0,0);
+    	6: set_channel('COLOR1',-1,66,0,0);
+    	7: set_channel('COLOR1',-1,77,0,0);
+    	8: set_channel('COLOR1',-1,88,0,0);
+    	9: set_channel('COLOR1',-1,99,0,0);
+    	10: set_channel('COLOR1',-1,110,0,0);
+    	11: set_channel('COLOR1',-1,121,0,0);
+    	12: set_channel('COLOR1',-1,128,0,0);
+    end;
+  end;
+  procedure goboboxchange;
+  begin
+    case gobobox.itemindex of
+    	0: set_channel('GOBO1',-1,0,0,0);
+    	1: set_channel('GOBO1',-1,8,0,0);
+    	2: set_channel('GOBO1',-1,16,0,0);
+    	3: set_channel('GOBO1',-1,24,0,0);
+    	4: set_channel('GOBO1',-1,32,0,0);
+    	5: set_channel('GOBO1',-1,40,0,0);
+    	6: set_channel('GOBO1',-1,48,0,0);
+    	7: set_channel('GOBO1',-1,56,0,0);
+    	8: set_channel('GOBO1',-1,64,0,0);
+    	9: set_channel('GOBO1',-1,72,0,0);
+    	10: set_channel('GOBO1',-1,80,0,0);
+    	11: set_channel('GOBO1',-1,88,0,0);
+    	12: set_channel('GOBO1',-1,96,0,0);
+    	13: set_channel('GOBO1',-1,104,0,0);
+    	14: set_channel('GOBO1',-1,112,0,0);
+    	15: set_channel('GOBO1',-1,120,0,0);
+    	16: set_channel('GOBO1',-1,128,0,0);
+    end;
+  end;
+  procedure shuttersliderchange;
+  begin
+		dontrefresh:=true;
+    set_channel('SHUTTER',-1,shutterslider.position,0,0);
+  end;
+  procedure goborotationsliderchange;
+  begin
+		dontrefresh:=true;
+    set_channel('GOBO1',-1,goborotationslider.position,0,0);
+  end;
+  procedure colorrotationsliderchange;
+  begin
+		dontrefresh:=true;
+    set_channel('COLOR1',-1,colorrotationslider.position,0,0);
+  end;
+  end.
+ </code>
+</device>

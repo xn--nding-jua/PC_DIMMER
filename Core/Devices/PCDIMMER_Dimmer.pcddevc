@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\Par56silber.png">
+ <information id="PC_DIMMER">
+ <name>PC_Dimmer</name>
+ <vendor>PC_DIMMER</vendor>
+ <author>Christian Nöding</author>
+ <description>8 Kanal Dimmerpack von Christian Nöding. Kompatibel mit Generic-Dimmerpack. Zusätzliche Einstellmöglichkeiten für Startadressen der PC_DIMMER-DMX-Dimmerpacks</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+ </channels>
+ <initvalues ch0="-1" />
+ <shutter OpenValue="16" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="16" MinValue="11" MaxValue="74" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="192" LeftMaxValue="255" OffValue="224" RightMinValue="192" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="195" height="300">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="16" left="80"/>
+  <deviceadress top="32" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <edit name="fadezeit" top="230" left="10" width="40" height="21" text="3000" action=""/>
+  <edit name="startaddress" top="270" left="10" width="40" height="21" text="1" action="setstartaddress"/>
+  <checkbox name="usefadezeit" top="230" left="60" width="120" height="17" caption="Einblendzeit nutzen" action="" checked="true"/>
+  <slider name="slider1" top="100" left="10" width="170" height="20" action="sliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="label1" top="85" left="8" width="30" height="13" caption="Fader:"/>
+  <label name="percent" top="85" left="150" width="14" height="13" caption="0%"/>
+  <label name="label2" top="215" left="10" width="43" height="13" caption="Zeit [ms]:"/>
+  <label name="startaddresslabel" top="255" left="10" width="111" height="13" caption="Hardware-Startadresse:"/>
+  <label name="text1" top="298" left="8" width="180" height="13" caption="Bitte drücken Sie nun die Setup-Taste"/>
+  <label name="text2" top="314" left="8" width="85" height="13" caption="am Dimmerpack..."/>
+  <button name="off" top="130" left="10" width="50" height="40" action="offclick" caption="Aus"/>
+  <button name="half" top="130" left="70" width="50" height="40" action="halfclick" caption="50%"/>
+  <button name="on" top="130" left="130" width="50" height="40" action="onclick" caption="Ein"/>
+  <button name="StopBtn" top="180" left="10" width="170" height="30" action="StopBtn" caption="Fade-Stop"/>
+ </form>
+ <code>
+  unit GenericDimmer;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure sliderchange;
+  procedure onclick;
+  procedure halfclick;
+  procedure offclick;
+  procedure setstartaddress;
+  procedure StopBtn;
+
+  implementation
+
+    var
+      dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // bitte hier die eigene Funktion eintragen
+  end;
+  procedure FormShow;
+    begin
+      startaddresslabel.font.style:=1;
+      text1.visible:=false;
+      text2.visible:=false;
+    end;
+  procedure FormRefresh(channel:Integer);
+    begin
+      if not dontrefresh then
+        slider1.position:=get_channel('DIMMER');
+      percent.caption:=levelstr(slider1.position);
+      dontrefresh:=false;
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure sliderchange;
+    begin
+      dontrefresh:=true;
+      set_channel('dimmer',slider1.position,slider1.position,0);  
+      percent.caption:=levelstr(slider1.position);
+    end;
+  procedure onclick;
+    var
+      zeit:integer;
+    begin
+      if usefadezeit.checked then
+        zeit:=strtoint(fadezeit.text)
+      else
+        zeit:=0;
+
+      set_channel('dimmer',get_channel('DIMMER'),255,zeit);
+    end;
+  procedure halfclick;
+    var
+      zeit:integer;
+    begin
+      if usefadezeit.checked then
+        zeit:=strtoint(fadezeit.text)
+      else
+        zeit:=0;
+
+      set_channel('dimmer',get_channel('DIMMER'),127,zeit);
+    end;
+  procedure offclick;
+    var
+      zeit:integer;
+    begin
+      if usefadezeit.checked then
+        zeit:=strtoint(fadezeit.text)
+      else
+        zeit:=0;
+
+      set_channel('dimmer',get_channel('DIMMER'),0,zeit);
+    end;
+  procedure setstartaddress;
+    begin
+      set_absolutechannel(511,strtoint(startaddress.text) div 256 * 128,strtoint(startaddress.text) div 256 * 128,0);
+      if strtoint(startaddress.text)>256 then
+		set_absolutechannel(512,strtoint(startaddress.text) mod 256,strtoint(startaddress.text) mod 256,0)
+	  else
+		set_absolutechannel(512,strtoint(startaddress.text) mod 256 - 1,strtoint(startaddress.text) mod 256 - 1,0);
+      text1.visible:=true;
+      text2.visible:=true;
+    end;
+  procedure StopBtn;
+  begin
+    set_channel('dimmer',get_channel('DIMMER'),get_channel('DIMMER'),0);
+  end;
+  end.
+ </code>
+</device>

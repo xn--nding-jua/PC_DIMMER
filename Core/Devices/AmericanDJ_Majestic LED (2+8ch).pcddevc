@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\colorflower.png">
+ <information id="PC_DIMMER">
+ <name>Majestic LED</name>
+ <vendor>American DJ</vendor>
+ <author>Martin</author>
+ <description>4-Fach LED Flower, für den 8 Kanal-Modus einfach 4 dieser DDF's hinzufügen. </description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Pattern/Macro" fade="yes" type="gobo1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Strobe" fade="yes" type="shutter"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" />
+ <shutter OpenValue="9" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="9" MinValue="10" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <gobos>
+  <gobo name="Blackout" value="0" valueend="9" filename="Offen.png" />
+  <gobo name="Pattern 1" value="10" valueend="19" filename="Gobo01.png" />
+  <gobo name="Pattern 2" value="20" valueend="29" filename="Gobo02.png" />
+  <gobo name="Pattern 3" value="30" valueend="39" filename="Gobo03.png" />
+  <gobo name="Pattern 4" value="40" valueend="49" filename="Gobo04.png" />
+  <gobo name="Pattern 5" value="50" valueend="59" filename="Gobo05.png" />
+  <gobo name="Pattern 6" value="60" valueend="69" filename="Gobo06.png" />
+  <gobo name="Pattern 7" value="70" valueend="79" filename="Gobo07.png" />
+  <gobo name="Pattern 8" value="80" valueend="89" filename="Gobo08.png" />
+  <gobo name="Pattern 9" value="90" valueend="99" filename="Gobo09.png" />
+  <gobo name="Pattern 10" value="100" valueend="109" filename="Gobo10.png" />
+  <gobo name="Pattern 11" value="110" valueend="119" filename="Gobo11.png" />
+  <gobo name="Pattern 12" value="120" valueend="129" filename="Gobo12.png" />
+  <gobo name="Pattern 13" value="130" valueend="139" filename="Gobo13.png" />
+  <gobo name="Pattern 14" value="140" valueend="149" filename="Gobo14.png" />
+  <gobo name="Pattern 15" value="150" valueend="159" filename="Gobo15.png" />
+  <gobo name="Macro 1" value="160" valueend="169" filename="Gobo16.png" />
+  <gobo name="Macro 2" value="170" valueend="179" filename="Gobo17.png" />
+  <gobo name="Macro 3" value="180" valueend="189" filename="Gobo18.png" />
+  <gobo name="Macro 4" value="190" valueend="199" filename="Gobo19.png" />
+  <gobo name="Macro 5" value="200" valueend="209" filename="Gobo20.png" />
+  <gobo name="Macro 6" value="210" valueend="219" filename="Gobo21.png" />
+  <gobo name="Macro 7" value="220" valueend="229" filename="Gobo22.png" />
+  <gobo name="Macro 8" value="230" valueend="239" filename="Gobo23.png" />
+  <gobo name="Macro 9" value="240" valueend="249" filename="Gobo24.png" />
+  <gobo name="Macro 10" value="250" valueend="255" filename="Gobo24.png" />
+ </gobos>
+ <form width="234" height="171">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="GOBOBOX1" top="140" left="10" width="215" height="23" action="gobo1change">
+   <item caption="Blackout" value="0" picture="Offen.bmp" />
+   <item caption="Pattern 1" value="0" picture="Gobo01.bmp" />
+   <item caption="Pattern 2" value="0" picture="Gobo02.bmp" />
+   <item caption="Pattern 3" value="0" picture="Gobo03.bmp" />
+   <item caption="Pattern 4" value="0" picture="Gobo04.bmp" />
+   <item caption="Pattern 5" value="0" picture="Gobo05.bmp" />
+   <item caption="Pattern 6" value="0" picture="Gobo06.bmp" />
+   <item caption="Pattern 7" value="0" picture="Gobo07.bmp" />
+   <item caption="Pattern 8" value="0" picture="Gobo08.bmp" />
+   <item caption="Pattern 9" value="0" picture="Gobo09.bmp" />
+   <item caption="Pattern 10" value="0" picture="Gobo10.bmp" />
+   <item caption="Pattern 11" value="0" picture="Gobo11.bmp" />
+   <item caption="Pattern 12" value="0" picture="Gobo12.bmp" />
+   <item caption="Pattern 13" value="0" picture="Gobo13.bmp" />
+   <item caption="Pattern 14" value="0" picture="Gobo14.bmp" />
+   <item caption="Pattern 15" value="0" picture="Gobo15.bmp" />
+   <item caption="Macro 1" value="0" picture="Gobo16.bmp" />
+   <item caption="Macro 2" value="0" picture="Gobo17.bmp" />
+   <item caption="Macro 3" value="0" picture="Gobo18.bmp" />
+   <item caption="Macro 4" value="0" picture="Gobo19.bmp" />
+   <item caption="Macro 5" value="0" picture="Gobo20.bmp" />
+   <item caption="Macro 6" value="0" picture="Gobo21.bmp" />
+   <item caption="Macro 7" value="0" picture="Gobo22.bmp" />
+   <item caption="Macro 8" value="0" picture="Gobo23.bmp" />
+   <item caption="Macro 9" value="0" picture="Gobo24.bmp" />
+   <item caption="Macro 10" value="0" picture="Gobo24.bmp" />
+  </dropdown>
+  <slider name="SHUTTERslider1" top="95" left="10" width="215" height="25" action="SHUTTERchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="SHUTTERlbl1" top="80" left="10" width="35" height="15" caption="Strobe"/>
+  <label name="Label2" top="125" left="10" width="75" height="15" caption="Pattern / Makro"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure GOBO1change;
+  procedure SHUTTERchange;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        value:=get_channel('gobo1');
+        case value of
+          0..9: gobobox1.itemindex:=0;
+          10..19: gobobox1.itemindex:=1;
+          20..29: gobobox1.itemindex:=2;
+          30..39: gobobox1.itemindex:=3;
+          40..49: gobobox1.itemindex:=4;
+          50..59: gobobox1.itemindex:=5;
+          60..69: gobobox1.itemindex:=6;
+          70..79: gobobox1.itemindex:=7;
+          80..89: gobobox1.itemindex:=8;
+          90..99: gobobox1.itemindex:=9;
+          100..109: gobobox1.itemindex:=10;
+          110..119: gobobox1.itemindex:=11;
+          120..129: gobobox1.itemindex:=12;
+          130..139: gobobox1.itemindex:=13;
+          140..149: gobobox1.itemindex:=14;
+          150..159: gobobox1.itemindex:=15;
+          160..169: gobobox1.itemindex:=16;
+          170..179: gobobox1.itemindex:=17;
+          180..189: gobobox1.itemindex:=18;
+          190..199: gobobox1.itemindex:=19;
+          200..209: gobobox1.itemindex:=20;
+          210..219: gobobox1.itemindex:=21;
+          220..229: gobobox1.itemindex:=22;
+          230..239: gobobox1.itemindex:=23;
+          240..249: gobobox1.itemindex:=24;
+          250..255: gobobox1.itemindex:=25;
+        end;
+      end;
+      1:
+      begin
+        SHUTTERslider1.position:=get_channel('SHUTTER');
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure GOBO1change;
+  begin
+    case gobobox1.itemindex of
+      0: set_channel('gobo1', -1, 0, 0);
+      1: set_channel('gobo1', -1, 10, 0);
+      2: set_channel('gobo1', -1, 20, 0);
+      3: set_channel('gobo1', -1, 30, 0);
+      4: set_channel('gobo1', -1, 40, 0);
+      5: set_channel('gobo1', -1, 50, 0);
+      6: set_channel('gobo1', -1, 60, 0);
+      7: set_channel('gobo1', -1, 70, 0);
+      8: set_channel('gobo1', -1, 80, 0);
+      9: set_channel('gobo1', -1, 90, 0);
+      10: set_channel('gobo1', -1, 100, 0);
+      11: set_channel('gobo1', -1, 110, 0);
+      12: set_channel('gobo1', -1, 120, 0);
+      13: set_channel('gobo1', -1, 130, 0);
+      14: set_channel('gobo1', -1, 140, 0);
+      15: set_channel('gobo1', -1, 150, 0);
+      16: set_channel('gobo1', -1, 160, 0);
+      17: set_channel('gobo1', -1, 170, 0);
+      18: set_channel('gobo1', -1, 180, 0);
+      19: set_channel('gobo1', -1, 190, 0);
+      20: set_channel('gobo1', -1, 200, 0);
+      21: set_channel('gobo1', -1, 210, 0);
+      22: set_channel('gobo1', -1, 220, 0);
+      23: set_channel('gobo1', -1, 230, 0);
+      24: set_channel('gobo1', -1, 240, 0);
+      25: set_channel('gobo1', -1, 250, 0);
+    end;
+  end;
+  procedure SHUTTERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SHUTTER',-1,SHUTTERslider1.position,0);
+  end;
+  end.
+ </code>
+</device>

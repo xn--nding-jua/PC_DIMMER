@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\el60g.png">
+ <information id="PC_DIMMER">
+ <name>DJLase Performance 200 GVC</name>
+ <vendor>Stairville</vendor>
+ <author>Martin</author>
+ <description>neuer Laser von Thomanns Eigenmarke</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Betriebsmodus" fade="yes" type="gobo2"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Pattern" fade="yes" type="gobo1"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Zoom" fade="yes" type="zoom"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Bewegung der X-Achse" fade="yes" type="pan"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Bewegung der Y-Achse" fade="yes" type="tilt"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Rotation um X-Achse" fade="yes" type="special1"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Rotation um Y-Achse" fade="yes" type="special2"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Rotation um Z-Achse" fade="yes" type="special3"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Farbauswahl" fade="yes" type="color1"/>
+ </channels>
+ <initvalues ch0="255" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" ch8="-1" />
+ <colors>
+  <color name="Ursprünglich Voreingestellte Farbe" value="0" valueend="31" r="255" g="255" b="255" />
+  <color name="Grün" value="32" valueend="63" r="0" g="255" b="0" />
+  <color name="Violett" value="64" valueend="95" r="128" g="0" b="128" />
+  <color name="Cyan" value="96" valueend="127" r="0" g="255" b="255" />
+  <color name="Farbdurchlauf" value="225" valueend="255" r="128" g="128" b="0" />
+ </colors>
+ <shutter OpenValue="7" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="7" MinValue="8" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <gobos>
+  <gobo name="Kreis" value="0" valueend="7" filename="CirTunnel.png" />
+  <gobo name="Kreis mit Spitzen" value="8" valueend="15" filename="Cone3.png" />
+  <gobo name="Dreieck" value="16" valueend="23" filename="TriAng6.png" />
+  <gobo name="Viereck" value="24" valueend="31" filename="Square.png" />
+  <gobo name="Viereck gestrichelt" value="32" valueend="39" filename="square1.png" />
+  <gobo name="Viereck im Viereck" value="40" valueend="47" filename="Squares.png" />
+  <gobo name="Plus" value="48" valueend="55" filename="R15020152.png" />
+  <gobo name="Stern" value="56" valueend="63" filename="Star2.png" />
+  <gobo name="L" value="64" valueend="71" filename="Question.png" />
+  <gobo name="2 gegenläufige Dreiecke" value="72" valueend="79" filename="Fan.png" />
+  <gobo name="Spirale" value="80" valueend="87" filename="PsychoCirclesW.png" />
+  <gobo name="2 Kreise" value="88" valueend="95" filename="HeightHorizontal.png" />
+  <gobo name="Stroke" value="96" valueend="103" filename="Flash.png" />
+  <gobo name="2 Kreisstücken" value="104" valueend="111" filename="Cone.png" />
+  <gobo name="2 Dreiecke" value="112" valueend="119" filename="Triangls.png" />
+  <gobo name="Wellenlinie" value="120" valueend="127" filename="Wave2.png" />
+  <gobo name="V" value="128" valueend="135" filename="Wave.png" />
+  <gobo name="M" value="136" valueend="143" filename="Gobo18.png" />
+  <gobo name="Rechteckwelle 90° gedreht" value="144" valueend="151" filename="Gobo19.png" />
+  <gobo name="Linie" value="152" valueend="159" filename="HBar.png" />
+  <gobo name="Linie gestrichelt" value="160" valueend="167" filename="lines.png" />
+  <gobo name="dünne Linie mit dicken Abschnitten" value="168" valueend="175" filename="LineOfBeams2.png" />
+  <gobo name="2 Linien" value="176" valueend="181" filename="DblDots.png" />
+  <gobo name="Kreuz" value="182" valueend="189" filename="DotCross.png" />
+  <gobo name="2 Kurze Linien" value="190" valueend="197" filename="Gobo25.png" />
+  <gobo name="Quadrat ohne Ecken" value="198" valueend="255" filename="Gobo26.png" />
+  <gobo name="2 Vierecke" value="206" valueend="213" filename="Gobo27.png" />
+  <gobo name="4 Vierecke" value="214" valueend="221" filename="Window.png" />
+  <gobo name="Exzentrischer Kreis" value="222" valueend="229" filename="DecenteredBeam.png" />
+  <gobo name="Linie aus Punkten" value="230" valueend="237" filename="LineOfBeams.png" />
+  <gobo name="Halbkreis aus Punkten" value="238" valueend="245" filename="dotcircle1.png" />
+  <gobo name="Random Punkte" value="246" valueend="255" filename="Dots6.png" />
+ </gobos>
+ <gobos2>
+  <gobo2 name="Aus" value="0" valueend="27" filename="flower.png" />
+  <gobo2 name="Automatikshow alle Farben" value="28" valueend="55" filename="Gobo01.png" />
+  <gobo2 name="Automatikshow rot" value="0" valueend="0" filename="Gobo02.png" />
+  <gobo2 name="Automatikshow grün" value="84" valueend="111" filename="Gobo03.png" />
+  <gobo2 name="Autmatikshow gelb" value="112" valueend="139" filename="Gobo04.png" />
+  <gobo2 name="Musikshow alle Farben" value="140" valueend="167" filename="Gobo05.png" />
+  <gobo2 name="Musikshow grün" value="168" valueend="195" filename="Gobo06.png" />
+  <gobo2 name="Musikshow violett" value="196" valueend="223" filename="Gobo07.png" />
+  <gobo2 name="Musikshow cyan" value="224" valueend="251" filename="Gobo08.png" />
+  <gobo2 name="DMX" value="252" valueend="255" filename="Open.png" />
+ </gobos2>
+ <form width="470" height="341">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="10" left="230" height="230" width="230" />
+  <colorbox top="260" left="230" height="22" width="230" />
+  <dropdown name="GOBOBOX2" top="260" left="10" width="210" height="23" action="gobo2change">
+   <item caption="Aus" value="0" picture="flower.bmp" />
+   <item caption="Automatikshow alle Farben" value="0" picture="Gobo01.bmp" />
+   <item caption="Automatikshow grün" value="0" picture="Gobo02.bmp" />
+   <item caption="Automatikshow violett" value="0" picture="Gobo03.bmp" />
+   <item caption="Autmatikshow cyan" value="0" picture="Gobo04.bmp" />
+   <item caption="Musikshow alle Farben" value="0" picture="Gobo05.bmp" />
+   <item caption="Musikshow grün" value="0" picture="Gobo06.bmp" />
+   <item caption="Musikshow violett" value="0" picture="Gobo07.bmp" />
+   <item caption="Musikshow cyan" value="0" picture="Gobo08.bmp" />
+   <item caption="DMX" value="0" picture="Open.bmp" />
+  </dropdown>
+  <dropdown name="GOBOBOX1" top="310" left="10" width="210" height="23" action="gobo1change">
+   <item caption="Kreis" value="0" picture="CirTunnel.bmp" />
+   <item caption="Kreis mit Spitzen" value="0" picture="Cone3.bmp" />
+   <item caption="Dreieck" value="0" picture="TriAng6.bmp" />
+   <item caption="Viereck" value="0" picture="Square.bmp" />
+   <item caption="Viereck gestrichelt" value="0" picture="square1.bmp" />
+   <item caption="Viereck im Viereck" value="0" picture="Squares.bmp" />
+   <item caption="Plus" value="0" picture="R15020152.bmp" />
+   <item caption="Stern" value="0" picture="Star2.bmp" />
+   <item caption="L" value="0" picture="Question.bmp" />
+   <item caption="2 gegenläufige Dreiecke" value="0" picture="Fan.bmp" />
+   <item caption="Spirale" value="0" picture="PsychoCirclesW.bmp" />
+   <item caption="2 Kreise" value="0" picture="HeightHorizontal.bmp" />
+   <item caption="Stroke" value="0" picture="Flash.bmp" />
+   <item caption="2 Kreisstücken" value="0" picture="Cone.bmp" />
+   <item caption="2 Dreiecke" value="0" picture="Triangls.bmp" />
+   <item caption="Wellenlinie" value="0" picture="Wave2.bmp" />
+   <item caption="V" value="0" picture="Wave.bmp" />
+   <item caption="M" value="0" picture="Gobo18.bmp" />
+   <item caption="Rechteckwelle 90° gedreht" value="0" picture="Gobo19.bmp" />
+   <item caption="Linie" value="0" picture="HBar.bmp" />
+   <item caption="Linie gestrichelt" value="0" picture="lines.bmp" />
+   <item caption="dünne Linie mit dicken Abschnitten" value="0" picture="LineOfBeams2.bmp" />
+   <item caption="2 Linien" value="0" picture="DblDots.bmp" />
+   <item caption="Kreuz" value="0" picture="DotCross.bmp" />
+   <item caption="2 Kurze Linien" value="0" picture="Gobo25.bmp" />
+   <item caption="Quadrat ohne Ecken" value="0" picture="Gobo26.bmp" />
+   <item caption="2 Vierecke" value="0" picture="Gobo27.bmp" />
+   <item caption="4 Vierecke" value="0" picture="Window.bmp" />
+   <item caption="Exzentrischer Kreis" value="0" picture="DecenteredBeam.bmp" />
+   <item caption="Linie aus Punkten" value="0" picture="LineOfBeams.bmp" />
+   <item caption="Halbkreis aus Punkten" value="0" picture="dotcircle1.bmp" />
+   <item caption="Random Punkte" value="0" picture="Dots6.bmp" />
+  </dropdown>
+  <slider name="ZOOMslider2" top="96" left="8" width="217" height="17" action="ZOOMchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SPECIAL1slider5" top="136" left="8" width="217" height="17" action="SPECIAL1change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SPECIAL2slider6" top="176" left="8" width="217" height="17" action="SPECIAL2change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SPECIAL3slider7" top="216" left="8" width="217" height="17" action="SPECIAL3change" startvalue="0" endvalue="255" default="0"/>
+  <label name="ZOOMlbl2" top="80" left="8" width="27" height="13" caption="Zoom"/>
+  <label name="SPECIAL1lbl5" top="120" left="8" width="100" height="13" caption="Rotation um X-Achse"/>
+  <label name="SPECIAL2lbl6" top="160" left="8" width="100" height="13" caption="Rotation um Y-Achse"/>
+  <label name="SPECIAL3lbl7" top="200" left="8" width="100" height="13" caption="Rotation um Z-Achse"/>
+  <label name="Label5" top="240" left="10" width="69" height="13" caption="Betriebsmodus"/>
+  <label name="Label6" top="290" left="10" width="34" height="13" caption="Pattern"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure GOBO2change;
+  procedure GOBO1change;
+  procedure ZOOMchange;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure SPECIAL1change;
+  procedure SPECIAL2change;
+  procedure SPECIAL3change;
+  procedure ColorBoxChange;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        value:=get_channel('gobo2');
+        case value of
+          0..27: gobobox2.itemindex:=0;
+          28..55: gobobox2.itemindex:=1;
+          0..0: gobobox2.itemindex:=2;
+          84..111: gobobox2.itemindex:=3;
+          112..139: gobobox2.itemindex:=4;
+          140..167: gobobox2.itemindex:=5;
+          168..195: gobobox2.itemindex:=6;
+          196..223: gobobox2.itemindex:=7;
+          224..251: gobobox2.itemindex:=8;
+          252..255: gobobox2.itemindex:=9;
+        end;
+      end;
+      1:
+      begin
+        value:=get_channel('gobo1');
+        case value of
+          0..7: gobobox1.itemindex:=0;
+          8..15: gobobox1.itemindex:=1;
+          16..23: gobobox1.itemindex:=2;
+          24..31: gobobox1.itemindex:=3;
+          32..39: gobobox1.itemindex:=4;
+          40..47: gobobox1.itemindex:=5;
+          48..55: gobobox1.itemindex:=6;
+          56..63: gobobox1.itemindex:=7;
+          64..71: gobobox1.itemindex:=8;
+          72..79: gobobox1.itemindex:=9;
+          80..87: gobobox1.itemindex:=10;
+          88..95: gobobox1.itemindex:=11;
+          96..103: gobobox1.itemindex:=12;
+          104..111: gobobox1.itemindex:=13;
+          112..119: gobobox1.itemindex:=14;
+          120..127: gobobox1.itemindex:=15;
+          128..135: gobobox1.itemindex:=16;
+          136..143: gobobox1.itemindex:=17;
+          144..151: gobobox1.itemindex:=18;
+          152..159: gobobox1.itemindex:=19;
+          160..167: gobobox1.itemindex:=20;
+          168..175: gobobox1.itemindex:=21;
+          176..181: gobobox1.itemindex:=22;
+          182..189: gobobox1.itemindex:=23;
+          190..197: gobobox1.itemindex:=24;
+          198..255: gobobox1.itemindex:=25;
+          206..213: gobobox1.itemindex:=26;
+          214..221: gobobox1.itemindex:=27;
+          222..229: gobobox1.itemindex:=28;
+          230..237: gobobox1.itemindex:=29;
+          238..245: gobobox1.itemindex:=30;
+          246..255: gobobox1.itemindex:=31;
+        end;
+      end;
+      2:
+      begin
+        ZOOMslider2.position:=get_channel('ZOOM');
+      end;
+      3:
+      begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+      end;
+      4:
+      begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+      end;
+      5:
+      begin
+        SPECIAL1slider5.position:=get_channel('SPECIAL1');
+      end;
+      6:
+      begin
+        SPECIAL2slider6.position:=get_channel('SPECIAL2');
+      end;
+      7:
+      begin
+        SPECIAL3slider7.position:=get_channel('SPECIAL3');
+      end;
+      8:
+      begin
+        value:=get_channel('color1');
+        case value of
+          0..31: colorbox.itemindex:=0;
+          32..63: colorbox.itemindex:=1;
+          64..95: colorbox.itemindex:=2;
+          96..127: colorbox.itemindex:=3;
+          225..255: colorbox.itemindex:=4;
+        end;
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure GOBO2change;
+  begin
+    case gobobox2.itemindex of
+      0: set_channel('gobo2', -1, 0, 0);
+      1: set_channel('gobo2', -1, 28, 0);
+      2: set_channel('gobo2', -1, 0, 0);
+      3: set_channel('gobo2', -1, 84, 0);
+      4: set_channel('gobo2', -1, 112, 0);
+      5: set_channel('gobo2', -1, 140, 0);
+      6: set_channel('gobo2', -1, 168, 0);
+      7: set_channel('gobo2', -1, 196, 0);
+      8: set_channel('gobo2', -1, 224, 0);
+      9: set_channel('gobo2', -1, 252, 0);
+    end;
+  end;
+  procedure GOBO1change;
+  begin
+    case gobobox1.itemindex of
+      0: set_channel('gobo1', -1, 0, 0);
+      1: set_channel('gobo1', -1, 8, 0);
+      2: set_channel('gobo1', -1, 16, 0);
+      3: set_channel('gobo1', -1, 24, 0);
+      4: set_channel('gobo1', -1, 32, 0);
+      5: set_channel('gobo1', -1, 40, 0);
+      6: set_channel('gobo1', -1, 48, 0);
+      7: set_channel('gobo1', -1, 56, 0);
+      8: set_channel('gobo1', -1, 64, 0);
+      9: set_channel('gobo1', -1, 72, 0);
+      10: set_channel('gobo1', -1, 80, 0);
+      11: set_channel('gobo1', -1, 88, 0);
+      12: set_channel('gobo1', -1, 96, 0);
+      13: set_channel('gobo1', -1, 104, 0);
+      14: set_channel('gobo1', -1, 112, 0);
+      15: set_channel('gobo1', -1, 120, 0);
+      16: set_channel('gobo1', -1, 128, 0);
+      17: set_channel('gobo1', -1, 136, 0);
+      18: set_channel('gobo1', -1, 144, 0);
+      19: set_channel('gobo1', -1, 152, 0);
+      20: set_channel('gobo1', -1, 160, 0);
+      21: set_channel('gobo1', -1, 168, 0);
+      22: set_channel('gobo1', -1, 176, 0);
+      23: set_channel('gobo1', -1, 182, 0);
+      24: set_channel('gobo1', -1, 190, 0);
+      25: set_channel('gobo1', -1, 198, 0);
+      26: set_channel('gobo1', -1, 206, 0);
+      27: set_channel('gobo1', -1, 214, 0);
+      28: set_channel('gobo1', -1, 222, 0);
+      29: set_channel('gobo1', -1, 230, 0);
+      30: set_channel('gobo1', -1, 238, 0);
+      31: set_channel('gobo1', -1, 246, 0);
+    end;
+  end;
+  procedure ZOOMchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('ZOOM',-1,ZOOMslider2.position,0);
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  var
+	phi,r,x,y:Double;
+	pan, tilt, panfine, tiltfine:Double;
+  begin
+	if usemhcontrol.checked then
+	begin
+		// Moving-Head-Steuerung (Polarkoordinaten)
+		x:=((PositionXY.Left+(PositionXY.Width div 2)-(fadenkreuz.Width/2))/fadenkreuz.Width)*2;	//-1..0..1
+		y:=((PositionXY.Top+(PositionXY.Height div 2)-(fadenkreuz.Width/2))/fadenkreuz.Height)*2;	//-1..0..1
+		r:=sqrt(x*x+y*y);
+	
+		if (r>0) then
+		begin
+			if (y>=0) then
+				phi:=arccos(x/r)
+			else
+				phi:=6.283185307179586476925286766559-arccos(x/r);
+		end else
+			phi:=64;
+		
+		r:=128-((r/2)*255);
+		phi:=(phi/6.283185307179586476925286766559)*255;
+		if 64>=phi then
+			phi:=phi+191
+		else
+			phi:=phi-64;
+	
+		pan:=255-phi;
+		tilt:=255-r;
+	end else
+	begin
+		// Scannersteuerung (Kartesische Koordinaten)
+		pan:=((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255;
+		tilt:=((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255;
+	end;
+
+	// Ausgabe
+	if panmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(255-pan),trunc(255-pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(255-pan)*255),trunc(frac(255-pan)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(pan),trunc(pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(pan)*255),trunc(frac(pan)*255),0);
+	end;
+	if tiltmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(255-tilt),trunc(255-tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(255-tilt)*255),trunc(frac(255-tilt)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(tilt),trunc(tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(tilt)*255),trunc(frac(tilt)*255),0);
+	end;
+  end;
+  procedure SPECIAL1change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL1',-1,SPECIAL1slider5.position,0);
+  end;
+  procedure SPECIAL2change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL2',-1,SPECIAL2slider6.position,0);
+  end;
+  procedure SPECIAL3change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL3',-1,SPECIAL3slider7.position,0);
+  end;
+  procedure ColorBoxChange;
+  begin
+    case colorbox.itemindex of
+      0: set_channel('color1', -1, 0, 0);
+      1: set_channel('color1', -1, 32, 0);
+      2: set_channel('color1', -1, 64, 0);
+      3: set_channel('color1', -1, 96, 0);
+      4: set_channel('color1', -1, 225, 0);
+    end;
+  end;
+  end.
+ </code>
+</device>

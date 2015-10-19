@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\color150dmx.png">
+ <information id="PC_DIMMER">
+ <name>TC-3</name>
+ <vendor>Eurolite</vendor>
+ <author>Christian Nöding</author>
+ <description>Farbwechsler mit einem Kanal</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Farbe" fade="yes" type="color1"/>
+ </channels>
+ <initvalues ch0="-1" />
+ <colors>
+  <color name="Schwarz" value="0" valueend="0" r="0" g="0" b="0" />
+  <color name="Weiß" value="6" valueend="6" r="255" g="255" b="255" />
+  <color name="Türkis" value="16" valueend="16" r="0" g="128" b="128" />
+  <color name="Grün" value="32" valueend="32" r="0" g="255" b="0" />
+  <color name="Gelb" value="48" valueend="48" r="255" g="255" b="0" />
+  <color name="Rot" value="64" valueend="64" r="255" g="0" b="0" />
+  <color name="Pink" value="80" valueend="80" r="255" g="0" b="255" />
+  <color name="Orange" value="96" valueend="96" r="255" g="128" b="0" />
+  <color name="Blau" value="112" valueend="112" r="0" g="0" b="255" />
+  <color name="Weiß" value="128" valueend="128" r="254" g="254" b="254" />
+ </colors>
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="191" height="122">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorbox top="90" left="10" height="22" width="170" />
+ </form>
+ <code>
+  unit TC3;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorBoxChange;
+
+  implementation
+
+
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+  	wert:integer;
+	begin
+    if channel=0 then
+    begin
+    	wert:=get_channel('COLOR1');
+    	case wert of
+    		0..5: colorbox.itemindex:=0;
+    		6..15: colorbox.itemindex:=1;
+    		16..31: colorbox.itemindex:=2;
+    		32..47: colorbox.itemindex:=3;
+    		48..63: colorbox.itemindex:=4;
+    		64..79: colorbox.itemindex:=5;
+    		80..95: colorbox.itemindex:=6;
+    		96..111: colorbox.itemindex:=7;
+    		112..127: colorbox.itemindex:=8;
+    		128..255: colorbox.itemindex:=9;
+    	end;
+    end;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure ColorBoxChange;
+  begin
+    case colorbox.itemindex of
+    	0: set_channel('COLOR1',-1,0,0,0);
+    	1: set_channel('COLOR1',-1,6,0,0);
+    	2: set_channel('COLOR1',-1,16,0,0);
+    	3: set_channel('COLOR1',-1,32,0,0);
+    	4: set_channel('COLOR1',-1,48,0,0);
+    	5: set_channel('COLOR1',-1,64,0,0);
+    	6: set_channel('COLOR1',-1,80,0,0);
+    	7: set_channel('COLOR1',-1,96,0,0);
+    	8: set_channel('COLOR1',-1,112,0,0);
+    	9: set_channel('COLOR1',-1,128,0,0);
+    end;
+  end;
+  end.
+ </code>
+</device>

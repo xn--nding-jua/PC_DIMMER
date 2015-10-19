@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\ledwash.png">
+ <information id="PC_DIMMER">
+ <name>LED Bar 2 RGBA Control</name>
+ <vendor>Eurolite</vendor>
+ <author>Ingo Koinzer</author>
+ <description></description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="MODE" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="DIMMER" fade="yes" type="dimmer"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="FLASH" fade="yes" type="shutter"/>
+ </channels>
+ <initvalues ch0="11" ch1="-1" ch2="0" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="230" height="235">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="ModeBox" top="100" left="10" width="210" height="23" action="SPECIAL1change">
+   <item caption="Aus" value="0" picture="" />
+   <item caption="Dimmer RGBA" value="6" picture="" />
+   <item caption="Dimmer 4x RGBA" value="11" picture="" />
+   <item caption="Alle R" value="16" picture="" />
+   <item caption="Alle G" value="21" picture="" />
+   <item caption="Alle B" value="26" picture="" />
+   <item caption="Alle A" value="31" picture="" />
+   <item caption="Alle RA" value="36" picture="" />
+   <item caption="Alle RG" value="41" picture="" />
+   <item caption="Alle RB" value="46" picture="" />
+   <item caption="Alle GB" value="51" picture="" />
+   <item caption="Alle AB" value="56" picture="" />
+   <item caption="Alle AG" value="61" picture="" />
+   <item caption="Alle RGB" value="66" picture="" />
+   <item caption="Alle RGA" value="71" picture="" />
+   <item caption="Alle RBA" value="76" picture="" />
+   <item caption="Alle GBA" value="81" picture="" />
+   <item caption="Alle RGBA" value="86" picture="" />
+   <item caption="Color jump" value="91" picture="" />
+   <item caption="Color fade" value="101" picture="" />
+   <item caption="Color dream" value="111" picture="" />
+   <item caption="Color flow" value="121" picture="" />
+   <item caption="Overlap flow" value="131" picture="" />
+   <item caption="Color chase" value="141" picture="" />
+   <item caption="Multi color" value="151" picture="" />
+   <item caption="Fade flow (color select)" value="161" picture="" />
+   <item caption="2 flow (2 color select)" value="171" picture="" />
+   <item caption="1 direction (2 color select)" value="181" picture="" />
+   <item caption="2 directions (2 color select)" value="191" picture="" />
+   <item caption="2 color flow (2 color select)" value="201" picture="" />
+   <item caption="Sound (Dimmer: Sensitivity)" value="211" picture="" />
+  </dropdown>
+  <slider name="DIMMERslider1" top="150" left="10" width="210" height="20" action="DIMMERchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SHUTTERslider2" top="200" left="10" width="210" height="20" action="SHUTTERchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="SPECIAL1lbl0" top="80" left="10" width="27" height="13" caption="Mode"/>
+  <label name="DIMMERlbl1" top="130" left="10" width="35" height="13" caption="Dimmer"/>
+  <label name="SHUTTERlbl2" top="180" left="10" width="25" height="13" caption="Flash"/>
+ </form>
+ <code>
+  unit EuroliteLEDBar2RGBAUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure SPECIAL1change;
+  procedure DIMMERchange;
+  procedure SHUTTERchange;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        case get_channel('SPECIAL1') of
+					  0..5  : ModeBox.ItemIndex :=  0;
+					  6..10 : ModeBox.ItemIndex :=  1;
+				   11..15 : ModeBox.ItemIndex :=  2;
+				   16..20 : ModeBox.ItemIndex :=  3;
+				   21..25 : ModeBox.ItemIndex :=  4;
+				   26..30 : ModeBox.ItemIndex :=  5;
+				   31..35 : ModeBox.ItemIndex :=  6;
+				   36..40 : ModeBox.ItemIndex :=  7;
+				   41..45 : ModeBox.ItemIndex :=  8;
+				   46..50 : ModeBox.ItemIndex :=  9;
+				   51..55 : ModeBox.ItemIndex := 10;
+				   56..60 : ModeBox.ItemIndex := 11;
+				   61..65 : ModeBox.ItemIndex := 12;
+				   66..70 : ModeBox.ItemIndex := 13;
+				   71..75 : ModeBox.ItemIndex := 14;
+				   76..80 : ModeBox.ItemIndex := 15;
+				   81..85 : ModeBox.ItemIndex := 16;
+				   86..90 : ModeBox.ItemIndex := 17;
+				   91..100: ModeBox.ItemIndex := 18;
+			    101..110: ModeBox.ItemIndex := 19;
+			    111..120: ModeBox.ItemIndex := 20;
+			    121..130: ModeBox.ItemIndex := 21;
+			    131..140: ModeBox.ItemIndex := 22;
+			    141..150: ModeBox.ItemIndex := 23;
+			    151..160: ModeBox.ItemIndex := 24; 
+			    161..170: ModeBox.ItemIndex := 25;
+			    171..180: ModeBox.ItemIndex := 26;
+			    181..190: ModeBox.ItemIndex := 27;
+			    191..200: ModeBox.ItemIndex := 28;
+			    201..210: ModeBox.ItemIndex := 29;
+			    211..255: ModeBox.ItemIndex := 30;
+        end;
+      end;
+      1:
+      begin
+        DIMMERslider1.position:=get_channel('DIMMER')
+      end;
+      2:
+      begin
+        SHUTTERslider2.position:=get_channel('SHUTTER')
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure SPECIAL1change;
+  begin
+    DontRefresh:=true;
+		case ModeBox.ItemIndex of
+		   0: set_channel('SPECIAL1',-1,  0,0);
+		   1: set_channel('SPECIAL1',-1,  6,0);
+		   2: set_channel('SPECIAL1',-1, 11,0);
+		   3: set_channel('SPECIAL1',-1, 16,0);
+		   4: set_channel('SPECIAL1',-1, 21,0);
+		   5: set_channel('SPECIAL1',-1, 26,0);
+		   6: set_channel('SPECIAL1',-1, 31,0);
+		   7: set_channel('SPECIAL1',-1, 36,0);
+		   8: set_channel('SPECIAL1',-1, 41,0);
+		   9: set_channel('SPECIAL1',-1, 46,0);
+	 		10: set_channel('SPECIAL1',-1, 51,0);
+	 		11: set_channel('SPECIAL1',-1, 56,0);
+	 		12: set_channel('SPECIAL1',-1, 61,0);
+	 		13: set_channel('SPECIAL1',-1, 66,0);
+	 		14: set_channel('SPECIAL1',-1, 71,0);
+	 		15: set_channel('SPECIAL1',-1, 76,0);
+	 		16: set_channel('SPECIAL1',-1, 81,0);
+	 		17: set_channel('SPECIAL1',-1, 86,0);
+	 		18: set_channel('SPECIAL1',-1, 91,0);
+	 		19: set_channel('SPECIAL1',-1,101,0);
+	 		20: set_channel('SPECIAL1',-1,111,0);
+	 		21: set_channel('SPECIAL1',-1,121,0);
+	 		22: set_channel('SPECIAL1',-1,131,0);
+	 		23: set_channel('SPECIAL1',-1,141,0);
+	 		24: set_channel('SPECIAL1',-1,151,0);
+	 		25: set_channel('SPECIAL1',-1,161,0);
+	 		26: set_channel('SPECIAL1',-1,171,0);
+	 		27: set_channel('SPECIAL1',-1,181,0); 
+	 		28: set_channel('SPECIAL1',-1,191,0);
+	 		29: set_channel('SPECIAL1',-1,201,0);
+	 		30: set_channel('SPECIAL1',-1,211,0);
+		end;
+  end;
+  procedure DIMMERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('DIMMER',-1,DIMMERslider1.position,0);
+  end;
+  procedure SHUTTERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SHUTTER',-1,SHUTTERslider2.position,0);
+  end;
+  end.
+ </code>
+</device>

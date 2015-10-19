@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\quadgem.png">
+ <information id="PC_DIMMER">
+ <name>EL-400RG</name>
+ <vendor>Laserworld</vendor>
+ <author>Christian Nöding</author>
+ <description>Laser mit DMX512-Steuerung und Rot/Grün-Laser</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Betriebsmodi" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Muster" fade="yes" type="special2"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Animationen" fade="yes" type="special3"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Strobe" fade="yes" type="shutter"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Punktgeschwidigkeit" fade="yes" type="speed"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Vertikale Bewegung" fade="yes" type="tilt"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Horizontale Bewegung" fade="yes" type="pan"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Farbauswahl" fade="yes" type="special4"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Reset" fade="yes" type="special5"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="0" ch1="-1" ch2="-1" ch3="0" ch4="-1" ch5="128" ch6="128" ch7="-1" ch8="0" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="470" height="312">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="8" left="233" height="226" width="226" />
+  <dropdown name="special1box" top="100" left="10" width="210" height="23" action="SPECIAL1change">
+   <item caption="Laser aus" value="0" picture="" />
+   <item caption="Soundmodus" value="0" picture="" />
+   <item caption="Automatikmodus" value="0" picture="" />
+   <item caption="DMX512-Steuerung" value="0" picture="" />
+  </dropdown>
+  <dropdown name="special4box" top="280" left="10" width="210" height="23" action="SPECIAL4change">
+   <item caption="Grün und Rot" value="0" picture="" />
+   <item caption="Rot" value="0" picture="" />
+   <item caption="Grün" value="0" picture="" />
+  </dropdown>
+  <slider name="SPECIAL2slider1" top="150" left="10" width="210" height="20" action="SPECIAL2change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SPECIAL3slider2" top="190" left="10" width="210" height="20" action="SPECIAL3change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SHUTTERslider3" top="230" left="10" width="210" height="20" action="SHUTTERchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SPEEDslider4" top="280" left="230" width="230" height="20" action="SPEEDchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="SPECIAL1lbl0" top="80" left="10" width="70" height="10" caption="Betriebsmodus"/>
+  <label name="SPECIAL2lbl1" top="130" left="10" width="30" height="10" caption="Muster"/>
+  <label name="SPECIAL3lbl2" top="170" left="10" width="50" height="10" caption="Animation"/>
+  <label name="SHUTTERlbl3" top="210" left="10" width="30" height="10" caption="Strobe"/>
+  <label name="SPEEDlbl4" top="260" left="230" width="100" height="10" caption="Punktgeschwidigkeit"/>
+  <label name="SPECIAL4lbl7" top="260" left="10" width="60" height="10" caption="Farbauswahl"/>
+  <button name="Button1" top="240" left="380" width="80" height="30" action="SPECIAL5change" caption="RESET"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure SPECIAL1change;
+  procedure SPECIAL2change;
+  procedure SPECIAL3change;
+  procedure SHUTTERchange;
+  procedure SPEEDchange;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure SPECIAL4change;
+  procedure SPECIAL5change;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        SPECIAL1box.itemindex:=trunc(get_channel('SPECIAL1')/64);
+      end;
+      1:
+      begin
+        SPECIAL2slider1.position:=get_channel('SPECIAL2');
+      end;
+      2:
+      begin
+        SPECIAL3slider2.position:=get_channel('SPECIAL3');
+      end;
+      3:
+      begin
+        SHUTTERslider3.position:=get_channel('SHUTTER');
+      end;
+      4:
+      begin
+        SPEEDslider4.position:=get_channel('SPEED');
+      end;
+      5:
+      begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+      end;
+      6:
+      begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+      end;
+      7:
+      begin
+        SPECIAL4box.itemindex:=trunc(get_channel('SPECIAL4')/102);
+      end;
+      8:
+      begin
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure SPECIAL1change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL1',-1,special1box.itemindex*64+32,0);
+  end;
+  procedure SPECIAL2change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL2',-1,SPECIAL2slider1.position,0);
+  end;
+  procedure SPECIAL3change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL3',-1,SPECIAL3slider2.position,0);
+  end;
+  procedure SHUTTERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SHUTTER',-1,SHUTTERslider3.position,0);
+  end;
+  procedure SPEEDchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPEED',-1,SPEEDslider4.position,0);
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  var
+	phi,r,x,y:Double;
+	pan, tilt, panfine, tiltfine:Double;
+  begin
+	if usemhcontrol.checked then
+	begin
+		// Moving-Head-Steuerung (Polarkoordinaten)
+		x:=((PositionXY.Left+(PositionXY.Width div 2)-(fadenkreuz.Width/2))/fadenkreuz.Width)*2;	//-1..0..1
+		y:=((PositionXY.Top+(PositionXY.Height div 2)-(fadenkreuz.Width/2))/fadenkreuz.Height)*2;	//-1..0..1
+		r:=sqrt(x*x+y*y);
+	
+		if (r>0) then
+		begin
+			if (y>=0) then
+				phi:=arccos(x/r)
+			else
+				phi:=6.283185307179586476925286766559-arccos(x/r);
+		end else
+			phi:=64;
+		
+		r:=128-((r/2)*255);
+		phi:=(phi/6.283185307179586476925286766559)*255;
+		if 64>=phi then
+			phi:=phi+191
+		else
+			phi:=phi-64;
+	
+		pan:=255-phi;
+		tilt:=255-r;
+	end else
+	begin
+		// Scannersteuerung (Kartesische Koordinaten)
+		pan:=((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255;
+		tilt:=((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255;
+	end;
+
+	// Ausgabe
+	if panmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(255-pan),trunc(255-pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(255-pan)*255),trunc(frac(255-pan)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(pan),trunc(pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(pan)*255),trunc(frac(pan)*255),0);
+	end;
+	if tiltmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(255-tilt),trunc(255-tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(255-tilt)*255),trunc(frac(255-tilt)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(tilt),trunc(tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(tilt)*255),trunc(frac(tilt)*255),0);
+	end;
+  end;
+  procedure SPECIAL4change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL4',-1,SPECIAL4box.itemindex*101+1,0);
+  end;
+  procedure SPECIAL5change;
+  begin
+    DontRefresh:=true;
+
+    if messagedlg('Soll der Laser resettet werden?',mtWarning,[mbYes,mbNo],0)=mrYes then
+		begin
+	    set_channel('SPECIAL5',-1,255,0);
+	    ShowMessage('Klicken Sie bitte auf "OK", wenn der Reset durchgeführt wurde...');
+	    set_channel('SPECIAL5',-1,0,0);
+		end;
+  end;
+  end.
+ </code>
+</device>

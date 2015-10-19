@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\Par56silber.png">
+ <information id="PC_DIMMER">
+ <name>LED Wash Ultra Bright RGB (6ch)</name>
+ <vendor>LightmaXX</vendor>
+ <author>Christian Nöding</author>
+ <description>LED Wash im 6-Kanal-Modus</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Farbmakros" fade="yes" type="color2"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Strobe" fade="yes" type="shutter"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Functions" fade="yes" type="special1"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="380" height="262">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorpicker top="80" left="17" />
+  <dropdown name="Combobox1" top="220" left="190" width="180" height="21" action="combobox1change">
+   <item caption="Keine Funktion" value="0" picture="" />
+   <item caption="Farbmischungen" value="0" picture="" />
+   <item caption="RGB Farbänderung" value="0" picture="" />
+   <item caption="7-Farb-Wechsel" value="0" picture="" />
+   <item caption="Soundsteuerung" value="0" picture="" />
+  </dropdown>
+  <slider name="Slider1" top="120" left="190" width="180" height="20" action="slider1change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Slider2" top="170" left="190" width="180" height="20" action="slider2change" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="100" left="190" width="62" height="13" caption="Farb-Makros:"/>
+  <label name="Label2" top="150" left="190" width="57" height="13" caption="Stroboskop:"/>
+  <label name="Label3" top="200" left="190" width="56" height="13" caption="Funktionen:"/>
+  <button name="Button1" top="220" left="10" width="160" height="30" action="button1click" caption="Colorpicker wechseln"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure button1click;
+  procedure slider1change;
+  procedure slider2change;
+  procedure combobox1change;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+	var
+		wert:integer;
+  begin
+    if not dontrefresh then
+		case channel of
+    	3:
+    	begin
+    		slider1.position:=get_channel('color2');
+    	end;
+    	4:
+    	begin
+    		slider2.position:=get_channel('shutter');
+    	end;
+    	5:
+    	begin
+    		wert:=get_channel('special1');
+    		case wert of
+    			0..31: combobox1.itemindex:=0;
+    			32..95: combobox1.itemindex:=1;
+    			96..159: combobox1.itemindex:=2;
+    			160..223: combobox1.itemindex:=3;
+    			224..255: combobox1.itemindex:=4;
+    		end;
+    	end;
+    end;
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure ColorPickerChange(R, G, B: Byte);
+  begin
+        set_channel('r',-1,r,0);
+        set_channel('g',-1,g,0);
+        set_channel('b',-1,b,0);
+  end;
+  procedure button1click;
+  begin
+      if colorpicker.visible then
+      begin
+        colorpicker.visible:=false;
+        colorpicker2.visible:=true;
+      end else
+      begin
+        colorpicker.visible:=true;
+        colorpicker2.visible:=false;
+      end;
+  end;
+  procedure slider1change;
+  begin
+    dontrefresh:=true;
+    set_channel('color2',-1,slider1.position,0);
+  end;
+  procedure slider2change;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,slider2.position,0);
+  end;
+  procedure combobox1change;
+  begin
+    dontrefresh:=true;
+		case combobox1.itemindex of
+			0: set_channel('special1',-1,0,0);
+			1: set_channel('special1',-1,32,0);
+			2: set_channel('special1',-1,96,0);
+			3: set_channel('special1',-1,160,0);
+			4: set_channel('special1',-1,224,0);
+		end;
+  end;
+  end.
+ </code>
+</device>

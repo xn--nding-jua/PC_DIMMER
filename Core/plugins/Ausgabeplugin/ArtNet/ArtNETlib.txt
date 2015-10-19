@@ -1,0 +1,28 @@
+Verwendete Datentypen:
+=======================================================
+    TDMXArray = array of byte;
+    PDMXArray = ^TDMXArray;
+
+
+Verwendete Funktionen:
+=======================================================
+    ArtNET_Activate:procedure(ReceiveDMXUniverse, ReceiveSingleValue:Pointer); stdcall; // Pointer auf Callbackfunktionen
+    ArtNET_Deactivate:procedure; stdcall;
+    ArtNET_SetChannel:procedure(ArtNETSubNet:integer; ArtNetUniverse:integer; Channel:integer; Value:integer);stdcall;
+    ArtNET_SendDMXUniverse:procedure(Address:PChar; ArtNETSubNet:integer; ArtNetUniverse:integer; Buffer: TDMXArray; Length:integer); stdcall;
+    ArtNET_ShowConfig:procedure; stdcall;
+    ArtNET_ShowAbout:procedure; stdcall;
+    ArtNET_SetReceiveUniverseOnOff:procedure(ArtNETSubNet:integer; ArtNetUniverse:integer; Enabled: boolean);stdcall;
+    ArtNET_SetConfig(ArtNetShortName, ArtNetLongName:String; ReceiverEnabled, AllowLoopback, SendContinuously, AllowAllUniverses:Boolean; UsedNetworkCard:integer; IPAddress, SubNetMask: String);stdcall;
+
+
+Verwendete Callback-Funktionen:
+========================================================
+    procedure ReceiveDMXUniverse(ArtNETSubNet:integer; ArtNETUniverse:integer; Buffer: PDMXArray; Length:integer);stdcall;
+    procedure ReceiveSingleValue(ArtNETSubNet:integer; ArtNETUniverse:integer; Channel:integer; Value:integer);stdcall;
+
+
+Copyrights:
+========================================================
+(c) 2008-2011 Dipl.-Ing. Christian Nöding
+Teile der Library (c) 2007 Michael Dreschmann

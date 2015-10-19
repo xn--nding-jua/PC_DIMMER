@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\ledpar64.png">
+ <information id="PC_DIMMER">
+ <name>LED Par56/64</name>
+ <vendor>img Stageline</vendor>
+ <author>Christian Nöding</author>
+ <description>LED Scheinwerfer von img Stageline mit 5 Kanälen</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Modus" fade="no" type="special2"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Geschwindigkeit" fade="yes" type="speed"/>
+ </channels>
+ <initvalues 0="-1" 1="-1" 2="-1" 3="-1" 4="-1" />
+ <form width="180" height="360">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="16" left="80"/>
+  <deviceadress top="32" left="80"/>
+  <devicedipswitch top="50" left="70"/>
+  <colorpicker top="90" left="20" />
+  <edit name="fadezeit" top="280" left="120" width="40" height="21" text="3000" action="fadezeitchange"/>
+  <checkbox name="usefadezeit" top="310" left="120" width="50" height="17" caption="Faden" action="usefadezeitchange" checked="false"/>
+  <dropdown name="modus" top="280" left="10" width="100" height="21" action="dropdownchange">
+   <item caption="Manuell" value="0" picture="" />
+   <item caption="7-Color Autofade" value="64" picture="" />
+   <item caption="7-Color Auto-Switch" value="128" picture="" />
+   <item caption="Crossfade" value="192" picture="" />
+  </dropdown>
+  <slider name="speed" top="330" left="10" width="160" height="20" action="speedchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="label1" top="260" left="120" width="43" height="13" caption="Zeit [ms]:"/>
+  <label name="label2" top="260" left="10" width="35" height="13" caption="Modus:"/>
+  <label name="label3" top="310" left="10" width="81" height="13" caption="Geschwindigkeit:"/>
+  <button name="changecolorpicker" top="230" left="10" width="160" height="20" action="onchangecolorpicker" caption="Wechsle Farbwahlbox"/>
+ </form>
+ <code>
+  unit LEDPar64;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure onchangecolorpicker;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure dropdownchange;
+  procedure fadezeitchange;
+  procedure usefadezeitchange;
+  procedure speedchange;
+
+  implementation
+
+    var
+      dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+    begin
+      // bitte hier die eigene Funktion eintragen
+    end;
+  procedure FormShow;
+    begin
+      usefadezeit.checked:=true;
+    end;
+  procedure onchangecolorpicker;
+    begin
+      if colorpicker.visible then
+      begin
+        colorpicker.visible:=false;
+        colorpicker2.visible:=true;
+      end else
+      begin
+        colorpicker.visible:=true;
+        colorpicker2.visible:=false;
+      end;
+    end;
+  procedure FormRefresh(channel:Integer);
+    var
+      red,green,blue:byte;
+      modusposition:integer;
+      wahr:integer;
+    begin
+      case channel of
+      0:
+      begin
+	if not dontrefresh then
+        begin
+          modusposition:=get_channel('special2');
+          case modusposition of
+		    0..63: modus.itemindex:=0;
+			64..127: modus.itemindex:=1;
+			128..191: modus.itemindex:=2;
+			192..255: modus.itemindex:=3;
+		  end;
+		end;
+      end;
+      1..3:
+      begin
+        red:=get_channel('r');
+        green:=get_channel('g');
+        blue:=get_channel('b');
+//        colorpicker.SelectedColor:=red + green shl 8 + blue shl 16;
+//        colorpicker2.SelectedColor:=red + green shl 8 + blue shl 16;
+      end;
+      4:
+      begin
+	if not dontrefresh then
+          speed.position:=get_channel('speed');
+      end;
+      end;
+      dontrefresh:=false;
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure ColorPickerChange(R, G, B: Byte);
+    var
+      zeit:integer;
+//      red,green,blue:byte;
+    begin
+      if usefadezeit.checked then
+        zeit:=strtoint(fadezeit.text)
+      else
+        zeit:=0;
+
+//        red:=colorpicker.selectedcolor and $FF;
+//        green := (colorpicker.selectedcolor shr 8) and $FF;
+//        blue := (colorpicker.selectedcolor shr 16) and $FF;
+        dontrefresh:=true;
+        set_channel('r',-1,r,zeit);
+        dontrefresh:=true;
+        set_channel('g',-1,g,zeit);
+        dontrefresh:=true;
+        set_channel('b',-1,b,zeit);
+    end;
+  procedure dropdownchange;
+    begin
+      dontrefresh:=true;
+      case modus.itemindex of
+        0: set_channel('special2',0,0,0);  
+        1: set_channel('special2',64,64,0);  
+        2: set_channel('special2',128,128,0);  
+        3: set_channel('special2',192,192,0);   
+      end;  
+    end;
+  procedure fadezeitchange;
+    begin
+    end;
+  procedure usefadezeitchange;
+    begin
+    end;
+  procedure speedchange;
+    begin
+      dontrefresh:=true;
+      set_channel('speed',speed.position,speed.position,0);
+    end;
+  end.
+ </code>
+</device>

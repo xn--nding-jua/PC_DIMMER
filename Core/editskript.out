@@ -1,0 +1,430 @@
+unit editskript;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, Action;
+
+type
+  Teditskriptfrm = class(TForm)
+    GroupBox1:   TGroupBox;
+    OK:          TButton;
+    ListBox:     TListBox;
+    Button1:     TButton;
+    Button2:     TButton;
+    Button3:     TButton;
+    Button4:     TButton;
+    Button5:     TButton;
+    Button6:     TButton;
+    Button7:     TButton;
+    Button8:     TButton;
+    OpenDialog1: TOpenDialog;
+    Button9:     TButton;
+    SaveDialog1: TSaveDialog;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure OKClick(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+    aktuellezeile, aktuellespalte: integer;
+  end;
+
+var
+  editskriptfrm: Teditskriptfrm;
+
+implementation
+
+uses kontrollpanelform, PCDIMMER;
+
+{$R *.dfm}
+
+function timestr(t: integer): string;
+var
+  h, m, s: integer;
+begin
+  h := t div 360000;
+  t := t mod 360000;
+  m := t div 6000;
+  t := t mod 6000;
+  s := t div 100;
+  t := t mod 100;
+  Result := IntToStr(h) + ':';
+  if m < 10 then
+    Result := Result + '0';
+  Result := Result + IntToStr(m) + ':';
+  if s < 10 then
+    Result := Result + '0';
+  Result := Result + IntToStr(s) + '.';
+  if t < 10 then
+    Result := Result + '0';
+  Result := Result + IntToStr(t) + '0';
+end;
+
+procedure Teditskriptfrm.Button1Click(Sender: TObject);
+var
+  action: Tscriptaction;
+  i, cnt: integer;
+  s: string;
+begin
+  actiondlg.reset; {Aktionsmanager vorbereiten}
+
+  for i := 1 to mainform.MaximumChan do
+    actiondlg.Faction.ch[i] := False;
+
+  actiondlg.StringGrid1.RowCount := mainform.lastchan + 1;
+
+  for i := 1 to mainform.lastchan do
+  begin
+    actiondlg.StringGrid1.Cells[1, i] := IntToStr(i);
+    actiondlg.StringGrid1.Cells[2, i] := mainform.Data.names[i];
+    actiondlg.StringGrid1.Cells[3, i] := '0';
+  end;
+
+  if actiondlg.Execute then
+  begin
+    action := actiondlg.action;
+    cnt := listbox.items.Count;
+    if action.option = optWait then
+    begin
+      s := 'Warte auf Kanal:  ';
+      for i := 1 to mainform.MaximumChan do
+        if action.ch[i] then
+          s := s + IntToStr(i) + ',';
+      Delete(s, length(s), 1);
+      s := s + ' for ' + timestr(action.wait);
+      listbox.ItemIndex := listbox.items.add(s);
+    end;
+    if action.option = optSwitch then
+    begin
+      s := 'Schalte Kanal:  ';
+      for i := 1 to mainform.MaximumChan do
+        if action.ch[i] then
+          s := s + IntToStr(i) + ',';
+      Delete(s, length(s), 1);
+      s := s + ' to ' + IntToStr(action.svalue) + '%';
+      listbox.ItemIndex := listbox.items.add(s);
+    end;
+    if action.option = optFade then
+    begin
+      s := 'Fade Kanal:  ';
+      for i := 1 to mainform.MaximumChan do
+        if action.ch[i] then
+          s := s + IntToStr(i) + ',';
+      Delete(s, length(s), 1);
+      s := s + ' from ' + IntToStr(action.svalue) + '% to ' + IntToStr(action.evalue) + '% in ' + timestr(action.fadetime);
+      listbox.ItemIndex := listbox.items.add(s);
+    end;
+    if action.option = optSync then
+    begin
+      if action.sync = 1 then
+        s := 'Letzte Aktionen abschließen';
+      if action.sync = 2 then
+        s := 'Letzte Aktionen abschließen und auf Tastendruck warten';
+      listbox.ItemIndex := listbox.items.add(s);
+    end;
+    listbox.ItemIndex := cnt;
+  end;
+end;
+
+procedure Teditskriptfrm.Button2Click(Sender: TObject);
+var
+  action: Tscriptaction;
+  i, cnt: integer;
+  s: string;
+begin
+  actiondlg.reset; {Aktionen initiieren}
+
+  for i := 1 to mainform.MaximumChan do
+    actiondlg.Faction.ch[i] := False;
+
+  actiondlg.StringGrid1.RowCount := mainform.lastchan + 1;
+
+  for i := 1 to mainform.lastchan do
+  begin
+    actiondlg.StringGrid1.Cells[1, i] := IntToStr(i);
+    actiondlg.StringGrid1.Cells[2, i] := mainform.Data.names[i];
+    actiondlg.StringGrid1.Cells[3, i] := '0';
+  end;
+
+  if actiondlg.Execute then
+  begin
+    action := actiondlg.action;
+    cnt := listbox.ItemIndex;
+    if action.option = optWait then
+    begin
+      s := 'Warte auf Kanal:  ';
+      for i := 1 to mainform.MaximumChan do
+        if action.ch[i] then
+          s := s + IntToStr(i) + ',';
+      Delete(s, length(s), 1);
+      s := s + ' for ' + timestr(action.wait);
+      listbox.items.insert(listbox.ItemIndex, s);
+    end;
+    if action.option = optSwitch then
+    begin
+      s := 'Schalte Kanal:  ';
+      for i := 1 to mainform.MaximumChan do
+        if action.ch[i] then
+          s := s + IntToStr(i) + ',';
+      Delete(s, length(s), 1);
+      s := s + ' to ' + IntToStr(action.svalue) + '%';
+      listbox.items.insert(listbox.ItemIndex, s);
+    end;
+    if action.option = optFade then
+    begin
+      s := 'Fade Kanal:  ';
+      for i := 1 to mainform.MaximumChan do
+        if action.ch[i] then
+          s := s + IntToStr(i) + ',';
+      Delete(s, length(s), 1);
+      s := s + ' from ' + IntToStr(action.svalue) + '% to ' + IntToStr(action.evalue) + '% in ' + timestr(action.fadetime);
+      listbox.items.insert(listbox.ItemIndex, s);
+    end;
+    if action.option = optSync then
+    begin
+      if action.sync = 1 then
+        s := 'Letzte Aktionen abschließen';
+      if action.sync = 2 then
+        s := 'Letzte Aktionen abschließen und auf Tastendruck warten';
+      listbox.items.insert(listbox.ItemIndex, s);
+    end;
+    listbox.ItemIndex := cnt;
+  end;
+end;
+
+procedure Teditskriptfrm.Button7Click(Sender: TObject);
+var
+  cnt: integer;
+begin
+  if listbox.ItemIndex >= 0 then
+  begin
+    cnt := listbox.ItemIndex;
+    listbox.items.Delete(listbox.ItemIndex);
+    if listbox.ItemIndex < listbox.Items.Count then
+      listbox.ItemIndex := cnt;
+    if listbox.ItemIndex < 0 then
+      listbox.ItemIndex := (cnt - 1);
+  end;
+end;
+
+procedure Teditskriptfrm.Button4Click(Sender: TObject);
+var
+  cnt: integer;
+begin
+  if ((listbox.ItemIndex > 0) and (listbox.ItemIndex > -1)) then
+  begin
+    cnt := listbox.ItemIndex;
+    listbox.items.exchange(listbox.ItemIndex - 1, listbox.ItemIndex);
+    listbox.ItemIndex := cnt - 1;
+  end;
+end;
+
+procedure Teditskriptfrm.Button5Click(Sender: TObject);
+var
+  cnt: integer;
+begin
+  if ((listbox.ItemIndex < listbox.items.Count - 1) and (listbox.ItemIndex > -1)) then
+  begin
+    cnt := listbox.ItemIndex;
+    listbox.items.exchange(listbox.ItemIndex, listbox.ItemIndex + 1);
+    listbox.ItemIndex := cnt + 1;
+  end;
+end;
+
+procedure Teditskriptfrm.Button6Click(Sender: TObject);
+var
+  action: Tscriptaction;
+  i, cnt: integer;
+  s: string;
+begin
+  if listbox.ItemIndex >= 0 then
+  begin
+    actiondlg.StringGrid1.RowCount := mainform.lastchan + 1;
+
+    for i := 1 to mainform.lastchan do
+    begin
+      actiondlg.StringGrid1.Cells[1, i] := IntToStr(i);
+      actiondlg.StringGrid1.Cells[2, i] := mainform.Data.names[i];
+      actiondlg.StringGrid1.Cells[3, i] := '0';
+    end;
+
+    s := listbox.items[listbox.ItemIndex];
+    Delete(s, pos(':', s), 1); {Lösche zuerst ':'}
+    for i := 1 to mainform.MaximumChan do
+      action.ch[i] := False;
+    while pos(',', s) <> 0 do {Suche nach Kanälen}
+    begin
+      cnt := StrToInt(copy(s, pos(',', s) - 3, 3));
+      action.ch[cnt] := True;
+      if cnt < 10 then
+        Delete(s, pos(IntToStr(cnt), s), 2)
+      else
+      if cnt < 100 then
+        Delete(s, pos(IntToStr(cnt), s), 3)
+      else
+        Delete(s, pos(IntToStr(cnt), s), 4);
+    end;
+    if copy(s, 1, 1) = 'W' then
+    begin
+      action.ch[StrToInt(copy(s, pos('for', s) - 4, 3))] := True;
+      action.option := optWait;
+      action.wait := StrToInt(copy(s, pos(':', s) - 2, 2)) * 3600;
+      action.wait := action.wait + StrToInt(copy(s, pos(':', s) + 1, 2)) * 60;
+      action.wait := action.wait + StrToInt(copy(s, pos('.', s) - 2, 2));
+      action.wait := action.wait * 100;
+      action.wait := action.wait + (StrToInt(copy(s, pos('.', s) + 1, 3)) div 10);
+      actiondlg.waitbutton2.Enabled := False;
+      actiondlg.switchbutton2.Enabled := True;
+      actiondlg.fadebutton2.Enabled := True;
+      actiondlg.syncbutton2.Enabled := True;
+    end;
+    if copy(s, 1, 1) = 'S' then
+    begin
+      action.ch[StrToInt(copy(s, pos('to', s) - 4, 3))] := True;
+      action.option := optSwitch;
+      action.svalue := StrToInt(copy(s, pos('to', s) + 3, pos('%', s) - (pos('to', s) + 3)));
+      actiondlg.waitbutton2.Enabled := True;
+      actiondlg.switchbutton2.Enabled := False;
+      actiondlg.fadebutton2.Enabled := True;
+      actiondlg.syncbutton2.Enabled := True;
+    end;
+    if copy(s, 1, 1) = 'F' then
+    begin
+      action.ch[StrToInt(copy(s, pos('from', s) - 4, 3))] := True;
+      action.option := optFade;
+      action.svalue := StrToInt(copy(s, pos('from', s) + 5, pos('%', s) - (pos('from', s) + 5)));
+      action.evalue := StrToInt(copy(s, pos('to', s) + 3, pos('% in', s) - (pos('to', s) + 3)));
+      action.fadetime := StrToInt(copy(s, pos(':', s) - 2, 2)) * 3600;
+      action.fadetime := action.fadetime + StrToInt(copy(s, pos(':', s) + 1, 2)) * 60;
+      action.fadetime := action.fadetime + StrToInt(copy(s, pos('.', s) - 2, 2));
+      action.fadetime := action.fadetime * 100;
+      action.fadetime := action.fadetime + (StrToInt(copy(s, pos('.', s) + 1, 3)) div 10);
+      actiondlg.waitbutton2.Enabled := True;
+      actiondlg.switchbutton2.Enabled := True;
+      actiondlg.fadebutton2.Enabled := False;
+      actiondlg.syncbutton2.Enabled := True;
+    end;
+    if copy(s, 1, 1) = 'L' then
+    begin
+      action.option := optSync;
+      if length(s) <= 30 then
+        action.sync := 1
+      else
+        action.sync := 2;
+      actiondlg.waitbutton2.Enabled := True;
+      actiondlg.switchbutton2.Enabled := True;
+      actiondlg.fadebutton2.Enabled := True;
+      actiondlg.syncbutton2.Enabled := False;
+    end;
+    actiondlg.action := action;
+    ActionDlg.EditMode;
+    if actiondlg.Execute then
+    begin
+      action := actiondlg.action;
+      cnt := listbox.ItemIndex;
+      if action.option = optWait then
+      begin
+        s := 'Warte auf Kanal:  ';
+        for i := 1 to mainform.MaximumChan do
+          if action.ch[i] then
+            s := s + IntToStr(i) + ',';
+        Delete(s, length(s), 1);
+        s := s + ' for ' + timestr(action.wait);
+        listbox.items.insert(listbox.ItemIndex, s);
+        listbox.items.Delete(listbox.ItemIndex);
+      end;
+      if action.option = optSwitch then
+      begin
+        s := 'Schalte Kanal:  ';
+        for i := 1 to mainform.MaximumChan do
+          if action.ch[i] then
+            s := s + IntToStr(i) + ',';
+        Delete(s, length(s), 1);
+        s := s + ' to ' + IntToStr(action.svalue) + '%';
+        listbox.items.insert(listbox.ItemIndex, s);
+        listbox.items.Delete(listbox.ItemIndex);
+      end;
+      if action.option = optFade then
+      begin
+        s := 'Fade Kanal:  ';
+        for i := 1 to mainform.MaximumChan do
+          if action.ch[i] then
+            s := s + IntToStr(i) + ',';
+        Delete(s, length(s), 1);
+        s := s + ' from ' + IntToStr(action.svalue) + '% to ' + IntToStr(action.evalue) + '% in ' + timestr(action.fadetime);
+        listbox.items.insert(listbox.ItemIndex, s);
+        listbox.items.Delete(listbox.ItemIndex);
+      end;
+      if action.option = optSync then
+      begin
+        if action.sync = 1 then
+          s := 'Letzte Aktionen abschließen';
+        if action.sync = 2 then
+          s := 'Letzte Aktionen abschließen und auf Tastendruck warten';
+        listbox.items.insert(listbox.ItemIndex, s);
+        listbox.items.Delete(listbox.ItemIndex);
+      end;
+      listbox.ItemIndex := cnt;
+    end;
+  end;
+end;
+
+procedure Teditskriptfrm.Button3Click(Sender: TObject);
+var
+  cnt: integer;
+begin
+  if listbox.ItemIndex >= 0 then
+  begin
+    cnt := listbox.ItemIndex;
+    listbox.items.insert(cnt + 1, listbox.items[cnt]);
+    listbox.ItemIndex := cnt + 1;
+  end;
+end;
+
+procedure Teditskriptfrm.OKClick(Sender: TObject);
+begin
+  if not DirectoryExists(ExtractFilepath(ParamStr(0)) + 'Projekt') then
+    CreateDir(ExtractFilepath(ParamStr(0)) + 'Projekt');
+  if not DirectoryExists(ExtractFilepath(ParamStr(0)) + 'Projekt\Kontrollpanel') then
+    CreateDir(ExtractFilepath(ParamStr(0)) + 'Projekt\Kontrollpanel');
+  listbox.items.insert(0, IntToStr(listbox.items.Count));
+  listbox.Items.SaveToFile(ExtractFilepath(ParamStr(0)) + 'Projekt\Kontrollpanel\Button' + IntToStr(aktuellezeile + 1) + 'x' + IntToStr(aktuellespalte + 1) + '.pcdscrp');
+end;
+
+procedure Teditskriptfrm.Button8Click(Sender: TObject);
+begin
+  if opendialog1.Execute then
+  begin
+    listbox.Items.LoadFromFile(opendialog1.FileName);
+    if listbox.Items.Count > 0 then
+      if listbox.items[0] <> IntToStr(listbox.items.Count - 1) then
+      begin
+        listbox.items.Clear;
+        messagedlg('Sorry, fehlerhafte Skriptdatei!', mtError, [mbOK], 0);
+      end
+      else
+        listbox.items.Delete(0);
+  end;
+end;
+
+procedure Teditskriptfrm.Button9Click(Sender: TObject);
+begin
+  if savedialog1.Execute then
+  begin
+    listbox.Items.Insert(0, IntToStr(listbox.Items.Count));
+    listbox.Items.SaveToFile(savedialog1.FileName);
+    listbox.Items.Delete(0);
+  end;
+end;
+
+end.

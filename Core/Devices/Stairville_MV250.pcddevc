@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\varyscanp6.png">
+ <information id="PC_DIMMER">
+ <name>MV250</name>
+ <vendor>Stairville</vendor>
+ <author>Christian Nöding</author>
+ <description>Movinghead mit 7 Kanälen</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Shutter/Shake" fade="yes" type="shutter"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Gobo" fade="yes" type="gobo1"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Farbe" fade="yes" type="color1"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="n/a" fade="yes" type="special1"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+ </channels>
+ <initvalues ch0="128" ch1="128" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" />
+ <colors>
+  <color name="Pink" value="118" valueend="118" r="255" g="0" b="255" />
+  <color name="Gelb" value="107" valueend="107" r="255" g="255" b="0" />
+  <color name="Orange" value="96" valueend="96" r="255" g="128" b="0" />
+  <color name="Hellgrün" value="86" valueend="86" r="0" g="255" b="0" />
+  <color name="Violett" value="75" valueend="75" r="128" g="0" b="128" />
+  <color name="Blau" value="64" valueend="64" r="0" g="0" b="255" />
+  <color name="Rot" value="54" valueend="54" r="255" g="0" b="0" />
+  <color name="Amber" value="43" valueend="43" r="255" g="255" b="204" />
+  <color name="Hellblau" value="32" valueend="32" r="166" g="202" b="240" />
+  <color name="Magenta" value="22" valueend="22" r="255" g="168" b="255" />
+  <color name="Grün" value="11" valueend="11" r="0" g="128" b="0" />
+  <color name="Weiß" value="0" valueend="0" r="255" g="255" b="255" />
+ </colors>
+ <shutter OpenValue="248" CloseValue="8" ChannelName="shutter"/>
+ <strobe OffValue="248" MinValue="16" MaxValue="131" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="128" LeftMaxValue="255" OffValue="128" RightMinValue="128" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="500" height="322">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="90" left="10" height="230" width="230" />
+  <colorbox top="240" left="250" height="22" width="240" />
+  <dropdown name="gobobox" top="190" left="250" width="240" height="21" action="goboboxchange">
+   <item caption="Gobo 1" value="0" picture="" />
+   <item caption="Gobo 2" value="0" picture="" />
+   <item caption="Gobo 3" value="0" picture="" />
+   <item caption="Gobo 4" value="0" picture="" />
+   <item caption="Gobo 5" value="0" picture="" />
+   <item caption="Gobo 6" value="0" picture="" />
+   <item caption="Gobo 7" value="0" picture="" />
+   <item caption="Gobo 8" value="0" picture="" />
+   <item caption="Gobo 9" value="0" picture="" />
+   <item caption="Gobo 10" value="0" picture="" />
+   <item caption="Gobo 11" value="0" picture="" />
+   <item caption="Gobo 12" value="0" picture="" />
+   <item caption="Gobo 13" value="0" picture="" />
+   <item caption="Gobo 14" value="0" picture="" />
+   <item caption="Gobo 15" value="0" picture="" />
+  </dropdown>
+  <dropdown name="shutterbox" top="110" left="250" width="240" height="21" action="shutterboxchange">
+   <item caption="Offen" value="0" picture="" />
+   <item caption="Shake" value="0" picture="" />
+   <item caption="Shutter" value="0" picture="" />
+   <item caption="Blackout" value="0" picture="" />
+  </dropdown>
+  <slider name="shutterslider" top="140" left="250" width="240" height="20" action="Shuttersliderchange" startvalue="0" endvalue="115" default="0"/>
+  <slider name="dimmerslider" top="290" left="250" width="240" height="20" action="dimmersliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="90" left="250" width="37" height="13" caption="Shutter:"/>
+  <label name="Label2" top="170" left="250" width="29" height="13" caption="Gobo:"/>
+  <label name="Label3" top="220" left="250" width="30" height="13" caption="Farbe:"/>
+  <label name="Label4" top="270" left="250" width="38" height="13" caption="Dimmer:"/>
+ </form>
+ <code>
+  unit StairvillMV250;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorBoxChange;
+  procedure Shuttersliderchange;
+  procedure dimmersliderchange;
+  procedure goboboxchange;
+  procedure shutterboxchange;
+
+  implementation
+
+  var
+    dontsetvalue:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    wert:integer;
+  begin
+    case channel of
+	    0..1:
+	    begin
+	      PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+	      PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+	    end;
+	    2:
+	    begin
+        wert:=get_channel('shutter');
+        case wert of
+        	248..255: shutterbox.itemindex:=0;
+        	132..247:
+					begin
+						shutterbox.itemindex:=1;
+						shutterslider.position:=wert-132;
+					end; 
+        	16..131:
+					begin
+						shutterbox.itemindex:=2;
+						shutterslider.position:=wert-16;
+					end;
+        	8..15: shutterbox.itemindex:=0;
+        	0..7: shutterbox.itemindex:=3;
+        end;
+	    end;
+	    3:
+	    begin
+        wert:=get_channel('gobo1');
+        case wert of
+        	120..127: gobobox.itemindex:=0;
+        	111..119: gobobox.itemindex:=1;
+        	103..110: gobobox.itemindex:=2;
+        	94..102: gobobox.itemindex:=3;
+        	86..93: gobobox.itemindex:=4;
+        	77..85: gobobox.itemindex:=5;
+        	69..76: gobobox.itemindex:=6;
+        	60..68: gobobox.itemindex:=7;
+        	52..59: gobobox.itemindex:=8;
+        	44..51: gobobox.itemindex:=9;
+        	35..43: gobobox.itemindex:=10;
+        	26..34: gobobox.itemindex:=11;
+        	18..25: gobobox.itemindex:=12;
+        	9..17: gobobox.itemindex:=13;
+        	0..8: gobobox.itemindex:=14;
+        end;
+	    end;
+	    4:
+	    begin
+        wert:=get_channel('color1');
+        case wert of
+        	118..127: colorbox.itemindex:=0;
+        	107..117: colorbox.itemindex:=1;
+        	96..106: colorbox.itemindex:=2;
+        	86..95: colorbox.itemindex:=3;
+        	75..85: colorbox.itemindex:=4;
+        	64..74: colorbox.itemindex:=5;
+        	54..63: colorbox.itemindex:=6;
+        	43..53: colorbox.itemindex:=7;
+        	32..42: colorbox.itemindex:=8;
+        	22..31: colorbox.itemindex:=9;
+        	11..21: colorbox.itemindex:=10;
+        	0..10: colorbox.itemindex:=11;
+        end;
+	    end;
+	    6:
+	    begin
+	    	if not dontsetvalue then
+					dimmerslider.position:=get_channel('dimmer');
+	    end;
+    end;
+    dontsetvalue:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  procedure ColorBoxChange;
+  begin
+      dontsetvalue:=true;
+      case colorbox.itemindex of
+        0: set_channel('color1',118,118,0);
+        1: set_channel('color1',107,107,0);
+        2: set_channel('color1',96,96,0);
+        3: set_channel('color1',86,86,0);
+        4: set_channel('color1',75,75,0);
+        5: set_channel('color1',64,64,0);
+        6: set_channel('color1',54,54,0);
+        7: set_channel('color1',43,43,0);
+        8: set_channel('color1',32,32,0);
+        9: set_channel('color1',22,22,0);
+        10: set_channel('color1',11,11,0);
+        11: set_channel('color1',0,0,0);
+      end;
+  end;
+  procedure Shuttersliderchange;
+  begin
+    shutterboxchange;
+  end;
+  procedure dimmersliderchange;
+  begin
+		dontsetvalue:=true;
+    set_channel('dimmer',-1,dimmerslider.position,0);
+  end;
+  procedure goboboxchange;
+  begin
+      dontsetvalue:=true;
+      case gobobox.itemindex of
+        0: set_channel('gobo1',120,120,0);
+        1: set_channel('gobo1',111,111,0);
+        2: set_channel('gobo1',103,103,0);
+        3: set_channel('gobo1',94,94,0);
+        4: set_channel('gobo1',86,86,0);
+        5: set_channel('gobo1',77,77,0);
+        6: set_channel('gobo1',69,69,0);
+        7: set_channel('gobo1',60,60,0);
+        8: set_channel('gobo1',52,52,0);
+        9: set_channel('gobo1',44,44,0);
+        10: set_channel('gobo1',35,35,0);
+        11: set_channel('gobo1',26,26,0);
+        12: set_channel('gobo1',18,18,0);
+        13: set_channel('gobo1',9,9,0);
+        14: set_channel('gobo1',0,0,0);
+      end;
+  end;
+  procedure shutterboxchange;
+  begin
+      dontsetvalue:=true;
+      case shutterbox.itemindex of
+        0: set_channel('shutter',248,248,0);
+        1: set_channel('shutter',132+shutterslider.position,132+shutterslider.position,0);
+        2: set_channel('shutter',16+shutterslider.position,16+shutterslider.position,0);
+        3: set_channel('shutter',8,8,0);
+      end;
+  end;
+  end.
+ </code>
+</device>

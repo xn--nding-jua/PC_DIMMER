@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\leddevil.png">
+ <information id="PC_DIMMER">
+ <name>LED Devil (3-Kanal)</name>
+ <vendor>JBLighting</vendor>
+ <author>Christian Nöding</author>
+ <description>LED Devil im 3-Kanal-Modus</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="color2"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="special1"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="199"/>
+ <gobo1rot LeftMinValue="132" LeftMaxValue="253" OffValue="132" RightMinValue="132" RightMaxValue="253" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="201" height="322">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="colorcombobox" top="290" left="10" width="180" height="21" action="colorcomboboxchange">
+  </dropdown>
+  <slider name="Slider1" top="200" left="10" width="180" height="20" action="sliderchange" startvalue="0" endvalue="249" default="127"/>
+  <slider name="dimmerslider" top="100" left="10" width="180" height="20" action="dimmersliderchange" startvalue="0" endvalue="199" default="0"/>
+  <slider name="stroboslider" top="150" left="10" width="180" height="20" action="strobosliderchange" startvalue="200" endvalue="255" default="200"/>
+  <label name="Label1" top="180" left="10" width="43" height="13" caption="Rotation:"/>
+  <label name="Label2" top="80" left="10" width="38" height="13" caption="Dimmer:"/>
+  <label name="Label3" top="130" left="10" width="57" height="13" caption="Stroboskop:"/>
+  <label name="Label4" top="270" left="10" width="36" height="13" caption="Farben:"/>
+  <button name="Button1" top="230" left="10" width="180" height="30" action="button1click" caption="Musiksteuerung"/>
+ </form>
+ <code>
+  unit leddevil;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure button1click;
+  procedure sliderchange;
+  procedure dimmersliderchange;
+  procedure strobosliderchange;
+  procedure colorcomboboxchange;
+
+  implementation
+
+  var
+    dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  var
+		i:integer;
+	begin
+    colorcombobox.items.clear;
+		for i:=0 to 31 do
+    	colorcombobox.items.add('Color '+inttostr(i+1));
+  end;
+  procedure FormRefresh(channel:Integer);
+	var
+		wert:integer;
+  begin
+    case channel of
+    	0:
+    	begin
+    		wert:=get_channel('DIMMER');
+    		if not dontrefresh then
+    		case wert of
+    			0..199: dimmerslider.position:=wert;
+    			200..255: stroboslider.position:=wert;
+    		end;
+    	end;
+    	1:
+    	begin
+    		wert:=get_channel('COLOR2');
+    		if not dontrefresh then
+				colorcombobox.itemindex:=wert div 8;
+    	end;
+    	2:
+    	begin
+    		wert:=get_channel('SPECIAL1');
+    		if not dontrefresh then
+				case wert of
+					0..249: slider1.position:=wert;
+				end;
+    	end;
+    end;
+    dontrefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure button1click;
+  begin
+    set_channel('SPECIAL1',-1,255,0,0);
+  end;
+  procedure sliderchange;
+  begin
+		dontrefresh:=true;
+    set_channel('SPECIAL1',-1,slider1.position,0,0);
+  end;
+  procedure dimmersliderchange;
+  begin
+		dontrefresh:=true;
+    set_channel('DIMMER',-1,dimmerslider.position,0,0);
+  end;
+  procedure strobosliderchange;
+  begin
+		dontrefresh:=true;
+    set_channel('DIMMER',-1,stroboslider.position,0,0);
+  end;
+  procedure colorcomboboxchange;
+  begin
+		dontrefresh:=true;
+    set_channel('COLOR2',-1,colorcombobox.itemindex*8,0,0);
+  end;
+  end.
+ </code>
+</device>

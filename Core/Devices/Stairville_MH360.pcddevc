@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\prohead250.png">
+ <information id="PC_DIMMER">
+ <name>MH-360</name>
+ <vendor>Stairville</vendor>
+ <author>Christian Nöding</author>
+ <description>LED-Movinghead</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Pan Fine" fade="yes" type="panfine"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Tilt Fine" fade="yes" type="tiltfine"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Geschwindigkeit" fade="yes" type="speed"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Spezial" fade="yes" type="special1"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Stroboskop" fade="yes" type="shutter"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="10" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="11" minvalue="0" maxvalue="255" name="Makro" fade="yes" type="special2"/>
+  <function channel="12" minvalue="0" maxvalue="255" name="Makrospeed" fade="yes" type="special3"/>
+ </channels>
+ <initvalues ch0="128" ch1="-1" ch2="128" ch3="-1" ch4="-1" ch5="255" ch6="-1" ch7="-1" ch8="-1" ch9="-1" ch10="-1" ch11="-1" ch12="-1" />
+ <shutter OpenValue="8" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="16" MaxValue="131" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="128" LeftMaxValue="255" OffValue="128" RightMinValue="128" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="500" height="382">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorpicker top="0" left="250" />
+  <position top="90" left="10" height="230" width="230" />
+  <dropdown name="makrobox" top="220" left="250" width="240" height="21" action="makroboxchange">
+   <item caption="Standalone" value="0" picture="" />
+   <item caption="Reset" value="0" picture="" />
+   <item caption="Hell, während Bewegung" value="0" picture="" />
+   <item caption="Blackout, während Bewegung" value="0" picture="" />
+  </dropdown>
+  <dropdown name="strobobox" top="320" left="250" width="240" height="21" action="stroboboxchange">
+   <item caption="Aus" value="0" picture="" />
+   <item caption="Stroboskop" value="0" picture="" />
+   <item caption="Schnell auf, langsam zu" value="0" picture="" />
+   <item caption="Langsam auf, schnell zu" value="0" picture="" />
+   <item caption="Langsam bis Schnell" value="0" picture="" />
+  </dropdown>
+  <dropdown name="colormakrobox" top="170" left="250" width="240" height="21" action="colormakroboxchange">
+   <item caption="Keine Funktion" value="0" picture="" />
+   <item caption="Color 1" value="0" picture="" />
+   <item caption="Color 32" value="0" picture="" />
+   <item caption="Color Chase 1" value="0" picture="" />
+   <item caption="Color Chase 16" value="0" picture="" />
+   <item caption="Color Fade 1" value="0" picture="" />
+   <item caption="Color Fade 16" value="0" picture="" />
+  </dropdown>
+  <slider name="speedslider" top="350" left="10" width="220" height="20" action="pantiltspeedchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="dimmerslider" top="270" left="250" width="240" height="20" action="dimmersliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="stroboslider" top="350" left="250" width="240" height="20" action="stroboboxchange" startvalue="0" endvalue="7" default="0"/>
+  <slider name="colorfaderspeedslider" top="140" left="410" width="80" height="20" action="colorfaderspeedsliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="330" left="10" width="122" height="13" caption="Pan/Tilt-Geschwindigkeit:"/>
+  <label name="Label2" top="200" left="250" width="87" height="13" caption="Spezialfunktionen:"/>
+  <label name="Label3" top="250" left="250" width="46" height="13" caption="Helligkeit:"/>
+  <label name="Label4" top="300" left="250" width="57" height="13" caption="Stroboskop:"/>
+  <label name="Label5" top="120" left="410" width="81" height="13" caption="Geschwindigkeit:"/>
+  <button name="colorboxbutton" top="140" left="250" width="150" height="20" action="colorboxbuttonclick" caption="Farbauswahl wechseln"/>
+ </form>
+ <code>
+  unit mh360;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure pantiltspeedchange;
+  procedure dimmersliderchange;
+  procedure colorfaderspeedsliderchange;
+  procedure makroboxchange;
+  procedure colorboxbuttonclick;
+  procedure colormakroboxchange;
+  procedure stroboboxchange;
+
+  implementation
+
+	var
+		dontsetvalue:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte diesen Typs beim ersten Start des PC_DIMMERs ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+	var
+  	wert:integer;
+	begin
+    case channel of
+    	0..3:
+    	begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+    	end;
+    	4:
+    	begin
+    		if not dontsetvalue then
+    			speedslider.position:=get_channel('speed');
+    	end;
+    	5:
+    	begin
+    		if not dontsetvalue then
+    		begin
+					wert:=get_channel('special1');
+					
+					case wert of
+			    	70..79: makrobox.itemindex:=0;
+			    	80..89: makrobox.itemindex:=1;
+			    	200..209: makrobox.itemindex:=2;
+			    	240..255: makrobox.itemindex:=3;
+					end;
+				end;
+    	end;
+    	6:
+    	begin
+    		if not dontsetvalue then
+    			dimmerslider.position:=get_channel('dimmer');
+    	end;
+    	7:
+    	begin
+    		if not dontsetvalue then
+    		begin
+					wert:=get_channel('shutter');
+					
+					case wert of
+			    	0..15: strobobox.itemindex:=0;
+			    	16..131: strobobox.itemindex:=1;
+			    	132..139: strobobox.itemindex:=0;
+			    	140..181: strobobox.itemindex:=2;
+			    	182..189: strobobox.itemindex:=0;
+			    	190..231: strobobox.itemindex:=3;
+			    	232..239: strobobox.itemindex:=0;
+			    	240..247: strobobox.itemindex:=4;
+			    	248..255: strobobox.itemindex:=0;
+					end;
+				end;
+    	end;
+    	8..10:
+    	begin
+    	end;
+    	11:
+    	begin
+    		if not dontsetvalue then
+    		begin
+					wert:=get_channel('special2');
+					
+					case wert of
+			    	0..7: colormakrobox.itemindex:=0;
+			    	8: colormakrobox.itemindex:=1;
+			    	127: colormakrobox.itemindex:=2;
+			    	191: colormakrobox.itemindex:=3;
+			    	192: colormakrobox.itemindex:=4;
+			    	255: colormakrobox.itemindex:=5;
+					end;
+				end;
+    	end;
+    	12:
+    	begin
+    		if not dontsetvalue then
+    			colorfaderspeedslider.position:=get_channel('special3');
+    	end;
+		end;
+		dontsetvalue:=false; 
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  begin
+    if panmirror.checked then
+      set_channel('pan',255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,255-((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0)
+    else
+      set_channel('pan',((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255,0);
+  if tiltmirror.checked then
+      set_channel('tilt',255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,255-((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0)
+    else
+      set_channel('tilt',((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255,0);
+  end;
+  procedure ColorPickerChange(R, G, B: Byte);
+    begin
+      dontsetvalue:=true;
+      set_channel('r',-1,r,0);
+      dontsetvalue:=true;
+      set_channel('g',-1,g,0);
+      dontsetvalue:=true;
+      set_channel('b',-1,b,0);
+    end;
+  procedure pantiltspeedchange;
+  begin
+		dontsetvalue:=true;
+    set_channel('speed',-1,speedslider.position,0);
+  end;
+  procedure dimmersliderchange;
+  begin
+		dontsetvalue:=true;
+    set_channel('dimmer',-1,dimmerslider.position,0);
+  end;
+  procedure colorfaderspeedsliderchange;
+  begin
+		dontsetvalue:=true;
+    set_channel('special3',-1,colorfaderspeedslider.position,0);
+  end;
+  procedure makroboxchange;
+  begin
+		dontsetvalue:=true;
+    case makrobox.itemindex of
+    	0: set_channel('special1',-1,255,0);
+    	1: set_channel('special1',-1,200,0);
+    	2: set_channel('special1',-1,85,0);
+    	3: set_channel('special1',-1,75,0);
+    end;
+  end;
+  procedure colorboxbuttonclick;
+  begin
+      if colorpicker.visible then
+      begin
+        colorpicker.visible:=false;
+        colorpicker2.visible:=true;
+      end else
+      begin
+        colorpicker.visible:=true;
+        colorpicker2.visible:=false;
+      end;
+  end;
+  procedure colormakroboxchange;
+  begin
+		dontsetvalue:=true;
+    case colormakrobox.itemindex of
+    	0: set_channel('special2',-1,0,0);
+    	1: set_channel('special2',-1,8,0);
+    	2: set_channel('special2',-1,127,0);
+    	3: set_channel('special2',-1,128,0);
+    	4: set_channel('special2',-1,191,0);
+    	5: set_channel('special2',-1,192,0);
+    	6: set_channel('special2',-1,255,0);
+    end;
+  end;
+  procedure stroboboxchange;
+  begin
+    dontsetvalue:=true;
+		stroboslider.min:=0;
+  	stroboslider.max:=255;
+		case strobobox.itemindex of
+			0:
+			begin
+				stroboslider.min:=0;
+				stroboslider.max:=255;
+				set_channel('shutter',-1,0,0);
+			end;
+			1:
+			begin
+				stroboslider.min:=16;
+				stroboslider.max:=131;
+				set_channel('shutter',-1,stroboslider.position,0);
+			end;
+			2:
+			begin
+				stroboslider.min:=140;
+				stroboslider.max:=181;
+				set_channel('shutter',-1,stroboslider.position,0);
+			end;
+			3:
+			begin
+				stroboslider.min:=190;
+				stroboslider.max:=231;
+				set_channel('shutter',-1,stroboslider.position,0);
+			end;
+			4:
+			begin
+				stroboslider.min:=240;
+				stroboslider.max:=247;
+				set_channel('shutter',-1,stroboslider.position,0);
+			end;
+    end;
+  end;
+  end.
+ </code>
+</device>

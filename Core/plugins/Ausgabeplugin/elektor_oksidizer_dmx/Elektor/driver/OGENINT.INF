@@ -1,0 +1,68 @@
+[Version]
+Signature="$CHICAGO$"
+Class=USB
+provider=%MSFT%
+LayoutFile=layout.inf
+
+[SourceDisksNames]
+1="www.oksidizer.com USB driver","",1
+
+[SourceDisksFiles]
+ogenint.sys=1
+
+[Manufacturer]
+%MfgName%=OksiD
+
+[OksiD]
+%USB\VID_04D8&PID_0000.DeviceDesc%=OGENINT.Dev, USB\VID_04D8&PID_0000
+%USB\VID_0403&PID_E088.DeviceDesc%=OGENINT.Dev, USB\VID_0403&PID_E088
+
+[PreCopySection]
+HKR,,NoSetupUI,,1
+
+[DestinationDirs]
+OGENINT.Files.Ext = 10,System32\Drivers
+OGENINT.Files.Inf = 10,INF
+
+[OGENINT.Dev]
+CopyFiles=OGENINT.Files.Ext, OGENINT.Files.Inf
+AddReg=OGENINT.AddReg
+
+[OGENINT.Dev.NT]
+CopyFiles=OGENINT.Files.Ext, OGENINT.Files.Inf
+AddReg=OGENINT.AddReg
+
+[OGENINT.Dev.NT.Services]
+Addservice = OGENINT, 0x00000002, OGENINT.AddService
+
+[OGENINT.AddService]
+DisplayName    = %OGENINT.SvcDesc%
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 2                  ; SERVICE_AUTO_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\System32\Drivers\OGENINT.sys
+LoadOrderGroup = Base
+
+[OGENINT.AddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,OGENINT.sys
+HKLM,"System\Currentcontrolset\Services\oGenInt\Parameters","MaximumTransferSize",0x10001,4096
+HKLM,"System\Currentcontrolset\Services\oGenInt\Parameters","DebugLevel",0x10001,4
+
+
+[OGENINT.Files.Ext]
+OGENINT.sys
+
+[OGENINT.Files.Inf]
+oGenInt.Inf
+
+
+;---------------------------------------------------------------;
+
+[Strings]
+MSFT="www.oksidizer.com"
+MfgName="www.oksidizer.com"
+USB\VID_04D8&PID_0000.DeviceDesc="USB Interrupt Device"
+USB\VID_0403&PID_E088.DeviceDesc="www.oksidizer.com USB to DMX512"
+INTUSB.SvcDesc="oGenInt.sys USB Interrupt driver"
+

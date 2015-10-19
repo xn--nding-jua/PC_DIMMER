@@ -1,0 +1,95 @@
+// Dateigröße einer HTTP-Datei herausfinden und diese herunterladen:
+
+uses WinINet;
+
+function GetFileSize(url: string):cardinal;
+var
+  hURL: HInternet;
+  dwindex,dwcodelen :dword;
+  dwcode:array[1..20] of char;
+begin
+  hURL := InternetOpenURL(hSession, PChar(URL), nil, 0, 0, 0);
+
+  dwIndex := 0;
+  dwCodeLen := 10;
+  HttpQueryInfo(hURL, HTTP_QUERY_CONTENT_LENGTH, @dwcode,  dwcodeLen, dwIndex);
+  Result := cardinal(strtoint(PCHAR(@dwcode)));
+  InternetCloseHandle(hURL);
+end;
+
+function GetInetFile(const fileURL, DestFileName: String): boolean;
+const
+  BufferSize = 1024;
+var
+  hSession, hURL: HInternet;
+  Buffer: array[1..BufferSize] of Byte;
+  BufferLen: DWORD;
+  f: File;
+  sAppName: string;
+  f1 : Integer;
+begin
+  result := false;
+  sAppName := ExtractFileName(Application.ExeName);
+  hSession := InternetOpen(PChar(sAppName), INTERNET_OPEN_TYPE_PRECONFIG, nil, nil, 0);
+  try
+    hURL := InternetOpenURL(hSession, PChar(fileURL), nil, 0, INTERNET_FLAG_DONT_CACHE, 0);
+    try
+      AssignFile(f, DestFileName);
+      Rewrite(f,1);
+      repeat
+        InternetReadFile(hURL, @Buffer, SizeOf(Buffer), BufferLen);
+        BlockWrite(f, Buffer, BufferLen);
+      until BufferLen = 0;
+      CloseFile(f);
+      result := True;
+    finally
+      InternetCloseHandle(hURL);
+    end;
+  finally
+    InternetCloseHandle(hSession);
+  end;
+end;
+
+
+
+
+
+
+
+
+//HTTP_QUERY_CONTENT_LENGTH
+
+// bei HTTP-Download
+
+uses WinINet;
+
+var
+  URL: HInternet;
+
+  function GetHTTPFileSize(hInet:HINTERNET):cardinal;
+  var
+    dwindex,dwcodelen :dword;
+    dwcode:array[1..20] of char;
+  Begin
+    dwIndex := 0;
+    dwCodeLen := 10;
+    HttpQueryInfo(hInet, HTTP_QUERY_CONTENT_LENGTH, @dwcode,  dwcodeLen, dwIndex);
+    Result := cardinal(strtoint(PCHAR(@dwcode)));
+  end;
+
+URL := InternetOpenURL(hSession, PChar(URL), nil, 0, 0, 0);
+SizeOfFile:= GetHTTPFileSize(URL);
+
+
+// bei FTP-Download
+
+var
+  sRec: TWin32FindData;
+
+    if FtpFindFirstFile(fFTP, PChar(ftpFile), sRec, 0, 0) <> nil then
+    begin
+      fileSize := sRec.nFileSizeLow;astWriteTime;
+    end else
+    begin
+      ShowMessage(Format('Datei nicht vorhanden',[ftpFile]));
+    end;

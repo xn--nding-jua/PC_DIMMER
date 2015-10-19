@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\pumpe.png">
+ <information id="PC_DIMMER">
+ <name>3-Phasen Pumpe</name>
+ <vendor>Generic</vendor>
+ <author>Generic</author>
+ <description>3-Phasen-Wechselstrompumpe</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="SPECIAL1" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="SPECIAL2" fade="yes" type="special2"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="SPECIAL3" fade="yes" type="special3"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" />
+ <shutter OpenValue="32" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="32" MinValue="64" MaxValue="95" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="191" LeftMaxValue="128" OffValue="192" RightMinValue="193" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="191" height="132">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="16" left="80"/>
+  <deviceadress top="32" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <slider name="slider1" top="100" left="10" width="170" height="20" action="sliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="label1" top="85" left="8" width="66" height="13" caption="Pumpleistung:"/>
+  <label name="percent" top="85" left="150" width="14" height="13" caption="0%"/>
+ </form>
+ <code>
+  unit GenericDimmer;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure sliderchange;
+
+  implementation
+
+	var
+		dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // bitte hier die eigene Funktion eintragen
+  end;
+  procedure FormShow;
+    begin
+    end;
+  procedure FormRefresh(channel:Integer);
+    begin
+      if not dontrefresh then
+      begin
+			  slider1.position:=get_channel('special1');
+		  end;
+      percent.caption:=levelstr(slider1.position);
+      dontrefresh:=false;
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure sliderchange;
+    begin
+      dontrefresh:=true;
+      set_channel('special1',slider1.position,slider1.position,0);  
+      set_channel('special2',slider1.position,slider1.position,0);  
+      set_channel('special3',slider1.position,slider1.position,0);  
+      percent.caption:=levelstr(slider1.position);
+    end;
+  end.
+ </code>
+</device>

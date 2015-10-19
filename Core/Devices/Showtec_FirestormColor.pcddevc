@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\colorflower.png">
+ <information id="PC_DIMMER">
+ <name>Firestorm Color</name>
+ <vendor>Showtec</vendor>
+ <author>Christian Nöding</author>
+ <description></description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Farbe" fade="yes" type="color1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="255" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="128" LeftMaxValue="255" OffValue="128" RightMinValue="128" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="251" height="182">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <slider name="DimmerSlider" top="150" left="10" width="230" height="20" action="DimmerChange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="ColorSlider" top="100" left="10" width="230" height="20" action="ColorChange" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1" top="130" left="10" width="46" height="13" caption="Helligkeit:"/>
+  <label name="Label3" top="80" left="10" width="27" height="13" caption="Farbe"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorChange;
+  procedure DimmerChange;
+
+  implementation
+
+  var
+    dontrefreshvalue:boolean;
+
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  begin
+    case channel of
+    	0:
+    	begin
+    		if not dontrefreshvalue then
+    			ColorSlider.position:=get_channel('COLOR1');
+    	end;
+    	1:
+    	begin
+    		if not dontrefreshvalue then
+    			DimmerSlider.position:=get_channel('DIMMER');
+    	end;
+    end;
+    
+    dontrefreshvalue:=false;
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  procedure ColorChange;
+  begin
+    dontrefreshvalue:=true;
+    set_channel('COLOR1', ColorSlider.position, ColorSlider.position, 0);
+  end;
+  procedure DimmerChange;
+  begin
+    dontrefreshvalue:=true;
+    set_channel('DIMMER', DimmerSlider.position, DimmerSlider.position, 0);
+  end;
+  end.
+ </code>
+</device>

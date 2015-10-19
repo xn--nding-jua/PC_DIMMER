@@ -1,0 +1,8 @@
+NAME Parzic
+LIBRARY Parzic
+DESCRIPTION "Add-on Library of Mathematical Routines"
+EXPORTS
+
+DllMain @1
+Parzic @2
+__vbaS @3

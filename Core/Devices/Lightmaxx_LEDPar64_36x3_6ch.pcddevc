@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\ledpar64.png">
+ <information id="PC_DIMMER">
+ <name>LED PAR 64 (36x3W - 6ch)</name>
+ <vendor>LightmaXX</vendor>
+ <author>Christian Nöding</author>
+ <description>36x3Watt im 6ch-Modus</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="MacroMix" fade="yes" type="special1"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Strobo" fade="yes" type="shutter"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Funktionen" fade="yes" type="special2"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <form width="350" height="258">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="16" left="80"/>
+  <deviceadress top="32" left="80"/>
+  <devicedipswitch top="50" left="70"/>
+  <colorpicker top="90" left="10" />
+  <edit name="fadezeit" top="60" left="240" width="40" height="21" text="3000" action=""/>
+  <checkbox name="usefadezeit" top="60" left="290" width="50" height="17" caption="Faden" action="" checked="false"/>
+  <dropdown name="functionbox" top="210" left="180" width="160" height="21" action="functionboxchange">
+   <item caption="Keine Funktion" value="0" picture="" />
+   <item caption="Farbmix" value="0" picture="" />
+   <item caption="RGB Farbwechsel" value="0" picture="" />
+   <item caption="7-Farben-Wechsel" value="0" picture="" />
+   <item caption="Soundsteuerung" value="0" picture="" />
+  </dropdown>
+  <slider name="stroboslider" top="160" left="180" width="160" height="20" action="strobosliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="makroslider" top="110" left="180" width="160" height="20" action="makrosliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="label1" top="65" left="190" width="43" height="13" caption="Zeit [ms]:"/>
+  <label name="Label4" top="90" left="180" width="76" height="13" caption="Farb-Makro-Mix:"/>
+  <label name="Label5" top="140" left="180" width="139" height="13" caption="Stroboskop / Empfindlichkeit:"/>
+  <label name="Label6" top="190" left="180" width="56" height="13" caption="Funktionen:"/>
+  <button name="changecolorpicker" top="230" left="10" width="160" height="20" action="onchangecolorpicker" caption="Wechsle Farbwahlbox"/>
+ </form>
+ <code>
+  unit LEDPar64;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure onchangecolorpicker;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure strobosliderchange;
+  procedure makrosliderchange;
+  procedure functionboxchange;
+
+  implementation
+
+    var
+      dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+    begin
+      // bitte hier die eigene Funktion eintragen
+    end;
+  procedure FormShow;
+    begin
+      usefadezeit.checked:=true;
+    end;
+  procedure onchangecolorpicker;
+    begin
+      if colorpicker.visible then
+      begin
+        colorpicker.visible:=false;
+        colorpicker2.visible:=true;
+      end else
+      begin
+        colorpicker.visible:=true;
+        colorpicker2.visible:=false;
+      end;
+    end;
+  procedure FormRefresh(channel:Integer);
+    var
+      wert:integer;
+      red, green, blue:byte;
+    begin
+      case channel of
+      0..2:
+      begin
+        red:=get_channel('r');
+        green:=get_channel('g');
+        blue:=get_channel('b');
+      end;
+      3:
+      begin
+				if not dontrefresh then
+					makroslider.position:=get_channel('SPECIAL1');
+      end;
+      4:
+      begin
+				if not dontrefresh then
+					stroboslider.position:=get_channel('SHUTTER');
+      end;
+      5:
+      begin
+				if not dontrefresh then
+        begin
+					wert:=get_channel('SPECIAL2');
+
+					case wert of
+						0..31: functionbox.itemindex:=0;
+						32..95: functionbox.itemindex:=1;
+						96..159: functionbox.itemindex:=2;
+						160..223: functionbox.itemindex:=3;
+						224..255: functionbox.itemindex:=4;
+					end;
+		  	end;
+      end;
+      end;
+      dontrefresh:=false;
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure ColorPickerChange(R, G, B: Byte);
+    var
+      zeit:integer;
+    begin
+      if usefadezeit.checked then
+        zeit:=strtoint(fadezeit.text)
+      else
+        zeit:=0;
+
+        dontrefresh:=true;
+        set_channel('r',-1,r,zeit);
+        dontrefresh:=true;
+        set_channel('g',-1,g,zeit);
+        dontrefresh:=true;
+        set_channel('b',-1,b,zeit);
+    end;
+  procedure strobosliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('SHUTTER',-1,stroboslider.position,0,0);
+  end;
+  procedure makrosliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('SPECIAL1',-1,makroslider.position,0,0);
+  end;
+  procedure functionboxchange;
+  begin
+    case functionbox.itemindex of
+    	0: set_channel('SPECIAL2',-1,0,0,0);
+    	1: set_channel('SPECIAL2',-1,32,0,0);
+    	2: set_channel('SPECIAL2',-1,96,0,0);
+    	3: set_channel('SPECIAL2',-1,160,0,0);
+    	4: set_channel('SPECIAL2',-1,224,0,0);
+    end;
+  end;
+  end.
+ </code>
+</device>

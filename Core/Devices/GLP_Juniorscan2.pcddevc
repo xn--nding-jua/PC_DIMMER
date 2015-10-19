@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\ts255.png">
+ <information id="PC_DIMMER">
+ <name>Junior Scan 2</name>
+ <vendor>GLP</vendor>
+ <author>GLP</author>
+ <description>Junior Scan 2</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="PAN" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="TILT" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="COLOR" fade="yes" type="color1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="GOGO" fade="yes" type="gobo1"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="SHUTTER" fade="yes" type="shutter"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="SPEED" fade="yes" type="speed"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="MOVES" fade="yes" type="moves"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="LASER" fade="yes" type="dimmer"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="SPEZIAL" fade="yes" type="special1"/>
+ </channels>
+ <initvalues 0="-1" 1="-1" 2="-1" 3="-1" 4="-1" 5="-1" 6="-1" 7="-1" 8="-1" />
+ <colors>
+  <color name="Weiß/Offen" value="0" valueend="3" r="255" g="255" b="255" />
+  <color name="Weiß/Blau" value="4" valueend="7" r="198" g="187" b="255" />
+  <color name="Dark Blue" value="8" valueend="11" r="0" g="0" b="128" />
+  <color name="Blau/Grün" value="12" valueend="15" r="128" g="255" b="128" />
+  <color name="Grün" value="16" valueend="19" r="0" g="255" b="0" />
+  <color name="Grün/Gelb" value="20" valueend="23" r="196" g="186" b="0" />
+  <color name="Gelb" value="24" valueend="27" r="255" g="255" b="0" />
+  <color name="Gelb/Blue" value="28" valueend="31" r="80" g="254" b="233" />
+  <color name="Blau" value="32" valueend="35" r="0" g="0" b="255" />
+  <color name="Blau/Lila" value="36" valueend="39" r="126" g="5" b="199" />
+  <color name="Lavender Blue" value="40" valueend="43" r="0" g="0" b="255" />
+  <color name="Lila/Magenta" value="44" valueend="47" r="245" g="5" b="180" />
+  <color name="Magenta" value="48" valueend="51" r="255" g="6" b="94" />
+  <color name="Magenta/Light Blue" value="52" valueend="55" r="255" g="0" b="255" />
+  <color name="Light Blue" value="56" valueend="59" r="0" g="255" b="255" />
+  <color name="Light Blue/Fire" value="60" valueend="63" r="0" g="0" b="255" />
+  <color name="Fire" value="64" valueend="67" r="0" g="0" b="0" />
+  <color name="Fire/Turquiose" value="68" valueend="71" r="0" g="0" b="0" />
+  <color name="Turquiose" value="72" valueend="75" r="0" g="255" b="0" />
+  <color name="Turquiose/Pink" value="76" valueend="79" r="0" g="255" b="0" />
+  <color name="Pink" value="80" valueend="83" r="255" g="0" b="255" />
+  <color name="Pink/Canary" value="84" valueend="87" r="0" g="0" b="0" />
+  <color name="Canary" value="88" valueend="91" r="0" g="0" b="0" />
+  <color name="Canary/Golden Amber" value="92" valueend="95" r="0" g="0" b="0" />
+  <color name="Golden Amber" value="96" valueend="99" r="0" g="0" b="0" />
+  <color name="Golden Amber/Red" value="100" valueend="103" r="255" g="0" b="0" />
+  <color name="Red" value="104" valueend="107" r="255" g="0" b="0" />
+  <color name="Red/Blue" value="108" valueend="111" r="0" g="255" b="255" />
+  <color name="Blue" value="112" valueend="115" r="0" g="0" b="255" />
+  <color name="Blue/Grün" value="116" valueend="119" r="0" g="255" b="0" />
+  <color name="Grün" value="120" valueend="123" r="0" g="255" b="0" />
+  <color name="Grün/Multicolor" value="124" valueend="127" r="0" g="0" b="0" />
+  <color name="Multicolor 1" value="128" valueend="131" r="255" g="255" b="255" />
+  <color name="Multicolor1&2" value="132" valueend="135" r="0" g="0" b="0" />
+  <color name="Multicolor 2" value="136" valueend="139" r="0" g="0" b="0" />
+  <color name="Rotation" value="140" valueend="253" r="255" g="255" b="255" />
+  <color name="Farbwechsel Low" value="254" valueend="254" r="0" g="0" b="0" />
+  <color name="Farbwechsel Fast" value="255" valueend="255" r="0" g="0" b="0" />
+ </colors>
+ <gobos>
+  <gobo name="Gobo 1" value="8" valueend="15" filename="R15020128.png" />
+  <gobo name="Gobo 2" value="16" valueend="23" filename="Worms4.png" />
+  <gobo name="Gobo 3" value="24" valueend="31" filename="Turbine.png" />
+  <gobo name="Gobo 4" value="32" valueend="39" filename="dot2circle.png" />
+  <gobo name="Gobo 5" value="40" valueend="47" filename="R15020142.png" />
+  <gobo name="Gobo 6" value="48" valueend="55" filename="pik.png" />
+  <gobo name="Gobo 7" value="56" valueend="63" filename="pik.png" />
+  <gobo name="Gobo 8" value="64" valueend="71" filename="Gobo08.png" />
+  <gobo name="Gobo 9" value="72" valueend="79" filename="Gobo09.png" />
+  <gobo name="Gobo 10" value="80" valueend="87" filename="Gobo10.png" />
+  <gobo name="Gobo 11" value="88" valueend="95" filename="Gobo11.png" />
+  <gobo name="Gobo 12" value="96" valueend="103" filename="Gobo12.png" />
+  <gobo name="Gobo 13" value="104" valueend="111" filename="Gobo13.png" />
+  <gobo name="Gobo 14" value="112" valueend="119" filename="Gobo14.png" />
+  <gobo name="Gobo 15" value="120" valueend="127" filename="Gobo15.png" />
+  <gobo name="Gobo 16" value="128" valueend="135" filename="Gobo16.png" />
+  <gobo name="Gobo 17" value="136" valueend="143" filename="Gobo17.png" />
+  <gobo name="Gobo 18" value="144" valueend="151" filename="Gobo18.png" />
+  <gobo name="Gobo 19" value="152" valueend="159" filename="Gobo19.png" />
+  <gobo name="Offen" value="0" valueend="7" filename="Open.png" />
+  <gobo name="Rotation Low" value="254" valueend="254" filename="leer.png" />
+  <gobo name="Rotation Fast" value="255" valueend="255" filename="" />
+ </gobos>
+ <form width="233" height="305">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+
+  implementation
+
+  var
+    // hier können globale Variablen definiert werden
+  DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // diese Funktion wird für alle Geräte dieses Typs beim Laden des Projekts ausgeführt.
+  end;
+  procedure FormShow;
+  begin
+    // diese Funktion wird bei jedem Laden der Form ausgeführt.
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Wert:integer;
+  begin
+    // diese Funktion wird bei jeder Kanaländerung, die das Gerät betrifft, ausgeführt. Schreiben Sie hier eine Funktion, um die Geräteoberfläche bei einer Kanalwertänderung zu aktualisieren. z.B. wie folgt:
+{
+    if not DontRefresh then
+    case channel of
+      0: ; // irgendwas machen
+    end;
+DontRefresh:=false;
+}
+  end;
+  procedure FormClose;
+  begin
+    // diese Funktion wird bei jedem Schließen der Form ausgeführt.
+  end;
+  end.
+ </code>
+</device>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\quadgem.png">
+ <information id="PC_DIMMER">
+ <name>MATBAR-4x64</name>
+ <vendor>Eurolite</vendor>
+ <author>Martin</author>
+ <description>Matrix LED Bar</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Bewegung X" fade="yes" type="special1"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Bewegung Y" fade="yes" type="special2"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Modus" fade="yes" type="option"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="280" height="495">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorpicker top="90" left="10" />
+  <dropdown name="chaserbox" top="390" left="10" width="260" height="23" action="chaserboxchange">
+   <item caption="Chaser  0" value="0" picture="" />
+   <item caption="Chaser  1" value="0" picture="" />
+   <item caption="Chaser  2" value="0" picture="" />
+   <item caption="Chaser  3" value="0" picture="" />
+   <item caption="Chaser  4" value="0" picture="" />
+   <item caption="Chaser  5" value="0" picture="" />
+   <item caption="Chaser  6" value="0" picture="" />
+   <item caption="Chaser  7" value="0" picture="" />
+   <item caption="Chaser  8" value="0" picture="" />
+   <item caption="Chaser  9" value="0" picture="" />
+   <item caption="Chaser  10" value="0" picture="" />
+   <item caption="Chaser  11" value="0" picture="" />
+   <item caption="Chaser  12" value="0" picture="" />
+   <item caption="Chaser  13" value="0" picture="" />
+  </dropdown>
+  <slider name="SPECIAL1slider3" top="290" left="10" width="260" height="20" action="SPECIAL1change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SPECIAL2slider4" top="340" left="10" width="260" height="20" action="SPECIAL2change" startvalue="0" endvalue="255" default="0"/>
+  <label name="SPECIAL1lbl3" top="270" left="10" width="60" height="20" caption="Bewegung X"/>
+  <label name="SPECIAL2lbl4" top="320" left="10" width="60" height="20" caption="Bewegung Y"/>
+  <label name="chaserlbl" top="370" left="10" width="33" height="13" caption="Chaser"/>
+  <button name="dmxbtn" top="90" left="170" width="100" height="30" action="dmxbtnclick" caption="DMX Modus"/>
+  <button name="chaserbtn" top="130" left="170" width="100" height="30" action="chaserbtnclick" caption="Chaser"/>
+  <button name="Button4" top="170" left="170" width="100" height="30" action="soundbtnclick" caption="Sound Active"/>
+  <button name="colorbtn" top="230" left="10" width="150" height="30" action="SwitchColorPicker" caption="Wechsle Farbauswahl"/>
+  <button name="Button6" top="210" left="170" width="100" height="30" action="blackoutbtnclick" caption="Blackout"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure FormClose;
+  procedure SwitchColorPicker;
+  procedure SPECIAL1change;
+  procedure SPECIAL2change;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure dmxbtnclick;
+  procedure chaserbtnclick;
+  procedure soundbtnclick;
+  procedure blackoutbtnclick;
+  procedure FormShow;
+  procedure chaserboxchange;
+  procedure FormRefresh(channel:Integer);
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure FormClose;
+  begin
+  end;
+
+  procedure SwitchColorPicker;
+  begin
+    if colorpicker.visible then
+    begin
+      colorpicker.visible:=false;
+      colorpicker2.visible:=true;
+    end else
+    begin
+      colorpicker.visible:=true;
+      colorpicker2.visible:=false;
+    end;
+  end;
+
+  procedure SPECIAL1change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL1',-1,SPECIAL1slider3.position,0);
+  end;
+
+  procedure SPECIAL2change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL2',-1,SPECIAL2slider4.position,0);
+  end;
+
+  procedure ColorPickerChange(R, G, B: Byte);
+  begin
+    set_channel('r',-1,r,0);
+    set_channel('g',-1,g,0);
+    set_channel('b',-1,b,0);
+  end;
+
+  procedure dmxbtnclick;
+  begin
+    DontRefresh:=true;
+		set_channel('OPTION',-1,0,0);
+		chaserlbl.visible:=false;
+		chaserbox.visible:=false;
+  end;
+
+  procedure chaserbtnclick;
+  begin
+    DontRefresh:=true;
+		chaserlbl.visible:=true;
+		chaserbox.visible:=true;
+		set_channel('OPTION', -1, 20, 0);
+  end;
+
+  procedure soundbtnclick;
+  begin
+    DontRefresh:=true;
+		chaserbox.visible:=false;
+		chaserlbl.visible:=false;
+		set_channel('OPTION', -1, 255, 0);
+  end;
+
+  procedure blackoutbtnclick;
+
+  begin
+    DontRefresh:=true;
+		set_channel('R', -1, 0, 0);
+    		set_channel('G', -1, 0, 0);
+		set_channel('B', -1, 0, 0);
+		set_channel('OPTION', -1, 0, 0);
+		chaserbox.visible:=false;
+		chaserlbl.visible:=false;
+  end;
+
+  procedure FormShow;
+  begin
+  end;
+
+  procedure chaserboxchange;
+  var
+	 itemid:integer;
+	 value:integer;
+  begin
+		itemid:=chaserbox.itemindex;
+		value:=(itemid*17)+17;
+		set_channel('OPTION', -1, value, 0);
+  end;
+
+  procedure FormRefresh(channel:Integer);
+  var
+	wert:Integer;
+	wert2:Integer;
+  begin
+	case channel of
+	0:
+	begin
+	end;
+	1:
+	begin
+	end;
+	2:
+	begin
+	end;
+	3:
+	begin
+	SPECIAL1slider3.position:=get_channel('SPECIAL1');
+	end;
+	4:
+	begin
+	SPECIAL2slider4.position:=get_channel('SPECIAL2');
+	end;
+	5:
+	begin
+	wert:=get_channel('OPTION');
+	case wert of
+		0..5:
+		begin
+		chaserbox.visible:=false;
+		chaserlbl.visible:=false;
+		end;
+		6..249:
+		begin
+		chaserlbl.visible:=true;
+		chaserbox.visible:=true;
+		case wert of	
+		6..22:chaserbox.itemindex:=0;
+		23..39:chaserbox.itemindex:=1;
+		40..56:chaserbox.itemindex:=2;
+		57..73:chaserbox.itemindex:=3;
+		74..90:chaserbox.itemindex:=4;
+		91..107:chaserbox.itemindex:=5;
+		108..124:chaserbox.itemindex:=6;
+		125..141:chaserbox.itemindex:=7;
+		142..158:chaserbox.itemindex:=8;
+		159..175:chaserbox.itemindex:=9;
+		176..192:chaserbox.itemindex:=10;
+		193..209:chaserbox.itemindex:=11;
+		210..226:chaserbox.itemindex:=12;
+		227..249:chaserbox.itemindex:=13;
+		end;
+		end;
+		250..255:
+		begin
+		chaserbox.visible:=false;
+		chaserlbl.visible:=false;
+		end;
+	end;
+  end;
+  end;
+  end;
+  end.
+ </code>
+</device>

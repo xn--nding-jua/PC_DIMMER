@@ -1,0 +1,1 @@
+Statt eines Arrays ein TList-Objekt nehmen und dann immer das erste Element nach Senden löschen

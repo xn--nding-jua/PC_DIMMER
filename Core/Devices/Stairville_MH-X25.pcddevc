@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\genioby5.png">
+ <information id="PC_DIMMER">
+ <name>MH-X25</name>
+ <vendor>Stairville</vendor>
+ <author>Hans-Werner</author>
+ <description>Moving Head</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="PAN" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="TILT" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="PANFINE" fade="yes" type="panfine"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="TILTFINE" fade="yes" type="tiltfine"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="SPEED" fade="yes" type="speed"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="COLORWHEEL" fade="yes" type="color1"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="SHUTTER" fade="yes" type="shutter"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="DIMMER" fade="yes" type="dimmer"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="GOBO1" fade="yes" type="gobo1"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="GOBO1ROT" fade="yes" type="gobo1rot"/>
+  <function channel="10" minvalue="0" maxvalue="255" name="EXTRA" fade="yes" type="extra"/>
+  <function channel="11" minvalue="0" maxvalue="255" name="SPECIAL1" fade="yes" type="special1"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" ch8="-1" ch9="-1" ch10="-1" ch11="-1" />
+ <colors>
+  <color name="weiß" value="1" valueend="4" r="255" g="255" b="255" />
+  <color name="gelb" value="5" valueend="9" r="255" g="255" b="0" />
+  <color name="pink" value="10" valueend="14" r="255" g="0" b="255" />
+  <color name="grün" value="15" valueend="19" r="0" g="255" b="0" />
+  <color name="peachblow" value="20" valueend="24" r="255" g="128" b="0" />
+  <color name="blau" value="25" valueend="29" r="0" g="0" b="255" />
+  <color name="kelly" value="30" valueend="34" r="192" g="220" b="192" />
+  <color name="rot" value="35" valueend="39" r="255" g="0" b="0" />
+  <color name="dark blue" value="40" valueend="44" r="0" g="0" b="128" />
+  <color name="white or yellow" value="45" valueend="56" r="255" g="255" b="255" />
+  <color name="yellow or pink" value="57" valueend="65" r="255" g="255" b="0" />
+  <color name="pink or green" value="66" valueend="74" r="255" g="0" b="255" />
+  <color name="peachblow or blue" value="84" valueend="92" r="192" g="220" b="192" />
+  <color name="blue or kelly" value="93" valueend="101" r="0" g="0" b="0" />
+  <color name="kelly or read" value="102" valueend="110" r="192" g="220" b="192" />
+  <color name="red or darkblue" value="111" valueend="119" r="0" g="0" b="128" />
+  <color name="darkblue or white" value="120" valueend="127" r="0" g="0" b="128" />
+  <color name="pos. rainbow w. increasind speed" value="128" valueend="191" r="0" g="0" b="0" />
+  <color name="neg. rainbow w. increasind speed" value="192" valueend="255" r="0" g="0" b="0" />
+ </colors>
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <gobos>
+  <gobo name="Gobo 1" value="0" valueend="7" filename="Open2.png" />
+  <gobo name="Gobo 2" value="8" valueend="15" filename="DotCircle6Red.png" />
+  <gobo name="Gobo 3" value="16" valueend="23" filename="JetFan.png" />
+  <gobo name="Gobo 4" value="24" valueend="31" filename="Movec0013.png" />
+  <gobo name="Gobo 5" value="32" valueend="39" filename="Cross6.png" />
+  <gobo name="Gobo 6" value="40" valueend="47" filename="Clouds.png" />
+  <gobo name="Gobo 7" value="48" valueend="55" filename="MultiBeam.png" />
+  <gobo name="Gobo 8" value="56" valueend="63" filename="R15010515.png" />
+ </gobos>
+ <form width="400" height="305">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    value:integer;
+  begin
+  end;
+  procedure FormClose;
+  begin
+  end;
+  end.
+ </code>
+</device>

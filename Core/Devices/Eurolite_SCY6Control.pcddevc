@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\quadgem.png">
+ <information id="PC_DIMMER">
+ <name>SCY-6 (Control DDF)</name>
+ <vendor>Eurolite</vendor>
+ <author>Martin</author>
+ <description>SCY-6 Kontrolle</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Programme / Automatik" fade="yes" type="gobo1"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Geschwindigkeit" fade="yes" type="speed"/>
+ </channels>
+ <initvalues ch0="-1" ch1="-1" ch2="-1" />
+ <shutter OpenValue="10" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="10" MinValue="11" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <gobos>
+  <gobo name="Aus" value="0" valueend="10" filename="Offen.png" />
+  <gobo name="Programm 1" value="11" valueend="24" filename="Gobo01.png" />
+  <gobo name="Programm 2" value="25" valueend="38" filename="Gobo02.png" />
+  <gobo name="Programm 3" value="39" valueend="52" filename="Gobo03.png" />
+  <gobo name="Programm 4" value="53" valueend="66" filename="Gobo04.png" />
+  <gobo name="Programm 5" value="67" valueend="80" filename="Gobo05.png" />
+  <gobo name="Programm 6" value="81" valueend="94" filename="Gobo06.png" />
+  <gobo name="Programm 7" value="95" valueend="108" filename="Gobo07.png" />
+  <gobo name="Programm 8" value="109" valueend="122" filename="Gobo08.png" />
+  <gobo name="Programm 9" value="123" valueend="136" filename="Gobo09.png" />
+  <gobo name="Programm 10" value="137" valueend="150" filename="Gobo10.png" />
+  <gobo name="Programm 11" value="151" valueend="164" filename="Gobo11.png" />
+  <gobo name="Programm 12" value="165" valueend="178" filename="Gobo12.png" />
+  <gobo name="Programm 13" value="179" valueend="192" filename="Gobo13.png" />
+  <gobo name="Programm 14" value="193" valueend="206" filename="Gobo14.png" />
+  <gobo name="Programm 15" value="207" valueend="220" filename="Gobo15.png" />
+  <gobo name="Programm 16" value="221" valueend="250" filename="Gobo16.png" />
+  <gobo name="Musiksteuerung" value="251" valueend="255" filename="Gobo17.png" />
+ </gobos>
+ <form width="230" height="121">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    value:integer;
+  begin
+  end;
+  procedure FormClose;
+  begin
+  end;
+  end.
+ </code>
+</device>

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\American_DJ-Revo_IV.png">
+ <information id="PC_DIMMER">
+ <name>Revo IV 4ch</name>
+ <vendor>American DJ</vendor>
+ <author>sky</author>
+ <description>LED-Effektstrahler mit 256 LEDs</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Funktion" fade="no" type="color1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Muster/Chase" fade="no" type="pan"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Farbe/Chase" fade="no" type="tilt"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Stroboskopeffekt" fade="no" type="shutter"/>
+ </channels>
+ <amber UseAmberMixing="no" AmberMixingCompensateRG="no" AmberMixingCompensateBlue="no" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="150" ch1="125" ch2="125" ch3="50" />
+ <colors>
+  <color name="Muster" value="10" valueend="29" r="128" g="128" b="0" />
+  <color name="Muster" value="30" valueend="49" r="255" g="255" b="128" />
+  <color name="Muster" value="50" valueend="79" r="255" g="255" b="0" />
+  <color name="Muster" value="80" valueend="99" r="223" g="254" b="5" />
+  <color name="Chase" value="100" valueend="129" r="128" g="255" b="128" />
+  <color name="Chase" value="130" valueend="169" r="128" g="255" b="0" />
+  <color name="Chase" value="170" valueend="199" r="0" g="255" b="0" />
+  <color name="Chase" value="202" valueend="239" r="0" g="255" b="128" />
+ </colors>
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="1" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="350" height="250">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="30" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="20" left="200"/>
+  <dropdown name="autobox1" top="160" left="10" width="140" height="21" action="SPECIAL_1_change">
+   <item caption="Muster/Chase 1" value="0" valueend="-1" picture="" />
+   <item caption="Muster/Chase 2" value="0" valueend="-1" picture="" />
+   <item caption="Muster/Chase 3" value="0" valueend="-1" picture="" />
+   <item caption="Muster/Chase 4" value="0" valueend="-1" picture="" />
+   <item caption="Muster/Chase 5" value="0" valueend="-1" picture="" />
+   <item caption="Muster/Chase 6" value="0" valueend="-1" picture="" />
+   <item caption="Muster/Chase 7" value="0" valueend="-1" picture="" />
+   <item caption="Muster/Chase 8" value="0" valueend="-1" picture="" />
+   <item caption="Muster/Chase 9" value="0" valueend="-1" picture="" />
+   <item caption="Muster/Chase 10" value="0" valueend="-1" picture="" />
+   <item caption="Muster/Chase 11" value="0" valueend="-1" picture="" />
+   <item caption="Muster/Chase 12" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="autobox2" top="220" left="10" width="150" height="21" action="SPECIAL_2_change">
+   <item caption="Farbe R / Geschwindigkeit 1" value="0" valueend="-1" picture="" />
+   <item caption="Farbe G / Geschwindigkeit 2" value="0" valueend="-1" picture="" />
+   <item caption="Farbe B / Geschwindigkeit 3" value="0" valueend="-1" picture="" />
+   <item caption="Farbe W / Geschwindigkeit 4" value="0" valueend="-1" picture="" />
+   <item caption="Farbe R+G / Geschwindigkeit 5" value="0" valueend="-1" picture="" />
+   <item caption="Farbe R+B / Geschwindigkeit 6" value="0" valueend="-1" picture="" />
+   <item caption="Farbe R+W / Geschwindigkeit 7" value="0" valueend="-1" picture="" />
+   <item caption="Farbe G+B / Geschwindigkeit 8" value="0" valueend="-1" picture="" />
+   <item caption="Farbe G+W / Geschwindigkeit 9" value="0" valueend="-1" picture="" />
+   <item caption="Farbe B+W / Geschwindigkeit 10" value="0" valueend="-1" picture="" />
+   <item caption="Farbe R+G+B / Geschwindigkeit 11" value="0" valueend="-1" picture="" />
+   <item caption="Farbe R+G+W / Geschwindigkeit 12" value="0" valueend="-1" picture="" />
+   <item caption="Farbe R+B+W / Geschwindigkeit 13" value="0" valueend="-1" picture="" />
+   <item caption="Farbe G+B+W / Geschwindigkeit 14" value="0" valueend="-1" picture="" />
+   <item caption="Farbe R+G+B+W / Geschwindigkeit 15" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <slider name="Speedslider" top="160" left="190" width="140" height="20" action="Speedslider" startvalue="0" endvalue="255" default="0"/>
+  <label name="SPECIAL1lbl0" top="80" left="10" width="113" height="13" caption="Kanal1: Fuktion (Color1)"/>
+  <label name="SHUTTERlbl1" top="140" left="180" width="157" height="13" caption="Kanal4; Strobskopeffekt (Shutter)"/>
+  <label name="Label3_862" top="140" left="10" width="156" height="13" caption="Kanal2; variabel mit Kanal1(PAN)"/>
+  <label name="Label4_855" top="200" left="10" width="157" height="13" caption="Kanal3; variabel mit Kanal1(TILT)"/>
+  <label name="Infofeld1" top="80" left="160" width="53" height="13" caption="Lampe Aus"/>
+  <button name="Feld1" top="100" left="10" width="80" height="30" action="Offclick" caption="Off"/>
+  <button name="Feld2" top="100" left="90" width="80" height="30" action="Musterclick" caption="Muster"/>
+  <button name="Feld3" top="100" left="170" width="80" height="30" action="Chaseclick" caption="Chase"/>
+  <button name="Feld4" top="100" left="250" width="80" height="30" action="Soundclick" caption="Sound2Light"/>
+  <button name="Button5_640" top="190" left="190" width="40" height="20" action="OffStroboclick" caption="Off"/>
+  <button name="Button6_342" top="190" left="240" width="40" height="20" action="ZWStroboclick" caption="20%"/>
+  <button name="Button7_765" top="190" left="290" width="40" height="20" action="VIStroboclick" caption="40%"/>
+  <button name="Button8_281" top="220" left="240" width="40" height="20" action="ACStroboclick" caption="80%"/>
+  <button name="Button9_208" top="220" left="190" width="40" height="20" action="SEStroboclick" caption="60%"/>
+  <button name="Button10_601" top="220" left="290" width="40" height="20" action="HNStroboclick" caption="100%"/>
+ </form>
+ <code>
+  unit Revo4_4ch;
+
+  interface
+
+  procedure Speedslider;
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure Offclick;
+  procedure SPECIAL_2_change;
+  procedure SPECIAL_1_change;
+  procedure Musterclick;
+  procedure Chaseclick;
+  procedure Soundclick;
+  procedure OffStroboclick;
+  procedure ZWStroboclick;
+  procedure VIStroboclick;
+  procedure SEStroboclick;
+  procedure HNStroboclick;
+  procedure ACStroboclick;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure Speedslider;
+  begin
+    DontRefresh:=true;
+		set_channel('SHUTTER',-1,speedslider.position,0);
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+	var
+		wert:integer;
+  begin
+    wert:=get_channel('COLOR1');
+    case wert of
+    	29: colorbox.itemindex:=0;
+    	49: colorbox.itemindex:=1;
+	    79: colorbox.itemindex:=2;
+    	99: colorbox.itemindex:=3;  
+			129: colorbox.itemindex:=4;
+    	169: colorbox.itemindex:=5;
+    	199: colorbox.itemindex:=6;
+    	239: colorbox.itemindex:=7;
+    end;
+    
+   
+    case wert of
+    	0..9:
+			begin
+
+				Infofeld1.caption:='Lampe Aus';
+			end;
+	
+    	10..99:
+			begin
+
+				Infofeld1.caption:='Muster';
+			end;
+			
+		 	100..239:
+			begin
+
+				Infofeld1.caption:='Chase';
+			end;
+			
+    	240..255:
+			begin
+
+				Infofeld1.caption:='Sound2Light-Modus';
+			end;
+    end; 
+   end;
+  procedure FormClose;
+  begin
+  end;
+  procedure Offclick;
+  begin
+		set_channel('COLOR1',0,0,0);
+
+  end;
+  procedure SPECIAL_2_change;
+  begin
+    DontRefresh:=true;
+
+		case autobox2.itemindex of
+			0: set_channel('TILT',-1,17,0);
+			1: set_channel('TILT',-1,34,0);
+			2: set_channel('TILT',-1,51,0);
+			3: set_channel('TILT',-1,68,0);
+			4: set_channel('TILT',-1,58,0);
+			5: set_channel('TILT',-1,102,0);
+			6: set_channel('TILT',-1,119,0);
+			7: set_channel('TILT',-1,136,0);
+			8: set_channel('TILT',-1,153,0);
+			9: set_channel('TILT',-1,170,0);
+			10: set_channel('TILT',-1,187,0);
+			11: set_channel('TILT',-1,204,0);
+			12: set_channel('TILT',-1,221,0);
+			13: set_channel('TILT',-1,238,0);
+			14: set_channel('TILT',-1,255,0);
+		end;
+  end;
+  procedure SPECIAL_1_change;
+  begin
+    DontRefresh:=true;
+
+		case autobox1.itemindex of
+			0: set_channel('PAN',-1,20,0);
+			1: set_channel('PAN',-1,41,0);
+			2: set_channel('PAN',-1,51,0);
+			3: set_channel('PAN',-1,65,0);
+			4: set_channel('PAN',-1,87,0);
+			5: set_channel('PAN',-1,108,0);
+			6: set_channel('PAN',-1,129,0);
+			7: set_channel('PAN',-1,150,0);
+			8: set_channel('PAN',-1,172,0);
+			9: set_channel('PAN',-1,193,0);
+			10: set_channel('PAN',-1,214,0);
+			11: set_channel('PAN',-1,235,0);
+		  12: set_channel('PAN',-1,255,0);
+		end;
+  end;
+  procedure Musterclick;
+  begin
+		set_channel('COLOR1',45,45,0);
+
+  end;
+  procedure Chaseclick;
+  begin
+		set_channel('COLOR1',170,170,0);
+
+  end;
+  procedure Soundclick;
+  begin
+		set_channel('COLOR1',255,255,0);
+
+  end;
+  procedure OffStroboclick;
+  begin
+		set_channel('Shutter',0,0,0);
+
+  end;
+  procedure ZWStroboclick;
+  begin
+		set_channel('Shutter',50,50,0);
+
+  end;
+  procedure VIStroboclick;
+  begin
+		set_channel('Shutter',101,101,0);
+
+  end;
+  procedure SEStroboclick;
+  begin
+		set_channel('Shutter',154,154,0);
+
+  end;
+  procedure HNStroboclick;
+  begin
+		set_channel('Shutter',255,255,0);
+
+  end;
+  procedure ACStroboclick;
+  begin
+		set_channel('Shutter',205,205,0);
+
+  end;
+  end.
+ </code>
+</device>

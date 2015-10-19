@@ -1,0 +1,577 @@
+unit Optionen;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ComCtrls, ExtCtrls, blenddownfrm, Grids,
+  CheckLst, pngimage, JvExControls, JvGradient;
+
+const
+  {$I GlobaleKonstanten.inc}
+
+type
+  TOptionenBox = class(TForm)
+    Notebook1:       TNotebook;
+    startupwitholdscene_checkbox: TCheckBox;
+    Selection:       TTreeView;
+    OKBtn:           TButton;
+    CancelBtn:       TButton;
+    Bevel1:          TBevel;
+    panelanordnungspeichern_checkbox: TCheckBox;
+    Label1:          TLabel;
+    Label2:          TLabel;
+    Label3:          TLabel;
+    ocd32reset_checkbox: TCheckBox;
+    prioritaet:      TTrackBar;
+    Label4:          TLabel;
+    prioritaet_label: TLabel;
+    powerswitch_checkbox: TCheckBox;
+    Label5:          TLabel;
+    askforscenechange_checkbox: TCheckBox;
+    Label9:          TLabel;
+    Label10:         TLabel;
+    pluginconfigure: TButton;
+    pluginabout:     TButton;
+    levelanzeigeoptionen: TRadioGroup;
+    Label11:         TLabel;
+    Label12:         TLabel;
+    Label13:         TLabel;
+    sounddevices:    TComboBox;
+    Label14:         TLabel;
+    Label15:         TLabel;
+    frontspeaker:    TCheckBox;
+    rearspeaker:     TCheckBox;
+    centerlfespeaker: TCheckBox;
+    backsurroundspeaker: TCheckBox;
+    Plugingrid:      TStringGrid;
+    Label16:         TLabel;
+    askforsaveproject_checkbox: TCheckBox;
+    lastchan:        TTrackBar;
+    lastchan_edit:   TEdit;
+    Label6:          TLabel;
+    Label7:          TLabel;
+    Label19:         TLabel;
+    Label20:         TLabel;
+    Label21:         TLabel;
+    Label22:         TLabel;
+    loadlastproject_checkbox: TCheckBox;
+    deactivateoutputdllsonclose: TCheckBox;
+    deactivateinputdllsonclose: TCheckBox;
+    bildschirmhelligkeit: TEdit;
+    Label23:         TLabel;
+    showlastplugins_checkbox: TCheckBox;
+    projectpriority: TRadioGroup;
+    Label26:         TLabel;
+    scrolllockled_checkbox: TCheckBox;
+    showaccuwarnings: TCheckBox;
+    RadioGroup1:     TRadioGroup;
+    Label27:         TLabel;
+    Label8:          TLabel;
+    Label17:         TLabel;
+    Label18:         TLabel;
+    Label28:         TLabel;
+    Label29:         TLabel;
+    Label30:         TLabel;
+    Label31:         TLabel;
+    Label32:         TLabel;
+    Label33:         TLabel;
+    Panel1:          TPanel;
+    Image1:          TImage;
+    Label34:         TLabel;
+    Label35:         TLabel;
+    JvGradient1:     TJvGradient;
+    Autosavetrackbar: TTrackBar;
+    Label24:         TLabel;
+    Autosavelabel:   TLabel;
+    nosetdataonstartup: TCheckBox;
+    timerradiogroup: TRadioGroup;
+    restartpcdimmer: TLabel;
+    procedure input_number(var pos: integer; var s: string);
+    procedure SelectionChange(Sender: TObject; Node: TTreeNode);
+    procedure FormShow(Sender: TObject);
+    procedure prioritaetChange(Sender: TObject);
+    procedure pluginconfigureClick(Sender: TObject);
+    procedure pluginaboutClick(Sender: TObject);
+    procedure PlugingridDblClick(Sender: TObject);
+    procedure PlugingridMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure lastchanChange(Sender: TObject);
+    procedure lastchan_editKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure PlugingridDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
+    procedure PlugingridGetEditMask(Sender: TObject; ACol, ARow: integer; var Value: string);
+    procedure PlugingridKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure bildschirmhelligkeitChange(Sender: TObject);
+    procedure sounddevicesChange(Sender: TObject);
+    procedure loadlastproject_checkboxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+    procedure FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure AutosavetrackbarChange(Sender: TObject);
+    procedure timerradiogroupClick(Sender: TObject);
+    procedure PlugingridGetEditText(Sender: TObject; ACol, ARow: integer; var Value: string);
+    procedure PlugingridKeyPress(Sender: TObject; var Key: char);
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+    pc_dimmer_plugins: array[-1..63] of string[255];
+    workingdirectory: string;
+    OutputDLL: array[0..63] of THandle;
+    active: array[1..63] of boolean;
+  end;
+
+var
+  OptionenBox: TOptionenBox;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  PCDIMMER;
+
+procedure TOptionenBox.SelectionChange(Sender: TObject; Node: TTreeNode);
+begin
+  Notebook1.PageIndex := Selection.Selected.Index;
+end;
+
+procedure TOptionenBox.FormShow(Sender: TObject);
+begin
+  mainform.debuglistbox.Items.LoadFromFile(workingdirectory + '\PC_DIMMER.log');
+
+  if active[plugingrid.Row] then
+  begin
+    pluginconfigure.Enabled := True;
+    pluginabout.Enabled := True;
+  end else
+  begin
+    pluginconfigure.Enabled := False;
+    pluginabout.Enabled := False;
+  end;
+end;
+
+procedure TOptionenBox.prioritaetChange(Sender: TObject);
+begin
+  case prioritaet.Position of
+    1:
+    begin
+      SetPriorityClass(GetCurrentProcess, IDLE_PRIORITY_CLASS);
+      prioritaet_label.Caption := 'Niedrig';
+    end;
+    2:
+    begin
+      SetPriorityClass(GetCurrentProcess, NORMAL_PRIORITY_CLASS);
+      prioritaet_label.Caption := 'Normal';
+    end;
+    3:
+    begin
+      SetPriorityClass(GetCurrentProcess, HIGH_PRIORITY_CLASS);
+      prioritaet_label.Caption := 'Hoch';
+    end;
+    4:
+    begin
+      SetPriorityClass(GetCurrentProcess, REALTIME_PRIORITY_CLASS);
+      prioritaet_label.Caption := 'Echtzeit';
+    end;
+  end;
+  if prioritaet.Position = 6 then
+  begin
+    prioritaet_label.Font.Style := [fsBold];
+    prioritaet_label.Font.Color := clRed;
+  end else
+  begin
+    prioritaet_label.Font.Style := [];
+    prioritaet_label.Font.Color := clBlack;
+  end;
+end;
+
+procedure TOptionenBox.input_number(var pos: integer; var s: string);
+var
+  i: integer;
+begin
+  i := 1;
+  while i <= length(s) do
+  begin
+    if (s[i] < '-') or (s[i] > '9') then
+    begin
+      Delete(s, i, 1);
+      Dec(pos);
+    end
+    else
+      Inc(i);
+  end;
+end;
+
+procedure TOptionenBox.pluginconfigureClick(Sender: TObject);
+var
+  ProcCall: procedure; stdcall;
+begin
+  if OutputDLL[plugingrid.Row] <> 0 then
+  begin
+    try
+      ProcCall := GetProcAddress(OutputDLL[plugingrid.Row], 'DLLConfigure');
+      if Assigned(ProcCall) then
+        ProcCall
+      else
+        ShowMessage('Fehler in DLL-Prozedur "DLLConfigure"!');
+    except
+      ShowMessage('Fehler in DLL!');
+    end;
+  end
+  else
+    ShowMessage('Plugin nicht geladen...');
+end;
+
+procedure TOptionenBox.pluginaboutClick(Sender: TObject);
+var
+  ProcCall: procedure; stdcall;
+begin
+  if OutputDLL[plugingrid.Row] <> 0 then
+  begin
+    try
+      ProcCall := GetProcAddress(OutputDLL[plugingrid.Row], 'DLLAbout');
+      if Assigned(ProcCall) then
+        ProcCall
+      else
+        ShowMessage('Fehler in DLL-Prozedur "DLLAbout"!');
+    except
+      ShowMessage('Fehler in DLL!');
+    end;
+  end else
+    ShowMessage('Plugin nicht geladen...');
+end;
+
+procedure TOptionenBox.PlugingridDblClick(Sender: TObject);
+begin
+  if (Plugingrid.Col = 1) and pluginconfigure.Enabled then
+    pluginconfigure.Click;
+end;
+
+procedure TOptionenBox.PlugingridMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+var
+  ProcCall: procedure(funktionsadresse0, funktionsadresse1, funktionsadresse2, funktionsadresse3, funktionsadresse4: Pointer); stdcall;
+  ProcCall2: procedure; stdcall;
+begin
+  if Plugingrid.Col = 0 then
+  begin
+    if active[Plugingrid.Row] = True then
+    begin
+      active[Plugingrid.Row] := False;
+      @mainform.DLLSenddata[plugingrid.row] := nil;
+      @mainform.DLLIsSending[plugingrid.row] := nil;
+      @mainform.DLLSendmessage[plugingrid.row] := nil;
+
+      ProcCall2 := GetProcAddress(OutputDLL[plugingrid.row], 'DLLDeactivate');
+      if Assigned(ProcCall2) then
+        ProcCall2
+      else
+        ShowMessage('Fehler in DLL-Prozedur "DLLDeactivate"!');
+      FreeLibrary(OutputDLL[plugingrid.row]);
+      OutputDLL[plugingrid.row] := 0;
+
+      mainform.debuglistbox.Items.Add('[' + IntToStr(mainform.debuglistbox.Items.Count) + '] [' + Timetostr(now) + '] [' + Datetostr(now) + '] PLUGIN: Deactivated Outputplugin ' + pc_dimmer_plugins[plugingrid.row]);
+      mainform.debuglistbox.Items.SaveToFile(workingdirectory + '\PC_DIMMER.log');
+
+      pluginabout.Enabled := False;
+      pluginconfigure.Enabled := False;
+    end else
+    begin
+      active[Plugingrid.Row] := True;
+
+      OutputDLL[plugingrid.row] := LoadLibrary(PChar(workingdirectory + '\plugins\' + pc_dimmer_plugins[plugingrid.row]));
+      mainform.OutputDLL[plugingrid.row] := OutputDLL[plugingrid.row];
+      ProcCall := GetProcAddress(OutputDLL[plugingrid.row], 'DLLActivate');
+      if Assigned(ProcCall) then
+      begin
+        Proccall(@CallbackGetDLLValue, @CallbackGetDLLValueEvent, @CallbackGetDLLName, @CallbackSetDLLValue, @CallbackMessage);
+        mainform.debuglistbox.Items.Add('[' + IntToStr(mainform.debuglistbox.Items.Count) + '] [' + Timetostr(now) + '] [' + Datetostr(now) + '] PLUGIN: Activated Outputplugin ' + pc_dimmer_plugins[plugingrid.row]);
+        mainform.debuglistbox.Items.SaveToFile(workingdirectory + '\PC_DIMMER.log');
+      end else
+      begin
+        ShowMessage('Fehler in DLL-Prozedur "DLLActivate"!');
+        mainform.debuglistbox.Items.Add('[' + IntToStr(mainform.debuglistbox.Items.Count) + '] [' + Timetostr(now) + '] [' + Datetostr(now) + '] PLUGIN: Error in Outputplugin ' + pc_dimmer_plugins[plugingrid.row]);
+        mainform.debuglistbox.Items.SaveToFile(workingdirectory + '\PC_DIMMER.log');
+      end;
+      @mainform.DLLSenddata[plugingrid.row]  := GetProcAddress(mainform.OutputDLL[plugingrid.row], 'DLLSenddata');
+      @mainform.DLLIsSending[plugingrid.row] := GetProcAddress(mainform.OutputDLL[plugingrid.row], 'DLLIsSending');
+      @mainform.DLLSendmessage[plugingrid.row] := GetProcAddress(mainform.OutputDLL[plugingrid.row], 'DLLSendMessage');
+
+      pluginabout.Enabled := True;
+      pluginconfigure.Enabled := True;
+    end;
+  end;
+
+  if active[plugingrid.Row] then
+  begin
+    pluginconfigure.Enabled := True;
+    pluginabout.Enabled := True;
+  end else
+  begin
+    pluginconfigure.Enabled := False;
+    pluginabout.Enabled := False;
+  end;
+
+  Plugingrid.Refresh;
+end;
+
+procedure TOptionenBox.lastchanChange(Sender: TObject);
+begin
+  lastchan_edit.Text := IntToStr(lastchan.Position);
+end;
+
+procedure TOptionenBox.lastchan_editKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+var
+  i: integer;
+  s: string;
+begin
+  if Key = vk_return then
+  begin
+    s := lastchan_edit.Text;
+    i := lastchan_edit.selstart;
+    mainform.input_number(i, s);
+    lastchan_edit.Text := s;
+    lastchan_edit.selstart := i;
+    if StrToInt(lastchan_edit.Text) < 32 then
+      lastchan_edit.Text := '32';
+    if StrToInt(lastchan_edit.Text) > chan then
+      lastchan_edit.Text := IntToStr(chan);
+    lastchan.Position := StrToInt(lastchan_edit.Text);
+  end;
+end;
+
+procedure TOptionenBox.PlugingridDrawCell(Sender: TObject; ACol, ARow: integer; Rect: TRect; State: TGridDrawState);
+var
+  AOffSet: TPoint;
+  AHaken1: TPoint;
+  AHaken2: TPoint;
+  AHaken3: TPoint;
+  ARect: TRect;
+begin
+  with Plugingrid.Canvas do
+  begin
+    if (ACol = Plugingrid.Col) and (ARow = Plugingrid.Row) then
+    begin
+      Brush.Color := clHighlight;
+      Font.Color  := clHighlightText;
+    end else
+    begin
+      Brush.Color := clWhite;
+      Font.Color  := clWindowText;
+    end;
+    FillRect(Rect);
+    TextOut(Rect.Left, Rect.Top, Plugingrid.Cells[ACol, ARow]);
+
+    if (ACol = 0) then
+    begin
+      //Kasten zeichnen
+      AOffSet.X := (Rect.Right - Rect.Left - 11) div 2;
+      AOffSet.Y := (Rect.Bottom - Rect.Top - 11) div 2;
+
+      ARect.Left := AOffSet.X + Rect.Left;
+      ARect.Top  := AOffSet.Y + Rect.Top;
+      ARect.Right := AOffSet.X + Rect.Left + 11;
+      ARect.Bottom := AOffSet.Y + Rect.Top + 11;
+
+      Pen.Color := clGray;
+      Rectangle(ARect);
+
+      // Abfrage ob Haken zeichnen oder nicht
+      if active[ARow] then
+      begin
+        //Haken zeichnen
+        AHaken1.X := ARect.Left + 2;
+        AHaken1.Y := ARect.Top + 6;
+        AHaken2.X := ARect.Left + 4;
+        AHaken2.Y := ARect.Top + 8;
+        AHaken3.X := ARect.Left + 9;
+        AHaken3.Y := ARect.Top + 3;
+
+        Pen.Color := clBlack; // Farbe des Häkchens
+
+        MoveTo(AHaken1.X, AHaken1.Y - 0);
+        LineTo(AHaken2.X, AHaken2.Y - 0);
+        LineTo(AHaken3.X, AHaken3.Y - 0);
+
+        MoveTo(AHaken1.X, AHaken1.Y - 1);
+        LineTo(AHaken2.X, AHaken2.Y - 1);
+        LineTo(AHaken3.X, AHaken3.Y - 1);
+
+        MoveTo(AHaken1.X, AHaken1.Y - 2);
+        LineTo(AHaken2.X, AHaken2.Y - 2);
+        LineTo(AHaken3.X, AHaken3.Y - 2);
+      end;
+    end;
+    TextOut(Rect.Left, Rect.Top, Plugingrid.Cells[ACol, ARow]);
+  end;
+end;
+
+procedure TOptionenBox.PlugingridGetEditMask(Sender: TObject; ACol, ARow: integer; var Value: string);
+var
+  Text: string;
+begin
+  if ACol = 1 then
+    Text := Plugingrid.Cells[ACol, ARow];
+
+  if (ACol = 0) or (ACol = 1) then
+    Plugingrid.EditorMode := False
+  else
+    Plugingrid.EditorMode := True;
+
+  if ACol = 1 then
+    Plugingrid.Cells[ACol, ARow] := Text;
+end;
+
+procedure TOptionenBox.PlugingridKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+{
+  if (Key=vk_return) then
+  begin
+    case Plugingrid.Col of
+    2:
+    begin
+      ShowMessage(plugingrid.Cells[plugingrid.Col,plugingrid.Row]);
+      try
+        if strtoint(plugingrid.Cells[plugingrid.Col,plugingrid.Row])>mainform.MaximumChan then
+          plugingrid.Cells[plugingrid.Col,plugingrid.Row]:=inttostr(mainform.MaximumChan);
+        if strtoint(plugingrid.Cells[plugingrid.Col,plugingrid.Row])<(-1*mainform.MaximumChan) then
+          plugingrid.Cells[plugingrid.Col,plugingrid.Row]:='-'+inttostr(mainform.MaximumChan);
+        if strtoint(plugingrid.Cells[plugingrid.Col+1,plugingrid.Row])<strtoint(plugingrid.Cells[plugingrid.Col,plugingrid.Row]) then
+          plugingrid.Cells[plugingrid.Col+1,plugingrid.Row]:=inttostr(strtoint(plugingrid.Cells[plugingrid.Col,plugingrid.Row])+1);
+      except
+        plugingrid.Cells[plugingrid.Col,plugingrid.Row]:='1';
+      end;
+    end;
+    3:
+    begin
+      try
+        if strtoint(plugingrid.Cells[plugingrid.Col,plugingrid.Row])>mainform.MaximumChan then
+          plugingrid.Cells[plugingrid.Col,plugingrid.Row]:=inttostr(mainform.MaximumChan);
+        if strtoint(plugingrid.Cells[plugingrid.Col,plugingrid.Row])<(-1*mainform.MaximumChan) then
+          plugingrid.Cells[plugingrid.Col,plugingrid.Row]:='-'+inttostr(mainform.MaximumChan);
+        if strtoint(plugingrid.Cells[plugingrid.Col,plugingrid.Row])<strtoint(plugingrid.Cells[plugingrid.Col-1,plugingrid.Row]) then
+          plugingrid.Cells[plugingrid.Col,plugingrid.Row]:=inttostr(strtoint(plugingrid.Cells[plugingrid.Col-1,plugingrid.Row])+1);
+      except
+        plugingrid.Cells[plugingrid.Col,plugingrid.Row]:='1';
+      end;
+    end;
+    end;
+  end;
+}
+end;
+
+procedure TOptionenBox.bildschirmhelligkeitChange(Sender: TObject);
+var
+  i: integer;
+  s: string;
+begin
+  s := TEdit(Sender).Text;
+  i := TEdit(Sender).selstart;
+  input_number(i, s);
+  TEdit(Sender).Text := s;
+  TEdit(Sender).selstart := i;
+end;
+
+procedure TOptionenBox.sounddevicesChange(Sender: TObject);
+begin
+  sounddevices.Hint := 'Soundkarte: ' + sounddevices.Items.Strings[sounddevices.ItemIndex];
+end;
+
+procedure TOptionenBox.loadlastproject_checkboxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  projectpriority.Enabled := loadlastproject_checkbox.Checked;
+end;
+
+procedure TOptionenBox.FormKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  if Key = vk_escape then
+    modalresult := mrCancel;
+end;
+
+procedure TOptionenBox.AutosavetrackbarChange(Sender: TObject);
+begin
+  if Autosavetrackbar.Position = 0 then
+  begin
+    Autosavelabel.Caption := 'Aus';
+  end else
+  begin
+    Autosavelabel.Caption := IntToStr(Autosavetrackbar.Position) + ' min';
+  end;
+end;
+
+procedure TOptionenBox.timerradiogroupClick(Sender: TObject);
+begin
+  restartpcdimmer.Visible := (mainform.animationtimer <> timerradiogroup.ItemIndex);
+end;
+
+procedure TOptionenBox.PlugingridGetEditText(Sender: TObject; ACol, ARow: integer; var Value: string);
+begin
+{
+    case ACol of
+    2:
+    begin
+      ShowMessage(Value);
+      try
+        if strtoint(Value)>mainform.MaximumChan then
+          Value:=inttostr(mainform.MaximumChan);
+        if strtoint(Value)<(-1*mainform.MaximumChan) then
+          Value:='-'+inttostr(mainform.MaximumChan);
+        if strtoint(plugingrid.Cells[ACol+1,ARow])<strtoint(Value) then
+          plugingrid.Cells[ACol+1,ARow]:=inttostr(strtoint(Value)+1);
+      except
+        Value:='1';
+      end;
+    end;
+    3:
+    begin
+      try
+        if strtoint(Value)>mainform.MaximumChan then
+          Value:=inttostr(mainform.MaximumChan);
+        if strtoint(Value)<(-1*mainform.MaximumChan) then
+          Value:='-'+inttostr(mainform.MaximumChan);
+        if strtoint(Value)<strtoint(plugingrid.Cells[ACol-1,ARow]) then
+          Value:=inttostr(strtoint(plugingrid.Cells[ACol-1,ARow])+1);
+      except
+        Value:='1';
+      end;
+    end;
+    end;
+}
+end;
+
+procedure TOptionenBox.PlugingridKeyPress(Sender: TObject; var Key: char);
+begin
+  begin
+    case Plugingrid.Col of
+      2:
+      begin
+        if (plugingrid.Cells[plugingrid.Col, plugingrid.Row] = '-') or (plugingrid.Cells[plugingrid.Col, plugingrid.Row] = '') then
+          exit;
+        try
+          if StrToInt(plugingrid.Cells[plugingrid.Col, plugingrid.Row]) > mainform.MaximumChan then
+            plugingrid.Cells[plugingrid.Col, plugingrid.Row] := IntToStr(mainform.MaximumChan);
+          //        if strtoint(plugingrid.Cells[plugingrid.Col,plugingrid.Row])<(-1*mainform.MaximumChan) then
+          //          plugingrid.Cells[plugingrid.Col,plugingrid.Row]:='-'+inttostr(mainform.MaximumChan);
+          if StrToInt(plugingrid.Cells[plugingrid.Col + 1, plugingrid.Row]) < StrToInt(plugingrid.Cells[plugingrid.Col, plugingrid.Row]) then
+            plugingrid.Cells[plugingrid.Col + 1, plugingrid.Row] := IntToStr(StrToInt(plugingrid.Cells[plugingrid.Col, plugingrid.Row]) + 1);
+        except
+          plugingrid.Cells[plugingrid.Col, plugingrid.Row] := '1';
+        end;
+      end;
+      3:
+      begin
+        if (plugingrid.Cells[plugingrid.Col, plugingrid.Row] = '-') or (plugingrid.Cells[plugingrid.Col, plugingrid.Row] = '') then
+          exit;
+        try
+          if StrToInt(plugingrid.Cells[plugingrid.Col, plugingrid.Row]) > mainform.MaximumChan then
+            plugingrid.Cells[plugingrid.Col, plugingrid.Row] := IntToStr(mainform.MaximumChan);
+          //        if strtoint(plugingrid.Cells[plugingrid.Col,plugingrid.Row])<(-1*mainform.MaximumChan) then
+          //          plugingrid.Cells[plugingrid.Col,plugingrid.Row]:='-'+inttostr(mainform.MaximumChan);
+          if StrToInt(plugingrid.Cells[plugingrid.Col, plugingrid.Row]) < StrToInt(plugingrid.Cells[plugingrid.Col - 1, plugingrid.Row]) then
+            plugingrid.Cells[plugingrid.Col, plugingrid.Row] := IntToStr(StrToInt(plugingrid.Cells[plugingrid.Col - 1, plugingrid.Row]) + 1);
+        except
+          plugingrid.Cells[plugingrid.Col, plugingrid.Row] := '1';
+        end;
+      end;
+    end;
+  end;
+end;
+
+end.
