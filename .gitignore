@@ -40,7 +40,8 @@ __history/
 *.wav
 *.mp3
 *.pdf
+*.bmp
 
 #ignore whole directories
-Bilder PC_DIMMER Versionen\
-Components\
+/Bilder PC_DIMMER Versionen/
+/Components/
