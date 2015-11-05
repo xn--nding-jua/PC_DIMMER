@@ -55,6 +55,7 @@ type
     saveconfigbtn: TButton;
     CheckBox2: TCheckBox;
     ScanTimer: TCHHighResTimer;
+    startuptimer: TTimer;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure StringGrid1GetEditMask(Sender: TObject; ACol, ARow: Integer;
@@ -75,6 +76,7 @@ type
     procedure ConfigOKClick(Sender: TObject);
     procedure CheckBox1MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure startuptimerTimer(Sender: TObject);
   private
     { Private-Deklarationen }
     RefreshSometimes:boolean;
@@ -362,6 +364,12 @@ begin
     end;
   end;
 
+  // Timerinterrupts wieder aktivieren
+  RegisterInterfaceChangeNotification(DeviceChange);
+  RegisterInputChangeNotification(InputChange);
+  if UseBlockChange then
+    RegisterInputChangeBlockNotification(InputChangeBlock);
+
   for i:=0 to 31 do
   begin
     if DE_Interfaces[i].Serial<>'0000000000000000' then
@@ -371,12 +379,6 @@ begin
       SetInterfaceMode(SerialstringToSerial(DE_Interfaces[i].Serial),DE_Interfaces[i].Modus);
     end;
   end;
-
-  // Timerinterrupts wieder aktivieren
-  RegisterInterfaceChangeNotification(DeviceChange);
-  RegisterInputChangeNotification(InputChange);
-  if UseBlockChange then
-    RegisterInputChangeBlockNotification(InputChangeBlock);
 end;
 
 procedure TConfig.ComboBox2Select(Sender: TObject);
@@ -703,6 +705,14 @@ procedure TConfig.CheckBox1MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   RefreshSometimesTimer.Enabled:=Checkbox1.Checked;
+end;
+
+procedure TConfig.startuptimerTimer(Sender: TObject);
+begin
+  startuptimer.Enabled:=false;
+
+  startup;
+  SearchForInterfaces;
 end;
 
 end.

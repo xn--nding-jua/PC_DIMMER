@@ -1,6 +1,6 @@
 object Config: TConfig
-  Left = 502
-  Top = 240
+  Left = 1270
+  Top = 166
   Width = 481
   Height = 451
   Caption = 'Konfiguration'
@@ -19,7 +19,7 @@ object Config: TConfig
     Left = 8
     Top = 92
     Width = 457
-    Height = 276
+    Height = 280
     Align = alClient
     Caption = ' Interfaceeinstellungen '
     TabOrder = 0
@@ -27,7 +27,7 @@ object Config: TConfig
       Left = 10
       Top = 23
       Width = 437
-      Height = 150
+      Height = 154
       Align = alClient
       ColCount = 6
       DefaultColWidth = 60
@@ -50,7 +50,7 @@ object Config: TConfig
     end
     object Panel7: TPanel
       Left = 2
-      Top = 173
+      Top = 177
       Width = 453
       Height = 101
       Align = alBottom
@@ -149,7 +149,7 @@ object Config: TConfig
       Left = 2
       Top = 23
       Width = 8
-      Height = 150
+      Height = 154
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 2
@@ -158,7 +158,7 @@ object Config: TConfig
       Left = 447
       Top = 23
       Width = 8
-      Height = 150
+      Height = 154
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 3
@@ -175,7 +175,7 @@ object Config: TConfig
   end
   object Panel1: TPanel
     Left = 0
-    Top = 376
+    Top = 380
     Width = 473
     Height = 41
     Align = alBottom
@@ -235,7 +235,7 @@ object Config: TConfig
     Left = 0
     Top = 92
     Width = 8
-    Height = 276
+    Height = 280
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 2
@@ -244,7 +244,7 @@ object Config: TConfig
     Left = 465
     Top = 92
     Width = 8
-    Height = 276
+    Height = 280
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
@@ -1107,7 +1107,7 @@ object Config: TConfig
   end
   object Panel6: TPanel
     Left = 0
-    Top = 368
+    Top = 372
     Width = 473
     Height = 8
     Align = alBottom
@@ -1133,6 +1133,13 @@ object Config: TConfig
     Accuracy = 0
     Enabled = False
     Left = 432
+    Top = 48
+  end
+  object startuptimer: TTimer
+    Enabled = False
+    Interval = 2500
+    OnTimer = startuptimerTimer
+    Left = 336
     Top = 48
   end
 end

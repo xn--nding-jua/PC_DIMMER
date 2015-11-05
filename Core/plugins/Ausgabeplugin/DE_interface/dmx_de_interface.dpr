@@ -25,7 +25,7 @@ uses
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
-  SetProcessAffinityMask(GetCurrentProcess, 1); // 1=CPU0 , 2=CPU1
+//  SetProcessAffinityMask(GetCurrentProcess, 1); // 1=CPU0 , 2=CPU1
 
   Application.CreateForm(TConfig, Config);
   Application.CreateForm(Ttimingform, timingform);
@@ -34,8 +34,7 @@ end;
 
 procedure DLLStart;stdcall;
 begin
-  config.startup;
-  config.SearchForInterfaces;
+  config.startuptimer.Enabled:=true; // waits 2.5 Seconds and initializes the interface
 end;
 
 function DLLDestroy:boolean;stdcall;
@@ -85,7 +84,7 @@ end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v6.0');
+  Result := PChar('v6.1');
 end;
 
 procedure DLLConfigure;stdcall;
