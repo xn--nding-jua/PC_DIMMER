@@ -1144,7 +1144,7 @@
   Befehlssystem[12].Steuerung[i].StringArgCount:=0;
   Befehlssystem[12].Steuerung[i].GUIDArgCount:=0;
 
-  setlength(Befehlssystem[13].Steuerung, 5);
+  setlength(Befehlssystem[13].Steuerung, 10);
   Befehlssystem[13].Programmteil:=_('Knotensteuerung');
   Befehlssystem[13].ProgrammteilGUID:=StringToGuid('{08B2E52A-6D8B-4821-9CE1-BAC59AADADE3}');
   i:=0;
@@ -1169,6 +1169,27 @@
   Befehlssystem[13].Steuerung[i].StringArgCount:=0;
   Befehlssystem[13].Steuerung[i].GUIDArgCount:=0;
   i:=i+1;
+  Befehlssystem[13].Steuerung[i].Bezeichnung:=_('Knotenausdehnung auf Wert setzen');
+  Befehlssystem[13].Steuerung[i].GUID:=StringToGuid('{A087A916-9BE5-4934-8C20-4A6BEA139334}');
+  Befehlssystem[13].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[13].Steuerung[i].IntegerArgCount:=2;
+  Befehlssystem[13].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[13].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[13].Steuerung[i].Bezeichnung:=_('Knotenkontrast auf Wert setzen');
+  Befehlssystem[13].Steuerung[i].GUID:=StringToGuid('{AFD5D84D-FC0E-4F58-B4FD-81E19B56F046}');
+  Befehlssystem[13].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[13].Steuerung[i].IntegerArgCount:=2;
+  Befehlssystem[13].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[13].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[13].Steuerung[i].Bezeichnung:=_('Knoteneinblendzeit auf Wert setzen');
+  Befehlssystem[13].Steuerung[i].GUID:=StringToGuid('{EC9C7E67-BFBD-4881-952D-0BC7A25F92CA}');
+  Befehlssystem[13].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[13].Steuerung[i].IntegerArgCount:=2;
+  Befehlssystem[13].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[13].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
   Befehlssystem[13].Steuerung[i].Bezeichnung:=_('Knotenposition X auf Eingangswert');
   Befehlssystem[13].Steuerung[i].GUID:=StringToGuid('{09FB6A0E-6B1A-4D21-8ECB-367C298C2ECF}');
   Befehlssystem[13].Steuerung[i].InputValueOnly:=false;
@@ -1180,6 +1201,20 @@
   Befehlssystem[13].Steuerung[i].GUID:=StringToGuid('{0E6A9294-122B-4FD5-BF09-761BEACEA9F0}');
   Befehlssystem[13].Steuerung[i].InputValueOnly:=false;
   Befehlssystem[13].Steuerung[i].IntegerArgCount:=2;
+  Befehlssystem[13].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[13].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[13].Steuerung[i].Bezeichnung:=_('Knotenausdehnung auf Eingangswert');
+  Befehlssystem[13].Steuerung[i].GUID:=StringToGuid('{F0017504-D71A-425C-86C2-B6CCD75E0E72}');
+  Befehlssystem[13].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[13].Steuerung[i].IntegerArgCount:=1;
+  Befehlssystem[13].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[13].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[13].Steuerung[i].Bezeichnung:=_('Knotenkontrast auf Eingangswert');
+  Befehlssystem[13].Steuerung[i].GUID:=StringToGuid('{48E09B6B-95B0-4419-817F-92FC6B17F834}');
+  Befehlssystem[13].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[13].Steuerung[i].IntegerArgCount:=1;
   Befehlssystem[13].Steuerung[i].StringArgCount:=0;
   Befehlssystem[13].Steuerung[i].GUIDArgCount:=0;
 

@@ -5527,6 +5527,14 @@ begin
     begin
    	  Filestream.WriteBuffer(mainform.NodeControlSets[i].ID,sizeof(mainform.NodeControlSets[i].ID));
    	  Filestream.WriteBuffer(mainform.NodeControlSets[i].Name,sizeof(mainform.NodeControlSets[i].Name));
+   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].stretching,sizeof(mainform.NodeControlSets[i].stretching));
+   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].contrast,sizeof(mainform.NodeControlSets[i].contrast));
+   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].fadetime,sizeof(mainform.NodeControlSets[i].fadetime));
+   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].ChangeRGB,sizeof(mainform.NodeControlSets[i].ChangeRGB));
+   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].ChangeA,sizeof(mainform.NodeControlSets[i].ChangeA));
+   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].ChangeW,sizeof(mainform.NodeControlSets[i].ChangeW));
+   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].ChangeDimmer,sizeof(mainform.NodeControlSets[i].ChangeDimmer));
+   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].StageViewScaling,sizeof(mainform.NodeControlSets[i].StageViewScaling));
 
       count2:=length(mainform.NodeControlSets[i].NodeControlNodes);
    	  Filestream.WriteBuffer(count2,sizeof(count2));
@@ -9763,6 +9771,14 @@ begin
       begin
      	  Filestream.ReadBuffer(mainform.NodeControlSets[i].ID,sizeof(mainform.NodeControlSets[i].ID));
      	  Filestream.ReadBuffer(mainform.NodeControlSets[i].Name,sizeof(mainform.NodeControlSets[i].Name));
+     	  Filestream.ReadBuffer(mainform.NodeControlSets[i].stretching,sizeof(mainform.NodeControlSets[i].stretching));
+     	  Filestream.ReadBuffer(mainform.NodeControlSets[i].contrast,sizeof(mainform.NodeControlSets[i].contrast));
+     	  Filestream.ReadBuffer(mainform.NodeControlSets[i].fadetime,sizeof(mainform.NodeControlSets[i].fadetime));
+   	    Filestream.ReadBuffer(mainform.NodeControlSets[i].ChangeRGB,sizeof(mainform.NodeControlSets[i].ChangeRGB));
+   	    Filestream.ReadBuffer(mainform.NodeControlSets[i].ChangeA,sizeof(mainform.NodeControlSets[i].ChangeA));
+     	  Filestream.ReadBuffer(mainform.NodeControlSets[i].ChangeW,sizeof(mainform.NodeControlSets[i].ChangeW));
+     	  Filestream.ReadBuffer(mainform.NodeControlSets[i].ChangeDimmer,sizeof(mainform.NodeControlSets[i].ChangeDimmer));
+     	  Filestream.ReadBuffer(mainform.NodeControlSets[i].StageViewScaling,sizeof(mainform.NodeControlSets[i].StageViewScaling));
 
      	  Filestream.ReadBuffer(count2,sizeof(count2));
         setlength(mainform.NodeControlSets[i].NodeControlNodes, count2);
@@ -14212,6 +14228,8 @@ begin
       dynguiform.Show;
     if LReg.ReadWriteBool('Showing PartyModul', false) then
       pmmform.Show;
+    if LReg.ReadWriteBool('Showing NodeControl', false) then
+      nodecontrolform.Show;
     LReg.CloseKey;
   end;
   LReg.Free;
@@ -17228,6 +17246,7 @@ begin
         if (AktuellerBefehl.ArgInteger[1]<length(mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes)) then
         begin
           mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes[AktuellerBefehl.ArgInteger[1]].X:=AktuellerBefehl.ArgInteger[2];
+          nodecontrolform.PleaseRecalculateDistances:=true;
         end;
       end;
       exit;
@@ -17239,29 +17258,82 @@ begin
         if (AktuellerBefehl.ArgInteger[1]<length(mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes)) then
         begin
           mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes[AktuellerBefehl.ArgInteger[1]].Y:=AktuellerBefehl.ArgInteger[2];
+          nodecontrolform.PleaseRecalculateDistances:=true;
         end;
       end;
       exit;
     end;
     if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[3].GUID) then
+    begin // Knotenausdehnung auf Wert setzen
+      if (AktuellerBefehl.ArgInteger[0]<length(mainform.NodeControlSets)) then
+      begin
+        mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].stretching:=AktuellerBefehl.ArgInteger[1];
+        nodecontrolform.CheckButtons;
+        nodecontrolform.PleaseRecalculateDistances:=true;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[4].GUID) then
+    begin // Knotenkontrast auf Wert setzen
+      if (AktuellerBefehl.ArgInteger[0]<length(mainform.NodeControlSets)) then
+      begin
+        mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].contrast:=AktuellerBefehl.ArgInteger[1];
+        nodecontrolform.CheckButtons;
+        nodecontrolform.PleaseRecalculateDistances:=true;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[5].GUID) then
+    begin // Knotenfadezeit auf Wert setzen
+      if (AktuellerBefehl.ArgInteger[0]<length(mainform.NodeControlSets)) then
+      begin
+        mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].fadetime:=AktuellerBefehl.ArgInteger[1];
+        nodecontrolform.CheckButtons;
+        nodecontrolform.PleaseRecalculateDistances:=true;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[6].GUID) then
     begin // Knotenposition X auf Eingangswert
       if (AktuellerBefehl.ArgInteger[0]<length(mainform.NodeControlSets)) then
       begin
         if (AktuellerBefehl.ArgInteger[1]<length(mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes)) then
         begin
           mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes[AktuellerBefehl.ArgInteger[1]].X:=round((Value/255)*nodecontrolform.PaintBox1.Width);
+          nodecontrolform.PleaseRecalculateDistances:=true;
         end;
       end;
       exit;
     end;
-    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[4].GUID) then
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[7].GUID) then
     begin // Knotenposition Y auf Eingangswert
       if (AktuellerBefehl.ArgInteger[0]<length(mainform.NodeControlSets)) then
       begin
         if (AktuellerBefehl.ArgInteger[1]<length(mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes)) then
         begin
           mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes[AktuellerBefehl.ArgInteger[1]].Y:=round((Value/255)*nodecontrolform.PaintBox1.Height);
+          nodecontrolform.PleaseRecalculateDistances:=true;
         end;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[8].GUID) then
+    begin // Knotenausdehnung auf Eingangswert
+      if (AktuellerBefehl.ArgInteger[0]<length(mainform.NodeControlSets)) then
+      begin
+        mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].stretching:=round((Value/255)*254000);
+        nodecontrolform.CheckButtons;
+        nodecontrolform.PleaseRecalculateDistances:=true;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[9].GUID) then
+    begin // Knotenkontrast auf Eingangswert
+      if (AktuellerBefehl.ArgInteger[0]<length(mainform.NodeControlSets)) then
+      begin
+        mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].contrast:=round((Value/255)*50);
+        nodecontrolform.CheckButtons;
+        nodecontrolform.PleaseRecalculateDistances:=true;
       end;
       exit;
     end;
@@ -20672,6 +20744,8 @@ begin
 
   nodecontrolform.Top:=0;
   nodecontrolform.Left:=0;
+  nodecontrolform.ClientWidth:=761;
+  nodecontrolform.ClientHeight:=546;
 end;
 
 procedure TMainform.AutobackuptimerTimer(Sender: TObject);

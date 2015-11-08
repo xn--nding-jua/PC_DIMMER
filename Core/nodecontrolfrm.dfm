@@ -1,8 +1,8 @@
 object nodecontrolform: Tnodecontrolform
-  Left = 697
-  Top = 190
-  Width = 1042
-  Height = 645
+  Left = 601
+  Top = 205
+  Width = 777
+  Height = 585
   Caption = 'Knoten-Steuerung'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -10,6 +10,141 @@ object nodecontrolform: Tnodecontrolform
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  Icon.Data = {
+    0000010001002020000001002000A81000001600000028000000200000004000
+    0000010020000000000000000000130B0000130B000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00002E303143685C568475645A95605753781E262B3200000000000000000000
+    0000000000002615112B4B6065744E7C89944E6F778638333149000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000272625405838
+    24A8814726DA945029EF965128F4914F29EC794527D352392B941A1211250E0E
+    121D1C56668C108BB2D010ABDAEB0EB3E5F40FB0E0F00F9BC6DC166B84AE2832
+    3648000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000E1518084431268B945029F9A851
+    1FFFA44F1EFF9F4B1AFFA04D1CFFA35020FFA75322FFA54A16FF936B4EE641AA
+    C2E200C5FFFF00CAFFFF00C4FFFF00C1FFFF00C1FFFF00C8FFFF00CBFFFF06B1
+    E3FD1E5868972118150E00000000000000000000000000000000000000000000
+    000000000000000000000000000001090F014A322596A55425FFA75524FFC285
+    59FFC3885DFFC18357FFA65A2DFF9E4E20FF9D4514FDA7744FFBCBF3ECFFC2FF
+    FFFF3BCEFCFA00BBFDFD00BEFDFF1CC7FEFF3CCFFEFF00BAFDFF21C7FEFF39D6
+    FFFF03C7FAFF195F74A518030007000000000000000000000000000000000000
+    00000000000000000000000000002C221E63A15529FFA34F1FFFA3582BFFD29D
+    73FFAE6539FFC78C62FFBD7E53FF9B4616FDA1592CFBBFE2DCFCC3FCFFFFCCF4
+    F2FFB6EFF4FD18C3FCFB00BBFDFD1AC5FEFF97EBFFFF5AD8FEFF91E9FFFF54D5
+    FEFF00C1FFFF06C4F6FF1A3D4773000000000000000000000000000000000000
+    00000000000000000000060B0F10774529DAA95322FF9D4E20FFA35729FFD19B
+    71FFBF8055FFCC946AFFAC6538FD9A400EFDB1A38CFDC5FFFFFFC2F2F3FFC1F3
+    F3FFD2F8F2FF72DDF8FC00BCFEFD00BCFDFC70DFFEFE74E1FEFF8FE9FFFF14C4
+    FDFF00BDFDFF00C9FFFF1198C0E61C0C0A190000000000000000000000000000
+    000000000000000000002F2824549D5226FFA15021FF9E4E20FFA3572AFFD39E
+    75FFB8764BFFCF996DFFAF6537FF9C4F21FEBDDCD5FEC4FBFDFFC2F3F3FFC2F3
+    F3FFCAF5F3FFAFEEF4FD14C2FDFE00BAFDFE2BCBFEFCADF2FFFF68DDFEFF00BC
+    FDFF00BFFDFF00C0FFFF05C3FCFF19333C660000000000000000000000000000
+    000000000000000000004630248AA75525FF9F5022FF9F4F21FFA15224FFB775
+    48FDBD7E51FEB67245FFA04B1BFFA46A45FDC2F2F0FEC3F7F8FFC2F3F3FFC2F3
+    F3FFC5F4F3FFC4F4F3FE2ECBFBFD00BCFDFF03BFFDFF6DDFFEFF2ACBFDFE00BD
+    FDFF00BFFDFF00BFFEFF00C9FFFF1B5F729B0000000000000000000000000000
+    00000000000000000000573927A1A85422FF9F5022FF9D4F24FE9B4C24FD9846
+    1FFD97471FFF9A491EFF9C4615FFA97A58FCC3F7F9FEC2F6F6FFC2F3F3FFC2F3
+    F3FFC4F3F3FFCAF5F3FE40D0FAFC00BCFEFF00BEFDFF00B9FDFF00BBFDFE00BC
+    FDFD00BEFDFE00BFFEFF00C8FFFF197893B20000000000000000000000000000
+    000000000000000000005237279AA35025FF9B4C24FDA4561DFAAE6117FCB266
+    18FFAF6217FDA4561EFD994318FFA37255FDC3F6F8FEC3F6F6FFC2F3F3FFC2F3
+    F3FFC5F4F3FFCAF5F3FE35CCFBFD00B9FDFF09C2FDFD1CCAFEFC28CEFEFF1ECB
+    FEFC0CC4FDFA00BCFEFC00C6FFFF1A718CAC0000000000000000000000000000
+    0000000000000000000040282470B2611BFFCC840AFADF9901FDE5A000FEE6A1
+    00FFE5A000FEDF9A01FDCB7F02FCB17332FBBCE9E8FDC2F8FBFFC2F3F3FFC2F3
+    F3FFC7F4F3FFBAF0F3FE39D1FDFB49DEFFFC74EFFFFD81F4FFFE84F5FFFF81F4
+    FFFE78F0FFFD56E3FFFA1FD2FEFF104555810000000000000000000000000000
+    0000000000001C131E0A3D5733A1DBA102FFECA400FFE5A000FFE39E00FFE39E
+    00FFE39E00FFE5A000FFE8A200FFE39B03FDD6DCAAFAC0FAFFFEC1F3F3FFC2F3
+    F3FFC4F2F2FEB7F2F8FC7CF2FFFE86F7FFFF83F5FFFF80F3FFFF7FF3FFFF80F3
+    FFFF82F4FFFF87F7FFFF86FAFEFF6D7D7FAE1C12110F00000000000000000000
+    00000B0006032B51369C2AB75FFF9DA91EFAF29C00FFE29E00FFE39E00FFE39E
+    00FFE39E00FFE39E00FFE39E00FFE39900FFF0BB40FCE0FDFAFBBEF3F7FFBEF2
+    F3FFDCF7F9FCAFF7FFFD7AF4FFFF7FF3FFFF7FF3FFFF7FF3FFFF7FF3FFFF7FF3
+    FFFF7FF3FFFF74F1FFFFAEFAFFFAFFFFFEFF7B7D7CAC00000007000000000000
+    00001D29215E36AF5AFF29B55CFF3EAE4CFBD1A007FCF19D00FFE29E00FFE39E
+    00FFE39E00FFE39E00FFE39E00FFE39D00FFE39A00FFF6DB96FBD0FDFFFDD0F6
+    F6FED5FBFFFE7FF3FFFF7EF3FFFF7FF3FFFF7FF3FFFF7FF3FFFF7FF3FFFF80F3
+    FFFF76F3FFFF86F4FFFCEAFDFFFAFFFFFFFFF6F6F6FF4040406E000000000800
+    040E317C47CE32BD5CFF31B057FF25B15DFD4FAD40FCD6A005FDF29D00FFE59E
+    00FFE39E00FFE39E00FFE39E00FFE39C00FFE09500FFED9B00FEF4DE94F9C7FE
+    FFFB83F6FFFF70F2FFFF7CF3FFFF7FF3FFFF7FF3FFFF7FF3FFFF7EF3FFFF76F2
+    FFFF85F4FFFDDDFDFFFBFFFFFFFDFFFFFFFFFFFFFFFFB4B4B4DA050505193037
+    325231A253FB30B659FF2EAE52FF2EAF52FE22B058FD41AD42FDACA418FCE99E
+    00FEF19D00FFEF9C00FFF19800FFF5A30DFEFAC253FEDFD692FF91E0AFF9C5E3
+    F8F7CBF5FDFCB2FCFFFC88F8FFFD77F6FFFF77F3FFFF75F3FFFF7AF2FFFEA1F6
+    FFFCE7FBFDFDFFFBFBFDFFFFFFFEFBFBFBFFFFFFFFFFECECECFE404040675273
+    5C8F2DAE55FF2EB153FF3AB76BFF4FC697FF4AC18BFE37BB7CFF27B057FE53AD
+    3EFC8CA621FCABA011FB9EBD55FC95ECD1FE6CFAFFFE1BF5FFFF3FF9FFFDEED0
+    F4FDE5C0EFFDF0D9F5FDE2E4F9FCABE7FAFAA5F7FFFCBBF9FFFCDEFCFFFCFFFF
+    FFFEEAE5E5FFCECDCDFFF7F7F7FFC8C8C8FFF4F4F4FFFFFFFFFF838383A35683
+    64A22AAF51FF34B45EFF57CAA6FF42BC7CFF50C699FF56CAA3FF2DAE53FF27B0
+    5AFF25AD54FE0ED0A9FB00F3FFFE00F1FFFF00EDFFFF00ECFFFF5AF8FFFBF5D9
+    F6FCD7B7EDFFD8BAEEFFDBBAEEFFDFBBEFFDEFDAF6FCFFFFFFFEFFFFFFFFFFFF
+    FFFFD8D8D8FFC7C7C7FFE2E2E2FFC3C3C3FFE6E6E6FFFFFFFFFFA1A1A1B4557A
+    60982AAD4FFF3CB96FFF54C8A1FF2FAF53FF4BC28DFF48BF87FF2FAF54FF34AC
+    4BFF1BC897FC00F3FFFE00F0FFFF00EEFFFF00EEFFFF00EDFFFF54F7FFFCF2D7
+    F5FDD8BAEEFFDABEEFFFDABEEFFFDABDEFFFD8B8EEFEEEE1F8FCFFFFFFFEF9F9
+    F9FFD3D3D3FFDEDEDEFFC7C7C7FFDEDEDEFFD8D8D8FFFEFEFEFF909090AB3F4C
+    43692FA752FF33B75FFF58CBA7FF41BB78FF48C088FF43BD7EFD30AC4BFE2AB5
+    65FD03E9EDFE00F1FFFF00EEFFFF00EEFFFF00EEFFFF00EDFFFF29F6FFFCDDD0
+    F3FCDCBAEEFFDABEEFFFDABEEFFFDABEEFFFD9BBEFFFDBC1F0FDFCF8FFFDF0F1
+    EFFFD5D5D5FFEFEFEFFFC8C8C8FFF4F4F4FFD8D8D8FFF0F0F0FF5858587E0C08
+    0A1E328B4DE02FB957FF3BB76BFF50C598FF4DC38FFF34B360FD32AB49FE18CB
+    A0FD00F3FFFE00EEFFFF00EEFFFF00EEFFFF00EDFFFF00F6FFFF03D0FCFCB5A3
+    F0FBE5C5EFFFD9BDEFFFDABEEFFFDABEEFFFDABEEFFFD8B9EEFEEDDEF8FDFCFD
+    FCFEF9F9F9FDFEFEFEFFF8F8F8FFFFFFFFFFFEFEFEFFCACACAEA1111112D0000
+    00002B49348634B95CFF2DB053FF2DAE52FF2EAE51FF2FAF55FE31AD50FC0BDB
+    CAFC00F2FFFF00EEFFFF00EEFFFF00EEFFFF00EFFFFF00FFFFFE076AF1FD6947
+    E8FDE8CBF0FEDCBFEFFFDABEEFFFDABEEFFFDABEEFFFD8BBEEFFE2CDF2FCFFFF
+    FFFCFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF67676796000000000000
+    000013050E11317545CB31BD5CFF2FB157FF30B057FF31B056FF2EB057FB04E3
+    DEFC00F1FFFF00EEFFFF00EEFFFF00EEFFFF00FFFFFF0AB4F8FD2315E6FE2010
+    E5FE9E88EDFDECCEF0FFDBBFEFFFDABEEFFFDABEEFFFD9BBEEFFDEC6F1FCFDFD
+    FFFBFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFA9A9A9D70404041B000000000000
+    0000000000002B222727367C4BCC31B85AFF30B959FF31B255FF2EB057FC03E3
+    E0FB00F0FFFF00F0FFFF00F8FFFF00FFFFFE09BBF9FD2120E8FD2510E5FF2118
+    E6FF2417E6FDA38CEDFDEACDF0FEE4C7EFFFDCC0EFFFD9BCEEFFDEC5F1FBFDFC
+    FFFAFFFFFFFFFFFFFFFFFFFFFFFFABABABD52222223100000000000000000000
+    00000000000000000000281B241830603E94339450EA33B359FF33B757FF09EA
+    D5FF00FFFFFE00F9FFFE04DBFCFD1281F3FC2418E6FE311EE5FF302AE7FF251A
+    E6FF2E27E7FF251CE6FE7462EBFCC8AEEFFDE3C7F0FEE6C7EEFEF0D8FDFFFFFF
+    FFFFFAFAFAFFCECECEEE7373739C1919191F0000000000000000000000000000
+    0000000000000000000000000000000000002E3D342C2B45326E2C562C951D81
+    8ED7118AFDFF175EF0FB222AE9FC280CE4FE200EE5FE575CE8FE5B5FE9FE1F12
+    E5FD7581EAFF312AE7FE170CE5FE2F24E7FC5C4CE9FB816CF6FF8A7EB1DC7879
+    72985C5C5C725A5A5A3000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000001C0C
+    1F462E13D7FA280DEDFF2814E5FF261BE6FF1F12E6FF5457E8FF7986E9FF646B
+    E9FF717CEAFF271AE6FF261AE6FF2016E5FF1A0FECFF1E15E1FE0F1128560000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000B0B
+    000526226EA5291EF8FF251AE8FF261BE5FF1F12E6FF575BE8FF6B75E9FF4241
+    E7FF7986EAFF2E25E7FF2419E5FF261BE7FF281CFAFF27227DB60B0C01080000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00001213031A2B2492CB271CF7FF251AECFF1F13E5FF4E4FE8FF7683EAFF666F
+    E9FF6972E9FF281EE6FF2418EAFF271BF8FF2E28A0D8191A0A24000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000001B1C0B1D2B277AAE2A1FE1FF261AF6FF271BF0FF2D25ECFF2F27
+    ECFF2318EFFF261AF6FF2A1FE5FF292481B82727182700000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000262538572A2684B52A22B7DB2C22CFEB2C22
+    CFEB2A22BBDD252084B82827405F1A1C00040000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000000000000000000000000000191A00024B4B44467A788B747A79
+    8D754D4E4B4A0A0D000600000000000000000000000000000000000000000000
+    000000000000000000000000000000000000000000000000000000000000FF83
+    C1FFFE00007FF800001FF000000FF000000FE0000007E0000007E0000007E000
+    0007E0000007E0000007C0000003800000018000000100000000000000000000
+    0000000000000000000000000000000000008000000180000001C0000003E000
+    0007F800001FFF0000FFFF0000FFFF8001FFFFC003FFFFF007FFFFF81FFF}
   OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
@@ -21,16 +156,16 @@ object nodecontrolform: Tnodecontrolform
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 753
-    Height = 606
+    Width = 489
+    Height = 546
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     object PaintBox1: TPaintBox
       Left = 0
       Top = 0
-      Width = 753
-      Height = 528
+      Width = 489
+      Height = 320
       Align = alClient
       OnMouseDown = PaintBox1MouseDown
       OnMouseMove = PaintBox1MouseMove
@@ -195,129 +330,112 @@ object nodecontrolform: Tnodecontrolform
     end
     object Panel3: TPanel
       Left = 0
-      Top = 528
-      Width = 753
-      Height = 78
+      Top = 320
+      Width = 489
+      Height = 226
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 0
-      object GroupBox3: TGroupBox
+      object GroupBox2: TGroupBox
         Left = 8
         Top = 8
-        Width = 329
-        Height = 65
-        Caption = ' Detail-Einstellungen '
+        Width = 481
+        Height = 209
+        Caption = ' Individuelle Knoteneinstellungen '
         TabOrder = 0
-        object Label1: TLabel
-          Left = 8
-          Top = 20
-          Width = 63
-          Height = 13
-          Caption = 'Ausdehnung:'
+        Visible = False
+        object colorpicker: THSLRingPicker
+          Left = 24
+          Top = 16
+          Width = 193
+          Height = 185
+          RingPickerHintFormat = 'Hue: %h'
+          SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
+          TabOrder = 7
+          OnMouseMove = colorpickerMouseMove
         end
-        object Label2: TLabel
-          Left = 168
-          Top = 20
-          Width = 42
-          Height = 13
-          Caption = 'Kontrast:'
-        end
-        object narrowslider: TScrollBar
-          Left = 8
-          Top = 40
-          Width = 153
-          Height = 17
-          Max = 254000
-          PageSize = 0
-          Position = 128000
+        object amberslider: TVColorPicker
+          Left = 232
+          Top = 30
+          Width = 241
+          Height = 35
+          HintFormat = 'Value: %value'
+          Layout = lyHorizontal
+          SelectionIndicator = siRect
           TabOrder = 0
-          OnChange = narrowsliderChange
+          OnMouseMove = ambersliderMouseMove
+          Value = 0
+          SelectedColor = clBlack
         end
-        object contrastslider: TScrollBar
-          Left = 168
-          Top = 40
-          Width = 153
-          Height = 17
-          Max = 50
-          PageSize = 0
-          Position = 20
+        object whiteslider: TVColorPicker
+          Left = 232
+          Top = 86
+          Width = 241
+          Height = 35
+          HintFormat = 'Value: %value'
+          Layout = lyHorizontal
+          SelectionIndicator = siRect
           TabOrder = 1
-          OnChange = narrowsliderChange
+          OnMouseMove = whitesliderMouseMove
+          Value = 0
+          SelectedColor = clBlack
         end
-      end
-      object GroupBox4: TGroupBox
-        Left = 344
-        Top = 8
-        Width = 145
-        Height = 65
-        Caption = ' Fading-Einstellungen '
-        TabOrder = 1
-        object Label3: TLabel
-          Left = 88
-          Top = 40
-          Width = 13
-          Height = 13
-          Caption = 'ms'
-        end
-        object fadetimemsedit: TEdit
-          Left = 8
-          Top = 36
-          Width = 73
-          Height = 21
-          MaxLength = 4
-          TabOrder = 0
-          Text = '75'
-        end
-      end
-      object GroupBox5: TGroupBox
-        Left = 496
-        Top = 8
-        Width = 257
-        Height = 65
-        Caption = ' Globale Einstellungen f'#252'r alle Knoten '
-        TabOrder = 2
-        object setrgbcheckbox: TCheckBox
-          Left = 8
-          Top = 24
-          Width = 105
+        object dimmerslider: TScrollBar
+          Left = 232
+          Top = 144
+          Width = 241
           Height = 17
-          Caption = 'Ver'#228'ndere RGB'
+          Max = 255
+          PageSize = 0
+          TabOrder = 2
+          OnChange = dimmersliderChange
+        end
+        object dimmercheckbox: TCheckBox
+          Left = 234
+          Top = 124
+          Width = 73
+          Height = 17
+          Caption = 'Dimmer'
+          TabOrder = 3
+          OnMouseUp = dimmercheckboxMouseUp
+        end
+        object whitecheckbox: TCheckBox
+          Left = 234
+          Top = 68
+          Width = 73
+          Height = 17
+          Caption = 'Wei'#223
+          TabOrder = 4
+          OnMouseUp = whitecheckboxMouseUp
+        end
+        object ambercheckbox: TCheckBox
+          Left = 234
+          Top = 12
+          Width = 73
+          Height = 17
+          Caption = 'Amber'
+          TabOrder = 5
+          OnMouseUp = ambercheckboxMouseUp
+        end
+        object rgbcheckbox: TCheckBox
+          Left = 8
+          Top = 16
+          Width = 49
+          Height = 17
+          Caption = 'RGB'
           Checked = True
           State = cbChecked
-          TabOrder = 0
-        end
-        object setambercheckbox: TCheckBox
-          Left = 8
-          Top = 40
-          Width = 105
-          Height = 17
-          Caption = 'Ver'#228'ndere Amber'
-          TabOrder = 1
-        end
-        object setdimmercheckbox: TCheckBox
-          Left = 128
-          Top = 40
-          Width = 121
-          Height = 17
-          Caption = 'Ver'#228'ndere Dimmer'
-          TabOrder = 2
-        end
-        object setwhitecheckbox: TCheckBox
-          Left = 128
-          Top = 24
-          Width = 121
-          Height = 17
-          Caption = 'Ver'#228'ndere Wei'#223
-          TabOrder = 3
+          TabOrder = 6
+          OnMouseUp = rgbcheckboxMouseUp
         end
       end
     end
   end
   object Panel2: TPanel
-    Left = 753
+    Left = 489
     Top = 0
-    Width = 273
-    Height = 606
+    Width = 272
+    Height = 546
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 1
@@ -325,23 +443,31 @@ object nodecontrolform: Tnodecontrolform
       Left = 8
       Top = 8
       Width = 257
-      Height = 249
+      Height = 433
       Caption = ' Steuerungsknoten '
       TabOrder = 0
+      object Label5: TLabel
+        Left = 8
+        Top = 256
+        Width = 76
+        Height = 13
+        Caption = 'Knotenauswahl:'
+      end
       object nodelist: TListBox
         Left = 8
-        Top = 88
+        Top = 272
         Width = 241
         Height = 121
         Enabled = False
         ItemHeight = 13
         TabOrder = 0
         OnClick = nodelistClick
+        OnKeyUp = nodelistKeyUp
         OnMouseUp = nodelistMouseUp
       end
       object addbtn: TPngBitBtn
         Left = 8
-        Top = 215
+        Top = 399
         Width = 38
         Height = 25
         Hint = 'F'#252'gt einen neuen Steuerungsknoten hinzu'
@@ -466,7 +592,7 @@ object nodecontrolform: Tnodecontrolform
       end
       object removebtn: TPngBitBtn
         Left = 51
-        Top = 215
+        Top = 399
         Width = 38
         Height = 25
         Hint = 'L'#246'scht den selektierten Steuerungsknoten'
@@ -593,7 +719,7 @@ object nodecontrolform: Tnodecontrolform
       end
       object renamebtn: TPngBitBtn
         Left = 95
-        Top = 215
+        Top = 399
         Width = 38
         Height = 25
         Hint = 'Nennt den selektierten Steuerungsknoten um'
@@ -1112,98 +1238,148 @@ object nodecontrolform: Tnodecontrolform
         TabOrder = 7
         OnChange = nodecontrolsetscomboboxChange
       end
+      object GroupBox3: TGroupBox
+        Left = 8
+        Top = 88
+        Width = 241
+        Height = 161
+        Caption = ' Detail-Einstellungen '
+        TabOrder = 8
+        object Label1: TLabel
+          Left = 8
+          Top = 20
+          Width = 63
+          Height = 13
+          Caption = 'Ausdehnung:'
+        end
+        object Label2: TLabel
+          Left = 8
+          Top = 68
+          Width = 42
+          Height = 13
+          Caption = 'Kontrast:'
+        end
+        object Label3: TLabel
+          Left = 96
+          Top = 136
+          Width = 13
+          Height = 13
+          Caption = 'ms'
+        end
+        object Label4: TLabel
+          Left = 8
+          Top = 116
+          Width = 60
+          Height = 13
+          Caption = 'Einblendzeit:'
+        end
+        object narrowslider: TScrollBar
+          Left = 8
+          Top = 40
+          Width = 225
+          Height = 17
+          Max = 254000
+          PageSize = 0
+          Position = 128000
+          TabOrder = 0
+          OnChange = narrowsliderChange
+        end
+        object contrastslider: TScrollBar
+          Left = 8
+          Top = 88
+          Width = 225
+          Height = 17
+          Max = 50
+          PageSize = 0
+          Position = 20
+          TabOrder = 1
+          OnChange = contrastsliderChange
+        end
+        object fadetimemsedit: TJvSpinEdit
+          Left = 8
+          Top = 133
+          Width = 81
+          Height = 21
+          CheckMinValue = True
+          Value = 75.000000000000000000
+          TabOrder = 2
+          OnChange = fadetimemseditChange
+        end
+      end
     end
-    object GroupBox2: TGroupBox
+    object GroupBox5: TGroupBox
       Left = 8
-      Top = 264
+      Top = 448
       Width = 257
-      Height = 337
-      Caption = ' Individuelle Knoteneinstellungen '
+      Height = 89
+      Caption = ' Einstellungen f'#252'r alle Knoten '
       TabOrder = 1
-      Visible = False
-      object amberslider: TVColorPicker
+      object Label6: TLabel
         Left = 8
-        Top = 198
-        Width = 241
-        Height = 35
-        HintFormat = 'Value: %value'
-        Layout = lyHorizontal
-        SelectionIndicator = siRect
-        TabOrder = 0
-        OnMouseMove = ambersliderMouseMove
-        Value = 0
-        SelectedColor = clBlack
+        Top = 63
+        Width = 88
+        Height = 13
+        Caption = 'B'#252'hnenskalierung:'
       end
-      object whiteslider: TVColorPicker
+      object setrgbcheckbox: TCheckBox
         Left = 8
-        Top = 254
-        Width = 241
-        Height = 35
-        HintFormat = 'Value: %value'
-        Layout = lyHorizontal
-        SelectionIndicator = siRect
-        TabOrder = 1
-        OnMouseMove = whitesliderMouseMove
-        Value = 0
-        SelectedColor = clBlack
-      end
-      object dimmerslider: TScrollBar
-        Left = 8
-        Top = 312
-        Width = 241
+        Top = 24
+        Width = 105
         Height = 17
-        Max = 255
-        PageSize = 0
-        TabOrder = 2
-        OnChange = dimmersliderChange
-      end
-      object colorpicker: THSLRingPicker
-        Left = 40
-        Top = 16
-        Width = 177
-        Height = 169
-        RingPickerHintFormat = 'Hue: %h'
-        SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
-        TabOrder = 3
-        OnMouseMove = colorpickerMouseMove
-      end
-      object dimmercheckbox: TCheckBox
-        Left = 10
-        Top = 292
-        Width = 73
-        Height = 17
-        Caption = 'Dimmer'
-        TabOrder = 4
-        OnMouseUp = dimmercheckboxMouseUp
-      end
-      object whitecheckbox: TCheckBox
-        Left = 10
-        Top = 236
-        Width = 73
-        Height = 17
-        Caption = 'Wei'#223
-        TabOrder = 5
-        OnMouseUp = whitecheckboxMouseUp
-      end
-      object ambercheckbox: TCheckBox
-        Left = 10
-        Top = 180
-        Width = 73
-        Height = 17
-        Caption = 'Amber'
-        TabOrder = 6
-        OnMouseUp = ambercheckboxMouseUp
-      end
-      object rgbcheckbox: TCheckBox
-        Left = 8
-        Top = 16
-        Width = 49
-        Height = 17
-        Caption = 'RGB'
+        Caption = 'Ver'#228'ndere RGB'
         Checked = True
         State = cbChecked
-        TabOrder = 7
-        OnMouseUp = rgbcheckboxMouseUp
+        TabOrder = 0
+        OnClick = setrgbcheckboxClick
+      end
+      object setambercheckbox: TCheckBox
+        Left = 8
+        Top = 40
+        Width = 105
+        Height = 17
+        Caption = 'Ver'#228'ndere Amber'
+        TabOrder = 1
+        OnClick = setambercheckboxClick
+      end
+      object setdimmercheckbox: TCheckBox
+        Left = 128
+        Top = 40
+        Width = 121
+        Height = 17
+        Caption = 'Ver'#228'ndere Dimmer'
+        TabOrder = 2
+        OnClick = setdimmercheckboxClick
+      end
+      object setwhitecheckbox: TCheckBox
+        Left = 128
+        Top = 24
+        Width = 121
+        Height = 17
+        Caption = 'Ver'#228'ndere Wei'#223
+        TabOrder = 3
+        OnClick = setwhitecheckboxClick
+      end
+      object scalebox: TComboBox
+        Left = 128
+        Top = 60
+        Width = 65
+        Height = 21
+        Style = csDropDownList
+        ItemHeight = 13
+        ItemIndex = 5
+        TabOrder = 4
+        Text = '0,5x'
+        OnChange = scaleboxChange
+        Items.Strings = (
+          '1x'
+          '0,9x'
+          '0,8x'
+          '0,7x'
+          '0,6x'
+          '0,5x'
+          '0,4x'
+          '0,3x'
+          '0,2x')
       end
     end
   end

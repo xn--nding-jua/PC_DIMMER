@@ -1444,6 +1444,55 @@
     nousersetting:=false;
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[3].GUID) then
+  begin // Knotenausdehnung auf Wert setzen
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Knotenset:');
+    Arg1Combobox.Items.Clear;
+    for i:=0 to length(mainform.nodecontrolsets)-1 do
+      Arg1Combobox.items.add(mainform.nodecontrolsets[i].Name);
+    Arg1Edit.visible:=false;
+    Arg1Combobox.visible:=true;
+    Arg1Combobox.Itemindex:=AktuellerBefehl.ArgInteger[0]-1;
+
+    Optionen2Box.Visible:=true;
+    Arg2Label.Caption:=_('Ausdehnung [0..254000]:');
+    Arg2Edit.Text:=inttostr(AktuellerBefehl.ArgInteger[1]);
+
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[4].GUID) then
+  begin // Knotenkontrast auf Wert setzen
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Knotenset:');
+    Arg1Combobox.Items.Clear;
+    for i:=0 to length(mainform.nodecontrolsets)-1 do
+      Arg1Combobox.items.add(mainform.nodecontrolsets[i].Name);
+    Arg1Edit.visible:=false;
+    Arg1Combobox.visible:=true;
+    Arg1Combobox.Itemindex:=AktuellerBefehl.ArgInteger[0]-1;
+
+    Optionen2Box.Visible:=true;
+    Arg2Label.Caption:=_('Kontrast [0..50]:');
+    Arg2Edit.Text:=inttostr(AktuellerBefehl.ArgInteger[1]);
+
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[5].GUID) then
+  begin // Knotenblendzeit auf Wert setzen
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Knotenset:');
+    Arg1Combobox.Items.Clear;
+    for i:=0 to length(mainform.nodecontrolsets)-1 do
+      Arg1Combobox.items.add(mainform.nodecontrolsets[i].Name);
+    Arg1Edit.visible:=false;
+    Arg1Combobox.visible:=true;
+    Arg1Combobox.Itemindex:=AktuellerBefehl.ArgInteger[0]-1;
+
+    FillTimeBox(AktuellerBefehl.ArgInteger[length(AktuellerBefehl.ArgInteger)-1]);
+
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[6].GUID) then
   begin // Knotenposition X auf Eingangswert
     Optionen1Box.Visible:=true;
     Arg1Label.Caption:=_('Knotenset:');
@@ -1460,7 +1509,7 @@
 
     nousersetting:=false;
   end;
-  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[4].GUID) then
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[7].GUID) then
   begin // Knotenposition Y auf Eingangswert
     Optionen1Box.Visible:=true;
     Arg1Label.Caption:=_('Knotenset:');
@@ -1474,6 +1523,32 @@
     Optionen2Box.Visible:=true;
     Arg2Label.Caption:=_('Knoten:');
     Arg2Edit.Text:=inttostr(AktuellerBefehl.ArgInteger[1]);
+
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[8].GUID) then
+  begin // Knotenausdehnung auf Eingangswert
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Knotenset:');
+    Arg1Combobox.Items.Clear;
+    for i:=0 to length(mainform.nodecontrolsets)-1 do
+      Arg1Combobox.items.add(mainform.nodecontrolsets[i].Name);
+    Arg1Edit.visible:=false;
+    Arg1Combobox.visible:=true;
+    Arg1Combobox.Itemindex:=AktuellerBefehl.ArgInteger[0]-1;
+
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[9].GUID) then
+  begin // Knotenkontrast auf Eingangswert
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Knotenset:');
+    Arg1Combobox.Items.Clear;
+    for i:=0 to length(mainform.nodecontrolsets)-1 do
+      Arg1Combobox.items.add(mainform.nodecontrolsets[i].Name);
+    Arg1Edit.visible:=false;
+    Arg1Combobox.visible:=true;
+    Arg1Combobox.Itemindex:=AktuellerBefehl.ArgInteger[0]-1;
 
     nousersetting:=false;
   end;

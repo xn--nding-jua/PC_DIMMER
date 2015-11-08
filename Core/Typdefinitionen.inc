@@ -903,6 +903,11 @@
   TNodeControlSet = record
     ID:TGUID;
     Name:string[255];
+    stretching:integer;
+    contrast:integer;
+    fadetime:cardinal;
+    ChangeRGB, ChangeA, ChangeW, ChangeDimmer:boolean;
+    StageViewScaling:integer;
     NodeControlNodes:array of TNodeControlNode;
   end;
 
