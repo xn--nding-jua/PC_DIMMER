@@ -2541,6 +2541,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Width = 65
           Height = 25
           Caption = 'Drehen'
+          Enabled = False
           TabOrder = 2
           OnClick = RotateBtnClick
         end
@@ -2550,6 +2551,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Width = 41
           Height = 25
           Caption = #243
+          Enabled = False
           Font.Charset = SYMBOL_CHARSET
           Font.Color = clWindowText
           Font.Height = -19
@@ -2565,6 +2567,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Width = 41
           Height = 25
           Caption = #244
+          Enabled = False
           Font.Charset = SYMBOL_CHARSET
           Font.Color = clWindowText
           Font.Height = -19
