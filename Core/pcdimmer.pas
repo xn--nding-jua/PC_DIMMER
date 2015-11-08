@@ -12633,6 +12633,7 @@ var
 //  mididata:Variant;
   SzenenData:PTreeData;
   myID:TGUID;
+  IDFound:integer;
 begin
   with mainform do
   if StartupFinished and (not shutdown) then
@@ -12740,10 +12741,26 @@ begin
       // PluginScenes
       MSG_CREATEPLUGINSCENE:
       begin
-        setlength(pluginszenen, length(pluginszenen)+1);
-        pluginszenen[length(pluginszenen)-1].ID:=StringToGUID(string(Data1));
-        pluginszenen[length(pluginszenen)-1].Name:=string(Data2);
-        pluginszenen[length(pluginszenen)-1].Category:='';
+        IDFound:=-1;
+        for i:=0 to length(pluginszenen)-1 do
+        begin
+          if IsEqualGuid(pluginszenen[i].ID, StringToGUID(string(Data1))) then
+          begin
+            IDFound:=i;
+            break;
+          end;
+        end;
+
+        if IDFound=-1 then
+        begin
+          setlength(pluginszenen, length(pluginszenen)+1);
+          pluginszenen[length(pluginszenen)-1].ID:=StringToGUID(string(Data1));
+          pluginszenen[length(pluginszenen)-1].Name:=string(Data2);
+          pluginszenen[length(pluginszenen)-1].Category:='';
+        end else
+        begin
+          pluginszenen[i].Name:=string(Data2);
+        end;
 
         // Szenenverwaltung aktualisieren
         if szenenverwaltung_formarray[0].Showing then
