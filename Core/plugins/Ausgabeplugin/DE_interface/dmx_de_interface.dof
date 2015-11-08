@@ -105,13 +105,17 @@ HostApplication=
 Launcher=
 UseLauncher=0
 DebugCWD=
+[Language]
+ActiveLang=
+ProjectLang=
+RootDir=
 [Version Info]
 IncludeVerInfo=1
 AutoIncBuild=1
 MajorVer=6
-MinorVer=1
+MinorVer=2
 Release=0
-Build=244
+Build=246
 Debug=0
 PreRelease=0
 Special=0
@@ -122,13 +126,13 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=Digital Enlightenment (FX5) DMX-Output Plugin
-FileVersion=6.1.0.244
+FileVersion=6.2.0.246
 InternalName=
 LegalCopyright=(c) 2008-2015 by Dipl.-Ing. Christian Nöding
 LegalTrademarks=
 OriginalFilename=
 ProductName=
-ProductVersion=6.1.0.0
+ProductVersion=6.2.0.0
 Comments=http://www.pcdimmer.de
 [HistoryLists\hlDebugSourcePath]
 Count=1

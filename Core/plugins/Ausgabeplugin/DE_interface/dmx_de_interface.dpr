@@ -84,7 +84,7 @@ end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v6.1');
+  Result := PChar('v6.2');
 end;
 
 procedure DLLConfigure;stdcall;

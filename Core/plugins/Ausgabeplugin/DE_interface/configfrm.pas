@@ -713,6 +713,15 @@ begin
 
   startup;
   SearchForInterfaces;
+  RefreshList;
+
+  // Abschalten
+  CloseLink(SerialstringToSerial(Stringgrid1.Cells[0,Stringgrid1.Row]));
+  SetInterfaceMode(SerialstringToSerial(Stringgrid1.Cells[0,Stringgrid1.Row]),0);
+
+  // Neu verbinden
+  OpenLink(SerialstringToSerial(Stringgrid1.Cells[0,Stringgrid1.Row]),@DMXOutArray[GetPositionInInterfaceArray(Stringgrid1.Cells[0,Stringgrid1.Row])],@DMXInArray[GetPositionInInterfaceArray(Stringgrid1.Cells[0,Stringgrid1.Row])]);
+  SetInterfaceMode(SerialstringToSerial(Stringgrid1.Cells[0,Stringgrid1.Row]),combobox2.ItemIndex);
 end;
 
 end.
