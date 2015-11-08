@@ -410,6 +410,7 @@
     pictureispng:boolean;
     top: array of integer;
     left: array of integer;
+    zaxis: array of integer;
     OldPos:array of TPoint;
     bank: array of integer;
     selected: array of boolean;

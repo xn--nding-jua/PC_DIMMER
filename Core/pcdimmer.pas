@@ -418,7 +418,6 @@ type
     WebsitesRibbonSub: TdxBarSubItem;
     pcdimmerforumRibbonBtn: TdxBarButton;
     pcdimmerhomeRibbonBtn: TdxBarButton;
-    OnlineUpdateRibbonBtn: TdxBarLargeButton;
     SonstigesRibbonGroup: TdxBar;
     TippsRibbonBtn: TdxBarLargeButton;
     EinleitungRibbonBtn: TdxBarLargeButton;
@@ -611,6 +610,7 @@ type
     StopVisualizer: TdxBarButton;
     dxBarButton2: TdxBarButton;
     dxBarButton6: TdxBarButton;
+    NodeControlRibbonBtn: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -661,7 +661,6 @@ type
     procedure FWM_DropFiles(var Msg: TMessage); message WM_DROPFILES;
     procedure PluginMenuClick(Sender: TObject);
     procedure Startoptionen1Click(Sender: TObject);
-    procedure AufneueVersionprfen1Click(Sender: TObject);
     procedure Kanalnamendrucken1Click(Sender: TObject);
     procedure PowerButton1PowerbuttonPress(Sender: TObject);
     procedure Pluginsreaktivieren1Click(Sender: TObject);
@@ -723,7 +722,6 @@ type
     procedure TBItem13Click(Sender: TObject);
     procedure TBItem22Click(Sender: TObject);
     procedure TBItem23Click(Sender: TObject);
-    procedure TBItem24Click(Sender: TObject);
     procedure AkkuTimerTimer(Sender: TObject);
     procedure TBItem25Click(Sender: TObject);
     procedure ShortCutCheckerTimer(Sender: TObject);
@@ -732,7 +730,6 @@ type
     procedure TBItem31Click(Sender: TObject);
     procedure FormDeactivate(Sender: TObject);
     procedure FormActivate(Sender: TObject);
-    procedure TBItem33Click(Sender: TObject);
     procedure TBItem34Click(Sender: TObject);
     procedure SaveWindowPositions(Window:string);
     procedure TBItem35Click(Sender: TObject);
@@ -871,6 +868,7 @@ type
     procedure StopVisualizerClick(Sender: TObject);
     procedure dxBarButton2Click(Sender: TObject);
     procedure dxBarButton6Click(Sender: TObject);
+    procedure NodeControlRibbonBtnClick(Sender: TObject);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -918,7 +916,6 @@ type
     beat_next:boolean;
     fadesplash:boolean;
     fastsaved:boolean;
-    smallwindowstyle:boolean;
     autoload_project_file:string;
     LastEvent:string;
     commandline_changechannel:array[1..chan] of bool;
@@ -964,7 +961,6 @@ type
     procedure SplashVersioninfo(Text:string);
     procedure RetranslateProgram(language: string);
     function FilterTextForNetwork(Text: string):string;
-    procedure CheckForNewVersion;
 
     procedure DebugAdd(Text: string; Save: boolean = true; InitText: boolean = true);
     procedure DebugAddToLine(Text: string; Save: boolean = true);
@@ -976,6 +972,7 @@ type
     BeatEnabled:boolean;
     StartupFinished:boolean;
     BeginValueBackups:boolean;
+    smallwindowstyle:boolean;
 
     ScannerSyncTempArray:array[0..16] of TScannerCalibration;
     ScannerSyncTempArrayBackup:array[0..16] of TScannerCalibration;
@@ -1232,9 +1229,6 @@ type
     function MillisecondsToTime(ms:Integer):String;
     function MillisecondsToTimeShort(ms:Integer):String;
     function GetFileSize2(const FileName: String): Int64;
-    function GetWebFileSize(url: string):cardinal;
-    function GetWebFileSize2(url: string):cardinal;
-    function GetWebFile(const fileURL, DestFileName: String): boolean;
     function FileSize2String(filesize: cardinal):string;
     procedure DeSelectAllDevices;
     procedure DeSelectDeviceGroup(ID: TGUID);
@@ -1301,7 +1295,7 @@ uses
   preseteditorform, projekteigenschaftenfrm, ddfeditorfrm, accumessagefrm,
   ownmessagefrm, audioeffektplayerfrm,
   timecodeplayerfrm, schedulerfrm,
-  videoscreenfrm, kanaluebersichtfrm, recoveryfrm, webdownloadfrm, beatfrm,
+  videoscreenfrm, kanaluebersichtfrm, recoveryfrm, beatfrm,
   clockfrm, DimmerKernelQueue, textbuchfrm, scenenotfoundfrm,
   cuelistfrm, masterfrm, cdplayerfrm, reordergroupfrm, USBViewMain,
   splashscreen2frm, firststepsfrm, winlircfrm,
@@ -1315,7 +1309,8 @@ uses
   layerbezeichnungenfrm, scannersynchronisationfrm,
   videoscreensynchronisierenfrm, ambilight, pmm, touchscreenfrm,
   ddfeditorassistant, dynguifrm, audiomanagerfrm, ProgressScreenSmallFrm,
-  presetsceneeditorform, adddevicefrm, pcdUtils, pcdRegistry;
+  presetsceneeditorform, adddevicefrm, pcdUtils, pcdRegistry,
+  nodecontrolfrm;
 
 {$R *.DFM}
 
@@ -3247,8 +3242,6 @@ begin
     kanaluebersichtform.close;
   if codeeditorform.showing then
     codeeditorform.close;
-  if webdownloadform.showing then
-    webdownloadform.close;
   if addfunctionform.showing then
     addfunctionform.close;
   if clockform.showing then
@@ -3311,6 +3304,8 @@ begin
     audiomanagerform.close;
   if presetsceneeditor.showing then
     presetsceneeditor.close;
+  if nodecontrolform.showing then
+    nodecontrolform.close;
 
 
   // WORKAROUND FOR MEVP
@@ -3603,7 +3598,6 @@ begin
   layerbezeichnungenform.free;
   kanaluebersichtform.free;
   codeeditorform.free;
-  webdownloadform.free;
   addfunctionform.free;
   clockform.free;
   ProgressScreenSmall.free;
@@ -3635,6 +3629,7 @@ begin
   dynguiform.free;
   audiomanagerform.free;
   presetsceneeditor.free;
+  nodecontrolform.free;
 
   // Finito :)
 
@@ -12802,99 +12797,6 @@ begin
   end;
 end;
 
-procedure TMainform.AufneueVersionprfen1Click(Sender: TObject);
-var
-  ver1a, ver2a, ver3a, ver4a:integer;
-  ver1b, ver2b, ver3b, ver4b:integer;
-  onlineversion, localversion, updatefile, updatepage:string;
-begin
-{
-  // VARIANTE1 (über Updatetool)
-  if onlineupdate=nil then
-    onlineupdate:=Tonlineupdate.Create(onlineupdate);
-
-  onlineupdate.Label2.Caption:=GetFileVersion(paramstr(0));
-	onlineupdate.ShowModal;
-}
-
-  // VARIANTE2 (über Website)
-  try
-    webdownloadform.ListBox1.Items.Text:=webdownloadform.IdHTTP.Get('http://www.pcdimmer.de/onlineupdate.inf');
-  except
-    ShowMessage(_('Es besteht derzeit offenbar keine Verbindung mit dem Internet...'));
-    exit;
-  end;
-  onlineversion:=webdownloadform.ListBox1.items[0];
-  localversion:=GetFileVersion(paramstr(0));
-  updatefile:=webdownloadform.ListBox1.items[1];
-  updatepage:=webdownloadform.ListBox1.items[2];
-
-  // Versionen vergleichen
-  ver1a:=strtoint(copy(onlineversion, 1, pos('.', onlineversion)-1));
-  onlineversion:=copy(onlineversion, pos('.', onlineversion)+1, length(onlineversion));
-  ver2a:=strtoint(copy(onlineversion, 1, pos('.', onlineversion)-1));
-  onlineversion:=copy(onlineversion, pos('.', onlineversion)+1, length(onlineversion));
-  ver3a:=strtoint(copy(onlineversion, 1, pos('.', onlineversion)-1));
-  onlineversion:=copy(onlineversion, pos('.', onlineversion)+1, length(onlineversion));
-  ver4a:=strtoint(onlineversion);
-
-  ver1b:=strtoint(copy(localversion, 1, pos('.', localversion)-1));
-  localversion:=copy(localversion, pos('.', localversion)+1, length(localversion));
-  ver2b:=strtoint(copy(localversion, 1, pos('.', localversion)-1));
-  localversion:=copy(localversion, pos('.', localversion)+1, length(localversion));
-  ver3b:=strtoint(copy(localversion, 1, pos('.', localversion)-1));
-  localversion:=copy(localversion, pos('.', localversion)+1, length(localversion));
-  ver4b:=strtoint(localversion);
-
-  if (ver1a>ver1b) or
-     ((ver1a=ver1b) and (ver2a>ver2b)) or
-     ((ver1a=ver1b) and (ver2a=ver2b) and (ver3a>ver3b)) or
-     ((ver1a=ver1b) and (ver2a=ver2b) and (ver3a=ver3b) and (ver4a>ver4b)) then
-  begin
-    if messagedlg(_('Eine neuere PC_DIMMER-Version ist verfügbar') + '(v'+webdownloadform.ListBox1.items[0]+'). ' + _('Möchten Sie jetzt die PC_DIMMER-Updateseite besuchen?'), mtInformation,
-    [mbYes,mbNo],0)=mrYes then
-      shellexecute(application.handle,'open',PChar(updatepage),'','',SW_SHOWNORMAL);
-  end else
-  begin
-    showmessage(_('Ihre Version des PC_DIMMERs ist bereits auf dem aktuellen Stand.'));
-  end;
-
-{
-  // VARIANTE3 (über eigenes Downloadfenster)
-  webdownloadform.ListBox1.Items.Text:=webdownloadform.IdHTTP.Get('http://www.pcdimmer.de/onlineupdate.inf');
-  webdownloadform.onlineversionlbl.Caption:=webdownloadform.ListBox1.items[0];
-
-  webdownloadform.downloadfile:=webdownloadform.ListBox1.items[1];
-  with webdownloadform do
-  begin
-    Label2.Visible:=true;
-    Label4.Visible:=true;
-    localversionlbl.Visible:=true;
-    localversionlbl.Caption:=GetFileVersion(paramstr(0));
-    onlineversionlbl.Visible:=true;
-  end;
-
-  if webdownloadform.ShowModal=mrOK then
-  begin
-    If not DirectoryExists(mainform.workingdirectory+'Downloads') then
-      CreateDir(mainform.workingdirectory+'Downloads');
-
-    shellexecute(application.handle,'open',PChar(workingdirectory+'Downloads\'+ExtractFileName(UnixPathToDosPath(webdownloadform.downloadfile))),'',PChar(workingdirectory+'Downloads\'),SW_SHOWNORMAL);
-    MainForm.shutdown:=true;
-    Mainform.QuitWithoutConfirmation:=true;
-    MainForm.close;
-  end;
-
-  with webdownloadform do
-  begin
-    Label2.Visible:=false;
-    Label4.Visible:=false;
-    localversionlbl.Visible:=false;
-    onlineversionlbl.Visible:=false;
-  end;
-}
-end;
-
 procedure TMainform.Kanalnamendrucken1Click(Sender: TObject);
 var
   X1, X2: Integer;
@@ -14510,9 +14412,6 @@ begin
     tippoftheday.BringToFront;
   end;
 
-  // auf neue Version prüfen
-  if CheckUpdatesOnStartup then
-    CheckForNewVersion;
   StartupFinished:=true;
 end;
 
@@ -21041,17 +20940,6 @@ begin
   timecodeplayerform.show;
 end;
 
-procedure TMainform.TBItem24Click(Sender: TObject);
-begin
-  webdownloadform.downloadfile:='http://home.arcor.de/christian.noeding/www.pcdimmer.de/downloads/pc_dimmer_software/Demoprojekt.pcdproj';
-
-  if webdownloadform.ShowModal=mrOK then
-  begin
-    openproject(workingdirectory+'Downloads\Demoprojekt.pcdproj', false);
-    deletefile(workingdirectory+'Downloads\Demoprojekt.pcdproj');
-  end;
-end;
-
 procedure TMainform.AkkuTimerTimer(Sender: TObject);
 begin
   if (akkulevel<=15) and showakkuwarnings and (akkulevel<=akkuwarningmessageshownext) and (not netzbetrieb) and (akkulevel>-1) then
@@ -21165,72 +21053,6 @@ begin
   if fFile = INVALID_HANDLE_VALUE then exit;
   result := (wfd.nFileSizeHigh*(MAXDWORD))+wfd.nFileSizeLow;
   windows.FindClose(fFile);
-end;
-
-function Tmainform.GetWebFileSize(url: string):cardinal;
-var
-  hSession : hInternet;
-  hURL: HInternet;
-  dwindex,dwcodelen :dword;
-  dwcode:array[1..20] of char;
-begin
-  hSession := InternetOpen (PChar(ExtractFileName(Application.ExeName)), INTERNET_OPEN_TYPE_PRECONFIG, Nil, Nil, 0);
-  hURL := InternetOpenURL(hSession, PChar(URL), nil, 0, 0, 0);
-
-  dwIndex := 0;
-  dwCodeLen := 10;
-  HttpQueryInfo(hURL, HTTP_QUERY_CONTENT_LENGTH, @dwcode,  dwcodeLen, dwIndex);
-  Result := cardinal(strtoint(PCHAR(@dwcode)));
-  InternetCloseHandle(hURL);
-  InternetCloseHandle(hSession);
-end;
-
-function Tmainform.GetWebFileSize2(url: string):cardinal;
-begin
-  webdownloadform.IdHTTP.Head(url);
-  Result := webdownloadform.IdHTTP.Response.ContentLength;
-  webdownloadform.IdHTTP.Disconnect;
-end;
-
-function Tmainform.GetWebFile(const fileURL, DestFileName: String): boolean;
-{
-const
-  BufferSize = 1024;
-var
-  hSession, hURL: HInternet;
-  Buffer: array[1..BufferSize] of Byte;
-  BufferLen: DWORD;
-  f: File;
-  sAppName: string;
-  f1 : Integer;
-}
-begin
-{
-  result := false;
-  sAppName := ExtractFileName(Application.ExeName);
-  hSession := InternetOpen(PChar(sAppName), INTERNET_OPEN_TYPE_PRECONFIG, nil, nil, 0);
-  try
-    hURL := InternetOpenURL(hSession, PChar(fileURL), nil, 0, INTERNET_FLAG_DONT_CACHE, 0);
-    try
-      AssignFile(f, DestFileName);
-      Rewrite(f,1);
-      repeat
-        InternetReadFile(hURL, @Buffer, SizeOf(Buffer), BufferLen);
-        BlockWrite(f, Buffer, BufferLen);
-      until BufferLen = 0;
-      CloseFile(f);
-      result := True;
-    finally
-      InternetCloseHandle(hURL);
-    end;
-  finally
-    InternetCloseHandle(hSession);
-  end;
-}
-  FileStream:=TFileStream.Create(DestFileName, fmCreate or fmShareDenyNone);
-  webdownloadform.IdHTTP.Get(fileURL,FileStream);
-  FileStream.Free;
-  Result:=true;
 end;
 
 function Tmainform.FileSize2String(filesize: cardinal):string;
@@ -21741,27 +21563,6 @@ begin
   end;
   if dynguiform.Showing then
     dynguiform.RefreshGoboList;
-end;
-
-procedure TMainform.TBItem33Click(Sender: TObject);
-begin
-  webdownloadform.downloadfile:='http://home.arcor.de/christian.noeding/www.pcdimmer.de/downloads/pc_dimmer_software/DDFs.pcdgzip';
-
-  if webdownloadform.ShowModal=mrOK then
-  begin
-    //Containerdatei entpacken
-		inprogress.Show;
-		inprogress.filename.Caption:=_('Entpacke Gerätedefinitionen...');
-		inprogress.ProgressBar1.Position:=0;
-    inprogress.ProgressBar2.Position:=0;
-	  inprogress.Refresh;
-    try
-      Compress.DecompressFile(workingdirectory+'Downloads\DDFs.pcdgzip',workingdirectory+'Devices\',true,true);
-    except
-    end;
-    inprogress.Hide;
-    ShowMessage(_('Die Gerätedefinitionen sind nun auf dem neuesten Stand.'));
-  end;
 end;
 
 procedure TMainform.TBItem34Click(Sender: TObject);
@@ -27171,7 +26972,6 @@ begin
 //  ReTranslateComponent(tippoftheday);
 //  ReTranslateComponent(videoscreenform);
   ReTranslateComponent(videoscreensynchronisierenform);
-  ReTranslateComponent(webdownloadform);
   ReTranslateComponent(winlircform);
   ReTranslateComponent(picturechangeform);
 
@@ -27341,95 +27141,6 @@ begin
     Optionenbox.frontspeaker.enabled:=false;
 end;
 
-procedure TMainform.CheckForNewVersion;
-var
-  ver1a, ver2a, ver3a, ver4a:integer;
-  ver1b, ver2b, ver3b, ver4b:integer;
-  onlineversion, localversion, updatefile, updatepage:string;
-begin
-{
-  // VARIANTE1 (über Updatetool)
-  if onlineupdate=nil then
-    onlineupdate:=Tonlineupdate.Create(onlineupdate);
-
-  onlineupdate.Label2.Caption:=GetFileVersion(paramstr(0));
-	onlineupdate.ShowModal;
-}
-
-  // VARIANTE2 (über Website)
-  try
-    webdownloadform.ListBox1.Items.Text:=webdownloadform.IdHTTP.Get('http://www.pcdimmer.de/onlineupdate.inf');
-  except
-    exit;
-  end;
-  onlineversion:=webdownloadform.ListBox1.items[0];
-  localversion:=GetFileVersion(paramstr(0));
-  updatefile:=webdownloadform.ListBox1.items[1];
-  updatepage:=webdownloadform.ListBox1.items[2];
-
-  // Versionen vergleichen
-  ver1a:=strtoint(copy(onlineversion, 1, pos('.', onlineversion)-1));
-  onlineversion:=copy(onlineversion, pos('.', onlineversion)+1, length(onlineversion));
-  ver2a:=strtoint(copy(onlineversion, 1, pos('.', onlineversion)-1));
-  onlineversion:=copy(onlineversion, pos('.', onlineversion)+1, length(onlineversion));
-  ver3a:=strtoint(copy(onlineversion, 1, pos('.', onlineversion)-1));
-  onlineversion:=copy(onlineversion, pos('.', onlineversion)+1, length(onlineversion));
-  ver4a:=strtoint(onlineversion);
-
-  ver1b:=strtoint(copy(localversion, 1, pos('.', localversion)-1));
-  localversion:=copy(localversion, pos('.', localversion)+1, length(localversion));
-  ver2b:=strtoint(copy(localversion, 1, pos('.', localversion)-1));
-  localversion:=copy(localversion, pos('.', localversion)+1, length(localversion));
-  ver3b:=strtoint(copy(localversion, 1, pos('.', localversion)-1));
-  localversion:=copy(localversion, pos('.', localversion)+1, length(localversion));
-  ver4b:=strtoint(localversion);
-
-  if (ver1a>ver1b) or
-     ((ver1a=ver1b) and (ver2a>ver2b)) or
-     ((ver1a=ver1b) and (ver2a=ver2b) and (ver3a>ver3b)) or
-     ((ver1a=ver1b) and (ver2a=ver2b) and (ver3a=ver3b) and (ver4a>ver4b)) then
-  begin
-    if messagedlg(_('Eine neuere PC_DIMMER-Version ist verfügbar') + '(v'+webdownloadform.ListBox1.items[0]+'). ' + _('Möchten Sie jetzt die PC_DIMMER-Updateseite besuchen?'), mtInformation,
-    [mbYes,mbNo],0)=mrYes then
-      shellexecute(application.handle,'open',PChar(updatepage),'','',SW_SHOWNORMAL);
-  end;
-
-{
-  // VARIANTE3 (über eigenes Downloadfenster)
-  webdownloadform.ListBox1.Items.Text:=webdownloadform.IdHTTP.Get('http://www.pcdimmer.de/onlineupdate.inf');
-  webdownloadform.onlineversionlbl.Caption:=webdownloadform.ListBox1.items[0];
-
-  webdownloadform.downloadfile:=webdownloadform.ListBox1.items[1];
-  with webdownloadform do
-  begin
-    Label2.Visible:=true;
-    Label4.Visible:=true;
-    localversionlbl.Visible:=true;
-    localversionlbl.Caption:=GetFileVersion(paramstr(0));
-    onlineversionlbl.Visible:=true;
-  end;
-
-  if webdownloadform.ShowModal=mrOK then
-  begin
-    If not DirectoryExists(mainform.workingdirectory+'Downloads') then
-      CreateDir(mainform.workingdirectory+'Downloads');
-
-    shellexecute(application.handle,'open',PChar(workingdirectory+'Downloads\'+ExtractFileName(UnixPathToDosPath(webdownloadform.downloadfile))),'',PChar(workingdirectory+'Downloads\'),SW_SHOWNORMAL);
-    MainForm.shutdown:=true;
-    Mainform.QuitWithoutConfirmation:=true;
-    MainForm.close;
-  end;
-
-  with webdownloadform do
-  begin
-    Label2.Visible:=false;
-    Label4.Visible:=false;
-    localversionlbl.Visible:=false;
-    onlineversionlbl.Visible:=false;
-  end;
-}
-end;
-
 procedure TMainform.dxBarButton24Click(Sender: TObject);
 begin
   ShellExecute(Handle, 'open', PChar('http://www.pcdimmer.de/bugtracker'), nil, nil, SW_SHOW);
@@ -27485,6 +27196,11 @@ procedure TMainform.dxBarButton6Click(Sender: TObject);
 begin
   RetranslateProgram('it');
 //  SendMSG(MSG_SETLANGUAGE, integer(0), 0);
+end;
+
+procedure TMainform.NodeControlRibbonBtnClick(Sender: TObject);
+begin
+  nodecontrolform.show;
 end;
 
 end.

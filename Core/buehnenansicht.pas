@@ -259,7 +259,7 @@ var
 
 implementation
 
-uses PCDIMMER, geraetesteuerungfrm, PngImageList;
+uses PCDIMMER, geraetesteuerungfrm, PngImageList, nodecontrolfrm;
 
 {$R *.dfm}
 
@@ -2278,7 +2278,7 @@ begin
 
   dorefresh:=false;
 
-  if grafischebuehnenansicht.Showing or ((mainform.pagecontrol1.ActivePageIndex=0) and (mainform.Panel1.Visible)) then
+  if grafischebuehnenansicht.Showing or nodecontrolform.showing or ((mainform.pagecontrol1.ActivePageIndex=0) and (mainform.Panel1.Visible)) then
   begin
     if ((Puffer1.Width<mainform.Paintbox1.Width) or (Puffer2.Width<mainform.Paintbox1.Width)) then
     begin
@@ -2341,7 +2341,16 @@ begin
     DrawGrafischeBuehnenansicht(Puffer2.Canvas);
 
     if grafischebuehnenansicht.Showing then
+    begin
       BitBlt(Paintbox1.Canvas.Handle,0,0,Paintbox1.Width,Paintbox1.Height,Puffer2.Canvas.Handle,0,0,SRCCOPY);
+    end;
+    
+    if nodecontrolform.Showing then
+    begin
+      nodecontrolform.StageviewBuffer.Width:=Puffer2.Width;
+      nodecontrolform.StageviewBuffer.Height:=Puffer2.Height;
+      BitBlt(nodecontrolform.StageviewBuffer.Canvas.Handle,0,0,nodecontrolform.StageviewBuffer.Width,nodecontrolform.StageviewBuffer.Height,Puffer2.Canvas.Handle,0,0,SRCCOPY);
+    end;
 
     if (mainform.pagecontrol1.ActivePageIndex=0) and (mainform.panel1.Visible) then
     begin

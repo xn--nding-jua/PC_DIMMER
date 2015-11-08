@@ -131,11 +131,11 @@ begin
         end;
       end;
 
-	  // MajorVersion = 7 will not be released
+  	  // MajorVersion = 7 will not be released
 	  
       if (OsVinfo.dwMajorVersion > 6) then
       begin
-		// Windows 10.0 will have MajorVersion = 10 and MinorVersion = x
+		    // Windows 10.0 will have MajorVersion = 10 and MinorVersion = x
         tempstring:='Windows '+inttostr(OsVinfo.dwMajorVersion)+'.'+inttostr(OsVinfo.dwMinorVersion)
       end;
     end;

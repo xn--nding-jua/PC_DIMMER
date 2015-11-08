@@ -13,7 +13,7 @@ uses
   Dialogs,
   Controls,
   Tokentools,
-  PCDIMMER in 'PCDIMMER.PAS' {MainForm},
+  PCDIMMER in 'pcdimmer.pas' {MainForm},
   splashscreen in 'splashscreen.pas' {splash},
   Action in 'Action.pas' {ActionDlg},
   About in 'About.pas' {AboutBox},
@@ -72,7 +72,6 @@ uses
   kanaluebersichtfrm in 'kanaluebersichtfrm.pas' {kanaluebersichtform},
   codeeditorfrm in 'codeeditorfrm.pas' {codeeditorform},
   recoveryfrm in 'recoveryfrm.pas' {recoveryform},
-  webdownloadfrm in 'webdownloadfrm.pas' {webdownloadform},
   beatfrm in 'beatfrm.pas' {beatform},
   addfunctionfrm in 'addfunctionfrm.pas' {addfunctionform},
   clockfrm in 'clockfrm.pas' {clockform},
@@ -119,7 +118,8 @@ uses
   pcdMEVP in 'pcdMEVP.pas',
   pcdHTTPServer in 'pcdHTTPServer.pas',
   pcdRegistry in 'pcdRegistry.pas',
-  pcdUtils in 'pcdUtils.pas';
+  pcdUtils in 'pcdUtils.pas',
+  nodecontrolfrm in 'nodecontrolfrm.pas' {nodecontrolform};
 
 const
   sPC_DIMMERMutex = 'PC_DIMMER';
@@ -169,7 +169,7 @@ begin
   end else
   begin
     Application.CreateForm(Tmainform, mainform);
-  if showtext then mainform.SplashAddText(_('Erstelle Projektverwaltung')); mainform.RefreshSplashText;
+    if showtext then mainform.SplashAddText(_('Erstelle Projektverwaltung')); mainform.RefreshSplashText;
     Application.CreateForm(Tprojektverwaltung, projektverwaltung);
     if showtext then mainform.SplashAddText(_('Erstelle Beattool')); mainform.RefreshSplashText;
     Application.CreateForm(Tbeatform, beatform);
@@ -251,8 +251,6 @@ begin
     Application.CreateForm(Tkanaluebersichtform, kanaluebersichtform);
     if showtext then mainform.SplashAddText(_('Erstelle Codeeditor')); mainform.RefreshSplashText;
     Application.CreateForm(Tcodeeditorform, codeeditorform);
-    if showtext then mainform.SplashAddText(_('Erstelle Webdownload')); mainform.RefreshSplashText;
-    Application.CreateForm(Twebdownloadform, webdownloadform);
     if showtext then mainform.SplashAddText(_('Erstelle Funktionsauswahl')); mainform.RefreshSplashText;
     Application.CreateForm(Taddfunctionform, addfunctionform);
     if showtext then mainform.SplashAddText(_('Erstelle Uhr')); mainform.SplashProgress(1, 40, 100); mainform.RefreshSplashText;
@@ -310,6 +308,8 @@ begin
     Application.CreateForm(Taudiomanagerform, audiomanagerform);
     if showtext then mainform.SplashAddText(_('Erstelle Preset-Szeneneditor')); mainform.RefreshSplashText;
     Application.CreateForm(Tpresetsceneeditor, presetsceneeditor);
+    if showtext then mainform.SplashAddText(_('Erstelle Knotensteuerung')); mainform.RefreshSplashText;
+    Application.CreateForm(Tnodecontrolform, nodecontrolform);
 
     // bitte neue Fenster im "OnClose"-Event des Hauptfensters zunächst schließen (wenn nötig) und dann "free"en!
 

@@ -1,6 +1,6 @@
 object grafischebuehnenansicht: Tgrafischebuehnenansicht
-  Left = 223
-  Top = 228
+  Left = 179
+  Top = 231
   Width = 768
   Height = 471
   Caption = 'Grafische B'#252'hnenansicht'
@@ -1758,10 +1758,10 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
     Visible = False
   end
   object Panel1: TPanel
-    Left = 568
+    Left = 560
     Top = 0
     Width = 192
-    Height = 441
+    Height = 432
     Align = alRight
     Alignment = taRightJustify
     AutoSize = True
@@ -2768,8 +2768,8 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 568
-    Height = 441
+    Width = 560
+    Height = 432
     Align = alClient
     AutoSize = True
     BevelOuter = bvNone
@@ -2779,8 +2779,8 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
     object Stage: TImage
       Left = 0
       Top = 0
-      Width = 568
-      Height = 441
+      Width = 560
+      Height = 432
       Align = alClient
       AutoSize = True
       IncrementalDisplay = True
@@ -2793,8 +2793,8 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
     object Paintbox1: TPaintBox
       Left = 0
       Top = 0
-      Width = 568
-      Height = 441
+      Width = 560
+      Height = 432
       Align = alClient
       Color = clWhite
       ParentColor = False
