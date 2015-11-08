@@ -119,7 +119,8 @@ uses
   pcdHTTPServer in 'pcdHTTPServer.pas',
   pcdRegistry in 'pcdRegistry.pas',
   pcdUtils in 'pcdUtils.pas',
-  nodecontrolfrm in 'nodecontrolfrm.pas' {nodecontrolform};
+  nodecontrolfrm in 'nodecontrolfrm.pas' {nodecontrolform},
+  opensourcefrm in 'opensourcefrm.pas' {opensourceform};
 
 const
   sPC_DIMMERMutex = 'PC_DIMMER';
@@ -310,6 +311,8 @@ begin
     Application.CreateForm(Tpresetsceneeditor, presetsceneeditor);
     if showtext then mainform.SplashAddText(_('Erstelle Knotensteuerung')); mainform.RefreshSplashText;
     Application.CreateForm(Tnodecontrolform, nodecontrolform);
+    if showtext then mainform.SplashAddText(_('Erstelle OpenSource-Form')); mainform.RefreshSplashText;
+    Application.CreateForm(Topensourceform, opensourceform);
 
     // bitte neue Fenster im "OnClose"-Event des Hauptfensters zunächst schließen (wenn nötig) und dann "free"en!
 

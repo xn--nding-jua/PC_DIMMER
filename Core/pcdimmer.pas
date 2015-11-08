@@ -1312,7 +1312,7 @@ uses
   videoscreensynchronisierenfrm, ambilight, pmm, touchscreenfrm,
   ddfeditorassistant, dynguifrm, audiomanagerfrm, ProgressScreenSmallFrm,
   presetsceneeditorform, adddevicefrm, pcdUtils, pcdRegistry,
-  nodecontrolfrm;
+  nodecontrolfrm, opensourcefrm;
 
 {$R *.DFM}
 
@@ -3308,6 +3308,8 @@ begin
     presetsceneeditor.close;
   if nodecontrolform.showing then
     nodecontrolform.close;
+  if opensourceform.showing then
+    opensourceform.close;
 
 
   // WORKAROUND FOR MEVP
@@ -3632,6 +3634,7 @@ begin
   audiomanagerform.free;
   presetsceneeditor.free;
   nodecontrolform.free;
+  opensourceform.free;
 
   // Finito :)
 
@@ -14414,6 +14417,20 @@ begin
     tippoftheday.Show;
     tippoftheday.BringToFront;
   end;
+
+  LReg := TPCDRegistry.Create;
+  if LReg.OpenRegKey('') then
+  begin
+    if not LReg.ReadWriteBool('OpenSourceMsgDisplayed', false) then
+    begin
+      opensourceform.ShowModal;
+      if opensourceform.ModalResult=mrOK then
+      begin
+        LReg.WriteBool('OpenSourceMsgDisplayed', true);
+      end;
+    end;
+  end;
+  LReg.Free;
 
   StartupFinished:=true;
 end;
@@ -26977,6 +26994,8 @@ begin
   ReTranslateComponent(videoscreensynchronisierenform);
   ReTranslateComponent(winlircform);
   ReTranslateComponent(picturechangeform);
+  ReTranslateComponent(nodecontrolform);
+  ReTranslateComponent(opensourceform);
 
   // Plugins neu initiieren
   mainform.Pluginsreaktivieren1Click(nil);

@@ -80,6 +80,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure rgbcheckboxMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure CreateParams(var Params:TCreateParams);override;
   private
     { Private declarations }
     Nodes:array of TSetPoint;
@@ -184,6 +185,8 @@ end;
 
 procedure Tnodecontrolform.FormCreate(Sender: TObject);
 begin
+  TranslateComponent(self);
+
   Randomize;
 
   StageviewBuffer:=TBitmap.Create;
@@ -476,6 +479,21 @@ begin
   begin
     Nodes[nodelist.itemindex].UseRGB:=rgbcheckbox.checked;
     PleaseRecalculateDistances:=true;
+  end;
+end;
+
+procedure Tnodecontrolform.CreateParams(var Params:TCreateParams);
+begin
+  inherited CreateParams(Params);
+
+  if mainform.ShowButtonInTaskbar then
+  begin
+    Params.ExStyle:=WS_EX_APPWINDOW; // Params.ExStyle sorgt dafür, dass das Form einen eigenen Taskbareintrag erhält
+    if mainform.ShowIconInTaskSwitcher then
+    begin
+      Params.WndParent:=GetDesktopWindow;
+      self.ParentWindow := GetDesktopWindow;
+    end;
   end;
 end;
 
