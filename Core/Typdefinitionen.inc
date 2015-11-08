@@ -894,3 +894,15 @@
     GoboRot2:Byte;
   end;
 
+  TNodeControlNode = record
+    Name:string[255];
+    X,Y,Z:Word;
+    R,G,B,A,W,Dimmer:byte;
+    UseRGB,UseA,UseW,UseDimmer:boolean;
+  end;
+  TNodeControlSet = record
+    ID:TGUID;
+    Name:string[255];
+    NodeControlNodes:array of TNodeControlNode;
+  end;
+

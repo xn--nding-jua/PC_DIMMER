@@ -1428,6 +1428,7 @@ begin
 	    end;
 	  end;
 	  LReg.CloseKey;
+    LReg.Free;
 	end;
   mainform.SaveWindowPositions('kontrollpanel');
 end;

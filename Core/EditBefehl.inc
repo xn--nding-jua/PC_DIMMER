@@ -1388,3 +1388,93 @@
 //    Arg1Combobox.Itemindex:=AktuellerBefehl.ArgInteger[0]-1;
     nousersetting:=false;
   end;
+  // NodeControl
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[0].GUID) then
+  begin // Knotenset abrufen
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Knotenset:');
+    Arg1Combobox.Items.Clear;
+    for i:=0 to length(mainform.nodecontrolsets)-1 do
+      Arg1Combobox.items.add(mainform.nodecontrolsets[i].Name);
+    Arg1Edit.visible:=false;
+    Arg1Combobox.visible:=true;
+    Arg1Combobox.Itemindex:=AktuellerBefehl.ArgInteger[0]-1;
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[1].GUID) then
+  begin // Knotenposition X auf Wert setzen
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Knotenset:');
+    Arg1Combobox.Items.Clear;
+    for i:=0 to length(mainform.nodecontrolsets)-1 do
+      Arg1Combobox.items.add(mainform.nodecontrolsets[i].Name);
+    Arg1Edit.visible:=false;
+    Arg1Combobox.visible:=true;
+    Arg1Combobox.Itemindex:=AktuellerBefehl.ArgInteger[0]-1;
+
+    Optionen2Box.Visible:=true;
+    Arg2Label.Caption:=_('Knoten:');
+    Arg2Edit.Text:=inttostr(AktuellerBefehl.ArgInteger[1]);
+
+    Optionen3Box.Visible:=true;
+    Arg3Label.Caption:=_('X-Position (Pixel):');
+    Arg3Edit.Text:=inttostr(AktuellerBefehl.ArgInteger[2]);
+
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[2].GUID) then
+  begin // Knotenposition Y auf Wert setzen
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Knotenset:');
+    Arg1Combobox.Items.Clear;
+    for i:=0 to length(mainform.nodecontrolsets)-1 do
+      Arg1Combobox.items.add(mainform.nodecontrolsets[i].Name);
+    Arg1Edit.visible:=false;
+    Arg1Combobox.visible:=true;
+    Arg1Combobox.Itemindex:=AktuellerBefehl.ArgInteger[0]-1;
+
+    Optionen2Box.Visible:=true;
+    Arg2Label.Caption:=_('Knoten:');
+    Arg2Edit.Text:=inttostr(AktuellerBefehl.ArgInteger[1]);
+
+    Optionen3Box.Visible:=true;
+    Arg3Label.Caption:=_('Y-Position (Pixel):');
+    Arg3Edit.Text:=inttostr(AktuellerBefehl.ArgInteger[2]);
+
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[3].GUID) then
+  begin // Knotenposition X auf Eingangswert
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Knotenset:');
+    Arg1Combobox.Items.Clear;
+    for i:=0 to length(mainform.nodecontrolsets)-1 do
+      Arg1Combobox.items.add(mainform.nodecontrolsets[i].Name);
+    Arg1Edit.visible:=false;
+    Arg1Combobox.visible:=true;
+    Arg1Combobox.Itemindex:=AktuellerBefehl.ArgInteger[0]-1;
+
+    Optionen2Box.Visible:=true;
+    Arg2Label.Caption:=_('Knoten:');
+    Arg2Edit.Text:=inttostr(AktuellerBefehl.ArgInteger[1]);
+
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[4].GUID) then
+  begin // Knotenposition Y auf Eingangswert
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Knotenset:');
+    Arg1Combobox.Items.Clear;
+    for i:=0 to length(mainform.nodecontrolsets)-1 do
+      Arg1Combobox.items.add(mainform.nodecontrolsets[i].Name);
+    Arg1Edit.visible:=false;
+    Arg1Combobox.visible:=true;
+    Arg1Combobox.Itemindex:=AktuellerBefehl.ArgInteger[0]-1;
+
+    Optionen2Box.Visible:=true;
+    Arg2Label.Caption:=_('Knoten:');
+    Arg2Edit.Text:=inttostr(AktuellerBefehl.ArgInteger[1]);
+
+    nousersetting:=false;
+  end;
+

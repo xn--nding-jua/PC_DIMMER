@@ -6,16 +6,10 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, StdCtrls, mbColorPickerControl, HSColorPicker,
   HexaColorPicker, HRingPicker, mbTrackBarPicker, VColorPicker,
-  HSLRingPicker, XPMan, Buttons, PngBitBtn, gnugettext, dxGDIPlusClasses;
+  HSLRingPicker, XPMan, Buttons, PngBitBtn, gnugettext, dxGDIPlusClasses,
+  Registry;
 
 type
-  TSetPoint = record
-    X,Y,Z:Word;
-    R,G,B,A,W,Dimmer:byte;
-    UseRGB,UseA,UseW,UseDimmer:boolean;
-    Name:string;
-  end;
-
   Tnodecontrolform = class(TForm)
     RedrawTimer: TTimer;
     Panel1: TPanel;
@@ -50,6 +44,10 @@ type
     setdimmercheckbox: TCheckBox;
     setwhitecheckbox: TCheckBox;
     Image1: TImage;
+    addnodecontrolsetsbtn: TPngBitBtn;
+    removenodecontrolsetsbtn: TPngBitBtn;
+    editnodecontrolsetsbtn: TPngBitBtn;
+    nodecontrolsetscombobox: TComboBox;
     procedure RedrawTimerTimer(Sender: TObject);
     procedure PaintBox1MouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
@@ -81,18 +79,26 @@ type
     procedure rgbcheckboxMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure CreateParams(var Params:TCreateParams);override;
+    procedure nodecontrolsetscomboboxChange(Sender: TObject);
+    procedure addnodecontrolsetsbtnClick(Sender: TObject);
+    procedure removenodecontrolsetsbtnClick(Sender: TObject);
+    procedure editnodecontrolsetsbtnClick(Sender: TObject);
+    procedure nodelistClick(Sender: TObject);
   private
     { Private declarations }
-    Nodes:array of TSetPoint;
     ShadowCanvas: TBitmap;
     MouseOnNode:integer;
     RoomHeight:word;
     PleaseRecalculateDistances:boolean;
     procedure RecalculateDistances;
     procedure RefreshNodeList;
+    procedure CheckButtons;
   public
     { Public declarations }
     StageviewBuffer:TBitmap;
+    procedure MSGSave;
+    procedure MSGOpen;
+    procedure MSGNew;
   end;
 
 var
@@ -108,6 +114,10 @@ procedure Tnodecontrolform.RedrawTimerTimer(Sender: TObject);
 var
   i, textposition:integer;
 begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
   if not grafischebuehnenansicht.RefreshTimer.Enabled then
   begin
     grafischebuehnenansicht.RefreshTimerTimer(nil);
@@ -126,39 +136,39 @@ begin
   // grafische Bühnenansicht kopieren
   BitBlt(ShadowCanvas.Canvas.Handle, 0, 0, StageviewBuffer.width, StageviewBuffer.height, StageviewBuffer.canvas.handle, 0, 0, SrcCopy);
 
-  for i:=0 to length(Nodes)-1 do
+  for i:=0 to length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1 do
   begin
-    if Nodes[i].UseRGB then
+    if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].UseRGB then
     begin
-      ShadowCanvas.Canvas.Brush.Color:=Nodes[i].R + (Nodes[i].G shl 8) + (Nodes[i].B shl 16);
-      ShadowCanvas.Canvas.Pen.Color:=Nodes[i].R + (Nodes[i].G shl 8) + (Nodes[i].B shl 16);
+      ShadowCanvas.Canvas.Brush.Color:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].R + (mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].G shl 8) + (mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].B shl 16);
+      ShadowCanvas.Canvas.Pen.Color:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].R + (mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].G shl 8) + (mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].B shl 16);
     end else
     begin
       ShadowCanvas.Canvas.Brush.Color:=clWhite;
       ShadowCanvas.Canvas.Pen.Color:=clWhite;
     end;
-    ShadowCanvas.Canvas.Rectangle(Nodes[i].X, Nodes[i].Y, Nodes[i].X+32, Nodes[i].Y+32);
-    ShadowCanvas.Canvas.Draw(Nodes[i].X, Nodes[i].Y, Image1.Picture.Graphic);
+    ShadowCanvas.Canvas.Rectangle(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X, mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y, mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X+32, mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y+32);
+    ShadowCanvas.Canvas.Draw(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X, mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y, Image1.Picture.Graphic);
 
     ShadowCanvas.Canvas.Pen.Color:=clWhite;
     ShadowCanvas.Canvas.Brush.Color:=clWhite;
-    textposition:=Nodes[i].Y+22;
+    textposition:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y+22;
     textposition:=textposition+10;
-    ShadowCanvas.Canvas.TextOut(Nodes[i].X, textposition, Nodes[i].Name);
+    ShadowCanvas.Canvas.TextOut(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X, textposition, mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Name);
     if ambercheckbox.Checked then
     begin
       textposition:=textposition+10;
-      ShadowCanvas.Canvas.TextOut(Nodes[i].X, textposition, _('Amber')+': '+floattostrf(Nodes[i].A/2.55, ffFixed, 3, 1)+'%');
+      ShadowCanvas.Canvas.TextOut(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X, textposition, _('Amber')+': '+floattostrf(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].A/2.55, ffFixed, 3, 1)+'%');
     end;
     if whitecheckbox.Checked then
     begin
       textposition:=textposition+10;
-      ShadowCanvas.Canvas.TextOut(Nodes[i].X, textposition, _('Weiß')+': '+floattostrf(Nodes[i].W/2.55, ffFixed, 3, 1)+'%');
+      ShadowCanvas.Canvas.TextOut(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X, textposition, _('Weiß')+': '+floattostrf(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].W/2.55, ffFixed, 3, 1)+'%');
     end;
     if Dimmercheckbox.Checked then
     begin
       textposition:=textposition+10;
-      ShadowCanvas.Canvas.TextOut(Nodes[i].X, textposition, _('Dimmer')+': '+floattostrf(Nodes[i].Dimmer/2.55, ffFixed, 3, 1)+'%');
+      ShadowCanvas.Canvas.TextOut(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X, textposition, _('Dimmer')+': '+floattostrf(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Dimmer/2.55, ffFixed, 3, 1)+'%');
     end;
   end;
 
@@ -174,10 +184,14 @@ end;
 procedure Tnodecontrolform.PaintBox1MouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
   if (shift=[ssLeft]) and (nodelist.ItemIndex>-1) then
   begin
-    Nodes[nodelist.ItemIndex].X:=X-16;
-    Nodes[nodelist.ItemIndex].Y:=Y-16;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=X-16;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=Y-16;
 
     PleaseRecalculateDistances:=true;
   end;
@@ -201,13 +215,18 @@ begin
 
 procedure Tnodecontrolform.addbtnClick(Sender: TObject);
 begin
-  setlength(Nodes, length(Nodes)+1);
-  Nodes[length(Nodes)-1].Name:=_('Neuer Knoten')+' '+inttostr(length(Nodes));
-  Nodes[length(Nodes)-1].UseRGB:=true;
-  nodelist.Items.add(Nodes[length(Nodes)-1].Name);
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
+  setlength(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes, length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)+1);
+  mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1].Name:=_('Neuer Knoten')+' '+inttostr(length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes));
+  mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1].UseRGB:=true;
+  nodelist.Items.add(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1].Name);
   nodelist.itemindex:=nodelist.items.count-1;
   RefreshNodeList;
   PleaseRecalculateDistances:=true;
+  CheckButtons;
 end;
 
 procedure Tnodecontrolform.RecalculateDistances;
@@ -246,37 +265,37 @@ begin
         W:=0;
         Dimmer:=0;
 
-        for k:=0 to length(Nodes)-1 do
+        for k:=0 to length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1 do
         begin
-          dX:=abs(Nodes[k].X-mainform.devices[i].left[j]);
-          dY:=abs(Nodes[k].Y-mainform.devices[i].top[j]);
-          //dZ:=abs(Nodes[k].Z-mainform.devices[i].zaxis[j]);
+          dX:=abs(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[k].X-mainform.devices[i].left[j]);
+          dY:=abs(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[k].Y-mainform.devices[i].top[j]);
+          //dZ:=abs(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[k].Z-mainform.devices[i].zaxis[j]);
           d2d:=sqrt(dX*dX+dY*dY);
           //d3d:=sqrt(dX*dX+dY*dY+dZ*dZ);
           factor:=((dMax2d-d2d)/dMax2d);
 
-          Rj:=(factor*Nodes[k].R-narrow)*narrowcorrection*contrast;
-          Gj:=(factor*Nodes[k].G-narrow)*narrowcorrection*contrast;
-          Bj:=(factor*Nodes[k].B-narrow)*narrowcorrection*contrast;
+          Rj:=(factor*mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[k].R-narrow)*narrowcorrection*contrast;
+          Gj:=(factor*mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[k].G-narrow)*narrowcorrection*contrast;
+          Bj:=(factor*mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[k].B-narrow)*narrowcorrection*contrast;
           R:=R+Saturate(Rj,0,255);
           G:=G+Saturate(Gj,0,255);
           B:=B+Saturate(Bj,0,255);
 
-          if Nodes[k].UseA then
+          if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[k].UseA then
           begin
-            Aj:=(factor*Nodes[k].A-narrow)*narrowcorrection*contrast;
+            Aj:=(factor*mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[k].A-narrow)*narrowcorrection*contrast;
             A:=A+Saturate(Aj,0,255);
           end;
 
-          if Nodes[k].UseW then
+          if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[k].UseW then
           begin
-            Wj:=(factor*Nodes[k].W-narrow)*narrowcorrection*contrast;
+            Wj:=(factor*mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[k].W-narrow)*narrowcorrection*contrast;
             W:=W+Saturate(Wj,0,255);
           end;
 
-          if Nodes[k].UseDimmer then
+          if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[k].UseDimmer then
           begin
-            Dimmerj:=(factor*Nodes[k].Dimmer-narrow)*narrowcorrection*contrast;
+            Dimmerj:=(factor*mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[k].Dimmer-narrow)*narrowcorrection*contrast;
             Dimmer:=Dimmer+Saturate(Dimmerj,0,255);
           end;
         end;
@@ -296,23 +315,109 @@ begin
 end;
 
 procedure Tnodecontrolform.FormShow(Sender: TObject);
+var
+	LReg:TRegistry;
 begin
+  LReg := TRegistry.Create;
+  LReg.RootKey:=HKEY_CURRENT_USER;
+
+  if LReg.OpenKey('Software', True) then
+  begin
+    if not LReg.KeyExists('PHOENIXstudios') then
+      LReg.CreateKey('PHOENIXstudios');
+    if LReg.OpenKey('PHOENIXstudios',true) then
+    begin
+      if not LReg.KeyExists('PC_DIMMER') then
+        LReg.CreateKey('PC_DIMMER');
+      if LReg.OpenKey('PC_DIMMER',true) then
+      begin
+  			LReg.WriteBool('Showing NodeControl',true);
+
+        if not LReg.KeyExists('NodeControl') then
+	        LReg.CreateKey('NodeControl');
+	      if LReg.OpenKey('NodeControl',true) then
+	      begin
+          if LReg.ValueExists('Width') then
+            nodecontrolform.ClientWidth:=LReg.ReadInteger('Width')
+          else
+            nodecontrolform.ClientWidth:=1026;
+          if LReg.ValueExists('Heigth') then
+            nodecontrolform.ClientHeight:=LReg.ReadInteger('Heigth')
+          else
+            nodecontrolform.ClientHeight:=606;
+
+          if LReg.ValueExists('PosX') then
+          begin
+            if (not (LReg.ReadInteger('PosX')+nodecontrolform.Width<screen.DesktopLeft)) and (not (LReg.ReadInteger('PosX')>screen.DesktopWidth+screen.DesktopLeft)) then
+              nodecontrolform.Left:=LReg.ReadInteger('PosX')
+            else
+              nodecontrolform.Left:=0;
+          end else
+            nodecontrolform.Left:=0;
+
+          if LReg.ValueExists('PosY') then
+          begin
+            if (not (LReg.ReadInteger('PosY')+nodecontrolform.Height<screen.DesktopTop)) and (not (LReg.ReadInteger('PosY')>screen.DesktopHeight+screen.DesktopTop)) then
+              nodecontrolform.Top:=LReg.ReadInteger('PosY')
+            else
+              nodecontrolform.Top:=0;
+          end else
+            nodecontrolform.Top:=0;
+        end;
+      end;
+    end;
+  end;
+  LReg.CloseKey;
+  LReg.Free;
+
+
   RedrawTimer.Enabled:=true;
   amberslider.SelectedColor:=$0005A9FA;
   amberslider.Value:=0;
+  CheckButtons;
 end;
 
 procedure Tnodecontrolform.FormHide(Sender: TObject);
+var
+  LReg:TRegistry;
 begin
   RedrawTimer.Enabled:=false;
+
+	if not mainform.shutdown then
+  begin
+	  LReg := TRegistry.Create;
+	  LReg.RootKey:=HKEY_CURRENT_USER;
+
+	  if LReg.OpenKey('Software', True) then
+	  begin
+	    if not LReg.KeyExists('PHOENIXstudios') then
+	      LReg.CreateKey('PHOENIXstudios');
+	    if LReg.OpenKey('PHOENIXstudios',true) then
+	    begin
+	      if not LReg.KeyExists('PC_DIMMER') then
+	        LReg.CreateKey('PC_DIMMER');
+	      if LReg.OpenKey('PC_DIMMER',true) then
+	      begin
+					LReg.WriteBool('Showing NodeControl',false);
+	      end;
+	    end;
+	  end;
+	  LReg.CloseKey;
+    LReg.Free;
+	end;
+  mainform.SaveWindowPositions('nodecontrol');
 end;
 
 procedure Tnodecontrolform.ambersliderMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
 begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
   if nodelist.ItemIndex>-1 then
   begin
-    Nodes[nodelist.itemindex].A:=amberslider.Value;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].A:=amberslider.Value;
     PleaseRecalculateDistances:=true;
   end;
 end;
@@ -320,18 +425,26 @@ end;
 procedure Tnodecontrolform.whitesliderMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
 begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
   if nodelist.ItemIndex>-1 then
   begin
-    Nodes[nodelist.itemindex].W:=whiteslider.Value;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].W:=whiteslider.Value;
     PleaseRecalculateDistances:=true;
   end;
 end;
 
 procedure Tnodecontrolform.dimmersliderChange(Sender: TObject);
 begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
   if nodelist.ItemIndex>-1 then
   begin
-    Nodes[nodelist.itemindex].Dimmer:=dimmerslider.position;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].Dimmer:=dimmerslider.position;
     PleaseRecalculateDistances:=true;
   end;
 end;
@@ -341,15 +454,15 @@ procedure Tnodecontrolform.nodelistMouseUp(Sender: TObject; Button: TMouseButton
 begin
   if nodelist.ItemIndex>-1 then
   begin
-    colorpicker.SelectedColor:=Nodes[nodelist.itemindex].R + (Nodes[nodelist.itemindex].G shl 16) + (Nodes[nodelist.itemindex].B shl 16);
-    amberslider.value:=Nodes[nodelist.itemindex].A;
-    whiteslider.value:=Nodes[nodelist.itemindex].W;
-    dimmerslider.position:=Nodes[nodelist.itemindex].Dimmer;
+    colorpicker.SelectedColor:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].R + (mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].G shl 16) + (mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].B shl 16);
+    amberslider.value:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].A;
+    whiteslider.value:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].W;
+    dimmerslider.position:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].Dimmer;
 
-    rgbcheckbox.Checked:=Nodes[nodelist.itemindex].UseRGB;
-    ambercheckbox.Checked:=Nodes[nodelist.itemindex].UseA;
-    whitecheckbox.Checked:=Nodes[nodelist.itemindex].UseW;
-    dimmercheckbox.Checked:=Nodes[nodelist.itemindex].UseDimmer;
+    rgbcheckbox.Checked:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseRGB;
+    ambercheckbox.Checked:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseA;
+    whitecheckbox.Checked:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseW;
+    dimmercheckbox.Checked:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseDimmer;
   end;
 end;
 
@@ -357,24 +470,29 @@ procedure Tnodecontrolform.removebtnClick(Sender: TObject);
 var
   i:integer;
 begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
   if nodelist.itemindex>-1 then
   begin
-    for i:=nodelist.ItemIndex to length(Nodes)-2 do
+    for i:=nodelist.ItemIndex to length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-2 do
     begin
-      Nodes[i].X:=Nodes[i+1].X;
-      Nodes[i].Y:=Nodes[i+1].Y;
-      Nodes[i].R:=Nodes[i+1].R;
-      Nodes[i].G:=Nodes[i+1].G;
-      Nodes[i].B:=Nodes[i+1].B;
-      Nodes[i].A:=Nodes[i+1].A;
-      Nodes[i].W:=Nodes[i+1].W;
-      Nodes[i].Dimmer:=Nodes[i+1].Dimmer;
-      Nodes[i].Name:=Nodes[i+1].Name;
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i+1].X;
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i+1].Y;
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].R:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i+1].R;
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].G:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i+1].G;
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].B:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i+1].B;
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].A:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i+1].A;
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].W:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i+1].W;
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Dimmer:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i+1].Dimmer;
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Name:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i+1].Name;
     end;
-    setlength(Nodes, length(Nodes)-1);
+    setlength(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes, length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1);
     RefreshNodeList;
   end;
   PleaseRecalculateDistances:=true;
+  CheckButtons;
 end;
 
 procedure Tnodecontrolform.RefreshNodeList;
@@ -384,9 +502,9 @@ begin
   LastIndex:=nodelist.itemindex;
 
   nodelist.Items.Clear;
-  for i:=0 to length(Nodes)-1 do
+  for i:=0 to length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1 do
   begin
-    nodelist.items.add(Nodes[i].Name);
+    nodelist.items.add(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Name);
   end;
 
   if LastIndex=-1 then
@@ -398,11 +516,15 @@ end;
 procedure Tnodecontrolform.colorpickerMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
 begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
   if (Shift=[ssLeft]) and (nodelist.ItemIndex>-1) then
   begin
-    Nodes[nodelist.itemindex].R:=colorpicker.SelectedColor;
-    Nodes[nodelist.itemindex].G:=colorpicker.SelectedColor shr 8;
-    Nodes[nodelist.itemindex].B:=colorpicker.SelectedColor shr 16;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].R:=colorpicker.SelectedColor;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].G:=colorpicker.SelectedColor shr 8;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].B:=colorpicker.SelectedColor shr 16;
 
     PleaseRecalculateDistances:=true;
   end;
@@ -410,9 +532,13 @@ end;
 
 procedure Tnodecontrolform.renamebtnClick(Sender: TObject);
 begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
   if nodelist.itemindex>-1 then
   begin
-    Nodes[nodelist.itemindex].Name:=InputBox(_('Neue Bezeichnung'), _('Bitte geben Sie eine neue Bezeichnung für diesen Knoten ein...'), Nodes[nodelist.itemindex].Name);
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].Name:=InputBox(_('Neue Bezeichnung'), _('Bitte geben Sie eine neue Bezeichnung für diesen Knoten ein...'), mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].Name);
     RefreshNodeList;
   end;
 end;
@@ -422,9 +548,13 @@ procedure Tnodecontrolform.PaintBox1MouseDown(Sender: TObject; Button: TMouseBut
 var
   i:integer;
 begin
-  for i:=0 to length(Nodes)-1 do
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
+  for i:=0 to length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1 do
   begin
-    if (X>Nodes[i].X) and (X<Nodes[i].X+32) and (Y>Nodes[i].Y) and (Y<Nodes[i].Y+32) then
+    if (X>mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X) and (X<mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X+32) and (Y>mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y) and (Y<mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y+32) then
     begin
       MouseOnNode:=i;
       if (MouseOnNode>-1) and (nodelist.items.count>0) and (MouseOnNode<nodelist.Items.count) then
@@ -439,9 +569,13 @@ end;
 procedure Tnodecontrolform.ambercheckboxMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
   if nodelist.ItemIndex>-1 then
   begin
-    Nodes[nodelist.itemindex].UseA:=ambercheckbox.checked;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseA:=ambercheckbox.checked;
     PleaseRecalculateDistances:=true;
   end;
 end;
@@ -449,9 +583,13 @@ end;
 procedure Tnodecontrolform.whitecheckboxMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
   if nodelist.ItemIndex>-1 then
   begin
-    Nodes[nodelist.itemindex].UseW:=whitecheckbox.checked;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseW:=whitecheckbox.checked;
     PleaseRecalculateDistances:=true;
   end;
 end;
@@ -459,9 +597,13 @@ end;
 procedure Tnodecontrolform.dimmercheckboxMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
   if nodelist.ItemIndex>-1 then
   begin
-    Nodes[nodelist.itemindex].UseDimmer:=dimmercheckbox.checked;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseDimmer:=dimmercheckbox.checked;
     PleaseRecalculateDistances:=true;
   end;
 end;
@@ -475,9 +617,13 @@ end;
 procedure Tnodecontrolform.rgbcheckboxMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
   if nodelist.ItemIndex>-1 then
   begin
-    Nodes[nodelist.itemindex].UseRGB:=rgbcheckbox.checked;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseRGB:=rgbcheckbox.checked;
     PleaseRecalculateDistances:=true;
   end;
 end;
@@ -495,6 +641,149 @@ begin
       self.ParentWindow := GetDesktopWindow;
     end;
   end;
+end;
+
+procedure Tnodecontrolform.MSGSave;
+begin
+  CheckButtons;
+end;
+
+procedure Tnodecontrolform.MSGOpen;
+var
+  i:integer;
+begin
+  nodecontrolsetscombobox.Items.Clear;
+  nodelist.Items.Clear;
+  
+  for i:=0 to length(mainform.NodeControlSets)-1 do
+  begin
+    nodecontrolsetscombobox.Items.Add(mainform.NodeControlSets[i].Name);
+  end;
+  nodecontrolsetscombobox.Itemindex:=0;
+  nodecontrolsetscomboboxchange(nil);
+  
+  CheckButtons;
+end;
+
+procedure Tnodecontrolform.MSGNew;
+begin
+  setlength(mainform.NodeControlSets, 0);
+  setlength(mainform.NodeControlSets, 1);
+  CreateGUID(mainform.NodeControlSets[0].ID);
+  mainform.NodeControlSets[0].Name:=_('Neue Knotensteuerung');
+  setlength(mainform.NodeControlSets[0].NodeControlNodes, 0);
+
+  MSGOpen;
+end;
+
+procedure Tnodecontrolform.nodecontrolsetscomboboxChange(Sender: TObject);
+var
+  i:integer;
+begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+  begin
+    nodelist.Items.clear;
+    CheckButtons;
+    exit;
+  end;
+
+  nodelist.items.clear;
+  for i:=0 to length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1 do
+  begin
+    nodelist.items.add(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Name);
+  end;
+  nodelist.itemindex:=0;
+  CheckButtons;
+  PleaseRecalculateDistances:=true;
+end;
+
+procedure Tnodecontrolform.addnodecontrolsetsbtnClick(Sender: TObject);
+begin
+  setlength(mainform.NodeControlSets, length(mainform.NodeControlSets)+1);
+  CreateGUID(mainform.NodeControlSets[length(mainform.NodeControlSets)-1].ID);
+  mainform.NodeControlSets[length(mainform.NodeControlSets)-1].Name:=_('Neue Knotensteuerung');
+  nodecontrolsetscombobox.itemindex:=nodecontrolsetscombobox.Items.add(mainform.NodeControlSets[length(mainform.NodeControlSets)-1].Name);
+  nodecontrolsetscomboboxChange(nil);
+end;
+
+procedure Tnodecontrolform.removenodecontrolsetsbtnClick(Sender: TObject);
+var
+  i, j, oldindex:integer;
+begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.ItemIndex=-1) then
+    exit;
+
+  for i:=nodecontrolsetscombobox.ItemIndex to length(mainform.NodeControlSets)-2 do
+  begin
+    mainform.NodeControlSets[i].ID:=mainform.NodeControlSets[i+1].ID;
+    mainform.NodeControlSets[i].Name:=mainform.NodeControlSets[i+1].Name;
+
+    setlength(mainform.NodeControlSets[i].NodeControlNodes, length(mainform.NodeControlSets[i+1].NodeControlNodes));
+    for j:=0 to length(mainform.NodeControlSets[i].NodeControlNodes)-1 do
+    begin
+      mainform.NodeControlSets[i].NodeControlNodes[j].Name:=mainform.NodeControlSets[i+1].NodeControlNodes[j].Name;
+      mainform.NodeControlSets[i].NodeControlNodes[j].X:=mainform.NodeControlSets[i+1].NodeControlNodes[j].X;
+      mainform.NodeControlSets[i].NodeControlNodes[j].Y:=mainform.NodeControlSets[i+1].NodeControlNodes[j].Y;
+      mainform.NodeControlSets[i].NodeControlNodes[j].Z:=mainform.NodeControlSets[i+1].NodeControlNodes[j].Z;
+      mainform.NodeControlSets[i].NodeControlNodes[j].R:=mainform.NodeControlSets[i+1].NodeControlNodes[j].R;
+      mainform.NodeControlSets[i].NodeControlNodes[j].G:=mainform.NodeControlSets[i+1].NodeControlNodes[j].G;
+      mainform.NodeControlSets[i].NodeControlNodes[j].B:=mainform.NodeControlSets[i+1].NodeControlNodes[j].B;
+      mainform.NodeControlSets[i].NodeControlNodes[j].A:=mainform.NodeControlSets[i+1].NodeControlNodes[j].A;
+      mainform.NodeControlSets[i].NodeControlNodes[j].W:=mainform.NodeControlSets[i+1].NodeControlNodes[j].W;
+      mainform.NodeControlSets[i].NodeControlNodes[j].Dimmer:=mainform.NodeControlSets[i+1].NodeControlNodes[j].Dimmer;
+      mainform.NodeControlSets[i].NodeControlNodes[j].UseRGB:=mainform.NodeControlSets[i+1].NodeControlNodes[j].UseRGB;
+      mainform.NodeControlSets[i].NodeControlNodes[j].UseA:=mainform.NodeControlSets[i+1].NodeControlNodes[j].UseA;
+      mainform.NodeControlSets[i].NodeControlNodes[j].UseW:=mainform.NodeControlSets[i+1].NodeControlNodes[j].UseW;
+      mainform.NodeControlSets[i].NodeControlNodes[j].UseDimmer:=mainform.NodeControlSets[i+1].NodeControlNodes[j].USeDimmer;
+    end;
+  end;
+  setlength(mainform.NodeControlSets, length(mainform.NodeControlSets)-1);
+  oldindex:=nodecontrolsetscombobox.itemindex;
+  nodecontrolsetscombobox.Items.Delete(nodecontrolsetscombobox.itemindex);
+  if oldindex<nodecontrolsetscombobox.Items.count-1 then
+    nodecontrolsetscombobox.itemindex:=oldindex
+  else
+    nodecontrolsetscombobox.itemindex:=nodecontrolsetscombobox.items.count-1;
+
+  nodecontrolsetscomboboxChange(nil);
+
+  CheckButtons;
+end;
+
+procedure Tnodecontrolform.editnodecontrolsetsbtnClick(Sender: TObject);
+var
+  oldindex:integer;
+begin
+  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
+    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
+    exit;
+
+  if nodecontrolsetscombobox.itemindex>-1 then
+  begin
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].Name:=InputBox(_('Neue Bezeichnung'), _('Bitte geben Sie eine neue Bezeichnung ein...'), mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].Name);
+    oldindex:=nodecontrolsetscombobox.itemindex;
+    nodecontrolsetscombobox.Items[nodecontrolsetscombobox.itemindex]:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].Name;
+    nodecontrolsetscombobox.itemindex:=oldindex;
+    nodecontrolsetscomboboxChange(nil);
+  end;
+end;
+
+procedure Tnodecontrolform.CheckButtons;
+begin
+  removenodecontrolsetsbtn.Enabled:=nodecontrolsetscombobox.ItemIndex>=0;
+  editnodecontrolsetsbtn.Enabled:=removenodecontrolsetsbtn.Enabled;
+  nodelist.Enabled:=removenodecontrolsetsbtn.Enabled;
+  addbtn.Enabled:=removenodecontrolsetsbtn.Enabled;
+
+  removebtn.Enabled:=nodelist.ItemIndex>=0;
+  renamebtn.Enabled:=removebtn.Enabled;
+  Groupbox2.visible:=removebtn.Enabled;
+end;
+
+procedure Tnodecontrolform.nodelistClick(Sender: TObject);
+begin
+  CheckButtons;
 end;
 
 end.

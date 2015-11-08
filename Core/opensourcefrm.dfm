@@ -22,7 +22,7 @@ object opensourceform: Topensourceform
     Left = 440
     Top = 64
     Width = 337
-    Height = 261
+    Height = 233
     Picture.Data = {
       0B546478504E47496D61676589504E470D0A1A0A0000000D4948445200000151
       00000139080600000029D113750000000467414D410000B18F0BFC6105000000
@@ -5052,7 +5052,7 @@ object opensourceform: Topensourceform
   object spendenbtn: TJvXPButton
     Left = 8
     Top = 304
-    Width = 161
+    Width = 185
     Height = 33
     Caption = 'Ja, ich m'#246'chte Spenden'
     TabOrder = 1
@@ -5165,13 +5165,13 @@ object opensourceform: Topensourceform
     WantReturns = False
   end
   object nichtspendenbtn: TJvXPButton
-    Left = 176
+    Left = 200
     Top = 304
-    Width = 257
+    Width = 289
     Height = 33
     Caption = 
-      'Nein, ich verwende das Programm f'#252'r private, oder kostenlose Ver' +
-      'anstaltungen'
+      'Nein, ich verwende den PC_DIMMER f'#252'r rein private oder allgemein' +
+      'n'#252'tzige Veranstaltungen'
     TabOrder = 3
     Glyph.Data = {
       0B546478504E47496D61676589504E470D0A1A0A0000000D4948445200000010

@@ -107,7 +107,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=469;
+  actualprojectversion=470;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -1151,6 +1151,7 @@ type
     pmmlights:array of TGUID;
     PartyMuckenModul:array of TPartyMuckenModul;
     PresetScenes: array of TPresetScene;
+    NodeControlSets: array of TNodeControlSet;
 
 //    DeviceForms:array of Tdeviceformprototyp;
     Desktopproperties : array[1..9] of TDesktopproperties;
@@ -3921,6 +3922,8 @@ begin
   TimeCodePlayerForm.NewFile;
   // Infrarotsteuerung zurücksetzen
   winlircform.MSGNew;
+  // Knotensteuerung zurücksetzen
+  nodecontrolform.MSGNew;
 
   for i:=0 to 31 do
   begin
@@ -4154,6 +4157,7 @@ begin
   beatform.MSGSave;
   kanaluebersichtform.MSGSave;
   szenenverwaltung_formarray[0].MSGSave;
+  nodecontrolform.MSGSave;
   SaveWindowPositions('all');
 
   inprogress.filename.Caption:=_('Sammle Hauptprogrammdaten...');
@@ -5514,6 +5518,37 @@ begin
       Filestream.WriteBuffer(mainform.PresetScenes[i].GoboRot2,sizeof(mainform.PresetScenes[i].GoboRot2));
     end;
 // Ende Presets
+// NodeControl speichern
+	  inprogress.filename.Caption:=_('Schreibe Datei... Knotensteuerung');
+  	inprogress.Refresh;
+    Count:=length(mainform.NodeControlSets);
+	  Filestream.WriteBuffer(Count,sizeof(Count));
+    for i:=0 to Count-1 do
+    begin
+   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].ID,sizeof(mainform.NodeControlSets[i].ID));
+   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].Name,sizeof(mainform.NodeControlSets[i].Name));
+
+      count2:=length(mainform.NodeControlSets[i].NodeControlNodes);
+   	  Filestream.WriteBuffer(count2,sizeof(count2));
+      for k:=0 to count2-1 do
+     	begin
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Name,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Name));
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].X,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].X));
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Y,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Y));
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Z,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Z));
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].R,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].R));
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].G,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].G));
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].B,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].B));
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].A,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].A));
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].W,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].W));
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Dimmer,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Dimmer));
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseRGB,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseRGB));
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseA,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseA));
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseW,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseW));
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseDimmer,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseDimmer));
+      end;
+    end;
+// Ende NodeControl
 
 	  inprogress.filename.Caption:=_('Schreibe Datei...');
   	inprogress.Refresh;
@@ -5738,7 +5773,7 @@ begin
             for m:=0 to Count2-1 do
   	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID[m]));
 
-
+                      
             Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActive);
   	        Filestream.WriteBuffer(Count2,sizeof(Count2));
             for m:=0 to Count2-1 do
@@ -7039,6 +7074,7 @@ begin
   TimeCodePlayerForm.NewFile;
   cuelistform.MSGNew;
   winlircform.MSGNew;
+  nodecontrolform.MSGNew;
 
   if not OnlyProject then
   begin
@@ -9708,6 +9744,48 @@ begin
       end;
     end;
 // Ende Preset-Szenen
+// NodeControl laden
+    if projektprogrammversionint>=470 then
+    begin
+      if not startingup then
+      begin
+        inprogress.filename.Caption:=_('Lese Daten ein... Knotensteuerung');
+        inprogress.Refresh;
+      end else
+      begin
+        SplashCaptioninfo(_('Lese Daten ein...Knotensteuerung'));
+        RefreshSplashText;
+      end;
+
+  	  Filestream.ReadBuffer(Count,sizeof(Count));
+      setlength(mainform.NodeControlSets, Count);
+      for i:=0 to Count-1 do
+      begin
+     	  Filestream.ReadBuffer(mainform.NodeControlSets[i].ID,sizeof(mainform.NodeControlSets[i].ID));
+     	  Filestream.ReadBuffer(mainform.NodeControlSets[i].Name,sizeof(mainform.NodeControlSets[i].Name));
+
+     	  Filestream.ReadBuffer(count2,sizeof(count2));
+        setlength(mainform.NodeControlSets[i].NodeControlNodes, count2);
+        for k:=0 to count2-1 do
+       	begin
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Name,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Name));
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].X,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].X));
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Y,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Y));
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Z,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Z));
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].R,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].R));
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].G,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].G));
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].B,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].B));
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].A,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].A));
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].W,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].W));
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Dimmer,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Dimmer));
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseRGB,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseRGB));
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseA,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseA));
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseW,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseW));
+          Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseDimmer,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseDimmer));
+        end;
+      end;
+    end;
+// Ende NodeControl
   end;
 
 	if not startingup then
@@ -9933,6 +10011,17 @@ begin
 
     // PartyMuckenModul aktualisieren
     pmmform.RefreshListboxes;
+
+    if not startingup then
+    begin
+      inprogress.filename.Caption:=_('Sende Öffnen-Befehl...Knotensteuerung');
+      inprogress.Refresh;
+    end else
+    begin
+      SplashCaptioninfo(_('Sende Öffnen-Befehl... Knotensteuerung'));
+      RefreshSplashText;
+    end;
+    nodecontrolform.MSGOpen;
 
     if not startingup then
     begin
@@ -12695,13 +12784,13 @@ begin
       end;
       MSG_REGISTERPLUGINCOMMAND:
       begin
-        setlength(Befehlssystem[13].Steuerung, length(Befehlssystem[13].Steuerung)+1);
-        Befehlssystem[13].Steuerung[length(Befehlssystem[13].Steuerung)-1].Bezeichnung:=string(Data2);
-        Befehlssystem[13].Steuerung[length(Befehlssystem[13].Steuerung)-1].GUID:=StringToGUID(string(Data1));
-        Befehlssystem[13].Steuerung[length(Befehlssystem[13].Steuerung)-1].InputValueOnly:=false;
-        Befehlssystem[13].Steuerung[length(Befehlssystem[13].Steuerung)-1].IntegerArgCount:=0;
-        Befehlssystem[13].Steuerung[length(Befehlssystem[13].Steuerung)-1].StringArgCount:=0;
-        Befehlssystem[13].Steuerung[length(Befehlssystem[13].Steuerung)-1].GUIDArgCount:=0;
+        setlength(Befehlssystem[14].Steuerung, length(Befehlssystem[14].Steuerung)+1);
+        Befehlssystem[14].Steuerung[length(Befehlssystem[14].Steuerung)-1].Bezeichnung:=string(Data2);
+        Befehlssystem[14].Steuerung[length(Befehlssystem[14].Steuerung)-1].GUID:=StringToGUID(string(Data1));
+        Befehlssystem[14].Steuerung[length(Befehlssystem[14].Steuerung)-1].InputValueOnly:=false;
+        Befehlssystem[14].Steuerung[length(Befehlssystem[14].Steuerung)-1].IntegerArgCount:=0;
+        Befehlssystem[14].Steuerung[length(Befehlssystem[14].Steuerung)-1].StringArgCount:=0;
+        Befehlssystem[14].Steuerung[length(Befehlssystem[14].Steuerung)-1].GUIDArgCount:=0;
       end;
       MSG_SETCOLOR: geraetesteuerung.set_color(StringToGUID(string(Data1)), data2[0], data2[1], data2[2], 0, 0); // Data1=ID, Data2=array[0..2] of byte (=R,G,B)
       MSG_SETDIMMER: geraetesteuerung.set_dimmer(StringToGUID(string(Data1)), data2); // Data1=ID, Data2=byte
@@ -14430,6 +14519,7 @@ begin
       end;
     end;
   end;
+  LReg.CloseKey;
   LReg.Free;
 
   StartupFinished:=true;
@@ -17121,12 +17211,66 @@ begin
       joystickform.CenterBtnClick(nil);
       exit;
     end;
+    // NodeControl
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[0].GUID) and EventFired then
+    begin // Knotenset abrufen
+      if (AktuellerBefehl.ArgInteger[0]<length(mainform.NodeControlSets)) then
+      begin
+        nodecontrolform.nodecontrolsetscombobox.ItemIndex:=AktuellerBefehl.ArgInteger[0];
+        nodecontrolform.nodecontrolsetscomboboxChange(nil);
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[1].GUID) then
+    begin // Knotenposition X auf Wert setzen
+      if (AktuellerBefehl.ArgInteger[0]<length(mainform.NodeControlSets)) then
+      begin
+        if (AktuellerBefehl.ArgInteger[1]<length(mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes)) then
+        begin
+          mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes[AktuellerBefehl.ArgInteger[1]].X:=AktuellerBefehl.ArgInteger[2];
+        end;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[2].GUID) then
+    begin // Knotenposition Y auf Wert setzen
+      if (AktuellerBefehl.ArgInteger[0]<length(mainform.NodeControlSets)) then
+      begin
+        if (AktuellerBefehl.ArgInteger[1]<length(mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes)) then
+        begin
+          mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes[AktuellerBefehl.ArgInteger[1]].Y:=AktuellerBefehl.ArgInteger[2];
+        end;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[3].GUID) then
+    begin // Knotenposition X auf Eingangswert
+      if (AktuellerBefehl.ArgInteger[0]<length(mainform.NodeControlSets)) then
+      begin
+        if (AktuellerBefehl.ArgInteger[1]<length(mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes)) then
+        begin
+          mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes[AktuellerBefehl.ArgInteger[1]].X:=round((Value/255)*nodecontrolform.PaintBox1.Width);
+        end;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[4].GUID) then
+    begin // Knotenposition Y auf Eingangswert
+      if (AktuellerBefehl.ArgInteger[0]<length(mainform.NodeControlSets)) then
+      begin
+        if (AktuellerBefehl.ArgInteger[1]<length(mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes)) then
+        begin
+          mainform.NodeControlSets[AktuellerBefehl.ArgInteger[0]].NodeControlNodes[AktuellerBefehl.ArgInteger[1]].Y:=round((Value/255)*nodecontrolform.PaintBox1.Height);
+        end;
+      end;
+      exit;
+    end;
   except
   end;
 
   // Wenn hier angekommen, dann ist Befehl nicht hinterlegt -> per Message senden:
 //  for i:=0 to length(mainform.Befehlssystem)-1 do
-  i:=13;
+  i:=14;
   begin
     for j:=0 to length(mainform.Befehlssystem[i].Steuerung)-1 do
     begin
@@ -20525,6 +20669,9 @@ begin
 
   schedulerform.Top:=0;
   schedulerform.Left:=0;
+
+  nodecontrolform.Top:=0;
+  nodecontrolform.Left:=0;
 end;
 
 procedure TMainform.AutobackuptimerTimer(Sender: TObject);
@@ -21636,6 +21783,8 @@ begin
     LReg.SaveWndPosEx('Touchscreen', touchscreenform);
   if (window='dyngui') or (window='all') then
     LReg.SaveWndPosEx('DynGUI', dynguiform);
+  if (window='nodecontrol') or (window='all') then
+    LReg.SaveWndPosEx('NodeControl', nodecontrolform);
 
   LReg.Free;
 end;
