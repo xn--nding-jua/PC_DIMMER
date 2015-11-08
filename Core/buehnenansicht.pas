@@ -173,7 +173,7 @@ type
 //    procedure searchpicture(Device: integer);
 //    procedure device_searchpicture(Device: integer; DeviceInStageView: integer);
     procedure RotateBtnClick(Sender: TObject);
-    procedure SmoothRotate(var aPng: TPNGObject; Angle: Extended);
+//    procedure SmoothRotate(var aPng: TPNGObject; Angle: Extended);
     procedure FlipHorBtnClick(Sender: TObject);
     procedure FlipVerBtnClick(Sender: TObject);
     procedure VertikalSpiegeln(Bitmap : TBitmap; Device:Integer);
@@ -347,6 +347,7 @@ begin
   end;
 end;
 
+{
 procedure Tgrafischebuehnenansicht.SmoothRotate(var aPng: TPNGObject; Angle: Extended);
   function TrimInt(i, Min, Max: Integer): Integer;
   begin
@@ -500,6 +501,7 @@ begin
   apng.assign(dst);
   dst.free;
 end;
+}
 
 function RGB2TColor(const R, G, B: Byte): Integer;
 begin

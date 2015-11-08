@@ -4,8 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, pngimage, ExtCtrls, JvExControls, JvGradient, Grids,
-  Buttons, PngBitBtn, gnugettext, PngImageList;
+  Dialogs, StdCtrls, ExtCtrls, JvExControls, JvGradient, Grids,
+  Buttons, PngBitBtn, gnugettext, PngImageList, pngimage;
 
 type
   Tdevicelistform = class(TForm)
@@ -84,10 +84,10 @@ begin
       png.PngImage.LoadFromFile(mainform.workingdirectory+'Devicepictures\32 x 32\par56silber.png');
     end else
     begin
-      png:=collection.Items.Add(false);
-      png.PngImage.Canvas.Brush.Color:=clwhite;
-      png.PngImage.Canvas.Pen.Color:=clwhite;
-      png.PngImage.Canvas.Rectangle(0, 0, 32, 32);
+      //png:=collection.Items.Add(false);
+      //png.PngImage.Canvas.Brush.Color:=clwhite;
+      //png.PngImage.Canvas.Pen.Color:=clwhite;
+      //png.PngImage.Canvas.Rectangle(0, 0, 32, 32);
     end;
   end;
 

@@ -611,6 +611,7 @@ type
     dxBarButton2: TdxBarButton;
     dxBarButton6: TdxBarButton;
     NodeControlRibbonBtn: TdxBarLargeButton;
+    OnlineUpdateRibbonBtn: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -869,6 +870,7 @@ type
     procedure dxBarButton2Click(Sender: TObject);
     procedure dxBarButton6Click(Sender: TObject);
     procedure NodeControlRibbonBtnClick(Sender: TObject);
+    procedure OnlineUpdateRibbonBtnClick(Sender: TObject);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -13562,6 +13564,7 @@ var
   somethingloaded:boolean;
   Buffer:TMemoryStream;
   Wnd: hWnd;
+  P: TdxPNGImage;
 begin
   if shutdown then exit;
 
@@ -27201,6 +27204,11 @@ end;
 procedure TMainform.NodeControlRibbonBtnClick(Sender: TObject);
 begin
   nodecontrolform.show;
+end;
+
+procedure TMainform.OnlineUpdateRibbonBtnClick(Sender: TObject);
+begin
+  ShellExecute(Handle, 'open', PChar('http://update.pcdimmer.de'), nil, nil, SW_SHOW);
 end;
 
 end.

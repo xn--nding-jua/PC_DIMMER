@@ -56,7 +56,7 @@ object devicelistform: Tdevicelistform
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 746
+    Width = 738
     Height = 57
     Align = alTop
     BevelOuter = bvNone
@@ -65,7 +65,7 @@ object devicelistform: Tdevicelistform
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 746
+      Width = 738
       Height = 57
       Style = grVertical
       StartColor = clWhite
@@ -700,8 +700,8 @@ object devicelistform: Tdevicelistform
   object StringGrid1: TStringGrid
     Left = 0
     Top = 57
-    Width = 746
-    Height = 309
+    Width = 738
+    Height = 300
     Align = alClient
     ColCount = 13
     DefaultColWidth = 100
@@ -714,8 +714,8 @@ object devicelistform: Tdevicelistform
   end
   object Panel2: TPanel
     Left = 0
-    Top = 366
-    Width = 746
+    Top = 357
+    Width = 738
     Height = 43
     Align = alBottom
     BevelOuter = bvNone
@@ -723,7 +723,7 @@ object devicelistform: Tdevicelistform
     object Shape1: TShape
       Left = 0
       Top = 1
-      Width = 746
+      Width = 738
       Height = 42
       Align = alClient
       Pen.Style = psClear
@@ -731,7 +731,7 @@ object devicelistform: Tdevicelistform
     object Shape2: TShape
       Left = 0
       Top = 0
-      Width = 746
+      Width = 738
       Height = 1
       Align = alTop
     end
