@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-09 00:52+0100\n"
+"POT-Creation-Date: 2015-11-09 22:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -885,7 +885,7 @@ msgstr ""
 #: bewegungsszeneneditor.dfm:686 bewegungsszeneneditor.dfm:706
 #: bewegungsszeneneditor.dfm:724 bewegungsszeneneditor.dfm:806
 #: bewegungsszeneneditor.dfm:1050 blenddownfrm.dfm:16 buehnenansicht.dfm:12
-#: buehnenansicht.dfm:1895 buehnenansicht.dfm:2463 buehnenansicht.dfm:2477
+#: buehnenansicht.dfm:1895 buehnenansicht.dfm:2464 buehnenansicht.dfm:2478
 #: buehnenansicht.dfm:2607 buehnenansicht.dfm:2620 buehnenansicht.dfm:2654
 #: buehnenansicht.dfm:2681 buehnenansicht.dfm:2729 buehnenansicht.dfm:2825
 #: buehnenansicht.dfm:2838 buehnenansicht.dfm:2843 buehnenansicht.dfm:2848
@@ -964,7 +964,7 @@ msgstr ""
 #: Optionen.dfm:1250 Optionen.dfm:1589 Optionen.dfm:1620 Optionen.dfm:1739
 #: Optionen.dfm:1947 Optionen.dfm:2037 ownmessagefrm.dfm:12 Pat.dfm:12
 #: pcdimmer.dfm:14 pcdimmer.dfm:361 pcdimmer.dfm:394 pcdimmer.dfm:866
-#: pcdimmer.dfm:2376 pcdimmer.dfm:2392 pcdimmer.dfm:2397 pcdimmer.dfm:2402
+#: pcdimmer.dfm:2390 pcdimmer.dfm:2406 pcdimmer.dfm:2411 pcdimmer.dfm:2416
 #: picturechangefrm.dfm:11 pmm.dfm:13 preseteditorform.dfm:12
 #: preseteditorform.dfm:192 preseteditorform.dfm:207 preseteditorform.dfm:212
 #: preseteditorform.dfm:217 preseteditorform.dfm:1612
@@ -2271,8 +2271,8 @@ msgstr ""
 #. setupform..Caption
 #. Programmer's name: POPUP
 #: Action.dfm:6  audioeffektplayerfrm.dfm:3589 kontrollpanelform.dfm:1280
-#: pcdimmer.dfm:263 pcdimmer.dfm:24910 pcdimmer.dfm:24912 pcdimmer.dfm:25364
-#: pcdimmer.dfm:25366 plugins/Ausgabeplugin/ArtNet/mainfrm.dfm:167
+#: pcdimmer.dfm:263 pcdimmer.dfm:24924 pcdimmer.dfm:24926 pcdimmer.dfm:25378
+#: pcdimmer.dfm:25380 plugins/Ausgabeplugin/ArtNet/mainfrm.dfm:167
 #: plugins/Programmplugins/Alt/Kontrollpanel/action.dfm:6
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:670
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:5
@@ -2739,7 +2739,7 @@ msgstr ""
 #: addcolorandgobotoeffectfrm.dfm:502  audioeffektplayerstretchfrm.dfm:93
 #: audioszeneeditorform.dfm:391 audioszeneeditorform.dfm:405 beatfrm.dfm:80
 #: beatfrm.dfm:94 beatfrm.dfm:107 beatfrm.dfm:114 beatfrm.dfm:121
-#: beatfrm.dfm:128 beatfrm.dfm:155 beatfrm.dfm:428 buehnenansicht.dfm:2509
+#: beatfrm.dfm:128 beatfrm.dfm:155 beatfrm.dfm:428 buehnenansicht.dfm:2510
 #: commandfrm.dfm:24 ddfeditorfrm.dfm:335 ddfeditorfrm.dfm:3283
 #: devicechannelselectionfrm.dfm:83 devicechannelselectionfrm.dfm:103
 #: devicescenefrm.dfm:662 devicescenefrm.dfm:675 effektsequenzerfrm.dfm:781
@@ -2750,7 +2750,7 @@ msgstr ""
 #: lauflichtassistentownpatternfrm.dfm:107
 #: lauflichtassistentownpatternfrm.dfm:121 matrixeditorfrm.dfm:86
 #: matrixeditorfrm.dfm:100 matrixeditorfrm.dfm:114 onlineupdatefrm.dfm:737
-#: pcdimmer.dfm:1464 pcdimmer.dfm:1471 pcdimmer.dfm:1478 pcdimmer.dfm:1485
+#: pcdimmer.dfm:1478 pcdimmer.dfm:1485 pcdimmer.dfm:1492 pcdimmer.dfm:1499
 #: preseteditorform.dfm:1496 presetsceneeditorform.dfm:1008
 #: progressscreen.dfm:1245 projektverwaltungfrm.dfm:70
 #: skripttimer_edit.dfm:1116 timecodeplayerfrm.dfm:190 winlircfrm.dfm:106
@@ -2800,7 +2800,7 @@ msgstr ""
 #: plugins/Programmplugins/_PluginSDK_Programmplugin_Delphi7/main.dfm:521
 #: plugins/Programmplugins/Alt/WinLIRC/settingfrm.dfm:568
 #: plugins/Programmplugins/Temperaturregler/configfrm.dfm:729
-#: pcdimmer.pas:22643 pcdimmer.pas:22644 pcdimmer.pas:22646
+#: pcdimmer.pas:22656 pcdimmer.pas:22657 pcdimmer.pas:22659
 msgid "..."
 msgstr ""
 
@@ -2836,7 +2836,7 @@ msgstr ""
 #. adddevice..Caption
 #. devicelistform..Caption
 #. MainForm..dxBarManager1..DeviceListRibbonBtn..Caption
-#: adddevicefrm.dfm:6  devicelistfrm.dfm:6 pcdimmer.dfm:20292
+#: adddevicefrm.dfm:6  devicelistfrm.dfm:6 pcdimmer.dfm:20306
 msgid "Geräteliste"
 msgstr ""
 
@@ -3011,7 +3011,7 @@ msgstr ""
 #: lauflichtassistentownpatternfrm.dfm:495 matrixeditorfrm.dfm:606
 #: matrixeditorfrm.dfm:619 matrixeditorfrm.dfm:627 mediacenterfrm.dfm:430
 #: mediacenterfrm.dfm:433 mediacenterfrm.dfm:439 mediacenterfrm.dfm:442
-#: pcdimmer.dfm:5581 pcdimmer.dfm:5593 pcdimmer.dfm:5604
+#: pcdimmer.dfm:5595 pcdimmer.dfm:5607 pcdimmer.dfm:5618
 #: projektverwaltungfrm.dfm:514 projektverwaltungfrm.dfm:533
 #: szenenverwaltung.dfm:1175 szenenverwaltung.dfm:1432 touchscreenfrm.dfm:645
 #: touchscreenfrm.dfm:654 touchscreenfrm.dfm:681 touchscreenfrm.dfm:699
@@ -3210,7 +3210,7 @@ msgstr ""
 #. adddevice..Panel2..GroupBox1..VST......WideText
 #. ddfeditorform..PageControl1..TabSheet2..Caption
 #. MainForm..Panel1..PageControl1..TabSheet3..Caption
-#: adddevicefrm.dfm:1619  ddfeditorfrm.dfm:369 pcdimmer.dfm:1457
+#: adddevicefrm.dfm:1619  ddfeditorfrm.dfm:369 pcdimmer.dfm:1471
 #: devicelistfrm.pas:114 submasterfrm.pas:491
 msgid "Kanäle"
 msgstr ""
@@ -3275,7 +3275,7 @@ msgstr ""
 #. geraetesteuerung..XML..StorageOptions.BooleanStringTrueValues
 #. MainForm..XML..StorageOptions.BooleanStringTrueValues
 #: adddevicefrm.dfm:2222  ddfeditorfrm.dfm:5733 ddfwindowfrm.dfm:2336
-#: geraetesteuerungfrm.dfm:3591 pcdimmer.dfm:17637
+#: geraetesteuerungfrm.dfm:3591 pcdimmer.dfm:17651
 msgid "TRUE, YES, Y"
 msgstr ""
 
@@ -3285,7 +3285,7 @@ msgstr ""
 #. geraetesteuerung..XML..StorageOptions.BooleanStringFalseValues
 #. MainForm..XML..StorageOptions.BooleanStringFalseValues
 #: adddevicefrm.dfm:2223  ddfeditorfrm.dfm:5734 ddfwindowfrm.dfm:2337
-#: geraetesteuerungfrm.dfm:3592 pcdimmer.dfm:17638
+#: geraetesteuerungfrm.dfm:3592 pcdimmer.dfm:17652
 msgid "FALSE, NO, N"
 msgstr ""
 
@@ -3295,7 +3295,7 @@ msgstr ""
 #. geraetesteuerung..XML..StorageOptions.InvalidCharReplacement
 #. MainForm..XML..StorageOptions.InvalidCharReplacement
 #: adddevicefrm.dfm:2226  ddfeditorfrm.dfm:5737 ddfwindowfrm.dfm:2340
-#: geraetesteuerungfrm.dfm:3595 pcdimmer.dfm:17641
+#: geraetesteuerungfrm.dfm:3595 pcdimmer.dfm:17655
 msgid "_"
 msgstr ""
 
@@ -3305,7 +3305,7 @@ msgstr ""
 #. geraetesteuerung..XML..RootNodeName
 #. MainForm..XML..RootNodeName
 #: adddevicefrm.dfm:2228  ddfeditorfrm.dfm:5739 ddfwindowfrm.dfm:2342
-#: geraetesteuerungfrm.dfm:3597 pcdimmer.dfm:17643
+#: geraetesteuerungfrm.dfm:3597 pcdimmer.dfm:17657
 msgid "device"
 msgstr ""
 
@@ -3493,7 +3493,7 @@ msgstr ""
 #. Standard-Autoszenen erstellen
 #: ambilight.dfm:551  pmm.dfm:1768
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:582
-#: kontrollpanelform.pas:544 pcdimmer.pas:3847 pcdimmer.pas:25922
+#: kontrollpanelform.pas:544 pcdimmer.pas:3860 pcdimmer.pas:25965
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1027
 msgid "Rot"
 msgstr ""
@@ -3503,7 +3503,7 @@ msgstr ""
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #: ambilight.dfm:560  pmm.dfm:1778
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:585
-#: kontrollpanelform.pas:546 pcdimmer.pas:3857 pcdimmer.pas:25924
+#: kontrollpanelform.pas:546 pcdimmer.pas:3870 pcdimmer.pas:25967
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1029
 msgid "Grün"
 msgstr ""
@@ -3513,7 +3513,7 @@ msgstr ""
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #: ambilight.dfm:569  pmm.dfm:1786
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:587
-#: kontrollpanelform.pas:551 pcdimmer.pas:3867 pcdimmer.pas:25929
+#: kontrollpanelform.pas:551 pcdimmer.pas:3880 pcdimmer.pas:25972
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1034
 msgid "Blau"
 msgstr ""
@@ -3644,7 +3644,7 @@ msgstr ""
 
 #. ambilightform..GroupBox5..Button2..Caption
 #. Ambilight aus
-#: ambilight.dfm:3841  ambilight.pas:1061 pcdimmer.pas:15934
+#: ambilight.dfm:3841  ambilight.pas:1061 pcdimmer.pas:15947
 msgid "Ambilight einschalten"
 msgstr ""
 
@@ -3866,7 +3866,7 @@ msgstr ""
 
 #. audioeffektplayerform..PanelTop..PanelRight..GroupBox1..Videoscreenbtn..Caption
 #. MainForm..dxBarManager1..VideoscreenRibbonBtn..Caption
-#: audioeffektplayerfrm.dfm:1045  pcdimmer.dfm:23252
+#: audioeffektplayerfrm.dfm:1045  pcdimmer.dfm:23266
 #: Channels_Commandsystem.inc:904
 msgid "Videoscreen"
 msgstr ""
@@ -4203,7 +4203,7 @@ msgstr ""
 #. Programmer's name: POPUP
 #. Programmer's name: POPUP
 #: audioeffektplayerfrm.dfm:3524  ddfeditorfrm.dfm:3904
-#: geraetesteuerungfrm.dfm:3428 kontrollpanelform.dfm:1223 pcdimmer.dfm:17787
+#: geraetesteuerungfrm.dfm:3428 kontrollpanelform.dfm:1223 pcdimmer.dfm:17801
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:628
 #: plugins/Programmplugins/Alt/WinLIRC/settingfrm.dfm:988
 #: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:244
@@ -4240,7 +4240,7 @@ msgstr ""
 #. videoscreenform..TBDock1..TBToolbar1..Einstellungen1..Caption
 #. mainform..MainMenu1..Ansicht1..Caption
 #: audioeffektplayerfrm.dfm:3543  kontrollpanelform.dfm:1247
-#: pcdimmer.dfm:18236 videoscreenfrm.dfm:695
+#: pcdimmer.dfm:18250 videoscreenfrm.dfm:695
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:650
 msgid "Ansicht"
 msgstr ""
@@ -4931,7 +4931,7 @@ msgstr ""
 #. audioszeneneditor..Panel5..Label34..Caption
 #. szenenverwaltungform..PopupMenu1..Audioszene1..Caption
 #. Name
-#: audioszeneeditorform.dfm:858  szenenverwaltung.dfm:1445 pcdimmer.pas:22482
+#: audioszeneeditorform.dfm:858  szenenverwaltung.dfm:1445 pcdimmer.pas:22495
 #: szenenverwaltung.pas:1528
 msgid "Audioszene"
 msgstr ""
@@ -5037,7 +5037,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Automatikszene1..Caption
 #. Name
 #: autoszenefrm.dfm:5  autoszenefrm.dfm:565 szenenverwaltung.dfm:1470
-#: pcdimmer.pas:22563 szenenverwaltung.pas:1820
+#: pcdimmer.pas:22576 szenenverwaltung.pas:1820
 msgid "Automatikszene"
 msgstr ""
 
@@ -5140,7 +5140,7 @@ msgstr ""
 #. mainform..Panel1..buttonfarbe..OtherCaption
 #: autoszenefrm.dfm:338  colormanagerfrm.dfm:263 colormanagerfrm.dfm:945
 #: ddfeditorfrm.dfm:869 ddfeditorfrm.dfm:1140 firststepsfrm.dfm:8660
-#: geraetesteuerungfrm.dfm:3271 kontrollpanelform.dfm:354 pcdimmer.dfm:1623
+#: geraetesteuerungfrm.dfm:3271 kontrollpanelform.dfm:354 pcdimmer.dfm:1637
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:387
 msgid "&Other..."
 msgstr ""
@@ -5300,7 +5300,7 @@ msgstr ""
 #. MainForm..Panel1..PageControl1..TabSheet2..btnwidth..Hint
 #. mainform..Panel1..zeilen..Hint
 #: beatfrm.dfm:350  kontrollpanelform.dfm:367 kontrollpanelform.dfm:786
-#: pcdimmer.dfm:1789 pcdimmer.dfm:1817
+#: pcdimmer.dfm:1803 pcdimmer.dfm:1831
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:397
 msgid "Zeilenanzahl"
 msgstr ""
@@ -5452,7 +5452,7 @@ msgstr ""
 #. editmidieventfrm..GroupBox2..typ....Items.Strings
 #. mainform..Caption
 #. ProgressScreenSmall.Refresh;
-#: befehleditorform.dfm:304  pcdimmer.dfm:27497 submasterfrm.dfm:9
+#: befehleditorform.dfm:304  pcdimmer.dfm:27511 submasterfrm.dfm:9
 #: plugins/Programmplugins/Alt/Submaster/editmidievent.dfm:371
 #: plugins/Programmplugins/Alt/Submaster/main.dfm:9
 #: Channels_Commandsystem.inc:1031 geraetesteuerungfrm.pas:3089
@@ -5467,7 +5467,7 @@ msgstr ""
 #. mainform..Caption
 #. mainform..Caption
 #: befehleditorform.dfm:305  firststepsfrm.dfm:9091 kontrollpanelform.dfm:10
-#: pcdimmer.dfm:21832
+#: pcdimmer.dfm:21846
 #: plugins/Programmplugins/_PluginSDK_Programmplugin_Delphi7/main.dfm:9
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:10
 #: Channels_Commandsystem.inc:1098
@@ -5668,7 +5668,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Befehle1..Caption
 #. Name
 #: befehleditorform2.dfm:839  submasterfrm.dfm:2320 szenenverwaltung.dfm:1455
-#: pcdimmer.pas:22519 szenenverwaltung.pas:1641
+#: pcdimmer.pas:22532 szenenverwaltung.pas:1641
 msgid "Befehl"
 msgstr ""
 
@@ -5692,7 +5692,7 @@ msgstr ""
 #. touchscreenform..pnglist......Name
 #. USBViewForm..DeviceIcons......Name
 #: befehleditorform2.dfm:988  cdplayerfrm.dfm:1057 cuelistfrm.dfm:2245
-#: dynguifrm.dfm:1954 leistungssteuerungfrm2.dfm:1516 pcdimmer.dfm:6229
+#: dynguifrm.dfm:1954 leistungssteuerungfrm2.dfm:1516 pcdimmer.dfm:6243
 #: textbuchfrm.dfm:994 touchscreenfrm.dfm:1739 USBViewMain.dfm:522
 msgid "PngImage0"
 msgstr ""
@@ -5707,7 +5707,7 @@ msgstr ""
 #. touchscreenform..pnglist......Name
 #. USBViewForm..DeviceIcons......Name
 #: befehleditorform2.dfm:1103  cdplayerfrm.dfm:1183 cuelistfrm.dfm:3084
-#: dynguifrm.dfm:2072 leistungssteuerungfrm2.dfm:1682 pcdimmer.dfm:6459
+#: dynguifrm.dfm:2072 leistungssteuerungfrm2.dfm:1682 pcdimmer.dfm:6473
 #: textbuchfrm.dfm:1104 touchscreenfrm.dfm:1923 USBViewMain.dfm:548
 msgid "PngImage1"
 msgstr ""
@@ -5721,7 +5721,7 @@ msgstr ""
 #. touchscreenform..pnglist......Name
 #. USBViewForm..DeviceIcons......Name
 #: befehleditorform2.dfm:1217  cuelistfrm.dfm:3251 dynguifrm.dfm:2194
-#: leistungssteuerungfrm2.dfm:2010 pcdimmer.dfm:6575 textbuchfrm.dfm:1492
+#: leistungssteuerungfrm2.dfm:2010 pcdimmer.dfm:6589 textbuchfrm.dfm:1492
 #: touchscreenfrm.dfm:2095 USBViewMain.dfm:485
 msgid "PngImage2"
 msgstr ""
@@ -5735,7 +5735,7 @@ msgstr ""
 #. touchscreenform..pnglist......Name
 #. USBViewForm..DeviceIcons......Name
 #: befehleditorform2.dfm:1337  cuelistfrm.dfm:3487 dynguifrm.dfm:2318
-#: leistungssteuerungfrm2.dfm:2329 pcdimmer.dfm:6688 textbuchfrm.dfm:1298
+#: leistungssteuerungfrm2.dfm:2329 pcdimmer.dfm:6702 textbuchfrm.dfm:1298
 #: touchscreenfrm.dfm:2297 USBViewMain.dfm:655
 msgid "PngImage3"
 msgstr ""
@@ -5748,7 +5748,7 @@ msgstr ""
 #. touchscreenform..pnglist......Name
 #. USBViewForm..DeviceIcons......Name
 #: befehleditorform2.dfm:1457  cuelistfrm.dfm:2934 dynguifrm.dfm:2436
-#: pcdimmer.dfm:6802 textbuchfrm.dfm:792 touchscreenfrm.dfm:2485
+#: pcdimmer.dfm:6816 textbuchfrm.dfm:792 touchscreenfrm.dfm:2485
 #: USBViewMain.dfm:769
 msgid "PngImage4"
 msgstr ""
@@ -5760,7 +5760,7 @@ msgstr ""
 #. textbuchform..PngImageList1......Name
 #. touchscreenform..pnglist......Name
 #: befehleditorform2.dfm:1577  cuelistfrm.dfm:2746 dynguifrm.dfm:2580
-#: pcdimmer.dfm:6912 textbuchfrm.dfm:893 touchscreenfrm.dfm:2612
+#: pcdimmer.dfm:6926 textbuchfrm.dfm:893 touchscreenfrm.dfm:2612
 msgid "PngImage5"
 msgstr ""
 
@@ -5771,7 +5771,7 @@ msgstr ""
 #. textbuchform..PngImageList1......Name
 #. touchscreenform..pnglist......Name
 #: befehleditorform2.dfm:1698  cuelistfrm.dfm:2582 dynguifrm.dfm:2724
-#: pcdimmer.dfm:7027 textbuchfrm.dfm:1201 touchscreenfrm.dfm:3079
+#: pcdimmer.dfm:7041 textbuchfrm.dfm:1201 touchscreenfrm.dfm:3079
 msgid "PngImage6"
 msgstr ""
 
@@ -5782,7 +5782,7 @@ msgstr ""
 #. textbuchform..PngImageList1......Name
 #. touchscreenform..pnglist......Name
 #: befehleditorform2.dfm:1815  cuelistfrm.dfm:2413 dynguifrm.dfm:2865
-#: pcdimmer.dfm:5886 textbuchfrm.dfm:476 touchscreenfrm.dfm:2704
+#: pcdimmer.dfm:5900 textbuchfrm.dfm:476 touchscreenfrm.dfm:2704
 msgid "PngImage7"
 msgstr ""
 
@@ -5793,7 +5793,7 @@ msgstr ""
 #. textbuchform..PngImageList1......Name
 #. touchscreenform..pnglist......Name
 #: befehleditorform2.dfm:1928  cuelistfrm.dfm:2075 dynguifrm.dfm:3159
-#: pcdimmer.dfm:6114 textbuchfrm.dfm:1395 touchscreenfrm.dfm:2825
+#: pcdimmer.dfm:6128 textbuchfrm.dfm:1395 touchscreenfrm.dfm:2825
 msgid "PngImage8"
 msgstr ""
 
@@ -5804,7 +5804,7 @@ msgstr ""
 #. textbuchform..PngImageList1......Name
 #. touchscreenform..pnglist......Name
 #: befehleditorform2.dfm:1961  cuelistfrm.dfm:3325 dynguifrm.dfm:3017
-#: pcdimmer.dfm:5770 textbuchfrm.dfm:693 touchscreenfrm.dfm:2955
+#: pcdimmer.dfm:5784 textbuchfrm.dfm:693 touchscreenfrm.dfm:2955
 msgid "PngImage9"
 msgstr ""
 
@@ -5823,7 +5823,7 @@ msgstr ""
 #. MainForm..PngImageList1......Name
 #. textbuchform..PngImageList1......Name
 #. touchscreenform..pnglist......Name
-#: befehleditorform2.dfm:2190  dynguifrm.dfm:3299 pcdimmer.dfm:7144
+#: befehleditorform2.dfm:2190  dynguifrm.dfm:3299 pcdimmer.dfm:7158
 #: textbuchfrm.dfm:1608 touchscreenfrm.dfm:3306
 msgid "PngImage11"
 msgstr ""
@@ -5832,7 +5832,7 @@ msgstr ""
 #. dynguiform..pnglist......Name
 #. MainForm..PngImageList1......Name
 #. touchscreenform..pnglist......Name
-#: befehleditorform2.dfm:2303  dynguifrm.dfm:3598 pcdimmer.dfm:6343
+#: befehleditorform2.dfm:2303  dynguifrm.dfm:3598 pcdimmer.dfm:6357
 #: touchscreenfrm.dfm:3420
 msgid "PngImage12"
 msgstr ""
@@ -5841,7 +5841,7 @@ msgstr ""
 #. dynguiform..pnglist......Name
 #. MainForm..PngImageList1......Name
 #. touchscreenform..pnglist......Name
-#: befehleditorform2.dfm:2423  dynguifrm.dfm:3873 pcdimmer.dfm:5997
+#: befehleditorform2.dfm:2423  dynguifrm.dfm:3873 pcdimmer.dfm:6011
 #: touchscreenfrm.dfm:3534
 msgid "PngImage13"
 msgstr ""
@@ -5850,7 +5850,7 @@ msgstr ""
 #. dynguiform..pnglist......Name
 #. MainForm..PngImageList1......Name
 #. touchscreenform..pnglist......Name
-#: befehleditorform2.dfm:2530  dynguifrm.dfm:4006 pcdimmer.dfm:7373
+#: befehleditorform2.dfm:2530  dynguifrm.dfm:4006 pcdimmer.dfm:7387
 #: touchscreenfrm.dfm:3772
 msgid "PngImage14"
 msgstr ""
@@ -6171,7 +6171,8 @@ msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..Label11..Caption
 #. MainForm..Panel1..PageControl1..TabSheet1..Label11..Caption
-#: buehnenansicht.dfm:1904  pcdimmer.dfm:875
+#. MainForm..Panel1..PageControl1..TabSheet1..Label16..Caption
+#: buehnenansicht.dfm:1904  pcdimmer.dfm:875 pcdimmer.dfm:890
 msgid "Verschiebe selektierte Icons nach:"
 msgstr ""
 
@@ -6218,7 +6219,7 @@ msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..Button2..Hint
 #. MainForm..Panel1..PageControl1..TabSheet1..Button2..Hint
-#: buehnenansicht.dfm:1939  pcdimmer.dfm:1356
+#: buehnenansicht.dfm:1939  pcdimmer.dfm:1360
 msgid "Fügt beliebig viele Icons eines beliebigen Kanals an"
 msgstr ""
 
@@ -6250,7 +6251,7 @@ msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..Button1....Hint
 #. MainForm..Panel1..PageControl1..TabSheet1..Button1....Hint
-#: buehnenansicht.dfm:1974  pcdimmer.dfm:932
+#: buehnenansicht.dfm:1974  pcdimmer.dfm:934
 msgid ""
 "Setzt die aktuelle Bühnenansicht-Selektion als Geräteselektion, sodass z.B. "
 "Presets auf diese Geräte angewendet werden können"
@@ -6258,7 +6259,7 @@ msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..Button1..Caption
 #. MainForm..Panel1..PageControl1..TabSheet1..Button1..Caption
-#: buehnenansicht.dfm:1975  pcdimmer.dfm:933
+#: buehnenansicht.dfm:1975  pcdimmer.dfm:935
 msgid "Selektion als Geräteselektion"
 msgstr ""
 
@@ -6282,20 +6283,20 @@ msgstr ""
 #. MainForm..Panel1..PageControl1..TabSheet1..BankCopy..Text
 #. MainForm..Panel1..PageControl1..TabSheet1..BankCopy....Items.Strings
 #: buehnenansicht.dfm:2002  buehnenansicht.dfm:2005 buehnenansicht.dfm:2016
-#: buehnenansicht.dfm:2019 pcdimmer.dfm:948 pcdimmer.dfm:951 pcdimmer.dfm:962
-#: pcdimmer.dfm:965 buehnenansicht.pas:1908 buehnenansicht.pas:1909
+#: buehnenansicht.dfm:2019 pcdimmer.dfm:950 pcdimmer.dfm:953 pcdimmer.dfm:964
+#: pcdimmer.dfm:967 buehnenansicht.pas:1908 buehnenansicht.pas:1909
 msgid "Bühne 1"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..CheckBox3..Caption
 #. MainForm..Panel1..PageControl1..TabSheet1..CheckBox3..Caption
-#: buehnenansicht.dfm:2402  pcdimmer.dfm:1348
+#: buehnenansicht.dfm:2402  pcdimmer.dfm:1350
 msgid "Icons verriegeln"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..Button4..Caption
 #. MainForm..Panel1..PageControl1..TabSheet1..Button4..Caption
-#: buehnenansicht.dfm:2411  pcdimmer.dfm:1451
+#: buehnenansicht.dfm:2411  pcdimmer.dfm:1455
 msgid "Am Raster ausrichten"
 msgstr ""
 
@@ -6303,68 +6304,69 @@ msgstr ""
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..ComboBox1....Items.Strings
 #. MainForm..Panel1..PageControl1..TabSheet1..ComboBox2..Text
 #. MainForm..Panel1..PageControl1..TabSheet1..ComboBox2....Items.Strings
-#: buehnenansicht.dfm:2424  buehnenansicht.dfm:2429 pcdimmer.dfm:1436
-#: pcdimmer.dfm:1442
+#: buehnenansicht.dfm:2424  buehnenansicht.dfm:2429 pcdimmer.dfm:1440
+#: pcdimmer.dfm:1446
 msgid "32px"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..ComboBox1....Items.Strings
 #. MainForm..Panel1..PageControl1..TabSheet1..ComboBox2....Items.Strings
-#: buehnenansicht.dfm:2426  pcdimmer.dfm:1439
+#: buehnenansicht.dfm:2426  pcdimmer.dfm:1443
 msgid "8px"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..ComboBox1....Items.Strings
 #. MainForm..Panel1..PageControl1..TabSheet1..ComboBox2....Items.Strings
-#: buehnenansicht.dfm:2427  pcdimmer.dfm:1440
+#: buehnenansicht.dfm:2427  pcdimmer.dfm:1444
 msgid "16px"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..ComboBox1....Items.Strings
 #. MainForm..Panel1..PageControl1..TabSheet1..ComboBox2....Items.Strings
-#: buehnenansicht.dfm:2428  pcdimmer.dfm:1441
+#: buehnenansicht.dfm:2428  pcdimmer.dfm:1445
 msgid "24px"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..ComboBox1....Items.Strings
 #. MainForm..Panel1..PageControl1..TabSheet1..ComboBox2....Items.Strings
-#: buehnenansicht.dfm:2430  pcdimmer.dfm:1443
+#: buehnenansicht.dfm:2430  pcdimmer.dfm:1447
 msgid "48px"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..ComboBox1....Items.Strings
 #. MainForm..Panel1..PageControl1..TabSheet1..ComboBox2....Items.Strings
-#: buehnenansicht.dfm:2431  pcdimmer.dfm:1444
+#: buehnenansicht.dfm:2431  pcdimmer.dfm:1448
 msgid "64px"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..CheckBox4..Caption
 #. MainForm..Panel1..PageControl1..TabSheet1..CheckBox4..Caption
-#: buehnenansicht.dfm:2438  pcdimmer.dfm:1422
+#: buehnenansicht.dfm:2438  pcdimmer.dfm:1426
 msgid "Automatisch ausrichten"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..CheckBox6..Caption
-#: buehnenansicht.dfm:2447 
+#. MainForm..Panel1..PageControl1..TabSheet1..CheckBox6..Caption
+#: buehnenansicht.dfm:2447  pcdimmer.dfm:1464
 msgid "Gerät bei Maus-Over hell"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..Caption
 #. MainForm..dxBarManager1..ErweitertRibbonGroup..Caption
-#: buehnenansicht.dfm:2452  pcdimmer.dfm:18204
+#: buehnenansicht.dfm:2453  pcdimmer.dfm:18218
 msgid "Erweitert"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..Label3..Caption
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..Label3..Caption
-#: buehnenansicht.dfm:2459 
+#: buehnenansicht.dfm:2460 
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1027
 msgid "Hintergrund:"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..Label22..Caption
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..Label22..Caption
-#: buehnenansicht.dfm:2473 
+#: buehnenansicht.dfm:2474 
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1137
 msgid "Icon:"
 msgstr ""
@@ -6372,14 +6374,14 @@ msgstr ""
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..Label23..Caption
 #. MainForm..Panel1..PageControl1..TabSheet1..Label23..Caption
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..Label23..Caption
-#: buehnenansicht.dfm:2500  pcdimmer.dfm:882
+#: buehnenansicht.dfm:2501  pcdimmer.dfm:882
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1164
 msgid "Größe:"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..Button6..Hint
 #. MainForm..Panel1..PageControl1..TabSheet1..Button6..Hint
-#: buehnenansicht.dfm:2516  pcdimmer.dfm:1383
+#: buehnenansicht.dfm:2517  pcdimmer.dfm:1387
 msgid "Ändert das Hintergrundbild"
 msgstr ""
 
@@ -6387,16 +6389,14 @@ msgstr ""
 #. grafischebuehnenansicht..PopupMenu1..Hintergrundndern1..Caption
 #. MainForm..Panel1..PageControl1..TabSheet1..Button6..Caption
 #. grafischebuehnenansicht..PopupMenu1..Hintergrundndern1..Caption
-#: buehnenansicht.dfm:2517  buehnenansicht.dfm:2891 pcdimmer.dfm:1384
+#: buehnenansicht.dfm:2518  buehnenansicht.dfm:2891 pcdimmer.dfm:1388
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2646
 msgid "Hintergrund ändern"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..RotateBtn..Caption
-#. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..RotateBtn..Caption
-#: buehnenansicht.dfm:2543 
-#: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1273
-msgid "Drehen"
+#: buehnenansicht.dfm:2544 
+msgid "Icon um 90° Drehen"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..FlipHorBtn..Caption
@@ -6419,7 +6419,7 @@ msgstr ""
 #. editskriptfrm..GroupBox1..Button5..Font.Name
 #. editskriptfrm..GroupBox1..Button7..Font.Name
 #. Settings..Button4..Font.Name
-#: buehnenansicht.dfm:2558  buehnenansicht.dfm:2574 editskript.dfm:205
+#: buehnenansicht.dfm:2557  buehnenansicht.dfm:2573 editskript.dfm:205
 #: editskript.dfm:220 editskript.dfm:244 leistungssteuerungfrm.dfm:958
 #: sidebarfrm.dfm:1827
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1288
@@ -6556,7 +6556,7 @@ msgstr ""
 #: dynguifrm.dfm:1001 dynguifrm.dfm:1004
 #: lauflichtassistentownpatternfrm.dfm:277
 #: lauflichtassistentownpatternfrm.dfm:280 matrixeditorfrm.dfm:272
-#: matrixeditorfrm.dfm:275 pcdimmer.dfm:2384 pcdimmer.dfm:2387
+#: matrixeditorfrm.dfm:275 pcdimmer.dfm:2398 pcdimmer.dfm:2401
 #: preseteditorform.dfm:199 preseteditorform.dfm:202
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2600
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:664
@@ -6573,7 +6573,7 @@ msgstr ""
 #. grafischebuehnenansicht..Panel2..colorbox1..Properties.OtherCaption
 #: buehnenansicht.dfm:2834  ddfeditorfrm.dfm:4869 ddfwindowfrm.dfm:1617
 #: dynguifrm.dfm:1002 lauflichtassistentownpatternfrm.dfm:278
-#: matrixeditorfrm.dfm:273 pcdimmer.dfm:2385
+#: matrixeditorfrm.dfm:273 pcdimmer.dfm:2399
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2601
 msgid "Andere Farben..."
 msgstr ""
@@ -6680,7 +6680,7 @@ msgstr ""
 
 #. cdplayerform..Caption
 #. MainForm..dxBarManager1..CDPlayerRibbonBtn..Caption
-#: cdplayerfrm.dfm:6  pcdimmer.dfm:23587
+#: cdplayerfrm.dfm:6  pcdimmer.dfm:23601
 msgid "CD-Player"
 msgstr ""
 
@@ -6749,7 +6749,7 @@ msgstr ""
 #. projekteigenschaftenform..GroupBox1..Label11..Caption
 #. projektverwaltung..GroupBox2..Label15..Caption
 #. schedulerform..Label28..Caption
-#: clockfrm.dfm:6  pcdimmer.dfm:24100 projekteigenschaftenfrm.dfm:100
+#: clockfrm.dfm:6  pcdimmer.dfm:24114 projekteigenschaftenfrm.dfm:100
 #: projektverwaltungfrm.dfm:246 schedulerfrm.dfm:53
 msgid "Uhrzeit"
 msgstr ""
@@ -7165,8 +7165,8 @@ msgstr ""
 #: commandfrm.pas:89 commandfrm.pas:186 commandfrm.pas:196 commandfrm.pas:206
 #: commandfrm.pas:216 commandfrm.pas:226 commandfrm.pas:236 commandfrm.pas:246
 #: commandfrm.pas:256 commandfrm.pas:266 commandfrm.pas:276 commandfrm.pas:286
-#: commandfrm.pas:296 pcdimmer.pas:23688 pcdimmer.pas:23699 pcdimmer.pas:23714
-#: pcdimmer.pas:23731
+#: commandfrm.pas:296 pcdimmer.pas:23701 pcdimmer.pas:23712 pcdimmer.pas:23727
+#: pcdimmer.pas:23744
 msgid "Kommando hier eingeben..."
 msgstr ""
 
@@ -8184,14 +8184,14 @@ msgstr ""
 #. ddfeditorform..PageControl1..TabSheet1..breitelbl..Caption
 #. kontrollpanel..Panel1..Label2..Caption
 #. MainForm..Panel1..PageControl1..TabSheet2..Label12..Caption
-#: ddfeditorfrm.dfm:280  kontrollpanelform.dfm:328 pcdimmer.dfm:1597
+#: ddfeditorfrm.dfm:280  kontrollpanelform.dfm:328 pcdimmer.dfm:1611
 msgid "Breite:"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet1..hoehelbl..Caption
 #. kontrollpanel..Panel1..Label6..Caption
 #. MainForm..Panel1..PageControl1..TabSheet2..Label14..Caption
-#: ddfeditorfrm.dfm:288  kontrollpanelform.dfm:335 pcdimmer.dfm:1604
+#: ddfeditorfrm.dfm:288  kontrollpanelform.dfm:335 pcdimmer.dfm:1618
 msgid "Höhe:"
 msgstr ""
 
@@ -8898,7 +8898,7 @@ msgstr ""
 #: ddfwindowfrm.dfm:1618 dynguifrm.dfm:1000 dynguifrm.dfm:1003
 #: lauflichtassistentownpatternfrm.dfm:276
 #: lauflichtassistentownpatternfrm.dfm:279 matrixeditorfrm.dfm:271
-#: matrixeditorfrm.dfm:274 pcdimmer.dfm:2383 pcdimmer.dfm:2386
+#: matrixeditorfrm.dfm:274 pcdimmer.dfm:2397 pcdimmer.dfm:2400
 #: preseteditorform.dfm:198 preseteditorform.dfm:201
 msgid "No Color"
 msgstr ""
@@ -8915,7 +8915,7 @@ msgstr ""
 #. mainform..GroupBox3..DevSettings....Colorbox2..Properties.OtherCaption
 #: ddfeditorfrm.dfm:4872  ddfwindowfrm.dfm:1620 deviceformprototypfrm.dfm:83
 #: dynguifrm.dfm:1005 lauflichtassistentownpatternfrm.dfm:281
-#: matrixeditorfrm.dfm:276 pcdimmer.dfm:2388 preseteditorform.dfm:200
+#: matrixeditorfrm.dfm:276 pcdimmer.dfm:2402 preseteditorform.dfm:200
 #: preseteditorform.dfm:203
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:665
 msgid "Other Colors..."
@@ -9580,7 +9580,7 @@ msgstr ""
 #. Submaster
 #: devicescenefrm.dfm:6  devicescenefrm.dfm:441 szenenverwaltung.dfm:1440
 #: geraetesteuerungfrm.pas:2915 geraetesteuerungfrm.pas:2930
-#: pcdimmer.pas:22467 pcdimmer.pas:26679 pcdimmer.pas:26776
+#: pcdimmer.pas:22480 pcdimmer.pas:26722 pcdimmer.pas:26819
 #: szenenverwaltung.pas:1415 szenenverwaltung.pas:4031
 #: szenenverwaltung.pas:4049
 msgid "Geräteszene"
@@ -9930,7 +9930,7 @@ msgstr ""
 #. dynguiform..Caption
 #. MainForm..dxBarManager1..dxBarLargeButton5..Caption
 #. MainForm..dxBarManager1..dxBarLargeButton5..Hint
-#: dynguifrm.dfm:9  pcdimmer.dfm:31640 pcdimmer.dfm:31642
+#: dynguifrm.dfm:9  pcdimmer.dfm:31654 pcdimmer.dfm:31656
 msgid "Dynamische Oberfläche"
 msgstr ""
 
@@ -10128,7 +10128,7 @@ msgstr ""
 #. touchscreenform..Panel4..dimmerpanel..Label1..Caption
 #: dynguifrm.dfm:791  firststepsfrm.dfm:8782 nodecontrolfrm.dfm:398
 #: pmm.dfm:1884 touchscreenfrm.dfm:387 devicelistfrm.pas:120
-#: nodecontrolfrm.pas:185 pcdimmer.pas:24084 preseteditorform.pas:857
+#: nodecontrolfrm.pas:185 pcdimmer.pas:24097 preseteditorform.pas:857
 #: preseteditorform.pas:859 presetsceneeditorform.pas:583
 #: presetsceneeditorform.pas:585
 msgid "Dimmer"
@@ -10302,13 +10302,13 @@ msgstr ""
 
 #. dynguiform..pnglist......Name
 #. MainForm..PngImageList1......Name
-#: dynguifrm.dfm:3740  pcdimmer.dfm:7829
+#: dynguifrm.dfm:3740  pcdimmer.dfm:7843
 msgid "PngImage18"
 msgstr ""
 
 #. dynguiform..pnglist......Name
 #. MainForm..PngImageList1......Name
-#: dynguifrm.dfm:4138  pcdimmer.dfm:7718
+#: dynguifrm.dfm:4138  pcdimmer.dfm:7732
 msgid "PngImage17"
 msgstr ""
 
@@ -10316,7 +10316,7 @@ msgstr ""
 #. MainForm..PngImageList1......Name
 #. MainForm..PngImageList1......Name
 #. touchscreenform..pnglist......Name
-#: dynguifrm.dfm:4271  pcdimmer.dfm:7257 pcdimmer.dfm:7493
+#: dynguifrm.dfm:4271  pcdimmer.dfm:7271 pcdimmer.dfm:7507
 #: touchscreenfrm.dfm:4027
 msgid "PngImage15"
 msgstr ""
@@ -10324,13 +10324,13 @@ msgstr ""
 #. dynguiform..pnglist......Name
 #. MainForm..PngImageList1......Name
 #. touchscreenform..pnglist......Name
-#: dynguifrm.dfm:4404  pcdimmer.dfm:7604 touchscreenfrm.dfm:4154
+#: dynguifrm.dfm:4404  pcdimmer.dfm:7618 touchscreenfrm.dfm:4154
 msgid "PngImage16"
 msgstr ""
 
 #. dynguiform..pnglist......Name
 #. MainForm..PngImageList1......Name
-#: dynguifrm.dfm:4536  pcdimmer.dfm:7938
+#: dynguifrm.dfm:4536  pcdimmer.dfm:7952
 msgid "PngImage19"
 msgstr ""
 
@@ -10356,7 +10356,7 @@ msgstr ""
 #: editdatainevent.dfm:49 
 #: plugins/Ausgabeplugin/pc_dimmer_lan/configfrm.dfm:2538 datainevent.pas:146
 #: devicechannelselectionfrm.pas:1943 devicescenefrm.pas:2434 insscene.pas:289
-#: pcdimmer.pas:12973 pcdimmer.pas:12975 SetNames.pas:83
+#: pcdimmer.pas:12986 pcdimmer.pas:12988 SetNames.pas:83
 #: plugins/Programmplugins/Alt/Kontrollpanel/insscene.pas:242
 #: plugins/Programmplugins/Alt/Leistungsplugin/settingfrm.pas:351
 #: plugins/Programmplugins/Alt/Submaster/kanalwahl.pas:165
@@ -10751,9 +10751,9 @@ msgstr ""
 #. skripttimer_editform..GroupBox1..ComboBox1....Items.Strings
 #. alle Effekte bis zur aktuellen Position abspielen
 #: effektsequenzerfrm.dfm:388  effektsequenzerfrm.dfm:511
-#: effektsequenzerfrm.dfm:1349 kontrollpanelform.dfm:435 pcdimmer.dfm:1650
+#: effektsequenzerfrm.dfm:1349 kontrollpanelform.dfm:435 pcdimmer.dfm:1664
 #: skripttimer_edit.dfm:1151 audioeffektplayerfrm.pas:6137
-#: audioeffektplayerfrm.pas:6160 pcdimmer.pas:22593 szenenverwaltung.pas:2064
+#: audioeffektplayerfrm.pas:6160 pcdimmer.pas:22606 szenenverwaltung.pas:2064
 msgid "Effekt"
 msgstr ""
 
@@ -11216,26 +11216,26 @@ msgstr ""
 #. faderpanelform..Caption
 #. MainForm..dxBarManager1..FaderpanelRibbonBtn..Caption
 #. Settings..Caption
-#: faderpanelfrm.dfm:7  pcdimmer.dfm:27455
+#: faderpanelfrm.dfm:7  pcdimmer.dfm:27469
 #: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:5
 msgid "Faderpanel"
 msgstr ""
 
 #. faderpanelform..PopupMenu1..NurKanlemitGertenanzeigen1..Caption
 #. MainForm..FaderpanelPopupMenu1..NurKanlemitGertenanzeigen1..Caption
-#: faderpanelfrm.dfm:1487  pcdimmer.dfm:33042
+#: faderpanelfrm.dfm:1487  pcdimmer.dfm:33058
 msgid "Freie Kanäle ausblenden"
 msgstr ""
 
 #. faderpanelform..PopupMenu1..Panelautomatischausblenden1..Caption
 #. MainForm..FaderpanelPopupMenu1..Panelautomatischausblenden1..Caption
-#: faderpanelfrm.dfm:1492  pcdimmer.dfm:33047
+#: faderpanelfrm.dfm:1492  pcdimmer.dfm:33063
 msgid "Panel automatisch ausblenden"
 msgstr ""
 
 #. faderpanelform..PopupMenu1..Kstchenimmervoll1..Caption
 #. MainForm..FaderpanelPopupMenu1..Kstchenimmervoll1..Caption
-#: faderpanelfrm.dfm:1498  pcdimmer.dfm:33053
+#: faderpanelfrm.dfm:1498  pcdimmer.dfm:33069
 msgid "Kästchen immer voll anzeigen"
 msgstr ""
 
@@ -11846,7 +11846,7 @@ msgid "RGB-Mischung"
 msgstr ""
 
 #. firststepsform..Notebook1....GroupBox8..CheckBox5..Caption
-#: firststepsfrm.dfm:8809  devicelistfrm.pas:117 pcdimmer.pas:24080
+#: firststepsfrm.dfm:8809  devicelistfrm.pas:117 pcdimmer.pas:24093
 msgid "Farbrad"
 msgstr ""
 
@@ -11919,7 +11919,7 @@ msgstr ""
 #. firststepsform..Notebook1....JvXPButton20..Caption
 #. MainForm..dxBarManager1..CuelistRibbonBtn..Caption
 #. Cuelist
-#: firststepsfrm.dfm:9165  pcdimmer.dfm:22715 szenenverwaltung.pas:4013
+#: firststepsfrm.dfm:9165  pcdimmer.dfm:22729 szenenverwaltung.pas:4013
 msgid "Cuelist"
 msgstr ""
 
@@ -11931,7 +11931,7 @@ msgstr ""
 #. FrameChannel..GbChannel..PageControl1..TsSteuerung..Caption
 #. MainForm..dxBarManager1..dxBarManager1Bar4..Caption
 #. textbuchform..PageControl1..TabSheet2..TBDock1..TBToolbar1..TBSubmenuItem3..Caption
-#: FrameChannelU.dfm:49  pcdimmer.dfm:18376 textbuchfrm.dfm:244
+#: FrameChannelU.dfm:49  pcdimmer.dfm:18390 textbuchfrm.dfm:244
 msgid "Steuerung"
 msgstr ""
 
@@ -12218,7 +12218,7 @@ msgstr ""
 #. MainForm..dxBarManager1..DeviceManagementRibbonGroup..Caption
 #. mainform..Caption
 #. mainform..GroupBox3..DevSettings....Label1..Caption
-#: geraetesteuerungfrm.dfm:10  pcdimmer.dfm:18092
+#: geraetesteuerungfrm.dfm:10  pcdimmer.dfm:18106
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:9
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:472
 msgid "Gerätesteuerung"
@@ -12433,7 +12433,7 @@ msgstr ""
 #. kontrollpanel..Panel1..Label3..Caption
 #. MainForm..Panel1..PageControl1..TabSheet2..Label4..Caption
 #. mainform..Panel1..Label3..Caption
-#: geraetesteuerungfrm.dfm:2550  kontrollpanelform.dfm:186 pcdimmer.dfm:1569
+#: geraetesteuerungfrm.dfm:2550  kontrollpanelform.dfm:186 pcdimmer.dfm:1583
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:183
 msgid "Farbe:"
 msgstr ""
@@ -12521,7 +12521,7 @@ msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..TBSubmenuItem2..Caption
 #. MainForm..dxBarManager1..dxBarManager1Bar6..Caption
-#: geraetesteuerungfrm.dfm:3502  pcdimmer.dfm:18420
+#: geraetesteuerungfrm.dfm:3502  pcdimmer.dfm:18434
 msgid "Zusatzfunktionen"
 msgstr ""
 
@@ -14159,7 +14159,7 @@ msgstr ""
 #. insscenedlg..Panel1..Label34..Caption
 #. szenenverwaltungform..PopupMenu1..EinfacheSzene1..Caption
 #. Name
-#: insscene.dfm:774  szenenverwaltung.dfm:1435 pcdimmer.pas:22452
+#: insscene.dfm:774  szenenverwaltung.dfm:1435 pcdimmer.pas:22465
 #: szenenverwaltung.pas:1373
 msgid "Einfache Szene"
 msgstr ""
@@ -14658,7 +14658,7 @@ msgstr ""
 
 #. kanaluebersichtform..Panel1..Panel2..Label5..Caption
 #. MainForm..Panel1..PageControl1..TabSheet3..Label5..Caption
-#: kanaluebersichtfrm.dfm:188  pcdimmer.dfm:1492
+#: kanaluebersichtfrm.dfm:188  pcdimmer.dfm:1506
 msgid "Zellenbreite:"
 msgstr ""
 
@@ -14696,7 +14696,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Kompositionsszene1..Caption
 #. Name
 #: kompositionsszeneeditorform.dfm:1062  szenenverwaltung.dfm:1460
-#: pcdimmer.pas:22533 szenenverwaltung.pas:1699
+#: pcdimmer.pas:22546 szenenverwaltung.pas:1699
 msgid "Kombinationsszene"
 msgstr ""
 
@@ -14808,7 +14808,7 @@ msgstr ""
 #. kontrollpanel..Panel1..Label1..Caption
 #. MainForm..Panel1..PageControl1..TabSheet2..Label3..Caption
 #. mainform..Panel1..Label1..Caption
-#: kontrollpanelform.dfm:179  pcdimmer.dfm:1562
+#: kontrollpanelform.dfm:179  pcdimmer.dfm:1576
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:176
 msgid "Buttonbeschriftung:"
 msgstr ""
@@ -14816,7 +14816,7 @@ msgstr ""
 #. kontrollpanel..Panel1..Label4..Caption
 #. MainForm..Panel1..PageControl1..TabSheet2..Label9..Caption
 #. mainform..Panel1..Label4..Caption
-#: kontrollpanelform.dfm:193  pcdimmer.dfm:1583
+#: kontrollpanelform.dfm:193  pcdimmer.dfm:1597
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:190
 msgid "Zeilen:"
 msgstr ""
@@ -14824,7 +14824,7 @@ msgstr ""
 #. kontrollpanel..Panel1..Label5..Caption
 #. MainForm..Panel1..PageControl1..TabSheet2..Label10..Caption
 #. mainform..Panel1..Label5..Caption
-#: kontrollpanelform.dfm:200  pcdimmer.dfm:1590
+#: kontrollpanelform.dfm:200  pcdimmer.dfm:1604
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:197
 msgid "Spalten:"
 msgstr ""
@@ -14832,7 +14832,7 @@ msgstr ""
 #. kontrollpanel..Panel1..Label7..Caption
 #. MainForm..Panel1..PageControl1..TabSheet2..Label8..Caption
 #. mainform..Panel1..Label7..Caption
-#: kontrollpanelform.dfm:207  pcdimmer.dfm:1576
+#: kontrollpanelform.dfm:207  pcdimmer.dfm:1590
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:204
 msgid "Buttontyp:"
 msgstr ""
@@ -14875,7 +14875,7 @@ msgstr ""
 #. kontrollpanel..Panel1..buttonname..Hint
 #. MainForm..Panel1..PageControl1..TabSheet2..buttonname..Hint
 #. mainform..Panel1..buttonname..Hint
-#: kontrollpanelform.dfm:342  pcdimmer.dfm:1611
+#: kontrollpanelform.dfm:342  pcdimmer.dfm:1625
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:374
 msgid "Bezeichnung des aktuellen Buttons"
 msgstr ""
@@ -14885,7 +14885,7 @@ msgstr ""
 #. MainForm..Panel1..PageControl1..TabSheet2..buttonname..Text
 #. mainform..Panel1..buttonname..Text
 #. mainform..StatusBar1......Text
-#: kontrollpanelform.dfm:346  kontrollpanelform.dfm:1194 pcdimmer.dfm:1615
+#: kontrollpanelform.dfm:346  kontrollpanelform.dfm:1194 pcdimmer.dfm:1629
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:378
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:576
 msgid "Button 1x1"
@@ -14896,8 +14896,8 @@ msgstr ""
 #. MainForm..Panel1..PageControl1..TabSheet2..spalten..Hint
 #. MainForm..Panel1..PageControl1..TabSheet2..btnheight..Hint
 #. mainform..Panel1..spalten..Hint
-#: kontrollpanelform.dfm:381  kontrollpanelform.dfm:800 pcdimmer.dfm:1803
-#: pcdimmer.dfm:1831
+#: kontrollpanelform.dfm:381  kontrollpanelform.dfm:800 pcdimmer.dfm:1817
+#: pcdimmer.dfm:1845
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:411
 msgid "Spaltenanzahl"
 msgstr ""
@@ -14919,7 +14919,7 @@ msgstr ""
 #. kontrollpanel..Panel1..ComboBox1..Hint
 #. MainForm..Panel1..PageControl1..TabSheet2..ComboBox1..Hint
 #. mainform..Panel1..ComboBox1..Hint
-#: kontrollpanelform.dfm:423  pcdimmer.dfm:1636
+#: kontrollpanelform.dfm:423  pcdimmer.dfm:1650
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:464
 msgid "Wählen zwischen Szene, Skript und Audiodatei"
 msgstr ""
@@ -14928,9 +14928,9 @@ msgstr ""
 #. MainForm..Panel1..PageControl1..TabSheet2..ComboBox1..Text
 #. MainForm..Panel1..PageControl1..TabSheet2..ComboBox1....Items.Strings
 #. mainform..Panel1..ComboBox1....Items.Strings
-#: kontrollpanelform.dfm:432  pcdimmer.dfm:1644 pcdimmer.dfm:1647
+#: kontrollpanelform.dfm:432  pcdimmer.dfm:1658 pcdimmer.dfm:1661
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:472
-#: pcdimmer.pas:27336
+#: pcdimmer.pas:27379
 msgid "<Leer>"
 msgstr ""
 
@@ -14938,7 +14938,7 @@ msgstr ""
 #. MainForm..Panel1..PageControl1..TabSheet2..ComboBox1....Items.Strings
 #. skripttimer_editform..GroupBox1..ComboBox1....Items.Strings
 #. mainform..Panel1..ComboBox1....Items.Strings
-#: kontrollpanelform.dfm:434  pcdimmer.dfm:1649 skripttimer_edit.dfm:1152
+#: kontrollpanelform.dfm:434  pcdimmer.dfm:1663 skripttimer_edit.dfm:1152
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:474
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:433
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1354
@@ -14948,14 +14948,14 @@ msgstr ""
 
 #. kontrollpanel..Panel1..ComboBox1....Items.Strings
 #. MainForm..Panel1..PageControl1..TabSheet2..ComboBox1....Items.Strings
-#: kontrollpanelform.dfm:436  pcdimmer.dfm:1651
+#: kontrollpanelform.dfm:436  pcdimmer.dfm:1665
 msgid "Flashobjekt aus Verwaltung"
 msgstr ""
 
 #. kontrollpanel..Panel1..ComboBox1....Items.Strings
 #. MainForm..Panel1..PageControl1..TabSheet2..ComboBox1....Items.Strings
 #. mainform..Panel1..ComboBox1....Items.Strings
-#: kontrollpanelform.dfm:437  pcdimmer.dfm:1652
+#: kontrollpanelform.dfm:437  pcdimmer.dfm:1666
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:477
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:436
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1357
@@ -14965,13 +14965,13 @@ msgstr ""
 
 #. kontrollpanel..Panel1..ComboBox1....Items.Strings
 #. MainForm..Panel1..PageControl1..TabSheet2..ComboBox1....Items.Strings
-#: kontrollpanelform.dfm:438  pcdimmer.dfm:1653
+#: kontrollpanelform.dfm:438  pcdimmer.dfm:1667
 msgid "Flasheffekt"
 msgstr ""
 
 #. kontrollpanel..Panel1..ComboBox1....Items.Strings
 #. MainForm..Panel1..PageControl1..TabSheet2..ComboBox1....Items.Strings
-#: kontrollpanelform.dfm:439  pcdimmer.dfm:1654
+#: kontrollpanelform.dfm:439  pcdimmer.dfm:1668
 msgid "Programmcode ausführen"
 msgstr ""
 
@@ -14999,7 +14999,7 @@ msgstr ""
 #. kontrollpanel..Panel1..szenebearbeiten..Hint
 #. MainForm..Panel1..PageControl1..TabSheet2..szenebearbeiten..Hint
 #. mainform..Panel1..szenebearbeiten..Hint
-#: kontrollpanelform.dfm:492  pcdimmer.dfm:2211
+#: kontrollpanelform.dfm:492  pcdimmer.dfm:2225
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:425
 msgid "Bearbeitet die Szene, das Skript oder die Audiodatei des Buttons"
 msgstr ""
@@ -15013,13 +15013,13 @@ msgstr ""
 
 #. kontrollpanel..Panel1..buttonglyphbtn..Hint
 #. MainForm..Panel1..PageControl1..TabSheet2..buttonglyphbtn..Hint
-#: kontrollpanelform.dfm:658  pcdimmer.dfm:1661
+#: kontrollpanelform.dfm:658  pcdimmer.dfm:1675
 msgid "Ändert das Bild zum aktuellen Button"
 msgstr ""
 
 #. kontrollpanel..Panel1..buttonglyphbtn..Caption
 #. MainForm..Panel1..PageControl1..TabSheet2..buttonglyphbtn..Caption
-#: kontrollpanelform.dfm:659  pcdimmer.dfm:1662
+#: kontrollpanelform.dfm:659  pcdimmer.dfm:1676
 msgid "Bild ändern"
 msgstr ""
 
@@ -15039,7 +15039,7 @@ msgstr ""
 
 #. kontrollpanel..TBDock1..TBToolbar1..Datei1..Speichern1..Caption
 #. MainForm..dxBarManager1..SaveAsRibbonBtn..Caption
-#: kontrollpanelform.dfm:1235  pcdimmer.dfm:19216
+#: kontrollpanelform.dfm:1235  pcdimmer.dfm:19230
 msgid "Speichern unter..."
 msgstr ""
 
@@ -15759,7 +15759,7 @@ msgstr ""
 
 #. masterform..Caption
 #. MainForm..dxBarManager1..MasterRibbonBtn..Caption
-#: masterfrm.dfm:6  pcdimmer.dfm:27539
+#: masterfrm.dfm:6  pcdimmer.dfm:27553
 msgid "Master"
 msgstr ""
 
@@ -15882,7 +15882,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..MediaCenterSzene1..Caption
 #. Name
 #: mediacenterfrm.dfm:6  mediacenterfrm.dfm:371 szenenverwaltung.dfm:1475
-#: pcdimmer.pas:22607 szenenverwaltung.pas:1910
+#: pcdimmer.pas:22620 szenenverwaltung.pas:1910
 msgid "MediaCenter Szene"
 msgstr ""
 
@@ -16277,7 +16277,7 @@ msgstr ""
 #: nodecontrolfrm.dfm:407 
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:578
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:581
-#: kontrollpanelform.pas:548 nodecontrolfrm.pas:180 pcdimmer.pas:25926
+#: kontrollpanelform.pas:548 nodecontrolfrm.pas:180 pcdimmer.pas:25969
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1031
 msgid "Weiß"
 msgstr ""
@@ -16290,7 +16290,7 @@ msgstr ""
 #. nodecontrolform..Panel1..Panel3..GroupBox2..rgbcheckbox..Caption
 #. pmmform..GroupBox3..usergbcheck..Caption
 #: nodecontrolfrm.dfm:425  pmm.dfm:1874 devicelistfrm.pas:119
-#: pcdimmer.pas:24082
+#: pcdimmer.pas:24095
 msgid "RGB"
 msgstr ""
 
@@ -16543,7 +16543,7 @@ msgstr ""
 #. MainForm..dxBarManager1..ErweiterteEinstellungenRibbonBtn..Caption
 #. MainForm..dxBarManager1..dxBarButton23..Caption
 #. MainForm..dxBarManager1..dxBarButton23..Hint
-#: Optionen.dfm:5  pcdimmer.dfm:26171 pcdimmer.dfm:30423 pcdimmer.dfm:30425
+#: Optionen.dfm:5  pcdimmer.dfm:26185 pcdimmer.dfm:30437 pcdimmer.dfm:30439
 msgid "Erweiterte Einstellungen"
 msgstr ""
 
@@ -16595,7 +16595,7 @@ msgstr ""
 #. OptionenBox..Notebook1....Panel4..pluginabout..Caption
 #. MainForm..dxBarManager1..InfoRibbonBtn..Hint
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..Caption
-#: Optionen.dfm:225  pcdimmer.dfm:27284
+#: Optionen.dfm:225  pcdimmer.dfm:27298
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1451
 msgid "Info"
 msgstr ""
@@ -17196,7 +17196,7 @@ msgstr ""
 #. OptionenBox..Panel7..optionlabel5..Caption
 #. MainForm..dxRibbon1..SonstigesRibbonTab..Caption
 #. MainForm..dxBarManager1..SonstigesRibbonGroup..Caption
-#: Optionen.dfm:1973  pcdimmer.dfm:280 pcdimmer.dfm:18316
+#: Optionen.dfm:1973  pcdimmer.dfm:280 pcdimmer.dfm:18330
 msgid "Sonstiges"
 msgstr ""
 
@@ -17207,14 +17207,14 @@ msgstr ""
 
 #. OptionenBox..Panel7..optionlabel7..Caption
 #. MainForm..dxBarManager1..NetzwerkRibbonSub..Caption
-#: Optionen.dfm:1997  pcdimmer.dfm:25792
+#: Optionen.dfm:1997  pcdimmer.dfm:25806
 msgid "Netzwerk"
 msgstr ""
 
 #. OptionenBox..Panel7..optionlabel0..Caption
 #. MainForm..dxRibbon1..PluginRibbonTab..Caption
 #. MainForm..dxBarManager1..PluginsRibbonGroup..Caption
-#: Optionen.dfm:2033  pcdimmer.dfm:252 pcdimmer.dfm:17855
+#: Optionen.dfm:2033  pcdimmer.dfm:252 pcdimmer.dfm:17869
 msgid "Plugins"
 msgstr ""
 
@@ -17452,7 +17452,7 @@ msgid "600ms / 100 BPM"
 msgstr ""
 
 #. MainForm..dxRibbonStatusBar1......Text
-#: pcdimmer.dfm:318  pcdimmer.pas:15825
+#: pcdimmer.dfm:318  pcdimmer.pas:15838
 msgid "1 Einschalten"
 msgstr ""
 
@@ -17473,7 +17473,7 @@ msgstr ""
 
 #. MainForm..dxRibbonStatusBar1..LookAndFeel.SkinName
 #. MainForm..dxBarManager1..LookAndFeel.SkinName
-#: pcdimmer.dfm:357  pcdimmer.dfm:17722
+#: pcdimmer.dfm:357  pcdimmer.dfm:17736
 msgid "Silver"
 msgstr ""
 
@@ -17497,66 +17497,61 @@ msgstr ""
 msgid "Bühne"
 msgstr ""
 
-#. MainForm..Panel1..PageControl1..TabSheet1..Label15..Caption
-#: pcdimmer.dfm:890 
-msgid "Label15"
-msgstr ""
-
 #. MainForm..Panel1..PageControl1..TabSheet1..Button2..Caption
-#: pcdimmer.dfm:1357 
+#: pcdimmer.dfm:1361 
 msgid "Neues Kanalicon"
 msgstr ""
 
 #. MainForm..Panel1..PageControl1..TabSheet2..Caption
-#: pcdimmer.dfm:1555 
+#: pcdimmer.dfm:1569 
 msgid "Panel"
 msgstr ""
 
 #. MainForm..Panel1..PageControl1..TabSheet2..ComboBox1....Items.Strings
-#: pcdimmer.dfm:1648 
+#: pcdimmer.dfm:1662 
 msgid "Objekt aus Verwaltung"
 msgstr ""
 
 #. MainForm..Panel1..debuglistbox....Items.Strings
-#: pcdimmer.dfm:3754 
+#: pcdimmer.dfm:3768 
 msgid "DEBUGLISTBOX"
 msgstr ""
 
 #. MainForm..OpenDialog..DefaultExt
 #. MainForm..SaveDialog..DefaultExt
-#: pcdimmer.dfm:5496  pcdimmer.dfm:5504
+#: pcdimmer.dfm:5510  pcdimmer.dfm:5518
 msgid "*.dpf"
 msgstr ""
 
 #. MainForm..OpenDialog..Filter
 #. MainForm..SaveDialog..Filter
-#: pcdimmer.dfm:5497  pcdimmer.dfm:5505
+#: pcdimmer.dfm:5511  pcdimmer.dfm:5519
 msgid "PC_DIMMER Script (*.dpf)|*.dpf|*.*|*.*"
 msgstr ""
 
 #. MainForm..OpenDialog..Title
-#: pcdimmer.dfm:5499 
+#: pcdimmer.dfm:5513 
 msgid "Dimmer Files öffnen..."
 msgstr ""
 
 #. MainForm..SaveDialog..Title
-#: pcdimmer.dfm:5507 
+#: pcdimmer.dfm:5521 
 msgid "Script speichern..."
 msgstr ""
 
 #. MainForm..systrayicon..Hint
 #. splashscreen3..Caption
-#: pcdimmer.dfm:5564  splashscreen3frm.dfm:5
+#: pcdimmer.dfm:5578  splashscreen3frm.dfm:5
 msgid "PC_DIMMER2012"
 msgstr ""
 
 #. MainForm..systraypopup..PCDimmeranzeigen1..Caption
-#: pcdimmer.dfm:5575 
+#: pcdimmer.dfm:5589 
 msgid "PC_DIMMER anzeigen/verbergen"
 msgstr ""
 
 #. MainForm..systraypopup..Startoptionen2..Caption
-#: pcdimmer.dfm:5584 
+#: pcdimmer.dfm:5598 
 msgid "Startoptionen..."
 msgstr ""
 
@@ -17564,7 +17559,7 @@ msgstr ""
 #. MainForm..dxBarManager1..TippsRibbonBtn..Caption
 #. MainForm..dxBarManager1..TippsRibbonBtn..Hint
 #. tippoftheday..Panel1..Label1..Caption
-#: pcdimmer.dfm:5588  pcdimmer.dfm:26933 pcdimmer.dfm:26935
+#: pcdimmer.dfm:5602  pcdimmer.dfm:26947 pcdimmer.dfm:26949
 #: tippofthedayfrm.dfm:257
 msgid "Tipps und Tricks"
 msgstr ""
@@ -17613,7 +17608,7 @@ msgstr ""
 #. About..Caption
 #. About..Caption
 #. About..Caption
-#: pcdimmer.dfm:5596  pcdimmer.dfm:27282
+#: pcdimmer.dfm:5610  pcdimmer.dfm:27296
 #: plugins/Ausgabeplugin/_PluginSDK_Delphi7/aboutfrm.dfm:5
 #: plugins/Ausgabeplugin/ArtNet/mainfrm.dfm:2111
 #: plugins/Ausgabeplugin/Cinetix_USBDMX512/aboutfrm.dfm:5
@@ -17660,441 +17655,441 @@ msgid "Info..."
 msgstr ""
 
 #. MainForm..systraypopup..Onlineupdate1..Caption
-#: pcdimmer.dfm:5600 
+#: pcdimmer.dfm:5614 
 msgid "Onlineupdate starten..."
 msgstr ""
 
 #. MainForm..systraypopup..Beenden1..Caption
-#: pcdimmer.dfm:5607  Channels_Commandsystem.inc:1232
+#: pcdimmer.dfm:5621  Channels_Commandsystem.inc:1232
 msgid "PC_DIMMER beenden"
 msgstr ""
 
 #. MainForm..openmedia....Filter
-#: pcdimmer.dfm:5615 
+#: pcdimmer.dfm:5629 
 msgid ""
 "Multimedia-Dateien (wav,mp3,etc.)|*.wav;*.mp3;*.mid;*.cda|Alle Dateien (*.*)|"
 "*.*"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:7971 
+#: pcdimmer.dfm:7985 
 msgid "PngImage20"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:8080 
+#: pcdimmer.dfm:8094 
 msgid "PngImage21"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:8195 
+#: pcdimmer.dfm:8209 
 msgid "PngImage22"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:8315 
+#: pcdimmer.dfm:8329 
 msgid "PngImage23"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:8434 
+#: pcdimmer.dfm:8448 
 msgid "PngImage24"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:8554 
+#: pcdimmer.dfm:8568 
 msgid "PngImage25"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:8674 
+#: pcdimmer.dfm:8688 
 msgid "PngImage26"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:8783 
+#: pcdimmer.dfm:8797 
 msgid "PngImage27"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:8894 
+#: pcdimmer.dfm:8908 
 msgid "PngImage28"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:8993 
+#: pcdimmer.dfm:9007 
 msgid "PngImage30"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:9091 
+#: pcdimmer.dfm:9105 
 msgid "PngImage29"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:9203 
+#: pcdimmer.dfm:9217 
 msgid "PngImage31"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:9320 
+#: pcdimmer.dfm:9334 
 msgid "PngImage32"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:9421 
+#: pcdimmer.dfm:9435 
 msgid "PngImage33"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:9528 
+#: pcdimmer.dfm:9542 
 msgid "PngImage34"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:9642 
+#: pcdimmer.dfm:9656 
 msgid "PngImage35"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:9762 
+#: pcdimmer.dfm:9776 
 msgid "PngImage36"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:9879 
+#: pcdimmer.dfm:9893 
 msgid "PngImage37"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:9995 
+#: pcdimmer.dfm:10009 
 msgid "PngImage38"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:10092 
+#: pcdimmer.dfm:10106 
 msgid "PngImage39"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:10195 
+#: pcdimmer.dfm:10209 
 msgid "PngImage40"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:10304 
+#: pcdimmer.dfm:10318 
 msgid "PngImage41"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:10412 
+#: pcdimmer.dfm:10426 
 msgid "PngImage42"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:10527 
+#: pcdimmer.dfm:10541 
 msgid "PngImage47"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:10636 
+#: pcdimmer.dfm:10650 
 msgid "PngImage43"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:10746 
+#: pcdimmer.dfm:10760 
 msgid "PngImage44"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:10855 
+#: pcdimmer.dfm:10869 
 msgid "PngImage45"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:10965 
+#: pcdimmer.dfm:10979 
 msgid "PngImage46"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:11082 
+#: pcdimmer.dfm:11096 
 msgid "PngImage48"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:11196 
+#: pcdimmer.dfm:11210 
 msgid "PngImage49"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:11315 
+#: pcdimmer.dfm:11329 
 msgid "PngImage50"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:11426 
+#: pcdimmer.dfm:11440 
 msgid "PngImage52"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:11538  pcdimmer.dfm:11567
+#: pcdimmer.dfm:11552  pcdimmer.dfm:11581
 msgid "PngImage53"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:11683 
+#: pcdimmer.dfm:11697 
 msgid "PngImage54"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:11796 
+#: pcdimmer.dfm:11810 
 msgid "PngImage55"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:11908 
+#: pcdimmer.dfm:11922 
 msgid "PngImage56"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:12022 
+#: pcdimmer.dfm:12036 
 msgid "PngImage57"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:12136 
+#: pcdimmer.dfm:12150 
 msgid "PngImage58"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:12255 
+#: pcdimmer.dfm:12269 
 msgid "PngImage59"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:12372  pcdimmer.dfm:12605
+#: pcdimmer.dfm:12386  pcdimmer.dfm:12619
 msgid "PngImage62"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:12490  pcdimmer.dfm:12722
+#: pcdimmer.dfm:12504  pcdimmer.dfm:12736
 msgid "PngImage63"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:12842 
+#: pcdimmer.dfm:12856 
 msgid "PngImage64"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:12962 
+#: pcdimmer.dfm:12976 
 msgid "PngImage65"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:13069 
+#: pcdimmer.dfm:13083 
 msgid "PngImage66"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:13178 
+#: pcdimmer.dfm:13192 
 msgid "PngImage67"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:13283 
+#: pcdimmer.dfm:13297 
 msgid "PngImage68"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:13396 
+#: pcdimmer.dfm:13410 
 msgid "PngImage69"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:13516 
+#: pcdimmer.dfm:13530 
 msgid "PngImage70"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:13637 
+#: pcdimmer.dfm:13651 
 msgid "PngImage72"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:13749 
+#: pcdimmer.dfm:13763 
 msgid "PngImage71"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:13870 
+#: pcdimmer.dfm:13884 
 msgid "PngImage73"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:13975  pcdimmer.dfm:14189
+#: pcdimmer.dfm:13989  pcdimmer.dfm:14203
 msgid "PngImage76"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:14076  pcdimmer.dfm:14303
+#: pcdimmer.dfm:14090  pcdimmer.dfm:14317
 msgid "PngImage77"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:14417 
+#: pcdimmer.dfm:14431 
 msgid "PngImage78"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:14531 
+#: pcdimmer.dfm:14545 
 msgid "PngImage79"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:14645 
+#: pcdimmer.dfm:14659 
 msgid "PngImage80"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:14759 
+#: pcdimmer.dfm:14773 
 msgid "PngImage81"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:14865 
+#: pcdimmer.dfm:14879 
 msgid "PngImage82"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:14982 
+#: pcdimmer.dfm:14996 
 msgid "PngImage83"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:15098 
+#: pcdimmer.dfm:15112 
 msgid "PngImage84"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:15209 
+#: pcdimmer.dfm:15223 
 msgid "PngImage85"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:15326 
+#: pcdimmer.dfm:15340 
 msgid "PngImage86"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:15445 
+#: pcdimmer.dfm:15459 
 msgid "PngImage87"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:15557 
+#: pcdimmer.dfm:15571 
 msgid "PngImage88"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:15678 
+#: pcdimmer.dfm:15692 
 msgid "PngImage89"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:15792 
+#: pcdimmer.dfm:15806 
 msgid "PngImage90"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:15909 
+#: pcdimmer.dfm:15923 
 msgid "PngImage91"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:16023 
+#: pcdimmer.dfm:16037 
 msgid "PngImage93"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:16138 
+#: pcdimmer.dfm:16152 
 msgid "PngImage94"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:16253 
+#: pcdimmer.dfm:16267 
 msgid "PngImage95"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:16368 
+#: pcdimmer.dfm:16382 
 msgid "PngImage96"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:16485 
+#: pcdimmer.dfm:16499 
 msgid "PngImage97"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:16604 
+#: pcdimmer.dfm:16618 
 msgid "PngImage98"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:16718 
+#: pcdimmer.dfm:16732 
 msgid "PngImage99"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:16832 
+#: pcdimmer.dfm:16846 
 msgid "PngImage100"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:16946 
+#: pcdimmer.dfm:16960 
 msgid "PngImage101"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:17059 
+#: pcdimmer.dfm:17073 
 msgid "PngImage92"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:17171 
+#: pcdimmer.dfm:17185 
 msgid "PngImage102"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:17291 
+#: pcdimmer.dfm:17305 
 msgid "PngImage103"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:17403 
+#: pcdimmer.dfm:17417 
 msgid "PngImage104"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:17510 
+#: pcdimmer.dfm:17524 
 msgid "PngImage105"
 msgstr ""
 
 #. MainForm..PngImageList1......Name
-#: pcdimmer.dfm:17622 
+#: pcdimmer.dfm:17636 
 msgid "PngImage106"
 msgstr ""
 
 #. MainForm..MediaCenterSocket..Address
 #. MainForm..GroupBox2..ArtCustomIP..Text
 #. Settings..DXPlay1..TCPIPSetting.HostName
-#: pcdimmer.dfm:17671 
+#: pcdimmer.dfm:17685 
 #: plugins/Ausgabeplugin/ArtNet/ArtNET_Dreschmann/Unit1.dfm:4002
 #: plugins/Programmplugins/SoftScanner/settingfrm.dfm:1466
 msgid "127.0.0.1"
@@ -18118,7 +18113,7 @@ msgstr ""
 #. Form1..GroupBox1..VL3..Font.Name
 #. Form1..GroupBox1..VL4..Font.Name
 #. Form1..GroupBox2..Memo1..Font.Name
-#: pcdimmer.dfm:17711  splashscreen.dfm:13 UpdateFoundForm.dfm:11
+#: pcdimmer.dfm:17725  splashscreen.dfm:13 UpdateFoundForm.dfm:11
 #: UpdateFoundForm.dfm:227 UpdateFoundFormD4.dfm:11 UpdateFoundFormD4.dfm:159
 #: UpdateFoundFormD4.dfm:174 UpdateFoundFormD4.dfm:191
 #: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/Delphi_Sample/Source/Unit1.dfm:12
@@ -18135,604 +18130,604 @@ msgid "Tahoma"
 msgstr ""
 
 #. MainForm..dxBarManager1....Categories.Strings
-#: pcdimmer.dfm:17714 
+#: pcdimmer.dfm:17728 
 msgid "Default"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar1..Caption
-#: pcdimmer.dfm:17735 
+#: pcdimmer.dfm:17749 
 msgid "Kopfzeile"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar1......ItemName
-#: pcdimmer.dfm:17746 
+#: pcdimmer.dfm:17760 
 msgid "New2RibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar1......ItemName
-#: pcdimmer.dfm:17750 
+#: pcdimmer.dfm:17764 
 msgid "Open2RibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar1......ItemName
-#: pcdimmer.dfm:17754 
+#: pcdimmer.dfm:17768 
 msgid "Save2RibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar1......ItemName
-#: pcdimmer.dfm:17758 
+#: pcdimmer.dfm:17772 
 msgid "BlackoutRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar1......ItemName
-#: pcdimmer.dfm:17762 
+#: pcdimmer.dfm:17776 
 msgid "OutputOffRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar1......ItemName
-#: pcdimmer.dfm:17766 
+#: pcdimmer.dfm:17780 
 msgid "StopRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar1......ItemName
-#: pcdimmer.dfm:17770 
+#: pcdimmer.dfm:17784 
 msgid "dxBarButton22"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar1......ItemName
-#: pcdimmer.dfm:17774 
+#: pcdimmer.dfm:17788 
 msgid "dxBarButton27"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar1......ItemName
-#: pcdimmer.dfm:17778 
+#: pcdimmer.dfm:17792 
 msgid "dxBarButton23"
 msgstr ""
 
 #. MainForm..dxBarManager1..DateiRibbonGroup......ItemName
 #. MainForm..dxBarApplicationMenu1......ItemName
-#: pcdimmer.dfm:17798  pcdimmer.dfm:33108
+#: pcdimmer.dfm:17812  pcdimmer.dfm:33124
 msgid "NewRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..DateiRibbonGroup......ItemName
 #. MainForm..dxBarApplicationMenu1......ItemName
-#: pcdimmer.dfm:17802  pcdimmer.dfm:33112
+#: pcdimmer.dfm:17816  pcdimmer.dfm:33128
 msgid "OpenRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..DateiRibbonGroup......ItemName
 #. MainForm..dxBarApplicationMenu1......ItemName
-#: pcdimmer.dfm:17806  pcdimmer.dfm:33116
+#: pcdimmer.dfm:17820  pcdimmer.dfm:33132
 msgid "SaveRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..DateiRibbonGroup......ItemName
 #. MainForm..dxBarApplicationMenu1......ItemName
-#: pcdimmer.dfm:17810  pcdimmer.dfm:33120
+#: pcdimmer.dfm:17824  pcdimmer.dfm:33136
 msgid "SaveAsRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..DateiRibbonGroup......ItemName
 #. MainForm..dxBarApplicationMenu1......ItemName
-#: pcdimmer.dfm:17814  pcdimmer.dfm:33128
+#: pcdimmer.dfm:17828  pcdimmer.dfm:33144
 msgid "LetzteProjekteRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..VerwaltungRibbonGroup..Caption
 #. projektverwaltung..Caption
 #. projektverwaltung..Panel1..Label34..Caption
-#: pcdimmer.dfm:17823  projektverwaltungfrm.dfm:5
+#: pcdimmer.dfm:17837  projektverwaltungfrm.dfm:5
 #: projektverwaltungfrm.dfm:474 Channels_Commandsystem.inc:1230
 msgid "Projektverwaltung"
 msgstr ""
 
 #. MainForm..dxBarManager1..VerwaltungRibbonGroup......ItemName
-#: pcdimmer.dfm:17834 
+#: pcdimmer.dfm:17848 
 msgid "ProjektassistentRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..VerwaltungRibbonGroup......ItemName
-#: pcdimmer.dfm:17838 
+#: pcdimmer.dfm:17852 
 msgid "VerwaltungRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..VerwaltungRibbonGroup......ItemName
-#: pcdimmer.dfm:17842 
+#: pcdimmer.dfm:17856 
 msgid "PrintChannelNamesRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..VerwaltungRibbonGroup......ItemName
-#: pcdimmer.dfm:17846 
+#: pcdimmer.dfm:17860 
 msgid "RecoverRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17866 
+#: pcdimmer.dfm:17880 
 msgid "plugin0ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17870 
+#: pcdimmer.dfm:17884 
 msgid "plugin1ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17874 
+#: pcdimmer.dfm:17888 
 msgid "plugin2ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17878 
+#: pcdimmer.dfm:17892 
 msgid "plugin3ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17882 
+#: pcdimmer.dfm:17896 
 msgid "plugin4ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17886 
+#: pcdimmer.dfm:17900 
 msgid "plugin5ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17890 
+#: pcdimmer.dfm:17904 
 msgid "plugin6ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17894 
+#: pcdimmer.dfm:17908 
 msgid "plugin7ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17898 
+#: pcdimmer.dfm:17912 
 msgid "plugin8ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17902 
+#: pcdimmer.dfm:17916 
 msgid "plugin9ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17906 
+#: pcdimmer.dfm:17920 
 msgid "plugin10ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17910 
+#: pcdimmer.dfm:17924 
 msgid "plugin11ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17914 
+#: pcdimmer.dfm:17928 
 msgid "plugin12ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17918 
+#: pcdimmer.dfm:17932 
 msgid "plugin13ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17922 
+#: pcdimmer.dfm:17936 
 msgid "plugin14ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17926 
+#: pcdimmer.dfm:17940 
 msgid "plugin15ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17930 
+#: pcdimmer.dfm:17944 
 msgid "plugin16ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17934 
+#: pcdimmer.dfm:17948 
 msgid "plugin17ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17938 
+#: pcdimmer.dfm:17952 
 msgid "plugin18ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17942 
+#: pcdimmer.dfm:17956 
 msgid "plugin19ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..PluginsRibbonGroup......ItemName
-#: pcdimmer.dfm:17946 
+#: pcdimmer.dfm:17960 
 msgid "plugin20ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..DeviceListRibbonGroup..Caption
-#: pcdimmer.dfm:17955 
+#: pcdimmer.dfm:17969 
 msgid "Geräteübersicht"
 msgstr ""
 
 #. MainForm..dxBarManager1..DeviceListRibbonGroup......ItemName
-#: pcdimmer.dfm:17966 
+#: pcdimmer.dfm:17980 
 msgid "DeviceListRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..DeviceListRibbonGroup......ItemName
-#: pcdimmer.dfm:17970 
+#: pcdimmer.dfm:17984 
 msgid "ExportDeviceListRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..AnzeigenRibbonGroup..Caption
 #. DelphiXDXPlayForm..Button1..Caption
-#: pcdimmer.dfm:17979  plugins/Programmplugins/SoftScanner/DXPlayFm.dfm:2551
+#: pcdimmer.dfm:17993  plugins/Programmplugins/SoftScanner/DXPlayFm.dfm:2551
 msgid "Anzeigen"
 msgstr ""
 
 #. MainForm..dxBarManager1..AnzeigenRibbonGroup......ItemName
-#: pcdimmer.dfm:17990 
+#: pcdimmer.dfm:18004 
 msgid "KanaluebersichtRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..AnzeigenRibbonGroup......ItemName
-#: pcdimmer.dfm:17994 
+#: pcdimmer.dfm:18008 
 msgid "BuehnenansichtRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..AnzeigenRibbonGroup......ItemName
-#: pcdimmer.dfm:17998 
+#: pcdimmer.dfm:18012 
 msgid "EasyViewRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..ControlRibbonGroup..Caption
-#: pcdimmer.dfm:18007 
+#: pcdimmer.dfm:18021 
 msgid "Steuerungen"
 msgstr ""
 
 #. MainForm..dxBarManager1..ControlRibbonGroup......ItemName
-#: pcdimmer.dfm:18018 
+#: pcdimmer.dfm:18032 
 msgid "SzenenverwaltungRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..ControlRibbonGroup......ItemName
-#: pcdimmer.dfm:18022 
+#: pcdimmer.dfm:18036 
 msgid "KontrollpanelRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..ControlRibbonGroup......ItemName
-#: pcdimmer.dfm:18027 
+#: pcdimmer.dfm:18041 
 msgid "FaderpanelRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..ControlRibbonGroup......ItemName
-#: pcdimmer.dfm:18031 
+#: pcdimmer.dfm:18045 
 msgid "SubmasterRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..ControlRibbonGroup......ItemName
-#: pcdimmer.dfm:18035 
+#: pcdimmer.dfm:18049 
 msgid "MasterRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..PlayerRibbonGroup..Caption
-#: pcdimmer.dfm:18044 
+#: pcdimmer.dfm:18058 
 msgid "Player / Sequenzer"
 msgstr ""
 
 #. MainForm..dxBarManager1..PlayerRibbonGroup......ItemName
-#: pcdimmer.dfm:18055 
+#: pcdimmer.dfm:18069 
 msgid "AudioeffektRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..PlayerRibbonGroup......ItemName
-#: pcdimmer.dfm:18059 
+#: pcdimmer.dfm:18073 
 msgid "EffektsequenzerRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..PlayerRibbonGroup......ItemName
-#: pcdimmer.dfm:18063 
+#: pcdimmer.dfm:18077 
 msgid "CuelistRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..PlayerRibbonGroup......ItemName
-#: pcdimmer.dfm:18067 
+#: pcdimmer.dfm:18081 
 msgid "TimecodeRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..PlayerRibbonGroup......ItemName
-#: pcdimmer.dfm:18073 
+#: pcdimmer.dfm:18087 
 msgid "TextbuchRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..PlayerRibbonGroup......ItemName
-#: pcdimmer.dfm:18078 
+#: pcdimmer.dfm:18092 
 msgid "VideoscreenRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..PlayerRibbonGroup......ItemName
-#: pcdimmer.dfm:18083 
+#: pcdimmer.dfm:18097 
 msgid "CDPlayerRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..DeviceManagementRibbonGroup......ItemName
-#: pcdimmer.dfm:18103 
+#: pcdimmer.dfm:18117 
 msgid "GeraetesteuerungRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..DeviceManagementRibbonGroup......ItemName
-#: pcdimmer.dfm:18107 
+#: pcdimmer.dfm:18121 
 msgid "dxBarLargeButton1"
 msgstr ""
 
 #. MainForm..dxBarManager1..InputRibbonGroup..Caption
-#: pcdimmer.dfm:18116 
+#: pcdimmer.dfm:18130 
 msgid "Eingabe"
 msgstr ""
 
 #. MainForm..dxBarManager1..InputRibbonGroup......ItemName
-#: pcdimmer.dfm:18127 
+#: pcdimmer.dfm:18141 
 msgid "TastatursteuerungRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..InputRibbonGroup......ItemName
-#: pcdimmer.dfm:18131 
+#: pcdimmer.dfm:18145 
 msgid "JoystickRibbonSub"
 msgstr ""
 
 #. MainForm..dxBarManager1..InputRibbonGroup......ItemName
-#: pcdimmer.dfm:18135 
+#: pcdimmer.dfm:18149 
 msgid "DataInRibbonSub"
 msgstr ""
 
 #. MainForm..dxBarManager1..InputRibbonGroup......ItemName
-#: pcdimmer.dfm:18139 
+#: pcdimmer.dfm:18153 
 msgid "MIDIRibbonSub"
 msgstr ""
 
 #. MainForm..dxBarManager1..InputRibbonGroup......ItemName
-#: pcdimmer.dfm:18143 
+#: pcdimmer.dfm:18157 
 msgid "InfrarotRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..InputRibbonGroup......ItemName
-#: pcdimmer.dfm:18147 
+#: pcdimmer.dfm:18161 
 msgid "NetzwerkRibbonSub"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar2..Caption
 #. szenenverwaltungform..VST......WideText
-#: pcdimmer.dfm:18156  szenenverwaltung.dfm:1416 timecodeplayerfrm.pas:132
+#: pcdimmer.dfm:18170  szenenverwaltung.dfm:1416 timecodeplayerfrm.pas:132
 msgid "Zeit"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar2......ItemName
-#: pcdimmer.dfm:18167 
+#: pcdimmer.dfm:18181 
 msgid "BeattoolRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar2......ItemName
-#: pcdimmer.dfm:18171 
+#: pcdimmer.dfm:18185 
 msgid "ClockRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar2......ItemName
-#: pcdimmer.dfm:18175 
+#: pcdimmer.dfm:18189 
 msgid "ZeitsteuerungRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar3..Caption
-#: pcdimmer.dfm:18184 
+#: pcdimmer.dfm:18198 
 msgid "Sprache"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar3......ItemName
-#: pcdimmer.dfm:18195 
+#: pcdimmer.dfm:18209 
 msgid "dxBarSubItem3"
 msgstr ""
 
 #. MainForm..dxBarManager1..ErweitertRibbonGroup......ItemName
-#: pcdimmer.dfm:18215 
+#: pcdimmer.dfm:18229 
 msgid "ErweiterteEinstellungenRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..ErweitertRibbonGroup......ItemName
-#: pcdimmer.dfm:18219 
+#: pcdimmer.dfm:18233 
 msgid "dxBarButton4"
 msgstr ""
 
 #. MainForm..dxBarManager1..ErweitertRibbonGroup......ItemName
-#: pcdimmer.dfm:18223 
+#: pcdimmer.dfm:18237 
 msgid "dxBarButton26"
 msgstr ""
 
 #. MainForm..dxBarManager1..ErweitertRibbonGroup......ItemName
-#: pcdimmer.dfm:18227 
+#: pcdimmer.dfm:18241 
 msgid "dxBarButton5"
 msgstr ""
 
 #. MainForm..dxBarManager1..AnsichtRibbonGroup......ItemName
-#: pcdimmer.dfm:18247 
+#: pcdimmer.dfm:18261 
 msgid "dxBarSubItem1"
 msgstr ""
 
 #. MainForm..dxBarManager1..AnsichtRibbonGroup......ItemName
-#: pcdimmer.dfm:18251 
+#: pcdimmer.dfm:18265 
 msgid "dxBarSubItem2"
 msgstr ""
 
 #. MainForm..dxBarManager1..AnsichtRibbonGroup......ItemName
-#: pcdimmer.dfm:18255 
+#: pcdimmer.dfm:18269 
 msgid "dxBarLargeButton2"
 msgstr ""
 
 #. MainForm..dxBarManager1..MonitorRibbonGroup..Caption
-#: pcdimmer.dfm:18264 
+#: pcdimmer.dfm:18278 
 msgid "Monitor"
 msgstr ""
 
 #. MainForm..dxBarManager1..MonitorRibbonGroup......ItemName
-#: pcdimmer.dfm:18275 
+#: pcdimmer.dfm:18289 
 msgid "MonitorStandbyRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..MonitorRibbonGroup......ItemName
-#: pcdimmer.dfm:18279 
+#: pcdimmer.dfm:18293 
 msgid "MonitorOffRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..MonitorRibbonGroup......ItemName
-#: pcdimmer.dfm:18283 
+#: pcdimmer.dfm:18297 
 msgid "MonitorOnRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..OnlineRibbonGroup..Caption
-#: pcdimmer.dfm:18292 
+#: pcdimmer.dfm:18306 
 msgid "Online"
 msgstr ""
 
 #. MainForm..dxBarManager1..OnlineRibbonGroup......ItemName
 #. MainForm..dxBarApplicationMenu1......ItemName
-#: pcdimmer.dfm:18303  pcdimmer.dfm:33132
+#: pcdimmer.dfm:18317  pcdimmer.dfm:33148
 msgid "WebsitesRibbonSub"
 msgstr ""
 
 #. MainForm..dxBarManager1..OnlineRibbonGroup......ItemName
-#: pcdimmer.dfm:18307 
+#: pcdimmer.dfm:18321 
 msgid "OnlineUpdateRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..SonstigesRibbonGroup......ItemName
-#: pcdimmer.dfm:18327 
+#: pcdimmer.dfm:18341 
 msgid "TippsRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..SonstigesRibbonGroup......ItemName
 #. MainForm..dxBarApplicationMenu1......ItemName
-#: pcdimmer.dfm:18331  pcdimmer.dfm:33124
+#: pcdimmer.dfm:18345  pcdimmer.dfm:33140
 msgid "EinleitungRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..SonstigesRibbonGroup......ItemName
-#: pcdimmer.dfm:18335 
+#: pcdimmer.dfm:18349 
 msgid "StartparamsRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..SonstigesRibbonGroup......ItemName
-#: pcdimmer.dfm:18339 
+#: pcdimmer.dfm:18353 
 msgid "GPLRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..SonstigesRibbonGroup......ItemName
-#: pcdimmer.dfm:18343 
+#: pcdimmer.dfm:18357 
 msgid "ChangeLogRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..SonstigesRibbonGroup......ItemName
-#: pcdimmer.dfm:18347 
+#: pcdimmer.dfm:18361 
 msgid "InfoRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..ZugriffRibbonGroup..Caption
-#: pcdimmer.dfm:18356 
+#: pcdimmer.dfm:18370 
 msgid "Zugriff"
 msgstr ""
 
 #. MainForm..dxBarManager1..ZugriffRibbonGroup......ItemName
-#: pcdimmer.dfm:18367 
+#: pcdimmer.dfm:18381 
 msgid "LockPCdimmerRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar4......ItemName
-#: pcdimmer.dfm:18387 
+#: pcdimmer.dfm:18401 
 msgid "RefreshPluginsRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar5..Caption
-#: pcdimmer.dfm:18396 
+#: pcdimmer.dfm:18410 
 msgid "Aussehen"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar5......ItemName
-#: pcdimmer.dfm:18407 
+#: pcdimmer.dfm:18421 
 msgid "MinimizeRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar5......ItemName
-#: pcdimmer.dfm:18411 
+#: pcdimmer.dfm:18425 
 msgid "SmallWindowRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar6......ItemName
-#: pcdimmer.dfm:18431 
+#: pcdimmer.dfm:18445 
 msgid "BlenddownRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar6......ItemName
-#: pcdimmer.dfm:18437 
+#: pcdimmer.dfm:18451 
 msgid "BrightnessEditRibbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar6......ItemName
-#: pcdimmer.dfm:18441 
+#: pcdimmer.dfm:18455 
 msgid "PowerRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar6......ItemName
-#: pcdimmer.dfm:18445 
+#: pcdimmer.dfm:18459 
 msgid "dxBarLargeButton3"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar7..Caption
-#: pcdimmer.dfm:18454 
+#: pcdimmer.dfm:18468 
 msgid "Spezialanwendungen"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar7......ItemName
-#: pcdimmer.dfm:18465 
+#: pcdimmer.dfm:18479 
 msgid "AmbilightRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar7......ItemName
-#: pcdimmer.dfm:18469 
+#: pcdimmer.dfm:18483 
 msgid "PartyMuckenModulRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar7......ItemName
-#: pcdimmer.dfm:18473 
+#: pcdimmer.dfm:18487 
 msgid "NodeControlRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar8..Caption
-#: pcdimmer.dfm:18482 
+#: pcdimmer.dfm:18496 
 msgid "Weitere Steuerungen"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar8......ItemName
-#: pcdimmer.dfm:18493 
+#: pcdimmer.dfm:18507 
 msgid "dxBarLargeButton4"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarManager1Bar8......ItemName
-#: pcdimmer.dfm:18497 
+#: pcdimmer.dfm:18511 
 msgid "dxBarLargeButton5"
 msgstr ""
 
 #. MainForm..dxBarManager1..DDFCreatorRibbonGroup..Caption
-#: pcdimmer.dfm:18506 
+#: pcdimmer.dfm:18520 
 msgid "Geräteerzeugung"
 msgstr ""
 
 #. MainForm..dxBarManager1..DDFCreatorRibbonGroup......ItemName
-#: pcdimmer.dfm:18517 
+#: pcdimmer.dfm:18531 
 msgid "DDFAssistantRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..DDFCreatorRibbonGroup......ItemName
-#: pcdimmer.dfm:18521 
+#: pcdimmer.dfm:18535 
 msgid "DeviceeditorRibbonBtn"
 msgstr ""
 
@@ -18742,350 +18737,350 @@ msgstr ""
 #. MainForm..dxBarManager1..New2RibbonBtn..Caption
 #. MainForm..dxBarManager1..New2RibbonBtn..Hint
 #. inprogress.filename.Caption:=_('Schreibe Datei... Projekt-Header');
-#: pcdimmer.dfm:18530  pcdimmer.dfm:18532 pcdimmer.dfm:18571
-#: pcdimmer.dfm:18744 pcdimmer.dfm:18746 pcdimmer.pas:3729 pcdimmer.pas:4203
-#: pcdimmer.pas:5694
+#: pcdimmer.dfm:18544  pcdimmer.dfm:18546 pcdimmer.dfm:18585
+#: pcdimmer.dfm:18758 pcdimmer.dfm:18760 pcdimmer.pas:3742 pcdimmer.pas:4216
+#: pcdimmer.pas:5707
 msgid "Neues Projekt"
 msgstr ""
 
 #. MainForm..dxBarManager1..NewRibbonBtn..Hint
-#: pcdimmer.dfm:18573 
+#: pcdimmer.dfm:18587 
 msgid "Erstellt ein neues Projekt"
 msgstr ""
 
 #. MainForm..dxBarManager1..Open2RibbonBtn..Caption
 #. MainForm..dxBarManager1..Open2RibbonBtn..Hint
-#: pcdimmer.dfm:18786  pcdimmer.dfm:18788
+#: pcdimmer.dfm:18800  pcdimmer.dfm:18802
 msgid "Projekt laden..."
 msgstr ""
 
 #. MainForm..dxBarManager1..Save2RibbonBtn..Caption
 #. MainForm..dxBarManager1..Save2RibbonBtn..Hint
 #. MainForm..dxBarManager1..SaveRibbonBtn..Caption
-#: pcdimmer.dfm:18828  pcdimmer.dfm:18830 pcdimmer.dfm:19043
+#: pcdimmer.dfm:18842  pcdimmer.dfm:18844 pcdimmer.dfm:19057
 #: Channels_Commandsystem.inc:1229
 msgid "Projekt speichern"
 msgstr ""
 
 #. MainForm..dxBarManager1..OpenRibbonBtn..Caption
-#: pcdimmer.dfm:18870 
+#: pcdimmer.dfm:18884 
 msgid "Projekt öffnen"
 msgstr ""
 
 #. MainForm..dxBarManager1..OpenRibbonBtn..Hint
-#: pcdimmer.dfm:18872 
+#: pcdimmer.dfm:18886 
 msgid "Öffnet vorhandene PC_DIMMER Projekte"
 msgstr ""
 
 #. MainForm..dxBarManager1..SaveRibbonBtn..Hint
-#: pcdimmer.dfm:19045 
+#: pcdimmer.dfm:19059 
 msgid "Speichert das aktuelle PC_DIMMER Projekt"
 msgstr ""
 
 #. MainForm..dxBarManager1..SaveAsRibbonBtn..Hint
-#: pcdimmer.dfm:19218 
+#: pcdimmer.dfm:19232 
 msgid "Speichert das aktuelle Projekt unter einem bestimmten Dateinamen"
 msgstr ""
 
 #. MainForm..dxBarManager1..VerwaltungRibbonBtn..Caption
-#: pcdimmer.dfm:19389 
+#: pcdimmer.dfm:19403 
 msgid "Verwaltung"
 msgstr ""
 
 #. MainForm..dxBarManager1..VerwaltungRibbonBtn..Hint
-#: pcdimmer.dfm:19391 
+#: pcdimmer.dfm:19405 
 msgid "Öffnet die Projektverwaltung"
 msgstr ""
 
 #. MainForm..dxBarManager1..PrintChannelNamesRibbonBtn..Caption
-#: pcdimmer.dfm:19614  Channels_Commandsystem.inc:1231
+#: pcdimmer.dfm:19628  Channels_Commandsystem.inc:1231
 msgid "Kanalnamen drucken"
 msgstr ""
 
 #. MainForm..dxBarManager1..PrintChannelNamesRibbonBtn..Hint
-#: pcdimmer.dfm:19616 
+#: pcdimmer.dfm:19630 
 msgid "Druckt die aktuelle Kanalbelegung"
 msgstr ""
 
 #. MainForm..dxBarManager1..RecoverRibbonBtn..Caption
-#: pcdimmer.dfm:19787 
+#: pcdimmer.dfm:19801 
 msgid "Projekt wiederherstellen"
 msgstr ""
 
 #. MainForm..dxBarManager1..RecoverRibbonBtn..Hint
-#: pcdimmer.dfm:19789 
+#: pcdimmer.dfm:19803 
 msgid "Stellt ein Projekt nach z.B. nach einem Absturz wieder her"
 msgstr ""
 
 #. MainForm..dxBarManager1..LetzteProjekteRibbonBtn..Caption
-#: pcdimmer.dfm:20012 
+#: pcdimmer.dfm:20026 
 msgid "Letzte Projekte"
 msgstr ""
 
 #. MainForm..dxBarManager1..LetzteProjekteRibbonBtn..Hint
-#: pcdimmer.dfm:20014 
+#: pcdimmer.dfm:20028 
 msgid "Zuletzt verwendete Projekte"
 msgstr ""
 
 #. MainForm..dxBarManager1..LetzteProjekteRibbonBtn......ItemName
-#: pcdimmer.dfm:20237 
+#: pcdimmer.dfm:20251 
 msgid "openhistory1ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..LetzteProjekteRibbonBtn......ItemName
-#: pcdimmer.dfm:20241 
+#: pcdimmer.dfm:20255 
 msgid "openhistory2ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..LetzteProjekteRibbonBtn......ItemName
-#: pcdimmer.dfm:20245 
+#: pcdimmer.dfm:20259 
 msgid "openhistory3ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..LetzteProjekteRibbonBtn......ItemName
-#: pcdimmer.dfm:20249 
+#: pcdimmer.dfm:20263 
 msgid "openhistory4ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..LetzteProjekteRibbonBtn......ItemName
-#: pcdimmer.dfm:20253 
+#: pcdimmer.dfm:20267 
 msgid "openhistory5ribbon"
 msgstr ""
 
 #. MainForm..dxBarManager1..openhistory1ribbon..Caption
 #. MainForm..dxBarManager1..openhistory1ribbon..Hint
-#: pcdimmer.dfm:20257  pcdimmer.dfm:20259
+#: pcdimmer.dfm:20271  pcdimmer.dfm:20273
 msgid "History 1"
 msgstr ""
 
 #. MainForm..dxBarManager1..openhistory2ribbon..Caption
 #. MainForm..dxBarManager1..openhistory2ribbon..Hint
-#: pcdimmer.dfm:20264  pcdimmer.dfm:20266
+#: pcdimmer.dfm:20278  pcdimmer.dfm:20280
 msgid "History 2"
 msgstr ""
 
 #. MainForm..dxBarManager1..openhistory5ribbon..Caption
 #. MainForm..dxBarManager1..openhistory5ribbon..Hint
-#: pcdimmer.dfm:20271  pcdimmer.dfm:20273
+#: pcdimmer.dfm:20285  pcdimmer.dfm:20287
 msgid "History 5"
 msgstr ""
 
 #. MainForm..dxBarManager1..openhistory3ribbon..Caption
 #. MainForm..dxBarManager1..openhistory3ribbon..Hint
-#: pcdimmer.dfm:20278  pcdimmer.dfm:20280
+#: pcdimmer.dfm:20292  pcdimmer.dfm:20294
 msgid "History 3"
 msgstr ""
 
 #. MainForm..dxBarManager1..openhistory4ribbon..Caption
 #. MainForm..dxBarManager1..openhistory4ribbon..Hint
-#: pcdimmer.dfm:20285  pcdimmer.dfm:20287
+#: pcdimmer.dfm:20299  pcdimmer.dfm:20301
 msgid "History 4"
 msgstr ""
 
 #. MainForm..dxBarManager1..DeviceListRibbonBtn..Hint
-#: pcdimmer.dfm:20294 
+#: pcdimmer.dfm:20308 
 msgid "Zeit eine übersichtliche Liste aller installierter Geräte"
 msgstr ""
 
 #. MainForm..dxBarManager1..ExportDeviceListRibbonBtn..Caption
-#: pcdimmer.dfm:20465 
+#: pcdimmer.dfm:20479 
 msgid "Geräteliste exportieren"
 msgstr ""
 
 #. MainForm..dxBarManager1..ExportDeviceListRibbonBtn..Hint
-#: pcdimmer.dfm:20467 
+#: pcdimmer.dfm:20481 
 msgid "Exportiert die vorhandenen Geräte in Listenform"
 msgstr ""
 
 #. MainForm..dxBarManager1..SzenenverwaltungRibbonBtn..Caption
-#: pcdimmer.dfm:20638 
+#: pcdimmer.dfm:20652 
 msgid "Szenen verwaltung"
 msgstr ""
 
 #. MainForm..dxBarManager1..SzenenverwaltungRibbonBtn..Hint
-#: pcdimmer.dfm:20640 
+#: pcdimmer.dfm:20654 
 msgid "Verwalten Sie hier sämtliche Szenen und Effekte"
 msgstr ""
 
 #. MainForm..dxBarManager1..KanaluebersichtRibbonBtn..Caption
-#: pcdimmer.dfm:20971 
+#: pcdimmer.dfm:20985 
 msgid "Kanal übersicht"
 msgstr ""
 
 #. MainForm..dxBarManager1..KanaluebersichtRibbonBtn..Hint
-#: pcdimmer.dfm:20973 
+#: pcdimmer.dfm:20987 
 msgid "Zeigt eine Kanalübersicht über die Kanäle des gesamten Universes"
 msgstr ""
 
 #. MainForm..dxBarManager1..ProjektassistentRibbonBtn..Caption
-#: pcdimmer.dfm:21216 
+#: pcdimmer.dfm:21230 
 msgid "Projekt assistent"
 msgstr ""
 
 #. MainForm..dxBarManager1..ProjektassistentRibbonBtn..Hint
-#: pcdimmer.dfm:21218 
+#: pcdimmer.dfm:21232 
 msgid "Ein Assistent, der Sie bei den ersten Schritten begleitet"
 msgstr ""
 
 #. MainForm..dxBarManager1..BuehnenansichtRibbonBtn..Caption
-#: pcdimmer.dfm:21441 
+#: pcdimmer.dfm:21455 
 msgid "Bühnenansicht"
 msgstr ""
 
 #. MainForm..dxBarManager1..BuehnenansichtRibbonBtn..Hint
-#: pcdimmer.dfm:21443 
+#: pcdimmer.dfm:21457 
 msgid "Eine 2D Ansicht der vorhandenen Geräte"
 msgstr ""
 
 #. MainForm..dxBarManager1..EasyViewRibbonBtn..Caption
-#: pcdimmer.dfm:21658 
+#: pcdimmer.dfm:21672 
 msgid "Visualizer"
 msgstr ""
 
 #. MainForm..dxBarManager1..EasyViewRibbonBtn..Hint
-#: pcdimmer.dfm:21660 
+#: pcdimmer.dfm:21674 
 msgid "Eine 3D Darstellung der Bühne"
 msgstr ""
 
 #. MainForm..dxBarManager1..KontrollpanelRibbonBtn....Hint
-#: pcdimmer.dfm:21836 
+#: pcdimmer.dfm:21850 
 msgid ""
 "Ein Panel zum schnellen Zugriff auf Effekte und Szenen z.B. bei einem Live-"
 "Auftritt"
 msgstr ""
 
 #. MainForm..dxBarManager1..GeraetesteuerungRibbonBtn..Caption
-#: pcdimmer.dfm:22019 
+#: pcdimmer.dfm:22033 
 msgid "Geräte steuerung"
 msgstr ""
 
 #. MainForm..dxBarManager1..GeraetesteuerungRibbonBtn..Hint
-#: pcdimmer.dfm:22021 
+#: pcdimmer.dfm:22035 
 msgid "Installieren oder löschen Sie Geräte zu oder aus Ihrem Projekt"
 msgstr ""
 
 #. MainForm..dxBarManager1..JoystickRibbonBtn..Caption
 #. MainForm..dxBarManager1..JoystickRibbonBtn..Hint
 #. MainForm..dxBarManager1..JoystickRibbonSub..Caption
-#: pcdimmer.dfm:22192  pcdimmer.dfm:22194 pcdimmer.dfm:25609
+#: pcdimmer.dfm:22206  pcdimmer.dfm:22208 pcdimmer.dfm:25623
 msgid "Joystick"
 msgstr ""
 
 #. MainForm..dxBarManager1..AudioeffektRibbonBtn..Caption
-#: pcdimmer.dfm:22365 
+#: pcdimmer.dfm:22379 
 msgid "Audio effektplayer"
 msgstr ""
 
 #. MainForm..dxBarManager1..AudioeffektRibbonBtn....Hint
-#: pcdimmer.dfm:22369 
+#: pcdimmer.dfm:22383 
 msgid "Programmieren Sie Lichteffekte millisekundengenau auf ein Musikstück"
 msgstr ""
 
 #. MainForm..dxBarManager1..EffektsequenzerRibbonBtn..Caption
-#: pcdimmer.dfm:22540 
+#: pcdimmer.dfm:22554 
 msgid "Effekt sequenzer"
 msgstr ""
 
 #. MainForm..dxBarManager1..EffektsequenzerRibbonBtn....Hint
-#: pcdimmer.dfm:22544 
+#: pcdimmer.dfm:22558 
 msgid "Erstellen Sie z.B. über den Lauflichtgenerator Effekte und Lauflichter"
 msgstr ""
 
 #. MainForm..dxBarManager1..CuelistRibbonBtn..Hint
-#: pcdimmer.dfm:22717 
+#: pcdimmer.dfm:22731 
 msgid "Eine listenartige Darstellung aufeinanderfolgender Szenen"
 msgstr ""
 
 #. MainForm..dxBarManager1..TextbuchRibbonBtn..Caption
 #. textbuchform..Caption
-#: pcdimmer.dfm:22873  textbuchfrm.dfm:6
+#: pcdimmer.dfm:22887  textbuchfrm.dfm:6
 msgid "Textbuch"
 msgstr ""
 
 #. MainForm..dxBarManager1..TextbuchRibbonBtn..Hint
-#: pcdimmer.dfm:22875 
+#: pcdimmer.dfm:22889 
 msgid "Für kleine Theaterstücke sinnvoll: das Textbuch"
 msgstr ""
 
 #. MainForm..dxBarManager1..TimecodeRibbonBtn..Caption
-#: pcdimmer.dfm:23031 
+#: pcdimmer.dfm:23045 
 msgid "Timecode player"
 msgstr ""
 
 #. MainForm..dxBarManager1..TimecodeRibbonBtn....Hint
-#: pcdimmer.dfm:23035 
+#: pcdimmer.dfm:23049 
 msgid ""
 "Synchronisieren Sie Lichtabläufe auf einen eingehenden Timecode (z.B. MIDI)"
 msgstr ""
 
 #. MainForm..dxBarManager1..VideoscreenRibbonBtn....Hint
-#: pcdimmer.dfm:23256 
+#: pcdimmer.dfm:23270 
 msgid ""
 "Live-Video und Videodateianzeige (kann mit Audioeffektplayer synchronisiert "
 "werden)"
 msgstr ""
 
 #. MainForm..dxBarManager1..CDPlayerRibbonBtn..Hint
-#: pcdimmer.dfm:23589 
+#: pcdimmer.dfm:23603 
 msgid "Ein einfacher CD-Player"
 msgstr ""
 
 #. MainForm..dxBarManager1..DeviceeditorRibbonBtn..Caption
-#: pcdimmer.dfm:23752 
+#: pcdimmer.dfm:23766 
 msgid "Geräte editor"
 msgstr ""
 
 #. MainForm..dxBarManager1..DeviceeditorRibbonBtn..Hint
-#: pcdimmer.dfm:23754 
+#: pcdimmer.dfm:23768 
 msgid "Erstellen Sie neue Gerätedefinitionen mit diesem Editor"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarLargeButton1..Caption
-#: pcdimmer.dfm:23925 
+#: pcdimmer.dfm:23939 
 msgid "Gruppen editor"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarLargeButton1....Hint
-#: pcdimmer.dfm:23929 
+#: pcdimmer.dfm:23943 
 msgid ""
 "Fügen Sie mehrere Geräte zu einer Gruppe hinzu, um gruppierte Geräte "
 "zeitgleich oder mit einem Zeitversatz einstellen zu können"
 msgstr ""
 
 #. MainForm..dxBarManager1..ClockRibbonBtn..Hint
-#: pcdimmer.dfm:24102 
+#: pcdimmer.dfm:24116 
 msgid "Eine einfache analoge Uhrzeitanzeige"
 msgstr ""
 
 #. MainForm..dxBarManager1..BeattoolRibbonBtn..Caption
-#: pcdimmer.dfm:24273  Channels_Commandsystem.inc:173
+#: pcdimmer.dfm:24287  Channels_Commandsystem.inc:173
 msgid "Beattool"
 msgstr ""
 
 #. MainForm..dxBarManager1..BeattoolRibbonBtn..Hint
-#: pcdimmer.dfm:24275 
+#: pcdimmer.dfm:24289 
 msgid "Wählen Sie aus verschiedenen Quellen einen Beat für Ihre Effekte"
 msgstr ""
 
 #. MainForm..dxBarManager1..ZeitsteuerungRibbonBtn..Caption
-#: pcdimmer.dfm:24470 
+#: pcdimmer.dfm:24484 
 msgid "Zeitsteuerung"
 msgstr ""
 
 #. MainForm..dxBarManager1..ZeitsteuerungRibbonBtn....Hint
-#: pcdimmer.dfm:24474 
+#: pcdimmer.dfm:24488 
 msgid ""
 "Lassen Sie Lichtszenen und Effekte zu bestimmten Zeitpunkten automatisch "
 "starten"
 msgstr ""
 
 #. MainForm..dxBarManager1..TastatursteuerungRibbonBtn..Caption
-#: pcdimmer.dfm:24645 
+#: pcdimmer.dfm:24659 
 msgid "Tastatur steuerung"
 msgstr ""
 
 #. MainForm..dxBarManager1..TastatursteuerungRibbonBtn..Hint
-#: pcdimmer.dfm:24647 
+#: pcdimmer.dfm:24661 
 msgid "Legen Sie Funktionen des PC_DIMMERs auf Tasten Ihrer Tastatur"
 msgstr ""
 
@@ -19093,7 +19088,7 @@ msgstr ""
 #. mainform..BitBtn1..Caption
 #. mainform..Panel1..MIDI..Caption
 #. mainform..BitBtn1..Caption
-#: pcdimmer.dfm:24952 
+#: pcdimmer.dfm:24966 
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:274
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:324
 #: plugins/Programmplugins/Alt/Submaster/main.dfm:1490
@@ -19101,200 +19096,200 @@ msgid "MIDI"
 msgstr ""
 
 #. MainForm..dxBarManager1..MIDIRibbonSub....Hint
-#: pcdimmer.dfm:24956 
+#: pcdimmer.dfm:24970 
 msgid ""
 "Nutzen Sie angeschlossene MIDI-Geräte oder MIDI-Sequenzer, um den PC_DIMMER "
 "zu steuern"
 msgstr ""
 
 #. MainForm..dxBarManager1..MIDIRibbonSub......ItemName
-#: pcdimmer.dfm:25173 
+#: pcdimmer.dfm:25187 
 msgid "MIDISetupRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..MIDIRibbonSub......ItemName
-#: pcdimmer.dfm:25177 
+#: pcdimmer.dfm:25191 
 msgid "MIDIActiveRibbonBox"
 msgstr ""
 
 #. MainForm..dxBarManager1..DataInRibbonSub..Caption
 #. DataIn-Events
-#: pcdimmer.dfm:25181  szenenverwaltung.pas:3911
+#: pcdimmer.dfm:25195  szenenverwaltung.pas:3911
 msgid "Data-In"
 msgstr ""
 
 #. MainForm..dxBarManager1..DataInRibbonSub....Hint
-#: pcdimmer.dfm:25185 
+#: pcdimmer.dfm:25199 
 msgid ""
 "Nutzen Sie DMX-Inputs oder andere Eingänge, um PC_DIMMER-Funktionen zu "
 "steuern"
 msgstr ""
 
 #. MainForm..dxBarManager1..DataInRibbonSub......ItemName
-#: pcdimmer.dfm:25356 
+#: pcdimmer.dfm:25370 
 msgid "dxBarButton3"
 msgstr ""
 
 #. MainForm..dxBarManager1..DataInRibbonSub......ItemName
-#: pcdimmer.dfm:25360 
+#: pcdimmer.dfm:25374 
 msgid "DataInActiveRibbonBox"
 msgstr ""
 
 #. MainForm..dxBarManager1..InfrarotRibbonBtn..Caption
-#: pcdimmer.dfm:25406 
+#: pcdimmer.dfm:25420 
 msgid "Infrarot"
 msgstr ""
 
 #. MainForm..dxBarManager1..InfrarotRibbonBtn....Hint
-#: pcdimmer.dfm:25410 
+#: pcdimmer.dfm:25424 
 msgid "Verwenden Sie eine Infrarotfernbedienung, um den PC_DIMMER zu steuern"
 msgstr ""
 
 #. MainForm..dxBarManager1..JoystickRibbonSub....Hint
-#: pcdimmer.dfm:25613 
+#: pcdimmer.dfm:25627 
 msgid "Steuern Sie PC_DIMMER-Funktionen über einen Joystick oder ein Gamepad"
 msgstr ""
 
 #. MainForm..dxBarManager1..JoystickRibbonSub......ItemName
-#: pcdimmer.dfm:25784 
+#: pcdimmer.dfm:25798 
 msgid "JoystickRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..JoystickRibbonSub......ItemName
-#: pcdimmer.dfm:25788 
+#: pcdimmer.dfm:25802 
 msgid "ActiveJoystickRibbonBox"
 msgstr ""
 
 #. MainForm..dxBarManager1..NetzwerkRibbonSub....Hint
-#: pcdimmer.dfm:25796 
+#: pcdimmer.dfm:25810 
 msgid "Verwenden Sie Netzwerkfunktionen, um PC_DIMMER-Funktionen zu steuern"
 msgstr ""
 
 #. MainForm..dxBarManager1..NetzwerkRibbonSub......ItemName
-#: pcdimmer.dfm:26037 
+#: pcdimmer.dfm:26051 
 msgid "ActivateCommandReceiverRibbonBox"
 msgstr ""
 
 #. MainForm..dxBarManager1..NetzwerkRibbonSub......ItemName
-#: pcdimmer.dfm:26041 
+#: pcdimmer.dfm:26055 
 msgid "MCTRibbonBox"
 msgstr ""
 
 #. MainForm..dxBarManager1..DeutschRibbonBtn..Caption
 #. MainForm..dxBarManager1..DeutschRibbonBtn..Hint
-#: pcdimmer.dfm:26045  pcdimmer.dfm:26047
+#: pcdimmer.dfm:26059  pcdimmer.dfm:26061
 msgid "Deutsch"
 msgstr ""
 
 #. MainForm..dxBarManager1..EnglishRibbonBtn..Caption
 #. MainForm..dxBarManager1..EnglishRibbonBtn..Hint
-#: pcdimmer.dfm:26087  pcdimmer.dfm:26089
+#: pcdimmer.dfm:26101  pcdimmer.dfm:26103
 msgid "English"
 msgstr ""
 
 #. MainForm..dxBarManager1..FrancaisRibbonBtn..Caption
 #. MainForm..dxBarManager1..FrancaisRibbonBtn..Hint
-#: pcdimmer.dfm:26129  pcdimmer.dfm:26131
+#: pcdimmer.dfm:26143  pcdimmer.dfm:26145
 msgid "Français"
 msgstr ""
 
 #. MainForm..dxBarManager1..ErweiterteEinstellungenRibbonBtn..Hint
-#: pcdimmer.dfm:26173 
+#: pcdimmer.dfm:26187 
 msgid "Zeigt erweiterte Einstellungen und Ausgabepluginseinstellungen"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem1..Caption
-#: pcdimmer.dfm:26344 
+#: pcdimmer.dfm:26358 
 msgid "Sidebars"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem1..Hint
-#: pcdimmer.dfm:26346 
+#: pcdimmer.dfm:26360 
 msgid "Blenden Sie Sidebars ein- oder aus"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem1......ItemName
-#: pcdimmer.dfm:26554 
+#: pcdimmer.dfm:26568 
 msgid "SidebarRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem1......ItemName
-#: pcdimmer.dfm:26558 
+#: pcdimmer.dfm:26572 
 msgid "LeistungssteuerungRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem1......ItemName
-#: pcdimmer.dfm:26562 
+#: pcdimmer.dfm:26576 
 msgid "SidebarselectRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..MonitorStandbyRibbonBtn..Caption
 #. MainForm..dxBarManager1..MonitorStandbyRibbonBtn..Hint
-#: pcdimmer.dfm:26566  pcdimmer.dfm:26568
+#: pcdimmer.dfm:26580  pcdimmer.dfm:26582
 msgid "StandBy"
 msgstr ""
 
 #. MainForm..dxBarManager1..MonitorOffRibbonBtn..Caption
 #. MainForm..dxBarManager1..MonitorOffRibbonBtn..Hint
-#: pcdimmer.dfm:26608  pcdimmer.dfm:26610
+#: pcdimmer.dfm:26622  pcdimmer.dfm:26624
 msgid "Ausschalten"
 msgstr ""
 
 #. MainForm..dxBarManager1..MonitorOnRibbonBtn..Caption
 #. MainForm..dxBarManager1..MonitorOnRibbonBtn..Hint
-#: pcdimmer.dfm:26650  pcdimmer.dfm:26652
+#: pcdimmer.dfm:26664  pcdimmer.dfm:26666
 msgid "Einschalten"
 msgstr ""
 
 #. MainForm..dxBarManager1..WebsitesRibbonSub..Caption
-#: pcdimmer.dfm:26692 
+#: pcdimmer.dfm:26706 
 msgid "Websites"
 msgstr ""
 
 #. MainForm..dxBarManager1..WebsitesRibbonSub......ItemName
-#: pcdimmer.dfm:26829 
+#: pcdimmer.dfm:26843 
 msgid "pcdimmerhomeRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..WebsitesRibbonSub......ItemName
-#: pcdimmer.dfm:26833 
+#: pcdimmer.dfm:26847 
 msgid "dxBarSeparator1"
 msgstr ""
 
 #. MainForm..dxBarManager1..WebsitesRibbonSub......ItemName
-#: pcdimmer.dfm:26837 
+#: pcdimmer.dfm:26851 
 msgid "dxBarButton29"
 msgstr ""
 
 #. MainForm..dxBarManager1..WebsitesRibbonSub......ItemName
-#: pcdimmer.dfm:26841 
+#: pcdimmer.dfm:26855 
 msgid "pcdimmerforumRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..WebsitesRibbonSub......ItemName
-#: pcdimmer.dfm:26845 
+#: pcdimmer.dfm:26859 
 msgid "dxBarSeparator2"
 msgstr ""
 
 #. MainForm..dxBarManager1..WebsitesRibbonSub......ItemName
-#: pcdimmer.dfm:26849 
+#: pcdimmer.dfm:26863 
 msgid "dxBarButton24"
 msgstr ""
 
 #. MainForm..dxBarManager1..WebsitesRibbonSub......ItemName
-#: pcdimmer.dfm:26853 
+#: pcdimmer.dfm:26867 
 msgid "dxBarButton25"
 msgstr ""
 
 #. MainForm..dxBarManager1..pcdimmerforumRibbonBtn..Caption
 #. MainForm..dxBarManager1..pcdimmerforumRibbonBtn..Hint
-#: pcdimmer.dfm:26857  pcdimmer.dfm:26859
+#: pcdimmer.dfm:26871  pcdimmer.dfm:26873
 msgid "PC_DIMMER Forum"
 msgstr ""
 
 #. MainForm..dxBarManager1..pcdimmerhomeRibbonBtn..Caption
 #. MainForm..dxBarManager1..pcdimmerhomeRibbonBtn..Hint
-#: pcdimmer.dfm:26891  pcdimmer.dfm:26893
+#: pcdimmer.dfm:26905  pcdimmer.dfm:26907
 msgid "PC_DIMMER Website"
 msgstr ""
 
@@ -19302,272 +19297,272 @@ msgstr ""
 #. MainForm..dxBarManager1..EinleitungRibbonBtn..Hint
 #. MainForm..dxBarManager1..dxBarButton29..Caption
 #. MainForm..dxBarManager1..dxBarButton29..Hint
-#: pcdimmer.dfm:27071  pcdimmer.dfm:27073 pcdimmer.dfm:32403
-#: pcdimmer.dfm:32405
+#: pcdimmer.dfm:27085  pcdimmer.dfm:27087 pcdimmer.dfm:32417
+#: pcdimmer.dfm:32419
 msgid "PC_DIMMER Handbuch"
 msgstr ""
 
 #. MainForm..dxBarManager1..StartparamsRibbonBtn..Caption
 #. MainForm..dxBarManager1..StartparamsRibbonBtn..Hint
-#: pcdimmer.dfm:27261  pcdimmer.dfm:27263
+#: pcdimmer.dfm:27275  pcdimmer.dfm:27277
 msgid "Startparameter"
 msgstr ""
 
 #. MainForm..dxBarManager1..GPLRibbonBtn..Caption
 #. MainForm..dxBarManager1..GPLRibbonBtn..Hint
-#: pcdimmer.dfm:27268  pcdimmer.dfm:27270
+#: pcdimmer.dfm:27282  pcdimmer.dfm:27284
 msgid "GPL Lizenz"
 msgstr ""
 
 #. MainForm..dxBarManager1..ChangeLogRibbonBtn..Caption
 #. MainForm..dxBarManager1..ChangeLogRibbonBtn..Hint
-#: pcdimmer.dfm:27275  pcdimmer.dfm:27277
+#: pcdimmer.dfm:27289  pcdimmer.dfm:27291
 msgid "Changelog"
 msgstr ""
 
 #. MainForm..dxBarManager1..FaderpanelRibbonBtn..Hint
-#: pcdimmer.dfm:27457 
+#: pcdimmer.dfm:27471 
 msgid "Ein multikanal Faderpanel zur Steuerung einzelner Kanäle"
 msgstr ""
 
 #. MainForm..dxBarManager1..SubmasterRibbonBtn..Hint
-#: pcdimmer.dfm:27499 
+#: pcdimmer.dfm:27513 
 msgid "Fassen Sie mehrere Kanäle eines Gerätes auf einem Fader zusammen"
 msgstr ""
 
 #. MainForm..dxBarManager1..MasterRibbonBtn..Hint
-#: pcdimmer.dfm:27541 
+#: pcdimmer.dfm:27555 
 msgid "Einige Hauptfader (Lautstärke, Helligkeit, etc.)"
 msgstr ""
 
 #. MainForm..dxBarManager1..LockPCdimmerRibbonBtn..Caption
-#: pcdimmer.dfm:27581  Channels_Commandsystem.inc:1233
+#: pcdimmer.dfm:27595  Channels_Commandsystem.inc:1233
 msgid "PC_DIMMER sperren"
 msgstr ""
 
 #. MainForm..dxBarManager1..LockPCdimmerRibbonBtn..Hint
-#: pcdimmer.dfm:27583 
+#: pcdimmer.dfm:27597 
 msgid "Sperrt den Zugriff zum PC_DIMMER"
 msgstr ""
 
 #. MainForm..dxBarManager1..DebugRibbonBtn..Caption
-#: pcdimmer.dfm:27734 
+#: pcdimmer.dfm:27748 
 msgid "Debugausgabe"
 msgstr ""
 
 #. MainForm..dxBarManager1..DebugRibbonBtn..Hint
-#: pcdimmer.dfm:27736 
+#: pcdimmer.dfm:27750 
 msgid "Zeigt eine kurze Debuganzeige"
 msgstr ""
 
 #. MainForm..dxBarManager1..ProtokollRibbonBtn..Caption
-#: pcdimmer.dfm:27740 
+#: pcdimmer.dfm:27754 
 msgid "Protokoll anzeigen..."
 msgstr ""
 
 #. MainForm..dxBarManager1..ProtokollRibbonBtn..Hint
-#: pcdimmer.dfm:27742 
+#: pcdimmer.dfm:27756 
 msgid "Zeigt das PC_DIMMER-Protokoll"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin0ribbon..Caption
 #. MainForm..dxBarManager1..plugin0ribbon..Hint
-#: pcdimmer.dfm:27747  pcdimmer.dfm:27749
+#: pcdimmer.dfm:27761  pcdimmer.dfm:27763
 msgid "Plugin 0"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin1ribbon..Caption
 #. MainForm..dxBarManager1..plugin1ribbon..Hint
-#: pcdimmer.dfm:27789  pcdimmer.dfm:27791
+#: pcdimmer.dfm:27803  pcdimmer.dfm:27805
 msgid "Plugin 1"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin2ribbon..Caption
 #. MainForm..dxBarManager1..plugin2ribbon..Hint
-#: pcdimmer.dfm:27831  pcdimmer.dfm:27833
+#: pcdimmer.dfm:27845  pcdimmer.dfm:27847
 msgid "Plugin 2"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin3ribbon..Caption
 #. MainForm..dxBarManager1..plugin3ribbon..Hint
-#: pcdimmer.dfm:27873  pcdimmer.dfm:27875
+#: pcdimmer.dfm:27887  pcdimmer.dfm:27889
 msgid "Plugin 3"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin4ribbon..Caption
 #. MainForm..dxBarManager1..plugin4ribbon..Hint
-#: pcdimmer.dfm:27915  pcdimmer.dfm:27917
+#: pcdimmer.dfm:27929  pcdimmer.dfm:27931
 msgid "Plugin 4"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin5ribbon..Caption
 #. MainForm..dxBarManager1..plugin5ribbon..Hint
-#: pcdimmer.dfm:27957  pcdimmer.dfm:27959
+#: pcdimmer.dfm:27971  pcdimmer.dfm:27973
 msgid "Plugin 5"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin7ribbon..Caption
 #. MainForm..dxBarManager1..plugin7ribbon..Hint
-#: pcdimmer.dfm:27999  pcdimmer.dfm:28001
+#: pcdimmer.dfm:28013  pcdimmer.dfm:28015
 msgid "Plugin 7"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin6ribbon..Caption
 #. MainForm..dxBarManager1..plugin6ribbon..Hint
-#: pcdimmer.dfm:28041  pcdimmer.dfm:28043
+#: pcdimmer.dfm:28055  pcdimmer.dfm:28057
 msgid "Plugin 6"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin8ribbon..Caption
 #. MainForm..dxBarManager1..plugin8ribbon..Hint
-#: pcdimmer.dfm:28083  pcdimmer.dfm:28085
+#: pcdimmer.dfm:28097  pcdimmer.dfm:28099
 msgid "Plugin 8"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin10ribbon..Caption
 #. MainForm..dxBarManager1..plugin10ribbon..Hint
-#: pcdimmer.dfm:28125  pcdimmer.dfm:28127
+#: pcdimmer.dfm:28139  pcdimmer.dfm:28141
 msgid "Plugin 10"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin9ribbon..Caption
 #. MainForm..dxBarManager1..plugin9ribbon..Hint
-#: pcdimmer.dfm:28167  pcdimmer.dfm:28169
+#: pcdimmer.dfm:28181  pcdimmer.dfm:28183
 msgid "Plugin 9"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin11ribbon..Caption
 #. MainForm..dxBarManager1..plugin11ribbon..Hint
-#: pcdimmer.dfm:28209  pcdimmer.dfm:28211
+#: pcdimmer.dfm:28223  pcdimmer.dfm:28225
 msgid "Plugin 11"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin13ribbon..Caption
 #. MainForm..dxBarManager1..plugin13ribbon..Hint
-#: pcdimmer.dfm:28251  pcdimmer.dfm:28253
+#: pcdimmer.dfm:28265  pcdimmer.dfm:28267
 msgid "Plugin 13"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin12ribbon..Caption
 #. MainForm..dxBarManager1..plugin12ribbon..Hint
-#: pcdimmer.dfm:28293  pcdimmer.dfm:28295
+#: pcdimmer.dfm:28307  pcdimmer.dfm:28309
 msgid "Plugin 12"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin14ribbon..Caption
 #. MainForm..dxBarManager1..plugin14ribbon..Hint
-#: pcdimmer.dfm:28335  pcdimmer.dfm:28337
+#: pcdimmer.dfm:28349  pcdimmer.dfm:28351
 msgid "Plugin 14"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin16ribbon..Caption
 #. MainForm..dxBarManager1..plugin16ribbon..Hint
-#: pcdimmer.dfm:28377  pcdimmer.dfm:28379
+#: pcdimmer.dfm:28391  pcdimmer.dfm:28393
 msgid "Plugin 16"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin15ribbon..Caption
 #. MainForm..dxBarManager1..plugin15ribbon..Hint
-#: pcdimmer.dfm:28419  pcdimmer.dfm:28421
+#: pcdimmer.dfm:28433  pcdimmer.dfm:28435
 msgid "Plugin 15"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin17ribbon..Caption
 #. MainForm..dxBarManager1..plugin17ribbon..Hint
-#: pcdimmer.dfm:28461  pcdimmer.dfm:28463
+#: pcdimmer.dfm:28475  pcdimmer.dfm:28477
 msgid "Plugin 17"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin19ribbon..Caption
 #. MainForm..dxBarManager1..plugin19ribbon..Hint
-#: pcdimmer.dfm:28503  pcdimmer.dfm:28505
+#: pcdimmer.dfm:28517  pcdimmer.dfm:28519
 msgid "Plugin 19"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin18ribbon..Caption
 #. MainForm..dxBarManager1..plugin18ribbon..Hint
-#: pcdimmer.dfm:28545  pcdimmer.dfm:28547
+#: pcdimmer.dfm:28559  pcdimmer.dfm:28561
 msgid "Plugin 18"
 msgstr ""
 
 #. MainForm..dxBarManager1..RefreshPluginsRibbonBtn..Caption
-#: pcdimmer.dfm:28587 
+#: pcdimmer.dfm:28601 
 msgid "Reset Plugins"
 msgstr ""
 
 #. MainForm..dxBarManager1..RefreshPluginsRibbonBtn..Hint
-#: pcdimmer.dfm:28589 
+#: pcdimmer.dfm:28603 
 msgid "Laden Sie alle vorhandenen Plugins"
 msgstr ""
 
 #. MainForm..dxBarManager1..plugin20ribbon..Caption
 #. MainForm..dxBarManager1..plugin20ribbon..Hint
-#: pcdimmer.dfm:28760  pcdimmer.dfm:28762
+#: pcdimmer.dfm:28774  pcdimmer.dfm:28776
 msgid "Plugin 20"
 msgstr ""
 
 #. MainForm..dxBarManager1..BlenddownRibbonBtn..Caption
 #. MainForm..dxBarManager1..BlenddownRibbonBtn..Hint
-#: pcdimmer.dfm:28802  pcdimmer.dfm:28804
+#: pcdimmer.dfm:28816  pcdimmer.dfm:28818
 msgid "Verdunkeln"
 msgstr ""
 
 #. MainForm..dxBarManager1..BlackoutRibbonBtn..Caption
 #. MainForm..dxBarManager1..BlackoutRibbonBtn..Hint
 #. touchscreenform..Panel1..blackoutbtn..Caption
-#: pcdimmer.dfm:28844  pcdimmer.dfm:28846 touchscreenfrm.dfm:124
+#: pcdimmer.dfm:28858  pcdimmer.dfm:28860 touchscreenfrm.dfm:124
 msgid "Blackout"
 msgstr ""
 
 #. MainForm..dxBarManager1..OutputOffRibbonBtn..Caption
 #. MainForm..dxBarManager1..OutputOffRibbonBtn..Hint
-#: pcdimmer.dfm:28888  pcdimmer.dfm:28890
+#: pcdimmer.dfm:28902  pcdimmer.dfm:28904
 msgid "Ausgabe aktivieren/deaktivieren"
 msgstr ""
 
 #. MainForm..dxBarManager1..StopRibbonBtn..Caption
-#: pcdimmer.dfm:28932 
+#: pcdimmer.dfm:28946 
 msgid "Stop Effekte und Audio"
 msgstr ""
 
 #. MainForm..dxBarManager1..StopRibbonBtn..Hint
-#: pcdimmer.dfm:28934 
+#: pcdimmer.dfm:28948 
 msgid "Stop (Effekte und Audio)"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarButton4..Caption
 #. MainForm..dxBarManager1..dxBarButton4..Hint
-#: pcdimmer.dfm:28974  pcdimmer.dfm:28976
+#: pcdimmer.dfm:28988  pcdimmer.dfm:28990
 msgid "Dimmerkernel"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarButton5..Caption
 #. MainForm..dxBarManager1..dxBarButton5..Hint
-#: pcdimmer.dfm:29016  pcdimmer.dfm:29018
+#: pcdimmer.dfm:29030  pcdimmer.dfm:29032
 msgid "USB Geräte"
 msgstr ""
 
 #. MainForm..dxBarManager1..PowerRibbonBtn..Caption
 #. MainForm..dxBarManager1..PowerRibbonBtn..Hint
-#: pcdimmer.dfm:29058  pcdimmer.dfm:29060
+#: pcdimmer.dfm:29072  pcdimmer.dfm:29074
 msgid "PowerButton"
 msgstr ""
 
 #. MainForm..dxBarManager1..MinimizeRibbonBtn..Caption
 #. MainForm..dxBarManager1..MinimizeRibbonBtn..Hint
-#: pcdimmer.dfm:29101  pcdimmer.dfm:29103
+#: pcdimmer.dfm:29115  pcdimmer.dfm:29117
 msgid "Menu ein/aus"
 msgstr ""
 
 #. MainForm..dxBarManager1..ResetWindowsRibbonBtn..Caption
 #. MainForm..dxBarManager1..ResetWindowsRibbonBtn..Hint
-#: pcdimmer.dfm:29108  pcdimmer.dfm:29110
+#: pcdimmer.dfm:29122  pcdimmer.dfm:29124
 msgid "Fensterpositionen resetten"
 msgstr ""
 
 #. MainForm..dxBarManager1..SaveWindowsRibbonBtn..Caption
 #. MainForm..dxBarManager1..SaveWindowsRibbonBtn..Hint
-#: pcdimmer.dfm:29115  pcdimmer.dfm:29117
+#: pcdimmer.dfm:29129  pcdimmer.dfm:29131
 msgid "Fensterpositionen speichern"
 msgstr ""
 
@@ -19577,258 +19572,264 @@ msgstr ""
 #. MainForm..dxBarManager1..dxBarLargeButton2..Hint
 #. MainForm..dxBarManager1..dxBarLargeButton3..Caption
 #. MainForm..dxBarManager1..dxBarLargeButton3..Hint
-#: pcdimmer.dfm:29122  pcdimmer.dfm:29124 pcdimmer.dfm:29413
-#: pcdimmer.dfm:29415 pcdimmer.dfm:29638 pcdimmer.dfm:29640
+#: pcdimmer.dfm:29136  pcdimmer.dfm:29138 pcdimmer.dfm:29427
+#: pcdimmer.dfm:29429 pcdimmer.dfm:29652 pcdimmer.dfm:29654
 msgid "Minimiert ein/aus"
 msgstr ""
 
 #. MainForm..dxBarManager1..ActiveJoystickRibbonBox..Caption
 #. MainForm..dxBarManager1..ActiveJoystickRibbonBox..Hint
-#: pcdimmer.dfm:29347  pcdimmer.dfm:29349
+#: pcdimmer.dfm:29361  pcdimmer.dfm:29363
 msgid "Aktiviere Joystick"
 msgstr ""
 
 #. MainForm..dxBarManager1..DataInActiveRibbonBox..Caption
 #. MainForm..dxBarManager1..DataInActiveRibbonBox..Hint
-#: pcdimmer.dfm:29356  pcdimmer.dfm:29358
+#: pcdimmer.dfm:29370  pcdimmer.dfm:29372
 msgid "Verarbeite DataIn-Daten"
 msgstr ""
 
 #. MainForm..dxBarManager1..MIDIActiveRibbonBox..Caption
 #. MainForm..dxBarManager1..MIDIActiveRibbonBox..Hint
-#: pcdimmer.dfm:29364  pcdimmer.dfm:29366
+#: pcdimmer.dfm:29378  pcdimmer.dfm:29380
 msgid "Verarbeite MIDI-Daten"
 msgstr ""
 
 #. MainForm..dxBarManager1..ActivatePDAServerRibbonBtn..Caption
 #. MainForm..dxBarManager1..ActivatePDAServerRibbonBtn..Hint
-#: pcdimmer.dfm:29372  pcdimmer.dfm:29374
+#: pcdimmer.dfm:29386  pcdimmer.dfm:29388
 msgid "PDA-Server aktiviert"
 msgstr ""
 
 #. MainForm..dxBarManager1..ActivateCommandReceiverRibbonBox..Caption
 #. MainForm..dxBarManager1..ActivateCommandReceiverRibbonBox..Hint
-#: pcdimmer.dfm:29379  pcdimmer.dfm:29381
+#: pcdimmer.dfm:29393  pcdimmer.dfm:29395
 msgid "Terminalschnittstelle aktivieren"
 msgstr ""
 
 #. MainForm..dxBarManager1..MCTRibbonBox..Caption
 #. MainForm..dxBarManager1..MCTRibbonBox..Hint
-#: pcdimmer.dfm:29387  pcdimmer.dfm:29389
+#: pcdimmer.dfm:29401  pcdimmer.dfm:29403
 msgid "MediaCenter Timecode empfangen"
 msgstr ""
 
 #. MainForm..dxBarManager1..SidebarRibbonBtn..Caption
 #. MainForm..dxBarManager1..SidebarRibbonBtn..Hint
-#: pcdimmer.dfm:29395  pcdimmer.dfm:29397
+#: pcdimmer.dfm:29409  pcdimmer.dfm:29411
 msgid "Einstellungen anzeigen"
 msgstr ""
 
 #. MainForm..dxBarManager1..LeistungssteuerungRibbonBtn..Caption
 #. MainForm..dxBarManager1..LeistungssteuerungRibbonBtn..Hint
-#: pcdimmer.dfm:29404  pcdimmer.dfm:29406
+#: pcdimmer.dfm:29418  pcdimmer.dfm:29420
 msgid "Leistungsanzeige anzeigen"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem2..Caption
-#: pcdimmer.dfm:29863 
+#: pcdimmer.dfm:29877 
 msgid "Weitere Funktionen"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem2......ItemName
-#: pcdimmer.dfm:30087 
+#: pcdimmer.dfm:30101 
 msgid "DebugRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem2......ItemName
-#: pcdimmer.dfm:30091 
+#: pcdimmer.dfm:30105 
 msgid "ProtokollRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem2......ItemName
-#: pcdimmer.dfm:30096 
+#: pcdimmer.dfm:30110 
 msgid "ResetWindowsRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem2......ItemName
-#: pcdimmer.dfm:30100 
+#: pcdimmer.dfm:30114 
 msgid "SaveWindowsRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..NetherlandsRibbonBtn..Caption
-#: pcdimmer.dfm:30104 
+#: pcdimmer.dfm:30118 
 msgid "Nederlands"
 msgstr ""
 
 #. MainForm..dxBarManager1..NetherlandsRibbonBtn..Hint
-#: pcdimmer.dfm:30106 
+#: pcdimmer.dfm:30120 
 msgid "Niederländisch"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem3..Caption
-#: pcdimmer.dfm:30146 
+#: pcdimmer.dfm:30160 
 msgid "Languages"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem3......ItemName
-#: pcdimmer.dfm:30355 
+#: pcdimmer.dfm:30369 
 msgid "EnglishRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem3......ItemName
-#: pcdimmer.dfm:30359 
+#: pcdimmer.dfm:30373 
 msgid "DeutschRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem3......ItemName
-#: pcdimmer.dfm:30363 
+#: pcdimmer.dfm:30377 
 msgid "FrancaisRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem3......ItemName
-#: pcdimmer.dfm:30367 
+#: pcdimmer.dfm:30381 
 msgid "dxBarButton6"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem3......ItemName
-#: pcdimmer.dfm:30371 
+#: pcdimmer.dfm:30385 
 msgid "NetherlandsRibbonBtn"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarSubItem3......ItemName
-#: pcdimmer.dfm:30375 
+#: pcdimmer.dfm:30389 
 msgid "dxBarButton2"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarButton22..Caption
-#: pcdimmer.dfm:30381 
+#: pcdimmer.dfm:30395 
 msgid "Audio Stop"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarButton22..Hint
-#: pcdimmer.dfm:30383 
+#: pcdimmer.dfm:30397 
 msgid "Stop Audio"
 msgstr ""
 
 #. MainForm..dxBarManager1..SidebarselectRibbonBtn..Caption
 #. MainForm..dxBarManager1..SidebarselectRibbonBtn..Hint
-#: pcdimmer.dfm:30465  pcdimmer.dfm:30467
+#: pcdimmer.dfm:30479  pcdimmer.dfm:30481
 msgid "Geräteselektion"
 msgstr ""
 
 #. MainForm..dxBarManager1..AmbilightRibbonBtn..Caption
-#: pcdimmer.dfm:30474 
+#: pcdimmer.dfm:30488 
 msgid "Ambilight"
 msgstr ""
 
 #. MainForm..dxBarManager1..AmbilightRibbonBtn....Hint
-#: pcdimmer.dfm:30478 
+#: pcdimmer.dfm:30492 
 msgid "Lassen Sie ihre RGB-Lampen zum Bildschirminhalt automatisch einstellen"
 msgstr ""
 
 #. MainForm..dxBarManager1..PartyMuckenModulRibbonBtn..Caption
 #. pmmform..Caption
-#: pcdimmer.dfm:30809  pmm.dfm:6
+#: pcdimmer.dfm:30823  pmm.dfm:6
 msgid "Party Modul"
 msgstr ""
 
 #. MainForm..dxBarManager1..PartyMuckenModulRibbonBtn..Hint
-#: pcdimmer.dfm:30811 
+#: pcdimmer.dfm:30825 
 msgid "Erstellen Sie schnell und einfach Lichteffekte für ihre Party"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarLargeButton4..Caption
 #. MainForm..dxBarManager1..dxBarLargeButton4..Hint
 #. touchscreenform..Caption
-#: pcdimmer.dfm:31134  pcdimmer.dfm:31136 touchscreenfrm.dfm:6
+#: pcdimmer.dfm:31148  pcdimmer.dfm:31150 touchscreenfrm.dfm:6
 msgid "Touchscreen"
 msgstr ""
 
 #. MainForm..dxBarManager1..DDFAssistantRibbonBtn..Caption
 #. MainForm..dxBarManager1..DDFAssistantRibbonBtn..Hint
-#: pcdimmer.dfm:31467  pcdimmer.dfm:31469
+#: pcdimmer.dfm:31481  pcdimmer.dfm:31483
 msgid "Geräteeditor Assistent"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarButton24..Caption
 #. MainForm..dxBarManager1..dxBarButton24..Hint
-#: pcdimmer.dfm:32229  pcdimmer.dfm:32231
+#: pcdimmer.dfm:32243  pcdimmer.dfm:32245
 msgid "PC_DIMMER Bugtracker"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarButton25..Caption
 #. MainForm..dxBarManager1..dxBarButton25..Hint
-#: pcdimmer.dfm:32271  pcdimmer.dfm:32273
+#: pcdimmer.dfm:32285  pcdimmer.dfm:32287
 msgid "PC_DIMMER Downloads"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarButton26..Caption
 #. MainForm..dxBarManager1..dxBarButton27..Caption
 #. MainForm..dxBarManager1..dxBarButton27..Hint
-#: pcdimmer.dfm:32313  pcdimmer.dfm:32355 pcdimmer.dfm:32357
+#: pcdimmer.dfm:32327  pcdimmer.dfm:32369 pcdimmer.dfm:32371
 msgid "Audiomanager"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarButton26..Hint
-#: pcdimmer.dfm:32315 
+#: pcdimmer.dfm:32329 
 msgid "Auflistung aller laufender Audioszenen"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarButton28..Caption
 #. MainForm..dxBarManager1..dxBarButton28..Hint
-#: pcdimmer.dfm:32397  pcdimmer.dfm:32399
+#: pcdimmer.dfm:32411  pcdimmer.dfm:32413
 msgid "New Button"
 msgstr ""
 
 #. MainForm..dxBarManager1..BrightnessEditRibbon..Caption
 #. MainForm..dxBarManager1..BrightnessEditRibbon..Hint
-#: pcdimmer.dfm:32447  pcdimmer.dfm:32450
+#: pcdimmer.dfm:32461  pcdimmer.dfm:32464
 msgid "Minimale Helligkeit"
 msgstr ""
 
 #. MainForm..dxBarManager1..StopVisualizer..Caption
 #. MainForm..dxBarManager1..StopVisualizer..Hint
-#: pcdimmer.dfm:32456  pcdimmer.dfm:32458
+#: pcdimmer.dfm:32470  pcdimmer.dfm:32472
 msgid "Stop visualizer"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarButton2..Caption
 #. MainForm..dxBarManager1..dxBarButton2..Hint
-#: pcdimmer.dfm:32498  pcdimmer.dfm:32500
+#: pcdimmer.dfm:32512  pcdimmer.dfm:32514
 msgid "Español"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarButton6..Caption
 #. MainForm..dxBarManager1..dxBarButton6..Hint
-#: pcdimmer.dfm:32532  pcdimmer.dfm:32534
+#: pcdimmer.dfm:32546  pcdimmer.dfm:32548
 msgid "Italiano"
 msgstr ""
 
 #. MainForm..dxBarManager1..NodeControlRibbonBtn..Caption
-#. MainForm..dxBarManager1..NodeControlRibbonBtn..Hint
-#: pcdimmer.dfm:32574  pcdimmer.dfm:32576
+#: pcdimmer.dfm:32588 
 msgid "Knoten- steuerung"
+msgstr ""
+
+#. MainForm..dxBarManager1..NodeControlRibbonBtn....Hint
+#: pcdimmer.dfm:32592 
+msgid ""
+"Knotensteuerung zur einfachen Bühneneinstellung auch bei großer Anzahl an "
+"Geräten"
 msgstr ""
 
 #. MainForm..dxBarManager1..OnlineUpdateRibbonBtn..Caption
 #. MainForm..dxBarManager1..OnlineUpdateRibbonBtn..Hint
-#: pcdimmer.dfm:32712  pcdimmer.dfm:32714
-msgid "Nach neuer Verison suchen"
+#: pcdimmer.dfm:32728  pcdimmer.dfm:32730
+msgid "Nach neuer Version suchen"
 msgstr ""
 
 #. MainForm..dxBarManager1..dxBarGroup1....Items
-#: pcdimmer.dfm:33011 
+#: pcdimmer.dfm:33027 
 msgid "dxBarButton1"
 msgstr ""
 
 #. MainForm..MediaCenterTimecodeSocket..RemoteHost
 #. mainform..PageControl1..TabSheet2..GroupBox2..edipaddressdestination..Text
-#: pcdimmer.dfm:33066  plugins/Ausgabeplugin/ArtNet/mainfrm.dfm:1883
+#: pcdimmer.dfm:33082  plugins/Ausgabeplugin/ArtNet/mainfrm.dfm:1883
 msgid "255.255.255.255"
 msgstr ""
 
 #. MainForm..dxBarPopupMenu1......ItemName
-#: pcdimmer.dfm:33143 
+#: pcdimmer.dfm:33159 
 msgid "StopVisualizer"
 msgstr ""
 
@@ -21406,8 +21407,8 @@ msgstr ""
 
 #. splashscreen2..Label2..Caption
 #. Splashscreen anzeigen
-#: splashscreen2frm.dfm:729  pcdimmer.pas:1768 pcdimmer.pas:1777
-#: pcdimmer.pas:1791
+#: splashscreen2frm.dfm:729  pcdimmer.pas:1781 pcdimmer.pas:1790
+#: pcdimmer.pas:1804
 msgid "Initialisiere Anwendung..."
 msgstr ""
 
@@ -21558,13 +21559,13 @@ msgid "Szene hinzufügen:"
 msgstr ""
 
 #. szenenverwaltungform..PopupMenu1..Bewegungsszene1..Caption
-#: szenenverwaltung.dfm:1450  pcdimmer.pas:22505 szenenverwaltung.pas:1570
+#: szenenverwaltung.dfm:1450  pcdimmer.pas:22518 szenenverwaltung.pas:1570
 msgid "Bewegungsszene"
 msgstr ""
 
 #. szenenverwaltungform..PopupMenu1..Preset1..Caption
 #. Name
-#: szenenverwaltung.dfm:1465  pcdimmer.pas:22548
+#: szenenverwaltung.dfm:1465  pcdimmer.pas:22561
 msgid "Preset"
 msgstr ""
 
@@ -22083,12 +22084,12 @@ msgid "Soll die neue Version jetzt geladen  und installiert werden ?"
 msgstr ""
 
 #. frmInternetUpdateFound..Panel2..Button1..Caption
-#: UpdateFoundFormD4.dfm:169  pcdimmer.pas:10547 pcdimmer.pas:10568
+#: UpdateFoundFormD4.dfm:169  pcdimmer.pas:10560 pcdimmer.pas:10581
 msgid "&Ja"
 msgstr ""
 
 #. frmInternetUpdateFound..Panel2..Button2..Caption
-#: UpdateFoundFormD4.dfm:187  pcdimmer.pas:10547 pcdimmer.pas:10568
+#: UpdateFoundFormD4.dfm:187  pcdimmer.pas:10560 pcdimmer.pas:10581
 msgid "&Nein"
 msgstr ""
 
@@ -28513,6 +28514,11 @@ msgstr ""
 msgid "Farbanzeige einblenden"
 msgstr ""
 
+#. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..RotateBtn..Caption
+#: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1273 
+msgid "Drehen"
+msgstr ""
+
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label1..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1319 
 msgid "Linksklick+Shift = Gerät löschen"
@@ -28787,7 +28793,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:466 
 #: faderpanelfrm.pas:465 lauflichtassistentfrm.pas:892
 #: lauflichtassistentownpatternfrm.pas:228 matrixeditorfrm.pas:236
-#: pcdimmer.pas:26236
+#: pcdimmer.pas:26279
 msgid "n/a"
 msgstr ""
 
@@ -28867,20 +28873,20 @@ msgstr ""
 
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:583 
-#: kontrollpanelform.pas:545 pcdimmer.pas:3877 pcdimmer.pas:25923
+#: kontrollpanelform.pas:545 pcdimmer.pas:3890 pcdimmer.pas:25966
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1028
 msgid "Gelb"
 msgstr ""
 
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:584 
-#: pcdimmer.pas:3897
+#: pcdimmer.pas:3910
 msgid "Violett"
 msgstr ""
 
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:586 
-#: pcdimmer.pas:3887
+#: pcdimmer.pas:3900
 msgid "Orange"
 msgstr ""
 
@@ -30351,7 +30357,7 @@ msgstr ""
 #. Master
 #. Grandmaster abfragen
 #: Channels_Commandsystem.inc:222  befehleditorform.pas:846
-#: pcdimmer.pas:15736
+#: pcdimmer.pas:15749
 msgid "Grandmaster setzen"
 msgstr ""
 
@@ -30365,7 +30371,7 @@ msgstr ""
 
 #. Flashmaster auf abfragen
 #: Channels_Commandsystem.inc:243  befehleditorform.pas:848
-#: pcdimmer.pas:15751
+#: pcdimmer.pas:15764
 msgid "Flashmaster setzen"
 msgstr ""
 
@@ -30378,7 +30384,7 @@ msgid "Speedmaster auf Eingangswert"
 msgstr ""
 
 #. Speedmaster abfragen
-#: Channels_Commandsystem.inc:264  pcdimmer.pas:15766
+#: Channels_Commandsystem.inc:264  pcdimmer.pas:15779
 msgid "Speedmaster setzen"
 msgstr ""
 
@@ -30391,7 +30397,7 @@ msgid "Audiomaster auf Eingangswert"
 msgstr ""
 
 #. Audiomaster abfragen
-#: Channels_Commandsystem.inc:285  pcdimmer.pas:15781
+#: Channels_Commandsystem.inc:285  pcdimmer.pas:15794
 msgid "Audiomaster setzen"
 msgstr ""
 
@@ -31261,7 +31267,7 @@ msgstr ""
 
 #. ProgressScreenSmall.close;
 #: adddevicefrm.pas:799  geraetesteuerungfrm.pas:1564
-#: geraetesteuerungfrm.pas:4691 pcdimmer.pas:14479 pcdimmer.pas:22047
+#: geraetesteuerungfrm.pas:4691 pcdimmer.pas:14492 pcdimmer.pas:22060
 msgid "Fertig."
 msgstr ""
 
@@ -31466,7 +31472,7 @@ msgid "Möchten Sie das Ambilight einschalten?"
 msgstr ""
 
 #. Ambilight ein
-#: ambilight.pas:1065  pcdimmer.pas:14014 pcdimmer.pas:15928
+#: ambilight.pas:1065  pcdimmer.pas:14027 pcdimmer.pas:15941
 msgid "Ambilight ausschalten"
 msgstr ""
 
@@ -31558,7 +31564,7 @@ msgstr ""
 msgid "Bewegungsszene starten"
 msgstr ""
 
-#: audioeffektplayerfrm.pas:2073  pcdimmer.pas:22503
+#: audioeffektplayerfrm.pas:2073  pcdimmer.pas:22516
 msgid "Unbegrenzt"
 msgstr ""
 
@@ -31592,7 +31598,7 @@ msgstr ""
 msgid "Automatikszene starten"
 msgstr ""
 
-#: audioeffektplayerfrm.pas:2186  pcdimmer.pas:22590
+#: audioeffektplayerfrm.pas:2186  pcdimmer.pas:22603
 msgid "Unendlich"
 msgstr ""
 
@@ -31617,12 +31623,12 @@ msgid "(Fehlerhafter Link)"
 msgstr ""
 
 #: audioeffektplayerfrm.pas:2320  audioeffektplayerfrm.pas:4920
-#: pcdimmer.pas:10095
+#: pcdimmer.pas:10108
 msgid "Die Audiodatei \""
 msgstr ""
 
 #: audioeffektplayerfrm.pas:2320  audioeffektplayerfrm.pas:4920
-#: pcdimmer.pas:10095
+#: pcdimmer.pas:10108
 msgid "\" wurde nicht gefunden. Möchten Sie jetzt danach suchen?"
 msgstr ""
 
@@ -31631,7 +31637,7 @@ msgid "Audiodateien|*.wav;*.mp3|*.*|*.*"
 msgstr ""
 
 #: audioeffektplayerfrm.pas:2324  audioeffektplayerfrm.pas:4924
-#: pcdimmer.pas:10099
+#: pcdimmer.pas:10112
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:915
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1000
 msgid "Audiodatei öffnen"
@@ -32113,6 +32119,10 @@ msgid ""
 "die Geräteszene aufgerufen werden kann."
 msgstr ""
 
+#: buehnenansicht.pas:422 
+msgid "Only COLOR_RGBALPHA and COLOR_RGB formats are supported"
+msgstr ""
+
 #: buehnenansicht.pas:561 
 msgid "Die gesamte Bühnenansicht wird zurückgesetzt. Fortfahren?"
 msgstr ""
@@ -32179,12 +32189,12 @@ msgstr ""
 #. Kanalnummer ändern
 #. Kanalnummer ändern
 #: buehnenansicht.pas:1487  buehnenansicht.pas:1506 buehnenansicht.pas:1832
-#: pcdimmer.pas:25582
+#: pcdimmer.pas:25624
 msgid "Kanaleinstellung"
 msgstr ""
 
 #: buehnenansicht.pas:1487  buehnenansicht.pas:1506 buehnenansicht.pas:1832
-#: pcdimmer.pas:25582
+#: pcdimmer.pas:25624
 msgid "Welcher Kanal soll für dieses Gerät gelten:"
 msgstr ""
 
@@ -32213,15 +32223,15 @@ msgstr ""
 msgid "Bitte geben Sie eine neue Bezeichnung für den aktuellen Kanal ein:"
 msgstr ""
 
-#: buehnenansicht.pas:2402  buehnenansicht.pas:2403
+#: buehnenansicht.pas:2404  buehnenansicht.pas:2405
 msgid "Bühne "
 msgstr ""
 
-#: buehnenansicht.pas:2420 
+#: buehnenansicht.pas:2422 
 msgid "Neue Bühnenbezeichnung"
 msgstr ""
 
-#: buehnenansicht.pas:2420 
+#: buehnenansicht.pas:2422 
 msgid "Bitte geben Sie eine neue Bezeichnung für diese Bühne:"
 msgstr ""
 
@@ -32264,7 +32274,7 @@ msgid "aber entriegelt"
 msgstr ""
 
 #. mainform.DeleteDir(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected));
-#: codeeditorfrm.pas:203  pcdimmer.pas:11009 projektverwaltungfrm.pas:342
+#: codeeditorfrm.pas:203  pcdimmer.pas:11022 projektverwaltungfrm.pas:342
 msgid "Die Datei \""
 msgstr ""
 
@@ -32591,12 +32601,12 @@ msgid "Es werden alle Kanäle der Szene hinzugefügt. Fortfahren?"
 msgstr ""
 
 #. HEADER
-#: devicelistfrm.pas:111  geraetesteuerungfrm.pas:4370 pcdimmer.pas:24074
+#: devicelistfrm.pas:111  geraetesteuerungfrm.pas:4370 pcdimmer.pas:24087
 #: reordergroupfrm.pas:138
 msgid "Gerätename"
 msgstr ""
 
-#: devicelistfrm.pas:112  pcdimmer.pas:24075 reordergroupfrm.pas:141
+#: devicelistfrm.pas:112  pcdimmer.pas:24088 reordergroupfrm.pas:141
 msgid "Hersteller"
 msgstr ""
 
@@ -32604,16 +32614,16 @@ msgstr ""
 msgid "P [W]"
 msgstr ""
 
-#: devicelistfrm.pas:116  pcdimmer.pas:24079
+#: devicelistfrm.pas:116  pcdimmer.pas:24092
 #: plugins/Programmplugins/Alt/Leistungsplugin/settingfrm.pas:352
 msgid "Phase"
 msgstr ""
 
-#: devicelistfrm.pas:118  pcdimmer.pas:24081
+#: devicelistfrm.pas:118  pcdimmer.pas:24094
 msgid "Pan/Tilt"
 msgstr ""
 
-#: devicelistfrm.pas:121  pcdimmer.pas:24085
+#: devicelistfrm.pas:121  pcdimmer.pas:24098
 msgid "Autoscening"
 msgstr ""
 
@@ -33173,8 +33183,8 @@ msgstr ""
 #. Ungerade Kanäle
 #. Gerade Kanäle
 #: geraetesteuerungfrm.pas:1613  geraetesteuerungfrm.pas:3135
-#: insscene.pas:492 konsolensteuerungfrm.pas:391 pcdimmer.pas:2182
-#: pcdimmer.pas:3785 pcdimmer.pas:12983 pcdimmer.pas:12986 SetNames.pas:58
+#: insscene.pas:492 konsolensteuerungfrm.pas:391 pcdimmer.pas:2195
+#: pcdimmer.pas:3798 pcdimmer.pas:12996 pcdimmer.pas:12999 SetNames.pas:58
 #: SetNames.pas:59
 msgid "Kanal "
 msgstr ""
@@ -33323,7 +33333,7 @@ msgstr ""
 msgid "Sie können maximal 255 Zeichen eingeben"
 msgstr ""
 
-#: insscene.pas:290  pcdimmer.pas:12974 pcdimmer.pas:12976 SetNames.pas:84
+#: insscene.pas:290  pcdimmer.pas:12987 pcdimmer.pas:12989 SetNames.pas:84
 #: plugins/Programmplugins/Alt/Kontrollpanel/insscene.pas:243
 #: plugins/Programmplugins/Alt/Leistungsplugin/settingfrm.pas:354
 #: plugins/Programmplugins/Alt/Submaster/kanalwahl.pas:166
@@ -33443,11 +33453,11 @@ msgstr ""
 msgid "Bereich"
 msgstr ""
 
-#: kanaluebersichtfrm.pas:477  pcdimmer.pas:25820
+#: kanaluebersichtfrm.pas:477  pcdimmer.pas:25863
 msgid "Kanalwert ändern"
 msgstr ""
 
-#: kanaluebersichtfrm.pas:477  pcdimmer.pas:25820
+#: kanaluebersichtfrm.pas:477  pcdimmer.pas:25863
 msgid "Bitte geben Sie einen neuen Endwert an:"
 msgstr ""
 
@@ -33521,17 +33531,17 @@ msgstr ""
 msgid "Fehler beim Zugriff auf die Datei \""
 msgstr ""
 
-#: kontrollpanelform.pas:547  pcdimmer.pas:25925
+#: kontrollpanelform.pas:547  pcdimmer.pas:25968
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1030
 msgid "Schwarz"
 msgstr ""
 
-#: kontrollpanelform.pas:549  pcdimmer.pas:25927
+#: kontrollpanelform.pas:549  pcdimmer.pas:25970
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1032
 msgid "Grau"
 msgstr ""
 
-#: kontrollpanelform.pas:550  pcdimmer.pas:25928
+#: kontrollpanelform.pas:550  pcdimmer.pas:25971
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1033
 msgid "Rosa"
 msgstr ""
@@ -33906,15 +33916,15 @@ msgstr ""
 msgid "Pluginscenes"
 msgstr ""
 
-#: pcdimmer.pas:1815 
+#: pcdimmer.pas:1828 
 msgid "The PC_DIMMER does not have a languagefile for your language \""
 msgstr ""
 
-#: pcdimmer.pas:1815 
+#: pcdimmer.pas:1828 
 msgid "\". The PC_DIMMER will start in English now..."
 msgstr ""
 
-#: pcdimmer.pas:1872 
+#: pcdimmer.pas:1885 
 msgid ""
 "Sie haben während des Startens die linke Shift-Taste gedrückt.\n"
 "\n"
@@ -33922,7 +33932,7 @@ msgid ""
 "Soll das Laden der letzten Projektdatei verhindert werden?"
 msgstr ""
 
-#: pcdimmer.pas:1880 
+#: pcdimmer.pas:1893 
 msgid ""
 "Sie haben während des Startens die rechte Shift-Taste gedrückt.\n"
 "\n"
@@ -33930,25 +33940,25 @@ msgid ""
 "Soll der Start der Akkukontrolle verhindert werden?"
 msgstr ""
 
-#: pcdimmer.pas:1980 
+#: pcdimmer.pas:1993 
 msgid "Startwerte..."
 msgstr ""
 
 #. MessageDlg('PC_DIMMER kann nicht auf die Protokolldatei "PC_DIMMER.log" zugreifen!', mtError, [mbOk], 0);
-#: pcdimmer.pas:1993  pcdimmer.pas:2000
+#: pcdimmer.pas:2006  pcdimmer.pas:2013
 msgid "Fehler in Protokolldatei"
 msgstr ""
 
-#: pcdimmer.pas:1996 
+#: pcdimmer.pas:2009 
 msgid ""
 "PC_DIMMER kann nicht auf die Protokolldatei \"PC_DIMMER.log\" zugreifen!"
 msgstr ""
 
-#: pcdimmer.pas:2041 
+#: pcdimmer.pas:2054 
 msgid "Registrywerte auslesen"
 msgstr ""
 
-#: pcdimmer.pas:2068 
+#: pcdimmer.pas:2081 
 msgid ""
 "Die Ausführungs-Priorität des PC_DIMMERs liegt unterhalb von \"Normal\".\n"
 "\n"
@@ -33957,29 +33967,29 @@ msgid ""
 "Priorität ggfs. auf \"Normal\" oder \"Höher\"."
 msgstr ""
 
-#: pcdimmer.pas:2170 
+#: pcdimmer.pas:2183 
 msgid "Konfiguration öffnen"
 msgstr ""
 
-#: pcdimmer.pas:2176 
+#: pcdimmer.pas:2189 
 msgid "Oberfläche vorbereiten..."
 msgstr ""
 
-#: pcdimmer.pas:2200 
+#: pcdimmer.pas:2213 
 msgid "Plugins suchen..."
 msgstr ""
 
 #. if FuncCall=StrPas('Output') then
-#: pcdimmer.pas:2235 
+#: pcdimmer.pas:2248 
 msgid "Outputplugin: "
 msgstr ""
 
 #. if FuncCall=StrPas('Input') then
-#: pcdimmer.pas:2244 
+#: pcdimmer.pas:2257 
 msgid "Programmplugin: "
 msgstr ""
 
-#: pcdimmer.pas:2274 
+#: pcdimmer.pas:2287 
 msgid ""
 "Es sind keine Ausgabeplugins installiert.\n"
 "\n"
@@ -33987,50 +33997,50 @@ msgid ""
 "herunterladbar."
 msgstr ""
 
-#: pcdimmer.pas:2294 
+#: pcdimmer.pas:2307 
 msgid "Audiosystem einrichten..."
 msgstr ""
 
-#: pcdimmer.pas:2303 
+#: pcdimmer.pas:2316 
 msgid "Die Datei \"bass.dll\" liegt in einer falschen Version ("
 msgstr ""
 
-#: pcdimmer.pas:2303 
+#: pcdimmer.pas:2316 
 msgid ") statt "
 msgstr ""
 
-#: pcdimmer.pas:2303 
+#: pcdimmer.pas:2316 
 msgid " vor."
 msgstr ""
 
-#: pcdimmer.pas:2320 
+#: pcdimmer.pas:2333 
 msgid "Power-Button deaktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:2343 
+#: pcdimmer.pas:2356 
 msgid "Hauptfenster erstellen..."
 msgstr ""
 
-#: pcdimmer.pas:3096 
+#: pcdimmer.pas:3109 
 msgid "Möchten Sie wirklich alle Einstellungen des PC_DIMMERs zurücksetzen?"
 msgstr ""
 
-#: pcdimmer.pas:3130 
+#: pcdimmer.pas:3143 
 msgid " Beende PC_DIMMER... "
 msgstr ""
 
-#: pcdimmer.pas:3138 
+#: pcdimmer.pas:3151 
 msgid "Bereite Shutdown vor..."
 msgstr ""
 
 #. Input-Plugins deaktivieren
 #. Input-Plugins deaktivieren
-#: pcdimmer.pas:3389  pcdimmer.pas:13064
+#: pcdimmer.pas:3402  pcdimmer.pas:13077
 msgid "Deaktiviere Input-Plugin "
 msgstr ""
 
 #. FreeLibrary(InputDLL[i]);
-#: pcdimmer.pas:3413 
+#: pcdimmer.pas:3426 
 msgid ""
 "Hinweis: Das Deaktivieren der Programmplugins ist in den Optionen "
 "deaktiviert.Dies ist nur für Testzwecke zu empfehlen. Bitte die "
@@ -34038,404 +34048,404 @@ msgid ""
 msgstr ""
 
 #. Output-Plugin deaktivieren
-#: pcdimmer.pas:3429 
+#: pcdimmer.pas:3442 
 msgid "Deaktiviere Output-Plugin "
 msgstr ""
 
-#: pcdimmer.pas:3439  pcdimmer.pas:13074
+#: pcdimmer.pas:3452  pcdimmer.pas:13087
 msgid "Das Plugin \""
 msgstr ""
 
-#: pcdimmer.pas:3439  pcdimmer.pas:13074
+#: pcdimmer.pas:3452  pcdimmer.pas:13087
 msgid "\" hat einen Fehler beim Deaktivieren gemeldet."
 msgstr ""
 
-#: pcdimmer.pas:3449 
+#: pcdimmer.pas:3462 
 msgid ""
 "Hinweis: Das Deaktivieren der Ausgabeplugins ist in den Optionen deaktiviert."
 "Dies ist nur für Testzwecke zu empfehlen. Bitte die Einstellungen "
 "kontrollieren."
 msgstr ""
 
-#: pcdimmer.pas:3461 
+#: pcdimmer.pas:3474 
 msgid "Schreibe Konfigurationsdatei..."
 msgstr ""
 
 #. Pluginreferenzen entfernen
-#: pcdimmer.pas:3523  pcdimmer.pas:13087
+#: pcdimmer.pas:3536  pcdimmer.pas:13100
 msgid "Entferne DLL-Referenzen..."
 msgstr ""
 
-#: pcdimmer.pas:3543 
+#: pcdimmer.pas:3556 
 msgid "Entferne Fenster..."
 msgstr ""
 
 #. Wait for accu thread to stop
-#: pcdimmer.pas:3548 
+#: pcdimmer.pas:3561 
 msgid "Stopping accu thread..."
 msgstr ""
 
-#: pcdimmer.pas:3642 
+#: pcdimmer.pas:3655 
 msgid "Beende Programm..."
 msgstr ""
 
 #. Oberfläche resetten
-#: pcdimmer.pas:3742 
+#: pcdimmer.pas:3755 
 msgid " - [Neues Projekt]"
 msgstr ""
 
 #. 'Neue Audiodatei...' setzen
-#: pcdimmer.pas:3797  pcdimmer.pas:10112
+#: pcdimmer.pas:3810  pcdimmer.pas:10125
 msgid "Neue Audiodatei..."
 msgstr ""
 
-#: pcdimmer.pas:3848 
+#: pcdimmer.pas:3861 
 msgid "Setzt alle Geräte mit aktiviertem Autoscening auf Rot"
 msgstr ""
 
-#: pcdimmer.pas:3858 
+#: pcdimmer.pas:3871 
 msgid "Setzt alle Geräte mit aktiviertem Autoscening auf Grün"
 msgstr ""
 
-#: pcdimmer.pas:3868 
+#: pcdimmer.pas:3881 
 msgid "Setzt alle Geräte mit aktiviertem Autoscening auf Blau"
 msgstr ""
 
-#: pcdimmer.pas:3878 
+#: pcdimmer.pas:3891 
 msgid "Setzt alle Geräte mit aktiviertem Autoscening auf Gelb"
 msgstr ""
 
-#: pcdimmer.pas:3888 
+#: pcdimmer.pas:3901 
 msgid "Setzt alle Geräte mit aktiviertem Autoscening auf Orange"
 msgstr ""
 
-#: pcdimmer.pas:3898 
+#: pcdimmer.pas:3911 
 msgid "Setzt alle Geräte mit aktiviertem Autoscening auf Violett"
 msgstr ""
 
-#: pcdimmer.pas:4104 
+#: pcdimmer.pas:4117 
 msgid "PC_DIMMER Projekt speichern..."
 msgstr ""
 
-#: pcdimmer.pas:4105  pcdimmer.pas:10989
+#: pcdimmer.pas:4118  pcdimmer.pas:11002
 msgid "PC_DIMMER Projekt (*.pcdproj)|*.pcdproj|*.*|*.*"
 msgstr ""
 
 #. Anzeigen vorbereiten
-#: pcdimmer.pas:4120 
+#: pcdimmer.pas:4133 
 msgid "Speichere Projekt..."
 msgstr ""
 
-#: pcdimmer.pas:4121 
+#: pcdimmer.pas:4134 
 msgid "Bereite Speicherung vor..."
 msgstr ""
 
-#: pcdimmer.pas:4122  pcdimmer.pas:4129
+#: pcdimmer.pas:4135  pcdimmer.pas:4142
 msgid "Projektgröße: "
 msgstr ""
 
-#: pcdimmer.pas:4123  pcdimmer.pas:12330
+#: pcdimmer.pas:4136  pcdimmer.pas:12343
 msgid " Speichere Datei... "
 msgstr ""
 
-#: pcdimmer.pas:4143 
+#: pcdimmer.pas:4156 
 msgid "Sende Plugins Speichern-Befehl..."
 msgstr ""
 
-#: pcdimmer.pas:4163 
+#: pcdimmer.pas:4176 
 msgid "Sammle Hauptprogrammdaten..."
 msgstr ""
 
-#: pcdimmer.pas:4186  pcdimmer.pas:5561
+#: pcdimmer.pas:4199  pcdimmer.pas:5574
 msgid "Schreibe Datei..."
 msgstr ""
 
 #. Projekt-Header speichern
-#: pcdimmer.pas:4194 
+#: pcdimmer.pas:4207 
 msgid "Schreibe Datei... Projekt-Header"
 msgstr ""
 
 #. Effektaudio speichern
-#: pcdimmer.pas:4217 
+#: pcdimmer.pas:4230 
 msgid "Schreibe Datei... Audioeffektplayer"
 msgstr ""
 
 #. Projekteinstellungen speichern
-#: pcdimmer.pas:4319 
+#: pcdimmer.pas:4332 
 msgid "Schreibe Datei... Projekteinstellungen"
 msgstr ""
 
 #. Figuren speichern
-#: pcdimmer.pas:4352 
+#: pcdimmer.pas:4365 
 msgid "Schreibe Datei... Figuren"
 msgstr ""
 
 #. Einfache-, Bewegungs- und Audioszenen, sowie Befehle speichern
-#: pcdimmer.pas:4373 
+#: pcdimmer.pas:4386 
 msgid "Schreibe Datei... Szenen"
 msgstr ""
 
 #. Timeline speichern
-#: pcdimmer.pas:4507 
+#: pcdimmer.pas:4520 
 msgid "Schreibe Datei... Timeline"
 msgstr ""
 
 #. Skripttimer speichern
-#: pcdimmer.pas:4528 
+#: pcdimmer.pas:4541 
 msgid "Schreibe Datei... Skripttimer"
 msgstr ""
 
 #. Hotkeys speichern
-#: pcdimmer.pas:4537 
+#: pcdimmer.pas:4550 
 msgid "Schreibe Datei... Hotkeys"
 msgstr ""
 
 #. Nebelmaschineneinstellungen
-#: pcdimmer.pas:4575 
+#: pcdimmer.pas:4588 
 msgid "Schreibe Datei... Nebelmaschine"
 msgstr ""
 
 #. Geräte speichern
-#: pcdimmer.pas:4581 
+#: pcdimmer.pas:4594 
 msgid "Schreibe Datei... Geräte"
 msgstr ""
 
 #. Presets speichern
-#: pcdimmer.pas:4748 
+#: pcdimmer.pas:4761 
 msgid "Schreibe Datei... Presets"
 msgstr ""
 
 #. Geräteszenen speichern
-#: pcdimmer.pas:4786 
+#: pcdimmer.pas:4799 
 msgid "Schreibe Datei... Geräteszenen"
 msgstr ""
 
 #. Gruppen speichern
-#: pcdimmer.pas:4875 
+#: pcdimmer.pas:4888 
 msgid "Schreibe Datei... Gerätegruppen"
 msgstr ""
 
 #. Softpatch speichern
-#: pcdimmer.pas:4901 
+#: pcdimmer.pas:4914 
 msgid "Schreibe Datei... Softpatch"
 msgstr ""
 
 #. Effekte speichern
-#: pcdimmer.pas:4930 
+#: pcdimmer.pas:4943 
 msgid "Schreibe Datei... Effekte"
 msgstr ""
 
 #. Bühnenansicht speichern
-#: pcdimmer.pas:5032 
+#: pcdimmer.pas:5045 
 msgid "Schreibe Datei... Bühnenansicht"
 msgstr ""
 
 #. Desktopproperties speichern
-#: pcdimmer.pas:5071 
+#: pcdimmer.pas:5084 
 msgid "Schreibe Datei... Desktopeinstellungen"
 msgstr ""
 
 #. Joystickeinstellungen Speichern
-#: pcdimmer.pas:5093 
+#: pcdimmer.pas:5106 
 msgid "Schreibe Datei... Joystickeinstellungen"
 msgstr ""
 
 #. Kontrollpanel speichern
-#: pcdimmer.pas:5127 
+#: pcdimmer.pas:5140 
 msgid "Schreibe Datei... Kontrollpanel"
 msgstr ""
 
 #. MIDI-IN Event speichern
-#: pcdimmer.pas:5153 
+#: pcdimmer.pas:5166 
 msgid "Schreibe Datei... MIDI-In"
 msgstr ""
 
 #. Data-IN Event speichern
-#: pcdimmer.pas:5188 
+#: pcdimmer.pas:5201 
 msgid "Schreibe Datei... Data-In"
 msgstr ""
 
 #. Leistungsdaten speichern
-#: pcdimmer.pas:5219 
+#: pcdimmer.pas:5232 
 msgid "Schreibe Datei... Leistungssteuerung"
 msgstr ""
 
 #. Autoszenen speichern
-#: pcdimmer.pas:5238 
+#: pcdimmer.pas:5251 
 msgid "Schreibe Datei... Autoszenen"
 msgstr ""
 
 #. Submaster (neu) speichern
-#: pcdimmer.pas:5269 
+#: pcdimmer.pas:5282 
 msgid "Schreibe Datei... Submaster"
 msgstr ""
 
 #. Cue-Liste speichern
-#: pcdimmer.pas:5323 
+#: pcdimmer.pas:5336 
 msgid "Schreibe Datei... Cueliste"
 msgstr ""
 
 #. Timecodeplayer-Liste speichern
-#: pcdimmer.pas:5350 
+#: pcdimmer.pas:5363 
 msgid "Schreibe Datei... Timecodeplayer"
 msgstr ""
 
 #. IR FB speichern
-#: pcdimmer.pas:5370 
+#: pcdimmer.pas:5383 
 msgid "Schreibe Datei... IR Fernbedienung"
 msgstr ""
 
 #. MediaCenter Szenen speichern
-#: pcdimmer.pas:5385 
+#: pcdimmer.pas:5398 
 msgid "Schreibe Datei... MediaCenter Szenen"
 msgstr ""
 
 #. Plugin Szenen speichern
-#: pcdimmer.pas:5405 
+#: pcdimmer.pas:5418 
 msgid "Schreibe Datei... Pluginszenen"
 msgstr ""
 
 #. PresetSzenen speichern
-#: pcdimmer.pas:5488 
+#: pcdimmer.pas:5501 
 msgid "Schreibe Datei... Preset-Szenen"
 msgstr ""
 
 #. NodeControl speichern
-#: pcdimmer.pas:5522 
+#: pcdimmer.pas:5535 
 msgid "Schreibe Datei... Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:5583 
+#: pcdimmer.pas:5596 
 msgid "Erstelle Backup-Datei \""
 msgstr ""
 
-#: pcdimmer.pas:5593 
+#: pcdimmer.pas:5606 
 msgid "Komprimiere Projektdatei..."
 msgstr ""
 
 #. filesinprojectdirectory:=0;
 #. ShowMessage('Informationen über aktuelle Projektdatei:'+#13#10#13#10+GetFileSummaryInfo(Openfilepath+Openfilename));
-#: pcdimmer.pas:5601  pcdimmer.pas:7113
+#: pcdimmer.pas:5614  pcdimmer.pas:7126
 msgid "Datei (1/"
 msgstr ""
 
 #. inprogress.filename.Caption:='Schreibe Datei...';
-#: pcdimmer.pas:7017 
+#: pcdimmer.pas:7030 
 msgid "Das Autobackup konnte nicht erstellt werden..."
 msgstr ""
 
-#: pcdimmer.pas:7099 
+#: pcdimmer.pas:7112 
 msgid ""
 "Achtung: Sie versuchen eine Datei als Projekt zu öffnen, die nicht die "
 "Endung \"pcdproj\" besitzt!"
 msgstr ""
 
-#: pcdimmer.pas:7133  pcdimmer.pas:14341 pcdimmer.pas:14354
+#: pcdimmer.pas:7146  pcdimmer.pas:14354 pcdimmer.pas:14367
 msgid "Lade Projekt..."
 msgstr ""
 
-#: pcdimmer.pas:7134 
+#: pcdimmer.pas:7147 
 msgid " Öffne Datei... "
 msgstr ""
 
-#: pcdimmer.pas:7146  pcdimmer.pas:7151
+#: pcdimmer.pas:7159  pcdimmer.pas:7164
 msgid "Sende Öffnen-Befehl...Plugins"
 msgstr ""
 
 #. hier aus Datei in Records schreiben
-#: pcdimmer.pas:7166  pcdimmer.pas:9816
+#: pcdimmer.pas:7179  pcdimmer.pas:9829
 msgid "Lese Daten ein..."
 msgstr ""
 
 #. Projekt-Header öffnen
-#: pcdimmer.pas:7180 
+#: pcdimmer.pas:7193 
 msgid "Lese Daten ein... Projekt-Header"
 msgstr ""
 
-#: pcdimmer.pas:7184 
+#: pcdimmer.pas:7197 
 msgid "Lese Daten ein...Projekt-Header"
 msgstr ""
 
 #. Version vor 4.x
-#: pcdimmer.pas:7222  pcdimmer.pas:7233
+#: pcdimmer.pas:7235  pcdimmer.pas:7246
 msgid "Projektdatei zurückgewiesen"
 msgstr ""
 
-#: pcdimmer.pas:7223  pcdimmer.pas:9827
+#: pcdimmer.pas:7236  pcdimmer.pas:9840
 msgid "Die Projektdatei ist veraltet"
 msgstr ""
 
-#: pcdimmer.pas:7225 
+#: pcdimmer.pas:7238 
 msgid ""
 "Aufgrund großer Änderungen am Projektformat können die bisherigen Projekte "
 "leider nicht weiter verwendet werden. Zum Teil können Programmteile über die "
 "jeweilige Speicherfunktion exportiert und reimportiert werden."
 msgstr ""
 
-#: pcdimmer.pas:7227  pcdimmer.pas:7253 pcdimmer.pas:7279 pcdimmer.pas:9831
-#: pcdimmer.pas:9855
+#: pcdimmer.pas:7240  pcdimmer.pas:7266 pcdimmer.pas:7292 pcdimmer.pas:9844
+#: pcdimmer.pas:9868
 msgid "Projektversion: "
 msgstr ""
 
-#: pcdimmer.pas:7228  pcdimmer.pas:9832 pcdimmer.pas:9856
+#: pcdimmer.pas:7241  pcdimmer.pas:9845 pcdimmer.pas:9869
 msgid "Datum: "
 msgstr ""
 
-#: pcdimmer.pas:7229  pcdimmer.pas:9833 pcdimmer.pas:9857
+#: pcdimmer.pas:7242  pcdimmer.pas:9846 pcdimmer.pas:9870
 msgid "Uhrzeit: "
 msgstr ""
 
 #. Hinweise zu neueren Projekten, als diese Programmversion
-#: pcdimmer.pas:7245 
+#: pcdimmer.pas:7258 
 msgid "Projekt einer neueren Programmversion"
 msgstr ""
 
-#: pcdimmer.pas:7246 
+#: pcdimmer.pas:7259 
 msgid "Das Projekt wurde mit einer neueren PC_DIMMER Version gespeichert."
 msgstr ""
 
-#: pcdimmer.pas:7248 
+#: pcdimmer.pas:7261 
 msgid ""
 "Die zu ladende Projektdatei wurde mit einer neueren PC_DIMMER-Version "
 "gespeichert und kann mit der aktuellen Version nicht fehlerfrei geöffnet "
 "werden."
 msgstr ""
 
-#: pcdimmer.pas:7250 
+#: pcdimmer.pas:7263 
 msgid ""
 "Bitte laden Sie sich eine aktuelle Version des PC_DIMMERs von der Seite "
 "http://www.pcdimmer.de herunter."
 msgstr ""
 
-#: pcdimmer.pas:7254  pcdimmer.pas:7280
+#: pcdimmer.pas:7267  pcdimmer.pas:7293
 msgid "Projektdatum: "
 msgstr ""
 
-#: pcdimmer.pas:7255  pcdimmer.pas:7281
+#: pcdimmer.pas:7268  pcdimmer.pas:7294
 msgid "Projektzeit: "
 msgstr ""
 
-#: pcdimmer.pas:7259  pcdimmer.pas:7285
+#: pcdimmer.pas:7272  pcdimmer.pas:7298
 msgid "Hinweis..."
 msgstr ""
 
 #. Hinweise zu älteren Projekten
-#: pcdimmer.pas:7271 
+#: pcdimmer.pas:7284 
 msgid "Projekt einer früheren Programmversion"
 msgstr ""
 
-#: pcdimmer.pas:7272 
+#: pcdimmer.pas:7285 
 msgid "Das Projekt wurde mit einer älteren PC_DIMMER Version gespeichert."
 msgstr ""
 
-#: pcdimmer.pas:7274 
+#: pcdimmer.pas:7287 
 msgid ""
 "Die zu ladende Projektdatei wurde mit einer älteren PC_DIMMER-Version "
 "gespeichert. Die Projektdatei wird beim nächsten Speichervorgang automatisch "
 "konvertiert und als neue Version abgespeichert."
 msgstr ""
 
-#: pcdimmer.pas:7276 
+#: pcdimmer.pas:7289 
 msgid ""
 "Nach der Konvertierung kann das Projekt nicht mehr in einer älteren Version "
 "des PC_DIMMERs geladen werden. Möchten Sie parallel eine ältere PC_DIMMER-"
@@ -34443,446 +34453,446 @@ msgid ""
 "nicht über die Speicherfunktion!) des Projektes anfertigen."
 msgstr ""
 
-#: pcdimmer.pas:7279 
+#: pcdimmer.pas:7292 
 msgid " (wird bei nächster Speicherung konvertiert zu Projektversion "
 msgstr ""
 
 #. Effektaudio laden
-#: pcdimmer.pas:7297 
+#: pcdimmer.pas:7310 
 msgid "Lese Daten ein... Audioeffektplayer"
 msgstr ""
 
-#: pcdimmer.pas:7301 
+#: pcdimmer.pas:7314 
 msgid "Lese Daten ein...Audioeffektplayer"
 msgstr ""
 
 #. Lese Projekteinstellungen
-#: pcdimmer.pas:7468 
+#: pcdimmer.pas:7481 
 msgid "Lese Daten ein... Projekteinstellungen"
 msgstr ""
 
-#: pcdimmer.pas:7472 
+#: pcdimmer.pas:7485 
 msgid "Lese Daten ein...Projekteinstellungen"
 msgstr ""
 
 #. Lese Figurendaten
-#: pcdimmer.pas:7523 
+#: pcdimmer.pas:7536 
 msgid "Lese Daten ein... Figuren"
 msgstr ""
 
-#: pcdimmer.pas:7528 
+#: pcdimmer.pas:7541 
 msgid "Lese Daten ein...Figuren"
 msgstr ""
 
 #. Einfache-, Bewegungs- und Audioszenen, sowie Befehle öffnen
-#: pcdimmer.pas:7555 
+#: pcdimmer.pas:7568 
 msgid "Lese Daten ein... Szenen"
 msgstr ""
 
-#: pcdimmer.pas:7559 
+#: pcdimmer.pas:7572 
 msgid "Lese Daten ein...Szenen"
 msgstr ""
 
 #. Timeline öffnen
-#: pcdimmer.pas:7849 
+#: pcdimmer.pas:7862 
 msgid "Lese Daten ein... Timeline"
 msgstr ""
 
-#: pcdimmer.pas:7853 
+#: pcdimmer.pas:7866 
 msgid "Lese Daten ein...Timeline"
 msgstr ""
 
 #. Skripttimer öffnen
-#: pcdimmer.pas:7878 
+#: pcdimmer.pas:7891 
 msgid "Lese Daten ein... Skripttimer"
 msgstr ""
 
-#: pcdimmer.pas:7882 
+#: pcdimmer.pas:7895 
 msgid "Lese Daten ein...Skripttimer"
 msgstr ""
 
 #. Hotkeys öffnen
-#: pcdimmer.pas:7894 
+#: pcdimmer.pas:7907 
 msgid "Lese Daten ein... Hotkeys"
 msgstr ""
 
-#: pcdimmer.pas:7899 
+#: pcdimmer.pas:7912 
 msgid "Lese Daten ein...Hotkeys"
 msgstr ""
 
 #. Nebelmaschineneinstellungen laden
-#: pcdimmer.pas:7987 
+#: pcdimmer.pas:8000 
 msgid "Lese Daten ein... Nebelmaschine"
 msgstr ""
 
-#: pcdimmer.pas:7991 
+#: pcdimmer.pas:8004 
 msgid "Lese Daten ein...Nebelmaschine"
 msgstr ""
 
 #. Geräte öffnen
-#: pcdimmer.pas:7999 
+#: pcdimmer.pas:8012 
 msgid "Lese Daten ein... Geräte"
 msgstr ""
 
-#: pcdimmer.pas:8003 
+#: pcdimmer.pas:8016 
 msgid "Lese Daten ein...Geräte"
 msgstr ""
 
-#: pcdimmer.pas:8030 
+#: pcdimmer.pas:8043 
 msgid "Konv. Kalibrierung"
 msgstr ""
 
-#: pcdimmer.pas:8042 
+#: pcdimmer.pas:8055 
 msgid "Konv. Verfolgerkalib."
 msgstr ""
 
 #. Presets öffnen
-#: pcdimmer.pas:8306 
+#: pcdimmer.pas:8319 
 msgid "Lese Daten ein... Presets"
 msgstr ""
 
-#: pcdimmer.pas:8310 
+#: pcdimmer.pas:8323 
 msgid "Lese Daten ein...Presets"
 msgstr ""
 
 #. Geräteszenen öffnen
-#: pcdimmer.pas:8362 
+#: pcdimmer.pas:8375 
 msgid "Lese Daten ein... Geräteszenen"
 msgstr ""
 
-#: pcdimmer.pas:8367 
+#: pcdimmer.pas:8380 
 msgid "Lese Daten ein...Geräteszenen"
 msgstr ""
 
 #. Gruppen öffnen
-#: pcdimmer.pas:8496 
+#: pcdimmer.pas:8509 
 msgid "Lese Daten... Gerätegruppen"
 msgstr ""
 
-#: pcdimmer.pas:8500 
+#: pcdimmer.pas:8513 
 msgid "Lese Daten ein...Gerätegruppen"
 msgstr ""
 
 #. Softpatch öffnen
-#: pcdimmer.pas:8546 
+#: pcdimmer.pas:8559 
 msgid "Lese Daten ein... Softpatch"
 msgstr ""
 
-#: pcdimmer.pas:8550 
+#: pcdimmer.pas:8563 
 msgid "Lese Daten ein...Softpatch"
 msgstr ""
 
 #. Effekte Öffnen
-#: pcdimmer.pas:8588  pcdimmer.pas:8592
+#: pcdimmer.pas:8601  pcdimmer.pas:8605
 msgid "Lese Daten ein... Effekte"
 msgstr ""
 
 #. Bühnenansicht öffnen
-#: pcdimmer.pas:8759  pcdimmer.pas:8764
+#: pcdimmer.pas:8772  pcdimmer.pas:8777
 msgid "Lese Daten ein... Bühnenansicht"
 msgstr ""
 
 #. Desktopproperties öffnen
-#: pcdimmer.pas:8835  pcdimmer.pas:8839
+#: pcdimmer.pas:8848  pcdimmer.pas:8852
 msgid "Lese Daten ein... Desktopeinstellungen"
 msgstr ""
 
 #. Joystickeinstellungen öffnen
-#: pcdimmer.pas:8869  pcdimmer.pas:8873
+#: pcdimmer.pas:8882  pcdimmer.pas:8886
 msgid "Lese Daten ein... Joystickeinstellungen"
 msgstr ""
 
 #. Kontrollpanel öffnen
-#: pcdimmer.pas:8960  pcdimmer.pas:8964
+#: pcdimmer.pas:8973  pcdimmer.pas:8977
 msgid "Lese Daten ein... Kontrollpanel"
 msgstr ""
 
 #. MIDI-IN Event öffnen
-#: pcdimmer.pas:9049  pcdimmer.pas:9054
+#: pcdimmer.pas:9062  pcdimmer.pas:9067
 msgid "Lese Daten ein... MIDI Einstellungen"
 msgstr ""
 
 #. Data-IN Event öffnen
-#: pcdimmer.pas:9130  pcdimmer.pas:9134
+#: pcdimmer.pas:9143  pcdimmer.pas:9147
 msgid "Lese Daten ein... DataIn Einstellungen"
 msgstr ""
 
 #. Leistungsdaten öffnen
-#: pcdimmer.pas:9198  pcdimmer.pas:9202
+#: pcdimmer.pas:9211  pcdimmer.pas:9215
 msgid "Lese Daten ein... Leistungssteuerung"
 msgstr ""
 
 #. Autoszenen öffnen
-#: pcdimmer.pas:9242  pcdimmer.pas:9246
+#: pcdimmer.pas:9255  pcdimmer.pas:9259
 msgid "Lese Daten ein... Automatikszenen"
 msgstr ""
 
 #. Textbuch
-#: pcdimmer.pas:9270  pcdimmer.pas:9275
+#: pcdimmer.pas:9283  pcdimmer.pas:9288
 msgid "Lese Daten ein... Textbuch"
 msgstr ""
 
 #. MIDI-DirectSending
-#: pcdimmer.pas:9288  pcdimmer.pas:9292
+#: pcdimmer.pas:9301  pcdimmer.pas:9305
 msgid "Lese Daten ein... MIDI-Informationen"
 msgstr ""
 
 #. Submaster
-#: pcdimmer.pas:9317  pcdimmer.pas:9321
+#: pcdimmer.pas:9330  pcdimmer.pas:9334
 msgid "Lese Daten ein... Submaster"
 msgstr ""
 
-#: pcdimmer.pas:9434  pcdimmer.pas:9438
+#: pcdimmer.pas:9447  pcdimmer.pas:9451
 msgid "Lese Daten ein... Cue-Liste"
 msgstr ""
 
 #. Timecodeplayer-Liste laden
-#: pcdimmer.pas:9504  pcdimmer.pas:9508
+#: pcdimmer.pas:9517  pcdimmer.pas:9521
 msgid "Lese Daten ein... Timecodeplayer"
 msgstr ""
 
 #. IR FB laden
-#: pcdimmer.pas:9536  pcdimmer.pas:9540
+#: pcdimmer.pas:9549  pcdimmer.pas:9553
 msgid "Lese Daten ein... IR Fernbedienung"
 msgstr ""
 
 #. MediaCenter Szenen laden
-#: pcdimmer.pas:9561  pcdimmer.pas:9565
+#: pcdimmer.pas:9574  pcdimmer.pas:9578
 msgid "Lese Daten ein... MediaCenter Szenen"
 msgstr ""
 
 #. Plugin Szenen laden
-#: pcdimmer.pas:9592  pcdimmer.pas:9596
+#: pcdimmer.pas:9605  pcdimmer.pas:9609
 msgid "Lese Daten ein... Pluginszenen"
 msgstr ""
 
 #. PresetSzenen öffnen
-#: pcdimmer.pas:9715 
+#: pcdimmer.pas:9728 
 msgid "Lese Daten ein... Preset-Szenen"
 msgstr ""
 
-#: pcdimmer.pas:9719 
+#: pcdimmer.pas:9732 
 msgid "Lese Daten ein...Preset-Szenen"
 msgstr ""
 
 #. NodeControl laden
-#: pcdimmer.pas:9760 
+#: pcdimmer.pas:9773 
 msgid "Lese Daten ein... Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:9764 
+#: pcdimmer.pas:9777 
 msgid "Lese Daten ein...Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:9809 
+#: pcdimmer.pas:9822 
 msgid "Lese Daten ein... Fertig."
 msgstr ""
 
-#: pcdimmer.pas:9814 
+#: pcdimmer.pas:9827 
 msgid "Lese Daten ein...Fertig."
 msgstr ""
 
 #. MessageDlg('Die Projektdatei ist in einem alten Format. Bitte nutzen Sie die Projektkonvertierung, um das Projekt in die neue Version zu konvertieren.'+#10+#10+'Projektversion: '+projektprogrammversion+#10+'Datum: '+projektdatum+#10+'Uhrzeit: '+projektuhrzeit, mtError, [mbOk], 0);
-#: pcdimmer.pas:9826  pcdimmer.pas:9839 pcdimmer.pas:9850 pcdimmer.pas:9863
+#: pcdimmer.pas:9839  pcdimmer.pas:9852 pcdimmer.pas:9863 pcdimmer.pas:9876
 msgid "Fehler in Projektdatei"
 msgstr ""
 
-#: pcdimmer.pas:9829 
+#: pcdimmer.pas:9842 
 msgid ""
 "Die Projektdatei ist in einem alten Format. Bitte nutzen Sie die "
 "Projektkonvertierung, um das Projekt in die neue Version zu konvertieren."
 msgstr ""
 
-#: pcdimmer.pas:9835  pcdimmer.pas:9859
+#: pcdimmer.pas:9848  pcdimmer.pas:9872
 msgid "Letzte Meldung: "
 msgstr ""
 
-#: pcdimmer.pas:9851 
+#: pcdimmer.pas:9864 
 msgid "Projektdatei konnte aufgrund eines Fehlers nicht geöffnet werden..."
 msgstr ""
 
-#: pcdimmer.pas:9853 
+#: pcdimmer.pas:9866 
 msgid ""
 "Die Projektdatei ist möglicherweise beschädigt, oder in einem falschen "
 "Format! Senden Sie das Projekt bitte an das PC_DIMMER-Team."
 msgstr ""
 
-#: pcdimmer.pas:9914 
+#: pcdimmer.pas:9927 
 msgid "Sende Öffnen-Befehl...Kontrollpanel"
 msgstr ""
 
-#: pcdimmer.pas:9919 
+#: pcdimmer.pas:9932 
 msgid "Sende Öffnen-Befehl... Kontrollpanel"
 msgstr ""
 
-#: pcdimmer.pas:9926 
+#: pcdimmer.pas:9939 
 msgid "Sende Öffnen-Befehl...Effektsequenzer"
 msgstr ""
 
-#: pcdimmer.pas:9931 
+#: pcdimmer.pas:9944 
 msgid "Sende Öffnen-Befehl... Effektsequenzer"
 msgstr ""
 
-#: pcdimmer.pas:9938 
+#: pcdimmer.pas:9951 
 msgid "Sende Öffnen-Befehl...Gerätesteuerung"
 msgstr ""
 
-#: pcdimmer.pas:9942 
+#: pcdimmer.pas:9955 
 msgid "Sende Öffnen-Befehl... Gerätesteuerung"
 msgstr ""
 
-#: pcdimmer.pas:9949 
+#: pcdimmer.pas:9962 
 msgid "Sende Öffnen-Befehl...Submaster"
 msgstr ""
 
-#: pcdimmer.pas:9954 
+#: pcdimmer.pas:9967 
 msgid "Sende Öffnen-Befehl... Submaster"
 msgstr ""
 
-#: pcdimmer.pas:9961 
+#: pcdimmer.pas:9974 
 msgid "Sende Öffnen-Befehl...Grafische Bühnenansicht"
 msgstr ""
 
-#: pcdimmer.pas:9965 
+#: pcdimmer.pas:9978 
 msgid "Sende Öffnen-Befehl... Bühnenansicht"
 msgstr ""
 
-#: pcdimmer.pas:9971 
+#: pcdimmer.pas:9984 
 msgid "Sende Öffnen-Befehl...Audioeffektplayer"
 msgstr ""
 
-#: pcdimmer.pas:9975 
+#: pcdimmer.pas:9988 
 msgid "Sende Öffnen-Befehl... Audioeffektplayer"
 msgstr ""
 
-#: pcdimmer.pas:9980 
+#: pcdimmer.pas:9993 
 msgid "Sende Öffnen-Befehl...Textbuch"
 msgstr ""
 
-#: pcdimmer.pas:9985 
+#: pcdimmer.pas:9998 
 msgid "Sende Öffnen-Befehl... Textbuch"
 msgstr ""
 
-#: pcdimmer.pas:9993 
+#: pcdimmer.pas:10006 
 msgid "Sende Öffnen-Befehl...Cue-List"
 msgstr ""
 
-#: pcdimmer.pas:9997 
+#: pcdimmer.pas:10010 
 msgid "Sende Öffnen-Befehl... Cue-List"
 msgstr ""
 
-#: pcdimmer.pas:10004 
+#: pcdimmer.pas:10017 
 msgid "Sende Öffnen-Befehl...Timecodeplayer"
 msgstr ""
 
-#: pcdimmer.pas:10008 
+#: pcdimmer.pas:10021 
 msgid "Sende Öffnen-Befehl... Timecodeplayer"
 msgstr ""
 
-#: pcdimmer.pas:10015 
+#: pcdimmer.pas:10028 
 msgid "Sende Öffnen-Befehl...IR Steuerung"
 msgstr ""
 
-#: pcdimmer.pas:10019 
+#: pcdimmer.pas:10032 
 msgid "Sende Öffnen-Befehl... IR Steuerung"
 msgstr ""
 
-#: pcdimmer.pas:10033 
+#: pcdimmer.pas:10046 
 msgid "Sende Öffnen-Befehl...Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:10037 
+#: pcdimmer.pas:10050 
 msgid "Sende Öffnen-Befehl... Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:10044  pcdimmer.pas:10049
+#: pcdimmer.pas:10057  pcdimmer.pas:10062
 msgid "Aktualisiere Hauptprogramm"
 msgstr ""
 
-#: pcdimmer.pas:10050 
+#: pcdimmer.pas:10063 
 msgid "Sende Öffnen-Befehl..."
 msgstr ""
 
-#: pcdimmer.pas:10062 
+#: pcdimmer.pas:10075 
 msgid " - [Nicht gespeichertes Projekt]"
 msgstr ""
 
-#: pcdimmer.pas:10098 
+#: pcdimmer.pas:10111 
 msgid "Audiodateien (*.wav;*.mp3)|*.wav;*.mp3|All files (*.*)|*.*"
 msgstr ""
 
 #. skripttimer_listbox.Items.LoadFromFile(opendialog.FileName);
-#: pcdimmer.pas:10140  pcdimmer.pas:10150 schedulerfrm.pas:171
+#: pcdimmer.pas:10153  pcdimmer.pas:10163 schedulerfrm.pas:171
 #: schedulerfrm.pas:181 schedulerfrm.pas:266 schedulerfrm.pas:276
 #: schedulerfrm.pas:633 schedulerfrm.pas:643 schedulerfrm.pas:678
 #: schedulerfrm.pas:688
 msgid "<EINMALIG>    "
 msgstr ""
 
-#: pcdimmer.pas:10141  pcdimmer.pas:10151 schedulerfrm.pas:172
+#: pcdimmer.pas:10154  pcdimmer.pas:10164 schedulerfrm.pas:172
 #: schedulerfrm.pas:182 schedulerfrm.pas:267 schedulerfrm.pas:277
 #: schedulerfrm.pas:634 schedulerfrm.pas:644 schedulerfrm.pas:679
 #: schedulerfrm.pas:689
 msgid "<TÄGLICH>     "
 msgstr ""
 
-#: pcdimmer.pas:10142  pcdimmer.pas:10152 schedulerfrm.pas:173
+#: pcdimmer.pas:10155  pcdimmer.pas:10165 schedulerfrm.pas:173
 #: schedulerfrm.pas:183 schedulerfrm.pas:268 schedulerfrm.pas:278
 #: schedulerfrm.pas:635 schedulerfrm.pas:645 schedulerfrm.pas:680
 #: schedulerfrm.pas:690
 msgid "<WÖCHENTLICH> "
 msgstr ""
 
-#: pcdimmer.pas:10143  pcdimmer.pas:10153 schedulerfrm.pas:174
+#: pcdimmer.pas:10156  pcdimmer.pas:10166 schedulerfrm.pas:174
 #: schedulerfrm.pas:184 schedulerfrm.pas:269 schedulerfrm.pas:279
 #: schedulerfrm.pas:636 schedulerfrm.pas:646 schedulerfrm.pas:681
 #: schedulerfrm.pas:691
 msgid "<MONATLICH>   "
 msgstr ""
 
-#: pcdimmer.pas:10143  pcdimmer.pas:10153 schedulerfrm.pas:174
+#: pcdimmer.pas:10156  pcdimmer.pas:10166 schedulerfrm.pas:174
 #: schedulerfrm.pas:184 schedulerfrm.pas:269 schedulerfrm.pas:279
 #: schedulerfrm.pas:636 schedulerfrm.pas:646 schedulerfrm.pas:681
 #: schedulerfrm.pas:691
 msgid "jeden"
 msgstr ""
 
-#: pcdimmer.pas:10144  pcdimmer.pas:10154 schedulerfrm.pas:175
+#: pcdimmer.pas:10157  pcdimmer.pas:10167 schedulerfrm.pas:175
 #: schedulerfrm.pas:185 schedulerfrm.pas:270 schedulerfrm.pas:280
 #: schedulerfrm.pas:637 schedulerfrm.pas:647 schedulerfrm.pas:682
 #: schedulerfrm.pas:692
 msgid "<JÄHRLICH>    "
 msgstr ""
 
-#: pcdimmer.pas:10316 
+#: pcdimmer.pas:10329 
 msgid "Scheduler: Warten... (Noch "
 msgstr ""
 
-#: pcdimmer.pas:10318 
+#: pcdimmer.pas:10331 
 msgid "Scheduler im Leerlauf..."
 msgstr ""
 
-#: pcdimmer.pas:10321 
+#: pcdimmer.pas:10334 
 msgid "Scheduler: Deaktiviert"
 msgstr ""
 
-#: pcdimmer.pas:10486 
+#: pcdimmer.pas:10499 
 msgid "PC_DIMMER Change log..."
 msgstr ""
 
-#: pcdimmer.pas:10487 
+#: pcdimmer.pas:10500 
 msgid "PHOENIXstudios PC_DIMMER"
 msgstr ""
 
-#: pcdimmer.pas:10488 
+#: pcdimmer.pas:10501 
 msgid "Keep looking on http://www.pcdimmer.de for updates"
 msgstr ""
 
-#: pcdimmer.pas:10535 
+#: pcdimmer.pas:10548 
 msgid "PC_DIMMER jetzt beenden?"
 msgstr ""
 
-#: pcdimmer.pas:10543 
+#: pcdimmer.pas:10556 
 msgid ""
 "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Die Projektdatei "
 "wurde noch nicht aktualisiert.\n"
@@ -34894,20 +34904,20 @@ msgid ""
 "Datei: \""
 msgstr ""
 
-#: pcdimmer.pas:10545  pcdimmer.pas:10567
+#: pcdimmer.pas:10558  pcdimmer.pas:10580
 msgid "Möchten Sie das aktuelle Projekt vor dem Beenden speichern?"
 msgstr ""
 
-#: pcdimmer.pas:10547  pcdimmer.pas:10568
+#: pcdimmer.pas:10560  pcdimmer.pas:10581
 msgid "&Fastsave"
 msgstr ""
 
-#: pcdimmer.pas:10547  pcdimmer.pas:10568
+#: pcdimmer.pas:10560  pcdimmer.pas:10581
 msgid "&Abbrechen"
 msgstr ""
 
 #. case messagedlg(text,mtConfirmation,[mbYes,mbNo,mbCancel],0) of
-#: pcdimmer.pas:10565 
+#: pcdimmer.pas:10578 
 msgid ""
 "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Es wurde noch "
 "keine externe Projektdatei erzeugt.\n"
@@ -34918,92 +34928,92 @@ msgid ""
 msgstr ""
 
 #. messagedlg('Der Ein-/Aus-Schalter am Computergehäuse ist jetzt deaktiviert.'+#13#10#13#10+'Beim kurzen(!) Drücken auf diesen Schalter wird Windows bei Computern mit ATX-Netzteil NICHT heruntergefahren.',mtInformation,[mbOK],0)
-#: pcdimmer.pas:10597  pcdimmer.pas:10607
+#: pcdimmer.pas:10610  pcdimmer.pas:10620
 msgid "Ein-/Ausschalter deaktiviert"
 msgstr ""
 
-#: pcdimmer.pas:10600 
+#: pcdimmer.pas:10613 
 msgid "Der Ein-/Aus-Schalter am Computergehäuse ist jetzt deaktiviert."
 msgstr ""
 
-#: pcdimmer.pas:10602 
+#: pcdimmer.pas:10615 
 msgid ""
 "Beim kurzen(!) Drücken auf diesen Schalter wird Windows bei Computern mit "
 "ATX-Netzteil NICHT heruntergefahren."
 msgstr ""
 
 #. messagedlg('Der Ein-/Aus-Schalter am Computergehäuse ist wieder aktiviert.'+#13#10#13#10+'Durch Drücken dieser Taste wird Windows jetzt wieder heruntergefahren.',mtInformation,[mbOK],0)
-#: pcdimmer.pas:10615 
+#: pcdimmer.pas:10628 
 msgid "Ein-/Ausschalter aktiviert"
 msgstr ""
 
-#: pcdimmer.pas:10618 
+#: pcdimmer.pas:10631 
 msgid "Der Ein-/Aus-Schalter am Computergehäuse ist wieder aktiviert."
 msgstr ""
 
-#: pcdimmer.pas:10620 
+#: pcdimmer.pas:10633 
 msgid "Durch Drücken dieser Taste wird Windows jetzt wieder heruntergefahren."
 msgstr ""
 
-#: pcdimmer.pas:10624 
+#: pcdimmer.pas:10637 
 msgid "Ein/-Ausschalter aktiviert"
 msgstr ""
 
-#: pcdimmer.pas:10932 
+#: pcdimmer.pas:10945 
 msgid "Bildschirmhelligkeit: "
 msgstr ""
 
-#: pcdimmer.pas:10949 
+#: pcdimmer.pas:10962 
 msgid "Aktuelles Projekt speichern?"
 msgstr ""
 
-#: pcdimmer.pas:10988 
+#: pcdimmer.pas:11001 
 msgid "PC_DIMMER Projekt öffnen..."
 msgstr ""
 
-#: pcdimmer.pas:11009 
+#: pcdimmer.pas:11022 
 msgid "\" ist nicht mehr verfügbar!"
 msgstr ""
 
 #. Ladezustand der Batterie
-#: pcdimmer.pas:11171 
+#: pcdimmer.pas:11184 
 msgid "Unbekannter Status"
 msgstr ""
 
-#: pcdimmer.pas:11173  pcdimmer.pas:11214
+#: pcdimmer.pas:11186  pcdimmer.pas:11227
 msgid "Es existiert kein Akku"
 msgstr ""
 
-#: pcdimmer.pas:11177 
+#: pcdimmer.pas:11190 
 msgid "Hoher Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:11178 
+#: pcdimmer.pas:11191 
 msgid "Niedriger Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:11179 
+#: pcdimmer.pas:11192 
 msgid "Kritischer Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:11181 
+#: pcdimmer.pas:11194 
 msgid "Unbekannter Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:11184 
+#: pcdimmer.pas:11197 
 msgid " - Akku wird geladen"
 msgstr ""
 
 #. Vista Progressbar Workaround
-#: pcdimmer.pas:12283 
+#: pcdimmer.pas:12296 
 msgid " Fortschritt: "
 msgstr ""
 
-#: pcdimmer.pas:12293 
+#: pcdimmer.pas:12306 
 msgid " Lade Datei... "
 msgstr ""
 
-#: pcdimmer.pas:12296  pcdimmer.pas:12321
+#: pcdimmer.pas:12309  pcdimmer.pas:12334
 msgid "Dekomprimiere: "
 msgstr ""
 
@@ -35011,84 +35021,84 @@ msgstr ""
 #. Vista Progressbar Workaround
 #. Vista Progressbar Workaround
 #. Vista Progressbar Workaround
-#: pcdimmer.pas:12306  pcdimmer.pas:12341 projektverwaltungfrm.pas:375
+#: pcdimmer.pas:12319  pcdimmer.pas:12354 projektverwaltungfrm.pas:375
 #: projektverwaltungfrm.pas:476
 msgid "Datei ("
 msgstr ""
 
-#: pcdimmer.pas:12317 
+#: pcdimmer.pas:12330 
 msgid "Dekomprimiere ("
 msgstr ""
 
-#: pcdimmer.pas:12333 
+#: pcdimmer.pas:12346 
 msgid "Komprimiere: "
 msgstr ""
 
 #. inprogress.Hide;
-#: pcdimmer.pas:12355 
+#: pcdimmer.pas:12368 
 msgid "Projekt vollständig geladen"
 msgstr ""
 
 #. Falls Skripttimerdatei
-#: pcdimmer.pas:12389 
+#: pcdimmer.pas:12402 
 msgid "Die zu ladende Skript-Timerliste ist fehlerhaft oder nicht vorhanden!"
 msgstr ""
 
-#: pcdimmer.pas:12524 
+#: pcdimmer.pas:12537 
 msgid "Fehler in DLL-Funktion \"DLLShow()\"!"
 msgstr ""
 
-#: pcdimmer.pas:12526 
+#: pcdimmer.pas:12539 
 msgid "Fehlerhafte DLL!"
 msgstr ""
 
-#: pcdimmer.pas:12529 
+#: pcdimmer.pas:12542 
 msgid "Plugin nicht geladen..."
 msgstr ""
 
-#: pcdimmer.pas:12537 
+#: pcdimmer.pas:12550 
 msgid "Zeigt beim Starten keinen Splashscreen an [ALT-Taste]"
 msgstr ""
 
-#: pcdimmer.pas:12538 
+#: pcdimmer.pas:12551 
 msgid "Verhindert den Start des Akku-Dienstes [Rechte SHIFT-Taste]"
 msgstr ""
 
-#: pcdimmer.pas:12539 
+#: pcdimmer.pas:12552 
 msgid ""
 "Verhindert das automatische Laden der letzten Projektdatei [Linke SHIFT-"
 "Taste]"
 msgstr ""
 
-#: pcdimmer.pas:12540 
+#: pcdimmer.pas:12553 
 msgid "Startet PC_DIMMER ohne Willkommensbildschirm"
 msgstr ""
 
-#: pcdimmer.pas:12541 
+#: pcdimmer.pas:12554 
 msgid "Zeigt beim Starten die Logdatei an."
 msgstr ""
 
-#: pcdimmer.pas:12542 
+#: pcdimmer.pas:12555 
 msgid "Startet den Timer mit als \"DateiX\" übergebener Timerdatei"
 msgstr ""
 
-#: pcdimmer.pas:12543 
+#: pcdimmer.pas:12556 
 msgid "Startet PC_DIMMER minimiert"
 msgstr ""
 
-#: pcdimmer.pas:12544 
+#: pcdimmer.pas:12557 
 msgid "Startet PC_DIMMER mit letzten Werten"
 msgstr ""
 
-#: pcdimmer.pas:12944 
+#: pcdimmer.pas:12957 
 msgid "Es sind keine Drucker im System installiert."
 msgstr ""
 
-#: pcdimmer.pas:12962 
+#: pcdimmer.pas:12975 
 msgid "PC_DIMMER Kanalnamenübersicht ("
 msgstr ""
 
-#: pcdimmer.pas:13033 
+#: pcdimmer.pas:13046 
 msgid ""
 "Die Power-Taste Ihres Computers wurde gedrückt!\n"
 "Diese Funktion ist im PC_DIMMER jedoch deaktiviert worden.\n"
@@ -35097,167 +35107,167 @@ msgid ""
 "Schalters kann die Power-Taste wieder aktiviert werden."
 msgstr ""
 
-#: pcdimmer.pas:13045 
+#: pcdimmer.pas:13058 
 msgid " Plugin-Reset... "
 msgstr ""
 
-#: pcdimmer.pas:13049 
+#: pcdimmer.pas:13062 
 msgid "Bereite Reset vor..."
 msgstr ""
 
-#: pcdimmer.pas:13127 
+#: pcdimmer.pas:13140 
 msgid "Reaktiviere Input-Plugin "
 msgstr ""
 
 #. Plugins starten
-#: pcdimmer.pas:13147 
+#: pcdimmer.pas:13160 
 msgid "Starte Input-Plugin "
 msgstr ""
 
-#: pcdimmer.pas:13157 
+#: pcdimmer.pas:13170 
 msgid "Sende allen Plugins aktuelle Werte..."
 msgstr ""
 
-#: pcdimmer.pas:13170 
+#: pcdimmer.pas:13183 
 msgid "Öffne Plugin "
 msgstr ""
 
-#: pcdimmer.pas:13713 
+#: pcdimmer.pas:13726 
 msgid "Outputplugins aktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:13719 
+#: pcdimmer.pas:13732 
 msgid "Es sind mehr als "
 msgstr ""
 
-#: pcdimmer.pas:13719 
+#: pcdimmer.pas:13732 
 msgid " Output-Plugins installiert. Es werden allerdings nur "
 msgstr ""
 
-#: pcdimmer.pas:13719 
+#: pcdimmer.pas:13732 
 msgid " davon geladen!"
 msgstr ""
 
-#: pcdimmer.pas:13735  pcdimmer.pas:13792
+#: pcdimmer.pas:13748  pcdimmer.pas:13805
 msgid "Aktiviere "
 msgstr ""
 
-#: pcdimmer.pas:13767  pcdimmer.pas:13778
+#: pcdimmer.pas:13780  pcdimmer.pas:13791
 msgid "Inputplugins aktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:13773 
+#: pcdimmer.pas:13786 
 msgid ""
 "Es sind mehr als 20 Input-Plugins installiert. Es werden allerdings nur 20 "
 "davon geladen!"
 msgstr ""
 
-#: pcdimmer.pas:13831 
+#: pcdimmer.pas:13844 
 msgid "Werte an Interfaces übergeben..."
 msgstr ""
 
-#: pcdimmer.pas:13852 
+#: pcdimmer.pas:13865 
 msgid "Letztgenutzte Plugins anzeigen..."
 msgstr ""
 
-#: pcdimmer.pas:13906 
+#: pcdimmer.pas:13919 
 msgid "Letzte Module starten..."
 msgstr ""
 
 #. Dimmerkernel starten
-#: pcdimmer.pas:13914 
+#: pcdimmer.pas:13927 
 msgid "Starte Dimmerkernel..."
 msgstr ""
 
 #. Joystick starten
-#: pcdimmer.pas:13925 
+#: pcdimmer.pas:13938 
 msgid "Starte Joystick..."
 msgstr ""
 
 #. MIDI starten
-#: pcdimmer.pas:13935 
+#: pcdimmer.pas:13948 
 msgid "Starte MIDI-In..."
 msgstr ""
 
-#: pcdimmer.pas:13940 
+#: pcdimmer.pas:13953 
 msgid "Starte MIDI-Out..."
 msgstr ""
 
 #. Akkukontrolle starten
-#: pcdimmer.pas:13962 
+#: pcdimmer.pas:13975 
 msgid "Starte Akkukontrolle..."
 msgstr ""
 
 #. Timecodeplayer starten
-#: pcdimmer.pas:13974 
+#: pcdimmer.pas:13987 
 msgid "Starte MIDI-Timecodeplayer..."
 msgstr ""
 
-#: pcdimmer.pas:13981 
+#: pcdimmer.pas:13994 
 msgid "Netzwerk und Ambilight aktivieren..."
 msgstr ""
 
 #. Ambilight aktivieren, sofern beim letzten mal aktiv
-#: pcdimmer.pas:14010 
+#: pcdimmer.pas:14023 
 msgid ""
 "Ambilight war in der letzten Sitzung aktiviert. Möchten Sie das Ambilight "
 "nun wieder einschalten?"
 msgstr ""
 
-#: pcdimmer.pas:14021 
+#: pcdimmer.pas:14034 
 msgid "Letzte Einstellungen laden..."
 msgstr ""
 
-#: pcdimmer.pas:14172 
+#: pcdimmer.pas:14185 
 msgid "Fenster öffnen..."
 msgstr ""
 
-#: pcdimmer.pas:14269  pcdimmer.pas:14270
+#: pcdimmer.pas:14282  pcdimmer.pas:14283
 msgid "DDF Bilder laden..."
 msgstr ""
 
-#: pcdimmer.pas:14277 
+#: pcdimmer.pas:14290 
 msgid "Dateien öffnen..."
 msgstr ""
 
 #. Falls Textdatei (z.B. nach Onlineupdate)
-#: pcdimmer.pas:14295 
+#: pcdimmer.pas:14308 
 msgid "Dateien öffnen...Textdatei"
 msgstr ""
 
-#: pcdimmer.pas:14296 
+#: pcdimmer.pas:14309 
 msgid "Zeige Textdatei an..."
 msgstr ""
 
 #. Falls Skripttimerdatei
-#: pcdimmer.pas:14306 
+#: pcdimmer.pas:14319 
 msgid "Dateien öffnen...Skripttimer"
 msgstr ""
 
-#: pcdimmer.pas:14307 
+#: pcdimmer.pas:14320 
 msgid "Lade Skripttimer..."
 msgstr ""
 
 #. Falls Skripttimerdatei gestartet werden soll
-#: pcdimmer.pas:14332 
+#: pcdimmer.pas:14345 
 msgid "Starte Skripttimer..."
 msgstr ""
 
 #. Falls Projektdatei
 #. Falls Fastsave
-#: pcdimmer.pas:14340  pcdimmer.pas:14353
+#: pcdimmer.pas:14353  pcdimmer.pas:14366
 msgid "Dateien öffnen...Projekt"
 msgstr ""
 
-#: pcdimmer.pas:14364 
+#: pcdimmer.pas:14377 
 msgid "Leeres Projekt erzeugen..."
 msgstr ""
 
-#: pcdimmer.pas:14388 
+#: pcdimmer.pas:14401 
 msgid "Projektwiederherstellung..."
 msgstr ""
 
-#: pcdimmer.pas:14391 
+#: pcdimmer.pas:14404 
 msgid ""
 "Anscheinend wurde der PC_DIMMER beim letzten Mal nicht richtig beendet.\n"
 "\n"
@@ -35266,373 +35276,373 @@ msgid ""
 "überschrieben)?"
 msgstr ""
 
-#: pcdimmer.pas:14400 
+#: pcdimmer.pas:14413 
 msgid "Timer aktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:14414 
+#: pcdimmer.pas:14427 
 msgid "Abschließende Arbeiten"
 msgstr ""
 
-#: pcdimmer.pas:14428 
+#: pcdimmer.pas:14441 
 msgid "Oberfläche aktualisieren..."
 msgstr ""
 
-#: pcdimmer.pas:14438 
+#: pcdimmer.pas:14451 
 msgid "Geräte initialisieren..."
 msgstr ""
 
-#: pcdimmer.pas:14470 
+#: pcdimmer.pas:14483 
 msgid "Beatquelle setzen..."
 msgstr ""
 
-#: pcdimmer.pas:15360 
+#: pcdimmer.pas:15373 
 msgid "Tastatur: "
 msgstr ""
 
-#: pcdimmer.pas:15424 
+#: pcdimmer.pas:15437 
 msgid "Geräteszene: "
 msgstr ""
 
-#: pcdimmer.pas:15457 
+#: pcdimmer.pas:15470 
 msgid "Direktszene AEP: "
 msgstr ""
 
-#: pcdimmer.pas:15489 
+#: pcdimmer.pas:15502 
 msgid "Direktszene Effekt: "
 msgstr ""
 
-#: pcdimmer.pas:15501 
+#: pcdimmer.pas:15514 
 msgid "Terminal-Schnittstelle"
 msgstr ""
 
 #. BPM-Wert abfragen
-#: pcdimmer.pas:15705 
+#: pcdimmer.pas:15718 
 msgid "Geschwindigkeit eingeben"
 msgstr ""
 
-#: pcdimmer.pas:15705 
+#: pcdimmer.pas:15718 
 msgid "Bitte geben Sie eine Geschwindigkeit in Beats-Per-Minute (BPM) an:"
 msgstr ""
 
-#: pcdimmer.pas:15736 
+#: pcdimmer.pas:15749 
 msgid "Bitte geben Sie einen Wert für den Grandmaster an [Wert von 0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:15751 
+#: pcdimmer.pas:15764 
 msgid "Bitte geben Sie einen Wert für den Flashmaster an [Wert von 0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:15766 
+#: pcdimmer.pas:15779 
 msgid ""
 "Bitte geben Sie einen Wert für den Speedmaster an [Wert von -100..0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:15781 
+#: pcdimmer.pas:15794 
 msgid "Bitte geben Sie einen Wert für den Audiomaster an [Wert von 0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:15826 
+#: pcdimmer.pas:15839 
 msgid "2 Ausschalten"
 msgstr ""
 
-#: pcdimmer.pas:15827 
+#: pcdimmer.pas:15840 
 msgid "3 Einblenden"
 msgstr ""
 
-#: pcdimmer.pas:15828 
+#: pcdimmer.pas:15841 
 msgid "4 Ausblenden"
 msgstr ""
 
-#: pcdimmer.pas:15829 
+#: pcdimmer.pas:15842 
 msgid "5 Flashen"
 msgstr ""
 
 #. Abgefragter Wert schalten
 #. Abgefragten Wert dimmen
-#: pcdimmer.pas:15973  pcdimmer.pas:15991
+#: pcdimmer.pas:15986  pcdimmer.pas:16004
 msgid "Kanalwert eingeben"
 msgstr ""
 
-#: pcdimmer.pas:15973  pcdimmer.pas:15991
+#: pcdimmer.pas:15986  pcdimmer.pas:16004
 msgid "Bitte geben Sie einen Kanalwert [0..255] ein, auf den der Kanal \""
 msgstr ""
 
-#: pcdimmer.pas:15973 
+#: pcdimmer.pas:15986 
 msgid "\" geschaltet werden soll:"
 msgstr ""
 
-#: pcdimmer.pas:15991 
+#: pcdimmer.pas:16004 
 msgid "\" gedimmt werden soll:"
 msgstr ""
 
 #. Auf abgefragten Wert schalten
-#: pcdimmer.pas:17094 
+#: pcdimmer.pas:17107 
 msgid "Faderwert eingeben"
 msgstr ""
 
-#: pcdimmer.pas:17094 
+#: pcdimmer.pas:17107 
 msgid "Bitte geben Sie einen Faderwert [0..255] ein, auf den der Fader \""
 msgstr ""
 
-#: pcdimmer.pas:17094 
+#: pcdimmer.pas:17107 
 msgid "\" gesetzt werden soll:"
 msgstr ""
 
-#: pcdimmer.pas:17719 
+#: pcdimmer.pas:17732 
 msgid ""
 "Es konnte keine Verbindung zum MediaCenter Server hergestellt werden. Bitte "
 "kontrollieren Sie ihre Angaben in den Feldern \"Adresse\" und \"Port\" der "
 "entsprechenden MediaCenter Szene."
 msgstr ""
 
-#: pcdimmer.pas:18718 
+#: pcdimmer.pas:18731 
 msgid "Einfache Szene bearbeiten"
 msgstr ""
 
 #. ShowMessage(E.Message); // EConvertError ist nur nervig
-#: pcdimmer.pas:20592 
+#: pcdimmer.pas:20605 
 msgid ""
 "Es wurde aufgrund eines Fehlers versucht eine Größe durch Null zu teilen."
 msgstr ""
 
-#: pcdimmer.pas:20599  pcdimmer.pas:20608
+#: pcdimmer.pas:20612  pcdimmer.pas:20621
 msgid "Fehlertyp: "
 msgstr ""
 
 #. +' "'+TControl(Sender).Name+'"';
 #. +' "'+TControl(Sender).Name+'"');
-#: pcdimmer.pas:20600  pcdimmer.pas:20610
+#: pcdimmer.pas:20613  pcdimmer.pas:20623
 msgid "Verursacher: "
 msgstr ""
 
-#: pcdimmer.pas:20606 
+#: pcdimmer.pas:20619 
 msgid "Fehlerbericht vom "
 msgstr ""
 
-#: pcdimmer.pas:21118 
+#: pcdimmer.pas:21131 
 msgid "PC_DIMMER Kanalnamen"
 msgstr ""
 
-#: pcdimmer.pas:21119 
+#: pcdimmer.pas:21132 
 msgid "PC_DIMMER Kontrollpanel"
 msgstr ""
 
-#: pcdimmer.pas:21120 
+#: pcdimmer.pas:21133 
 msgid "PC_DIMMER Gerätedatei"
 msgstr ""
 
-#: pcdimmer.pas:21121 
+#: pcdimmer.pas:21134 
 msgid "PC_DIMMER Effektaudio"
 msgstr ""
 
-#: pcdimmer.pas:21122 
+#: pcdimmer.pas:21135 
 msgid "PC_DIMMER Effektliste"
 msgstr ""
 
-#: pcdimmer.pas:21123 
+#: pcdimmer.pas:21136 
 msgid "PC_DIMMER Effektlayer"
 msgstr ""
 
-#: pcdimmer.pas:21124 
+#: pcdimmer.pas:21137 
 msgid "PC_DIMMER Audioeffekt-Repeat"
 msgstr ""
 
-#: pcdimmer.pas:21125 
+#: pcdimmer.pas:21138 
 msgid "PC_DIMMER Figuren"
 msgstr ""
 
-#: pcdimmer.pas:21126 
+#: pcdimmer.pas:21139 
 msgid "PC_DIMMER Fastscene"
 msgstr ""
 
-#: pcdimmer.pas:21127 
+#: pcdimmer.pas:21140 
 msgid "PC_DIMMER Leistungsansicht"
 msgstr ""
 
-#: pcdimmer.pas:21128 
+#: pcdimmer.pas:21141 
 msgid "PC_DIMMER MIDI-Einstellungen"
 msgstr ""
 
-#: pcdimmer.pas:21129 
+#: pcdimmer.pas:21142 
 msgid "PC_DIMMER Audioplaylist"
 msgstr ""
 
-#: pcdimmer.pas:21130 
+#: pcdimmer.pas:21143 
 msgid "PC_DIMMER Szenenbibliothek"
 msgstr ""
 
-#: pcdimmer.pas:21131 
+#: pcdimmer.pas:21144 
 msgid "PC_DIMMER Szenenliste"
 msgstr ""
 
-#: pcdimmer.pas:21132 
+#: pcdimmer.pas:21145 
 msgid "PC_DIMMER Skript"
 msgstr ""
 
 #. RegisterFileType('pcdstge', _('PC_DIMMER Bühnenansicht'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-#: pcdimmer.pas:21134 
+#: pcdimmer.pas:21147 
 msgid "PC_DIMMER Timerliste"
 msgstr ""
 
-#: pcdimmer.pas:21135 
+#: pcdimmer.pas:21148 
 msgid "PC_DIMMER Submaster"
 msgstr ""
 
-#: pcdimmer.pas:21136 
+#: pcdimmer.pas:21149 
 msgid "PC_DIMMER Effekt-Timeline"
 msgstr ""
 
-#: pcdimmer.pas:21137 
+#: pcdimmer.pas:21150 
 msgid "PC_DIMMER Autobackupdatei"
 msgstr ""
 
-#: pcdimmer.pas:21138 
+#: pcdimmer.pas:21151 
 msgid "PC_DIMMER Updatedatei"
 msgstr ""
 
-#: pcdimmer.pas:21139 
+#: pcdimmer.pas:21152 
 msgid "PC_DIMMER Tastaturbelegung"
 msgstr ""
 
-#: pcdimmer.pas:21140 
+#: pcdimmer.pas:21153 
 msgid "PC_DIMMER Cue-Liste"
 msgstr ""
 
-#: pcdimmer.pas:21141 
+#: pcdimmer.pas:21154 
 msgid "PC_DIMMER Timecode-Liste"
 msgstr ""
 
-#: pcdimmer.pas:21142 
+#: pcdimmer.pas:21155 
 msgid "PC_DIMMER Gerätebeschreibung"
 msgstr ""
 
-#: pcdimmer.pas:21143 
+#: pcdimmer.pas:21156 
 msgid "PC_DIMMER Matrixeffekt"
 msgstr ""
 
-#: pcdimmer.pas:21144 
+#: pcdimmer.pas:21157 
 msgid "PC_DIMMER Lauflichteffekt"
 msgstr ""
 
-#: pcdimmer.pas:21146 
+#: pcdimmer.pas:21159 
 msgid "PC_DIMMER-Projekt"
 msgstr ""
 
-#: pcdimmer.pas:21190 
+#: pcdimmer.pas:21203 
 msgid "Möchten Sie wirklich alle laufenden Effekte und Szenen beenden?"
 msgstr ""
 
-#: pcdimmer.pas:21236 
+#: pcdimmer.pas:21249 
 msgid "  Akku: "
 msgstr ""
 
-#: pcdimmer.pas:21970 
+#: pcdimmer.pas:21983 
 msgid "Datei wird gesucht..."
 msgstr ""
 
 #. Datei ist im Bildverzeichnis 128x128
 #. Suchen im Project-Temp
-#: pcdimmer.pas:22022  pcdimmer.pas:22031
+#: pcdimmer.pas:22035  pcdimmer.pas:22044
 msgid "Suche nach Datei"
 msgstr ""
 
-#: pcdimmer.pas:22022  pcdimmer.pas:22031
+#: pcdimmer.pas:22035  pcdimmer.pas:22044
 msgid "im Ordner"
 msgstr ""
 
 #. Name
-#: pcdimmer.pas:22622 
+#: pcdimmer.pas:22635 
 msgid "Presetszene"
 msgstr ""
 
 #. Name
-#: pcdimmer.pas:22636  szenenverwaltung.pas:2021
+#: pcdimmer.pas:22649  szenenverwaltung.pas:2021
 msgid "Plugin Szene"
 msgstr ""
 
-#: pcdimmer.pas:23682 
+#: pcdimmer.pas:23695 
 msgid "MediaCenter Verbindung:"
 msgstr ""
 
 #. Sprache des 3D-Visualizers setzen
-#: pcdimmer.pas:23978 
+#: pcdimmer.pas:23991 
 msgid ""
 "Der 3D Visualizer wurde nicht gefunden. Bitte kontrollieren Sie die "
 "Pfadangabe in den erweiterten Einstellungen..."
 msgstr ""
 
-#: pcdimmer.pas:24050 
+#: pcdimmer.pas:24063 
 msgid "Kennwort festlegen"
 msgstr ""
 
-#: pcdimmer.pas:24050 
+#: pcdimmer.pas:24063 
 msgid ""
 "In den erweiterten Optionen ist kein Standardkennwort hinterlegt. Geben Sie "
 "daher bitte ein Kennwort für die aktuelle Sperrung ein:"
 msgstr ""
 
-#: pcdimmer.pas:24065 
+#: pcdimmer.pas:24078 
 msgid "CSV-Datei (*.csv)|*.csv|*.*|*.*"
 msgstr ""
 
-#: pcdimmer.pas:24066 
+#: pcdimmer.pas:24079 
 msgid "Gerätedaten exportieren"
 msgstr ""
 
-#: pcdimmer.pas:24076 
+#: pcdimmer.pas:24089 
 msgid "Startadresse"
 msgstr ""
 
-#: pcdimmer.pas:24077 
+#: pcdimmer.pas:24090 
 msgid "Kanalanzahl"
 msgstr ""
 
-#: pcdimmer.pas:24078 
+#: pcdimmer.pas:24091 
 msgid "Leistung [W]"
 msgstr ""
 
-#: pcdimmer.pas:24083 
+#: pcdimmer.pas:24096 
 msgid "CMY"
 msgstr ""
 
-#: pcdimmer.pas:24086 
+#: pcdimmer.pas:24099 
 msgid "DIP-Startadresse"
 msgstr ""
 
 #. Installierte Geräte
-#: pcdimmer.pas:26381 
+#: pcdimmer.pas:26424 
 msgid "Installierte Geräte:"
 msgstr ""
 
 #. Anzahl der Szenen
-#: pcdimmer.pas:26385 
+#: pcdimmer.pas:26428 
 msgid "Erstellte Szenen:"
 msgstr ""
 
 #. Dimmerkernelzeit
-#: pcdimmer.pas:26389  pcdimmer.pas:26391
+#: pcdimmer.pas:26432  pcdimmer.pas:26434
 msgid "Dimmerkernel:"
 msgstr ""
 
-#: pcdimmer.pas:26389 
+#: pcdimmer.pas:26432 
 msgid "Job"
 msgstr ""
 
-#: pcdimmer.pas:26391 
+#: pcdimmer.pas:26434 
 msgid "Jobs"
 msgstr ""
 
 #. Kanaländerungen pro Sekunde
-#: pcdimmer.pas:26400 
+#: pcdimmer.pas:26443 
 msgid "Kanaländerung/s:"
 msgstr ""
 
-#: pcdimmer.pas:26682  pcdimmer.pas:26779
+#: pcdimmer.pas:26725  pcdimmer.pas:26822
 msgid "Aufgenommen"
 msgstr ""
 
-#: pcdimmer.pas:26990 
+#: pcdimmer.pas:27033 
 msgid "Möchten Sie wirklich alle laufenden Audiowiedergaben beenden?"
 msgstr ""
 
