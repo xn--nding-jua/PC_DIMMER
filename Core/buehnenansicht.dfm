@@ -1,6 +1,6 @@
 object grafischebuehnenansicht: Tgrafischebuehnenansicht
-  Left = 1005
-  Top = 270
+  Left = 1037
+  Top = 204
   Width = 768
   Height = 471
   Caption = 'Grafische B'#252'hnenansicht'
@@ -2522,9 +2522,9 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           OnClick = Button6Click
         end
         object TrackBar1: TTrackBar
-          Left = 40
+          Left = 48
           Top = 61
-          Width = 135
+          Width = 127
           Height = 21
           Ctl3D = True
           Max = 255
@@ -2539,10 +2539,9 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
         object RotateBtn: TButton
           Left = 8
           Top = 32
-          Width = 65
+          Width = 169
           Height = 25
-          Caption = 'Drehen'
-          Enabled = False
+          Caption = 'Icon um 90'#176' Drehen'
           TabOrder = 2
           OnClick = RotateBtnClick
         end
@@ -2552,7 +2551,6 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Width = 41
           Height = 25
           Caption = #243
-          Enabled = False
           Font.Charset = SYMBOL_CHARSET
           Font.Color = clWindowText
           Font.Height = -19
@@ -2560,6 +2558,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Font.Style = []
           ParentFont = False
           TabOrder = 3
+          Visible = False
           OnClick = FlipHorBtnClick
         end
         object FlipVerBtn: TButton
@@ -2568,7 +2567,6 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Width = 41
           Height = 25
           Caption = #244
-          Enabled = False
           Font.Charset = SYMBOL_CHARSET
           Font.Color = clWindowText
           Font.Height = -19
@@ -2576,6 +2574,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Font.Style = []
           ParentFont = False
           TabOrder = 4
+          Visible = False
           OnClick = FlipVerBtnClick
         end
       end
