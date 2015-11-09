@@ -1,6 +1,6 @@
 object grafischebuehnenansicht: Tgrafischebuehnenansicht
-  Left = 179
-  Top = 231
+  Left = 1005
+  Top = 270
   Width = 768
   Height = 471
   Caption = 'Grafische B'#252'hnenansicht'
@@ -2446,6 +2446,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Height = 17
           Caption = 'Ger'#228't bei Maus-Over hell'
           TabOrder = 16
+          OnMouseUp = CheckBox6MouseUp
         end
       end
       object TabSheet2: TTabSheet

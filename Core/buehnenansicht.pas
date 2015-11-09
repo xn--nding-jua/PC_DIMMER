@@ -210,6 +210,8 @@ type
       MousePos: TPoint; var Handled: Boolean);
     procedure FormMouseWheelDown(Sender: TObject; Shift: TShiftState;
       MousePos: TPoint; var Handled: Boolean);
+    procedure CheckBox6MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private-Deklarationen }
     Puffer1, Puffer2:TBitmap;
@@ -2246,6 +2248,8 @@ begin
   end;
   LReg.CloseKey;
   LReg.Free;
+
+  mainform.CheckBox5.Checked:=Checkbox5.Checked;
 end;
 
 procedure Tgrafischebuehnenansicht.RefreshTimerTimer(Sender: TObject);
@@ -2549,6 +2553,8 @@ begin
   end;
   LReg.CloseKey;
   LReg.Free;
+
+  mainform.CheckBox3.Checked:=Checkbox3.Checked;
 end;
 
 procedure Tgrafischebuehnenansicht.NureinGertefensterffneneinaus1Click(
@@ -3919,6 +3925,12 @@ procedure Tgrafischebuehnenansicht.FormMouseWheelDown(Sender: TObject;
 begin
   if MouseOnDeviceHover>-1 then
     geraetesteuerung.set_dimmer(MouseOnDeviceID, geraetesteuerung.get_dimmer(MouseOnDeviceID)-1, 0, 0);
+end;
+
+procedure Tgrafischebuehnenansicht.CheckBox6MouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  mainform.CheckBox6.Checked:=Checkbox6.Checked;
 end;
 
 end.

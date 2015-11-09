@@ -574,7 +574,6 @@ type
     NurKanlemitGertenanzeigen1: TMenuItem;
     Panelautomatischausblenden1: TMenuItem;
     Kstchenimmervoll1: TMenuItem;
-    Label15: TLabel;
     GoboPictures: TPngImageCollection;
     CheckBox4: TCheckBox;
     ComboBox2: TComboBox;
@@ -612,6 +611,8 @@ type
     dxBarButton6: TdxBarButton;
     NodeControlRibbonBtn: TdxBarLargeButton;
     OnlineUpdateRibbonBtn: TdxBarLargeButton;
+    CheckBox6: TCheckBox;
+    Label16: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -871,6 +872,18 @@ type
     procedure dxBarButton6Click(Sender: TObject);
     procedure NodeControlRibbonBtnClick(Sender: TObject);
     procedure OnlineUpdateRibbonBtnClick(Sender: TObject);
+    procedure CheckBox6KeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure CheckBox6MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure CheckBox5KeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure CheckBox5MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure CheckBox3MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure CheckBox3KeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -25124,6 +25137,35 @@ begin
         end;
 ////////////
 
+/////////// DeviceHighlight
+        if CheckBox6.Checked then
+        begin
+          // Altes Gerät zurücksetzen
+          geraetesteuerung.set_color(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.R, grafischebuehnenansicht.LastMouseOverHighlightDevice.G, grafischebuehnenansicht.LastMouseOverHighlightDevice.B, 150, 0);
+          geraetesteuerung.set_shutter(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.ShutterOpenOrClose);
+          geraetesteuerung.set_dimmer(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.Dimmer, 150, 0);
+
+          // Aktuelle Werte speichern
+          if not IsEqualGUID(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.MouseOnDeviceID) then
+          begin
+            grafischebuehnenansicht.LastMouseOverHighlightDevice.ID:=grafischebuehnenansicht.MouseOnDeviceID;
+            grafischebuehnenansicht.LastMouseOverHighlightDevice.Dimmer:=geraetesteuerung.get_dimmer(grafischebuehnenansicht.MouseOnDeviceID);
+            grafischebuehnenansicht.LastMouseOverHighlightDevice.R:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'R');
+            grafischebuehnenansicht.LastMouseOverHighlightDevice.G:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'G');
+            grafischebuehnenansicht.LastMouseOverHighlightDevice.B:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'B');
+            grafischebuehnenansicht.LastMouseOverHighlightDevice.ShutterOpenOrClose:=geraetesteuerung.get_shutter(grafischebuehnenansicht.MouseOnDeviceID);
+          end;
+
+          // Aktuelles Gerät setzen
+          if grafischebuehnenansicht.MouseOnDeviceHover>-1 then
+          begin
+            geraetesteuerung.set_shutter(grafischebuehnenansicht.MouseOnDeviceID, 255);
+            geraetesteuerung.set_color(grafischebuehnenansicht.MouseOnDeviceID, 255, 255, 255, 150, 0);
+            geraetesteuerung.set_dimmer(grafischebuehnenansicht.MouseOnDeviceID, 255, 150, 0);
+          end;
+        end;
+////////////
+
         if grafischebuehnenansicht.MouseOnDevice>-1 then
         begin
           if CheckBox3.Checked then exit;
@@ -25718,6 +25760,7 @@ procedure TMainform.CheckBox2KeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   grafischebuehnenansicht.CheckBox2.Checked:=checkbox2.Checked;
+  grafischebuehnenansicht.doimmediaterefresh:=true;
 end;
 
 procedure TMainform.CheckBox1KeyUp(Sender: TObject; var Key: Word;
@@ -27468,6 +27511,42 @@ end;
 procedure TMainform.OnlineUpdateRibbonBtnClick(Sender: TObject);
 begin
   ShellExecute(Handle, 'open', PChar('http://update.pcdimmer.de'), nil, nil, SW_SHOW);
+end;
+
+procedure TMainform.CheckBox6KeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  grafischebuehnenansicht.CheckBox6.Checked:=checkbox6.Checked;
+end;
+
+procedure TMainform.CheckBox6MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  grafischebuehnenansicht.CheckBox6.Checked:=checkbox6.Checked;
+end;
+
+procedure TMainform.CheckBox5KeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  grafischebuehnenansicht.CheckBox5.Checked:=checkbox5.Checked;
+end;
+
+procedure TMainform.CheckBox5MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  grafischebuehnenansicht.CheckBox5.Checked:=checkbox5.Checked;
+end;
+
+procedure TMainform.CheckBox3MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  grafischebuehnenansicht.CheckBox3.Checked:=checkbox3.Checked;
+end;
+
+procedure TMainform.CheckBox3KeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  grafischebuehnenansicht.CheckBox3.Checked:=checkbox3.Checked;
 end;
 
 end.
