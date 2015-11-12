@@ -2355,7 +2355,7 @@ end;
 procedure Tkontrollpanel.PaintBox1MouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
-  if (Shift=[]) then
+  if (Shift=[]) and not MouseIsDown then
   begin
     OverBtn.Y:=trunc((Y-yoffset)/btnheight.value);
     OverBtn.X:=trunc((X-xoffset)/btnwidth.value);
