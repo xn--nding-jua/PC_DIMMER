@@ -120,7 +120,8 @@ uses
   pcdRegistry in 'pcdRegistry.pas',
   pcdUtils in 'pcdUtils.pas',
   nodecontrolfrm in 'nodecontrolfrm.pas' {nodecontrolform},
-  opensourcefrm in 'opensourcefrm.pas' {opensourceform};
+  opensourcefrm in 'opensourcefrm.pas' {opensourceform},
+  D7GesturesHeader in 'D7GesturesHeader.pas';
 
 const
   sPC_DIMMERMutex = 'PC_DIMMER';
@@ -170,7 +171,7 @@ begin
   end else
   begin
     Application.CreateForm(Tmainform, mainform);
-    if showtext then mainform.SplashAddText(_('Erstelle Projektverwaltung')); mainform.RefreshSplashText;
+  if showtext then mainform.SplashAddText(_('Erstelle Projektverwaltung')); mainform.RefreshSplashText;
     Application.CreateForm(Tprojektverwaltung, projektverwaltung);
     if showtext then mainform.SplashAddText(_('Erstelle Beattool')); mainform.RefreshSplashText;
     Application.CreateForm(Tbeatform, beatform);

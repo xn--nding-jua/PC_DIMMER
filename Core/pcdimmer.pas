@@ -103,7 +103,7 @@ uses
   JvOfficeColorPanel, JvColorButton, cxStyles, dxGDIPlusClasses, SHDocVw,
   graphutil, IdCustomTCPServer, IdCustomHTTPServer, idContext, VistaAltFixUnit2,
   SVATimer, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, pcdMEVP,
-  dxRibbonSkins, dxBarApplicationMenu;
+  dxRibbonSkins, dxBarApplicationMenu, D7GesturesHeader;
 
 const
   maincaption = 'PC_DIMMER';

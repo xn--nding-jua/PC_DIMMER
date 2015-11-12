@@ -162,10 +162,21 @@ object kontrollpanel: Tkontrollpanel
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
+  object PaintBox1: TPaintBox
+    Left = 0
+    Top = 98
+    Width = 759
+    Height = 246
+    Align = alClient
+    OnMouseDown = PaintBox1MouseDown
+    OnMouseMove = PaintBox1MouseMove
+    OnMouseUp = PaintBox1MouseUp
+    OnPaint = PaintBox1Paint
+  end
   object Panel1: TPanel
     Left = 0
     Top = 25
-    Width = 767
+    Width = 759
     Height = 73
     Align = alTop
     AutoSize = True
@@ -1184,8 +1195,8 @@ object kontrollpanel: Tkontrollpanel
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 353
-    Width = 767
+    Top = 344
+    Width = 759
     Height = 19
     Hint = 'Statusleiste doppelt anklicken, um Titelleiste auszublenden...'
     Panels = <
@@ -1209,7 +1220,7 @@ object kontrollpanel: Tkontrollpanel
   object TBDock1: TTBDock
     Left = 0
     Top = 0
-    Width = 767
+    Width = 759
     Height = 25
     object TBToolbar1: TTBToolbar
       Left = 0
@@ -1301,26 +1312,6 @@ object kontrollpanel: Tkontrollpanel
           OnClick = astenkrzel1Click
         end
       end
-    end
-  end
-  object Panel3: TPanel
-    Left = 0
-    Top = 98
-    Width = 767
-    Height = 255
-    Align = alClient
-    BevelOuter = bvNone
-    TabOrder = 3
-    object PaintBox1: TPaintBox
-      Left = 0
-      Top = 0
-      Width = 767
-      Height = 255
-      Align = alClient
-      OnMouseDown = PaintBox1MouseDown
-      OnMouseMove = PaintBox1MouseMove
-      OnMouseUp = PaintBox1MouseUp
-      OnPaint = PaintBox1Paint
     end
   end
   object OpenDialog1: TOpenDialog

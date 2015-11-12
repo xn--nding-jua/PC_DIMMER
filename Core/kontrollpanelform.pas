@@ -15,7 +15,7 @@ uses
   JvExControls, JvComponent, JvColorBox, JvColorButton, Mask,
   JvExMask, JvSpin, JvZlibMultiple, MPlayer, Menus, Buttons, ImgList, Registry,
   Math, JvComponentBase, PngBitBtn, JvExButtons, JvButtons, JvInterpreter,
-  gnugettext, TB2Item, TB2Dock, TB2Toolbar, pngimage, GR32;
+  gnugettext, TB2Item, TB2Dock, TB2Toolbar, pngimage, GR32, D7GesturesHeader;
 
 
 const
@@ -115,13 +115,12 @@ type
     ooltipsanzeigen1: TTBItem;
     N6: TTBSubmenuItem;
     astenkrzel1: TTBItem;
-    Panel3: TPanel;
-    PaintBox1: TPaintBox;
     RefreshTimer: TTimer;
     ListBox: TListBox;
     PngBitBtn3: TPngBitBtn;
     showiconsbtn: TTBItem;
     buttonstyledark: TTBItem;
+    PaintBox1: TPaintBox;
     procedure FormShow(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure buttonfarbeChange(Sender: TObject);
@@ -212,9 +211,25 @@ type
     SourceBtn:TPoint;
     MouseDown,OldOffset:TPoint;
     LastColRows:TPoint;
+
+    //f_ptFirst:TPoint;
+    //f_dwArguments:Int64;     //saved T/G dw arguments
+    LastTouchEvent:integer;
+    MyTouchPoint:TPoint;
+    ssTouch:boolean;
+    MouseIsDown:boolean;
+
     function UseGradient(Farbe: TColor; Direction: byte):TColor;
 //    procedure DrawGradientV(Canvas: TCanvas; Color1, Color2: TColor; Rect: TRect);
     procedure DrawGradientH(Canvas: TCanvas; Color1, Color2: TColor; Rect: TRect);
+    procedure StartTouchEvent(X, Y: integer);
+    procedure UpdateTouchEvent(Event, X, Y: integer);
+    procedure EndTouchEvent(X, Y: integer);
+  protected
+    procedure WMTouch( var Msg: TMessage);                 message WM_TOUCH;
+    procedure WMGestureNotify( var Msg: TWMGestureNotify); message WM_GESTURENOTIFY;
+    procedure WMGesture( var Msg: TMessage);               message WM_GESTURE;
+    procedure WMTabletFlick( var Msg: TMessage);           message WM_TABLET_FLICK;
   public
     { Public-Deklarationen }
     SelectedBtn:TPoint;
@@ -1144,6 +1159,7 @@ procedure Tkontrollpanel.FormCreate(Sender: TObject);
 //  i:integer;
 begin
   TranslateComponent(self);
+
   If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp') then
 	 	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp');
   If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel') then
@@ -1188,6 +1204,21 @@ begin
 	OverBtn.X:=0;
 
   argumente:=TJvInterpreterArgs.Create;
+
+  // Initialisiere Touch-Interface, sofern möglich
+  LoadTouchGestureAPI; // sofern verfügbar
+{
+  if bMultiTouchHardware then
+    Caption:=Caption+' - MultiTouch'
+  else if bTouchGestureAPIPresent then
+    Caption:=Caption+' - Touch';
+}
+  // use only WM_TOUCH (if possible)
+  if bMultiTouchHardware or bTouchGestureAPIPresent then
+  begin
+    Caption:=Caption+' - Touch';
+    RegisterTouchWindowFn(kontrollpanel.handle, 0);
+  end;
 end;
 
 procedure Tkontrollpanel.sync_btnClick(Sender: TObject);
@@ -2345,6 +2376,12 @@ end;
 procedure Tkontrollpanel.PaintBox1MouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if MouseIsDown then
+  begin
+    PaintBox1MouseUp(Paintbox1, mbLeft, [], MouseDown.X, MouseDown.Y);
+    MouseIsDown:=true;
+  end;
+
   MouseDown.X:=x;
   MouseDown.Y:=y;
 
@@ -2513,6 +2550,8 @@ var
 	k:integer;
   isaudioscene:boolean;
 begin
+  MouseIsDown:=false;
+  ssTouch:=false;
   BtnDown.Y:=-1;
   BtnDown.X:=-1;
 
@@ -3156,6 +3195,229 @@ procedure Tkontrollpanel.FormCanResize(Sender: TObject; var NewWidth,
   NewHeight: Integer; var Resize: Boolean);
 begin
   Resize:=(NewHeight>250) and (NewWidth>250)
+end;
+
+procedure Tkontrollpanel.WMTouch(var Msg: TMessage);
+  function TouchPointToPoint(const TouchPoint: TTouchInput): TPoint;
+  begin
+    Result := Point(TouchPoint.X div 100, TouchPoint.Y div 100);
+    PhysicalToLogicalPointFn(Handle, Result);
+    Result := ScreenToClient(Result);
+  end ;
+var
+  TouchInputs: array of TTouchInput;
+  counter: Integer;
+  Handled: Boolean;
+begin
+  Handled := False;
+  if not bTouchGestureAPIPresent then Exit;
+
+  SetLength(TouchInputs, Msg.WParam);
+  GetTouchInputInfoFn(Msg.LParam, Msg.WParam, @TouchInputs[0], SizeOf(TTouchInput));
+
+  try
+    for counter := 1 to Length (TouchInputs) do
+    begin
+      MyTouchPoint := TouchPointToPoint(TouchInputs [counter-1]);
+      if not ssTouch then
+      begin
+        ssTouch:=true;
+//        mouse_event(MOUSEEVENTF_ABSOLUTE or MOUSEEVENTF_MOVE, MyTouchPoint.x-5, MyTouchPoint.y-5, 0, 0);
+        Paintbox1MouseMove(Paintbox1, [], MyTouchPoint.x, MyTouchPoint.y-Panel1.Height-TBToolbar1.Height-25);
+        mouse_event(MOUSEEVENTF_LEFTDOWN, MyTouchPoint.x, MyTouchPoint.y, 0, 0);
+      end;
+    end;
+    Handled := True;
+  finally
+    if Handled then CloseTouchInputHandleFn(Msg.LParam)
+      else inherited ;
+  end;
+end;
+
+procedure Tkontrollpanel.WMGestureNotify( var Msg: TWMGestureNotify);
+begin
+  Msg.Result := DefWindowProc( Handle, Msg.Msg, Msg.Unused, Longint(Msg.NotifyStruct));
+end;
+
+procedure Tkontrollpanel.WMGesture(var Msg: TMessage);
+var
+  gi:TGestureInfo;
+  bResult,bHandled:BOOL;
+  L:Integer;
+//  ptZoomCenterX,ptZoomCenterY,K,angle:Single; _ptSecond:TPoint;
+  MyTouchPoint:TPoint;
+begin
+  bHandled:= False;
+  if bTouchGestureAPIPresent then
+    begin
+      L:=SizeOf(gi);
+      FillChar(gi,L,#0);
+      gi.cbSize := L;
+      bResult := GetGestureInfoFn(Msg.lParam , gi); // retrieve gesture info with lParam 
+
+      if bResult then
+        begin
+          bHandled:=True;
+          case gi.dwID of
+            GID_BEGIN:
+            begin
+              MyTouchPoint.x := gi.ptsLocation.x;
+              MyTouchPoint.y := gi.ptsLocation.y;
+              MyTouchPoint   := ScreenToClient(MyTouchPoint);
+              StartTouchEvent(MyTouchPoint.x, MyTouchPoint.y);
+            end;
+            GID_END:
+            begin
+              MyTouchPoint.x := gi.ptsLocation.x;
+              MyTouchPoint.y := gi.ptsLocation.y;
+              MyTouchPoint   := ScreenToClient(MyTouchPoint);
+              EndTouchEvent(MyTouchPoint.x, MyTouchPoint.y);
+            end;
+            GID_PAN:
+            begin
+              MyTouchPoint.x := gi.ptsLocation.x;
+              MyTouchPoint.y := gi.ptsLocation.y;
+              MyTouchPoint   := ScreenToClient(MyTouchPoint);
+              UpdateTouchEvent(1, MyTouchPoint.x, MyTouchPoint.y);
+
+{
+              if gi.dwFlags=GF_Begin then
+                begin
+                  f_ptFirst.x := gi.ptsLocation.x;
+                  f_ptFirst.y := gi.ptsLocation.y;
+                  f_ptFirst   := ScreenToClient(f_ptFirst);
+                end
+                else begin // read the second point (middle between fingers in the position)
+                  _ptSecond.x := gi.ptsLocation.x;
+                  _ptSecond.y := gi.ptsLocation.y;
+                  _ptSecond   := ScreenToClient(_ptSecond);
+                  //ProcessGestureMove(_ptSecond.x-f_ptFirst.x,_ptSecond.y-f_ptFirst.y);
+                  f_ptFirst := _ptSecond;      //save
+                end;
+}
+            end;
+            GID_ZOOM:
+            begin
+              MyTouchPoint.x := gi.ptsLocation.x;
+              MyTouchPoint.y := gi.ptsLocation.y;
+              MyTouchPoint   := ScreenToClient(MyTouchPoint);
+              UpdateTouchEvent(2, MyTouchPoint.x, MyTouchPoint.y);
+
+{
+              if gi.dwFlags=GF_Begin then
+                begin
+                  f_ptFirst.x   := gi.ptsLocation.x;
+                  f_ptFirst.y   := gi.ptsLocation.y;
+                  f_ptFirst     := ScreenToClient(f_ptFirst);
+                  f_dwArguments := gi.ullArguments;
+                end
+                else begin
+                  _ptSecond.x := gi.ptsLocation.x;
+                  _ptSecond.y := gi.ptsLocation.y;
+                  _ptSecond   := ScreenToClient(_ptSecond);
+                  ptZoomCenterX := (f_ptFirst.x + _ptSecond.x)/2;
+                  ptZoomCenterY := (f_ptFirst.y + _ptSecond.y)/2;
+                  k := gi.ullArguments/f_dwArguments;
+                  //ProcessGestureZoom(k,ptZoomCenterX,ptZoomCenterY);
+                  f_ptFirst     := _ptSecond;
+                  f_dwArguments := gi.ullArguments;
+                end;
+}
+            end;
+            GID_ROTATE:
+            begin
+              MyTouchPoint.x := gi.ptsLocation.x;
+              MyTouchPoint.y := gi.ptsLocation.y;
+              MyTouchPoint   := ScreenToClient(MyTouchPoint);
+              UpdateTouchEvent(3, MyTouchPoint.x, MyTouchPoint.y);
+
+{
+              if gi.dwFlags=GF_BEGIN then
+                f_dwArguments := 0
+              else begin
+                f_ptFirst.x := gi.ptsLocation.x;
+                f_ptFirst.y := gi.ptsLocation.y;
+                f_ptFirst   := ScreenToClient(f_ptFirst);
+                angle := GID_ROTATE_ANGLE_FROM_ARGUMENT(LODWORD(gi.ullArguments))-GID_ROTATE_ANGLE_FROM_ARGUMENT(f_dwArguments);
+                //ProcessGestureRotate( angle,f_ptFirst.x,f_ptFirst.y);  //angle in radians
+                f_dwArguments := LODWORD(gi.ullArguments);            //save previous
+              end;
+}
+            end;
+            GID_TWOFINGERTAP:
+            begin
+              MyTouchPoint.x := gi.ptsLocation.x;
+              MyTouchPoint.y := gi.ptsLocation.y;
+              MyTouchPoint   := ScreenToClient(MyTouchPoint);
+              UpdateTouchEvent(4, MyTouchPoint.x, MyTouchPoint.y);   // 2 finger tap
+            end;
+            GID_PRESSANDTAP:
+            begin
+              MyTouchPoint.x := gi.ptsLocation.x;
+              MyTouchPoint.y := gi.ptsLocation.y;
+              MyTouchPoint   := ScreenToClient(MyTouchPoint);
+              UpdateTouchEvent(5, MyTouchPoint.x, MyTouchPoint.y);   // press n tap
+            end;
+          else bHandled:= False;
+          end;
+        end else
+        begin //GetGestureInfo failed
+          //dwError := GetLastError;
+          // Handle dwError ??
+        end;
+
+      CloseGestureInfoHandleFn(Msg.lParam);
+    end else
+    begin
+      // no Touch API Present
+    end;
+  if bHandled then Msg.Result := 0
+    else Msg.Result := DefWindowProc(Handle, Msg.Msg, Msg.WParam, Msg.LParam);
+end;
+
+procedure Tkontrollpanel.WMTabletFlick( var Msg: TMessage);
+begin
+  Msg.Result := DefWindowProc(Handle, Msg.Msg, Msg.WParam, Msg.LParam);
+end;
+
+procedure Tkontrollpanel.StartTouchEvent(X, Y: integer);
+begin
+  LastTouchEvent:=-1; // Start
+end;
+
+procedure Tkontrollpanel.UpdateTouchEvent(Event, X, Y: integer);
+begin
+  if LastTouchEvent=-1 then
+  begin
+    // Etwas mit dem jeweiligen Event beginnen
+    case Event of
+      1: ; // PAN
+      2: ; // ZOOM
+      3: ; // ROTATE
+      4: ; // 2-Finger-Tap
+      5: // Press + Tap -> MouseDown()
+      begin
+        //mouse_event(MOUSEEVENTF_ABSOLUTE or MOUSEEVENTF_MOVE, X, Y, 0, 0);
+        mouse_event(MOUSEEVENTF_LEFTDOWN, X, Y, 0, 0);
+      end;
+    end;
+  end;
+
+  LastTouchEvent:=Event;
+end;
+
+procedure Tkontrollpanel.EndTouchEvent(X, Y: integer);
+begin
+  case LastTouchEvent of
+    1: ; // PAN
+    2: ; // ZOOM
+    3: ; // ROTATE
+    4: ; // 2-Finger-Tap
+    5: // Press + Tap -> MouseUp()
+    begin
+      mouse_event(MOUSEEVENTF_LEFTUP, X, Y, 0, 0);
+    end;
+  end;
 end;
 
 end.
