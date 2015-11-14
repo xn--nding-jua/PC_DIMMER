@@ -1081,7 +1081,7 @@ begin
           for k:=0 to length(mainform.devices)-1 do
           for l:=0 to length(mainform.devices[k].selected)-1 do
           begin
-            if ((mainform.devices[k].selected[l])) then
+            if (mainform.devices[k].ShowInStageview and (mainform.devices[k].bank[l]=BankSelect.Itemindex) and (mainform.devices[k].selected[l])) then
             begin
               StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
               if not StopDeviceMoving then
@@ -1152,7 +1152,7 @@ begin
           for k:=0 to length(mainform.devices)-1 do
           for l:=0 to length(mainform.devices[k].selected)-1 do
           begin
-            if ((mainform.devices[k].selected[l])) then
+            if (mainform.devices[k].ShowInStageview and (mainform.devices[k].bank[l]=BankSelect.Itemindex) and (mainform.devices[k].selected[l])) then
             begin
               StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
               if not StopDeviceMoving then
@@ -1219,7 +1219,7 @@ begin
       for i:=0 to length(mainform.devices)-1 do
       for j:=0 to length(mainform.devices[i].bank)-1 do
       begin
-        if mainform.devices[i].bank[j]=BankSelect.Itemindex then
+        if (mainform.devices[i].ShowInStageview and (mainform.devices[i].bank[j]=BankSelect.Itemindex)) then
         begin
           // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
           if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Bottom)
@@ -1240,7 +1240,7 @@ begin
       for i:=0 to length(mainform.devices)-1 do
       for j:=0 to length(mainform.devices[i].bank)-1 do
       begin
-        if mainform.devices[i].bank[j]=BankSelect.Itemindex then
+        if (mainform.devices[i].ShowInStageview and (mainform.devices[i].bank[j]=BankSelect.Itemindex)) then
         begin
           // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
           if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Bottom)
@@ -3932,6 +3932,3 @@ begin
 end;
 
 end.
-
-
-
