@@ -13801,7 +13801,7 @@ begin
     FuncCall2 := GetProcAddress(InputDLL[i],'DLLGetVersion');
     if Assigned(FuncCall) then
     begin
-      SplashProgress(1, 60+round(15*((i/(strtoint(pc_dimmer_inputplugins[-1])-1)))), 100);
+      SplashProgress(1, 60+round(15*(((i+1)/(strtoint(pc_dimmer_inputplugins[-1]))))), 100);
       SplashAddText(_('Aktiviere ')+FuncCall);
       RefreshSplashText;
       tdxBarButton(FindComponent('plugin'+inttostr(i)+'ribbon')).Caption:=FuncCall;
@@ -15957,6 +15957,11 @@ begin
     begin // Zeitsteuerung aus
       schedulerform.TimerDeaktiviertCheckbox.checked:=false;
       skripttimer_offline:=schedulerform.TimerDeaktiviertCheckbox.checked;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[27].GUID) and EventFired then
+    begin // Alle Audioeffekte stoppen
+        //TODO
       exit;
     end;
 

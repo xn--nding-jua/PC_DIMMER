@@ -100,20 +100,16 @@ Conditionals=
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
-RunParams="C:\Programmieren\Delphi\PC_DIMMER2010\PC_DIMMER2010 Source\plugins\temperaturregler.dll"
-HostApplication=C:\Programmieren\Delphi\PC_DIMMER2010\PC_DIMMER2010 Source\plugins\Testprogramm.exe
+RunParams="D:\Cloud\Programmieren\Delphi\PC_DIMMER\Core\plugins\temperaturregler.dll"
+HostApplication=D:\Cloud\Programmieren\Delphi\Fertige Programme\PHOENIXstudios PC_DIMMER v5.1\PC_DIMMER_Plugintester.exe
 Launcher=
 UseLauncher=0
-DebugCWD=C:\Programmieren\Delphi\PC_DIMMER2010\PC_DIMMER2010 Source\plugins\
-[Language]
-ActiveLang=
-ProjectLang=
-RootDir=C:\Programme\Borland\Delphi7\Bin\
+DebugCWD=D:\Cloud\Programmieren\Delphi\PC_DIMMER\Core\plugins\
 [Version Info]
 IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=1
-MinorVer=6
+MinorVer=7
 Release=0
 Build=0
 Debug=0
@@ -126,21 +122,14 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=Temperaturregler für PC_DIMMER
-FileVersion=1.6.0.0
+FileVersion=1.7.0.0
 InternalName=
-LegalCopyright=(c) 2011-2013 by Dipl.-Ing. M.Sc. Christian Nöding
+LegalCopyright=(c) 2011-2015 by Dipl.-Ing. M.Sc. Christian Nöding
 LegalTrademarks=
 OriginalFilename=
 ProductName=
-ProductVersion=1.6.0.0
+ProductVersion=1.7.0.0
 Comments=http://www.pcdimmer.de
-[Excluded Packages]
-c:\program files (x86)\borland\delphi7\Projects\Bpl\DSPackDesign_D7.bpl=DSPack 2.3: Multimedia Package for Delphi
-c:\program files (x86)\borland\delphi7\Bin\dclindy70.bpl=Internet Direct (Indy) für Delphi 7 Eigenschafts- und Komponenten-Editoren
-C:\Program Files (x86)\Developer Express Inc\Library\Delphi7\dclcxWebD7.bpl=ExpressWeb Framework by Developer Express Inc.
-C:\Program Files (x86)\Developer Express Inc\Library\Delphi7\dclcxWebPascalScriptD7.bpl=Pascal Script Engine for EWF by Developer Express Inc.
-C:\Program Files (x86)\Developer Express Inc\Library\Delphi7\dclcxWebSnapD7.bpl=ExpressWebPage Module for WebSnap Application by Developer Express Inc.
-C:\Program Files (x86)\Developer Express Inc\Library\Delphi7\dclcxWebTeeChartD7.bpl=ExpressWebTeeChart for EWF by Developer Express Inc.
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;

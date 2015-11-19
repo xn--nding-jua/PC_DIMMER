@@ -446,6 +446,10 @@
   begin // Zeitsteuerung aus
     nousersetting:=false;
   end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[3].Steuerung[27].GUID) then
+  begin // Alle Audioeffekte stoppen
+    nousersetting:=false;
+  end;
 
   // Einzelkanaländerung
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[4].Steuerung[0].GUID) then

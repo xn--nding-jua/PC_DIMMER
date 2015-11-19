@@ -105,17 +105,13 @@ HostApplication=
 Launcher=
 UseLauncher=0
 DebugCWD=
-[Language]
-ActiveLang=
-ProjectLang=
-RootDir=
 [Version Info]
 IncludeVerInfo=1
 AutoIncBuild=1
 MajorVer=6
 MinorVer=2
 Release=0
-Build=246
+Build=248
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +122,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=Digital Enlightenment (FX5) DMX-Output Plugin
-FileVersion=6.2.0.246
+FileVersion=6.2.0.248
 InternalName=
 LegalCopyright=(c) 2008-2015 by Dipl.-Ing. Christian Nöding
 LegalTrademarks=

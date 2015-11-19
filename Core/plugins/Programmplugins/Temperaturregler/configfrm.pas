@@ -4,9 +4,9 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, CPDrv, ExtCtrls, Registry, CPort, Mask, JvExMask,
+  Dialogs, StdCtrls, CPDrv, ExtCtrls, Registry, Mask, JvExMask,
   JvSpin, JvExControls, JvSwitch, ComCtrls, JvSimScope, JvLED, gnugettext,
-  messagesystem;
+  messagesystem, JvChart;
 
 type
   TCallbackValues = procedure(address,startvalue,endvalue,fadetime,delay:integer);stdcall;
@@ -17,36 +17,9 @@ type
 
   TConfig = class(TForm)
     comport: TCommPortDriver;
-    GroupBox3: TGroupBox;
-    tempcurrentlbl: TLabel;
-    Label14: TLabel;
-    tempon: TJvSwitch;
-    Bevel1: TBevel;
-    Bevel3: TBevel;
-    GroupBox4: TGroupBox;
-    scope: TJvSimScope;
-    tempminlbl: TLabel;
-    tempmeanlbl: TLabel;
-    tempmaxlbl: TLabel;
-    Label7: TLabel;
-    Label12: TLabel;
-    Label15: TLabel;
     SekundenTimer: TTimer;
-    Label16: TLabel;
-    Label17: TLabel;
-    Label18: TLabel;
-    Label19: TLabel;
-    Label20: TLabel;
-    Label21: TLabel;
-    heizenled: TJvLED;
-    Label8: TLabel;
-    Label26: TLabel;
-    hystereseled: TJvLED;
-    tempokled: TJvLED;
-    Label27: TLabel;
-    scope2: TJvSimScope;
-    Button3: TButton;
-    Button1: TButton;
+    RegisterPluginCommands: TTimer;
+    Panel2: TPanel;
     GroupBox1: TGroupBox;
     Label2: TLabel;
     temp2lbl: TLabel;
@@ -58,40 +31,70 @@ type
     Label5: TLabel;
     Label6: TLabel;
     deltatemplbl: TLabel;
+    Label33: TLabel;
+    stromverbrauchlbl: TLabel;
+    stromkostenlbl: TLabel;
+    Memo1: TMemo;
+    Panel1: TPanel;
+    GroupBox3: TGroupBox;
+    tempcurrentlbl: TLabel;
+    Label14: TLabel;
+    Bevel1: TBevel;
+    Bevel3: TBevel;
+    heizenled: TJvLED;
+    Label8: TLabel;
+    Label26: TLabel;
+    hystereseled: TJvLED;
+    tempokled: TJvLED;
+    Label27: TLabel;
     nachtabsled: TJvLED;
     Label24: TLabel;
+    Label9: TLabel;
+    tempon: TJvSwitch;
+    Button1: TButton;
     GroupBox5: TGroupBox;
-    CheckBox2: TCheckBox;
-    absenkung_h_startedit: TJvSpinEdit;
-    absenkung_min_startedit: TJvSpinEdit;
-    absenkung_h_stopedit: TJvSpinEdit;
-    absenkung_min_stopedit: TJvSpinEdit;
     Label25: TLabel;
     Label28: TLabel;
     Label29: TLabel;
     Label30: TLabel;
     Label31: TLabel;
-    absenkung_temp: TJvSpinEdit;
     Label32: TLabel;
+    CheckBox2: TCheckBox;
+    absenkung_h_startedit: TJvSpinEdit;
+    absenkung_min_startedit: TJvSpinEdit;
+    absenkung_h_stopedit: TJvSpinEdit;
+    absenkung_min_stopedit: TJvSpinEdit;
+    absenkung_temp: TJvSpinEdit;
     GroupBox6: TGroupBox;
-    tempsoll: TJvSpinEdit;
     Label13: TLabel;
     Label10: TLabel;
     Label11: TLabel;
     Label22: TLabel;
     Label23: TLabel;
+    tempsoll: TJvSpinEdit;
     tempmin: TJvSpinEdit;
     tempmax: TJvSpinEdit;
     CheckBox1: TCheckBox;
     Button2: TButton;
-    Label9: TLabel;
-    Label33: TLabel;
-    stromverbrauchlbl: TLabel;
-    stromkostenlbl: TLabel;
-    Memo1: TMemo;
+    GroupBox7: TGroupBox;
+    tempminlbl: TLabel;
+    tempmeanlbl: TLabel;
+    tempmaxlbl: TLabel;
+    Label7: TLabel;
+    Label12: TLabel;
+    Label15: TLabel;
     Label34: TLabel;
     TimeToSollwertLbl: TLabel;
-    RegisterPluginCommands: TTimer;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    chart: TJvChart;
+    Label16: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
+    Label19: TLabel;
+    zoom15mincheckbox: TCheckBox;
+    TestCaseBtn: TButton;
+    DemoData: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure comportReceiveData(Sender: TObject; DataPtr: Pointer;
       DataSize: Cardinal);
@@ -102,15 +105,17 @@ type
     procedure temponOff(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure SekundenTimerTimer(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
     procedure FormHide(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure RegisterPluginCommandsTimer(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure TestCaseBtnClick(Sender: TObject);
+    procedure DemoDataTimer(Sender: TObject);
   private
     { Private-Deklarationen }
+    procedure DLLSendMessageTest(MSG, Data1, Data2: Variant);
   public
     { Public-Deklarationen }
     FirstShow:boolean;
@@ -124,12 +129,15 @@ type
     TempVor15Minuten:Single;
     FuenfzehnminutenCounter:Word;
     Temp2msb, Temp2lsb, Temp3msb, Temp3lsb:byte;
-    CurrentTemp2, CurrentTemp3:Single;
-    TemperaturArray:array[0..599] of Smallint;
-    TemperaturArrayPointer:Word;
+    CurrentTemp2, CurrentTemp3:array[0..9] of Single;
+    CurrentTemp2Mean, CurrentTemp3Mean:single;
+    CurrentTemp2MeanIndex, CurrentTemp3MeanIndex:integer;
     RegelungNeuGestartet:Boolean;
     Heizbetrieb:Boolean;
     Strompreis, Kilowattstunden:Single;
+
+    GrowingIndex:integer;
+    OverallMin, OverallMax:double;
 
     SetDLLValues:TCallbackValues;
     SetDLLEvent:TCallbackEvent;
@@ -325,43 +333,42 @@ begin
   if FirstShow then
   begin
     FirstShow:=false;
-    StartUp;
+//    StartUp;
   end;
-
-  scope.Active:=true;
-  scope2.Active:=true;
 end;
 
 function TConfig.CalcMaximum:Single;
 var
   i:integer;
-  Maximum:Double;
+  maxvalue:double;
 begin
-  Maximum:=-200;
-  for i:=0 to length(TemperaturArray)-1 do
+  maxvalue:=-200;
+  for i:=GrowingIndex-1 downto GrowingIndex-301 do
   begin
-    if (TemperaturArray[i]>-32768) and ((TemperaturArray[i]/1000) > Maximum) then
+    if (chart.Data.ValueCount>0) and (i<chart.Data.ValueCount) and (i>0) and (chart.Options.PenCount>0) then
     begin
-      Maximum:=TemperaturArray[i]/1000;
+      if chart.data.Value[0, i]>maxvalue then
+        maxvalue:=chart.data.Value[0, i];
     end;
   end;
-  result:=Maximum;
+  result:=maxvalue;
 end;
 
 function TConfig.CalcMinimum:Single;
 var
   i:integer;
-  Minimum:Double;
+  minvalue:double;
 begin
-  Minimum:=200;
-  for i:=0 to length(TemperaturArray)-1 do
+  minvalue:=200;
+  for i:=GrowingIndex-1 downto GrowingIndex-301 do
   begin
-    if (TemperaturArray[i]>-32768) and ((TemperaturArray[i]/1000) < Minimum) then
+    if (chart.Data.ValueCount>0) and (i<chart.Data.ValueCount) and (i>0) and (chart.Options.PenCount>0) then
     begin
-      Minimum:=TemperaturArray[i]/1000;
+      if chart.data.Value[0, i]<minvalue then
+        minvalue:=chart.data.Value[0, i];
     end;
   end;
-  result:=Minimum;
+  result:=minvalue;
 end;
 
 function TConfig.CalcMean:Single;
@@ -371,11 +378,11 @@ var
 begin
   Mean:=0;
   Values:=0;
-  for i:=0 to length(TemperaturArray)-1 do
+  for i:=GrowingIndex-1 downto GrowingIndex-301 do
   begin
-    if (TemperaturArray[i]>-32768) then
+    if (chart.Data.ValueCount>0) and (i<chart.Data.ValueCount) and (i>0) and (chart.Options.PenCount>0) then
     begin
-      Mean:=Mean+TemperaturArray[i]/1000;
+      Mean:=Mean+chart.data.Value[0, i];
       inc(Values);
     end;
   end;
@@ -393,24 +400,71 @@ var
 
   ZeitBisSollwert:Single;
   ZeitBisSollwert_h, ZeitBisSollwert_min: integer;
+
+  i:integer;
+
+  displaymax, displaymin:double;
 begin
-  // TemperaturArray aktualisieren
-  TemperaturArray[TemperaturArrayPointer]:=round(CurrentTemp*1000);
-  inc(TemperaturArrayPointer);
-  if TemperaturArrayPointer>=length(TemperaturArray) then
-    TemperaturArrayPointer:=0;
+  // Temperatur in Scope anzeigen
+  chart.Data.Timestamp[GrowingIndex]:=now;
+  chart.Data.Value[0, GrowingIndex]:=CurrentTemp;
+  chart.Data.Value[1, GrowingIndex]:=(tempsoll.value-Nachtabsenkung+tempmax.value);
+  chart.Data.Value[2, GrowingIndex]:=(tempsoll.value-Nachtabsenkung+tempmin.value);
+  chart.Data.Value[3, GrowingIndex]:=CurrentTemp2Mean;
+  chart.Data.Value[4, GrowingIndex]:=CurrentTemp3Mean;
 
   TempMinVal:=CalcMinimum;
   TempMeanVal:=CalcMean;
   TempMaxVal:=CalcMaximum;
 
-  // Temperatur in Scope anzeigen
-  scope.Lines.Lines[0].Position:=round(CurrentTemp/0.3);
-  scope.Lines.Lines[1].Position:=round((tempsoll.value-Nachtabsenkung+tempmax.value)/0.3);
-  scope.Lines.Lines[2].Position:=round((tempsoll.value-Nachtabsenkung+tempmin.value)/0.3);
-  scope2.Lines.Lines[0].Position:=round(CurrentTemp/0.3);
-  scope2.Lines.Lines[1].Position:=round((tempsoll.value-Nachtabsenkung+tempmax.value)/0.3);
-  scope2.Lines.Lines[2].Position:=round((tempsoll.value-Nachtabsenkung+tempmin.value)/0.3);
+  if chart.Data.ValueCount>10 then
+  begin
+    OverallMin:=200;
+    OverallMax:=-200;
+    for i:=10 to chart.data.ValueCount-1 do
+    begin
+      if chart.Data.Value[0, i]<OverallMin then
+        OverallMin:=chart.Data.Value[0, GrowingIndex];
+      if chart.Data.Value[0, i]>OverallMax then
+        OverallMax:=chart.Data.Value[0, GrowingIndex];
+    end;
+  end else
+  begin
+    OverallMin:=-10;
+    OverallMax:=35;
+  end;
+
+  if zoom15mincheckbox.checked then
+  begin
+    displaymax:=(tempsoll.value-Nachtabsenkung+tempmax.value);
+    if (tempsoll.value-Nachtabsenkung+tempmin.value)>displaymax then
+      displaymax:=(tempsoll.value-Nachtabsenkung+tempmin.value);
+    if OverallMax>displaymax then
+      displaymax:=OverallMax;
+
+    displaymin:=(tempsoll.value-Nachtabsenkung+tempmax.value);
+    if (tempsoll.value-Nachtabsenkung+tempmin.value)<displaymin then
+      displaymin:=(tempsoll.value-Nachtabsenkung+tempmin.value);
+    if OverallMin<displaymin then
+      displaymin:=OverallMin;
+  end else
+  begin
+    displaymax:=(tempsoll.value-Nachtabsenkung+tempmax.value);
+    if (tempsoll.value-Nachtabsenkung+tempmin.value)>displaymax then
+      displaymax:=(tempsoll.value-Nachtabsenkung+tempmin.value);
+    if OverallMax>displaymax then
+      displaymax:=OverallMax;
+
+    displaymin:=(tempsoll.value-Nachtabsenkung+tempmax.value);
+    if (tempsoll.value-Nachtabsenkung+tempmin.value)<displaymin then
+      displaymin:=(tempsoll.value-Nachtabsenkung+tempmin.value);
+    if OverallMin<displaymin then
+      displaymin:=OverallMin;
+  end;
+  chart.Options.PrimaryYAxis.YMax:=round(trunc(displaymax/5)+0.99)*5;
+  chart.Options.PrimaryYAxis.YMin:=round(trunc(displaymin/5)-0.99)*5;
+  chart.Options.PrimaryYAxis.YDivisions:=trunc((chart.Options.PrimaryYAxis.YMax / 5) + (abs(chart.Options.PrimaryYAxis.YMin) / 5));
+  GrowingIndex:=GrowingIndex+1;
 
   // Temperatur in Label anzeigen
   if config.Showing then
@@ -421,17 +475,21 @@ begin
     tempmaxlbl.Caption:=floattostrf(TempMaxVal, ffFixed, 5, 1)+'°C';
   end;
 
-  if tempon.StateOn then
-  begin
-    // Aktuelle Temperatur als Kanalwert an PC_DIMMER senden
+  // Aktuelle Temperatur als Kanalwert an PC_DIMMER senden
+  if round(setupform.datainchtemp.Value)>0 then
     SetDLLEvent(round(setupform.datainchtemp.Value), RoundToByte(CurrentTemp));
-    // Minimale Temperatur als Kanalwert an PC_DIMMER senden
+  // Minimale Temperatur als Kanalwert an PC_DIMMER senden
+  if round(setupform.datainchmin.Value)>0 then
     SetDLLEvent(round(setupform.datainchmin.Value), RoundToByte(TempMinVal));
-    // Mittelwert der Temperatur als Kanalwert an PC_DIMMER senden
+  // Mittelwert der Temperatur als Kanalwert an PC_DIMMER senden
+  if round(setupform.datainchmean.Value)>0 then
     SetDLLEvent(round(setupform.datainchmean.Value), RoundToByte(TempMeanVal));
-    // Maximale Temperatur als Kanalwert an PC_DIMMER senden
+  // Maximale Temperatur als Kanalwert an PC_DIMMER senden
+  if round(setupform.datainchmax.Value)>0 then
     SetDLLEvent(round(setupform.datainchmax.Value), RoundToByte(TempMaxVal));
 
+  if tempon.StateOn then
+  begin
     // Mittelwert oder Aktueller Wert als Referenz
     if CheckBox1.Checked then
       ReglerTemperaturWert:=TempMeanVal
@@ -463,7 +521,8 @@ begin
     if ReglerTemperaturWert>(tempsoll.value-Nachtabsenkung+tempmax.Value) then
     begin
       // Zu Warm -> Ausschalten
-      SetDLLEvent(round(setupform.datainchon.Value), 0);
+      if round(setupform.datainchon.Value)>0 then
+        SetDLLEvent(round(setupform.datainchon.Value), 0);
       Heizbetrieb:=false;
       heizenled.active:=false;
       heizenled.status:=false;
@@ -475,7 +534,8 @@ begin
     if ReglerTemperaturWert<(tempsoll.value-Nachtabsenkung+tempmin.Value) then
     begin
       // Zu Kalt -> Einschalten
-      SetDLLEvent(round(setupform.datainchon.Value), 255);
+      if round(setupform.datainchon.Value)>0 then
+        SetDLLEvent(round(setupform.datainchon.Value), 255);
       Heizbetrieb:=true;
       heizenled.active:=true;
       label14.Caption:=_('Heizung ein');
@@ -489,7 +549,8 @@ begin
       begin
         // Aufheizen, da Sollwert noch nicht erreicht und Regelung gerade eingeschaltet
         RegelungNeuGestartet:=false;
-        SetDLLEvent(round(setupform.datainchon.Value), 255);
+        if round(setupform.datainchon.Value)>0 then
+          SetDLLEvent(round(setupform.datainchon.Value), 255);
         Heizbetrieb:=true;
         heizenled.active:=true;
         label14.Caption:=_('Heizung ein');
@@ -518,7 +579,8 @@ begin
   end else
   begin
     // Regelung ausgeschaltet
-    SetDLLEvent(round(setupform.datainchon.Value), 0);
+    if round(setupform.datainchon.Value)>0 then
+      SetDLLEvent(round(setupform.datainchon.Value), 0);
     Heizbetrieb:=false;
     tempokled.Status:=false;
     hystereseled.status:=false;
@@ -569,8 +631,8 @@ begin
     // Temperaturwerte und Kosten in CSV-Datei speichern
     Memo1.Lines.Add(DateToStr(now)+';'+TimeToStr(now)+';'+
       floattostrf(CurrentTemp, ffFixed, 5, 1)+';'+
-      floattostrf(config.CurrentTemp2, ffFixed, 5, 1)+';'+
-      floattostrf(config.CurrentTemp3, ffFixed, 5, 1)+';'+
+      floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+';'+
+      floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+';'+
       floattostrf((CurrentTemp-TempVor15Minuten), ffFixed, 5, 1)+';'+
       floattostrf(Kilowattstunden+((setupform.MaxInstalledPowerEdit.Value/1000)*(1/3600)), ffFixed, 5, 6)+';'+
       floattostrf(Kilowattstunden+((setupform.MaxInstalledPowerEdit.Value/1000)*(1/3600))*(setupform.PricePerkWhEdit.Value/100), ffFixed, 5, 6));
@@ -599,28 +661,6 @@ begin
   else if TempInteger<0 then
     TempInteger:=0;
   result:=TempInteger;
-end;
-
-procedure TConfig.Button3Click(Sender: TObject);
-begin
-  scope2.Visible:=not scope2.Visible;
-  scope.Visible:=not scope.Visible;
-
-  if scope.Visible then
-  begin
-    label20.Caption:='5min';
-    label19.Caption:='4min';
-    label18.Caption:='3min';
-    label17.Caption:='2min';
-    label16.Caption:='1min';
-  end else
-  begin
-    label20.Caption:='5h';
-    label19.Caption:='4h';
-    label18.Caption:='3h';
-    label17.Caption:='2h';
-    label16.Caption:='1h';
-  end;
 end;
 
 procedure TConfig.FormHide(Sender: TObject);
@@ -713,11 +753,25 @@ begin
   if button2.Caption='>>' then
   begin
     button2.Caption:='<<';
-    config.ClientWidth:=945;
+
+    chart.Visible:=true;
+    panel2.Visible:=chart.Visible;
+    panel4.Visible:=chart.Visible;
+    zoom15mincheckbox.Visible:=chart.Visible;
+
+    config.ClientWidth:=1322;
+    config.ClientHeight:=453;
   end else
   begin
     button2.Caption:='>>';
-    config.ClientWidth:=302;
+
+    config.ClientWidth:=310;
+    config.ClientHeight:=350;
+
+    chart.Visible:=false;
+    panel2.Visible:=chart.Visible;
+    panel4.Visible:=chart.Visible;
+    zoom15mincheckbox.Visible:=chart.Visible;
   end;
 end;
 
@@ -743,8 +797,6 @@ var
   DeviceDescription: string;
   Bus: string;
 
-  i:integer;
-
   LReg:TRegistry;
   serialport, regbaudrate:integer;
   TestHandle : integer;
@@ -754,8 +806,6 @@ begin
   LoadConfigManagerApi;
 
   Shutdown:=false;
-  for i:=0 to length(TemperaturArray)-1 do
-    TemperaturArray[i]:=-32768;
   RegelungNeuGestartet:=false;
   Heizbetrieb:=false;
   TempVor15Minuten:=-1000;
@@ -862,11 +912,12 @@ begin
   LReg.Free;
 
   // enumerate all serial devices (COM port devices)
-    SerialGUID := GUID_DEVINTERFACE_COMPORT;
-//    SerialGUID := GUID_DEVINTERFACE_SERENUM_BUS_ENUMERATOR;
+  SerialGUID := GUID_DEVINTERFACE_COMPORT;
+//  SerialGUID := GUID_DEVINTERFACE_SERENUM_BUS_ENUMERATOR;
   PnPHandle := SetupDiGetClassDevs(@SerialGUID, nil, 0, DIGCF_PRESENT or DIGCF_DEVICEINTERFACE);
   if PnPHandle = Pointer(INVALID_HANDLE_VALUE) then
     Exit;
+
   setupform.portchange.Items.BeginUpdate;
   setupform.portchange.Items.Clear;
   Devn := 0;
@@ -955,6 +1006,40 @@ begin
   Label3.Caption:='('+setupform.Temp2LabelEdit.Text+')';
   Label4.Caption:='('+setupform.Temp3LabelEdit.Text+')';
   Label6.Caption:='('+inttostr(round(setupform.TimeForDeltaTEdit.Value))+'min)';
+
+
+  // Chart vorbereiten
+//  chart.Options.PenValueLabels[0]:=true;
+  chart.Options.PenCount:=5;
+  chart.Options.PenUnit.Clear;
+
+  chart.Options.PenColor[0]:=clblack;
+  chart.Options.PenUnit.Add('°C');
+
+  chart.Options.PenValueLabels[1]:=false;
+  chart.Options.PenColor[1]:=clred;
+  chart.Options.PenUnit.Add('°C');
+
+  chart.Options.PenValueLabels[2]:=false;
+  chart.Options.PenColor[2]:=cllime;
+  chart.Options.PenUnit.Add('°C');
+
+  chart.Options.PenValueLabels[3]:=false;
+  chart.Options.PenColor[3]:=clolive;
+  chart.Options.PenUnit.Add('°C');
+
+  chart.Options.PenValueLabels[4]:=false;
+  chart.Options.PenColor[4]:=clteal;
+  chart.Options.PenUnit.Add('°C');
+
+  chart.Options.PenLineWidth:=2;
+  chart.Options.XAxisDateTimeMode:=true;
+  chart.Options.XAxisDateTimeFormat:='hh:mm:ss';
+  chart.Options.XAxisDivisionMarkers:=true;
+  chart.Options.XAxisValuesPerDivision:=5;
+
+  chart.Options.AxisFont.Name:='Calibri';
+  chart.Options.AxisFont.Size:=8;
 end;
 
 procedure TConfig.RegisterPluginCommandsTimer(Sender: TObject);
@@ -968,8 +1053,72 @@ end;
 procedure TConfig.FormDestroy(Sender: TObject);
 begin
 	setupform.Free;
-  comport.Disconnect;
-  SekundenTimer.Enabled:=false;
+end;
+
+procedure TConfig.TestCaseBtnClick(Sender: TObject);
+begin
+  CurrentTemp:=1.1;
+  DemoData.Enabled:=true;
+  SekundenTimer.Enabled:=true;
+  SekundenTimer.Interval:=75;
+  FuenfzehnminutenCounter:=round(setupform.TimeForDeltaTEdit.Value*60)-20;
+end;
+
+procedure TConfig.DemoDataTimer(Sender: TObject);
+begin
+  CurrentTemp:=CurrentTemp+0.01;
+
+  DLLSendMessageTest(integer(14), integer(random(10)+60), integer(random(255)));
+
+  if CurrentTemp>30 then
+    CurrentTemp:=CurrentTemp-10;
+
+  if TempVor15Minuten=-1000 then
+    TempVor15Minuten:=CurrentTemp;
+end;
+
+procedure TConfig.DLLSendMessageTest(MSG, Data1, Data2: Variant);
+var
+  i:integer;
+begin
+      if Integer(Data1)=round(setupform.temp2_msb.value) then
+      begin
+        config.temp2msb:=Integer(Data2);
+      end;
+      if Integer(Data1)=round(setupform.temp2_lsb.value) then
+      begin
+        config.temp2lsb:=Integer(Data2);
+        config.CurrentTemp2[config.CurrentTemp2MeanIndex]:=(((config.temp2msb shl 8)+config.temp2lsb)-550)/10;
+        config.CurrentTemp2MeanIndex:=config.CurrentTemp2MeanIndex+1;
+        if config.CurrentTemp2MeanIndex>=length(config.CurrentTemp2) then
+          config.CurrentTemp2MeanIndex:=0;
+      end;
+
+      if Integer(Data1)=round(setupform.temp3_msb.value) then
+      begin
+        config.temp3msb:=Integer(Data2);
+      end;
+      if Integer(Data1)=round(setupform.temp3_lsb.value) then
+      begin
+        config.temp3lsb:=Integer(Data2);
+        config.CurrentTemp3[config.CurrentTemp3MeanIndex]:=(((config.temp3msb shl 8)+config.temp3lsb)-550)/10;
+        config.CurrentTemp3MeanIndex:=config.CurrentTemp3MeanIndex+1;
+        if config.CurrentTemp3MeanIndex>=length(config.CurrentTemp3) then
+          config.CurrentTemp3MeanIndex:=0;
+      end;
+
+      config.CurrentTemp2Mean:=0;
+      config.CurrentTemp3Mean:=0;
+      for i:=0 to length(config.CurrentTemp2)-1 do
+      begin
+        config.CurrentTemp2Mean:=config.CurrentTemp2Mean+config.CurrentTemp2[i];
+        config.CurrentTemp3Mean:=config.CurrentTemp3Mean+config.CurrentTemp3[i];
+      end;
+      config.CurrentTemp2Mean:=config.CurrentTemp2Mean/length(config.CurrentTemp2);
+      config.CurrentTemp3Mean:=config.CurrentTemp3Mean/length(config.CurrentTemp3);
+
+      config.temp2lbl.caption:=floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+'°C';
+      config.temp3lbl.caption:=floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+'°C';
 end;
 
 end.

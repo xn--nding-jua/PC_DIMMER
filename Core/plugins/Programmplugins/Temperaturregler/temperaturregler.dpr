@@ -21,10 +21,14 @@ uses
   setup in 'setup.pas' {setupform},
   messagesystem in 'messagesystem.pas';
 
+var
+  ShuttingDown:boolean;
+  
 {$R *.res}
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
+  ShuttingDown:=false;
   Application.CreateForm(TConfig, Config);
   @Config.SetDLLEvent:=CallbackSetDLLValueEvent;
   @Config.SendMSG:=CallbackSendMessage;
@@ -33,16 +37,18 @@ end;
 procedure DLLStart;stdcall;
 begin
   // DLL wird bei FormShow() gestartet
+  config.StartUp;
 end;
 
 function DLLDestroy:boolean;stdcall;
 begin
+  ShuttingDown:=true;
 
   // Letzte Temperaturwerte eintragen
   Config.Memo1.Lines.Add(DateToStr(now)+';'+TimeToStr(now)+';'+
     floattostrf(Config.CurrentTemp, ffFixed, 5, 1)+';'+
-    floattostrf(config.CurrentTemp2, ffFixed, 5, 1)+';'+
-    floattostrf(config.CurrentTemp3, ffFixed, 5, 1)+';'+
+    floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+';'+
+    floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+';'+
     floattostrf((Config.CurrentTemp-Config.TempVor15Minuten), ffFixed, 5, 1)+';'+
     floattostrf(Config.Kilowattstunden+(7.5*(1/3600)), ffFixed, 5, 6)+';'+
     floattostrf(Config.Kilowattstunden+(7.5*(1/3600))*0.24, ffFixed, 5, 6));
@@ -55,13 +61,25 @@ begin
       stringreplace(TimeToStr(now), ':', '', [rfReplaceAll, rfIgnoreCase])+'_Temperatur.csv');
   end;
 
+  config.chart.Options.AutoUpdateGraph:=false;
+
+  Application.ProcessMessages;
+  sleep(150);
+
   Config.Shutdown:=true;
   if config.comport.Connected then
 		Config.comport.Disconnect;
   Config.SekundenTimer.Enabled:=false;
 
+  Application.ProcessMessages;
+  sleep(150);
+
 	@config.SetDLLEvent:=nil;
+
 	Config.free;
+
+  Application.ProcessMessages;
+  sleep(150);
 
   Result:=True;
 end;
@@ -78,7 +96,7 @@ end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v1.6');
+  Result := PChar('v1.7');
 end;
 
 procedure DLLShow;stdcall;
@@ -91,35 +109,53 @@ begin
 end;
 
 procedure DLLSendMessage(MSG:Byte; Data1, Data2:Variant);stdcall;
+var
+  i:integer;
 begin
+  if ShuttingDown then
+    exit;
+
   case MSG of
-    14:
+    MSG_ACTUALCHANNELVALUE:
     begin
       if Integer(Data1)=round(setupform.temp2_msb.value) then
       begin
         config.temp2msb:=Integer(Data2);
-        config.CurrentTemp2:=(((config.temp2msb shl 8)+config.temp2lsb)-550)/10;
-        config.temp2lbl.caption:=floattostrf(config.CurrentTemp2, ffFixed, 5, 1)+'°C';
       end;
       if Integer(Data1)=round(setupform.temp2_lsb.value) then
       begin
         config.temp2lsb:=Integer(Data2);
-        config.CurrentTemp2:=(((config.temp2msb shl 8)+config.temp2lsb)-550)/10;
-        config.temp2lbl.caption:=floattostrf(config.CurrentTemp2, ffFixed, 5, 1)+'°C';
+        config.CurrentTemp2[config.CurrentTemp2MeanIndex]:=(((config.temp2msb shl 8)+config.temp2lsb)-550)/10;
+        config.CurrentTemp2MeanIndex:=config.CurrentTemp2MeanIndex+1;
+        if config.CurrentTemp2MeanIndex>=length(config.CurrentTemp2) then
+          config.CurrentTemp2MeanIndex:=0;
       end;
 
       if Integer(Data1)=round(setupform.temp3_msb.value) then
       begin
         config.temp3msb:=Integer(Data2);
-        config.CurrentTemp3:=(((config.temp3msb shl 8)+config.temp3lsb)-550)/10;
-        config.temp3lbl.caption:=floattostrf(config.CurrentTemp3, ffFixed, 5, 1)+'°C';
       end;
       if Integer(Data1)=round(setupform.temp3_lsb.value) then
       begin
         config.temp3lsb:=Integer(Data2);
-        config.CurrentTemp3:=(((config.temp3msb shl 8)+config.temp3lsb)-550)/10;
-        config.temp3lbl.caption:=floattostrf(config.CurrentTemp3, ffFixed, 5, 1)+'°C';
+        config.CurrentTemp3[config.CurrentTemp3MeanIndex]:=(((config.temp3msb shl 8)+config.temp3lsb)-550)/10;
+        config.CurrentTemp3MeanIndex:=config.CurrentTemp3MeanIndex+1;
+        if config.CurrentTemp3MeanIndex>=length(config.CurrentTemp3) then
+          config.CurrentTemp3MeanIndex:=0;
       end;
+
+      config.CurrentTemp2Mean:=0;
+      config.CurrentTemp3Mean:=0;
+      for i:=0 to length(config.CurrentTemp2)-1 do
+      begin
+        config.CurrentTemp2Mean:=config.CurrentTemp2Mean+config.CurrentTemp2[i];
+        config.CurrentTemp3Mean:=config.CurrentTemp3Mean+config.CurrentTemp3[i];
+      end;
+      config.CurrentTemp2Mean:=config.CurrentTemp2Mean/length(config.CurrentTemp2);
+      config.CurrentTemp3Mean:=config.CurrentTemp3Mean/length(config.CurrentTemp3);
+
+      config.temp2lbl.caption:=floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+'°C';
+      config.temp3lbl.caption:=floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+'°C';
     end;
     MSG_EDITPLUGINSCENE:
     begin

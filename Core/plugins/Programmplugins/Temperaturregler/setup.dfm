@@ -209,7 +209,6 @@ object setupform: Tsetupform
       Width = 57
       Height = 21
       MaxValue = 8192.000000000000000000
-      MinValue = 1.000000000000000000
       Value = 1.000000000000000000
       TabOrder = 0
     end
@@ -219,7 +218,6 @@ object setupform: Tsetupform
       Width = 57
       Height = 21
       MaxValue = 8192.000000000000000000
-      MinValue = 1.000000000000000000
       Value = 5.000000000000000000
       TabOrder = 1
     end
@@ -239,7 +237,6 @@ object setupform: Tsetupform
       Width = 57
       Height = 21
       MaxValue = 8192.000000000000000000
-      MinValue = 1.000000000000000000
       Value = 2.000000000000000000
       TabOrder = 3
     end
@@ -249,7 +246,6 @@ object setupform: Tsetupform
       Width = 57
       Height = 21
       MaxValue = 8192.000000000000000000
-      MinValue = 1.000000000000000000
       Value = 3.000000000000000000
       TabOrder = 4
     end
@@ -259,7 +255,6 @@ object setupform: Tsetupform
       Width = 57
       Height = 21
       MaxValue = 8192.000000000000000000
-      MinValue = 1.000000000000000000
       Value = 4.000000000000000000
       TabOrder = 5
     end

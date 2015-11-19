@@ -1,11 +1,9 @@
 object Config: TConfig
-  Left = 487
-  Top = 129
-  BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = bsSingle
+  Left = 269
+  Top = 334
+  Width = 1330
+  Height = 483
   Caption = 'Temperaturregler'
-  ClientHeight = 345
-  ClientWidth = 945
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -156,773 +154,793 @@ object Config: TConfig
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object GroupBox3: TGroupBox
-    Left = 8
-    Top = 8
-    Width = 289
+  object chart: TJvChart
+    Left = 305
+    Top = 9
+    Width = 1008
     Height = 329
-    Caption = ' Temperatureinstellungen '
+    Align = alClient
+    Options.XAxisValuesPerDivision = 0
+    Options.XAxisLabelAlignment = taLeftJustify
+    Options.XAxisDateTimeMode = False
+    Options.XOrigin = 0
+    Options.YOrigin = 0
+    Options.YStartOffset = 30
+    Options.PrimaryYAxis.YMax = 10.000000000000000000
+    Options.PrimaryYAxis.YLegendDecimalPlaces = 0
+    Options.SecondaryYAxis.YMax = 10.000000000000000000
+    Options.SecondaryYAxis.YLegendDecimalPlaces = 0
+    Options.MouseDragObjects = False
+    Options.LegendRowCount = 0
+    Options.AxisLineWidth = 3
+    Options.HeaderFont.Charset = DEFAULT_CHARSET
+    Options.HeaderFont.Color = clWindowText
+    Options.HeaderFont.Height = -11
+    Options.HeaderFont.Name = 'MS Sans Serif'
+    Options.HeaderFont.Style = []
+    Options.LegendFont.Charset = DEFAULT_CHARSET
+    Options.LegendFont.Color = clWindowText
+    Options.LegendFont.Height = -11
+    Options.LegendFont.Name = 'MS Sans Serif'
+    Options.LegendFont.Style = []
+    Options.AxisFont.Charset = DEFAULT_CHARSET
+    Options.AxisFont.Color = clWindowText
+    Options.AxisFont.Height = -11
+    Options.AxisFont.Name = 'MS Sans Serif'
+    Options.AxisFont.Style = []
+    Options.PaperColor = clWhite
+    Options.AxisLineColor = clBlack
+    Options.CursorColor = clBlack
+    Options.CursorStyle = psSolid
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 338
+    Width = 1322
+    Height = 115
+    Align = alBottom
+    BevelOuter = bvNone
     TabOrder = 0
-    object tempcurrentlbl: TLabel
-      Left = 152
-      Top = 35
-      Width = 129
-      Height = 46
-      Alignment = taCenter
-      AutoSize = False
-      Caption = '0,0'#176'C'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clGreen
-      Font.Height = -40
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object Label14: TLabel
+    object GroupBox1: TGroupBox
       Left = 8
-      Top = 104
-      Width = 273
-      Height = 21
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Temperaturregler deaktiviert...'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object Bevel1: TBevel
-      Left = 8
-      Top = 126
-      Width = 273
-      Height = 1
-      Shape = bsTopLine
-    end
-    object Bevel3: TBevel
-      Left = 8
-      Top = 102
-      Width = 273
-      Height = 1
-      Shape = bsTopLine
-    end
-    object heizenled: TJvLED
-      Left = 11
-      Top = 54
-      ColorOn = clRed
-      ColorOff = clBlack
-      Interval = 500
-      Status = False
-    end
-    object Label8: TLabel
-      Left = 32
-      Top = 56
-      Width = 33
-      Height = 13
-      Caption = 'Heizen'
-    end
-    object Label26: TLabel
-      Left = 32
-      Top = 40
-      Width = 47
-      Height = 13
-      Caption = 'Hysterese'
-    end
-    object hystereseled: TJvLED
-      Left = 11
-      Top = 38
-      ColorOff = clBlack
-      Status = False
-    end
-    object tempokled: TJvLED
-      Left = 11
-      Top = 22
-      Status = False
-    end
-    object Label27: TLabel
-      Left = 32
-      Top = 24
-      Width = 48
-      Height = 13
-      Caption = 'Temp. OK'
-    end
-    object nachtabsled: TJvLED
-      Left = 11
-      Top = 70
-      ColorOn = clYellow
-      ColorOff = clBlack
-      Interval = 500
-      Status = False
-    end
-    object Label24: TLabel
-      Left = 32
-      Top = 72
-      Width = 49
-      Height = 13
-      Caption = 'Nachtabs.'
-    end
-    object Label9: TLabel
-      Left = 152
-      Top = 20
-      Width = 129
-      Height = 13
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Aktuelle Temperatur:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object tempon: TJvSwitch
-      Left = 88
-      Top = 24
-      Width = 65
-      Height = 60
-      Caption = 'Regelung ein'
+      Top = 0
+      Width = 289
+      Height = 105
+      Caption = ' Weitere Temperatursensoren '
       TabOrder = 0
-      TextPosition = tpBelow
-      OnOn = temponOn
-      OnOff = temponOff
+      object Label2: TLabel
+        Left = 8
+        Top = 20
+        Width = 137
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Temperatur 2:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object temp2lbl: TLabel
+        Left = 8
+        Top = 51
+        Width = 137
+        Height = 46
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '0,0'#176'C'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clOlive
+        Font.Height = -40
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label1: TLabel
+        Left = 144
+        Top = 20
+        Width = 137
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Temperatur 3:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object temp3lbl: TLabel
+        Left = 144
+        Top = 51
+        Width = 137
+        Height = 46
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '0,0'#176'C'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clTeal
+        Font.Height = -40
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label3: TLabel
+        Left = 8
+        Top = 34
+        Width = 137
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '(Eingangst'#252'r)'
+      end
+      object Label4: TLabel
+        Left = 144
+        Top = 34
+        Width = 137
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '(Decke)'
+      end
     end
-    object Button1: TButton
-      Left = 8
-      Top = 296
-      Width = 233
-      Height = 25
-      Caption = 'Erweiterte Einstellungen...'
+    object GroupBox2: TGroupBox
+      Left = 304
+      Top = 0
+      Width = 337
+      Height = 105
+      Caption = ' Ermittelte Werte '
       TabOrder = 1
-      OnClick = Button1Click
-    end
-    object GroupBox5: TGroupBox
-      Left = 8
-      Top = 224
-      Width = 273
-      Height = 65
-      Caption = ' Nachtabsenkung '
-      TabOrder = 2
-      object Label25: TLabel
-        Left = 218
-        Top = 16
-        Width = 3
+      object Label5: TLabel
+        Left = 8
+        Top = 20
+        Width = 137
         Height = 13
-        Caption = ':'
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Delta T:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
       end
-      object Label28: TLabel
-        Left = 218
-        Top = 40
-        Width = 3
+      object Label6: TLabel
+        Left = 8
+        Top = 34
+        Width = 137
         Height = 13
-        Caption = ':'
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '(in den letzten 15 Minuten)'
       end
-      object Label29: TLabel
-        Left = 153
-        Top = 16
-        Width = 16
+      object deltatemplbl: TLabel
+        Left = 8
+        Top = 51
+        Width = 137
+        Height = 46
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '... '#176'C'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -40
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label33: TLabel
+        Left = 160
+        Top = 20
+        Width = 161
         Height = 13
-        Alignment = taRightJustify
-        Caption = 'Ab:'
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Verbrauch:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
       end
-      object Label30: TLabel
+      object stromverbrauchlbl: TLabel
+        Left = 160
+        Top = 34
+        Width = 161
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '0,000 kWh'
+      end
+      object stromkostenlbl: TLabel
+        Left = 160
+        Top = 51
+        Width = 161
+        Height = 46
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '0,00 '#8364
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -40
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Memo1: TMemo
+        Left = 136
+        Top = 8
+        Width = 49
+        Height = 25
+        TabOrder = 0
+        Visible = False
+      end
+      object TestCaseBtn: TButton
         Left = 152
         Top = 40
-        Width = 17
-        Height = 13
-        Alignment = taRightJustify
-        Caption = 'Bis:'
-      end
-      object Label31: TLabel
-        Left = 8
-        Top = 40
-        Width = 57
-        Height = 13
-        Alignment = taRightJustify
-        Caption = 'Absenkung:'
-      end
-      object Label32: TLabel
-        Left = 120
-        Top = 40
-        Width = 11
-        Height = 13
-        Caption = #176'C'
-      end
-      object CheckBox2: TCheckBox
-        Left = 8
-        Top = 16
-        Width = 129
-        Height = 17
-        Caption = 'Nachtabsenkung ein'
-        TabOrder = 0
-      end
-      object absenkung_h_startedit: TJvSpinEdit
-        Left = 176
-        Top = 12
-        Width = 41
-        Height = 21
-        MaxValue = 23.000000000000000000
-        Value = 22.000000000000000000
-        TabOrder = 1
-      end
-      object absenkung_min_startedit: TJvSpinEdit
-        Left = 224
-        Top = 12
-        Width = 41
-        Height = 21
-        MaxValue = 59.000000000000000000
-        Value = 30.000000000000000000
-        TabOrder = 2
-      end
-      object absenkung_h_stopedit: TJvSpinEdit
-        Left = 176
-        Top = 36
-        Width = 41
-        Height = 21
-        MaxValue = 23.000000000000000000
-        Value = 8.000000000000000000
-        TabOrder = 3
-      end
-      object absenkung_min_stopedit: TJvSpinEdit
-        Left = 224
-        Top = 36
-        Width = 41
-        Height = 21
-        MaxValue = 59.000000000000000000
-        TabOrder = 4
-      end
-      object absenkung_temp: TJvSpinEdit
-        Left = 72
-        Top = 36
-        Width = 41
-        Height = 21
-        MinValue = -20.000000000000000000
-        Value = -7.000000000000000000
-        TabOrder = 5
-        OnChange = tempmaxChange
-      end
-    end
-    object GroupBox6: TGroupBox
-      Left = 8
-      Top = 144
-      Width = 273
-      Height = 73
-      Caption = ' Temperatur-Sollwert '
-      TabOrder = 3
-      object Label13: TLabel
-        Left = 70
-        Top = 20
-        Width = 11
-        Height = 13
-        Caption = #176'C'
-      end
-      object Label10: TLabel
-        Left = 104
-        Top = 16
-        Width = 97
-        Height = 13
-        Alignment = taRightJustify
-        AutoSize = False
-        Caption = 'Ein-Schwelle: dT<'
-      end
-      object Label11: TLabel
-        Left = 104
-        Top = 40
-        Width = 97
-        Height = 13
-        Alignment = taRightJustify
-        AutoSize = False
-        Caption = 'Aus-Schwelle: dT>'
-      end
-      object Label22: TLabel
-        Left = 258
-        Top = 16
-        Width = 7
-        Height = 13
-        Caption = 'K'
-      end
-      object Label23: TLabel
-        Left = 258
-        Top = 40
-        Width = 7
-        Height = 13
-        Caption = 'K'
-      end
-      object tempsoll: TJvSpinEdit
-        Left = 10
-        Top = 16
-        Width = 55
-        Height = 21
-        Increment = 0.100000000000000000
-        MaxValue = 30.000000000000000000
-        ValueType = vtFloat
-        Value = 19.000000000000000000
-        TabOrder = 0
-      end
-      object tempmin: TJvSpinEdit
-        Left = 208
-        Top = 12
-        Width = 49
-        Height = 21
-        Increment = 0.100000000000000000
-        MaxValue = 10.000000000000000000
-        MinValue = -10.000000000000000000
-        ValueType = vtFloat
-        Value = -1.000000000000000000
-        TabOrder = 1
-        OnChange = tempminChange
-      end
-      object tempmax: TJvSpinEdit
-        Left = 208
-        Top = 36
-        Width = 49
-        Height = 21
-        Increment = 0.100000000000000000
-        MaxValue = 10.000000000000000000
-        MinValue = -10.000000000000000000
-        ValueType = vtFloat
-        Value = 1.000000000000000000
-        TabOrder = 2
-        OnChange = tempmaxChange
-      end
-      object CheckBox1: TCheckBox
-        Left = 8
-        Top = 40
-        Width = 97
+        Width = 75
         Height = 25
-        Caption = 'Mittelwert als Referenz'
-        TabOrder = 3
-        WordWrap = True
+        Caption = 'TestCaseBtn'
+        TabOrder = 1
+        Visible = False
+        OnClick = TestCaseBtnClick
       end
     end
-    object Button2: TButton
-      Left = 248
-      Top = 296
-      Width = 33
-      Height = 25
-      Caption = '<<'
-      TabOrder = 4
-      OnClick = Button2Click
+    object GroupBox7: TGroupBox
+      Left = 648
+      Top = 0
+      Width = 665
+      Height = 105
+      Caption = ' Statistik- und Prognosewerte '
+      TabOrder = 2
+      object tempminlbl: TLabel
+        Left = 16
+        Top = 50
+        Width = 145
+        Height = 46
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '0,0'#176'C'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlue
+        Font.Height = -40
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object tempmeanlbl: TLabel
+        Left = 168
+        Top = 50
+        Width = 145
+        Height = 46
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '0,0'#176'C'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -40
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object tempmaxlbl: TLabel
+        Left = 320
+        Top = 50
+        Width = 145
+        Height = 46
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '0,0'#176'C'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clRed
+        Font.Height = -40
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label7: TLabel
+        Left = 16
+        Top = 18
+        Width = 145
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Min. Temperatur:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label12: TLabel
+        Left = 168
+        Top = 18
+        Width = 145
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Mittelwert:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label15: TLabel
+        Left = 320
+        Top = 18
+        Width = 145
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Max. Temperatur:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label34: TLabel
+        Left = 472
+        Top = 18
+        Width = 145
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Zeit bis Sollwert:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object TimeToSollwertLbl: TLabel
+        Left = 472
+        Top = 58
+        Width = 145
+        Height = 38
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '...'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -27
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label16: TLabel
+        Left = 16
+        Top = 34
+        Width = 145
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '(in den letzten 5 Minuten)'
+      end
+      object Label17: TLabel
+        Left = 168
+        Top = 34
+        Width = 145
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '(in den letzten 5 Minuten)'
+      end
+      object Label18: TLabel
+        Left = 320
+        Top = 34
+        Width = 145
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '(in den letzten 5 Minuten)'
+      end
+      object Label19: TLabel
+        Left = 480
+        Top = 34
+        Width = 137
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+      end
     end
   end
-  object GroupBox4: TGroupBox
-    Left = 304
-    Top = 8
-    Width = 633
-    Height = 217
-    Caption = ' Temperaturverlaufskurve und -werte der letzten Zeit '
+  object Panel1: TPanel
+    Left = 0
+    Top = 9
+    Width = 305
+    Height = 329
+    Align = alLeft
+    BevelOuter = bvNone
     TabOrder = 1
-    object scope: TJvSimScope
-      Left = 16
-      Top = 24
-      Width = 600
-      Height = 100
-      Active = False
-      BaseLine = 1
-      HorizontalGridSize = 10
-      Interval = 100
-      Lines = <
-        item
-          Name = 'temperatur'
-          Color = clYellow
-          Position = 0
-        end
-        item
-          Name = 'tempmax'
-          Color = clRed
-          Position = 75
-        end
-        item
-          Name = 'tempmin'
-          Position = 25
-        end>
-      Minimum = 0
-      Maximum = 100
-      TotalTimeSteps = 600
-      VerticalGridSize = 10
-    end
-    object tempminlbl: TLabel
-      Left = 16
-      Top = 162
-      Width = 145
-      Height = 46
-      Alignment = taCenter
-      AutoSize = False
-      Caption = '0,0'#176'C'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clBlue
-      Font.Height = -40
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object tempmeanlbl: TLabel
-      Left = 168
-      Top = 162
-      Width = 145
-      Height = 46
-      Alignment = taCenter
-      AutoSize = False
-      Caption = '0,0'#176'C'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -40
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object tempmaxlbl: TLabel
-      Left = 320
-      Top = 162
-      Width = 145
-      Height = 46
-      Alignment = taCenter
-      AutoSize = False
-      Caption = '0,0'#176'C'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clRed
-      Font.Height = -40
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object Label7: TLabel
-      Left = 16
-      Top = 146
-      Width = 145
-      Height = 13
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Min. Temperatur (5min):'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object Label12: TLabel
-      Left = 168
-      Top = 146
-      Width = 145
-      Height = 13
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Mittelwert (5min):'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object Label15: TLabel
-      Left = 320
-      Top = 146
-      Width = 145
-      Height = 13
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Max. Temperatur (5min):'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object Label16: TLabel
-      Left = 488
-      Top = 128
-      Width = 22
-      Height = 13
-      Caption = '1min'
-    end
-    object Label17: TLabel
-      Left = 368
-      Top = 128
-      Width = 22
-      Height = 13
-      Caption = '2min'
-    end
-    object Label18: TLabel
-      Left = 248
-      Top = 128
-      Width = 22
-      Height = 13
-      Caption = '3min'
-    end
-    object Label19: TLabel
-      Left = 128
-      Top = 128
-      Width = 22
-      Height = 13
-      Caption = '4min'
-    end
-    object Label20: TLabel
+    object GroupBox3: TGroupBox
       Left = 8
-      Top = 128
-      Width = 22
-      Height = 13
-      Caption = '5min'
-    end
-    object Label21: TLabel
-      Left = 600
-      Top = 128
-      Width = 22
-      Height = 13
-      Caption = 'Jetzt'
-    end
-    object scope2: TJvSimScope
-      Left = 16
-      Top = 24
-      Width = 600
-      Height = 100
-      Active = False
-      BaseLine = 1
-      HorizontalGridSize = 10
-      Interval = 6000
-      Lines = <
-        item
-          Name = 'temperatur'
-          Color = clYellow
-          Position = 0
-        end
-        item
-          Name = 'tempmax'
-          Color = clRed
-          Position = 75
-        end
-        item
-          Name = 'tempmin'
-          Position = 25
-        end>
-      Minimum = 0
-      Maximum = 100
-      TotalTimeSteps = 600
-      VerticalGridSize = 10
-      Visible = False
-    end
-    object Label34: TLabel
-      Left = 472
-      Top = 146
-      Width = 145
-      Height = 13
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Zeit bis Sollwert:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object TimeToSollwertLbl: TLabel
-      Left = 472
-      Top = 170
-      Width = 145
-      Height = 38
-      Alignment = taCenter
-      AutoSize = False
-      Caption = '...'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clBlack
-      Font.Height = -27
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object Button3: TButton
-      Left = 544
-      Top = 8
-      Width = 75
-      Height = 17
-      Caption = '5min / 5h'
+      Top = 0
+      Width = 289
+      Height = 329
+      Caption = ' Temperatureinstellungen '
       TabOrder = 0
-      OnClick = Button3Click
+      object tempcurrentlbl: TLabel
+        Left = 152
+        Top = 35
+        Width = 129
+        Height = 46
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '0,0'#176'C'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clGreen
+        Font.Height = -40
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label14: TLabel
+        Left = 8
+        Top = 104
+        Width = 273
+        Height = 21
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Temperaturregler deaktiviert...'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Bevel1: TBevel
+        Left = 8
+        Top = 126
+        Width = 273
+        Height = 1
+        Shape = bsTopLine
+      end
+      object Bevel3: TBevel
+        Left = 8
+        Top = 102
+        Width = 273
+        Height = 1
+        Shape = bsTopLine
+      end
+      object heizenled: TJvLED
+        Left = 11
+        Top = 54
+        ColorOn = clRed
+        ColorOff = clBlack
+        Interval = 500
+        Status = False
+      end
+      object Label8: TLabel
+        Left = 32
+        Top = 56
+        Width = 33
+        Height = 13
+        Caption = 'Heizen'
+      end
+      object Label26: TLabel
+        Left = 32
+        Top = 40
+        Width = 47
+        Height = 13
+        Caption = 'Hysterese'
+      end
+      object hystereseled: TJvLED
+        Left = 11
+        Top = 38
+        ColorOff = clBlack
+        Status = False
+      end
+      object tempokled: TJvLED
+        Left = 11
+        Top = 22
+        Status = False
+      end
+      object Label27: TLabel
+        Left = 32
+        Top = 24
+        Width = 48
+        Height = 13
+        Caption = 'Temp. OK'
+      end
+      object nachtabsled: TJvLED
+        Left = 11
+        Top = 70
+        ColorOn = clYellow
+        ColorOff = clBlack
+        Interval = 500
+        Status = False
+      end
+      object Label24: TLabel
+        Left = 32
+        Top = 72
+        Width = 49
+        Height = 13
+        Caption = 'Nachtabs.'
+      end
+      object Label9: TLabel
+        Left = 152
+        Top = 20
+        Width = 129
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Aktuelle Temperatur:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object tempon: TJvSwitch
+        Left = 88
+        Top = 24
+        Width = 65
+        Height = 60
+        Caption = 'Regelung ein'
+        TabOrder = 0
+        TextPosition = tpBelow
+        OnOn = temponOn
+        OnOff = temponOff
+      end
+      object Button1: TButton
+        Left = 8
+        Top = 296
+        Width = 233
+        Height = 25
+        Caption = 'Erweiterte Einstellungen...'
+        TabOrder = 1
+        OnClick = Button1Click
+      end
+      object GroupBox5: TGroupBox
+        Left = 8
+        Top = 224
+        Width = 273
+        Height = 65
+        Caption = ' Nachtabsenkung '
+        TabOrder = 2
+        object Label25: TLabel
+          Left = 218
+          Top = 16
+          Width = 3
+          Height = 13
+          Caption = ':'
+        end
+        object Label28: TLabel
+          Left = 218
+          Top = 40
+          Width = 3
+          Height = 13
+          Caption = ':'
+        end
+        object Label29: TLabel
+          Left = 153
+          Top = 16
+          Width = 16
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Ab:'
+        end
+        object Label30: TLabel
+          Left = 152
+          Top = 40
+          Width = 17
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Bis:'
+        end
+        object Label31: TLabel
+          Left = 8
+          Top = 40
+          Width = 57
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Absenkung:'
+        end
+        object Label32: TLabel
+          Left = 120
+          Top = 40
+          Width = 11
+          Height = 13
+          Caption = #176'C'
+        end
+        object CheckBox2: TCheckBox
+          Left = 8
+          Top = 16
+          Width = 129
+          Height = 17
+          Caption = 'Nachtabsenkung ein'
+          TabOrder = 0
+        end
+        object absenkung_h_startedit: TJvSpinEdit
+          Left = 176
+          Top = 12
+          Width = 41
+          Height = 21
+          MaxValue = 23.000000000000000000
+          Value = 22.000000000000000000
+          TabOrder = 1
+        end
+        object absenkung_min_startedit: TJvSpinEdit
+          Left = 224
+          Top = 12
+          Width = 41
+          Height = 21
+          MaxValue = 59.000000000000000000
+          Value = 30.000000000000000000
+          TabOrder = 2
+        end
+        object absenkung_h_stopedit: TJvSpinEdit
+          Left = 176
+          Top = 36
+          Width = 41
+          Height = 21
+          MaxValue = 23.000000000000000000
+          Value = 8.000000000000000000
+          TabOrder = 3
+        end
+        object absenkung_min_stopedit: TJvSpinEdit
+          Left = 224
+          Top = 36
+          Width = 41
+          Height = 21
+          MaxValue = 59.000000000000000000
+          TabOrder = 4
+        end
+        object absenkung_temp: TJvSpinEdit
+          Left = 72
+          Top = 36
+          Width = 41
+          Height = 21
+          MinValue = -20.000000000000000000
+          Value = -7.000000000000000000
+          TabOrder = 5
+          OnChange = tempmaxChange
+        end
+      end
+      object GroupBox6: TGroupBox
+        Left = 8
+        Top = 144
+        Width = 273
+        Height = 73
+        Caption = ' Temperatur-Sollwert '
+        TabOrder = 3
+        object Label13: TLabel
+          Left = 70
+          Top = 20
+          Width = 11
+          Height = 13
+          Caption = #176'C'
+        end
+        object Label10: TLabel
+          Left = 104
+          Top = 16
+          Width = 97
+          Height = 13
+          Alignment = taRightJustify
+          AutoSize = False
+          Caption = 'Ein-Schwelle: dT<'
+        end
+        object Label11: TLabel
+          Left = 104
+          Top = 40
+          Width = 97
+          Height = 13
+          Alignment = taRightJustify
+          AutoSize = False
+          Caption = 'Aus-Schwelle: dT>'
+        end
+        object Label22: TLabel
+          Left = 258
+          Top = 16
+          Width = 7
+          Height = 13
+          Caption = 'K'
+        end
+        object Label23: TLabel
+          Left = 258
+          Top = 40
+          Width = 7
+          Height = 13
+          Caption = 'K'
+        end
+        object tempsoll: TJvSpinEdit
+          Left = 10
+          Top = 16
+          Width = 55
+          Height = 21
+          Increment = 0.100000000000000000
+          MaxValue = 30.000000000000000000
+          ValueType = vtFloat
+          Value = 19.000000000000000000
+          TabOrder = 0
+        end
+        object tempmin: TJvSpinEdit
+          Left = 208
+          Top = 12
+          Width = 49
+          Height = 21
+          Increment = 0.100000000000000000
+          MaxValue = 10.000000000000000000
+          MinValue = -10.000000000000000000
+          ValueType = vtFloat
+          Value = -1.000000000000000000
+          TabOrder = 1
+          OnChange = tempminChange
+        end
+        object tempmax: TJvSpinEdit
+          Left = 208
+          Top = 36
+          Width = 49
+          Height = 21
+          Increment = 0.100000000000000000
+          MaxValue = 10.000000000000000000
+          MinValue = -10.000000000000000000
+          ValueType = vtFloat
+          Value = 1.000000000000000000
+          TabOrder = 2
+          OnChange = tempmaxChange
+        end
+        object CheckBox1: TCheckBox
+          Left = 8
+          Top = 40
+          Width = 97
+          Height = 25
+          Caption = 'Mittelwert als Referenz'
+          TabOrder = 3
+          WordWrap = True
+        end
+      end
+      object Button2: TButton
+        Left = 248
+        Top = 296
+        Width = 33
+        Height = 25
+        Caption = '<<'
+        TabOrder = 4
+        OnClick = Button2Click
+      end
     end
   end
-  object GroupBox1: TGroupBox
-    Left = 304
-    Top = 232
-    Width = 289
-    Height = 105
-    Caption = ' Weitere Temperatursensoren '
+  object Panel3: TPanel
+    Left = 0
+    Top = 0
+    Width = 1322
+    Height = 9
+    Align = alTop
+    BevelOuter = bvNone
     TabOrder = 2
-    object Label2: TLabel
-      Left = 8
-      Top = 20
-      Width = 137
-      Height = 13
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Temperatur 2:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object temp2lbl: TLabel
-      Left = 8
-      Top = 51
-      Width = 137
-      Height = 46
-      Alignment = taCenter
-      AutoSize = False
-      Caption = '0,0'#176'C'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clBlack
-      Font.Height = -40
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object Label1: TLabel
-      Left = 144
-      Top = 20
-      Width = 137
-      Height = 13
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Temperatur 3:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object temp3lbl: TLabel
-      Left = 144
-      Top = 51
-      Width = 137
-      Height = 46
-      Alignment = taCenter
-      AutoSize = False
-      Caption = '0,0'#176'C'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clBlack
-      Font.Height = -40
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object Label3: TLabel
-      Left = 8
-      Top = 34
-      Width = 137
-      Height = 13
-      Alignment = taCenter
-      AutoSize = False
-      Caption = '(Eingangst'#252'r)'
-    end
-    object Label4: TLabel
-      Left = 144
-      Top = 34
-      Width = 137
-      Height = 13
-      Alignment = taCenter
-      AutoSize = False
-      Caption = '(Decke)'
-    end
   end
-  object GroupBox2: TGroupBox
-    Left = 600
-    Top = 232
-    Width = 337
-    Height = 105
-    Caption = ' Ermittelte Werte '
+  object Panel4: TPanel
+    Left = 1313
+    Top = 9
+    Width = 9
+    Height = 329
+    Align = alRight
+    BevelOuter = bvNone
     TabOrder = 3
-    object Label5: TLabel
-      Left = 8
-      Top = 20
-      Width = 137
-      Height = 13
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Delta T:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object Label6: TLabel
-      Left = 8
-      Top = 34
-      Width = 137
-      Height = 13
-      Alignment = taCenter
-      AutoSize = False
-      Caption = '(15min)'
-    end
-    object deltatemplbl: TLabel
-      Left = 8
-      Top = 51
-      Width = 137
-      Height = 46
-      Alignment = taCenter
-      AutoSize = False
-      Caption = '... '#176'C'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clBlack
-      Font.Height = -40
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object Label33: TLabel
-      Left = 160
-      Top = 20
-      Width = 161
-      Height = 13
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Verbrauch:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object stromverbrauchlbl: TLabel
-      Left = 160
-      Top = 34
-      Width = 161
-      Height = 13
-      Alignment = taCenter
-      AutoSize = False
-      Caption = '0,000 kWh'
-    end
-    object stromkostenlbl: TLabel
-      Left = 160
-      Top = 51
-      Width = 161
-      Height = 46
-      Alignment = taCenter
-      AutoSize = False
-      Caption = '0,00 '#8364
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clBlack
-      Font.Height = -40
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object Memo1: TMemo
-      Left = 216
-      Top = 56
-      Width = 113
-      Height = 41
-      TabOrder = 0
-      Visible = False
-    end
+  end
+  object zoom15mincheckbox: TCheckBox
+    Left = 312
+    Top = 16
+    Width = 153
+    Height = 17
+    Caption = 'Zoom auf letzte 15 Minuten'
+    Color = clWhite
+    ParentColor = False
+    TabOrder = 4
   end
   object comport: TCommPortDriver
     Port = pnCustom
@@ -948,5 +966,12 @@ object Config: TConfig
     OnTimer = RegisterPluginCommandsTimer
     Left = 840
     Top = 40
+  end
+  object DemoData: TTimer
+    Enabled = False
+    Interval = 150
+    OnTimer = DemoDataTimer
+    Left = 536
+    Top = 378
   end
 end
