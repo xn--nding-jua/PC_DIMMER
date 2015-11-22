@@ -2376,6 +2376,9 @@ end;
 procedure Tkontrollpanel.PaintBox1MouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if ssTouch then
+    exit;
+
   if MouseIsDown then
   begin
     PaintBox1MouseUp(Paintbox1, mbLeft, [], MouseDown.X, MouseDown.Y);
@@ -3221,10 +3224,18 @@ begin
       MyTouchPoint := TouchPointToPoint(TouchInputs [counter-1]);
       if not ssTouch then
       begin
+        //mouse_event(MOUSEEVENTF_ABSOLUTE or MOUSEEVENTF_MOVE, MyTouchPoint.x-5, MyTouchPoint.y-5, 0, 0);
+        //mouse_event(MOUSEEVENTF_LEFTDOWN, MyTouchPoint.x, MyTouchPoint.y-Panel1.Height-TBToolbar1.Height, 0, 0);
+
+        // anhand Position aktuellen Button highlighten
+        OverBtn.Y:=trunc(((MyTouchPoint.y-Panel1.Height-TBToolbar1.Height)-yoffset)/btnheight.value);
+        OverBtn.X:=trunc(((MyTouchPoint.x)-xoffset)/btnwidth.value);
+
+        // MouseDown-Event ausführen
+        Paintbox1MouseDown(Paintbox1, mbLeft, [ssLeft], MyTouchPoint.x, MyTouchPoint.y-Panel1.Height-TBToolbar1.Height);
+
+        // Verhindern, dass Paintbox1MouseDown ein weiteres mal ausgeführt wird, bevor nicht ein MouseUp-Event getriggert wird
         ssTouch:=true;
-//        mouse_event(MOUSEEVENTF_ABSOLUTE or MOUSEEVENTF_MOVE, MyTouchPoint.x-5, MyTouchPoint.y-5, 0, 0);
-        Paintbox1MouseMove(Paintbox1, [], MyTouchPoint.x, MyTouchPoint.y-Panel1.Height-TBToolbar1.Height-25);
-        mouse_event(MOUSEEVENTF_LEFTDOWN, MyTouchPoint.x, MyTouchPoint.y, 0, 0);
       end;
     end;
     Handled := True;
