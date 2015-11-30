@@ -41,6 +41,8 @@ begin
 end;
 
 function DLLDestroy:boolean;stdcall;
+var
+  CurrYear, CurrMonth, CurrDay: Word;
 begin
   ShuttingDown:=true;
 
@@ -57,7 +59,8 @@ begin
   begin
     if not DirectoryExists(setupform.savefilestoedit.Text) then
       CreateDir(setupform.savefilestoedit.Text);
-    Config.Memo1.Lines.SaveToFile(setupform.savefilestoedit.Text+'\'+stringreplace(DateToStr(now), '.', '', [rfReplaceAll, rfIgnoreCase])+'_'+
+    DecodeDate(Date(), CurrYear, CurrMonth, CurrDay);
+    Config.Memo1.Lines.SaveToFile(setupform.savefilestoedit.Text+'\'+inttostr(CurrYear)+inttostr(CurrMonth)+inttostr(CurrDay)+'_'+
       stringreplace(TimeToStr(now), ':', '', [rfReplaceAll, rfIgnoreCase])+'_Temperatur.csv');
   end;
 

@@ -911,3 +911,10 @@
     NodeControlNodes:array of TNodeControlNode;
   end;
 
+  TUserAccount = record
+    ID:TGUID;
+    Name:string[255];
+    PasswordScrambled:string[255];
+    Password:string[255];
+    AccountLevel:integer;
+  end;

@@ -114,6 +114,8 @@ type
     {$ENDIF}
     LastAxisValue:array[0..7] of Integer;
     ActualPosition:array[0..7] of Single;
+    procedure SaveConfigurationToFile;
+    procedure LoadConfigurationFromFile;
   public
     { Public-Deklarationen }
     gcp: TGamePad;
@@ -121,6 +123,7 @@ type
     offset:array[0..7] of Integer;
     procedure PositionXYMoved;
     procedure InitializeJoystick;
+    procedure MSGNew;
   end;
 
 var
@@ -1067,6 +1070,188 @@ begin
       Params.WndParent:=GetDesktopWindow;
       self.ParentWindow := GetDesktopWindow;
     end;
+  end;
+end;
+
+procedure Tjoystickform.SaveConfigurationToFile;
+var
+  i, j:integer;
+begin
+  savedialog1.DefaultExt:='*.pcdjstk';
+  savedialog1.Filter:=_('PC_DIMMER Joystick-Einstellungen (*.pcdjstk)|*.pcdjstk|Alle Dateien|*.*');
+  savedialog1.Title:=_('PC_DIMMER Joystick-Einstellungen öffnen');
+
+	if savedialog1.Execute then
+  begin
+    FileStream:=TFileStream.Create(savedialog1.FileName, fmCreate);
+
+    for i:=0 to length(mainform.JoystickEvents)-1 do
+    begin
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].ID,sizeof(mainform.JoystickEvents[i].ID));
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].UseEvent,sizeof(mainform.JoystickEvents[i].UseEvent));
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].positionrelativ,sizeof(mainform.JoystickEvents[i].positionrelativ));
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].invert,sizeof(mainform.JoystickEvents[i].invert));
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].deaktivierterbereich,sizeof(mainform.JoystickEvents[i].deaktivierterbereich));
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].beschleunigung,sizeof(mainform.JoystickEvents[i].beschleunigung));
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].offset,sizeof(mainform.JoystickEvents[i].offset));
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].PermanentUpdate,sizeof(mainform.JoystickEvents[i].PermanentUpdate));
+
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].Befehl.Typ,sizeof(mainform.JoystickEvents[i].Befehl.Typ));
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].Befehl.OnValue,sizeof(mainform.JoystickEvents[i].Befehl.OnValue));
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].Befehl.SwitchValue,sizeof(mainform.JoystickEvents[i].Befehl.SwitchValue));
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].Befehl.InvertSwitchValue,sizeof(mainform.JoystickEvents[i].Befehl.InvertSwitchValue));
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].Befehl.OffValue,sizeof(mainform.JoystickEvents[i].Befehl.OffValue));
+      Filestream.WriteBuffer(mainform.JoystickEvents[i].Befehl.ScaleValue,sizeof(mainform.JoystickEvents[i].Befehl.ScaleValue));
+      Count2:=length(mainform.JoystickEvents[i].Befehl.ArgInteger);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for j:=0 to Count2-1 do
+        Filestream.WriteBuffer(mainform.JoystickEvents[i].Befehl.ArgInteger[j],sizeof(mainform.JoystickEvents[i].Befehl.ArgInteger[j]));
+      Count2:=length(mainform.JoystickEvents[i].Befehl.ArgString);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for j:=0 to Count2-1 do
+        Filestream.WriteBuffer(mainform.JoystickEvents[i].Befehl.ArgString[j],sizeof(mainform.JoystickEvents[i].Befehl.ArgString[j]));
+      Count2:=length(mainform.JoystickEvents[i].Befehl.ArgGUID);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for j:=0 to Count2-1 do
+        Filestream.WriteBuffer(mainform.JoystickEvents[i].Befehl.ArgGUID[j],sizeof(mainform.JoystickEvents[i].Befehl.ArgGUID[j]));
+    end;
+    
+    FileStream.Free;
+  end;
+end;
+
+procedure Tjoystickform.LoadConfigurationFromFile;
+var
+  i, j:integer;
+begin
+  opendialog1.DefaultExt:='*.pcdjstk';
+  opendialog1.Filter:=_('PC_DIMMER Joystick-Einstellungen (*.pcdjstk)|*.pcdjstk|Alle Dateien|*.*');
+  opendialog1.Title:=_('PC_DIMMER Joystick-Einstellungen öffnen');
+	if opendialog1.Execute then
+  begin
+    FileStream:=TFileStream.Create(opendialog1.filename, fmOpenRead);
+  
+    for i:=0 to length(mainform.JoystickEvents)-1 do
+    begin
+      Filestream.ReadBuffer(mainform.JoystickEvents[i].ID,sizeof(mainform.JoystickEvents[i].ID));
+      Filestream.ReadBuffer(mainform.JoystickEvents[i].UseEvent,sizeof(mainform.JoystickEvents[i].UseEvent));
+      Filestream.ReadBuffer(mainform.JoystickEvents[i].positionrelativ,sizeof(mainform.JoystickEvents[i].positionrelativ));
+      if projektprogrammversionint>=429 then
+        Filestream.ReadBuffer(mainform.JoystickEvents[i].invert,sizeof(mainform.JoystickEvents[i].invert));
+      Filestream.ReadBuffer(mainform.JoystickEvents[i].deaktivierterbereich,sizeof(mainform.JoystickEvents[i].deaktivierterbereich));
+      Filestream.ReadBuffer(mainform.JoystickEvents[i].beschleunigung,sizeof(mainform.JoystickEvents[i].beschleunigung));
+      Filestream.ReadBuffer(mainform.JoystickEvents[i].offset,sizeof(mainform.JoystickEvents[i].offset));
+      if projektprogrammversionint>=466 then
+        Filestream.ReadBuffer(mainform.JoystickEvents[i].PermanentUpdate,sizeof(mainform.JoystickEvents[i].PermanentUpdate));
+
+      Filestream.ReadBuffer(mainform.JoystickEvents[i].Befehl.Typ,sizeof(mainform.JoystickEvents[i].Befehl.Typ));
+      Filestream.ReadBuffer(mainform.JoystickEvents[i].Befehl.OnValue,sizeof(mainform.JoystickEvents[i].Befehl.OnValue));
+      if projektprogrammversionint>=456 then
+        Filestream.ReadBuffer(mainform.JoystickEvents[i].Befehl.SwitchValue,sizeof(mainform.JoystickEvents[i].Befehl.SwitchValue))
+      else
+        mainform.JoystickEvents[i].Befehl.SwitchValue:=mainform.JoystickEvents[i].Befehl.OnValue;
+      if projektprogrammversionint>=462 then
+        Filestream.ReadBuffer(mainform.JoystickEvents[i].Befehl.InvertSwitchValue,sizeof(mainform.JoystickEvents[i].Befehl.InvertSwitchValue));
+      Filestream.ReadBuffer(mainform.JoystickEvents[i].Befehl.OffValue,sizeof(mainform.JoystickEvents[i].Befehl.OffValue));
+      if projektprogrammversionint>=457 then
+        Filestream.ReadBuffer(mainform.JoystickEvents[i].Befehl.ScaleValue,sizeof(mainform.JoystickEvents[i].Befehl.ScaleValue));
+      Filestream.ReadBuffer(Count2,sizeof(Count2));
+      setlength(mainform.JoystickEvents[i].Befehl.ArgInteger,Count2);
+      for j:=0 to Count2-1 do
+        Filestream.ReadBuffer(mainform.JoystickEvents[i].Befehl.ArgInteger[j],sizeof(mainform.JoystickEvents[i].Befehl.ArgInteger[j]));
+      Filestream.ReadBuffer(Count2,sizeof(Count2));
+      setlength(mainform.JoystickEvents[i].Befehl.ArgString,Count2);
+      for j:=0 to Count2-1 do
+        Filestream.ReadBuffer(mainform.JoystickEvents[i].Befehl.ArgString[j],sizeof(mainform.JoystickEvents[i].Befehl.ArgString[j]));
+      Filestream.ReadBuffer(Count2,sizeof(Count2));
+      setlength(mainform.JoystickEvents[i].Befehl.ArgGUID,Count2);
+      for j:=0 to Count2-1 do
+        Filestream.ReadBuffer(mainform.JoystickEvents[i].Befehl.ArgGUID[j],sizeof(mainform.JoystickEvents[i].Befehl.ArgGUID[j]));
+    end;
+    
+    FileStream.Free;
+  end;
+end;
+
+procedure Tjoystickform.MSGNew;
+var
+  i:integer;
+begin
+  for i:=0 to 43 do
+  begin
+    CreateGUID(mainform.JoystickEvents[i].ID);
+    mainform.JoystickEvents[i].Befehl.OnValue:=255;
+    mainform.JoystickEvents[i].Befehl.SwitchValue:=128;
+    mainform.JoystickEvents[i].Befehl.OffValue:=0;
+    mainform.JoystickEvents[i].Befehl.ScaleValue:=false;
+  end;
+
+  mainform.JoystickEvents[0].UseEvent:=true;
+  mainform.JoystickEvents[0].positionrelativ:=false;
+  mainform.JoystickEvents[0].invert:=false;
+  mainform.JoystickEvents[0].deaktivierterbereich:=0;
+  mainform.JoystickEvents[0].beschleunigung:=2000;
+  setlength(mainform.JoystickEvents[0].Befehl.ArgInteger,2);
+  mainform.JoystickEvents[0].Befehl.ArgInteger[0]:=0; // PAN
+  mainform.JoystickEvents[0].Befehl.ArgInteger[1]:=75; // Faktor 1
+  mainform.JoystickEvents[0].Befehl.Typ:=Befehlssystem[5].Steuerung[21].GUID;
+  mainform.JoystickEvents[0].Befehl.OnValue:=255;
+  mainform.JoystickEvents[0].Befehl.SwitchValue:=0;
+  mainform.JoystickEvents[0].Befehl.OffValue:=0;
+  mainform.JoystickEvents[0].PermanentUpdate:=true;
+
+  mainform.JoystickEvents[1].UseEvent:=true;
+  mainform.JoystickEvents[1].positionrelativ:=false;
+  mainform.JoystickEvents[1].invert:=false;
+  mainform.JoystickEvents[1].deaktivierterbereich:=0;
+  mainform.JoystickEvents[1].beschleunigung:=2000;
+  setlength(mainform.JoystickEvents[1].Befehl.ArgInteger,2);
+  mainform.JoystickEvents[1].Befehl.ArgInteger[0]:=1; // TILT
+  mainform.JoystickEvents[1].Befehl.ArgInteger[1]:=75; // Faktor 1
+  mainform.JoystickEvents[1].Befehl.Typ:=Befehlssystem[5].Steuerung[21].GUID;
+  mainform.JoystickEvents[1].Befehl.OnValue:=255;
+  mainform.JoystickEvents[1].Befehl.SwitchValue:=0;
+  mainform.JoystickEvents[1].Befehl.OffValue:=0;
+  mainform.JoystickEvents[1].PermanentUpdate:=true;
+
+  for i:=2 to 43 do
+  begin
+    mainform.JoystickEvents[i].UseEvent:=false;
+    mainform.JoystickEvents[i].positionrelativ:=false;
+    mainform.JoystickEvents[i].invert:=false;
+    mainform.JoystickEvents[i].deaktivierterbereich:=0;
+    mainform.JoystickEvents[i].beschleunigung:=2000;
+    mainform.JoystickEvents[i].PermanentUpdate:=false;
+  end;
+  
+  mainform.OldJoystickEvents[0].Typ:=180;
+  mainform.OldJoystickEvents[0].UseEvent:=true;
+  mainform.OldJoystickEvents[0].Arg1:=0; // PAN
+  mainform.OldJoystickEvents[0].Arg2:=0;
+//        mainform.OldJoystickEvents[0].Arg3:='';
+  mainform.OldJoystickEvents[0].positionrelativ:=true;
+  mainform.OldJoystickEvents[0].deaktivierterbereich:=0;
+  mainform.OldJoystickEvents[0].beschleunigung:=2000;
+
+  mainform.OldJoystickEvents[1].Typ:=180;
+  mainform.OldJoystickEvents[1].UseEvent:=true;
+  mainform.OldJoystickEvents[1].Arg1:=1; // TILT
+  mainform.OldJoystickEvents[1].Arg2:=0;
+//        mainform.OldJoystickEvents[1].Arg3:='';
+  mainform.OldJoystickEvents[1].positionrelativ:=true;
+  mainform.OldJoystickEvents[1].deaktivierterbereich:=0;
+  mainform.OldJoystickEvents[1].beschleunigung:=2000;
+
+  for i:=2 to 43 do
+  begin
+    mainform.OldJoystickEvents[i].Typ:=0;
+    mainform.OldJoystickEvents[i].UseEvent:=false;
+    mainform.OldJoystickEvents[i].Arg1:=0;
+    mainform.OldJoystickEvents[i].Arg2:=0;
+//      mainform.OldJoystickEvents[i].Arg3:='';
+    mainform.OldJoystickEvents[i].positionrelativ:=false;
+    mainform.OldJoystickEvents[i].deaktivierterbereich:=0;
+    mainform.OldJoystickEvents[i].beschleunigung:=2000;
   end;
 end;
 

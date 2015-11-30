@@ -107,7 +107,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=470;
+  actualprojectversion=471;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -1165,6 +1165,7 @@ type
     PartyMuckenModul:array of TPartyMuckenModul;
     PresetScenes: array of TPresetScene;
     NodeControlSets: array of TNodeControlSet;
+    UserAccounts: array of TUserAccount;
 
 //    DeviceForms:array of Tdeviceformprototyp;
     Desktopproperties : array[1..9] of TDesktopproperties;
@@ -2164,6 +2165,30 @@ begin
     CheckUpdatesOnStartup := LReg.ReadWriteBool('Check updates on Startup', true);
     QuitWithoutConfirmation := LReg.ReadWriteBool('Do not ask for exit', false);
 
+    if LReg.ValueExists('NumberOfUserAccounts') then
+    begin
+      count:=LReg.ReadInteger('NumberOfUserAccounts');
+      setlength(UserAccounts, count);
+      for i:=0 to length(UserAccounts)-1 do
+      begin
+        LReg.ReadBinaryData('UserAccount '+inttostr(i)+'ID', UserAccounts[i].ID, sizeof(UserAccounts[i].ID));
+        LReg.ReadBinaryData('UserAccount '+inttostr(i)+'Name', UserAccounts[i].Name, sizeof(UserAccounts[i].Name));
+        LReg.ReadBinaryData('UserAccount '+inttostr(i)+'Password', UserAccounts[i].PasswordScrambled, sizeof(UserAccounts[i].PasswordScrambled));
+        // TODO: Descramble Password
+        LReg.ReadBinaryData('UserAccount '+inttostr(i)+'AccountLevel', UserAccounts[i].AccountLevel, sizeof(UserAccounts[i].AccountLevel));
+      end;
+    end;
+    if length(UserAccounts)=0 then
+    begin
+      setlength(UserAccounts, 1);
+      CreateGUID(UserAccounts[0].ID);
+      UserAccounts[0].Name:='Admin';
+      UserAccounts[0].Password:='';
+      // TODO: Scramble Password
+      UserAccounts[0].AccountLevel:=0;
+    end;
+    
+    
     LReg.LoadWndPos(mainForm);
 
     if not LReg.ValueExists('Longitude') then
@@ -3512,6 +3537,17 @@ begin
     LReg.WriteString('Last Midi Outputdevices',lastmidioutputdevices);
     LReg.WriteInteger('Midi Backtrack Interval',MidiCallbackTimer.Interval);
     LReg.WriteBool('Small Windowstyle',mainpanel.Visible);
+    
+    LReg.WriteInteger('NumberOfUserAccounts', length(UserAccounts));
+    for i:=0 to length(UserAccounts)-1 do
+    begin
+      LReg.WriteBinaryData('UserAccount '+inttostr(i)+'ID', UserAccounts[i].ID, sizeof(UserAccounts[i].ID));
+      LReg.WriteBinaryData('UserAccount '+inttostr(i)+'Name', UserAccounts[i].Name, sizeof(UserAccounts[i].Name));
+      // TODO: Scramble Password
+      LReg.WriteBinaryData('UserAccount '+inttostr(i)+'Password', UserAccounts[i].PasswordScrambled, sizeof(UserAccounts[i].PasswordScrambled));
+      LReg.WriteBinaryData('UserAccount '+inttostr(i)+'AccountLevel', UserAccounts[i].AccountLevel, sizeof(UserAccounts[i].AccountLevel));
+    end;
+    
     LReg.CloseKey;
   end;
   LReg.Free;
@@ -3937,6 +3973,8 @@ begin
   winlircform.MSGNew;
   // Knotensteuerung zurücksetzen
   nodecontrolform.MSGNew;
+  // Joysticksteuerung zurücksetzen
+  joystickform.MSGNew;
 
   for i:=0 to 31 do
   begin
@@ -3949,84 +3987,7 @@ begin
   BeatImpuls.OnValue:=255;
   BeatImpuls.OffValue:=0;
 
-  for i:=0 to 43 do
-  begin
-    CreateGUID(JoystickEvents[i].ID);
-    JoystickEvents[i].Befehl.OnValue:=255;
-    JoystickEvents[i].Befehl.SwitchValue:=128;
-    JoystickEvents[i].Befehl.OffValue:=0;
-    JoystickEvents[i].Befehl.ScaleValue:=false;
-  end;
-
-  JoystickEvents[0].UseEvent:=true;
-  JoystickEvents[0].positionrelativ:=false;
-  JoystickEvents[0].invert:=false;
-  JoystickEvents[0].deaktivierterbereich:=0;
-  JoystickEvents[0].beschleunigung:=2000;
-  setlength(JoystickEvents[0].Befehl.ArgInteger,2);
-  JoystickEvents[0].Befehl.ArgInteger[0]:=0; // PAN
-  JoystickEvents[0].Befehl.ArgInteger[1]:=75; // Faktor 1
-  JoystickEvents[0].Befehl.Typ:=Befehlssystem[5].Steuerung[21].GUID;
-  JoystickEvents[0].Befehl.OnValue:=255;
-  JoystickEvents[0].Befehl.SwitchValue:=0;
-  JoystickEvents[0].Befehl.OffValue:=0;
-  JoystickEvents[0].PermanentUpdate:=true;
-
-  JoystickEvents[1].UseEvent:=true;
-  JoystickEvents[1].positionrelativ:=false;
-  JoystickEvents[1].invert:=false;
-  JoystickEvents[1].deaktivierterbereich:=0;
-  JoystickEvents[1].beschleunigung:=2000;
-  setlength(JoystickEvents[1].Befehl.ArgInteger,2);
-  JoystickEvents[1].Befehl.ArgInteger[0]:=1; // TILT
-  JoystickEvents[1].Befehl.ArgInteger[1]:=75; // Faktor 1
-  JoystickEvents[1].Befehl.Typ:=Befehlssystem[5].Steuerung[21].GUID;
-  JoystickEvents[1].Befehl.OnValue:=255;
-  JoystickEvents[1].Befehl.SwitchValue:=0;
-  JoystickEvents[1].Befehl.OffValue:=0;
-  JoystickEvents[1].PermanentUpdate:=true;
-
-  for i:=2 to 43 do
-  begin
-    JoystickEvents[i].UseEvent:=false;
-    JoystickEvents[i].positionrelativ:=false;
-    JoystickEvents[i].invert:=false;
-    JoystickEvents[i].deaktivierterbereich:=0;
-    JoystickEvents[i].beschleunigung:=2000;
-    JoystickEvents[i].PermanentUpdate:=false;
-  end;
-
-  OldJoystickEvents[0].Typ:=180;
-  OldJoystickEvents[0].UseEvent:=true;
-  OldJoystickEvents[0].Arg1:=0; // PAN
-  OldJoystickEvents[0].Arg2:=0;
-//        OldJoystickEvents[0].Arg3:='';
-  OldJoystickEvents[0].positionrelativ:=true;
-  OldJoystickEvents[0].deaktivierterbereich:=0;
-  OldJoystickEvents[0].beschleunigung:=2000;
-
-  OldJoystickEvents[1].Typ:=180;
-  OldJoystickEvents[1].UseEvent:=true;
-  OldJoystickEvents[1].Arg1:=1; // TILT
-  OldJoystickEvents[1].Arg2:=0;
-//        OldJoystickEvents[1].Arg3:='';
-  OldJoystickEvents[1].positionrelativ:=true;
-  OldJoystickEvents[1].deaktivierterbereich:=0;
-  OldJoystickEvents[1].beschleunigung:=2000;
-
   ShortCutChecker.Enabled:=true;
-
-  for i:=2 to 43 do
-  begin
-    OldJoystickEvents[i].Typ:=0;
-    OldJoystickEvents[i].UseEvent:=false;
-    OldJoystickEvents[i].Arg1:=0;
-    OldJoystickEvents[i].Arg2:=0;
-//      OldJoystickEvents[i].Arg3:='';
-    OldJoystickEvents[i].positionrelativ:=false;
-    OldJoystickEvents[i].deaktivierterbereich:=0;
-    OldJoystickEvents[i].beschleunigung:=2000;
-  end;
 
   pcdimmerresetting:=false;
 
@@ -5570,7 +5531,6 @@ begin
       end;
     end;
 // Ende NodeControl
-
 	  inprogress.filename.Caption:=_('Schreibe Datei...');
   	inprogress.Refresh;
       FileStream.Free;
