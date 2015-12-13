@@ -622,9 +622,11 @@ begin
           geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))]:=lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'));
           geraetesteuerung.DevicePrototyp[i].kanalfade[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))]:=lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('fade'))='yes';
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('DIMMER') then geraetesteuerung.DevicePrototyp[i].hasDimmer:=true;
-          if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('VIRTUALRGBADIMMER') then
+          if (lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('VIRTUALRGBDIMMER')) or
+            (lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('VIRTUALRGBADIMMER')) or
+            (lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('VIRTUALRGBAWDIMMER')) then
           begin
-            geraetesteuerung.DevicePrototyp[i].hasVirtualRGBDimmer:=true;
+            geraetesteuerung.DevicePrototyp[i].hasVirtualRGBAWDimmer:=true;
             geraetesteuerung.DevicePrototyp[i].hasDimmer:=true;
             geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))]:=lowercase('DIMMER'); // VirtualRGBDimmer als normalen DIMMER maskieren
           end;

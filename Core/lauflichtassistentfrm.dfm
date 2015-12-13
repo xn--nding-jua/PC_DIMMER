@@ -2,7 +2,7 @@ object lauflichtassistentform: Tlauflichtassistentform
   Left = 642
   Top = 90
   Width = 515
-  Height = 555
+  Height = 546
   Caption = 'Lauflicht-Assistent'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object lauflichtassistentform: Tlauflichtassistentform
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 507
+    Width = 499
     Height = 57
     Align = alTop
     BevelOuter = bvNone
@@ -28,7 +28,7 @@ object lauflichtassistentform: Tlauflichtassistentform
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 507
+      Width = 499
       Height = 57
       Style = grVertical
       StartColor = clWhite
@@ -281,8 +281,8 @@ object lauflichtassistentform: Tlauflichtassistentform
   object Notebook1: TNotebook
     Left = 0
     Top = 57
-    Width = 507
-    Height = 427
+    Width = 499
+    Height = 409
     Align = alClient
     PageIndex = 2
     TabOrder = 1
@@ -315,7 +315,7 @@ object lauflichtassistentform: Tlauflichtassistentform
         Left = 0
         Top = 41
         Width = 507
-        Height = 384
+        Height = 377
         Align = alClient
         ItemHeight = 13
         MultiSelect = True
@@ -332,7 +332,7 @@ object lauflichtassistentform: Tlauflichtassistentform
         Left = 378
         Top = 0
         Width = 129
-        Height = 425
+        Height = 418
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
@@ -583,7 +583,7 @@ object lauflichtassistentform: Tlauflichtassistentform
         Left = 0
         Top = 0
         Width = 378
-        Height = 425
+        Height = 418
         Align = alClient
         ItemHeight = 13
         TabOrder = 1
@@ -598,7 +598,7 @@ object lauflichtassistentform: Tlauflichtassistentform
         Left = 0
         Top = 0
         Width = 8
-        Height = 427
+        Height = 409
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
@@ -606,24 +606,24 @@ object lauflichtassistentform: Tlauflichtassistentform
       object Panel7: TPanel
         Left = 8
         Top = 0
-        Width = 499
-        Height = 427
+        Width = 491
+        Height = 409
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
         object GroupBox1: TGroupBox
           Left = 0
-          Top = 201
-          Width = 491
-          Height = 218
+          Top = 217
+          Width = 483
+          Height = 184
           Align = alClient
           Caption = ' Vorschau und Ger'#228'teauswahl '
           TabOrder = 0
           object PaintBox1: TPaintBox
             Left = 2
             Top = 15
-            Width = 487
-            Height = 201
+            Width = 479
+            Height = 167
             Align = alClient
             OnMouseUp = PaintBox1MouseUp
           end
@@ -953,8 +953,8 @@ object lauflichtassistentform: Tlauflichtassistentform
         end
         object Panel8: TPanel
           Left = 0
-          Top = 419
-          Width = 499
+          Top = 401
+          Width = 491
           Height = 8
           Align = alBottom
           BevelOuter = bvNone
@@ -963,16 +963,16 @@ object lauflichtassistentform: Tlauflichtassistentform
         object Panel6: TPanel
           Left = 0
           Top = 0
-          Width = 499
-          Height = 201
+          Width = 491
+          Height = 217
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 2
           object Panel9: TPanel
-            Left = 491
+            Left = 483
             Top = 0
             Width = 8
-            Height = 201
+            Height = 217
             Align = alRight
             BevelOuter = bvNone
             TabOrder = 0
@@ -980,16 +980,16 @@ object lauflichtassistentform: Tlauflichtassistentform
           object Panel13: TPanel
             Left = 0
             Top = 0
-            Width = 491
-            Height = 201
+            Width = 483
+            Height = 217
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
             object GroupBox4: TGroupBox
               Left = 0
               Top = 122
-              Width = 491
-              Height = 71
+              Width = 483
+              Height = 87
               Align = alBottom
               Caption = 
                 ' Kanaleinstellungen f'#252'r unten ausgew'#228'hltes Ger'#228't (klick auf eine' +
@@ -1020,7 +1020,7 @@ object lauflichtassistentform: Tlauflichtassistentform
                 Left = 208
                 Top = 16
                 Width = 1
-                Height = 49
+                Height = 57
                 Pen.Color = clBtnShadow
               end
               object Label8: TLabel
@@ -1058,6 +1058,15 @@ object lauflichtassistentform: Tlauflichtassistentform
                 TabOrder = 1
                 TickStyle = tsManual
                 OnChange = TrackBar1Change
+              end
+              object Button1: TButton
+                Left = 216
+                Top = 56
+                Width = 265
+                Height = 25
+                Caption = 'F'#252'r alle Ger'#228'te '#252'bernehmen'
+                TabOrder = 2
+                OnClick = Button1Click
               end
             end
             object GroupBox2: TGroupBox
@@ -1673,7 +1682,7 @@ object lauflichtassistentform: Tlauflichtassistentform
             object Panel12: TPanel
               Left = 0
               Top = 114
-              Width = 491
+              Width = 483
               Height = 8
               Align = alBottom
               BevelOuter = bvNone
@@ -1681,8 +1690,8 @@ object lauflichtassistentform: Tlauflichtassistentform
             end
             object Panel10: TPanel
               Left = 0
-              Top = 193
-              Width = 491
+              Top = 209
+              Width = 483
               Height = 8
               Align = alBottom
               BevelOuter = bvNone
@@ -1691,10 +1700,10 @@ object lauflichtassistentform: Tlauflichtassistentform
           end
         end
         object Panel11: TPanel
-          Left = 491
-          Top = 201
+          Left = 483
+          Top = 217
           Width = 8
-          Height = 218
+          Height = 184
           Align = alRight
           BevelOuter = bvNone
           TabOrder = 3
@@ -1704,8 +1713,8 @@ object lauflichtassistentform: Tlauflichtassistentform
   end
   object Panel2: TPanel
     Left = 0
-    Top = 484
-    Width = 507
+    Top = 466
+    Width = 499
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
@@ -1713,7 +1722,7 @@ object lauflichtassistentform: Tlauflichtassistentform
     object Shape4: TShape
       Left = 0
       Top = 0
-      Width = 507
+      Width = 499
       Height = 41
       Align = alBottom
       Pen.Style = psClear

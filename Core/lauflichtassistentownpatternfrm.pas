@@ -67,6 +67,16 @@ type
     showanimation: TCheckBox;
     ColorPicker2: TJvOfficeColorPanel;
     Button2: TButton;
+    N4: TMenuItem;
+    Diagonalselektieren1: TMenuItem;
+    Label13: TLabel;
+    hasamber: TLabel;
+    Label15: TLabel;
+    haswhite: TLabel;
+    Label14: TLabel;
+    amberslider: TTrackBar;
+    Label16: TLabel;
+    whiteslider: TTrackBar;
     procedure dimmersliderChange(Sender: TObject);
     procedure PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -104,6 +114,9 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure ColorPicker2ColorChange(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure ambersliderChange(Sender: TObject);
+    procedure whitesliderChange(Sender: TObject);
+    procedure Diagonalselektieren1Click(Sender: TObject);
   private
     { Private-Deklarationen }
     selectedrow:integer;
@@ -136,6 +149,27 @@ function RGB2TColor(const R, G, B: Byte): Integer;
 begin
   // convert hexa-decimal values to RGB
   Result := R + G shl 8 + B shl 16;
+end;
+
+function RGBAW2TColor(const R, G, B, A, W: Byte): Integer;
+var
+  Rint, Gint, Bint:integer;
+  Rbyte, Gbyte, Bbyte: byte;
+begin
+  // convert hexa-decimal values to RGB
+  Rint:=R+W+A;
+  Gint:=round(G+W+(A*0.75));
+  Bint:=B+W;
+
+  if Rint>255 then Rint:=255;
+  if Gint>255 then Gint:=255;
+  if Bint>255 then Bint:=255;
+  
+  Rbyte:=Rint;
+  Gbyte:=Gint;
+  Bbyte:=Bint;
+  
+  Result := Rbyte + Gbyte shl 8 + Bbyte shl 16;
 end;
 
 procedure TColor2RGB(const Color: TColor; var R, G, B: Byte);
@@ -206,6 +240,8 @@ begin
     lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].r:=lauflichtassistentform.lauflichtarray[sourcerow][sourcecol].r;
     lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].g:=lauflichtassistentform.lauflichtarray[sourcerow][sourcecol].g;
     lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].b:=lauflichtassistentform.lauflichtarray[sourcerow][sourcecol].b;
+    lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].a:=lauflichtassistentform.lauflichtarray[sourcerow][sourcecol].a;
+    lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].w:=lauflichtassistentform.lauflichtarray[sourcerow][sourcecol].w;
     lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].useonlyrgb:=lauflichtassistentform.lauflichtarray[sourcerow][sourcecol].useonlyrgb;
   end else
   begin
@@ -232,6 +268,14 @@ begin
       hasrgb.Caption:=_('Ja')
     else
       hasrgb.Caption:=_('Nein');
+    if mainform.devicegroups[devicepos].HasChanType[41] then
+      hasamber.Caption:=_('Ja')
+    else
+      hasamber.Caption:=_('Nein');
+    if mainform.devicegroups[devicepos].HasChanType[40] then
+      haswhite.Caption:=_('Ja')
+    else
+      haswhite.Caption:=_('Nein');
     if mainform.devicegroups[devicepos].HasChanType[19] then
       hasdimmer.Caption:=_('Ja')
     else
@@ -248,6 +292,14 @@ begin
       hasrgb.Caption:=_('Ja')
     else
       hasrgb.Caption:=_('Nein');
+    if mainform.devicegroups[devicepos].HasChanType[41] then
+      hasamber.Caption:=_('Ja')
+    else
+      hasamber.Caption:=_('Nein');
+    if mainform.devicegroups[devicepos].HasChanType[40] then
+      haswhite.Caption:=_('Ja')
+    else
+      haswhite.Caption:=_('Nein');
     if mainform.devices[devicepos].hasDimmer then
       hasdimmer.Caption:=_('Ja')
     else
@@ -258,6 +310,8 @@ begin
 
 //  colorpicker.SelectedColor:=RGB2TColor(lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].r, lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].g, lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].b);
   dimmerslider.Position:=lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].intensity;
+  amberslider.Position:=lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].a;
+  whiteslider.Position:=lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].w;
   channeltype.ItemIndex:=lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].channel;
   delayedit.Value:=lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].delay;
   fadetimeedit.Value:=lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].fadetime;
@@ -265,6 +319,8 @@ begin
   useonlyrgb.checked:=lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].useonlyrgb;
   channeltype.enabled:=not lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].useonlyrgb;
   dimmerslider.enabled:=not lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].useonlyrgb;
+  amberslider.enabled:=lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].useonlyrgb;
+  whiteslider.enabled:=lauflichtassistentform.lauflichtarray[selectedrow][selectedcol].useonlyrgb;
 
   colorpicker.enabled:=useonlyrgb.Checked;
 end;
@@ -317,6 +373,8 @@ begin
       lauflichtassistentform.lauflichtarray[j][i].r:=0;
       lauflichtassistentform.lauflichtarray[j][i].g:=0;
       lauflichtassistentform.lauflichtarray[j][i].b:=0;
+      lauflichtassistentform.lauflichtarray[j][i].a:=0;
+      lauflichtassistentform.lauflichtarray[j][i].w:=0;
       lauflichtassistentform.lauflichtarray[j][i].channel:=19;
 
       position:=geraetesteuerung.GetDevicePositionInDeviceArray(@lauflichtassistentform.lauflichtdevices[i]);
@@ -369,6 +427,8 @@ begin
   channeltype.Enabled:=not useonlyrgb.Checked;
   dimmerslider.Enabled:=not useonlyrgb.Checked;
   colorpicker.enabled:=useonlyrgb.Checked;
+  amberslider.enabled:=useonlyrgb.Checked;
+  whiteslider.enabled:=useonlyrgb.Checked;
 end;
 
 procedure Tlauflichtassistentownpatternform.chanactiveMouseUp(
@@ -453,6 +513,8 @@ begin
       lauflichtassistentform.lauflichtarray[i][j].r:=0;
       lauflichtassistentform.lauflichtarray[i][j].g:=0;
       lauflichtassistentform.lauflichtarray[i][j].b:=0;
+      lauflichtassistentform.lauflichtarray[i][j].a:=0;
+      lauflichtassistentform.lauflichtarray[i][j].w:=0;
     end;
   end;
 end;
@@ -539,7 +601,7 @@ begin
     if lauflichtassistentform.lauflichtarray[lauflichtcounter][i].enabled then
     begin
       if lauflichtassistentform.lauflichtarray[lauflichtcounter][i].useonlyrgb then
-        paintbox2.Canvas.Brush.Color:=RGB2TColor(lauflichtassistentform.lauflichtarray[lauflichtcounter][i].r,lauflichtassistentform.lauflichtarray[lauflichtcounter][i].g,lauflichtassistentform.lauflichtarray[lauflichtcounter][i].b)
+        paintbox2.Canvas.Brush.Color:=RGBAW2TColor(lauflichtassistentform.lauflichtarray[lauflichtcounter][i].r,lauflichtassistentform.lauflichtarray[lauflichtcounter][i].g,lauflichtassistentform.lauflichtarray[lauflichtcounter][i].b,lauflichtassistentform.lauflichtarray[lauflichtcounter][i].a,lauflichtassistentform.lauflichtarray[lauflichtcounter][i].w)
       else
         paintbox2.canvas.Brush.Color:=RGB2TColor(lauflichtassistentform.lauflichtarray[lauflichtcounter][i].intensity,lauflichtassistentform.lauflichtarray[lauflichtcounter][i].intensity, lauflichtassistentform.lauflichtarray[lauflichtcounter][i].intensity);
     end else
@@ -585,7 +647,7 @@ begin
           _Buffer.Canvas.Pen.Color:=clGray;
       end;
       if lauflichtassistentform.lauflichtarray[i][j].useonlyrgb then
-        _Buffer.Canvas.Brush.Color:=RGB2TColor(lauflichtassistentform.lauflichtarray[i][j].r,lauflichtassistentform.lauflichtarray[i][j].g,lauflichtassistentform.lauflichtarray[i][j].b)
+        _Buffer.Canvas.Brush.Color:=RGBAW2TColor(lauflichtassistentform.lauflichtarray[i][j].r,lauflichtassistentform.lauflichtarray[i][j].g,lauflichtassistentform.lauflichtarray[i][j].b,lauflichtassistentform.lauflichtarray[i][j].a,lauflichtassistentform.lauflichtarray[i][j].w)
       else
         _Buffer.Canvas.Brush.Color:=RGB2TColor(lauflichtassistentform.lauflichtarray[i][j].intensity, lauflichtassistentform.lauflichtarray[i][j].intensity, lauflichtassistentform.lauflichtarray[i][j].intensity);
       _Buffer.Canvas.Rectangle(rectanglewidth*j,rectangleheight*i,rectanglewidth*(j+1),rectangleheight*(i+1));
@@ -756,4 +818,56 @@ begin
   end;
 end;
 
+procedure Tlauflichtassistentownpatternform.ambersliderChange(
+  Sender: TObject);
+var
+  i,j:integer;
+begin
+  // change amber-color
+  for j:=0 to devicecount-1 do
+    for i:=0 to round(rowcount.value)-1 do
+      if selected[i][j] then
+      begin
+        lauflichtassistentform.lauflichtarray[i][j].a:=amberslider.position;
+      end;
+end;
+
+procedure Tlauflichtassistentownpatternform.whitesliderChange(
+  Sender: TObject);
+var
+  i,j:integer;
+begin
+  // change white-color
+  for j:=0 to devicecount-1 do
+    for i:=0 to round(rowcount.value)-1 do
+      if selected[i][j] then
+      begin
+        lauflichtassistentform.lauflichtarray[i][j].w:=whiteslider.position;
+      end;
+end;
+
+procedure Tlauflichtassistentownpatternform.Diagonalselektieren1Click(
+  Sender: TObject);
+var
+  i,j,colcounter:integer;
+begin
+  for i:=0 to length(selected)-1 do
+    for j:=0 to length(selected[i])-1 do
+      selected[i][j]:=false;
+
+  colcounter:=0;
+
+  for i:=0 to length(selected)-1 do
+    for j:=0 to length(selected[i])-1 do
+    begin
+      if (j=colcounter) then
+      begin
+        selected[i][j]:=true;
+        colcounter:=colcounter+1;
+        break;
+      end;
+    end;
+end;
+
 end.
+

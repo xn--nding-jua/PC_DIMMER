@@ -60,16 +60,16 @@ object midieventfrm: Tmidieventfrm
   object GroupBox1: TGroupBox
     Left = 9
     Top = 57
-    Width = 752
-    Height = 229
+    Width = 744
+    Height = 220
     Align = alClient
     Caption = ' MIDI-Events bearbeiten '
     TabOrder = 0
     object MIDIGrid: TStringGrid
       Left = 11
       Top = 24
-      Width = 730
-      Height = 162
+      Width = 722
+      Height = 153
       Align = alClient
       ColCount = 12
       DefaultRowHeight = 15
@@ -96,8 +96,8 @@ object midieventfrm: Tmidieventfrm
     end
     object Panel5: TPanel
       Left = 2
-      Top = 186
-      Width = 748
+      Top = 177
+      Width = 740
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
@@ -892,7 +892,7 @@ object midieventfrm: Tmidieventfrm
       Left = 2
       Top = 24
       Width = 9
-      Height = 162
+      Height = 153
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 2
@@ -900,17 +900,17 @@ object midieventfrm: Tmidieventfrm
     object Panel7: TPanel
       Left = 2
       Top = 15
-      Width = 748
+      Width = 740
       Height = 9
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 3
     end
     object Panel8: TPanel
-      Left = 741
+      Left = 733
       Top = 24
       Width = 9
-      Height = 162
+      Height = 153
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 4
@@ -931,8 +931,8 @@ object midieventfrm: Tmidieventfrm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 286
-    Width = 770
+    Top = 277
+    Width = 762
     Height = 177
     Align = alBottom
     BevelOuter = bvNone
@@ -1193,16 +1193,16 @@ object midieventfrm: Tmidieventfrm
     Left = 0
     Top = 57
     Width = 9
-    Height = 229
+    Height = 220
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 2
   end
   object Panel3: TPanel
-    Left = 761
+    Left = 753
     Top = 57
     Width = 9
-    Height = 229
+    Height = 220
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
@@ -1210,7 +1210,7 @@ object midieventfrm: Tmidieventfrm
   object Panel9: TPanel
     Left = 0
     Top = 0
-    Width = 770
+    Width = 762
     Height = 57
     Align = alTop
     BevelOuter = bvNone
@@ -1219,7 +1219,7 @@ object midieventfrm: Tmidieventfrm
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 770
+      Width = 762
       Height = 57
       Style = grVertical
       StartColor = clWhite

@@ -15,7 +15,7 @@ type
     channel : byte;
     delay : integer;
     fadetime : integer;
-    r,g,b:byte;
+    r,g,b,a,w:byte;
     useonlyrgb:boolean;
   end;
 
@@ -85,6 +85,7 @@ type
     newbtn: TPngBitBtn;
     Shape4: TShape;
     Shape2: TShape;
+    Button1: TButton;
     procedure cancelbtnClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure gobtnClick(Sender: TObject);
@@ -117,6 +118,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure ListBox1KeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure Button1Click(Sender: TObject);
   private
     { Private-Deklarationen }
     GedrehteSchrift:HGDIOBJ;
@@ -147,6 +149,27 @@ function RGB2TColor(const R, G, B: Byte): Integer;
 begin
   // convert hexa-decimal values to RGB
   Result := R + G shl 8 + B shl 16;
+end;
+
+function RGBAW2TColor(const R, G, B, A, W: Byte): Integer;
+var
+  Rint, Gint, Bint:integer;
+  Rbyte, Gbyte, Bbyte: byte;
+begin
+  // convert hexa-decimal values to RGB
+  Rint:=R+W+A;
+  Gint:=round(G+W+(A*0.75));
+  Bint:=B+W;
+
+  if Rint>255 then Rint:=255;
+  if Gint>255 then Gint:=255;
+  if Bint>255 then Bint:=255;
+  
+  Rbyte:=Rint;
+  Gbyte:=Gint;
+  Bbyte:=Bint;
+  
+  Result := Rbyte + Gbyte shl 8 + Bbyte shl 16;
 end;
 
 procedure TColor2RGB(const Color: TColor; var R, G, B: Byte);
@@ -266,9 +289,11 @@ begin
         lauflichtarray[0][i].r:=0;
         lauflichtarray[0][i].g:=0;
         lauflichtarray[0][i].b:=0;
+        lauflichtarray[0][i].a:=0;
+        lauflichtarray[0][i].w:=0;
         position:=geraetesteuerung.GetDevicePositionInDeviceArray(@lauflichtassistentform.lauflichtdevices[i]);
         if position>-1 then
-          lauflichtarray[0][i].useonlyrgb:=mainform.Devices[position].hasRGB;;
+          lauflichtarray[0][i].useonlyrgb:=mainform.Devices[position].hasRGB;
       end;
 
       BuildArray;
@@ -334,7 +359,7 @@ begin
         if lauflichtarray[lauflichtcounter][i].enabled then
         begin
           if lauflichtarray[lauflichtcounter][i].useonlyrgb then
-            paintbox1.Canvas.Brush.Color:=RGB2TColor(lauflichtarray[lauflichtcounter][i].r,lauflichtarray[lauflichtcounter][i].g,lauflichtarray[lauflichtcounter][i].b)
+            paintbox1.Canvas.Brush.Color:=RGBAW2TColor(lauflichtarray[lauflichtcounter][i].r,lauflichtarray[lauflichtcounter][i].g,lauflichtarray[lauflichtcounter][i].b,lauflichtarray[lauflichtcounter][i].a,lauflichtarray[lauflichtcounter][i].w)
           else
             paintbox1.canvas.Brush.Color:=RGB2TColor(lauflichtarray[lauflichtcounter][i].intensity,lauflichtarray[lauflichtcounter][i].intensity, lauflichtarray[lauflichtcounter][i].intensity);
         end else
@@ -353,11 +378,15 @@ begin
                 geraetesteuerung.set_channel(lauflichtdevices[i], 'R', -1, lauflichtarray[lauflichtcounter][i].r, lauflichtfadetime, lauflichtarray[lauflichtcounter][i].delay);
                 geraetesteuerung.set_channel(lauflichtdevices[i], 'G', -1, lauflichtarray[lauflichtcounter][i].g, lauflichtfadetime, lauflichtarray[lauflichtcounter][i].delay);
                 geraetesteuerung.set_channel(lauflichtdevices[i], 'B', -1, lauflichtarray[lauflichtcounter][i].b, lauflichtfadetime, lauflichtarray[lauflichtcounter][i].delay);
+                geraetesteuerung.set_channel(lauflichtdevices[i], 'A', -1, lauflichtarray[lauflichtcounter][i].a, lauflichtfadetime, lauflichtarray[lauflichtcounter][i].delay);
+                geraetesteuerung.set_channel(lauflichtdevices[i], 'W', -1, lauflichtarray[lauflichtcounter][i].w, lauflichtfadetime, lauflichtarray[lauflichtcounter][i].delay);
               end else
               begin
                 geraetesteuerung.set_channel(lauflichtdevices[i], 'R', -1, lauflichtarray[lauflichtcounter][i].r, lauflichtarray[lauflichtcounter][i].fadetime, lauflichtarray[lauflichtcounter][i].delay);
                 geraetesteuerung.set_channel(lauflichtdevices[i], 'G', -1, lauflichtarray[lauflichtcounter][i].g, lauflichtarray[lauflichtcounter][i].fadetime, lauflichtarray[lauflichtcounter][i].delay);
                 geraetesteuerung.set_channel(lauflichtdevices[i], 'B', -1, lauflichtarray[lauflichtcounter][i].b, lauflichtarray[lauflichtcounter][i].fadetime, lauflichtarray[lauflichtcounter][i].delay);
+                geraetesteuerung.set_channel(lauflichtdevices[i], 'A', -1, lauflichtarray[lauflichtcounter][i].a, lauflichtarray[lauflichtcounter][i].fadetime, lauflichtarray[lauflichtcounter][i].delay);
+                geraetesteuerung.set_channel(lauflichtdevices[i], 'W', -1, lauflichtarray[lauflichtcounter][i].w, lauflichtarray[lauflichtcounter][i].fadetime, lauflichtarray[lauflichtcounter][i].delay);
               end;
             end else
             begin
@@ -834,6 +863,8 @@ begin
       lauflichtarray[i][k].r:=0;
       lauflichtarray[i][k].g:=0;
       lauflichtarray[i][k].b:=0;
+      lauflichtarray[i][k].a:=0;
+      lauflichtarray[i][k].w:=0;
       lauflichtarray[i][k].useonlyrgb:=false;
     end;
   end;
@@ -962,6 +993,8 @@ begin
       lauflichtassistentform.lauflichtarray[0][i].r:=0;
       lauflichtassistentform.lauflichtarray[0][i].g:=0;
       lauflichtassistentform.lauflichtarray[0][i].b:=0;
+      lauflichtassistentform.lauflichtarray[0][i].a:=0;
+      lauflichtassistentform.lauflichtarray[0][i].w:=0;
 
       lauflichtassistentform.lauflichtarray[1][i].enabled:=true;
       lauflichtassistentform.lauflichtarray[1][i].delay:=-1;
@@ -971,6 +1004,8 @@ begin
       lauflichtassistentform.lauflichtarray[1][i].r:=0;
       lauflichtassistentform.lauflichtarray[1][i].g:=0;
       lauflichtassistentform.lauflichtarray[1][i].b:=0;
+      lauflichtassistentform.lauflichtarray[1][i].a:=0;
+      lauflichtassistentform.lauflichtarray[1][i].w:=0;
 
       position:=geraetesteuerung.GetDevicePositionInDeviceArray(@lauflichtassistentform.lauflichtdevices[i]);
       if position>-1 then
@@ -1039,6 +1074,8 @@ begin
         FileStream.WriteBuffer(lauflichtarray[i][j].r,sizeof(lauflichtarray[i][j].r));
         FileStream.WriteBuffer(lauflichtarray[i][j].g,sizeof(lauflichtarray[i][j].g));
         FileStream.WriteBuffer(lauflichtarray[i][j].b,sizeof(lauflichtarray[i][j].b));
+        FileStream.WriteBuffer(lauflichtarray[i][j].a,sizeof(lauflichtarray[i][j].a));
+        FileStream.WriteBuffer(lauflichtarray[i][j].w,sizeof(lauflichtarray[i][j].w));
         FileStream.WriteBuffer(lauflichtarray[i][j].useonlyrgb,sizeof(lauflichtarray[i][j].useonlyrgb));
       end;
     end;
@@ -1086,6 +1123,15 @@ begin
         FileStream.ReadBuffer(lauflichtarray_temp[i][j].r,sizeof(lauflichtarray_temp[i][j].r));
         FileStream.ReadBuffer(lauflichtarray_temp[i][j].g,sizeof(lauflichtarray_temp[i][j].g));
         FileStream.ReadBuffer(lauflichtarray_temp[i][j].b,sizeof(lauflichtarray_temp[i][j].b));
+        if FileVersion>=472 then
+        begin
+          FileStream.ReadBuffer(lauflichtarray_temp[i][j].a,sizeof(lauflichtarray_temp[i][j].a));
+          FileStream.ReadBuffer(lauflichtarray_temp[i][j].w,sizeof(lauflichtarray_temp[i][j].w));
+        end else
+        begin
+          lauflichtarray_temp[i][j].a:=0;
+          lauflichtarray_temp[i][j].w:=0;
+        end;
         FileStream.ReadBuffer(lauflichtarray_temp[i][j].useonlyrgb,sizeof(lauflichtarray_temp[i][j].useonlyrgb));
       end;
     end;
@@ -1117,6 +1163,8 @@ begin
           lauflichtarray[i][j].r:=lauflichtarray_temp[i][j].r;
           lauflichtarray[i][j].g:=lauflichtarray_temp[i][j].g;
           lauflichtarray[i][j].b:=lauflichtarray_temp[i][j].b;
+          lauflichtarray[i][j].a:=lauflichtarray_temp[i][j].a;
+          lauflichtarray[i][j].w:=lauflichtarray_temp[i][j].w;
           lauflichtarray[i][j].useonlyrgb:=lauflichtarray_temp[i][j].useonlyrgb;
         end;
       end;
@@ -1154,6 +1202,8 @@ begin
       lauflichtarray[j][i].r:=0;
       lauflichtarray[j][i].g:=0;
       lauflichtarray[j][i].b:=0;
+      lauflichtarray[j][i].a:=0;
+      lauflichtarray[j][i].w:=0;
 
       position:=geraetesteuerung.GetDevicePositionInDeviceArray(@lauflichtdevices[i]);
       if position>-1 then
@@ -1191,6 +1241,18 @@ procedure Tlauflichtassistentform.ListBox1KeyUp(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 begin
   gobtn.enabled:=listbox1.SelCount>0;
+end;
+
+procedure Tlauflichtassistentform.Button1Click(Sender: TObject);
+var
+  i,j:integer;
+begin
+  for i:=0 to length(lauflichtarray)-1 do
+    for j:=0 to length(lauflichtarray[i])-1 do
+    begin
+      lauflichtarray[i][j].channel:=channeltype.ItemIndex;
+      lauflichtarray[i][j].intensity:=trackbar1.Position
+    end;
 end;
 
 end.

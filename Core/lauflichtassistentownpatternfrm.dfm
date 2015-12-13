@@ -1,8 +1,8 @@
 object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
-  Left = 171
-  Top = 196
+  Left = 253
+  Top = 239
   Width = 754
-  Height = 590
+  Height = 666
   Caption = 'Eigenes Lauflicht erstellen'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,7 +22,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
     Left = 0
     Top = 0
     Width = 560
-    Height = 469
+    Height = 547
     Hint = 'Rechte Maustaste f'#252'r Men'#252
     Align = alClient
     ParentShowHint = False
@@ -35,7 +35,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
     Left = 560
     Top = 0
     Width = 186
-    Height = 469
+    Height = 547
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 0
@@ -59,7 +59,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
     end
     object GroupBox1: TGroupBox
       Left = 8
-      Top = 368
+      Top = 448
       Width = 169
       Height = 97
       Caption = ' Ger'#228'tedetails '
@@ -72,7 +72,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         Caption = 'Name:'
       end
       object devicename: TLabel
-        Left = 48
+        Left = 56
         Top = 24
         Width = 9
         Height = 13
@@ -100,7 +100,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         Caption = 'RGB:'
       end
       object hasrgb: TLabel
-        Left = 40
+        Left = 56
         Top = 56
         Width = 9
         Height = 13
@@ -120,12 +120,40 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         Height = 13
         Caption = '...'
       end
+      object Label13: TLabel
+        Left = 88
+        Top = 56
+        Width = 33
+        Height = 13
+        Caption = 'Amber:'
+      end
+      object hasamber: TLabel
+        Left = 136
+        Top = 56
+        Width = 9
+        Height = 13
+        Caption = '...'
+      end
+      object Label15: TLabel
+        Left = 88
+        Top = 72
+        Width = 25
+        Height = 13
+        Caption = 'Wei'#223
+      end
+      object haswhite: TLabel
+        Left = 136
+        Top = 72
+        Width = 9
+        Height = 13
+        Caption = '...'
+      end
     end
     object GroupBox2: TGroupBox
       Left = 8
       Top = 32
       Width = 169
-      Height = 321
+      Height = 409
       Caption = ' Kanaleinstellungen '
       TabOrder = 2
       object Label5: TLabel
@@ -152,16 +180,30 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
       object Label7: TLabel
         Left = 56
         Top = 139
-        Width = 49
+        Width = 43
         Height = 13
         Caption = 'Fadezeit:'
       end
       object Label9: TLabel
         Left = 8
         Top = 140
-        Width = 49
+        Width = 46
         Height = 13
         Caption = 'Delayzeit:'
+      end
+      object Label14: TLabel
+        Left = 8
+        Top = 321
+        Width = 33
+        Height = 13
+        Caption = 'Amber:'
+      end
+      object Label16: TLabel
+        Left = 8
+        Top = 361
+        Width = 28
+        Height = 13
+        Caption = 'Wei'#223':'
       end
       object ColorPicker: THSLColorPicker
         Left = 8
@@ -175,6 +217,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         LPickerCursor = crCross
         ShowHint = False
         ParentShowHint = False
+        Visible = False
         TabOrder = 6
         OnChange = ColorPickerChange
         DesignSize = (
@@ -271,7 +314,6 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         HotTrackFont.Name = 'MS Sans Serif'
         HotTrackFont.Style = []
         TabOrder = 8
-        Visible = False
         Properties.ShowDefaultColor = False
         Properties.NoneColorCaption = 'No Color'
         Properties.DefaultColorCaption = 'Automatic'
@@ -305,11 +347,37 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         TabOrder = 9
         OnClick = Button2Click
       end
+      object amberslider: TTrackBar
+        Left = 3
+        Top = 336
+        Width = 158
+        Height = 25
+        Hint = 'Kanalwert'
+        Max = 255
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 10
+        TickStyle = tsManual
+        OnChange = ambersliderChange
+      end
+      object whiteslider: TTrackBar
+        Left = 3
+        Top = 376
+        Width = 158
+        Height = 25
+        Hint = 'Kanalwert'
+        Max = 255
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 11
+        TickStyle = tsManual
+        OnChange = whitesliderChange
+      end
     end
   end
   object Panel2: TPanel
     Left = 0
-    Top = 469
+    Top = 547
     Width = 746
     Height = 89
     Align = alBottom
@@ -452,7 +520,6 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
     Top = 8
   end
   object PopupMenu1: TPopupMenu
-    Images = MainForm.PngImageList1
     Left = 40
     Top = 8
     object AlleKanleaktivieren1: TMenuItem
@@ -465,10 +532,17 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
       ImageIndex = 74
       OnClick = AlleKanledeaktivieren1Click
     end
+    object N4: TMenuItem
+      Caption = '-'
+    end
     object AlleKanleselektieren1: TMenuItem
       Caption = 'Alle Kan'#228'le selektieren'
       ImageIndex = 75
       OnClick = AlleKanleselektieren1Click
+    end
+    object Diagonalselektieren1: TMenuItem
+      Caption = 'Diagonal selektieren'
+      OnClick = Diagonalselektieren1Click
     end
     object N1: TMenuItem
       Caption = '-'

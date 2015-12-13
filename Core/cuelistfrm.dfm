@@ -67,8 +67,8 @@ object cuelistform: Tcuelistform
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 378
-    Width = 779
+    Top = 369
+    Width = 771
     Height = 100
     Align = alBottom
     BevelOuter = bvNone
@@ -1788,16 +1788,16 @@ object cuelistform: Tcuelistform
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 779
-    Height = 378
+    Width = 771
+    Height = 369
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
     object StringGrid1: TStringGrid
       Left = 8
       Top = 8
-      Width = 763
-      Height = 370
+      Width = 755
+      Height = 361
       Align = alClient
       Color = clGray
       ColCount = 9
@@ -1841,7 +1841,7 @@ object cuelistform: Tcuelistform
       Left = 0
       Top = 8
       Width = 8
-      Height = 370
+      Height = 361
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 1
@@ -1849,17 +1849,17 @@ object cuelistform: Tcuelistform
     object Panel4: TPanel
       Left = 0
       Top = 0
-      Width = 779
+      Width = 771
       Height = 8
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 2
     end
     object Panel5: TPanel
-      Left = 771
+      Left = 763
       Top = 8
       Width = 8
-      Height = 370
+      Height = 361
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 3

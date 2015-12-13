@@ -500,7 +500,7 @@ begin
         begin
           _Buffer.Canvas.Brush.Style:=bsSolid;
           if devicetoggle then
-            _Buffer.Canvas.Brush.Color:=$00CFCFCF
+            _Buffer.Canvas.Brush.Color:=$00FFBFBF
           else
             _Buffer.Canvas.Brush.Color:=$00FFFFFF;
           _Buffer.Canvas.Rectangle(40*(i-1)+5, 10, 40*(i+mainform.Devices[devicecounter].MaxChan-1)+5, 23);

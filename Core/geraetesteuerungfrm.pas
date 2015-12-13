@@ -83,7 +83,7 @@ type
     ddffilename:string[255];
     funktionen:string;
     hasDimmer:boolean;
-    hasVirtualRGBDimmer:boolean;
+    hasVirtualRGBAWDimmer:boolean;
     hasRGB:boolean;
     hasCMY:boolean;
     hasAmber:boolean;
@@ -424,7 +424,8 @@ type
     procedure SaveFile(FileName: String);
     procedure MSGSave;
     procedure RefreshTreeNew;
-    procedure set_pantilt(DeviceID: TGUID; PANstartvalue, PANendvalue, TILTstartvalue, TILTendvalue, fadetime:integer);
+    procedure set_pantilt(DeviceID: TGUID; PANstartvalue, PANendvalue, TILTstartvalue, TILTendvalue, fadetime:integer);overload;
+    procedure set_pantilt(DeviceID: TGUID; PANstartvalue, PANendvalue, TILTstartvalue, TILTendvalue, fadetime, delay:integer);overload;
     procedure set_channel(DeviceID: TGUID; channel:string; startvalue, endvalue, fadetime:integer);overload;
     procedure set_channel(DeviceID: TGUID; channel:string; startvalue, endvalue, fadetime, delay:integer);overload;
     procedure set_group(GroupID: TGUID; channel:string; startvalue, endvalue, fadetime:integer);overload;
@@ -452,7 +453,7 @@ type
     procedure LoadDDFfiles;
     procedure AddGobo(filename: string);
     procedure ConvertRGBtoRGBA(Rin, Gin, Bin: byte; AmberColorR, AmberColorG:byte; CompRG, CompBlue:boolean; var Rout, Gout, Bout, Aout: byte);
-    procedure ConvertRGBAtoRGB(Rin, Gin, Bin, Ain: byte; AmberColorR, AmberColorG:byte; CompRG, CompBlue:boolean; var Rout, Gout, Bout: byte);
+    procedure ConvertRGBAWtoRGB(Rin, Gin, Bin, Ain: byte; AmberColorR, AmberColorG:byte; CompRG, CompBlue: boolean; Win:byte; var Rout, Gout, Bout: byte);
   end;
 
 var
@@ -722,7 +723,7 @@ begin
       end;
    	  Filestream.ReadBuffer(mainform.Devices[i].hasDimmer,sizeof(mainform.Devices[i].hasDIMMER));
       if Version>=464 then
-     	  Filestream.ReadBuffer(mainform.Devices[i].hasVirtualRGBDimmer,sizeof(mainform.Devices[i].hasVirtualRGBDIMMER));
+     	  Filestream.ReadBuffer(mainform.Devices[i].hasVirtualRGBAWDimmer,sizeof(mainform.Devices[i].hasVirtualRGBAWDIMMER));
    	  Filestream.ReadBuffer(mainform.Devices[i].hasRGB,sizeof(mainform.Devices[i].hasRGB));
       if Version>=468 then
      	  Filestream.ReadBuffer(mainform.Devices[i].hasCMY,sizeof(mainform.Devices[i].hasCMY));
@@ -1012,7 +1013,7 @@ begin
       Filestream.WriteBuffer(mainform.Devices[i].bank[j],sizeof(mainform.Devices[i].bank[j]));
     end;
     Filestream.WriteBuffer(mainform.Devices[i].hasDimmer,sizeof(mainform.Devices[i].hasDIMMER));
-    Filestream.WriteBuffer(mainform.Devices[i].hasVirtualRGBDimmer,sizeof(mainform.Devices[i].hasVirtualRGBDIMMER));
+    Filestream.WriteBuffer(mainform.Devices[i].hasVirtualRGBAWDimmer,sizeof(mainform.Devices[i].hasVirtualRGBAWDIMMER));
     Filestream.WriteBuffer(mainform.Devices[i].hasRGB,sizeof(mainform.Devices[i].hasRGB));
     Filestream.WriteBuffer(mainform.Devices[i].hasCMY,sizeof(mainform.Devices[i].hasCMY));
     Filestream.WriteBuffer(mainform.Devices[i].hasAmber,sizeof(mainform.Devices[i].hasAmber));
@@ -1332,7 +1333,7 @@ begin
         mainform.Devices[length(mainform.Devices)-1].MaxChan:=deviceprototyp[devposition].MaxChan;
         mainform.Devices[length(mainform.Devices)-1].color:=clWhite;
         mainform.Devices[length(mainform.Devices)-1].hasDimmer:=deviceprototyp[devposition].hasDimmer;
-        mainform.Devices[length(mainform.Devices)-1].hasVirtualRGBDimmer:=deviceprototyp[devposition].hasVirtualRGBDimmer;
+        mainform.Devices[length(mainform.Devices)-1].hasVirtualRGBAWDimmer:=deviceprototyp[devposition].hasVirtualRGBAWDimmer;
         mainform.Devices[length(mainform.Devices)-1].hasRGB:=deviceprototyp[devposition].hasRGB;
         mainform.Devices[length(mainform.Devices)-1].hasCMY:=deviceprototyp[devposition].hasCMY;
         mainform.Devices[length(mainform.Devices)-1].hasAmber:=deviceprototyp[devposition].hasAmber;
@@ -2159,7 +2160,7 @@ begin
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].MaxChan:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].MaxChan;
 
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasDimmer:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasDimmer;
-        mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasVirtualRGBDimmer:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasVirtualRGBDimmer;
+        mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasVirtualRGBAWDimmer:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasVirtualRGBAWDimmer;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasRGB:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasRGB;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasCMY:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasCMY;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasAmber:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasAmber;
@@ -2335,6 +2336,11 @@ begin
 end;
 
 procedure Tgeraetesteuerung.set_pantilt(DeviceID: TGUID; PANstartvalue, PANendvalue, TILTstartvalue, TILTendvalue, fadetime:integer);
+begin
+  set_pantilt(DeviceID, PANstartvalue, PANendvalue, TILTstartvalue, TILTendvalue, fadetime, 0);
+end;
+
+procedure Tgeraetesteuerung.set_pantilt(DeviceID: TGUID; PANstartvalue, PANendvalue, TILTstartvalue, TILTendvalue, fadetime, delay:integer);
 var
   aktuellesgeraet:integer;
 begin
@@ -2344,8 +2350,8 @@ begin
   mainform.Devices[aktuellesgeraet].PanEndvalue:=PANendvalue;
   mainform.Devices[aktuellesgeraet].TiltStartvalue:=TILTstartvalue;
   mainform.Devices[aktuellesgeraet].TiltEndvalue:=TILTendvalue;
-  set_channel(DeviceID, 'pan', PANstartvalue, PANendvalue, fadetime);
-  set_channel(DeviceID, 'tilt', TILTstartvalue, TILTendvalue, fadetime);
+  set_channel(DeviceID, 'pan', PANstartvalue, PANendvalue, fadetime, delay);
+  set_channel(DeviceID, 'tilt', TILTstartvalue, TILTendvalue, fadetime, delay);
 end;
 
 procedure Tgeraetesteuerung.set_channel(DeviceID: TGUID; channel:String; startvalue, endvalue, fadetime:integer);
@@ -3629,7 +3635,7 @@ begin
           mainform.devices[i].IrisMaxValue:=DevicePrototyp[j].IrisMaxValue;
 
           mainform.devices[i].hasDimmer:=DevicePrototyp[j].hasDimmer;
-          mainform.devices[i].hasVirtualRGBDimmer:=DevicePrototyp[j].hasVirtualRGBDimmer;
+          mainform.devices[i].hasVirtualRGBAWDimmer:=DevicePrototyp[j].hasVirtualRGBAWDimmer;
           mainform.devices[i].hasRGB:=DevicePrototyp[j].hasRGB;
           mainform.devices[i].hasCMY:=DevicePrototyp[j].hasCMY;
           mainform.devices[i].hasAmber:=DevicePrototyp[j].hasAmber;
@@ -3895,7 +3901,7 @@ begin
   mainform.devices[Destination].OldPos:=mainform.devices[Source].OldPos;
 
   mainform.devices[Destination].hasDimmer:=mainform.devices[Source].hasDimmer;
-  mainform.devices[Destination].hasVirtualRGBDimmer:=mainform.devices[Source].hasVirtualRGBDimmer;
+  mainform.devices[Destination].hasVirtualRGBAWDimmer:=mainform.devices[Source].hasVirtualRGBAWDimmer;
   mainform.devices[Destination].hasRGB:=mainform.devices[Source].hasRGB;
   mainform.devices[Destination].hasCMY:=mainform.devices[Source].hasCMY;
   mainform.devices[Destination].hasAmber:=mainform.devices[Source].hasAmber;
@@ -4534,11 +4540,13 @@ begin
               geraetesteuerung.DevicePrototyp[i].hasPANTILT:=true;
           if lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('DIMMER') then
             geraetesteuerung.DevicePrototyp[i].hasDimmer:=true;
-          if lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('VIRTUALRGBADIMMER') then
+          if (lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('VIRTUALRGBDIMMER')) or
+            (lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('VIRTUALRGBADIMMER')) or
+            (lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('VIRTUALRGBAWDIMMER')) then
           begin
             geraetesteuerung.DevicePrototyp[i].hasDimmer:=true;
-            geraetesteuerung.DevicePrototyp[i].hasVirtualRGBDimmer:=true;
-            geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))]:=lowercase('DIMMER'); // VirtualRGBADimmer als normalen DIMMER maskieren
+            geraetesteuerung.DevicePrototyp[i].hasVirtualRGBAWDimmer:=true;
+            geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))]:=lowercase('DIMMER'); // VirtualRGBAWDimmer als normalen DIMMER maskieren
           end;
           if (lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('R')) or
             (lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('G')) or
@@ -5090,10 +5098,13 @@ begin
   aout:=round(ys*255);
 end;
 
-procedure Tgeraetesteuerung.ConvertRGBAtoRGB(Rin, Gin, Bin, Ain: byte; AmberColorR, AmberColorG:byte; CompRG, CompBlue: boolean; var Rout, Gout, Bout: byte);
+procedure Tgeraetesteuerung.ConvertRGBAWtoRGB(Rin, Gin, Bin, Ain: byte; AmberColorR, AmberColorG:byte; CompRG, CompBlue: boolean; Win:byte; var Rout, Gout, Bout: byte);
 var
   AmberRs,AmberGs:double;
   AmberRGratio:double;
+  
+  Rint, Gint, Bint:integer;
+  Rbyte, Gbyte, Bbyte:byte;
 begin
   AmberRGratio:=AmberColorG/AmberColorR;
 
@@ -5177,9 +5188,21 @@ begin
   AmberGs:=AmberGs+(1-AmberGs)*(Ain/255)*AmberRGratio;
   if AmberGs>1 then AmberGs:=1;
 
-  Rout:=round(AmberRs*255);
-  Gout:=round(AmberGs*255);
-  Bout:=Bin;
+  Rint:=round(AmberRs*255)+Win;
+  Gint:=round(AmberGs*255)+Win;
+  Bint:=Bin+Win;
+  
+  if Rint>255 then Rint:=255;
+  if Gint>255 then Gint:=255;
+  if Bint>255 then Bint:=255;
+  
+  Rbyte:=Rint;
+  Gbyte:=Gint;
+  Bbyte:=Bint;
+
+  Rout:=Rbyte;
+  Gout:=Gbyte;
+  Bout:=Bbyte;
 end;
 
 procedure Tgeraetesteuerung.set_shutter(DeviceID: TGUID; OpenOrClose:byte; Delaytime:integer=0);

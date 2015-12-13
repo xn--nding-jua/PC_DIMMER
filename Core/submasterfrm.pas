@@ -134,6 +134,7 @@ type
     procedure NewFile;
     procedure MSGOpen;
     procedure MSGSave;
+    procedure OpenFile(Filename: string);
     procedure ChangeSubmaster(SubmasterNr, Value: integer);
   end;
 
@@ -362,15 +363,15 @@ begin
   end;
 end;
 
-procedure Tsubmasterform.SpeedButton1Click(Sender: TObject);
+procedure Tsubmasterform.Openfile(Filename: string);
 var
   j,k,l,count2,count3, Fileversion:integer;
 begin
-  if (length(mainform.Submasterbank)>0) and (BankSelect.ItemIndex<length(mainform.Submasterbank)) and OpenDialog1.Execute then
+  if (length(mainform.Submasterbank)>0) and (BankSelect.ItemIndex<length(mainform.Submasterbank)) then
   begin
-    if FileExists(OpenDialog1.FileName) then
+    if FileExists(Filename) then
     begin
-      FileStream:=TFileStream.Create(OpenDialog1.FileName,fmOpenRead);
+      FileStream:=TFileStream.Create(Filename,fmOpenRead);
 
       // Projektversion
       Filestream.ReadBuffer(FileVersion, sizeof(FileVersion));
@@ -408,6 +409,14 @@ begin
 
       FileStream.Free;
     end;
+  end;
+end;
+
+procedure Tsubmasterform.SpeedButton1Click(Sender: TObject);
+begin
+  if OpenDialog1.Execute then
+  begin
+    Openfile(OpenDialog1.FileName);
   end;
 end;
 

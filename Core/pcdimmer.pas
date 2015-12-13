@@ -103,11 +103,11 @@ uses
   JvOfficeColorPanel, JvColorButton, cxStyles, dxGDIPlusClasses, SHDocVw,
   graphutil, IdCustomTCPServer, IdCustomHTTPServer, idContext, VistaAltFixUnit2,
   SVATimer, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, pcdMEVP,
-  dxRibbonSkins, dxBarApplicationMenu, D7GesturesHeader;
+  dxRibbonSkins, dxBarApplicationMenu, D7GesturesHeader, jpeg;
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=471;
+  actualprojectversion=472;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -884,6 +884,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure CheckBox3KeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormDragDrop(Sender, Source: TObject; X, Y: Integer);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -1271,6 +1272,10 @@ type
     procedure SplashProgress(bar, position, max:integer);
     procedure ExecuteDataInEvent(address, endvalue:integer);
     procedure ResetBass;
+    procedure ConvertBMPtoJPG(bmpSource, jpgDestination: string);
+    procedure ConvertBMPtoPNG(bmpSource, pngDestination: string);
+    procedure SavePng(Bitmap: TBitmap; Destination:string);
+    procedure SaveJpg(Bitmap: TBitmap; Destination:string);
   end;
 
 // Callbackfunktionen der Plugin-Dlls
@@ -2741,11 +2746,15 @@ begin
               endvalue_Calibrated:=round(((maxres-masterform.dimmermaster.position)/maxres)*endvalue);
               useCalibrationValue:=true;
 
-              if devices[k].hasVirtualRGBDimmer then
+              if devices[k].hasVirtualRGBAWDimmer then
               begin
-                if ((devices[k].kanaltyp[address-devices[k].Startaddress]='r') or (devices[k].kanaltyp[address-devices[k].Startaddress]='g') or (devices[k].kanaltyp[address-devices[k].Startaddress]='b') or (devices[k].kanaltyp[address-devices[k].Startaddress]='a')) then
+                if ((devices[k].kanaltyp[address-devices[k].Startaddress]='r') or
+                  (devices[k].kanaltyp[address-devices[k].Startaddress]='g') or
+                  (devices[k].kanaltyp[address-devices[k].Startaddress]='b') or
+                  (devices[k].kanaltyp[address-devices[k].Startaddress]='a') or
+                  (devices[k].kanaltyp[address-devices[k].Startaddress]='w')) then
                 begin
-                  // falls aktueller Kanal R,G,B oder A
+                  // falls aktueller Kanal R,G,B,A oder W
                   virtualdimmerfaktor:=(geraetesteuerung.get_channel(devices[k].ID, 'DIMMER')/maxres);
                   startvalue_Calibrated:=round(maxres-(virtualdimmerfaktor*(maxres-startvalue)));
                   endvalue_Calibrated:=round(maxres-(virtualdimmerfaktor*(maxres-endvalue)));
@@ -2753,11 +2762,12 @@ begin
                 end;
                 if (devices[k].kanaltyp[address-devices[k].Startaddress]='dimmer') then
                 begin
-                  // R,G,B,A aktualisieren
+                  // R,G,B,A,W aktualisieren
                   geraetesteuerung.set_channel(devices[k].ID, 'r', -1, geraetesteuerung.get_channel(devices[k].ID, 'r'), 0);
                   geraetesteuerung.set_channel(devices[k].ID, 'g', -1, geraetesteuerung.get_channel(devices[k].ID, 'g'), 0);
                   geraetesteuerung.set_channel(devices[k].ID, 'b', -1, geraetesteuerung.get_channel(devices[k].ID, 'b'), 0);
                   geraetesteuerung.set_channel(devices[k].ID, 'a', -1, geraetesteuerung.get_channel(devices[k].ID, 'a'), 0);
+                  geraetesteuerung.set_channel(devices[k].ID, 'w', -1, geraetesteuerung.get_channel(devices[k].ID, 'w'), 0);
                 end;
               end;
             end;
@@ -2896,11 +2906,15 @@ begin
             Value:=round(((maxres-masterform.dimmermaster.position)/maxres)*FilterWithDimmcurve(Data1,Data2));
             useCalibrationValue:=true;
 
-            if devices[k].hasVirtualRGBDimmer then
+            if devices[k].hasVirtualRGBAWDimmer then
             begin
-              if ((devices[k].kanaltyp[tempvalue]='r') or (devices[k].kanaltyp[tempvalue]='g') or (devices[k].kanaltyp[tempvalue]='b') or (devices[k].kanaltyp[tempvalue]='a')) then
+              if ((devices[k].kanaltyp[tempvalue]='r') or
+                (devices[k].kanaltyp[tempvalue]='g') or
+                (devices[k].kanaltyp[tempvalue]='b') or
+                (devices[k].kanaltyp[tempvalue]='a') or
+                (devices[k].kanaltyp[tempvalue]='w')) then
               begin
-                // falls aktueller Kanal R,G,B oder A und aktivierter VirtualDimmer, dann diesen berechnen
+                // falls aktueller Kanal R,G,B,A oder W und aktivierter VirtualDimmer, dann diesen berechnen
                 virtualdimmerfaktor:=(geraetesteuerung.get_channel(devices[k].ID, 'DIMMER')/255);
                 Value:=round(virtualdimmerfaktor*Integer(Data2));
               end;
@@ -2911,6 +2925,7 @@ begin
                 geraetesteuerung.set_channel(devices[k].ID, 'g', -1, geraetesteuerung.get_channel(devices[k].ID, 'g'), 0);
                 geraetesteuerung.set_channel(devices[k].ID, 'b', -1, geraetesteuerung.get_channel(devices[k].ID, 'b'), 0);
                 geraetesteuerung.set_channel(devices[k].ID, 'a', -1, geraetesteuerung.get_channel(devices[k].ID, 'a'), 0);
+                geraetesteuerung.set_channel(devices[k].ID, 'w', -1, geraetesteuerung.get_channel(devices[k].ID, 'w'), 0);
               end;
             end;
           end else if ((devices[k].kanaltyp[tempvalue]='pan') or (devices[k].kanaltyp[tempvalue]='tilt')) then
@@ -4593,7 +4608,7 @@ begin
      	  Filestream.WriteBuffer(mainform.Devices[i].bank[j],sizeof(mainform.Devices[i].bank[j]));
       end;
    	  Filestream.WriteBuffer(mainform.Devices[i].hasDimmer,sizeof(mainform.Devices[i].hasDIMMER));
-   	  Filestream.WriteBuffer(mainform.Devices[i].hasVirtualRGBDimmer,sizeof(mainform.Devices[i].hasVirtualRGBDIMMER));
+   	  Filestream.WriteBuffer(mainform.Devices[i].hasVirtualRGBAWDimmer,sizeof(mainform.Devices[i].hasVirtualRGBAWDIMMER));
    	  Filestream.WriteBuffer(mainform.Devices[i].hasRGB,sizeof(mainform.Devices[i].hasRGB));
    	  Filestream.WriteBuffer(mainform.Devices[i].hasCMY,sizeof(mainform.Devices[i].hasCMY));
    	  Filestream.WriteBuffer(mainform.Devices[i].hasAmber,sizeof(mainform.Devices[i].hasAmber));
@@ -6083,7 +6098,7 @@ begin
      	  Filestream.WriteBuffer(mainform.Devices[i].bank[j],sizeof(mainform.Devices[i].bank[j]));
       end;
    	  Filestream.WriteBuffer(mainform.Devices[i].hasDimmer,sizeof(mainform.Devices[i].hasDIMMER));
-   	  Filestream.WriteBuffer(mainform.Devices[i].hasVirtualRGBDimmer,sizeof(mainform.Devices[i].hasVirtualRGBDIMMER));
+   	  Filestream.WriteBuffer(mainform.Devices[i].hasVirtualRGBAWDimmer,sizeof(mainform.Devices[i].hasVirtualRGBAWDIMMER));
    	  Filestream.WriteBuffer(mainform.Devices[i].hasRGB,sizeof(mainform.Devices[i].hasRGB));
    	  Filestream.WriteBuffer(mainform.Devices[i].hasCMY,sizeof(mainform.Devices[i].hasCMY));
    	  Filestream.WriteBuffer(mainform.Devices[i].hasAmber,sizeof(mainform.Devices[i].hasAmber));
@@ -8055,7 +8070,7 @@ begin
       end;
    	  Filestream.ReadBuffer(mainform.Devices[i].hasDimmer,sizeof(mainform.Devices[i].hasDIMMER));
       if projektprogrammversionint>=464 then
-     	  Filestream.ReadBuffer(mainform.Devices[i].hasVirtualRGBDimmer,sizeof(mainform.Devices[i].hasVirtualRGBDIMMER));
+     	  Filestream.ReadBuffer(mainform.Devices[i].hasVirtualRGBAWDimmer,sizeof(mainform.Devices[i].hasVirtualRGBAWDIMMER));
    	  Filestream.ReadBuffer(mainform.Devices[i].hasRGB,sizeof(mainform.Devices[i].hasRGB));
       if projektprogrammversionint>=468 then
      	  Filestream.ReadBuffer(mainform.Devices[i].hasCMY,sizeof(mainform.Devices[i].hasCMY));
@@ -12339,143 +12354,26 @@ end;
 
 procedure TMainform.FWM_DropFiles(var Msg: TMessage);
 var
-	i, k, anzahl, size, effektanzahl: integer;
-  Dateiname, effectfilepath, effectfilename: String;
-  SR: TSearchRec;
-  j:integer;
+	i, anzahl, size: integer;
+  Dateiname: String;
 begin
   inherited;
   Dateiname := '';
   anzahl := DragQueryFile(Msg.WParam, $FFFFFFFF, nil, 0);
+
+  showmessage(inttostr(anzahl));
+
   for i := 0 to (anzahl - 1) do
   begin
-    size := DragQueryFile(Msg.WParam, i , nil, 0) + 1;
+    size := DragQueryFile(Msg.WParam, i , nil, 0);
     SetLength(Dateiname, size);
-    SetLength(Dateiname, DragQueryFile(Msg.WParam,i , @Dateiname[1], size));
-//////
-    // Falls Skripttimerdatei
-    if copy(Dateiname,length(Dateiname)-6,7)='pcdstmr' then
-    begin
-      try
-        schedulerform.skripttimer_listbox.items.loadfromfile(Dateiname);
-      except
-        ErrorPop(_('Die zu ladende Skript-Timerliste ist fehlerhaft oder nicht vorhanden!'));
-      end;
-      schedulerform.checkskripttimerbuttons();
-      schedulerform.show;
-      schedulerform.skripttimer_start.Click;
-    end;
-
-    // Falls Projektdatei
-    if copy(Dateiname,length(Dateiname)-6,7)='pcdproj' then
-    begin
-      autoload_project_file:=Dateiname;
-      openproject(Dateiname, false);
-    end;
-
-    // Falls Audioeffektdatei
-    if copy(Dateiname,length(Dateiname)-6,7)='pcdeaud' then
-    begin
-      audioeffektplayerform.openeffektaudiofile(Dateiname);
-    end;
-
-		// Falls Audioeffekte
-    if (copy(Dateiname,length(Dateiname)-6,7)='pcdelst') and (audioeffektplayerform.OpenEffektliste.Enabled) then
-    begin
-	    effectfilepath:=ExtractFilepath(Dateiname);
-	    effectfilename:=ExtractFileName(Dateiname);
-
-	    DeleteFile(workingdirectory+'Temp\*.*');
-	    Compress.DecompressFile(effectfilepath+effectfilename,workingdirectory+'Temp\',true,false);
-      if not startingup then
-        inprogress.Hide;
-
-	    if fileexists(workingdirectory+'Temp\Effektaudio') then
-				FileStream:=TFileStream.Create(workingdirectory+'Temp\Effektaudio',fmOpenRead)
-	    else
-	    	FileStream:=TFileStream.Create(workingdirectory+'Temp\'+effectfilename,fmOpenRead);
-      Filestream.ReadBuffer(Effektaudiodatei_record.layeranzahl,sizeof(Effektaudiodatei_record.layeranzahl));
-      // Einzelne Layer und Effekte laden
-      for j:=1 to maxaudioeffektlayers do
-      begin
-        // Effektanzahl herausfinden
-        FileStream.ReadBuffer(effektanzahl,sizeof(effektanzahl));
-        audioeffektplayerform.maxaudioeffekte[j]:=effektanzahl;
-        // Effektarraygrößen festlegen
-        setlength(audioeffektplayerform._effektaudioeffektpassed[audioeffektplayerform._audioeffektlayer],effektanzahl);
-        setlength(Effektaudiodatei_record.layer[j].effekt,effektanzahl);
-        // Effektarrays laden
-				for k:=0 to effektanzahl-1 do
-        begin
-        	Filestream.ReadBuffer(Effektaudiodatei_record.layer[j].effekt[k],sizeof(Effektaudiodatei_record.layer[j].effekt[k]));
-        end;
-       	Filestream.ReadBuffer(Effektaudiodatei_record.layer[j].layeractive,sizeof(Effektaudiodatei_record.layer[j].layeractive));
-      end;
-      Filestream.ReadBuffer(Effektaudiodatei_record.repeatjump,sizeof(Effektaudiodatei_record.repeatjump));
-      Filestream.ReadBuffer(Effektaudiodatei_record.repeatdestination,sizeof(Effektaudiodatei_record.repeatdestination));
-      Filestream.ReadBuffer(Effektaudiodatei_record.repeatactive,sizeof(Effektaudiodatei_record.repeatactive));
-      Filestream.ReadBuffer(Effektaudiodatei_record.volume,sizeof(Effektaudiodatei_record.volume));
-      Filestream.ReadBuffer(Effektaudiodatei_record.videoseeking,sizeof(Effektaudiodatei_record.videoseeking));
-      Filestream.ReadBuffer(Effektaudiodatei_record.layername,sizeof(Effektaudiodatei_record.layername));
-			FileStream.Free;
-	    DeleteFile(workingdirectory+'Temp\*.*');
-
-	    for j:=1 to maxaudioeffektlayers do
-	    begin
-        audioeffektplayerform.layercombobox.Checked[j-1]:=Effektaudiodatei_record.layer[j].layeractive;
-        audioeffektplayerform.activelayer[j-1]:=Effektaudiodatei_record.layer[j].layeractive;
-      end;
-
-	    audioeffektplayerform.layerbox.ItemIndex:=0;
-			audioeffektplayerform.layerboxChange(nil);
-
-      FindClose(SR);
-			audioeffektplayerform.layerboxChange(nil);
-    	audioeffektplayerform.Check_audioeffektbuttons();
-    end;
-
-		// Falls Audioeffektlayer
-    if (copy(Dateiname,length(Dateiname)-6,7)='pcdelyr') and (audioeffektplayerform.OpenEffektliste.Enabled) and (audioeffektplayerform._audioeffektlayer>0) then
-    begin
-	    effectfilepath:=ExtractFilepath(Dateiname);
-	    effectfilename:=ExtractFileName(Dateiname);
-
-	    DeleteFile(workingdirectory+'Temp\*.*');
-	    Compress.DecompressFile(effectfilepath+effectfilename,workingdirectory+'Temp\',true,false);
-      if not startingup then
-        inprogress.Hide;
-
-	      if fileexists(workingdirectory+'Temp\Effektlayer') then
-					FileStream:=TFileStream.Create(workingdirectory+'Temp\Effektlayer',fmOpenRead)
-        else
-        	FileStream:=TFileStream.Create(workingdirectory+'Temp\'+effectfilename,fmOpenRead);
-	      // Effektanzahl herausfinden
-        FileStream.ReadBuffer(effektanzahl,sizeof(effektanzahl));
-        audioeffektplayerform.maxaudioeffekte[audioeffektplayerform._audioeffektlayer]:=effektanzahl;
-        // Effektarraygrößen festlegen
-        setlength(audioeffektplayerform._effektaudioeffektpassed[audioeffektplayerform._audioeffektlayer],effektanzahl);
-        setlength(Effektaudiodatei_record.layer[audioeffektplayerform._audioeffektlayer].effekt,effektanzahl);
-        // Effektarray laden
-        for k:=0 to effektanzahl-1 do
-        begin
-	        Filestream.ReadBuffer(Effektaudiodatei_record.layer[audioeffektplayerform._audioeffektlayer].effekt[k],sizeof(Effektaudiodatei_record.layer[audioeffektplayerform._audioeffektlayer].effekt[k]));
-        end;
-      Filestream.ReadBuffer(Effektaudiodatei_record.layer[audioeffektplayerform._audioeffektlayer].layeractive,sizeof(Effektaudiodatei_record.layer[audioeffektplayerform._audioeffektlayer].layeractive));
-      Filestream.ReadBuffer(Effektaudiodatei_record.repeatjump,sizeof(Effektaudiodatei_record.repeatjump));
-      Filestream.ReadBuffer(Effektaudiodatei_record.repeatdestination,sizeof(Effektaudiodatei_record.repeatdestination));
-      Filestream.ReadBuffer(Effektaudiodatei_record.repeatactive,sizeof(Effektaudiodatei_record.repeatactive));
-      Filestream.ReadBuffer(Effektaudiodatei_record.volume,sizeof(Effektaudiodatei_record.volume));
-      Filestream.ReadBuffer(Effektaudiodatei_record.videoseeking,sizeof(Effektaudiodatei_record.videoseeking));
-      Filestream.ReadBuffer(Effektaudiodatei_record.layername,sizeof(Effektaudiodatei_record.layername));
-	 		FileStream.Free;
-	    DeleteFile(workingdirectory+'Temp\*.*');
-
-			audioeffektplayerform.layerboxChange(nil);
-	    audioeffektplayerform.Check_audioeffektbuttons();
-    end;
-//////
+//    SetLength(Dateiname, DragQueryFile(Msg.WParam,i , PChar(Dateiname), size));
+    DragQueryFile(Msg.WParam, i, PChar(Dateiname), size + 1);
+    showmessage(Dateiname);
+    OpenPCDIMMERFile(Dateiname);
   end;
   DragFinish(Msg.WParam);
+  Msg.Result := 0;
 end;
 
 procedure TMainform.PluginMenuClick(Sender: TObject);
@@ -13659,7 +13557,6 @@ var
   ProcCall2:procedure;stdcall;
   text1:string;
   ergebnisse:Variant;
-  somethingloaded:boolean;
   Buffer:TMemoryStream;
   Wnd: hWnd;
   P: TdxPNGImage;
@@ -13669,7 +13566,6 @@ begin
   if not FirstStartAfterCreate then
     Exit;
 
-  somethingloaded := false;
   currentprojectversion := actualprojectversion;
 
   // Konstanten für Ribbon setzen, damit Ribbons nicht bei Doppelklick verschwinden
@@ -14245,8 +14141,12 @@ begin
 
   LoadDDFPictures;
 
-  debuglistbox.Items.SaveToFile(workingdirectory+'\PC_DIMMER.log');
   SplashProgress(1, 80, 100);
+  SplashCaptioninfo(_('Leeres Projekt erzeugen...'));
+  NewProject;
+
+  debuglistbox.Items.SaveToFile(workingdirectory+'\PC_DIMMER.log');
+  SplashProgress(1, 85, 100);
   SplashCaptioninfo(_('Dateien öffnen...'));
   SplashAddText('');
   RefreshSplashText;
@@ -14260,83 +14160,32 @@ begin
   else
     DebugAddToLine(' - No Files found');
 
+  // Versuche Dateien zu laden
   for i:=1 to paramcount do
   begin
-    // Falls Textdatei (z.B. nach Onlineupdate)
-    if copy(paramstr(i),length(paramstr(i))-2,3)='txt' then
-    begin
-      SplashCaptioninfo(_('Dateien öffnen...Textdatei'));
-      SplashAddText(_('Zeige Textdatei an...'));
-      DebugAdd('FILE: Loading Textfile: '+paramstr(i));
-      textbox.Items.LoadFromFile(paramstr(i));
-      ShowMessage(textbox.Items.GetText);
-    end;
+    SplashCaptioninfo(_('Dateien öffnen...')+ExtractFileName(paramstr(i)));
+    SplashAddText(_('Lade Datei...')+ExtractFileName(paramstr(i)));
+    DebugAdd('FILE: Loading PC_DIMMER-File: '+paramstr(i));
+    OpenPCDIMMERFile(paramstr(i));
+  end;
 
-    // Falls Skripttimerdatei
-    if copy(paramstr(i),length(paramstr(i))-6,7)='pcdstmr' then
-    begin
-      somethingloaded:=true;
-      SplashCaptioninfo(_('Dateien öffnen...Skripttimer'));
-      SplashAddText(_('Lade Skripttimer...'));
-      DebugAdd('FILE: Loading Scripttimerfile: '+paramstr(i));
-
-      FileStream.Create(paramstr(i),fmOpenRead);
-      Filestream.ReadBuffer(Count,sizeof(Count));
-      setlength(AblaufTimer,Count);
-      for j:=0 to Count-1 do
-        Filestream.ReadBuffer(AblaufTimer[j],sizeof(AblaufTimer[j]));
-      Filestream.Free;
-      schedulerform.skripttimer_listbox.Clear;
-      for j:=0 to Count-1 do
-      begin
-        case Ablauftimer[j].LoadTyp of
-          0..1: schedulerform.skripttimer_listbox.ItemIndex:=schedulerform.skripttimer_listbox.Items.Add(Ablauftimer[j].Datum+' '+Ablauftimer[j].Uhrzeit+' : '+Ablauftimer[j].Name);
-          2: schedulerform.skripttimer_listbox.ItemIndex:=schedulerform.skripttimer_listbox.Items.Add(Ablauftimer[j].Datum+' '+Ablauftimer[j].Uhrzeit+' : '+ExtractFileName(Ablauftimer[j].Skriptdatei));
-        end;
-      end;
-
-      schedulerform.checkskripttimerbuttons();
-      schedulerform.show;
-    end;
-
+  // Werte Parameterschalter aus
+  for i:=1 to paramcount do
+  begin
     // Falls Skripttimerdatei gestartet werden soll
     if ((paramstr(i)='/starttimer') and (schedulerform.skripttimer_listbox.Items.Count>0)) then
     begin
       SplashAddText(_('Starte Skripttimer...'));
       schedulerform.skripttimer_start.Click;
     end;
-
-    // Falls Projektdatei
-    if copy(paramstr(i),length(paramstr(i))-6,7)='pcdproj' then
-    begin
-      somethingloaded:=true;
-      SplashCaptioninfo(_('Dateien öffnen...Projekt'));
-      SplashAddText(_('Lade Projekt...'));
-      DebugAdd('FILE: Loading Projectfile: '+paramstr(i));
-      autoload_project_file:=paramstr(i);
-      openproject(paramstr(i), false);
-      //SplashProgress(1, 81..93, 100);
-    end;
-
-    // Falls Fastsave
     if paramstr(i)='/loadfastsave' then
     begin
-      somethingloaded:=true;
       fastsaved:=true;
       SplashCaptioninfo(_('Dateien öffnen...Projekt'));
       SplashAddText(_('Lade Projekt...'));
       DebugAdd('FILE: Loading Projectfile: '+paramstr(i));
       openproject('', true);
-      //SplashProgress(1, 81..93, 100);
     end;
-  end;
-
-  if somethingloaded=false then
-  begin
-    SplashProgress(1, 94, 100);
-    SplashCaptioninfo(_('Leeres Projekt erzeugen...'));
-    NewProject;
-//    openproject('', true);
   end;
 
   // Letzte Werte wiederherstellen
@@ -15921,7 +15770,14 @@ begin
     end;
     if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[27].GUID) and EventFired then
     begin // Alle Audioeffekte stoppen
-        //TODO
+      for i:=0 to length(audioszenen)-1 do
+        mainform.StopScene(audioszenen[i].ID);
+      Audioeffektplayerform.StopEffektaudioClick(nil);
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[28].GUID) and EventFired then
+    begin // Datei öffnen
+        OpenPCDIMMERFile(AktuellerBefehl.ArgString[0]);
       exit;
     end;
 
@@ -21093,9 +20949,7 @@ end;
 
 procedure Tmainform.RegisterPC_DIMMERFiles;
 begin
-  RegisterFileType('pcdchnm', _('PC_DIMMER Kanalnamen'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
   RegisterFileType('pcdcpnl', _('PC_DIMMER Kontrollpanel'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcddevs', _('PC_DIMMER Gerätedatei'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
   RegisterFileType('pcdeaud', _('PC_DIMMER Effektaudio'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
   RegisterFileType('pcdelst', _('PC_DIMMER Effektliste'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
   RegisterFileType('pcdelyr', _('PC_DIMMER Effektlayer'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
@@ -21108,7 +20962,6 @@ begin
   RegisterFileType('pcdscen', _('PC_DIMMER Szenenbibliothek'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
   RegisterFileType('pcdscnl', _('PC_DIMMER Szenenliste'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
   RegisterFileType('pcdscrp', _('PC_DIMMER Skript'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-//  RegisterFileType('pcdstge', _('PC_DIMMER Bühnenansicht'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
   RegisterFileType('pcdstmr', _('PC_DIMMER Timerliste'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
   RegisterFileType('pcdsubm', _('PC_DIMMER Submaster'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
   RegisterFileType('pcdtmln', _('PC_DIMMER Effekt-Timeline'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
@@ -21120,16 +20973,15 @@ begin
   RegisterFileType('pcddevc', _('PC_DIMMER Gerätebeschreibung'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
   RegisterFileType('pcdmtrx', _('PC_DIMMER Matrixeffekt'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
   RegisterFileType('pcdchse', _('PC_DIMMER Lauflichteffekt'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
+  RegisterFileType('pcdpmmp', _('PC_DIMMER PartyMuckenModulPreset'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
+  RegisterFileType('pcdjstk', _('PC_DIMMER Joysticksteuerung'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
 
   RegisterFileType('pcdproj', _('PC_DIMMER-Projekt'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
 end;
 
 procedure Tmainform.UnRegisterPC_DIMMERFiles;
 begin
-  UnRegisterFileType('pcdandg');
-  UnRegisterFileType('pcdchnm');
   UnRegisterFileType('pcdcpnl');
-  UnRegisterFileType('pcddevs');
   UnRegisterFileType('pcdeaud');
   UnRegisterFileType('pcdelst');
   UnRegisterFileType('pcdelyr');
@@ -21142,7 +20994,6 @@ begin
   UnRegisterFileType('pcdscen');
   UnRegisterFileType('pcdscnl');
   UnRegisterFileType('pcdscrp');
-//  UnRegisterFileType('pcdstge');
   UnRegisterFileType('pcdstmr');
   UnRegisterFileType('pcdsubm');
   UnRegisterFileType('pcdtmln');
@@ -21154,6 +21005,8 @@ begin
   UnRegisterFileType('pcddevc');
   UnRegisterFileType('pcdmtrx');
   UnRegisterFileType('pcdchse');
+  UnRegisterFileType('pcdpmmp');
+  UnRegisterFileType('pcdjstk');
 
   UnRegisterFileType('pcdproj');
 end;
@@ -22022,7 +21875,7 @@ begin
   end;
 
 //  ProgressScreenSmall.close;
-  ProgressScreenSmall.Label1.Caption:=_('Fertig.');
+  ProgressScreenSmall.Label1.Caption:=_('Dateioperation abgeschlossen.');
   ProgressScreenSmall.Label2.Caption:=newfilename;
   ProgressScreenSmall.Refresh;
   ProgressScreenSmall.Timer1.Enabled:=true; // Timer1 blendet Dialog dann aus
@@ -23091,7 +22944,7 @@ end;
 procedure TMainform.OpenPCDIMMERFile(FileName: string);
 var
   filetoopen:string;
-  j,k,l,Count,Count2,Count3:integer;
+  j,Count:integer;
 begin
   filetoopen:=SearchFileBeneathProject(FileName);
 
@@ -23102,132 +22955,6 @@ begin
     begin
 			textbox.Items.LoadFromFile(filetoopen);
      	ShowMessage(textbox.Items.GetText);
-    end;
-
-    // Falls Szenenbibliotheksdatei
-    if copy(filetoopen,length(filetoopen)-6,7)='pcdscen' then
-    begin
-      FileStream:=TFileStream.Create(filetoopen,fmOpenRead);
-    // Lese Figurendaten
-        	  Filestream.ReadBuffer(Count,sizeof(Count));
-            setlength(Figuren,Count);
-            for j:=0 to Count-1 do
-            begin
-          	  Filestream.ReadBuffer(Figuren[j].ID,sizeof(Figuren[j].ID));
-          	  Filestream.ReadBuffer(Figuren[j].name,sizeof(Figuren[j].name));
-          	  Filestream.ReadBuffer(Figuren[j].invertpan,sizeof(Figuren[j].invertpan));
-          	  Filestream.ReadBuffer(Figuren[j].inverttilt,sizeof(Figuren[j].inverttilt));
-          	  Filestream.ReadBuffer(Count2,sizeof(Count2));
-              setlength(Figuren[j].posx,Count2);
-              setlength(Figuren[j].posy,Count2);
-              for k:=0 to Count2-1 do
-              begin
-            	  Filestream.ReadBuffer(Figuren[j].posx[k],sizeof(Figuren[j].posx[k]));
-            	  Filestream.ReadBuffer(Figuren[j].posy[k],sizeof(Figuren[j].posy[k]));
-              end;
-            	  Filestream.ReadBuffer(Figuren[j].gesamtlaenge,sizeof(Figuren[j].gesamtlaenge));
-            end;
-    // Ende Figurendaten
-    // Einfache-, Bewegungs- und Audioszenen, sowie Befehle öffnen
-   	  Filestream.ReadBuffer(Count,sizeof(Count));
-      setlength(Einfacheszenen,Count);
-      for j:=0 to Count-1 do
-        Filestream.ReadBuffer(Einfacheszenen[j],sizeof(Einfacheszenen[j]));
-   	  Filestream.ReadBuffer(Count,sizeof(Count));
-      setlength(Audioszenen,Count);
-      setlength(AudioszenenCHAN,Count);
-      for j:=0 to length(Audioszenen)-1 do
-      begin
-        Filestream.ReadBuffer(Audioszenen[j].ID,sizeof(Audioszenen[j].ID));
-        Filestream.ReadBuffer(Audioszenen[j].Name,sizeof(Audioszenen[j].Name));
-        Filestream.ReadBuffer(Audioszenen[j].Beschreibung,sizeof(Audioszenen[j].Beschreibung));
-        Filestream.ReadBuffer(Audioszenen[j].Datei,sizeof(Audioszenen[j].Datei));
-        Filestream.ReadBuffer(Audioszenen[j].Dauer,sizeof(Audioszenen[j].Dauer));
-        Filestream.ReadBuffer(Audioszenen[j].Volume,sizeof(Audioszenen[j].Volume));
-        Filestream.ReadBuffer(Audioszenen[j].FadeinTime,sizeof(Audioszenen[j].FadeinTime));
-        Filestream.ReadBuffer(Audioszenen[j].FadeoutTime,sizeof(Audioszenen[j].FadeoutTime));
-        Filestream.ReadBuffer(Audioszenen[j].matrix,sizeof(Audioszenen[j].matrix));
-        Filestream.ReadBuffer(Audioszenen[j].Kanalsettings,sizeof(Audioszenen[j].Kanalsettings));
-      end;
-
-   	  Filestream.ReadBuffer(Count,sizeof(Count));
-      setlength(Bewegungsszenen,Count);
-      setlength(BewegungsszenenZeit,Count);
-      setlength(BewegungsszenenAktiv,Count);
-      for k:=0 to Count-1 do
-      begin
-          Filestream.ReadBuffer(Bewegungsszenen[k].ID,sizeof(Bewegungsszenen[k].ID));
-          Filestream.ReadBuffer(Bewegungsszenen[k].Name,sizeof(Bewegungsszenen[k].Name));
-          Filestream.ReadBuffer(Bewegungsszenen[k].Beschreibung,sizeof(Bewegungsszenen[k].Beschreibung));
-          Filestream.ReadBuffer(Bewegungsszenen[k].IsBeatControlled,sizeof(Bewegungsszenen[k].IsBeatControlled));
-          Filestream.ReadBuffer(Bewegungsszenen[k].figur,sizeof(Bewegungsszenen[k].figur));
-          Filestream.ReadBuffer(Bewegungsszenen[k].dauer,sizeof(Bewegungsszenen[k].dauer));
-          Filestream.ReadBuffer(Bewegungsszenen[k].dontfade,sizeof(Bewegungsszenen[k].dontfade));
-          Filestream.ReadBuffer(Bewegungsszenen[k].repeats,sizeof(Bewegungsszenen[k].repeats));
-          Filestream.ReadBuffer(Bewegungsszenen[k].identischespurgeschwidigkeit,sizeof(Bewegungsszenen[k].identischespurgeschwidigkeit));
-          Filestream.ReadBuffer(Bewegungsszenen[k].startpositionrelativ,sizeof(Bewegungsszenen[k].startpositionrelativ));
-     	    Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(Bewegungsszenen[k].Devices,Count2);
-          setlength(BewegungsszenenAktiv[k].Zeit,Count2);
-          setlength(BewegungsszenenAktiv[k].Position,Count2);
-          for j:=0 to Count2-1 do
-          begin
-            Filestream.ReadBuffer(Bewegungsszenen[k].Devices[j].ID,sizeof(Bewegungsszenen[k].Devices[j].ID));
-
-            Filestream.ReadBuffer(Count3,sizeof(Count3));
-            setlength(BewegungsszenenZeit[k][j],Count3);
-            setlength(Bewegungsszenen[k].Devices[j].DeviceChannel,Count3);
-            setlength(BewegungsszenenAktiv[k].Zeit[j],Count3);
-            setlength(BewegungsszenenAktiv[k].Position[j],Count3);
-            for l:=0 to Count3-1 do
-            begin
-              Filestream.ReadBuffer(Bewegungsszenen[k].Devices[j].DeviceChannel[l],sizeof(Bewegungsszenen[k].Devices[j].DeviceChannel[l]));
-            end;
-
-            Filestream.ReadBuffer(Count3,sizeof(Count3));
-            setlength(Bewegungsszenen[k].Devices[j].Szenen,Count3);
-            for l:=0 to Count3-1 do
-            begin
-              Filestream.ReadBuffer(Bewegungsszenen[k].Devices[j].Szenen[l],sizeof(Bewegungsszenen[k].Devices[j].Szenen[l]));
-            end;
-          end;
-   	  end;
-
-      Filestream.ReadBuffer(Count,sizeof(Count));
-      setlength(Befehle2,Count);
-      for k:=0 to Count-1 do
-      begin
-        Filestream.ReadBuffer(Befehle2[k].ID,sizeof(Befehle2[k].ID));
-        Filestream.ReadBuffer(Befehle2[k].Typ,sizeof(Befehle2[k].Typ));
-        Filestream.ReadBuffer(Befehle2[k].Name,sizeof(Befehle2[k].Name));
-        Filestream.ReadBuffer(Befehle2[k].Beschreibung,sizeof(Befehle2[k].Beschreibung));
-        Filestream.ReadBuffer(Befehle2[k].OnValue,sizeof(Befehle2[k].OnValue));
-        Filestream.ReadBuffer(Befehle2[k].SwitchValue,sizeof(Befehle2[k].SwitchValue));
-        Filestream.ReadBuffer(Befehle2[k].InvertSwitchValue,sizeof(Befehle2[k].InvertSwitchValue));
-        Filestream.ReadBuffer(Befehle2[k].OffValue,sizeof(Befehle2[k].OffValue));
-        Filestream.ReadBuffer(Befehle2[k].ScaleValue,sizeof(Befehle2[k].ScaleValue));
-        Filestream.ReadBuffer(Befehle2[k].RunOnProjectLoad,sizeof(Befehle2[k].RunOnProjectLoad));
-        Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(Befehle2[k].ArgInteger,Count2);
-        for j:=0 to Count2-1 do
-        begin
-          Filestream.ReadBuffer(Befehle2[k].ArgInteger[j],sizeof(Befehle2[k].ArgInteger[j]));
-        end;
-        Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(Befehle2[k].ArgString,Count2);
-        for j:=0 to Count2-1 do
-        begin
-          Filestream.ReadBuffer(Befehle2[k].ArgString[j],sizeof(Befehle2[k].ArgString[j]));
-        end;
-        Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(Befehle2[k].ArgGUID,Count2);
-        for j:=0 to Count2-1 do
-        begin
-          Filestream.ReadBuffer(Befehle2[k].ArgGUID[j],sizeof(Befehle2[k].ArgGUID[j]));
-        end;
-      end;
-
-      FileStream.Free;
     end;
 
     // Falls Figurendatei
@@ -23264,12 +22991,6 @@ begin
       schedulerform.show;
     end;
 
-    // Falls Skripttimerdatei gestartet werden soll
-    if ((filetoopen='/starttimer') and (schedulerform.skripttimer_listbox.Items.Count>0)) then
-    begin
-      schedulerform.skripttimer_start.Click;
-    end;
-
     // Falls Projektdatei
     if copy(filetoopen,length(filetoopen)-6,7)='pcdproj' then
     begin
@@ -23289,18 +23010,50 @@ begin
       effektsequenzer.OpenFile(filetoopen);
     end;
 
-{
-    // Falls Bühnendatei
-    if copy(filetoopen,length(filetoopen)-6,7)='pcdstge' then
-    begin
-      grafischebuehnenansicht.openscene(filetoopen);
-    end;
-}
     // Falls Kontrollpanel
     if copy(filetoopen,length(filetoopen)-6,7)='pcdcpnl' then
     begin
       kontrollpanel.OpenFile(filetoopen);
     end;
+    
+    // Falls Kontrollpanel
+    if copy(filetoopen,length(filetoopen)-6,7)='pcdsubm' then
+    begin
+      submasterform.Openfile(filetoopen);
+    end;
+
+    // Falls PMM
+    if copy(filetoopen,length(filetoopen)-6,7)='pcdpmmp' then
+    begin
+      pmmform.Openfile(filetoopen);
+    end;
+
+    // Falls MIDI-Einstellungen
+    if copy(filetoopen,length(filetoopen)-6,7)='pcdmidi' then
+    begin
+      midieventfrm.Openfile(filetoopen);
+    end;
+    
+    // Falls Tastaturbelegung
+    if copy(filetoopen,length(filetoopen)-6,7)='pcdshct' then
+    begin
+      Tastenabfrage.Openfile(filetoopen);
+    end;    
+    
+    // Falls Cuelistdatei
+    if copy(filetoopen,length(filetoopen)-6,7)='pcdcuel' then
+    begin
+      cuelistform.Openfile(filetoopen);
+    end;    
+    
+    // Falls Joysticksteuerungsdatei
+    if copy(filetoopen,length(filetoopen)-6,7)='pcdjstk' then
+    begin
+      joystickform.Openfile(filetoopen);
+    end;
+  end else
+  begin
+    DebugAdd('ERROR: '+_('Die zu öffnende Datei konnte nicht gefunden werden')+': '+filetoopen);
   end;
 end;
 
@@ -24150,6 +23903,7 @@ begin
       ScriptInterpreter.Compile;
       ScriptInterpreter.CallFunction('RunCommand',nil,[]);
 //      ScriptInterpreter.Run;
+      AContext.Connection.Socket.WriteLn('Done');
     end else if pos('get_devices',cmd)>0 then
     begin
       temp:='devices '+inttostr(length(devices));
@@ -24433,13 +24187,14 @@ begin
             temp:=copy(cmdtemp, 0, pos(';',cmdtemp)-1) // temp=xxxx;....;....
           else
             temp:=cmdtemp; // temp=xxxx
-            
+
           ExecuteCommandServerCmd(temp);
         until (pos(';',cmdtemp)<=0);
       end else
       begin
         ExecuteCommandServerCmd(cmd);
       end;
+      AContext.Connection.Socket.WriteLn('Done');
     end;
   end;
 end;
@@ -24476,6 +24231,36 @@ begin
     value[5]:=temp;
 
     geraetesteuerung.set_channel(stringtoguid(value[0]), value[1], strtoint(value[2]), strtoint(value[3]), strtoint(value[4]), strtoint(value[5]));
+  end;
+  if (pos('set_pantilt',cmd)>0) or (pos('set_pt',cmd)>0) then  // set_pt GUID -1 255 -1 255 5000 0
+  begin
+    temp:=cmd;
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[0]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[1]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[2]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[3]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[4]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[5]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    // Leerzeichen entfernen, sofern vorhanden
+    if pos(' ', temp)>0 then
+      temp:=copy(temp, 0, pos(' ', temp)-1);
+    value[6]:=temp;
+
+    geraetesteuerung.set_pantilt(stringtoguid(value[0]), strtoint(value[1]), strtoint(value[2]), strtoint(value[3]), strtoint(value[4]), strtoint(value[5]), strtoint(value[6]));
   end;
   if (pos('set_color',cmd)>0) then  // set_color GUID R G B 5000 0
   begin
@@ -25109,6 +24894,8 @@ begin
           geraetesteuerung.set_color(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.R, grafischebuehnenansicht.LastMouseOverHighlightDevice.G, grafischebuehnenansicht.LastMouseOverHighlightDevice.B, 150, 0);
           geraetesteuerung.set_shutter(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.ShutterOpenOrClose);
           geraetesteuerung.set_dimmer(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.Dimmer, 150, 0);
+          geraetesteuerung.set_channel(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, 'a', grafischebuehnenansicht.LastMouseOverHighlightDevice.A, 150, 0);
+          geraetesteuerung.set_channel(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, 'w', grafischebuehnenansicht.LastMouseOverHighlightDevice.W, 150, 0);
 
           // Aktuelle Werte speichern
           if not IsEqualGUID(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.MouseOnDeviceID) then
@@ -25118,6 +24905,8 @@ begin
             grafischebuehnenansicht.LastMouseOverHighlightDevice.R:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'R');
             grafischebuehnenansicht.LastMouseOverHighlightDevice.G:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'G');
             grafischebuehnenansicht.LastMouseOverHighlightDevice.B:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'B');
+            grafischebuehnenansicht.LastMouseOverHighlightDevice.A:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'A');
+            grafischebuehnenansicht.LastMouseOverHighlightDevice.W:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'W');
             grafischebuehnenansicht.LastMouseOverHighlightDevice.ShutterOpenOrClose:=geraetesteuerung.get_shutter(grafischebuehnenansicht.MouseOnDeviceID);
           end;
 
@@ -25127,6 +24916,8 @@ begin
             geraetesteuerung.set_shutter(grafischebuehnenansicht.MouseOnDeviceID, 255);
             geraetesteuerung.set_color(grafischebuehnenansicht.MouseOnDeviceID, 255, 255, 255, 150, 0);
             geraetesteuerung.set_dimmer(grafischebuehnenansicht.MouseOnDeviceID, 255, 150, 0);
+            geraetesteuerung.set_channel(grafischebuehnenansicht.MouseOnDeviceID, 'a', 255, 150, 0);
+            geraetesteuerung.set_channel(grafischebuehnenansicht.MouseOnDeviceID, 'w', 255, 150, 0);
           end;
         end;
 ////////////
@@ -27512,6 +27303,79 @@ procedure TMainform.CheckBox3KeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   grafischebuehnenansicht.CheckBox3.Checked:=checkbox3.Checked;
+end;
+
+procedure TMainform.FormDragDrop(Sender, Source: TObject; X, Y: Integer);
+begin
+  showmessage('Dropped');
+end;
+
+procedure TMainform.ConvertBMPtoJPG(bmpSource, jpgDestination: string);
+var
+  Bmp: TBitmap;
+  Jpg: TJpegImage;
+  Quality: TJPEGQualityRange;
+begin
+  Bmp := TBitmap.Create;
+  Jpg := TJpegImage.Create;
+  try
+    Bmp.LoadFromFile(bmpSource);
+    Quality:=100;
+    Jpg.CompressionQuality:=Quality;
+    Jpg.Assign(Bmp);
+    Jpg.SaveToFile(jpgDestination);
+  finally
+    Jpg.Free;
+    Bmp.Free;
+  end;
+end;
+
+procedure TMainform.ConvertBMPtoPNG(bmpSource, pngDestination: string);
+var
+  Bmp: TBitmap;
+  Png: TPNGObject;
+begin
+  Bmp := TBitmap.Create;
+  Png := TPNGObject.Create;
+  try
+    Bmp.LoadFromFile(bmpSource);
+    Png.Transparent:=false;
+    Png.Assign(Bmp);
+    Png.SaveToFile(pngDestination);
+  finally
+    Png.Free;
+    Bmp.Free;
+  end;
+end;
+
+procedure Tmainform.SavePng(Bitmap: TBitmap; Destination:string);
+var
+  Png: TPNGObject;
+begin
+  Png := TPNGObject.Create;
+  try
+    Png.Transparent:=false;
+    Png.Assign(Bitmap);
+    Png.SaveToFile(Destination);
+  finally
+    Png.Free;
+  end;
+end;
+
+procedure Tmainform.SaveJpg(Bitmap: TBitmap; Destination:string);
+var
+  Jpg: TJpegImage;
+  Quality: TJPEGQualityRange;
+begin
+  Jpg := TJpegImage.Create;
+  try
+    Quality:=40;
+    Jpg.CompressionQuality:=Quality;
+    Jpg.Assign(Bitmap);
+    Jpg.SaveToFile(Destination);
+  finally
+    Jpg.Free;
+  end;
 end;
 
 end.

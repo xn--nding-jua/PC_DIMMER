@@ -303,7 +303,7 @@ begin
     6: begin
          grafischebuehnenansicht.SaveToBMP:=true;
          sleep(500);
-         AHTMLCode.Add('<img border="0" src="stageview.bmp">');
+         AHTMLCode.Add('<img border="0" src="stageview.jpg">');
        end
   end;
   AHTMLCode.Add(LFooter);

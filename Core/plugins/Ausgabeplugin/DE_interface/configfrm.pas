@@ -55,7 +55,6 @@ type
     saveconfigbtn: TButton;
     CheckBox2: TCheckBox;
     ScanTimer: TCHHighResTimer;
-    startuptimer: TTimer;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure StringGrid1GetEditMask(Sender: TObject; ACol, ARow: Integer;
@@ -76,7 +75,6 @@ type
     procedure ConfigOKClick(Sender: TObject);
     procedure CheckBox1MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure startuptimerTimer(Sender: TObject);
   private
     { Private-Deklarationen }
     RefreshSometimes:boolean;
@@ -92,6 +90,8 @@ type
     baudrate:integer;
     rs232_inframe:array of byte;
     IsSending:boolean;
+
+    InterfaceList:TSERIALLIST;
 
     DE_Interfaces : array[0..31] of TDE_Interface;
     DE_IF_Profiles : array of TDE_Interface;
@@ -317,19 +317,14 @@ var
   i,j:integer;
   newinterface:boolean;
 begin
-  // Alle Interrupt-Funktionen beenden
-  UnregisterInputChangeNotification;
-  UnregisterInterfaceChangeNotification;
-  if UseBlockChange then
-    UnRegisterInputChangeBlockNotification;
+  InterfaceList:=GetAllConnectedInterfaces;
 
-  for i:=0 to length(GetAllConnectedInterfaces)-1 do // GetAllConnectedInterfaces liefert immer 32
-  if (i<=31) then
+  for i:=0 to 31 do
   begin
-    DE_Interfaces[i].Serial:=SerialToSerialstring(GetAllConnectedInterfaces[i]);
+    DE_Interfaces[i].Serial:=SerialToSerialstring(InterfaceList[i]);
     DE_Interfaces[i].Modus:=6;
     DE_Interfaces[i].Startaddress:=1;
-    DE_Interfaces[i].Version:=GetDeviceVersion(SerialstringToSerial(GetAllConnectedInterfaces[i]));
+    DE_Interfaces[i].Version:=GetDeviceVersion(SerialstringToSerial(InterfaceList[i]));
     DE_Interfaces[i].UseDMXIn:=false;
     DE_Interfaces[i].DMXInStartaddress:=1;
   end;
@@ -363,12 +358,6 @@ begin
       DE_IF_Profiles[length(DE_IF_Profiles)-1].DMXInStartaddress:=DE_Interfaces[i].DMXInStartaddress;
     end;
   end;
-
-  // Timerinterrupts wieder aktivieren
-  RegisterInterfaceChangeNotification(DeviceChange);
-  RegisterInputChangeNotification(InputChange);
-  if UseBlockChange then
-    RegisterInputChangeBlockNotification(InputChangeBlock);
 
   for i:=0 to 31 do
   begin
@@ -535,27 +524,24 @@ procedure TConfig.ScanTimerTimer(Sender: TObject);
 var
   i,j:integer;
 begin
-  with config do
-  begin
-    ScanTimer.enabled:=false;
+  ScanTimer.enabled:=false;
 
-    for i:=0 to 31 do
+  for i:=0 to 31 do
+  begin
+    if (DE_Interfaces[i].Serial<>'0000000000000000') and DE_Interfaces[i].UseDMXIn then
     begin
-      if (DE_Interfaces[i].Serial<>'0000000000000000') and DE_Interfaces[i].UseDMXIn then
+      for j:=0 to 511 do
       begin
-        for j:=0 to 511 do
+        if (DMXInArray[i][j]<>DMXInArrayLastValue[i][j]) or RefreshSometimes then
         begin
-          if (DMXInArray[i][j]<>DMXInArrayLastValue[i][j]) or RefreshSometimes then
-          begin
-            DMXInArrayLastValue[i][j]:=DMXInArray[i][j];
-            IsSending:=CheckBox2.Checked;
-            RefreshDLLEvent(j+DE_Interfaces[i].DMXInStartaddress, DMXInArray[i][j])
-          end;
+          DMXInArrayLastValue[i][j]:=DMXInArray[i][j];
+          IsSending:=CheckBox2.Checked;
+          RefreshDLLEvent(j+DE_Interfaces[i].DMXInStartaddress, DMXInArray[i][j])
         end;
       end;
     end;
-    RefreshSometimes:=false;
   end;
+  RefreshSometimes:=false;
 end;
 
 procedure TConfig.saveconfigbtnClick(Sender: TObject);
@@ -697,41 +683,20 @@ begin
 
   RegisterInterfaceChangeNotification(DeviceChange);
   RegisterInputChangeNotification(InputChange);
-  if UseBlockChange then
-    RegisterInputChangeBlockNotification(InputChangeBlock);
+//  if UseBlockChange then
+//    RegisterInputChangeBlockNotification(InputChangeBlock);
+
+  Application.ProcessMessages;
+  sleep(150);
+
+  SearchForInterfaces;
+  RefreshList;
 end;
 
 procedure TConfig.CheckBox1MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   RefreshSometimesTimer.Enabled:=Checkbox1.Checked;
-end;
-
-procedure TConfig.startuptimerTimer(Sender: TObject);
-var
-  RefreshSometimesLast:boolean;
-begin
-  startuptimer.Enabled:=false;
-
-  startup;
-  SearchForInterfaces;
-  RefreshList;
-
-  // Abschalten
-  CloseLink(SerialstringToSerial(Stringgrid1.Cells[0,Stringgrid1.Row]));
-  SetInterfaceMode(SerialstringToSerial(Stringgrid1.Cells[0,Stringgrid1.Row]),0);
-
-  // Neu verbinden
-  OpenLink(SerialstringToSerial(Stringgrid1.Cells[0,Stringgrid1.Row]),@DMXOutArray[GetPositionInInterfaceArray(Stringgrid1.Cells[0,Stringgrid1.Row])],@DMXInArray[GetPositionInInterfaceArray(Stringgrid1.Cells[0,Stringgrid1.Row])]);
-  SetInterfaceMode(SerialstringToSerial(Stringgrid1.Cells[0,Stringgrid1.Row]),combobox2.ItemIndex);
-
-  RefreshSometimesLast:=RefreshSometimes;
-  RefreshSometimes:=true;
-  ScanTimerTimer(nil);
-  RefreshSometimes:=RefreshSometimesLast;
-
-  SearchForInterfaces;
-  RefreshList;
 end;
 
 end.

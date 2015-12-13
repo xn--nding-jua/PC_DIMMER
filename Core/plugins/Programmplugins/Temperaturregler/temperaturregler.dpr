@@ -28,6 +28,8 @@ var
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
+  SetProcessAffinityMask(GetCurrentProcess, 1); // 1=CPU0 , 2=CPU1
+
   ShuttingDown:=false;
   Application.CreateForm(TConfig, Config);
   @Config.SetDLLEvent:=CallbackSetDLLValueEvent;

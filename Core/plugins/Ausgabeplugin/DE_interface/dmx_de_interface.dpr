@@ -25,7 +25,7 @@ uses
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
-//  SetProcessAffinityMask(GetCurrentProcess, 1); // 1=CPU0 , 2=CPU1
+  SetProcessAffinityMask(GetCurrentProcess, 1); // 1=CPU0 , 2=CPU1
 
   Application.CreateForm(TConfig, Config);
   Application.CreateForm(Ttimingform, timingform);
@@ -34,30 +34,33 @@ end;
 
 procedure DLLStart;stdcall;
 begin
-  config.startuptimer.Enabled:=true; // waits 2.5 Seconds and initializes the interface
+  config.Startup;
 end;
 
 function DLLDestroy:boolean;stdcall;
 begin
-  // Alle Interrupt-Funktionen beenden
-  UnregisterInputChangeNotification;
-  UnregisterInterfaceChangeNotification;
-  if config.UseBlockChange then
-    UnRegisterInputChangeBlockNotification;
-
-  Application.ProcessMessages;
-  sleep(150);
-
   // Alle Timer beenden
   config.RefreshSometimesTimer.Enabled:=false;
   config.ScanForInterfacesTimer.Enabled:=false;
   config.ScanTimer.Enabled:=false;
 
   Application.ProcessMessages;
-  sleep(150);
+  sleep(50);
 
   // Alle Interfacelinks deaktivieren
   CloseAllLinks;
+
+  Application.ProcessMessages;
+  sleep(150);
+
+  // Alle Interrupt-Funktionen beenden
+  UnregisterInputChangeNotification;
+  UnregisterInterfaceChangeNotification;
+//  if config.UseBlockChange then
+//    UnRegisterInputChangeBlockNotification;
+
+  Application.ProcessMessages;
+  sleep(150);
 
   // Funktionspointer auflösen
   @Config.RefreshDLLEvent:=nil;
@@ -84,7 +87,7 @@ end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v6.2');
+  Result := PChar('v6.4');
 end;
 
 procedure DLLConfigure;stdcall;

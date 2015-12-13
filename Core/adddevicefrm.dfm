@@ -18,10 +18,10 @@ object adddevice: Tadddevice
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
-    Left = 393
+    Left = 385
     Top = 57
     Width = 289
-    Height = 492
+    Height = 483
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 0
@@ -540,7 +540,7 @@ object adddevice: Tadddevice
     end
     object Panel4: TPanel
       Left = 0
-      Top = 455
+      Top = 446
       Width = 289
       Height = 37
       Align = alBottom
@@ -677,23 +677,23 @@ object adddevice: Tadddevice
   object Panel2: TPanel
     Left = 0
     Top = 57
-    Width = 393
-    Height = 492
+    Width = 385
+    Height = 483
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
     object GroupBox1: TGroupBox
       Left = 8
       Top = 0
-      Width = 377
-      Height = 451
+      Width = 369
+      Height = 442
       Align = alClient
       Caption = ' Neues Ger'#228't hinzuf'#252'gen... '
       TabOrder = 0
       object Panel8: TPanel
         Left = 2
-        Top = 360
-        Width = 373
+        Top = 351
+        Width = 365
         Height = 89
         Align = alBottom
         BevelOuter = bvNone
@@ -1490,7 +1490,7 @@ object adddevice: Tadddevice
       object Panel9: TPanel
         Left = 2
         Top = 15
-        Width = 373
+        Width = 365
         Height = 34
         Align = alTop
         BevelOuter = bvNone
@@ -1553,24 +1553,24 @@ object adddevice: Tadddevice
         Left = 2
         Top = 49
         Width = 8
-        Height = 294
+        Height = 285
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 2
       end
       object Panel11: TPanel
-        Left = 367
+        Left = 359
         Top = 49
         Width = 8
-        Height = 294
+        Height = 285
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 3
       end
       object ProgressBar1: TProgressBar
         Left = 2
-        Top = 343
-        Width = 373
+        Top = 334
+        Width = 365
         Height = 17
         Align = alBottom
         Smooth = True
@@ -1580,8 +1580,8 @@ object adddevice: Tadddevice
       object VST: TVirtualStringTree
         Left = 10
         Top = 49
-        Width = 357
-        Height = 294
+        Width = 349
+        Height = 285
         Align = alClient
         Colors.UnfocusedSelectionColor = clInactiveBorder
         Colors.UnfocusedSelectionBorderColor = clInactiveBorder
@@ -1593,6 +1593,7 @@ object adddevice: Tadddevice
         Header.Font.Height = -11
         Header.Font.Name = 'MS Sans Serif'
         Header.Font.Style = []
+        Header.Height = 17
         Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoVisible]
         Images = MainForm.PngImageList1
         TabOrder = 5
@@ -1632,8 +1633,8 @@ object adddevice: Tadddevice
     end
     object Panel3: TPanel
       Left = 0
-      Top = 451
-      Width = 393
+      Top = 442
+      Width = 385
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
@@ -1886,16 +1887,16 @@ object adddevice: Tadddevice
       Left = 0
       Top = 0
       Width = 8
-      Height = 451
+      Height = 442
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 2
     end
     object Panel6: TPanel
-      Left = 385
+      Left = 377
       Top = 0
       Width = 8
-      Height = 451
+      Height = 442
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 3
@@ -1904,7 +1905,7 @@ object adddevice: Tadddevice
   object Panel12: TPanel
     Left = 0
     Top = 0
-    Width = 682
+    Width = 674
     Height = 57
     Align = alTop
     BevelOuter = bvNone
@@ -1913,7 +1914,7 @@ object adddevice: Tadddevice
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 682
+      Width = 674
       Height = 57
       Style = grVertical
       StartColor = clWhite

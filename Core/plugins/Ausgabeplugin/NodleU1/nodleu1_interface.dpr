@@ -40,25 +40,28 @@ end;
 
 function DLLDestroy:boolean;stdcall;
 begin
-  // Alle Interrupt-Funktionen beenden
-  UnregisterInputChangeNotification;
-  UnregisterInterfaceChangeNotification;
-  if config.UseBlockChange then
-    UnRegisterInputChangeBlockNotification;
-
-  Application.ProcessMessages;
-  sleep(150);
-
   // Alle Timer beenden
   config.RefreshSometimesTimer.Enabled:=false;
   config.ScanForInterfacesTimer.Enabled:=false;
   config.ScanTimer.Enabled:=false;
 
   Application.ProcessMessages;
-  sleep(150);
+  sleep(50);
 
   // Alle Interfacelinks deaktivieren
   CloseAllLinks;
+
+  Application.ProcessMessages;
+  sleep(150);
+
+  // Alle Interrupt-Funktionen beenden
+  UnregisterInputChangeNotification;
+  UnregisterInterfaceChangeNotification;
+//  if config.UseBlockChange then
+//    UnRegisterInputChangeBlockNotification;
+
+  Application.ProcessMessages;
+  sleep(150);
 
   // Funktionspointer auflösen
   @Config.RefreshDLLEvent:=nil;
@@ -85,7 +88,7 @@ end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v1.0');
+  Result := PChar('v1.1');
 end;
 
 procedure DLLConfigure;stdcall;

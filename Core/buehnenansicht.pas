@@ -31,6 +31,8 @@ type
     R:Byte;
     G:Byte;
     B:Byte;
+    A:Byte;
+    W:Byte;
     ShutterOpenOrClose:byte;
   end;
 
@@ -1025,6 +1027,8 @@ begin
     geraetesteuerung.set_color(LastMouseOverHighlightDevice.ID, LastMouseOverHighlightDevice.R, LastMouseOverHighlightDevice.G, LastMouseOverHighlightDevice.B, 150, 0);
     geraetesteuerung.set_shutter(LastMouseOverHighlightDevice.ID, LastMouseOverHighlightDevice.ShutterOpenOrClose);
     geraetesteuerung.set_dimmer(LastMouseOverHighlightDevice.ID, LastMouseOverHighlightDevice.Dimmer, 150, 0);
+    geraetesteuerung.set_channel(LastMouseOverHighlightDevice.ID, 'a', LastMouseOverHighlightDevice.A, 150, 0);
+    geraetesteuerung.set_channel(LastMouseOverHighlightDevice.ID, 'w', LastMouseOverHighlightDevice.W, 150, 0);
 
     // Aktuelle Werte speichern
     if not IsEqualGUID(LastMouseOverHighlightDevice.ID, MouseOnDeviceID) then
@@ -1034,6 +1038,8 @@ begin
       LastMouseOverHighlightDevice.R:=geraetesteuerung.get_channel(MouseOnDeviceID, 'R');
       LastMouseOverHighlightDevice.G:=geraetesteuerung.get_channel(MouseOnDeviceID, 'G');
       LastMouseOverHighlightDevice.B:=geraetesteuerung.get_channel(MouseOnDeviceID, 'B');
+      LastMouseOverHighlightDevice.A:=geraetesteuerung.get_channel(MouseOnDeviceID, 'A');
+      LastMouseOverHighlightDevice.W:=geraetesteuerung.get_channel(MouseOnDeviceID, 'W');
       LastMouseOverHighlightDevice.ShutterOpenOrClose:=geraetesteuerung.get_shutter(MouseOnDeviceID);
     end;
 
@@ -1043,6 +1049,8 @@ begin
       geraetesteuerung.set_shutter(MouseOnDeviceID, 255);
       geraetesteuerung.set_color(MouseOnDeviceID, 255, 255, 255, 150, 0);
       geraetesteuerung.set_dimmer(MouseOnDeviceID, 255, 150, 0);
+      geraetesteuerung.set_channel(MouseOnDeviceID, 'a', 255, 150, 0);
+      geraetesteuerung.set_channel(MouseOnDeviceID, 'w', 255, 150, 0);
     end;
   end;
 ////////////
@@ -1925,7 +1933,9 @@ begin
 	image1.Width:=panel2.Width;
   image1.Height:=panel2.Height;
 	panel2.PaintTo(image1.canvas,0,0);
-  image1.Picture.SaveToFile(mainform.workingdirectory+'stageview.bmp');
+//  image1.Picture.SaveToFile(mainform.workingdirectory+'stageview.bmp');
+  mainform.SavePng(image1.Picture.Bitmap, mainform.workingdirectory+'stageview.png');
+  mainform.SaveJpg(image1.Picture.Bitmap, mainform.workingdirectory+'stageview.jpg');
   image1.Free;
 end;
 
@@ -2172,7 +2182,9 @@ begin
 	image1.Width:=panel2.Width;
   image1.Height:=panel2.Height;
 	panel2.PaintTo(image1.canvas,0,0);
-  image1.Picture.SaveToFile(mainform.workingdirectory+'stageview.bmp');
+//  image1.Picture.SaveToFile(mainform.workingdirectory+'stageview.bmp');
+  mainform.SavePng(image1.Picture.Bitmap, mainform.workingdirectory+'stageview.png');
+  mainform.SaveJpg(image1.Picture.Bitmap, mainform.workingdirectory+'stageview.jpg');
   image1.Free;
 
   BankSelect.ItemIndex:=0;
@@ -2372,7 +2384,9 @@ begin
       BitBlt(image1.Canvas.Handle, 0, 0, image1.width, image1.height, Puffer2.Canvas.Handle, 0, 0 , SRCCOPY);
 
       try
-        image1.Picture.SaveToFile(mainform.workingdirectory+'stageview.bmp');
+//        image1.Picture.SaveToFile(mainform.workingdirectory+'stageview.bmp');
+        mainform.SavePng(image1.Picture.Bitmap, mainform.workingdirectory+'stageview.png');
+        mainform.SaveJpg(image1.Picture.Bitmap, mainform.workingdirectory+'stageview.jpg');
       except
       end;
       image1.Free;
@@ -3058,7 +3072,7 @@ var
 	R,G,B,R2,G2,B2,R3,G3,B3:byte;
   RGB, RGB3, shuttervalue:integer;
   //RGB2:integer;
-  AmberR,AmberG,AmberB,Amber:byte;
+  AmberR,AmberG,AmberB,Amber,White:byte;
 
 //  AmberRs,AmberGs,AmberBs,Ambers:double;
 //  AmberRGratio:single;
@@ -3215,10 +3229,11 @@ begin
           AmberG:=geraetesteuerung.get_channel(mainform.devices[i].ID,'G');
           AmberB:=geraetesteuerung.get_channel(mainform.devices[i].ID,'B');
           Amber:=geraetesteuerung.get_channel(mainform.devices[i].ID,'A');
+          White:=geraetesteuerung.get_channel(mainform.devices[i].ID,'W');
 
           if mainform.devices[i].hasAmber then
           begin
-            geraetesteuerung.ConvertRGBAtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, R, G, B);
+            geraetesteuerung.ConvertRGBAWtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, R, G, B);
             _Buffer.Brush.Color:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
           end else
           begin
@@ -3231,10 +3246,11 @@ begin
           AmberG:=geraetesteuerung.get_channel(mainform.devices[i].ID,'G');
           AmberB:=geraetesteuerung.get_channel(mainform.devices[i].ID,'B');
           Amber:=geraetesteuerung.get_channel(mainform.devices[i].ID,'A');
+          White:=geraetesteuerung.get_channel(mainform.devices[i].ID,'W');
 
           if mainform.devices[i].hasAmber then
           begin
-            geraetesteuerung.ConvertRGBAtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, R, G, B);
+            geraetesteuerung.ConvertRGBAWtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, R, G, B);
             _Buffer.Brush.Color:=RGB2TColor(R, G, B);
           end else
           begin
@@ -3251,10 +3267,11 @@ begin
           AmberG:=255-geraetesteuerung.get_channel(mainform.devices[i].ID,'M');
           AmberB:=255-geraetesteuerung.get_channel(mainform.devices[i].ID,'Y');
           Amber:=geraetesteuerung.get_channel(mainform.devices[i].ID,'A');
+          White:=geraetesteuerung.get_channel(mainform.devices[i].ID,'W');
 
           if mainform.devices[i].hasAmber then
           begin
-            geraetesteuerung.ConvertRGBAtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, R, G, B);
+            geraetesteuerung.ConvertRGBAWtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, R, G, B);
             _Buffer.Brush.Color:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
           end else
           begin
@@ -3267,10 +3284,11 @@ begin
           AmberG:=255-geraetesteuerung.get_channel(mainform.devices[i].ID,'M');
           AmberB:=255-geraetesteuerung.get_channel(mainform.devices[i].ID,'Y');
           Amber:=geraetesteuerung.get_channel(mainform.devices[i].ID,'A');
+          White:=geraetesteuerung.get_channel(mainform.devices[i].ID,'W');
 
           if mainform.devices[i].hasAmber then
           begin
-            geraetesteuerung.ConvertRGBAtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, R, G, B);
+            geraetesteuerung.ConvertRGBAWtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, R, G, B);
             _Buffer.Brush.Color:=RGB2TColor(R, G, B);
           end else
           begin

@@ -122,6 +122,7 @@ type
     procedure FlipEntry(Source, Destination:integer);
   public
     { Public-Deklarationen }
+    procedure Openfile(Filename:string);
   end;
 
 var
@@ -497,11 +498,55 @@ if messagedlg(_('Möchten Sie wirklich alle MIDI-Events löschen?'),mtConfirmation
 	end;
 end;
 
+procedure Tmidieventfrm.Openfile(Filename:string);
+var
+  i,j,Count,Count2:integer;
+begin
+  if FileExists(Filename) then
+  begin
+    with mainform do
+    begin
+      Filestream:=TFileStream.Create(Filename, fmOpenRead);
+      Filestream.ReadBuffer(Count,sizeof(Count));
+      setlength(MidiEventArray,Count);
+      for i:=0 to Count-1 do
+      begin
+        Filestream.ReadBuffer(MidiEventArray[i].ID,sizeof(MidiEventArray[i].ID));
+        Filestream.ReadBuffer(MidiEventArray[i].MIDIMessage,sizeof(MidiEventArray[i].MIDIMessage));
+        Filestream.ReadBuffer(MidiEventArray[i].MIDIData1,sizeof(MidiEventArray[i].MIDIData1));
+        Filestream.ReadBuffer(MidiEventArray[i].MIDIData2,sizeof(MidiEventArray[i].MIDIData2));
+
+        Filestream.ReadBuffer(MidiEventArray[i].Befehl.Typ,sizeof(MidiEventArray[i].Befehl.Typ));
+        Filestream.ReadBuffer(MidiEventArray[i].Befehl.OnValue,sizeof(MidiEventArray[i].Befehl.OnValue));
+        Filestream.ReadBuffer(MidiEventArray[i].Befehl.SwitchValue,sizeof(MidiEventArray[i].Befehl.SwitchValue));
+        Filestream.ReadBuffer(MidiEventArray[i].Befehl.InvertSwitchValue,sizeof(MidiEventArray[i].Befehl.InvertSwitchValue));
+        Filestream.ReadBuffer(MidiEventArray[i].Befehl.OffValue,sizeof(MidiEventArray[i].Befehl.OffValue));
+        Filestream.ReadBuffer(MidiEventArray[i].Befehl.ScaleValue,sizeof(MidiEventArray[i].Befehl.ScaleValue));
+        Filestream.ReadBuffer(Count2,sizeof(Count2));
+        setlength(MidiEventArray[i].Befehl.ArgInteger,Count2);
+        for j:=0 to Count2-1 do
+          Filestream.ReadBuffer(MidiEventArray[i].Befehl.ArgInteger[j],sizeof(MidiEventArray[i].Befehl.ArgInteger[j]));
+        Filestream.ReadBuffer(Count2,sizeof(Count2));
+        setlength(MidiEventArray[i].Befehl.ArgString,Count2);
+        for j:=0 to Count2-1 do
+          Filestream.ReadBuffer(MidiEventArray[i].Befehl.ArgString[j],sizeof(MidiEventArray[i].Befehl.ArgString[j]));
+        Filestream.ReadBuffer(Count2,sizeof(Count2));
+        setlength(MidiEventArray[i].Befehl.ArgGUID,Count2);
+        for j:=0 to Count2-1 do
+          Filestream.ReadBuffer(MidiEventArray[i].Befehl.ArgGUID[j],sizeof(MidiEventArray[i].Befehl.ArgGUID[j]));
+
+        Filestream.ReadBuffer(MidiEventArray[i].Data1orData2,sizeof(MidiEventArray[i].Data1orData2));
+        Filestream.ReadBuffer(MidiEventArray[i].UseMidiBacktrack,sizeof(MidiEventArray[i].UseMidiBacktrack))
+      end;
+      FileStream.Free;
+    end;
+  end;
+end;
+
 procedure Tmidieventfrm.SpeedButton2Click(Sender: TObject);
 var
   i,j,startindex,Count,Count2:integer;
   additiv:boolean;
-//  FileStream:TFileStream;
 begin
   additiv:=true;
 
@@ -557,42 +602,7 @@ begin
     end else
     begin
       // Ersetzen
-      with mainform do
-      begin
-        Filestream:=TFileStream.Create(OpenDialog1.Filename, fmOpenRead);
-        Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(MidiEventArray,Count);
-        for i:=0 to Count-1 do
-        begin
-          Filestream.ReadBuffer(MidiEventArray[i].ID,sizeof(MidiEventArray[i].ID));
-          Filestream.ReadBuffer(MidiEventArray[i].MIDIMessage,sizeof(MidiEventArray[i].MIDIMessage));
-          Filestream.ReadBuffer(MidiEventArray[i].MIDIData1,sizeof(MidiEventArray[i].MIDIData1));
-          Filestream.ReadBuffer(MidiEventArray[i].MIDIData2,sizeof(MidiEventArray[i].MIDIData2));
-
-          Filestream.ReadBuffer(MidiEventArray[i].Befehl.Typ,sizeof(MidiEventArray[i].Befehl.Typ));
-          Filestream.ReadBuffer(MidiEventArray[i].Befehl.OnValue,sizeof(MidiEventArray[i].Befehl.OnValue));
-          Filestream.ReadBuffer(MidiEventArray[i].Befehl.SwitchValue,sizeof(MidiEventArray[i].Befehl.SwitchValue));
-          Filestream.ReadBuffer(MidiEventArray[i].Befehl.InvertSwitchValue,sizeof(MidiEventArray[i].Befehl.InvertSwitchValue));
-          Filestream.ReadBuffer(MidiEventArray[i].Befehl.OffValue,sizeof(MidiEventArray[i].Befehl.OffValue));
-          Filestream.ReadBuffer(MidiEventArray[i].Befehl.ScaleValue,sizeof(MidiEventArray[i].Befehl.ScaleValue));
-          Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(MidiEventArray[i].Befehl.ArgInteger,Count2);
-          for j:=0 to Count2-1 do
-            Filestream.ReadBuffer(MidiEventArray[i].Befehl.ArgInteger[j],sizeof(MidiEventArray[i].Befehl.ArgInteger[j]));
-          Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(MidiEventArray[i].Befehl.ArgString,Count2);
-          for j:=0 to Count2-1 do
-            Filestream.ReadBuffer(MidiEventArray[i].Befehl.ArgString[j],sizeof(MidiEventArray[i].Befehl.ArgString[j]));
-          Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(MidiEventArray[i].Befehl.ArgGUID,Count2);
-          for j:=0 to Count2-1 do
-            Filestream.ReadBuffer(MidiEventArray[i].Befehl.ArgGUID[j],sizeof(MidiEventArray[i].Befehl.ArgGUID[j]));
-
-          Filestream.ReadBuffer(MidiEventArray[i].Data1orData2,sizeof(MidiEventArray[i].Data1orData2));
-          Filestream.ReadBuffer(MidiEventArray[i].UseMidiBacktrack,sizeof(MidiEventArray[i].UseMidiBacktrack))
-        end;
-        FileStream.Free;
-      end;
+      Openfile(OpenDialog1.Filename);
     end;
 
     if length(mainform.MidiEventArray)>0 then

@@ -66,23 +66,23 @@ object geraetesteuerung: Tgeraetesteuerung
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
-    Left = 376
+    Left = 368
     Top = 25
-    Height = 457
+    Height = 448
     Align = alRight
   end
   object Panel3: TPanel
     Left = 0
     Top = 25
-    Width = 245
-    Height = 457
+    Width = 237
+    Height = 448
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     object fortschrittsbalken: TProgressBar
       Left = 0
-      Top = 311
-      Width = 245
+      Top = 302
+      Width = 237
       Height = 17
       Align = alBottom
       TabOrder = 0
@@ -92,15 +92,15 @@ object geraetesteuerung: Tgeraetesteuerung
       Left = 0
       Top = 41
       Width = 8
-      Height = 270
+      Height = 261
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 1
     end
     object Panel4: TPanel
       Left = 0
-      Top = 328
-      Width = 245
+      Top = 319
+      Width = 237
       Height = 129
       Align = alBottom
       BevelOuter = bvNone
@@ -781,7 +781,7 @@ object geraetesteuerung: Tgeraetesteuerung
     object Panel5: TPanel
       Left = 0
       Top = 0
-      Width = 245
+      Width = 237
       Height = 41
       Align = alTop
       BevelOuter = bvNone
@@ -858,8 +858,8 @@ object geraetesteuerung: Tgeraetesteuerung
     object VST: TVirtualStringTree
       Left = 8
       Top = 41
-      Width = 237
-      Height = 270
+      Width = 229
+      Height = 261
       Align = alClient
       Colors.UnfocusedSelectionColor = clInactiveBorder
       Colors.UnfocusedSelectionBorderColor = clInactiveBorder
@@ -871,7 +871,8 @@ object geraetesteuerung: Tgeraetesteuerung
       Header.Font.Height = -11
       Header.Font.Name = 'MS Sans Serif'
       Header.Font.Style = []
-      Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+      Header.Height = 17
+      Header.Options = [hoColumnResize, hoDrag, hoShowImages, hoShowSortGlyphs, hoVisible]
       Images = MainForm.PngImageList1
       TabOrder = 4
       TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScroll, toAutoScrollOnExpand, toAutoTristateTracking, toAutoDeleteMovedNodes]
@@ -905,10 +906,10 @@ object geraetesteuerung: Tgeraetesteuerung
     end
   end
   object Panel1: TPanel
-    Left = 379
+    Left = 371
     Top = 25
     Width = 313
-    Height = 457
+    Height = 448
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 1
@@ -924,7 +925,7 @@ object geraetesteuerung: Tgeraetesteuerung
       Left = 4
       Top = 269
       Width = 301
-      Height = 147
+      Height = 138
       Align = alClient
       ColCount = 3
       DefaultRowHeight = 15
@@ -943,7 +944,7 @@ object geraetesteuerung: Tgeraetesteuerung
     end
     object Panel6: TPanel
       Left = 0
-      Top = 416
+      Top = 407
       Width = 313
       Height = 41
       Align = alBottom
@@ -1784,7 +1785,7 @@ object geraetesteuerung: Tgeraetesteuerung
       Left = 0
       Top = 269
       Width = 4
-      Height = 147
+      Height = 138
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 3
@@ -1793,7 +1794,7 @@ object geraetesteuerung: Tgeraetesteuerung
       Left = 305
       Top = 269
       Width = 8
-      Height = 147
+      Height = 138
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 4
@@ -1841,10 +1842,10 @@ object geraetesteuerung: Tgeraetesteuerung
     end
   end
   object Panel7: TPanel
-    Left = 245
+    Left = 237
     Top = 25
     Width = 131
-    Height = 457
+    Height = 448
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
@@ -3413,7 +3414,7 @@ object geraetesteuerung: Tgeraetesteuerung
   object TBDock1: TTBDock
     Left = 0
     Top = 0
-    Width = 692
+    Width = 684
     Height = 25
     LimitToOneRow = True
     object TBToolbar1: TTBToolbar

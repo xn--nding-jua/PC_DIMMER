@@ -155,16 +155,16 @@ object Tastenabfrage: TTastenabfrage
   object GroupBox1: TGroupBox
     Left = 9
     Top = 9
-    Width = 761
-    Height = 337
+    Width = 753
+    Height = 328
     Align = alClient
     Caption = ' '#220'bersicht '
     TabOrder = 0
     object StringGrid1: TStringGrid
       Left = 11
       Top = 24
-      Width = 739
-      Height = 268
+      Width = 731
+      Height = 259
       Align = alClient
       Color = clWhite
       ColCount = 7
@@ -187,8 +187,8 @@ object Tastenabfrage: TTastenabfrage
     end
     object Panel5: TPanel
       Left = 2
-      Top = 292
-      Width = 757
+      Top = 283
+      Width = 749
       Height = 43
       Align = alBottom
       BevelOuter = bvNone
@@ -816,7 +816,7 @@ object Tastenabfrage: TTastenabfrage
       Left = 2
       Top = 24
       Width = 9
-      Height = 268
+      Height = 259
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 2
@@ -824,17 +824,17 @@ object Tastenabfrage: TTastenabfrage
     object Panel7: TPanel
       Left = 2
       Top = 15
-      Width = 757
+      Width = 749
       Height = 9
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 3
     end
     object Panel8: TPanel
-      Left = 750
+      Left = 742
       Top = 24
       Width = 9
-      Height = 268
+      Height = 259
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 4
@@ -842,8 +842,8 @@ object Tastenabfrage: TTastenabfrage
   end
   object Panel1: TPanel
     Left = 0
-    Top = 346
-    Width = 779
+    Top = 337
+    Width = 771
     Height = 260
     Align = alBottom
     BevelOuter = bvNone
@@ -851,7 +851,7 @@ object Tastenabfrage: TTastenabfrage
     object Shape4: TShape
       Left = 0
       Top = 224
-      Width = 779
+      Width = 771
       Height = 36
       Align = alBottom
       Pen.Style = psClear
@@ -956,7 +956,7 @@ object Tastenabfrage: TTastenabfrage
     object Shape1: TShape
       Left = 0
       Top = 223
-      Width = 779
+      Width = 771
       Height = 1
       Align = alBottom
     end
@@ -1436,7 +1436,7 @@ object Tastenabfrage: TTastenabfrage
     Left = 0
     Top = 9
     Width = 9
-    Height = 337
+    Height = 328
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 2
@@ -1444,17 +1444,17 @@ object Tastenabfrage: TTastenabfrage
   object Panel4: TPanel
     Left = 0
     Top = 0
-    Width = 779
+    Width = 771
     Height = 9
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 3
   end
   object Panel3: TPanel
-    Left = 770
+    Left = 762
     Top = 9
     Width = 9
-    Height = 337
+    Height = 328
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4

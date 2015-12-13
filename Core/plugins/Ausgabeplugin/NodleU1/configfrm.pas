@@ -87,6 +87,8 @@ type
     DMXInArrayLastValue:array[0..31] of TDMXArray;
     UseBlockChange:boolean;
 
+    SerialList: TSERIALLIST;
+
     comportnumber:integer;
     baudrate:integer;
     rs232_inframe:array of byte;
@@ -316,19 +318,14 @@ var
   i,j:integer;
   newinterface:boolean;
 begin
-  // Alle Interrupt-Funktionen beenden
-  UnregisterInputChangeNotification;
-  UnregisterInterfaceChangeNotification;
-  if UseBlockChange then
-    UnRegisterInputChangeBlockNotification;
+  SerialList:=GetAllConnectedInterfaces;
 
-  for i:=0 to length(GetAllConnectedInterfaces)-1 do // GetAllConnectedInterfaces liefert immer 32
-  if (i<=31) then
+  for i:=0 to 31 do
   begin
-    DE_Interfaces[i].Serial:=SerialToSerialstring(GetAllConnectedInterfaces[i]);
+    DE_Interfaces[i].Serial:=SerialToSerialstring(SerialList[i]);
     DE_Interfaces[i].Modus:=6;
     DE_Interfaces[i].Startaddress:=1;
-    DE_Interfaces[i].Version:=GetDeviceVersion(SerialstringToSerial(GetAllConnectedInterfaces[i]));
+    DE_Interfaces[i].Version:=GetDeviceVersion(SerialstringToSerial(SerialList[i]));
     DE_Interfaces[i].UseDMXIn:=false;
     DE_Interfaces[i].DMXInStartaddress:=1;
   end;
@@ -372,12 +369,6 @@ begin
       SetInterfaceMode(SerialstringToSerial(DE_Interfaces[i].Serial),DE_Interfaces[i].Modus);
     end;
   end;
-
-  // Timerinterrupts wieder aktivieren
-  RegisterInterfaceChangeNotification(DeviceChange);
-  RegisterInputChangeNotification(InputChange);
-  if UseBlockChange then
-    RegisterInputChangeBlockNotification(InputChangeBlock);
 end;
 
 procedure TConfig.ComboBox2Select(Sender: TObject);
@@ -696,8 +687,8 @@ begin
 
   RegisterInterfaceChangeNotification(DeviceChange);
   RegisterInputChangeNotification(InputChange);
-  if UseBlockChange then
-    RegisterInputChangeBlockNotification(InputChangeBlock);
+//  if UseBlockChange then
+//    RegisterInputChangeBlockNotification(InputChangeBlock);
 end;
 
 procedure TConfig.CheckBox1MouseUp(Sender: TObject; Button: TMouseButton;

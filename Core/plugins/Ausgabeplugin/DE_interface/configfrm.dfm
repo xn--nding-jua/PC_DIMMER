@@ -18,16 +18,16 @@ object Config: TConfig
   object GroupBox3: TGroupBox
     Left = 8
     Top = 92
-    Width = 457
-    Height = 280
+    Width = 449
+    Height = 271
     Align = alClient
     Caption = ' Interfaceeinstellungen '
     TabOrder = 0
     object StringGrid1: TStringGrid
       Left = 10
       Top = 23
-      Width = 437
-      Height = 154
+      Width = 429
+      Height = 145
       Align = alClient
       ColCount = 6
       DefaultColWidth = 60
@@ -50,8 +50,8 @@ object Config: TConfig
     end
     object Panel7: TPanel
       Left = 2
-      Top = 177
-      Width = 453
+      Top = 168
+      Width = 445
       Height = 101
       Align = alBottom
       BevelOuter = bvNone
@@ -149,16 +149,16 @@ object Config: TConfig
       Left = 2
       Top = 23
       Width = 8
-      Height = 154
+      Height = 145
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 2
     end
     object Panel9: TPanel
-      Left = 447
+      Left = 439
       Top = 23
       Width = 8
-      Height = 154
+      Height = 145
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 3
@@ -166,7 +166,7 @@ object Config: TConfig
     object Panel10: TPanel
       Left = 2
       Top = 15
-      Width = 453
+      Width = 445
       Height = 8
       Align = alTop
       BevelOuter = bvNone
@@ -175,8 +175,8 @@ object Config: TConfig
   end
   object Panel1: TPanel
     Left = 0
-    Top = 380
-    Width = 473
+    Top = 371
+    Width = 465
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
@@ -184,7 +184,7 @@ object Config: TConfig
     object Shape2: TShape
       Left = 0
       Top = 1
-      Width = 473
+      Width = 465
       Height = 40
       Align = alClient
       Pen.Color = clWhite
@@ -192,7 +192,7 @@ object Config: TConfig
     object Shape3: TShape
       Left = 0
       Top = 0
-      Width = 473
+      Width = 465
       Height = 1
       Align = alTop
     end
@@ -235,16 +235,16 @@ object Config: TConfig
     Left = 0
     Top = 92
     Width = 8
-    Height = 280
+    Height = 271
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 2
   end
   object Panel3: TPanel
-    Left = 465
+    Left = 457
     Top = 92
     Width = 8
-    Height = 280
+    Height = 271
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
@@ -252,7 +252,7 @@ object Config: TConfig
   object Panel4: TPanel
     Left = 0
     Top = 0
-    Width = 473
+    Width = 465
     Height = 84
     Align = alTop
     BevelOuter = bvNone
@@ -260,7 +260,7 @@ object Config: TConfig
     object Image1: TImage
       Left = 0
       Top = 0
-      Width = 473
+      Width = 465
       Height = 84
       Align = alTop
       Picture.Data = {
@@ -1091,7 +1091,7 @@ object Config: TConfig
     object Shape1: TShape
       Left = 0
       Top = 83
-      Width = 473
+      Width = 465
       Height = 1
       Align = alBottom
     end
@@ -1099,7 +1099,7 @@ object Config: TConfig
   object Panel5: TPanel
     Left = 0
     Top = 84
-    Width = 473
+    Width = 465
     Height = 8
     Align = alTop
     BevelOuter = bvNone
@@ -1107,8 +1107,8 @@ object Config: TConfig
   end
   object Panel6: TPanel
     Left = 0
-    Top = 372
-    Width = 473
+    Top = 363
+    Width = 465
     Height = 8
     Align = alBottom
     BevelOuter = bvNone
@@ -1133,13 +1133,6 @@ object Config: TConfig
     Accuracy = 0
     Enabled = False
     Left = 432
-    Top = 48
-  end
-  object startuptimer: TTimer
-    Enabled = False
-    Interval = 2500
-    OnTimer = startuptimerTimer
-    Left = 336
     Top = 48
   end
 end

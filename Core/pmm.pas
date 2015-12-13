@@ -120,6 +120,7 @@ type
     selected:array of boolean;
     procedure pmmstep;
     procedure RefreshListBoxes;
+    procedure Openfile(Filename:string);
   end;
 
 var
@@ -205,6 +206,8 @@ begin
   presetbox.Items.clear;
   for i:=0 to length(mainform.PartyMuckenModul)-1 do
     presetbox.items.add(mainform.PartyMuckenModul[i].Name);
+
+  presetboxClick(presetbox);
 end;
 
 procedure Tpmmform.FormCreate(Sender: TObject);
@@ -434,6 +437,9 @@ end;
 
 procedure Tpmmform.presetboxClick(Sender: TObject);
 begin
+  if (presetbox.itemindex<0) and (presetbox.items.count>0) then
+    presetbox.itemindex:=0;
+
   if (presetbox.itemindex>-1) and (presetbox.itemindex<length(mainform.PartyMuckenModul)) then
   begin
     check1.Checked:=mainform.PartyMuckenModul[presetbox.itemindex].ControlMode=0;
@@ -625,15 +631,15 @@ begin
   end;
 end;
 
-procedure Tpmmform.SpeedButton2Click(Sender: TObject);
+procedure Tpmmform.Openfile(Filename:string);
 var
   i,count:integer;
 begin
-  if OpenDialog1.Execute then
+  if FileExists(Filename) then
   begin
     with mainform do
     begin
-      Filestream:=TFileStream.Create(OpenDialog1.Filename, fmOpenRead);
+      Filestream:=TFileStream.Create(Filename, fmOpenRead);
 
       Filestream.ReadBuffer(Count,sizeof(Count));
       setlength(PartyMuckenModul, Count);
@@ -665,6 +671,14 @@ begin
     end;
 
     RefreshListboxes;
+  end;
+end;
+
+procedure Tpmmform.SpeedButton2Click(Sender: TObject);
+begin
+  if OpenDialog1.Execute then
+  begin
+    Openfile(OpenDialog1.Filename);
   end;
 end;
 

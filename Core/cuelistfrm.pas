@@ -143,6 +143,7 @@ type
     procedure MSGNew;
     procedure MSGOpen;
     procedure MSGSave;
+    procedure Openfile(Filename:string);
   end;
 
 var
@@ -991,6 +992,38 @@ begin
   end;
 end;
 
+procedure Tcuelistform.Openfile(Filename:string);
+var
+  j, count2, FileVersion:integer;
+begin
+  if FileExists(Filename) then
+  begin
+    FileStream:=TFileStream.Create(FileName, fmOpenRead);
+
+    // Projektversion
+    Filestream.ReadBuffer(FileVersion, sizeof(FileVersion));
+
+    FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].BankName, sizeof(mainform.Cuelistbank[BankSelect.Itemindex].BankName));
+    FileStream.ReadBuffer(count2, sizeof(count2));
+    setlength(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems,count2);
+    for j:=0 to count2-1 do
+    begin
+      FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].ID,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].ID));
+      FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].OwnDescription,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].OwnDescription));
+      FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].Typ,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].Typ));
+      if FileVersion>=455 then
+      begin
+        FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].UseFadetime,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].UseFadetime));
+        FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].Fadetime,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].Fadetime));
+        FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].LiveTime,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].LiveTime));
+        FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].StopCueIfTimeOver,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].StopCueIfTimeOver));
+      end;
+    end;
+
+    FileStream.Free;
+  end;
+end;
+
 procedure Tcuelistform.SpeedButton2Click(Sender: TObject);
 var
   j, startindex, count2, FileVersion:integer;
@@ -1038,29 +1071,7 @@ begin
       FileStream.Free;
     end else
     begin
-      FileStream:=TFileStream.Create(Opendialog1.FileName, fmOpenRead);
-
-      // Projektversion
-      Filestream.ReadBuffer(FileVersion, sizeof(FileVersion));
-
-      FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].BankName, sizeof(mainform.Cuelistbank[BankSelect.Itemindex].BankName));
-      FileStream.ReadBuffer(count2, sizeof(count2));
-      setlength(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems,count2);
-      for j:=0 to count2-1 do
-      begin
-        FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].ID,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].ID));
-        FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].OwnDescription,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].OwnDescription));
-        FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].Typ,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].Typ));
-        if FileVersion>=455 then
-        begin
-          FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].UseFadetime,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].UseFadetime));
-          FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].Fadetime,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].Fadetime));
-          FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].LiveTime,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].LiveTime));
-          FileStream.ReadBuffer(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].StopCueIfTimeOver,sizeof(mainform.Cuelistbank[BankSelect.Itemindex].Cuelistbankitems[j].StopCueIfTimeOver));
-        end;
-      end;
-
-      FileStream.Free;
+      Openfile(Opendialog1.Filename);
     end;
 
     BankSelectChange(BankSelect);

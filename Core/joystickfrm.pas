@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, ComCtrls, directinput, ugamepad, mmsystem,
   Grids, StrUtils, gnugettext, pngimage, JvExControls,
-  JvGradient, SVATimer;
+  JvGradient, SVATimer, Buttons;
 
 type
   Tjoystickform = class(TForm)
@@ -89,6 +89,11 @@ type
     CloseBtn: TButton;
     lblgpdisabled: TLabel;
     JoystickTimer: TSVATimer;
+    SpeedButton3: TSpeedButton;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    OpenDialog1: TOpenDialog;
+    SaveDialog1: TSaveDialog;
     procedure CloseBtnClick(Sender: TObject);
     procedure CheckBox1MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -107,6 +112,9 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CreateParams(var Params:TCreateParams);override;
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure SpeedButton3Click(Sender: TObject);
   private
     { Private-Deklarationen }
     {$IFNDEF USETIMER}
@@ -124,6 +132,7 @@ type
     procedure PositionXYMoved;
     procedure InitializeJoystick;
     procedure MSGNew;
+    procedure Openfile(Filename:string);
   end;
 
 var
@@ -1075,7 +1084,8 @@ end;
 
 procedure Tjoystickform.SaveConfigurationToFile;
 var
-  i, j:integer;
+  i, j, Count2:integer;
+  FileStream:TFileStream;
 begin
   savedialog1.DefaultExt:='*.pcdjstk';
   savedialog1.Filter:=_('PC_DIMMER Joystick-Einstellungen (*.pcdjstk)|*.pcdjstk|Alle Dateien|*.*');
@@ -1085,6 +1095,7 @@ begin
   begin
     FileStream:=TFileStream.Create(savedialog1.FileName, fmCreate);
 
+    Filestream.WriteBuffer(mainform.currentprojectversion,sizeof(mainform.currentprojectversion));
     for i:=0 to length(mainform.JoystickEvents)-1 do
     begin
       Filestream.WriteBuffer(mainform.JoystickEvents[i].ID,sizeof(mainform.JoystickEvents[i].ID));
@@ -1120,17 +1131,17 @@ begin
   end;
 end;
 
-procedure Tjoystickform.LoadConfigurationFromFile;
+procedure Tjoystickform.Openfile(Filename:string);
 var
-  i, j:integer;
+  i, j, Count2:integer;
+  FileStream:TFileStream;
+  projektprogrammversionint:integer;
 begin
-  opendialog1.DefaultExt:='*.pcdjstk';
-  opendialog1.Filter:=_('PC_DIMMER Joystick-Einstellungen (*.pcdjstk)|*.pcdjstk|Alle Dateien|*.*');
-  opendialog1.Title:=_('PC_DIMMER Joystick-Einstellungen öffnen');
-	if opendialog1.Execute then
+  if FileExists(Filename) then
   begin
-    FileStream:=TFileStream.Create(opendialog1.filename, fmOpenRead);
-  
+    FileStream:=TFileStream.Create(Filename, fmOpenRead);
+
+    Filestream.ReadBuffer(projektprogrammversionint, sizeof(projektprogrammversionint));
     for i:=0 to length(mainform.JoystickEvents)-1 do
     begin
       Filestream.ReadBuffer(mainform.JoystickEvents[i].ID,sizeof(mainform.JoystickEvents[i].ID));
@@ -1168,8 +1179,20 @@ begin
       for j:=0 to Count2-1 do
         Filestream.ReadBuffer(mainform.JoystickEvents[i].Befehl.ArgGUID[j],sizeof(mainform.JoystickEvents[i].Befehl.ArgGUID[j]));
     end;
-    
+
     FileStream.Free;
+  end;
+end;
+
+procedure Tjoystickform.LoadConfigurationFromFile;
+begin
+  opendialog1.DefaultExt:='*.pcdjstk';
+  opendialog1.Filter:=_('PC_DIMMER Joystick-Einstellungen (*.pcdjstk)|*.pcdjstk|Alle Dateien|*.*');
+  opendialog1.Title:=_('PC_DIMMER Joystick-Einstellungen öffnen');
+
+	if opendialog1.Execute then
+  begin
+    Openfile(opendialog1.filename);
   end;
 end;
 
@@ -1194,7 +1217,7 @@ begin
   setlength(mainform.JoystickEvents[0].Befehl.ArgInteger,2);
   mainform.JoystickEvents[0].Befehl.ArgInteger[0]:=0; // PAN
   mainform.JoystickEvents[0].Befehl.ArgInteger[1]:=75; // Faktor 1
-  mainform.JoystickEvents[0].Befehl.Typ:=Befehlssystem[5].Steuerung[21].GUID;
+  mainform.JoystickEvents[0].Befehl.Typ:=mainform.Befehlssystem[5].Steuerung[21].GUID;
   mainform.JoystickEvents[0].Befehl.OnValue:=255;
   mainform.JoystickEvents[0].Befehl.SwitchValue:=0;
   mainform.JoystickEvents[0].Befehl.OffValue:=0;
@@ -1208,7 +1231,7 @@ begin
   setlength(mainform.JoystickEvents[1].Befehl.ArgInteger,2);
   mainform.JoystickEvents[1].Befehl.ArgInteger[0]:=1; // TILT
   mainform.JoystickEvents[1].Befehl.ArgInteger[1]:=75; // Faktor 1
-  mainform.JoystickEvents[1].Befehl.Typ:=Befehlssystem[5].Steuerung[21].GUID;
+  mainform.JoystickEvents[1].Befehl.Typ:=mainform.Befehlssystem[5].Steuerung[21].GUID;
   mainform.JoystickEvents[1].Befehl.OnValue:=255;
   mainform.JoystickEvents[1].Befehl.SwitchValue:=0;
   mainform.JoystickEvents[1].Befehl.OffValue:=0;
@@ -1253,6 +1276,21 @@ begin
     mainform.OldJoystickEvents[i].deaktivierterbereich:=0;
     mainform.OldJoystickEvents[i].beschleunigung:=2000;
   end;
+end;
+
+procedure Tjoystickform.SpeedButton2Click(Sender: TObject);
+begin
+  SaveConfigurationToFile;
+end;
+
+procedure Tjoystickform.SpeedButton1Click(Sender: TObject);
+begin
+  LoadConfigurationFromFile;
+end;
+
+procedure Tjoystickform.SpeedButton3Click(Sender: TObject);
+begin
+  MSGNew;
 end;
 
 end.

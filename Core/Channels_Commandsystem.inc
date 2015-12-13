@@ -208,7 +208,7 @@
   Befehlssystem[2].Steuerung[i].StringArgCount:=0;
   Befehlssystem[2].Steuerung[i].GUIDArgCount:=0;
 
-  setlength(Befehlssystem[3].Steuerung, 28);
+  setlength(Befehlssystem[3].Steuerung, 29);
   Befehlssystem[3].Programmteil:=_('Master / MIDI / Programm');
   Befehlssystem[3].ProgrammteilGUID:=StringToGuid('{43D6EC65-DED7-40FB-AC0A-1DC3D4250BAE}');
   i:=0;
@@ -406,6 +406,13 @@
   Befehlssystem[3].Steuerung[i].InputValueOnly:=false;
   Befehlssystem[3].Steuerung[i].IntegerArgCount:=0;
   Befehlssystem[3].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[3].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[3].Steuerung[i].Bezeichnung:=_('Datei öffnen');
+  Befehlssystem[3].Steuerung[i].GUID:=StringToGuid('{95BF7C35-336C-45D0-812C-4E3324A706DB}');
+  Befehlssystem[3].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[3].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[3].Steuerung[i].StringArgCount:=1;
   Befehlssystem[3].Steuerung[i].GUIDArgCount:=0;
 
   setlength(Befehlssystem[4].Steuerung, 12);

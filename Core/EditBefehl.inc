@@ -450,6 +450,14 @@
   begin // Alle Audioeffekte stoppen
     nousersetting:=false;
   end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[3].Steuerung[28].GUID) then
+  begin // Datei öffnen
+    Optionen1Box.Visible:=true;
+    Arg1Label.caption:=_('Datei öffnen:');
+    Arg1Edit.visible:=true;
+    Arg1Edit.text:=AktuellerBefehl.ArgString[0];
+    Arg1Combobox.visible:=false;
+  end;
 
   // Einzelkanaländerung
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[4].Steuerung[0].GUID) then

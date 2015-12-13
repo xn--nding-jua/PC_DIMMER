@@ -177,6 +177,7 @@ type
     { Public-Deklarationen }
     lastrow:integer;
     procedure RestoreDefautKeymap;
+    procedure Openfile(Filename:string);
   end;
 
 var
@@ -667,11 +668,50 @@ if messagedlg(_('Möchten Sie wirklich alle ShortCuts löschen?'),mtConfirmation,
   end;
 end;
 
+procedure TTastenabfrage.Openfile(Filename:string);
+var
+  i,j,Count,Count2:integer;
+begin
+  if FileExists(Filename) then
+  with mainform do
+  begin
+    Filestream:=TFileStream.Create(FileName,fmOpenRead);
+    Filestream.ReadBuffer(Count,sizeof(Count));
+    setlength(TastencodeArray,Count);
+    setlength(TastencodePressedArray, Count);
+    for i:=0 to Count-1 do
+    begin
+      Filestream.ReadBuffer(TastencodeArray[i].ID,sizeof(TastencodeArray[i].ID));
+      Filestream.ReadBuffer(TastencodeArray[i].active,sizeof(TastencodeArray[i].active));
+      Filestream.ReadBuffer(TastencodeArray[i].Hotkey,sizeof(TastencodeArray[i].Hotkey));
+      Filestream.ReadBuffer(TastencodeArray[i].Global,sizeof(TastencodeArray[i].Global));
+      Filestream.ReadBuffer(TastencodeArray[i].Repeated,sizeof(TastencodeArray[i].Repeated));
+      Filestream.ReadBuffer(TastencodeArray[i].UseKeyUp,sizeof(TastencodeArray[i].UseKeyUp));
+
+      Filestream.ReadBuffer(TastencodeArray[i].Befehl.Typ,sizeof(TastencodeArray[i].Befehl.Typ));
+      Filestream.ReadBuffer(TastencodeArray[i].Befehl.OnValue,sizeof(TastencodeArray[i].Befehl.OnValue));
+      Filestream.ReadBuffer(TastencodeArray[i].Befehl.OffValue,sizeof(TastencodeArray[i].Befehl.OffValue));
+      Filestream.ReadBuffer(Count2,sizeof(Count2));
+      setlength(TastencodeArray[i].Befehl.ArgInteger,Count2);
+      for j:=0 to Count2-1 do
+        Filestream.ReadBuffer(TastencodeArray[i].Befehl.ArgInteger[j],sizeof(TastencodeArray[i].Befehl.ArgInteger[j]));
+      Filestream.ReadBuffer(Count2,sizeof(Count2));
+      setlength(TastencodeArray[i].Befehl.ArgString,Count2);
+      for j:=0 to Count2-1 do
+        Filestream.ReadBuffer(TastencodeArray[i].Befehl.ArgString[j],sizeof(TastencodeArray[i].Befehl.ArgString[j]));
+      Filestream.ReadBuffer(Count2,sizeof(Count2));
+      setlength(TastencodeArray[i].Befehl.ArgGUID,Count2);
+      for j:=0 to Count2-1 do
+        Filestream.ReadBuffer(TastencodeArray[i].Befehl.ArgGUID[j],sizeof(TastencodeArray[i].Befehl.ArgGUID[j]));
+    end;
+    Filestream.Free;
+  end;
+end;
+
 procedure TTastenabfrage.SpeedButton2Click(Sender: TObject);
 var
   i,j,startindex,Count,Count2:integer;
   additiv:boolean;
-//  Filestream:TFilestream;
 begin
   additiv:=true;
 
@@ -726,39 +766,7 @@ begin
     end else
     begin
       // ersetzen
-      with mainform do
-      begin
-        Filestream:=TFileStream.Create(OpenDialog1.FileName,fmOpenRead);
-        Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(TastencodeArray,Count);
-        setlength(TastencodePressedArray, Count);
-        for i:=0 to Count-1 do
-        begin
-          Filestream.ReadBuffer(TastencodeArray[i].ID,sizeof(TastencodeArray[i].ID));
-          Filestream.ReadBuffer(TastencodeArray[i].active,sizeof(TastencodeArray[i].active));
-          Filestream.ReadBuffer(TastencodeArray[i].Hotkey,sizeof(TastencodeArray[i].Hotkey));
-          Filestream.ReadBuffer(TastencodeArray[i].Global,sizeof(TastencodeArray[i].Global));
-          Filestream.ReadBuffer(TastencodeArray[i].Repeated,sizeof(TastencodeArray[i].Repeated));
-          Filestream.ReadBuffer(TastencodeArray[i].UseKeyUp,sizeof(TastencodeArray[i].UseKeyUp));
-
-          Filestream.ReadBuffer(TastencodeArray[i].Befehl.Typ,sizeof(TastencodeArray[i].Befehl.Typ));
-          Filestream.ReadBuffer(TastencodeArray[i].Befehl.OnValue,sizeof(TastencodeArray[i].Befehl.OnValue));
-          Filestream.ReadBuffer(TastencodeArray[i].Befehl.OffValue,sizeof(TastencodeArray[i].Befehl.OffValue));
-          Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(TastencodeArray[i].Befehl.ArgInteger,Count2);
-          for j:=0 to Count2-1 do
-            Filestream.ReadBuffer(TastencodeArray[i].Befehl.ArgInteger[j],sizeof(TastencodeArray[i].Befehl.ArgInteger[j]));
-          Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(TastencodeArray[i].Befehl.ArgString,Count2);
-          for j:=0 to Count2-1 do
-            Filestream.ReadBuffer(TastencodeArray[i].Befehl.ArgString[j],sizeof(TastencodeArray[i].Befehl.ArgString[j]));
-          Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(TastencodeArray[i].Befehl.ArgGUID,Count2);
-          for j:=0 to Count2-1 do
-            Filestream.ReadBuffer(TastencodeArray[i].Befehl.ArgGUID[j],sizeof(TastencodeArray[i].Befehl.ArgGUID[j]));
-        end;
-        Filestream.Free;
-      end;
+      Openfile(Opendialog1.Filename);
     end;
 
     mainform.ShortCutChecker.Enabled:=true;

@@ -417,7 +417,7 @@
 
     // Erweiterte Einstellungen
     hasDimmer:boolean;
-    hasVirtualRGBDimmer:boolean;
+    hasVirtualRGBAWDimmer:boolean;
     hasRGB:boolean;
     hasCMY:boolean;
     hasAmber:boolean;
