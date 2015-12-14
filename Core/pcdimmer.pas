@@ -58,8 +58,6 @@ const
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
-  maxOutputDLL = 63; // Bei veränderten Werten sind alte Configfiles nicht mehr kompatibel
-  maxInputDLL = 20; // Anzahl muss kleiner/gleich Anzahl der "Plugin" Einträge im versteckten Hauptmenü "Plugins" sein
 
   // Konstanten für Thread-Multicore-Zuweisung
   THREAD_TERMINATE                 = $0001;
@@ -207,10 +205,33 @@ const
 // Ende Funktionen für Projektdateiinformationen
 
 type
-  // permanente DLL-Funktionen hier deklarieren
-  TDLLSendData = procedure(address, startvalue, endvalue, fadetime:integer; channelname:PChar);stdcall;
-  TDLLSendMessage = procedure(MSG:Byte; Data1, Data2:Variant);stdcall;
-  TDLLIsSending = function:boolean;stdcall;
+  // Plugin-Prototypen deklarieren
+  TOutputPlugin = record
+    Filename: string;
+    IsActive: boolean;
+    IsEnabled: boolean;
+    IsBlacklisted: boolean;
+    Handle: THandle;
+    Name: string;
+    Version: string;
+    Icon: TBitmap;
+
+    Startaddress: integer;
+    Stopaddress: integer;
+
+    SendData: procedure(address, startvalue, endvalue, fadetime:integer; channelname:PChar);stdcall;
+    SendMessage: procedure(MSG:Byte; Data1, Data2:Variant);stdcall;
+    IsSending: function:boolean;stdcall;
+  end;
+  TProgramPlugin = record
+    Filename: string;
+    Handle: THandle;
+    Name: string;
+    Version: string;
+    Icon: TBitmap;
+    SendData: procedure(address, startvalue, endvalue, fadetime:integer; channelname:PChar);stdcall;
+    SendMessage: procedure(MSG:Byte; Data1, Data2:Variant);stdcall;
+  end;
 
   // Thread für Akkuanzeige deklarieren
   TAccuEvent = procedure () of object;
@@ -379,29 +400,8 @@ type
     LockPCdimmerRibbonBtn: TdxBarLargeButton;
     DebugRibbonBtn: TdxBarButton;
     ProtokollRibbonBtn: TdxBarButton;
-    plugin0ribbon: TdxBarButton;
-    plugin1ribbon: TdxBarButton;
-    plugin2ribbon: TdxBarButton;
-    plugin3ribbon: TdxBarButton;
-    plugin4ribbon: TdxBarButton;
-    plugin5ribbon: TdxBarButton;
-    plugin7ribbon: TdxBarButton;
-    plugin6ribbon: TdxBarButton;
-    plugin8ribbon: TdxBarButton;
-    plugin10ribbon: TdxBarButton;
-    plugin9ribbon: TdxBarButton;
-    plugin11ribbon: TdxBarButton;
-    plugin13ribbon: TdxBarButton;
-    plugin12ribbon: TdxBarButton;
-    plugin14ribbon: TdxBarButton;
-    plugin16ribbon: TdxBarButton;
-    plugin15ribbon: TdxBarButton;
-    plugin17ribbon: TdxBarButton;
-    plugin19ribbon: TdxBarButton;
-    plugin18ribbon: TdxBarButton;
     dxBarManager1Bar4: TdxBar;
     RefreshPluginsRibbonBtn: TdxBarLargeButton;
-    plugin20ribbon: TdxBarButton;
     dxRibbonStatusBar1Container3: TdxStatusBarContainerControl;
     dxRibbonStatusBar1Container5: TdxStatusBarContainerControl;
     statusbar_imagegreen: TImage;
@@ -608,7 +608,6 @@ type
     procedure CompressCompressedFile(Sender: TObject;
       const FileName: String);
     procedure FWM_DropFiles(var Msg: TMessage); message WM_DROPFILES;
-    procedure PluginMenuClick(Sender: TObject);
     procedure Startoptionen1Click(Sender: TObject);
     procedure Kanalnamendrucken1Click(Sender: TObject);
     procedure PowerButton1PowerbuttonPress(Sender: TObject);
@@ -1005,21 +1004,9 @@ type
     QuitWithoutConfirmation:boolean;
     CheckUpdatesOnStartup: boolean;
     killsplash:boolean;
-// Output-Plugin deklarieren
-    pc_dimmer_outputplugins : array[-1..maxOutputDLL] of string[255];
-    OutputDLLActive:array[0..maxOutputDLL] of boolean;
-    OutputDLL:array[0..maxOutputDLL] of THandle;
-    OutputDLLName:array[0..maxOutputDLL] of string;
-    OutputDLLVersion:array[0..maxOutputDLL] of string;
-    DLLSendData:array[0..maxOutputDLL] of TDLLSendData;
-    DLLSendMessage:array[0..maxOutputDLL] of TDLLSendMessage;
-    DLLIsSending:array[0..maxOutputDLL] of TDLLIsSending;
-// Programm-Plugins deklarieren
-    pc_dimmer_inputplugins : array[-1..maxInputDLL] of string[255];
-    InputDLL:array[0..maxInputDLL] of THandle;
-    PluginDLLSendData: array[0..maxInputDLL] of TDLLSendData;
-    PluginDLLSendMessage: array[0..maxInputDLL] of TDLLSendmessage;
-
+    OutputPlugins: array of TOutputPlugin;
+    ProgramPlugins: array of TProgramPlugin;
+// Dimmerkernel-Variablen deklarieren
     channel_endvalue:array[1..chan] of byte;
     channel_value:array[1..chan] of byte;
     channel_value_highresolution:array[1..chan] of Single; // auf 7-8 Stellen genau - sollte hier reichen ;-)
@@ -1219,6 +1206,7 @@ type
     procedure ConvertBMPtoPNG(bmpSource, pngDestination: string);
     procedure SavePng(Bitmap: TBitmap; Destination:string);
     procedure SaveJpg(Bitmap: TBitmap; Destination:string);
+    procedure PluginRibbonBtnClick(Sender: TObject);
   end;
 
 // Callbackfunktionen der Plugin-Dlls
@@ -1645,7 +1633,7 @@ end;
 
 procedure TMainform.FormCreate(Sender: TObject);
 var
-  i,j,k,zeilenanzahl,pluginanzahl,Count, Count2: integer;
+  i,j,k,zeilenanzahl,Count, Count2: integer;
   text,text1,text2,tempstring, sprache, LastLanguage:string;
   SR: TSearchRec;
   FuncCall,FuncCall2,FuncCall3 : function : PChar;stdcall;
@@ -2161,11 +2149,10 @@ begin
   PluginsToLoad:=CountFiles(workingdirectory+'Plugins\','*.dll');
   ActualPlugin:=-1;
 
-// DLLs suchen und Input- und Output-DLLs rausfiltern
-  i:=0;
-  j:=0;
-  pc_dimmer_outputplugins[-1]:='0';
-  pc_dimmer_inputplugins[-1]:='0';
+// DLLs suchen und Output- und Program-DLLs rausfiltern
+  setlength(OutputPlugins, 0);
+  setlength(ProgramPlugins, 0);
+
   if (FindFirst(workingdirectory+'\plugins\*.dll',faAnyFile-faDirectory,SR)=0) then
   begin
     repeat
@@ -2183,25 +2170,27 @@ begin
               ActualPlugin:=ActualPlugin+1;
               SplashProgress(1, 3+round(15*(ActualPlugin/PluginsToLoad)), 100);
 
-//              if FuncCall=StrPas('Output') then
               if FuncCall[0]=StrPas('O') then
               begin
-                pc_dimmer_outputplugins[i]:=SR.Name;
+                setlength(OutputPlugins, length(OutputPlugins)+1);
+
+                OutputPlugins[length(OutputPlugins)-1].Filename:=SR.Name;
                 DebugAdd('PLUGIN: Found Outputplugin '+SR.Name);
-                OutputDLLName[i]:=FuncCall2;
-                OutputDLLVersion[i]:=FuncCall3;
-                SplashAddText(_('Outputplugin: ')+OutputDLLName[i]);
+                OutputPlugins[length(OutputPlugins)-1].Name:=FuncCall2;
+                OutputPlugins[length(OutputPlugins)-1].Version:=FuncCall3;
+                SplashAddText(_('Outputplugin: ')+OutputPlugins[length(OutputPlugins)-1].Name);
                 RefreshSplashText;
-                inc(i);
-              end;
-//              if FuncCall=StrPas('Input') then
-              if FuncCall[0]=StrPas('I') then
+              end else if FuncCall[0]=StrPas('I') then
               begin
-                pc_dimmer_inputplugins[j]:=SR.Name;
-                DebugAdd('PLUGIN: Found Inputplugin '+SR.Name);
-                SplashAddText(_('Programmplugin: ')+FuncCall2);
+                setlength(ProgramPlugins, length(ProgramPlugins)+1);
+
+                ProgramPlugins[length(ProgramPlugins)-1].Filename:=SR.Name;
+                DebugAdd('PLUGIN: Found Programplugin '+SR.Name);
+                ProgramPlugins[length(ProgramPlugins)-1].Name:=FuncCall2;
+                ProgramPlugins[length(ProgramPlugins)-1].Version:=FuncCall3;
+
+                SplashAddText(_('Programmplugin: ')+ProgramPlugins[length(ProgramPlugins)-1].Name);
                 RefreshSplashText;
-                inc(j);
               end;
             end else
             begin
@@ -2222,19 +2211,16 @@ begin
       end;
     until FindNext(SR)<>0;
     FindClose(SR);
-    pc_dimmer_outputplugins[-1]:=inttostr(i);
-    pc_dimmer_inputplugins[-1]:=inttostr(j);
   end;
-  pluginanzahl:=strtoint(pc_dimmer_outputplugins[-1])+strtoint(pc_dimmer_inputplugins[-1])-2;
 
-  if strtoint(pc_dimmer_outputplugins[-1])<=0 then
+  if length(OutputPlugins)=0 then
   begin
     text:=_('Es sind keine Ausgabeplugins installiert.'+#10+#10+'Plugins sind auf der Website "http://downloads.pcdimmer.de" kostenlos herunterladbar.');
     MessageBox(Handle, PChar(text), 'Hinweis', MB_ICONWARNING or MB_OK);
   end;
 
-  DebugAdd('PLUGIN: Found '+inttostr(i)+' Outputplugin(s)...', false);
-  DebugAdd('PLUGIN: Found '+inttostr(j)+' Inputplugin(s)...', false);
+  DebugAdd('PLUGIN: Found '+inttostr(length(OutputPlugins))+' Outputplugin(s)...', false);
+  DebugAdd('PLUGIN: Found '+inttostr(length(ProgramPlugins))+' Programplugin(s)...', false);
   DebugAdd('', true, false);
 
   for i:=1 to chan do
@@ -2525,11 +2511,11 @@ begin
       // Werte an Plugin-DLLs senden
       // Strings für Plugins nullterminieren
       newname:=data.names[address]+#0;
-      for i:=0 to strtoint(pc_dimmer_inputplugins[-1])-1 do
+      for i:=0 to length(ProgramPlugins)-1 do
       begin
-        if (@PluginDLLSenddata[i]<>nil) then
+        if (@ProgramPlugins[i].SendData<>nil) then
         begin
-          PluginDLLSenddata[i](address,oldstartvalue,oldendvalue,fadetime,@newname);
+          ProgramPlugins[i].SendData(address,oldstartvalue,oldendvalue,fadetime,@newname);
         end;
       end;
 
@@ -2690,16 +2676,16 @@ begin
           end;
         end;
 
-        for i:=0 to strtoint(pc_dimmer_outputplugins[-1])-1 do
+        for i:=0 to length(OutputPlugins)-1 do
         begin
-  	      if OutputDLLActive[i] and (@DLLSenddata[i]<>nil) and (not (DLLIsSending[i])) and
-            (address>=data.plugin_startaddress[i]) and (address<=data.plugin_stopaddress[i]) and
-            ((address-data.plugin_startaddress[i]+1)>=1) and ((address-data.plugin_startaddress[i]+1)<=8192) then
+  	      if OutputPlugins[i].IsActive and (@OutputPlugins[i].SendData<>nil) and (not (OutputPlugins[i].IsSending)) and
+            (address>=OutputPlugins[i].Startaddress) and (address<=OutputPlugins[i].Stopaddress) and
+            ((address-OutputPlugins[i].Startaddress+1)>=1) and ((address-OutputPlugins[i].Startaddress+1)<=8192) then
           begin
             if useCalibrationValue then
-              DLLSenddata[i](address-data.plugin_startaddress[i]+1,startvalue_Calibrated,endvalue_Calibrated,fadetime,@newname)
+              OutputPlugins[i].SendData(address-OutputPlugins[i].Startaddress+1,startvalue_Calibrated,endvalue_Calibrated,fadetime,@newname)
             else
-              DLLSenddata[i](address-data.plugin_startaddress[i]+1,FilterWithDimmcurve(address,startvalue),FilterWithDimmcurve(address,endvalue),fadetime,@newname);
+              OutputPlugins[i].SendData(address-OutputPlugins[i].Startaddress+1,FilterWithDimmcurve(address,startvalue),FilterWithDimmcurve(address,endvalue),fadetime,@newname);
           end;
         end;
       end;
@@ -2773,11 +2759,11 @@ begin
   Value:=0;
 
   // Werte an Plugin-DLLs senden
-  for i:=0 to strtoint(pc_dimmer_inputplugins[-1])-1 do
+  for i:=0 to length(ProgramPlugins)-1 do
   begin
-    if pc_dimmer_inputplugins[i]<>'' then
+    if (@ProgramPlugins[i].SendMessage<>nil) then
     begin
-      PluginDLLSendmessage[i](MSG, Data1, Data2);
+      ProgramPlugins[i].SendMessage(MSG, Data1, Data2);
     end;
   end;
 
@@ -3011,27 +2997,27 @@ begin
 }
 
   // Ausgabeplugins bedienen
-  for i:=0 to strtoint(pc_dimmer_outputplugins[-1])-1 do
+  for i:=0 to length(OutputPlugins)-1 do
   begin
-    if OutputDLLActive[i] {and Assigned(@DLLSendmessage[i])} then
+    if OutputPlugins[i].IsActive then
 	  begin
       case MSG of
         MSG_ACTUALCHANNELVALUE:
         begin
-          if (Integer(Data1)>=data.plugin_startaddress[i]) and (Integer(Data1)<=data.plugin_stopaddress[i]) and
-            ((Integer(Data1)-data.plugin_startaddress[i]+1)>=1) and ((Integer(Data1)-data.plugin_startaddress[i]+1)<=8192) then
+          if (Integer(Data1)>=OutputPlugins[i].Startaddress) and (Integer(Data1)<=OutputPlugins[i].Stopaddress) and
+            ((Integer(Data1)-OutputPlugins[i].Startaddress+1)>=1) and ((Integer(Data1)-OutputPlugins[i].Startaddress+1)<=8192) then
           begin
             if useCalibrationValue then
             begin
-              DLLSendmessage[i](MSG, Data1-data.plugin_startaddress[i]+1, Value);
+              OutputPlugins[i].SendMessage(MSG, Data1-OutputPlugins[i].Startaddress+1, Value);
             end else
             begin
-              DLLSendmessage[i](MSG, Data1-data.plugin_startaddress[i]+1, FilterWithDimmcurve(Data1,Data2));
+              OutputPlugins[i].SendMessage(MSG, Data1-OutputPlugins[i].Startaddress+1, FilterWithDimmcurve(Data1,Data2));
             end;
           end;
         end else
         begin
-          DLLSendmessage[i](MSG, Data1, Data2);
+          OutputPlugins[i].SendMessage(MSG, Data1, Data2);
         end;
       end;
     end;
@@ -3345,27 +3331,27 @@ begin
 
   BASS_CD_Door(curdrive, BASS_CD_DOOR_UNLOCK);
 
-// Input-Plugins deaktivieren
+// Program-Plugins deaktivieren
   if deactivateinputdllsonclose then
   begin
-    for i:=0 to strtoint(pc_dimmer_inputplugins[-1])-1 do
+    for i:=0 to length(ProgramPlugins)-1 do
     begin
-      funccall := GetProcAddress(InputDLL[i],'DLLDestroy');
+      funccall := GetProcAddress(ProgramPlugins[i].Handle,'DLLDestroy');
       if not Assigned(funccall) then
-        funccall := GetProcAddress(InputDLL[i],'DLLDeactivate');
+        funccall := GetProcAddress(ProgramPlugins[i].Handle,'DLLDeactivate');
       if Assigned(funccall) then
       begin
-        inprogress.filename.Caption:=_('Deaktiviere Input-Plugin ')+pc_dimmer_inputplugins[i];
+        inprogress.filename.Caption:=_('Deaktiviere Input-Plugin ')+ProgramPlugins[i].Filename;
         inprogress.ProgressBar1.Position:=41;
         inprogress.ProgressBar1.Position:=40;
         inprogress.Refresh;
-        DebugAdd('SHUTDOWN: Deactivating Plugin '+pc_dimmer_inputplugins[i]);
+        DebugAdd('SHUTDOWN: Deactivating Plugin '+ProgramPlugins[i].Filename);
         if funccall then
         begin
           DebugAddToLine(' - OK');
         end else
         begin
-          ShowMessage('Das Plugin "'+pc_dimmer_inputplugins[i]+'" hat einen Fehler beim Deaktivieren gemeldet.');
+          ShowMessage('Das Plugin "'+ProgramPlugins[i].Filename+'" hat einen Fehler beim Deaktivieren gemeldet.');
           DebugAddToLine(' - ERROR');
         end;
 //	        FreeLibrary(InputDLL[i]);
@@ -3387,25 +3373,25 @@ begin
 // Output-Plugin deaktivieren
   if deactivateoutputdllsonclose then
   begin
-    for i:=0 to strtoint(pc_dimmer_outputplugins[-1])-1 do
+    for i:=0 to length(OutputPlugins)-1 do
     begin
-      FuncCall := GetProcAddress(OutputDLL[i],'DLLDestroy');
+      FuncCall := GetProcAddress(OutputPlugins[i].Handle,'DLLDestroy');
       if not Assigned(FuncCall) then
-        FuncCall := GetProcAddress(OutputDLL[i],'DLLDeactivate');
+        FuncCall := GetProcAddress(OutputPlugins[i].Handle,'DLLDeactivate');
       try
         if Assigned(funccall) then
         begin
-          inprogress.filename.Caption:=_('Deaktiviere Output-Plugin ')+pc_dimmer_outputplugins[i];
+          inprogress.filename.Caption:=_('Deaktiviere Output-Plugin ')+OutputPlugins[i].Filename;
           inprogress.ProgressBar1.Position:=61;
           inprogress.ProgressBar1.Position:=60;
           inprogress.Refresh;
-          DebugAdd('SHUTDOWN: Deactivating Plugin '+pc_dimmer_outputplugins[i]);
+          DebugAdd('SHUTDOWN: Deactivating Plugin '+OutputPlugins[i].Filename);
           if funccall then
           begin
             DebugAddToLine(' - OK');
           end else
           begin
-            ShowMessage(_('Das Plugin "')+pc_dimmer_inputplugins[i]+_('" hat einen Fehler beim Deaktivieren gemeldet.'));
+            ShowMessage(_('Das Plugin "')+OutputPlugins[i].Filename+_('" hat einen Fehler beim Deaktivieren gemeldet.'));
             DebugAddToLine(' - ERROR');
           end;
         end;
@@ -3507,12 +3493,12 @@ begin
     DebugAdd('SHUTDOWN: Freeing DLLs...');
 
     DebugAddToLine('OutputDLLs...', false);
-    for i:=0 to strtoint(pc_dimmer_outputplugins[-1])-1 do
-      FreeLibrary(OutputDLL[i]);
+    for i:=0 to length(OutputPlugins)-1 do
+      FreeLibrary(OutputPlugins[i].Handle);
 
-    DebugAddToLine('InputDLLs...', false);
-    for i:=0 to strtoint(pc_dimmer_inputplugins[-1])-1 do
-      FreeLibrary(InputDLL[i]);
+    DebugAddToLine('ProgramDLLs...', false);
+    for i:=0 to length(ProgramPlugins)-1 do
+      FreeLibrary(ProgramPlugins[i].Handle);
 
     DebugAddToLine(' - OK');
   end;
@@ -3640,11 +3626,12 @@ var
 begin
   DebugAdd('SETUP: Processing PC_DIMMER reset...');
 
-  for i:=0 to maxOutputDLL do
+  for i:=0 to length(OutputPlugins)-1 do
   begin
-    data.plugin_startaddress[i]:=1;
-    data.plugin_stopaddress[i]:=512;
-    data.lastusedoutputplugin[i]:='';
+    OutputPlugins[i].Startaddress:=1;
+    OutputPlugins[i].Stopaddress:=512;
+    OutputPlugins[i].IsActive:=false;
+    OutputPlugins[i].IsEnabled:=false;
   end;
 
   for i:=0 to 4 do
@@ -3660,7 +3647,6 @@ begin
   startupwitholdscene:=True;
   switchofflightsatshutdown:=true;
   powerswitchoff:=true;
-//  MaximumChan:=512;
   lastchan:=512;
   askforsaveproject:=false;
   levelanzeigeoptionen:=0;
@@ -10312,11 +10298,11 @@ begin
     value:=maxres-data.ch[i];
 //    value:=round(((100-masterform.dimmerMaster.Position)/100)*value);
 
-    for k:=0 to maxInputDLL do
+    for k:=0 to length(ProgramPlugins)-1 do
     begin
-      if (@PluginDLLSenddata[k]<>nil) then
+      if (@ProgramPlugins[k].SendData<>nil) then
       begin
-        PluginDLLSenddata[k](i,value,value,0,@datanames);
+        ProgramPlugins[k].SendData(i,value,value,0,@datanames);
       end;
     end;
 	end;
@@ -10539,9 +10525,6 @@ var
   oldsounddevicespeakers:integer;
   BassDeviceInfo:BASS_DEVICEINFO;
 begin
-  Optionenbox.plugin_blacklist:=plugin_blacklist;
-  Optionenbox.plugin_blacklistnew:=plugin_blacklistnew;
-
   Optionenbox.Notebook1.PageIndex:=0;
 
   oldsounddevicespeakers:=sounddevicespeakers;
@@ -10628,33 +10611,24 @@ begin
     Optionenbox.frontspeaker.enabled:=false;
 
 // Werte für Plugins
-  Optionenbox.Plugingrid.RowCount:=strtoint(pc_dimmer_outputplugins[-1]);
+  Optionenbox.Plugingrid.RowCount:=length(OutputPlugins);
 
-  for i:=0 to strtoint(pc_dimmer_outputplugins[-1]) do
+  for i:=0 to length(OutputPlugins)-1 do
   begin
-    Optionenbox.Plugingrid.Cells[1,i]:=OutputDLLName[i];
-    Optionenbox.Plugingrid.Cells[2,i]:=OutputDLLVersion[i];
+    Optionenbox.Plugingrid.Cells[1,i]:=OutputPlugins[i].Name;
+    Optionenbox.Plugingrid.Cells[2,i]:=OutputPlugins[i].Version;
 
-    if (data.plugin_startaddress[i]=0) and (data.plugin_stopaddress[i]=0) then
+    if (OutputPlugins[i].Startaddress=0) and (OutputPlugins[i].Stopaddress=0) then
     begin
-      data.plugin_startaddress[i]:=1;
-      data.plugin_stopaddress[i]:=512;
+      OutputPlugins[i].Startaddress:=1;
+      OutputPlugins[i].Stopaddress:=512;
     end;
 
-    Optionenbox.Plugingrid.Cells[3,i]:=inttostr(data.plugin_startaddress[i]);
-    Optionenbox.Plugingrid.Cells[4,i]:=inttostr(data.plugin_stopaddress[i]);
-    Optionenbox.Plugingrid.Cells[5,i]:=pc_dimmer_outputplugins[i];
+    Optionenbox.Plugingrid.Cells[3,i]:=inttostr(OutputPlugins[i].Startaddress);
+    Optionenbox.Plugingrid.Cells[4,i]:=inttostr(OutputPlugins[i].Stopaddress);
+    Optionenbox.Plugingrid.Cells[5,i]:=OutputPlugins[i].Filename;
   end;
 
-  for i:=0 to maxOutputDLL do
-  begin
-    Optionenbox.active[i]:=OutputDLLActive[i];
-    Optionenbox.OutputDLL[i]:=OutputDLL[i];
-  end;
-
-  for i:=0 to strtoint(pc_dimmer_outputplugins[-1]) do
-    Optionenbox.pc_dimmer_plugins[i]:=pc_dimmer_outputplugins[i];
-  Optionenbox.pc_dimmer_plugins[-1]:=pc_dimmer_outputplugins[-1];
 // Ende von Werte schreiben
   Optionenbox.Plugingrid.Refresh;
 
@@ -10663,8 +10637,6 @@ begin
 //#########################
 
 // Werte aus Optionendialog lesen
-  plugin_blacklistnew:=Optionenbox.plugin_blacklistnew;
-  plugin_blacklist:=Optionenbox.plugin_blacklist;
   lastchan:=Optionenbox.lastchan.Position;
   setlength(data.ch,lastchan+1);
   setlength(data.names,lastchan+1);
@@ -10777,18 +10749,10 @@ begin
   sounddevice:=Optionenbox.sounddevices.ItemIndex;
 
 // Werte für Plugins auslesen
-  for i:=0 to strtoint(pc_dimmer_outputplugins[-1]) do
+  for i:=0 to length(OutputPlugins)-1 do
   begin
-    if Optionenbox.active[i] then
-    begin
-      data.lastusedoutputplugin[i]:=Optionenbox.pc_dimmer_plugins[i];
-    end else
-    begin
-      data.lastusedoutputplugin[i]:='';
-    end;
-
-    data.plugin_startaddress[i]:=strtoint(Optionenbox.Plugingrid.Cells[3,i]);
-    data.plugin_stopaddress[i]:=strtoint(Optionenbox.Plugingrid.Cells[4,i]);
+    OutputPlugins[i].Startaddress:=strtoint(Optionenbox.Plugingrid.Cells[3,i]);
+    OutputPlugins[i].Stopaddress:=strtoint(Optionenbox.Plugingrid.Cells[4,i]);
   end;
 
 // Ende von Auslesen der Werte
@@ -12290,32 +12254,6 @@ begin
   Msg.Result := 0;
 end;
 
-procedure TMainform.PluginMenuClick(Sender: TObject);
-var
-  ProcCall:procedure;stdcall;
-  i:integer;
-begin
-  for i:=0 to maxInputDLL do
-  begin
-    if (Sender=TdxBarButton(FindComponent('plugin'+inttostr(i)+'ribbon'))) then
-    begin
-        if InputDLL[i]<>0 then
-        begin
-          try
-            @ProcCall := GetProcAddress(InputDLL[i],'DLLShow');
-            if Assigned(ProcCall) then
-			        Proccall
-            else
-              ShowMessage(_('Fehler in DLL-Funktion "DLLShow()"!'));
-          except
-            ShowMessage(_('Fehlerhafte DLL!'));
-          end;
-        end else
-        ShowMessage(_('Plugin nicht geladen...'));
-    end;
-  end;
-end;
-
 procedure TMainform.Startoptionen1Click(Sender: TObject);
 begin
   ShowMessage(
@@ -12386,22 +12324,22 @@ begin
         // Werte an Output-DLLs senden
         if not IsFreezeMode then
         begin
-          for k:=0 to maxOutputDLL do
+          for k:=0 to length(OutputPlugins)-1 do
           begin
             try
-              if Assigned(@DLLSenddata[k]) and OutputDLLActive[k] then
-                DLLSenddata[k](address+data.plugin_startaddress[k]-1,FilterWithDimmcurve(address,maxres-kanalwert),FilterWithDimmcurve(address,maxres-kanalwert),0,@datanames);
+              if Assigned(@OutputPlugins[k].SendData) and OutputPlugins[k].IsActive then
+                OutputPlugins[k].SendData(address+OutputPlugins[k].Startaddress-1,FilterWithDimmcurve(address,maxres-kanalwert),FilterWithDimmcurve(address,maxres-kanalwert),0,@datanames);
             except
             end;
           end;
         end;
 
         // Werte an Plugin-DLLs senden
-        for k:=0 to maxInputDLL do
+        for k:=0 to length(ProgramPlugins)-1 do
         begin
-          if (@PluginDLLSenddata[k]<>nil) then
+          if (@ProgramPlugins[k].SendData<>nil) then
           begin
-            PluginDLLSenddata[k](address,data.ch[address],data.ch[address],0,@datanames);
+            ProgramPlugins[k].SendData(address,data.ch[address],data.ch[address],0,@datanames);
           end;
         end;
       end;
@@ -12840,33 +12778,30 @@ begin
   DebugAdd('PLUGIN: Deactivating Plugins...');
 
 // Input-Plugins deaktivieren
-  for i:=0 to strtoint(pc_dimmer_inputplugins[-1])-1 do
+  for i:=0 to length(ProgramPlugins)-1 do
   begin
-    FuncCallDeactivate := GetProcAddress(InputDLL[i],'DLLDestroy');
+    FuncCallDeactivate := GetProcAddress(ProgramPlugins[i].Handle,'DLLDestroy');
     if not Assigned(FuncCallDeactivate) then
-      FuncCallDeactivate := GetProcAddress(InputDLL[i],'DLLDeactivate');
+      FuncCallDeactivate := GetProcAddress(ProgramPlugins[i].Handle,'DLLDeactivate');
     if Assigned(FuncCallDeactivate) then
     begin
-			inprogress.filename.Caption:=_('Deaktiviere Input-Plugin ')+pc_dimmer_inputplugins[i];
+			inprogress.filename.Caption:=_('Deaktiviere Input-Plugin ')+ProgramPlugins[i].Filename;
 			inprogress.ProgressBar1.Position:=21;
 			inprogress.ProgressBar1.Position:=20;
 			inprogress.Refresh;
-  		DebugAdd('PLUGIN: Deactivating Plugin '+pc_dimmer_inputplugins[i]);
+  		DebugAdd('PLUGIN: Deactivating Plugin '+ProgramPlugins[i].Filename);
       if FuncCallDeactivate then
       begin
        	DebugAddToLine(' - OK');
 			end else
       begin
-				ShowMessage(_('Das Plugin "')+pc_dimmer_inputplugins[i]+_('" hat einen Fehler beim Deaktivieren gemeldet.'));
+				ShowMessage(_('Das Plugin "')+ProgramPlugins[i].Filename+_('" hat einen Fehler beim Deaktivieren gemeldet.'));
        	DebugAddToLine(' - ERROR');
       end;
     end else
     begin
-	 		DebugAdd('PLUGIN: Error in Plugin '+pc_dimmer_inputplugins[i]);
+	 		DebugAdd('PLUGIN: Error in Plugin '+ProgramPlugins[i].Filename);
     end;
-//    FreeLibrary(InputDLL[i]);
-    tdxBarButton(FindComponent('plugin'+inttostr(i)+'ribbon')).Caption:=inttostr(i)+' - ';
-    tdxBarButton(FindComponent('plugin'+inttostr(i)+'ribbon')).visible:=ivNever;
   end;
   DebugAdd('PLUGIN: Deactivated all Inputplugins successful...');
 
@@ -12877,65 +12812,61 @@ begin
 
   DebugAdd('PLUGIN: Freeing DLLs...');
 
-  for i:=0 to strtoint(pc_dimmer_inputplugins[-1])-1 do
+  for i:=0 to length(ProgramPlugins)-1 do
   begin
-    FreeLibrary(InputDLL[i]);
-    @PluginDLLSenddata[i]:=nil;
-    @PluginDLLSendMessage[i]:=nil;
+    FreeLibrary(ProgramPlugins[i].Handle);
+    @ProgramPlugins[i].SendData:=nil;
+    @ProgramPlugins[i].SendMessage:=nil;
   end;
 
  	DebugAddToLine(' - OK');
   DebugAdd('PLUGIN: Reactivating Plugins:');
 
-  if (strtoint(pc_dimmer_inputplugins[-1])>=0) then
+  for i:=0 to length(ProgramPlugins)-1 do
   begin
-    for i:=0 to strtoint(pc_dimmer_inputplugins[-1])-1 do
+    ProgramPlugins[i].Handle := LoadLibrary(PChar(workingdirectory+'\plugins\'+ProgramPlugins[i].Filename));
+    FuncCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLGetName');
+    FuncCall2 := GetProcAddress(ProgramPlugins[i].Handle,'DLLGetVersion');
+    if Assigned(FuncCall) then
     begin
-      InputDLL[i] := LoadLibrary(PChar(workingdirectory+'\plugins\'+pc_dimmer_inputplugins[i]));
-      FuncCall := GetProcAddress(InputDLL[i],'DLLGetName');
-      FuncCall2 := GetProcAddress(InputDLL[i],'DLLGetVersion');
-      if Assigned(FuncCall) then
-      begin
-        tdxBarButton(FindComponent('plugin'+inttostr(i)+'ribbon')).Caption:=FuncCall;
-        tdxBarButton(FindComponent('plugin'+inttostr(i)+'ribbon')).Hint:=FuncCall+' ('+FuncCall2+')';
-        tdxBarButton(FindComponent('plugin'+inttostr(i)+'ribbon')).visible:=ivAlways;
-      end else
-      begin
-        DebugAdd('PLUGIN: Error in inputplugin "'+pc_dimmer_inputplugins[i]+'"');
-      end;
-
-      DebugAdd('PLUGIN: Try to activate inputplugin "'+pc_dimmer_inputplugins[i]+'"');
-      ProcCall := GetProcAddress(InputDLL[i],'DLLCreate');
-      if not Assigned(ProcCall) then
-        ProcCall := GetProcAddress(InputDLL[i],'DLLActivate');
-      if Assigned(ProcCall) then
-      begin
-			  inprogress.filename.Caption:=_('Reaktiviere Input-Plugin ')+pc_dimmer_inputplugins[i];
-			  inprogress.ProgressBar1.Position:=61;
-			  inprogress.ProgressBar1.Position:=60;
-			  inprogress.Refresh;
-        Proccall(@CallbackGetDLLValue,@CallbackGetDLLValueEvent,@CallbackGetDLLName,@CallbackSetDLLValue,@CallbackMessage);
-				DebugAddToLine(' - OK');
-      end else
-      begin
-				DebugAddToLine(' - ERROR');
-      end;
- 	    @PluginDLLSenddata[i] := GetProcAddress(InputDLL[i],'DLLSendData');
-      @PluginDLLSendMessage[i] := GetProcAddress(InputDLL[i],'DLLSendMessage');
+      ProgramPlugins[i].Name:=FuncCall;
+      ProgramPlugins[i].Version:=FuncCall2;
+    end else
+    begin
+      DebugAdd('PLUGIN: Error in inputplugin "'+ProgramPlugins[i].Filename+'"');
     end;
 
-    // Plugins starten
-    for i:=0 to strtoint(pc_dimmer_inputplugins[-1])-1 do
+    DebugAdd('PLUGIN: Try to activate inputplugin "'+ProgramPlugins[i].Filename+'"');
+    ProcCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLCreate');
+    if not Assigned(ProcCall) then
+      ProcCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLActivate');
+    if Assigned(ProcCall) then
     begin
-      ProcCall2 := GetProcAddress(InputDLL[i],'DLLStart');
-      if Assigned(ProcCall2) then
-      begin
-			  inprogress.filename.Caption:=_('Starte Input-Plugin ')+pc_dimmer_inputplugins[i];
-			  inprogress.ProgressBar1.Position:=61;
-			  inprogress.ProgressBar1.Position:=60;
-			  inprogress.Refresh;
-        Proccall2;
-      end;
+      inprogress.filename.Caption:=_('Reaktiviere Input-Plugin ')+ProgramPlugins[i].Filename;
+      inprogress.ProgressBar1.Position:=61;
+      inprogress.ProgressBar1.Position:=60;
+      inprogress.Refresh;
+      Proccall(@CallbackGetDLLValue,@CallbackGetDLLValueEvent,@CallbackGetDLLName,@CallbackSetDLLValue,@CallbackMessage);
+      DebugAddToLine(' - OK');
+    end else
+    begin
+      DebugAddToLine(' - ERROR');
+    end;
+    @ProgramPlugins[i].SendData := GetProcAddress(ProgramPlugins[i].Handle,'DLLSendData');
+    @ProgramPlugins[i].SendMessage := GetProcAddress(ProgramPlugins[i].Handle,'DLLSendMessage');
+  end;
+
+  // Plugins starten
+  for i:=0 to length(ProgramPlugins)-1 do
+  begin
+    ProcCall2 := GetProcAddress(ProgramPlugins[i].Handle,'DLLStart');
+    if Assigned(ProcCall2) then
+    begin
+      inprogress.filename.Caption:=_('Starte Input-Plugin ')+ProgramPlugins[i].Filename;
+      inprogress.ProgressBar1.Position:=61;
+      inprogress.ProgressBar1.Position:=60;
+      inprogress.Refresh;
+      Proccall2;
     end;
   end;
   DebugAdd('PLUGIN: Sending values to all Plugins...');
@@ -12950,32 +12881,31 @@ begin
   DebugAdd('', true, false);
 
   LReg := TPCDRegistry.Create;
-  if (strtoint(pc_dimmer_inputplugins[-1])>=0) then
-    for i:=0 to strtoint(pc_dimmer_inputplugins[-1])-1 do
-    begin
-	    inprogress.filename.Caption:=_('Öffne Plugin ')+pc_dimmer_inputplugins[i];
-      inprogress.ProgressBar1.Position:=91;
-      inprogress.ProgressBar1.Position:=90;
-		  inprogress.Refresh;
+  for i:=0 to length(ProgramPlugins)-1 do
+  begin
+    inprogress.filename.Caption:=_('Öffne Plugin ')+ProgramPlugins[i].Filename;
+    inprogress.ProgressBar1.Position:=91;
+    inprogress.ProgressBar1.Position:=90;
+    inprogress.Refresh;
 
-      if LReg.OpenRegKey(pc_dimmer_inputplugins[i]) then
-      begin
-        if LReg.ValueExists('Showing Plugin') then
- 	      	if LReg.ReadBool('Showing Plugin') then
+    if LReg.OpenRegKey(ProgramPlugins[i].Filename) then
+    begin
+      if LReg.ValueExists('Showing Plugin') then
+        if LReg.ReadBool('Showing Plugin') then
+        begin
+          if (ProgramPlugins[i].Handle<>0) then
           begin
-  	        if InputDLL[i]<>0 then
-		        begin
-		          try
-		            @ProcCall2 := GetProcAddress(InputDLL[i],'DLLShow');
-		            if Assigned(ProcCall2) then
-					        Proccall2;
-		          except
-              end;
-	          end;
-	        end;
-	      LReg.CloseKey;
-	    end;
+            try
+              @ProcCall2 := GetProcAddress(ProgramPlugins[i].Handle,'DLLShow');
+              if Assigned(ProcCall2) then
+                Proccall2;
+            except
+            end;
+          end;
+        end;
+      LReg.CloseKey;
     end;
+  end;
   LReg.Free;
 
   inprogress.hide;
@@ -13468,6 +13398,7 @@ var
 	LReg:TPCDRegistry;
   i,j,k,l,m,Count,Count2,Count3:integer;
   FuncCall,FuncCall2 : function : PChar;stdcall;
+  FuncCall4:function:TBitmap;stdcall;
   ProcCall: procedure(funktionsadresse0,funktionsadresse1,funktionsadresse2,funktionsadresse3:Pointer;funktionsadresse4:Pointer);stdcall;
   ProcCall2:procedure;stdcall;
   text1:string;
@@ -13498,53 +13429,69 @@ begin
   SplashProgress(1, 45, 100);
   RefreshSplashText;
 
-  if (strtoint(pc_dimmer_outputplugins[-1])>maxOutputDLL) then
+  // Plugineinstellungen aus Registry lesen
+  LReg := TPCDRegistry.Create;
+  // Lese zuletzt verwendete Plugins
+  for i:=0 to length(OutputPlugins)-1 do
   begin
-    ShowMessage(_('Es sind mehr als ')+pc_dimmer_outputplugins[-1]+_(' Output-Plugins installiert. Es werden allerdings nur ')+inttostr(maxOutputDLL+1)+_(' davon geladen!'));
-    pc_dimmer_outputplugins[-1]:=inttostr(maxOutputDLL+1);
+    if LReg.OpenRegKey(OutputPlugins[i].Filename) then
+    begin
+      OutputPlugins[i].IsEnabled:=LReg.ReadWriteBool('Plugin Enabled', false);
+      OutputPlugins[i].IsBlacklisted:=LReg.ReadWriteBool('Plugin Blacklisted', false);
+      OutputPlugins[i].Startaddress:=LReg.ReadWriteInt('Plugin Startaddress', 1);
+      OutputPlugins[i].Stopaddress:=LReg.ReadWriteInt('Plugin Stopaddress', 512);
+      LReg.CloseKey;
+    end else
+    begin
+      OutputPlugins[i].IsEnabled:=false;
+      OutputPlugins[i].IsBlacklisted:=false;
+      OutputPlugins[i].Startaddress:=1;
+      OutputPlugins[i].Stopaddress:=512;
+    end;
   end;
+  LReg.Free;
 
   // Zuletzt genutzte Plugins rausfinden und aktivieren
   DebugAdd('', false, false);
-  for j:=0 to maxOutputDLL do
+  for i:=0 to length(OutputPlugins)-1 do
   begin
-    for i:=0 to strtoint(pc_dimmer_outputplugins[-1])-1 do
-      if ((data.lastusedoutputplugin[j]=pc_dimmer_outputplugins[i]) and (data.lastusedoutputplugin[j]<>'')) then
-      begin
-        DebugAdd('PLUGIN: Try to activate outputplugin "'+pc_dimmer_outputplugins[i]+'"...');
+    if (OutputPlugins[i].IsEnabled and (not OutputPlugins[i].IsActive)) then
+    begin
+      DebugAdd('PLUGIN: Try to activate outputplugin "'+OutputPlugins[i].Filename+'"...');
 
-        OutputDLLActive[i]:=true;
-        OutputDLL[i]:=LoadLibrary(PChar(workingdirectory+'\plugins\'+pc_dimmer_outputplugins[i]));
-        SplashProgress(1, 45+round(15*(i / (strtoint(pc_dimmer_outputplugins[-1])-1))), 100);
-        SplashAddText(_('Aktiviere ')+OutputDLLName[i]);
-        RefreshSplashText;
-        ProcCall := GetProcAddress(OutputDLL[i],'DLLCreate');
-        if not Assigned(ProcCall) then
-          ProcCall := GetProcAddress(OutputDLL[i],'DLLActivate');
-        if Assigned(ProcCall) then
-        begin
-          Proccall(@CallbackGetDLLValue,@CallbackGetDLLValueEvent,@CallbackGetDLLName,@CallbackSetDLLValue,@CallbackMessage);
-          DebugAddToLine(' - OK');
-        end else
-        begin
-          DebugAddToLine(' - ERROR');
-        end;
-        @DLLSenddata[i] := GetProcAddress(OutputDLL[i],'DLLSendData');
-        @DLLIsSending[i] := GetProcAddress(OutputDLL[i],'DLLIsSending');
-        @DLLSendmessage[i] := GetProcAddress(OutputDLL[i],'DLLSendMessage');
-      end;
-
-    // Plugins starten
-    for i:=0 to strtoint(pc_dimmer_outputplugins[-1])-1 do
-      if ((data.lastusedoutputplugin[j]=pc_dimmer_outputplugins[i]) and (data.lastusedoutputplugin[j]<>'')) then
+      OutputPlugins[i].Handle:=LoadLibrary(PChar(workingdirectory+'\plugins\'+OutputPlugins[i].Filename));
+      SplashProgress(1, 45+round(15*(i / length(OutputPlugins))), 100);
+      SplashAddText(_('Aktiviere ')+OutputPlugins[i].Name);
+      RefreshSplashText;
+      ProcCall := GetProcAddress(OutputPlugins[i].Handle,'DLLCreate');
+      if not Assigned(ProcCall) then
+        ProcCall := GetProcAddress(OutputPlugins[i].Handle,'DLLActivate');
+      if Assigned(ProcCall) then
       begin
-        ProcCall2 := GetProcAddress(OutputDLL[i],'DLLStart');
-        if Assigned(ProcCall2) then
-        begin
-          Proccall2;
-        end;
+        Proccall(@CallbackGetDLLValue,@CallbackGetDLLValueEvent,@CallbackGetDLLName,@CallbackSetDLLValue,@CallbackMessage);
+        DebugAddToLine(' - OK');
+      end else
+      begin
+        DebugAddToLine(' - ERROR');
       end;
+      @OutputPlugins[i].SendData := GetProcAddress(OutputPlugins[i].Handle,'DLLSendData');
+      @OutputPlugins[i].IsSending := GetProcAddress(OutputPlugins[i].Handle,'DLLIsSending');
+      @OutputPlugins[i].SendMessage := GetProcAddress(OutputPlugins[i].Handle,'DLLSendMessage');
+    end;
   end;
+
+  // Plugins starten
+  for i:=0 to length(OutputPlugins)-1 do
+  if OutputPlugins[i].IsEnabled and (not OutputPlugins[i].IsActive) then
+  begin
+    ProcCall2 := GetProcAddress(OutputPlugins[i].Handle,'DLLStart');
+    if Assigned(ProcCall2) then
+    begin
+      Proccall2;
+      OutputPlugins[i].IsActive:=true;
+    end;
+  end;
+
   DebugAdd('', false, false);
 
   debuglistbox.Items.LoadFromFile(workingdirectory+'\PC_DIMMER.log');
@@ -13552,37 +13499,67 @@ begin
   SplashProgress(1, 60, 100);
   RefreshSplashText;
 
-  if (strtoint(pc_dimmer_inputplugins[-1])>20) then
-  begin
-    ShowMessage(_('Es sind mehr als 20 Input-Plugins installiert. Es werden allerdings nur 20 davon geladen!'));
-    DebugAdd('There are more than 20 Inputplugins. The first 20 will be loaded!');
-    pc_dimmer_inputplugins[-1]:='20';
-  end;
-
   SplashCaptioninfo(_('Inputplugins aktivieren...'));
   RefreshSplashText;
 
-  if (strtoint(pc_dimmer_inputplugins[-1])>=0) then
-  for i:=0 to strtoint(pc_dimmer_inputplugins[-1])-1 do
+  for i:=0 to length(ProgramPlugins)-1 do
   begin
-    DebugAdd('PLUGIN: Try to activate inputplugin "'+pc_dimmer_inputplugins[i]+'"...');
+    DebugAdd('PLUGIN: Try to activate inputplugin "'+ProgramPlugins[i].Filename+'"...');
 
-    InputDLL[i]:=LoadLibrary(PChar(workingdirectory+'\plugins\'+pc_dimmer_inputplugins[i]));
-    FuncCall := GetProcAddress(InputDLL[i],'DLLGetName');
-    FuncCall2 := GetProcAddress(InputDLL[i],'DLLGetVersion');
+    ProgramPlugins[i].Handle:=LoadLibrary(PChar(workingdirectory+'\plugins\'+ProgramPlugins[i].Filename));
+    FuncCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLGetName');
+    FuncCall2 := GetProcAddress(ProgramPlugins[i].Handle,'DLLGetVersion');
+    try
+      FuncCall4 := GetProcAddress(ProgramPlugins[i].Handle,'DLLGetIcon');
+    except
+    end;
     if Assigned(FuncCall) then
     begin
-      SplashProgress(1, 60+round(15*(((i+1)/(strtoint(pc_dimmer_inputplugins[-1]))))), 100);
+      SplashProgress(1, 60+round(15*(((i+1)/length(ProgramPlugins)))), 100);
       SplashAddText(_('Aktiviere ')+FuncCall);
       RefreshSplashText;
-      tdxBarButton(FindComponent('plugin'+inttostr(i)+'ribbon')).Caption:=FuncCall;
-      tdxBarButton(FindComponent('plugin'+inttostr(i)+'ribbon')).Hint:=FuncCall+' ('+FuncCall2+')';
-      tdxBarButton(FindComponent('plugin'+inttostr(i)+'ribbon')).visible:=ivAlways;
+
+      ProgramPlugins[i].Name:=FuncCall;
+      ProgramPlugins[i].Version:=FuncCall2;
+      if Assigned(FuncCall4) then
+      begin
+        ProgramPlugins[i].Icon:=FuncCall4;
+      end else
+      begin
+        ProgramPlugins[i].Icon:=AmbilightRibbonBtn.HotGlyph;
+      end;
+      with mainform.PluginsRibbonGroup.ItemLinks.AddItem(TdxBarSubItem).Item as TdxBarSubItem do
+      begin
+        with ItemLinks.AddItem(TdxBarSeparator).Item as TdxBarSeparator do
+        begin
+          Name:='PluginRibbonSeparator'+inttostr(i);
+          Caption:=_('Fenster');
+        end;
+        Caption:=ProgramPlugins[i].Name;
+        Hint:=ProgramPlugins[i].Version;
+        Glyph:=ProgramPlugins[i].Icon;
+        LargeGlyph:=ProgramPlugins[i].Icon;
+        Name:='PluginRibbonSubitem'+inttostr(i);
+        LargeImageIndex:=0;
+
+        with ItemLinks.AddItem(TdxBarButton).Item as TdxBarButton do
+        begin
+          Caption:=_('Anzeigen...');
+          Name:='PluginShowRibbonBtn'+inttostr(i);
+          OnClick:=mainform.PluginRibbonBtnClick;
+        end;
+        with ItemLinks.AddItem(TdxBarButton).Item as TdxBarButton do
+        begin
+          Caption:=_('Info...');
+          Name:='PluginAboutRibbonBtn'+inttostr(i);
+          OnClick:=mainform.PluginRibbonBtnClick;
+        end;
+      end;
     end;
 
-    ProcCall := GetProcAddress(InputDLL[i],'DLLCreate');
+    ProcCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLCreate');
     if not Assigned(ProcCall) then
-      ProcCall := GetProcAddress(InputDLL[i],'DLLActivate');
+      ProcCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLActivate');
     if Assigned(ProcCall) then
     begin
       Proccall(@CallbackGetDLLValue,@CallbackGetDLLValueEvent,@CallbackGetDLLName,@CallbackSetDLLValue,@CallbackMessage);
@@ -13591,22 +13568,21 @@ begin
     begin
       DebugAddToLine(' - ERROR');
     end;
-    @PluginDLLSendData[i] := GetProcAddress(InputDLL[i],'DLLSendData');
-    @PluginDLLSendMessage[i] := GetProcAddress(InputDLL[i],'DLLSendMessage');
+    @ProgramPlugins[i].SendData := GetProcAddress(ProgramPlugins[i].Handle,'DLLSendData');
+    @ProgramPlugins[i].SendMessage := GetProcAddress(ProgramPlugins[i].Handle,'DLLSendMessage');
   end;
 
   // Plugins starten
-  if (strtoint(pc_dimmer_inputplugins[-1])>=0) then
-  for i:=0 to strtoint(pc_dimmer_inputplugins[-1])-1 do
+  for i:=0 to length(ProgramPlugins)-1 do
   begin
-    ProcCall2 := GetProcAddress(InputDLL[i],'DLLStart');
+    ProcCall2 := GetProcAddress(ProgramPlugins[i].Handle,'DLLStart');
     if Assigned(ProcCall2) then
     begin
       Proccall2;
     end;
   end;
 
-  if strtoint(pc_dimmer_inputplugins[-1])>0 then
+  if length(ProgramPlugins)>0 then
   begin
     PluginRibbonTab.Visible:=true;
   end;
@@ -13641,18 +13617,17 @@ begin
   if ShowLastPlugins then
   begin
     LReg := TPCDRegistry.Create;
-    if (strtoint(pc_dimmer_inputplugins[-1])>=0) then
-    for i:=0 to strtoint(pc_dimmer_inputplugins[-1])-1 do
+    for i:=0 to length(ProgramPlugins)-1 do
     begin
-      if LReg.OpenRegKey(pc_dimmer_inputplugins[i]) then
+      if LReg.OpenRegKey(ProgramPlugins[i].Filename) then
       begin
         if LReg.ValueExists('Showing Plugin') then
           if LReg.ReadBool('Showing Plugin') then
           begin
-            if InputDLL[i]<>0 then
+            if ProgramPlugins[i].Handle<>0 then
             begin
               try
-                @ProcCall2 := GetProcAddress(InputDLL[i],'DLLShow');
+                @ProcCall2 := GetProcAddress(ProgramPlugins[i].Handle,'DLLShow');
                 if Assigned(ProcCall2) then
                   Proccall2;
               except
@@ -23033,6 +23008,7 @@ end;
 procedure Tmainform.WriteConfigurationFile;
 var
   LReg:TPCDRegistry;
+  i:integer;
 begin
   LReg := TPCDRegistry.Create;
   if LReg.OpenRegKey('') then
@@ -23042,21 +23018,30 @@ begin
     LReg.WriteString('Openhistory3',data.openhistory[2]);
     LReg.WriteString('Openhistory4',data.openhistory[3]);
     LReg.WriteString('Openhistory5',data.openhistory[4]);
-
-    LReg.WriteInteger('Maximum Output DLLs',maxOutputDLL);
-    LReg.WriteBinaryData('Pluginstartaddresses',data.plugin_startaddress,sizeof(data.plugin_startaddress[0])*maxOutputDLL);
-    LReg.WriteBinaryData('Pluginstopaddresses',data.plugin_stopaddress,sizeof(data.plugin_stopaddress[0])*maxOutputDLL);
-    LReg.WriteBinaryData('Last used plugins',data.lastusedoutputplugin,sizeof(data.lastusedoutputplugin[0])*maxOutputDLL);
-
     LReg.CloseKey;
+
+    // Speichere verwendete Plugins
+    for i:=0 to length(OutputPlugins)-1 do
+    begin
+      if LReg.OpenRegKey(OutputPlugins[i].Filename) then
+      begin
+        LReg.WriteBool('Plugin Enabled', OutputPlugins[i].IsEnabled);
+        LReg.WriteBool('Plugin Blacklisted', OutputPlugins[i].IsBlacklisted);
+        LReg.WriteInteger('Plugin Startaddress', OutputPlugins[i].Startaddress);
+        LReg.WriteInteger('Plugin Stopaddress', OutputPlugins[i].Stopaddress);
+        LReg.CloseKey;
+      end;
+    end;
   end;
   LReg.Free;
 end;
 
 procedure Tmainform.ReadConfigurationFile;
 var
-  i,MaximumOutputDLLs:integer;
+  i:integer;
   LReg:TPCDRegistry;
+  myint:array[0..31] of integer;
+  mystring:array[0..31] of string[255];
 begin
   if FileExists(workingdirectory+'\'+'config.cfg') then
   begin
@@ -23064,15 +23049,9 @@ begin
     FileStream:=TFilestream.Create(workingdirectory+'\'+'config.cfg',fmOpenRead);
     if FileStream.Size=10088 then
     begin
-      for i:=32 to 63 do
-      begin
-        data.plugin_startaddress[i]:=1;
-        data.plugin_stopaddress[i]:=512;
-        data.lastusedoutputplugin[i]:='';
-      end;
-      FileStream.ReadBuffer(data.plugin_startaddress,sizeof(data.plugin_startaddress[0])*32);
-      FileStream.ReadBuffer(data.plugin_stopaddress,sizeof(data.plugin_stopaddress[0])*32);
-      FileStream.ReadBuffer(data.lastusedoutputplugin,sizeof(data.lastusedoutputplugin[0])*32);
+      FileStream.ReadBuffer(myint,sizeof(myint)); // Dummywerte auslesen
+      FileStream.ReadBuffer(myint,sizeof(myint)); // Dummywerte auslesen
+      FileStream.ReadBuffer(mystring,sizeof(mystring));
       FileStream.ReadBuffer(data.page,sizeof(data.page));
       FileStream.ReadBuffer(data.preheatvalue,sizeof(data.preheatvalue));
       FileStream.ReadBuffer(data.Shortcutnames,sizeof(data.Shortcutnames));
@@ -23103,36 +23082,17 @@ begin
       if LReg.ValueExists('Openhistory5') then
         data.openhistory[4]:=LReg.ReadString('Openhistory5');
 
-      if LReg.ValueExists('Maximum Output DLLs') then
-      begin
-        MaximumOutputDLLs:=LReg.ReadInteger('Maximum Output DLLs');
-        if LReg.ValueExists('Pluginstartaddresses') then
-          LReg.ReadBinaryData('Pluginstartaddresses',data.plugin_startaddress,sizeof(data.plugin_startaddress[0])*MaximumOutputDLLs);
-        if LReg.ValueExists('Pluginstopaddresses') then
-          LReg.ReadBinaryData('Pluginstopaddresses',data.plugin_stopaddress,sizeof(data.plugin_stopaddress[0])*MaximumOutputDLLs);
-        if LReg.ValueExists('Last used plugins') then
-          LReg.ReadBinaryData('Last used plugins',data.lastusedoutputplugin,sizeof(data.lastusedoutputplugin[0])*MaximumOutputDLLs);
-      end else
-      begin
-        for i:=0 to maxOutputDLL do
-        begin
-          data.plugin_startaddress[i]:=1;
-          data.plugin_stopaddress[i]:=512;
-          data.lastusedoutputplugin[i]:='';
-        end;
-      end;
-
       LReg.CloseKey;
     end;
     LReg.Free;
   end;
 
-  for i:=0 to maxOutputDLL do
+  for i:=0 to length(OutputPlugins)-1 do
   begin
-    if (data.plugin_startaddress[i]=0) and (data.plugin_stopaddress[i]=0) then
+    if (OutputPlugins[i].Startaddress=0) and (OutputPlugins[i].Stopaddress=0) then
     begin
-      data.plugin_startaddress[i]:=1;
-      data.plugin_stopaddress[i]:=512;
+      OutputPlugins[i].Startaddress:=1;
+      OutputPlugins[i].Stopaddress:=512;
     end;
   end;
 end;
@@ -27148,6 +27108,39 @@ begin
     Jpg.SaveToFile(Destination);
   finally
     Jpg.Free;
+  end;
+end;
+
+procedure Tmainform.PluginRibbonBtnClick(Sender: TObject);
+var
+  i:integer;
+  ProcCall:procedure;
+begin
+  for i := 0 to length(ProgramPlugins)-1 do
+  begin
+    if TdxBarButton(Sender).Name='PluginShowRibbonBtn'+inttostr(i)then
+    begin
+      if ProgramPlugins[i].Handle<>0 then
+      begin
+        try
+          @ProcCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLShow');
+          if Assigned(ProcCall) then
+            Proccall;
+        except
+        end;
+      end;
+      break;
+    end;
+    if TdxBarButton(Sender).Name='PluginAboutRibbonBtn'+inttostr(i)then
+    begin
+        try
+          @ProcCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLAbout');
+          if Assigned(ProcCall) then
+            Proccall;
+        except
+        end;
+      break;
+    end;
   end;
 end;
 

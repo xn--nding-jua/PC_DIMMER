@@ -252,9 +252,6 @@
               end;
 
   TData = record
-            plugin_startaddress:array[0..maxOutputDLL] of Integer;
-            plugin_stopaddress:array[0..maxOutputDLL] of Integer;
-            lastusedoutputplugin:array[0..maxOutputDLL] of string[255];
             page : Word;
             preheatvalue:byte;
             ch : array of byte;

@@ -270,12 +270,7 @@ type
     MyHoverTickCount:byte;
   public
     { Public-Deklarationen }
-    pc_dimmer_plugins : array[-1..63] of string[255];
-    plugin_blacklist,plugin_blacklistnew:string;
-    addtoblacklist:array[0..63] of boolean;
     workingdirectory:string;
-    OutputDLL:array[0..63] of THandle;
-    active:array[0..63] of boolean;
   end;
 
 var
@@ -307,7 +302,7 @@ begin
     end;
   end;
 
-  if active[plugingrid.Row] then
+  if mainform.OutputPlugins[plugingrid.Row].IsEnabled then
   begin
     pluginconfigure.Enabled:=true;
     pluginabout.Enabled:=true;
@@ -317,12 +312,15 @@ begin
     pluginabout.Enabled:=false;
   end;
 
-  for i:=0 to plugingrid.rowcount-1 do
+  for i:=0 to length(mainform.OutputPlugins)-1 do
   begin
-    addtoblacklist[i]:=Pos(pc_dimmer_plugins[i],plugin_blacklistnew)>0;
+    if mainform.OutputPlugins[i].IsBlacklisted then
+    begin
+      label48.Visible:=true;
+      button2.Visible:=true;
+      break;
+    end;
   end;
-  button2.visible:=length(plugin_blacklist)>0;
-  label48.Visible:=length(plugin_blacklist)>0;
 
   Timer2.enabled:=true;
 end;
@@ -365,10 +363,10 @@ procedure TOptionenBox.pluginconfigureClick(Sender: TObject);
 var
   ProcCall: procedure;stdcall;
 begin
-  if OutputDLL[plugingrid.Row] <> 0 then
+  if mainform.OutputPlugins[plugingrid.Row].Handle <> 0 then
   begin
     try
-      ProcCall := GetProcAddress(OutputDLL[plugingrid.Row],'DLLConfigure');
+      ProcCall := GetProcAddress(mainform.OutputPlugins[plugingrid.Row].Handle,'DLLConfigure');
       if Assigned(ProcCall) then ProcCall else ShowMessage('Fehler in DLL-Prozedur "DLLConfigure"!');
     except
       ShowMessage('Fehler in DLL!');
@@ -382,10 +380,10 @@ procedure TOptionenBox.pluginaboutClick(Sender: TObject);
 var
   ProcCall: procedure;stdcall;
 begin
-  if OutputDLL[plugingrid.Row] <> 0 then
+  if mainform.OutputPlugins[plugingrid.Row].Handle <> 0 then
   begin
     try
-      ProcCall := GetProcAddress(OutputDLL[plugingrid.Row],'DLLAbout');
+      ProcCall := GetProcAddress(mainform.OutputPlugins[plugingrid.Row].Handle,'DLLAbout');
       if Assigned(ProcCall) then ProcCall else ShowMessage('Fehler in DLL-Prozedur "DLLAbout"!');
     except
       ShowMessage('Fehler in DLL!');
@@ -406,57 +404,55 @@ var
   ProcCall: procedure(funktionsadresse0,funktionsadresse1,funktionsadresse2,funktionsadresse3,funktionsadresse4:Pointer);stdcall;
   ProcCall2: procedure;stdcall;
   funccall: function:boolean;stdcall;
-  i:integer;
 begin
   if Plugingrid.Col=0 then
   begin
-	  if active[Plugingrid.Row]=true then
+	  if mainform.OutputPlugins[plugingrid.Row].IsEnabled=true then
 	  begin
-	    active[Plugingrid.Row]:=false;
-      mainform.OutputDLLActive[Plugingrid.Row]:=false;
+      mainform.OutputPlugins[Plugingrid.Row].IsEnabled:=false;
 
-      @mainform.DLLSenddata[plugingrid.row] := nil;
-      @mainform.DLLIsSending[plugingrid.row] := nil;
-      @mainform.DLLSendmessage[plugingrid.row] := nil;
+      @mainform.OutputPlugins[plugingrid.Row].SendData := nil;
+      @mainform.OutputPlugins[plugingrid.Row].IsSending := nil;
+      @mainform.OutputPlugins[plugingrid.Row].SendMessage := nil;
 
-	    funccall := GetProcAddress(OutputDLL[plugingrid.row],'DLLDestroy');
+	    funccall := GetProcAddress(mainform.OutputPlugins[plugingrid.Row].Handle,'DLLDestroy');
       if not Assigned(funccall) then
-  	    funccall := GetProcAddress(OutputDLL[plugingrid.row],'DLLDeactivate');
+  	    funccall := GetProcAddress(mainform.OutputPlugins[plugingrid.Row].Handle,'DLLDeactivate');
 	   	if Assigned(funccall) then funccall else ShowMessage('Fehler in DLL-Prozedur "DLLDestroy" bzw. "DLLDeactivate"!');
-	 	  FreeLibrary(OutputDLL[plugingrid.row]);
-	  	OutputDLL[plugingrid.row]:=0;
+	 	  FreeLibrary(mainform.OutputPlugins[plugingrid.Row].Handle);
+	  	mainform.OutputPlugins[plugingrid.Row].Handle:=0;
 
-	    mainform.debuglistbox.Items.Add('['+inttostr(mainform.debuglistbox.Items.Count)+'] ['+Timetostr(now)+'] ['+Datetostr(now)+'] PLUGIN: Deactivated Outputplugin '+pc_dimmer_plugins[plugingrid.row]);
+	    mainform.debuglistbox.Items.Add('['+inttostr(mainform.debuglistbox.Items.Count)+'] ['+Timetostr(now)+'] ['+Datetostr(now)+'] PLUGIN: Deactivated Outputplugin '+mainform.OutputPlugins[plugingrid.Row].Filename);
 	    mainform.debuglistbox.Items.SaveToFile(workingdirectory+'\PC_DIMMER.log');
+
+      mainform.OutputPlugins[plugingrid.Row].IsActive:=false;
 
 	    pluginabout.Enabled:=false;
 	    pluginconfigure.Enabled:=false;
 	  end else
 	  begin
-	    active[Plugingrid.Row]:=true;
-      mainform.OutputDLLActive[Plugingrid.Row]:=true;
+	    mainform.OutputPlugins[plugingrid.Row].IsEnabled:=true;
 
-	    OutputDLL[plugingrid.row] := LoadLibrary(PChar(workingdirectory+'\plugins\'+pc_dimmer_plugins[plugingrid.row]));
-      mainform.OutputDLL[plugingrid.row]:=OutputDLL[plugingrid.row];
+	    mainform.OutputPlugins[plugingrid.Row].Handle := LoadLibrary(PChar(workingdirectory+'\plugins\'+mainform.OutputPlugins[plugingrid.Row].Filename));
 
-	    ProcCall := GetProcAddress(OutputDLL[plugingrid.row],'DLLCreate');
+	    ProcCall := GetProcAddress(mainform.OutputPlugins[plugingrid.Row].Handle,'DLLCreate');
       if not Assigned(ProcCall) then
-        ProcCall := GetProcAddress(OutputDLL[plugingrid.row],'DLLActivate');
+        ProcCall := GetProcAddress(mainform.OutputPlugins[plugingrid.Row].Handle,'DLLActivate');
 	    if Assigned(ProcCall) then
 	    begin
         Proccall(@CallbackGetDLLValue,@CallbackGetDLLValueEvent,@CallbackGetDLLName,@CallbackSetDLLValue,@CallbackMessage);
-	      mainform.debuglistbox.Items.Add('['+inttostr(mainform.debuglistbox.Items.Count)+'] ['+Timetostr(now)+'] ['+Datetostr(now)+'] PLUGIN: Activated Outputplugin '+pc_dimmer_plugins[plugingrid.row]);
+	      mainform.debuglistbox.Items.Add('['+inttostr(mainform.debuglistbox.Items.Count)+'] ['+Timetostr(now)+'] ['+Datetostr(now)+'] PLUGIN: Activated Outputplugin '+mainform.OutputPlugins[plugingrid.Row].Filename);
 	      mainform.debuglistbox.Items.SaveToFile(workingdirectory+'\PC_DIMMER.log');
 	    end else
 	    begin
 	      ShowMessage('Fehler in DLL-Prozedur "DLLCreate" bzw. "DLLActivate"!');
-	      mainform.debuglistbox.Items.Add('['+inttostr(mainform.debuglistbox.Items.Count)+'] ['+Timetostr(now)+'] ['+Datetostr(now)+'] PLUGIN: Error in Outputplugin '+pc_dimmer_plugins[plugingrid.row]);
+	      mainform.debuglistbox.Items.Add('['+inttostr(mainform.debuglistbox.Items.Count)+'] ['+Timetostr(now)+'] ['+Datetostr(now)+'] PLUGIN: Error in Outputplugin '+mainform.OutputPlugins[plugingrid.Row].Filename);
 	      mainform.debuglistbox.Items.SaveToFile(workingdirectory+'\PC_DIMMER.log');
 	    end;
 
-      @mainform.DLLSenddata[plugingrid.row] := GetProcAddress(mainform.OutputDLL[plugingrid.row],'DLLSendData');
-      @mainform.DLLIsSending[plugingrid.row] := GetProcAddress(mainform.OutputDLL[plugingrid.row],'DLLIsSending');
-      @mainform.DLLSendmessage[plugingrid.row] := GetProcAddress(mainform.OutputDLL[plugingrid.row],'DLLSendMessage');
+      @mainform.OutputPlugins[plugingrid.Row].SendData := GetProcAddress(mainform.OutputPlugins[plugingrid.Row].Handle,'DLLSendData');
+      @mainform.OutputPlugins[plugingrid.Row].IsSending := GetProcAddress(mainform.OutputPlugins[plugingrid.Row].Handle,'DLLIsSending');
+      @mainform.OutputPlugins[plugingrid.Row].SendMessage := GetProcAddress(mainform.OutputPlugins[plugingrid.Row].Handle,'DLLSendMessage');
 
 	    pluginabout.Enabled:=true;
 	    pluginconfigure.Enabled:=true;
@@ -464,26 +460,20 @@ begin
       Application.ProcessMessages;
       sleep(100);
 
-      ProcCall2 := GetProcAddress(OutputDLL[plugingrid.row],'DLLStart');
+      ProcCall2 := GetProcAddress(mainform.OutputPlugins[plugingrid.Row].Handle,'DLLStart');
       if Assigned(ProcCall2) then
       begin
         Proccall2;
+   	    mainform.OutputPlugins[plugingrid.Row].IsActive:=true;
       end;
 	  end;
 	end;
   if Plugingrid.Col=6 then
   begin
-    addtoblacklist[Plugingrid.Row]:=not addtoblacklist[Plugingrid.Row];
-
-    plugin_blacklistnew:='';
-    for i:=0 to plugingrid.rowcount-1 do
-    begin
-      if addtoblacklist[i] then
-        plugin_blacklistnew:=plugin_blacklistnew+pc_dimmer_plugins[i];
-    end;
+    mainform.OutputPlugins[plugingrid.Row].IsBlacklisted:=not mainform.OutputPlugins[plugingrid.Row].IsBlacklisted;
 	end;
 
-  if active[plugingrid.Row] then
+  if mainform.OutputPlugins[plugingrid.Row].IsEnabled then
   begin
     pluginconfigure.Enabled:=true;
     pluginabout.Enabled:=true;
@@ -558,7 +548,7 @@ begin
       Rectangle(ARect);
 
       // Abfrage ob Haken zeichnen oder nicht
-      if active[ARow] then
+      if mainform.OutputPlugins[ARow].IsEnabled then
       begin
         //Haken zeichnen
         AHaken1.X := ARect.Left + 2;
@@ -598,7 +588,7 @@ begin
       Rectangle(ARect);
 
       // Abfrage ob Haken zeichnen oder nicht
-      if addtoblacklist[ARow] then
+      if mainform.OutputPlugins[plugingrid.Row].IsBlacklisted then
       begin
         //Haken zeichnen
         AHaken1.X := ARect.Left + 2;
@@ -842,9 +832,11 @@ begin
 end;
 
 procedure TOptionenBox.Button2Click(Sender: TObject);
+var
+  i:integer;
 begin
-  plugin_blacklist:='';
-  plugin_blacklistnew:='';
+  for i:=0 to length(mainform.Outputplugins)-1 do
+    mainform.OutputPlugins[i].IsBlacklisted:=false;
   Showmessage(_('Nach einem Neustart stehen wieder alle Plugins zur Verfügung.'));
 end;
 

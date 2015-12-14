@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\Par56silber.png">
+ <information id="PC_DIMMER">
+ <name>Temperaturanzeige</name>
+ <vendor>PC_DIMMER</vendor>
+ <author>Christian Nöding</author>
+ <description>Zeigt Temperaturen im K4 an</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="T2_MSB" fade="no" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="T2_LSB" fade="no" type="special2"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="T3_MSB" fade="no" type="special3"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="T3_LSB" fade="no" type="special4"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="T1_Current" fade="no" type="special5"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="T1_Min" fade="no" type="special6"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="T1_Mean" fade="no" type="special7"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="T1_Max" fade="no" type="special8"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Heizung an" fade="no" type="special9"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" ch8="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="191" height="270">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <label name="Label13_278" top="90" left="10" width="82" height="13" caption="Haupttemperatur:"/>
+  <label name="t1lbl" top="110" left="10" width="9" height="13" caption="..."/>
+  <label name="Label15_945" top="140" left="10" width="20" height="13" caption="Min:"/>
+  <label name="Label16_190" top="140" left="60" width="23" height="13" caption="Max."/>
+  <label name="Label17_973" top="140" left="110" width="48" height="13" caption="Mittelwert:"/>
+  <label name="minlbl" top="160" left="10" width="9" height="13" caption="..."/>
+  <label name="maxlbl" top="160" left="60" width="9" height="13" caption="..."/>
+  <label name="meanlbl" top="160" left="110" width="9" height="13" caption="..."/>
+  <label name="Label21_416" top="190" left="10" width="59" height="13" caption="Eingangstür:"/>
+  <label name="Label22_382" top="190" left="110" width="35" height="13" caption="Decke:"/>
+  <label name="t2lbl" top="210" left="10" width="9" height="13" caption="..."/>
+  <label name="t3lbl" top="210" left="110" width="9" height="13" caption="..."/>
+  <label name="Label25_908" top="240" left="10" width="75" height="13" caption="Heizungsstatus:"/>
+  <label name="heizunglbl" top="240" left="110" width="9" height="13" caption="..."/>
+ </form>
+ <code>
+  unit GenericDimmer;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+
+  implementation
+
+	var
+		dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // bitte hier die eigene Funktion eintragen
+  end;
+  procedure FormShow;
+    begin
+    end;
+  procedure FormRefresh(channel:Integer);
+	var
+		t1, t2msb, t2lsb, t3msb, t3lsb:byte;
+		t1min, t1mean, t1max, heizungon:byte;		
+		t2, t3:double;
+  begin
+		t2msb := get_channel('special1');
+		t2lsb := get_channel('special2');
+		t3msb := get_channel('special3');
+		t3lsb := get_channel('special4');
+		t1 := get_channel('special5');
+		t1min := get_channel('special6');
+		t1mean := get_channel('special7');
+		t1max := get_channel('special8');
+		heizungon := get_channel('special9');
+		
+		t1lbl.caption:=inttostr(trunc(t1/10))+','+inttostr(frac(t1/10)*10)+'°C';
+		minlbl.caption:=inttostr(trunc(t1min/10))+','+inttostr(frac(t1min/10)*10)+'°C';
+		meanlbl.caption:=inttostr(trunc(t1mean/10))+','+inttostr(frac(t1mean/10)*10)+'°C';
+		maxlbl.caption:=inttostr(trunc(t1max/10))+','+inttostr(frac(t1max/10)*10)+'°C';
+
+		if heizungon = 255 then
+			heizunglbl.caption:='Heizen'
+		else
+			heizunglbl.caption:='Aus';
+			
+		t2:=(((t2msb shl 8)+t2lsb)-550)/10;
+		t3:=(((t3msb shl 8)+t3lsb)-550)/10;
+		t2lbl.caption:=inttostr(trunc(t2))+','+inttostr(abs(frac(t2)))+'°C';
+		t3lbl.caption:=inttostr(trunc(t3))+','+inttostr(abs(frac(t3)))+'°C';
+
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+    begin
+    end;
+  end.
+ </code>
+</device>
