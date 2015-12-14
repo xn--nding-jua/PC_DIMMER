@@ -126,8 +126,8 @@ const
   sPC_DIMMERMutex = 'PC_DIMMER';
 
 {$R *.RES}
-{$R 'resources.res' 'resources.rc'}
-{$R MANIFEST.RES}
+{$R 'resources.RES'}
+//{$R MANIFEST.RES}
 
 type
   TFixedHintWindow = class(THintWindow)

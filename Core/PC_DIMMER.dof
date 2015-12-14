@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=5
 MinorVer=4
 Release=0
-Build=4613
+Build=4616
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=PC_DIMMER
-FileVersion=5.4.0.4613
+FileVersion=5.4.0.4616
 InternalName=PC_DIMMER
 LegalCopyright=(c) 2004-2015 Dipl.-Ing. Christian Nöding
 LegalTrademarks=

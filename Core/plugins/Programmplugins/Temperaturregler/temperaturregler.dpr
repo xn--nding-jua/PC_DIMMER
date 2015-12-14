@@ -17,14 +17,68 @@ uses
   SysUtils,
   Classes,
   Windows,
+  Graphics,
+  ExtCtrls,
+  GR32,
+  PNGImage,
   configfrm in 'configfrm.pas' {Config},
   setup in 'setup.pas' {setupform},
-  messagesystem in 'messagesystem.pas';
+  messagesystem in 'messagesystem.pas',
+  aboutfrm in 'aboutfrm.pas' {About};
 
 var
   ShuttingDown:boolean;
   
 {$R *.res}
+{$R plugin_icon.res}
+
+function PNGToBitmap32(DstBitmap: TBitmap32; Png: TPngObject): Boolean;
+var
+  TransparentColor: TColor32;
+  PixelPtr: PColor32;
+  AlphaPtr: PByte;
+  X, Y: Integer;
+begin
+  Result := False;
+
+  DstBitmap.Assign(PNG);
+  DstBitmap.ResetAlpha;
+
+  case PNG.TransparencyMode of
+    ptmPartial:
+      begin
+        if (PNG.Header.ColorType = COLOR_GRAYSCALEALPHA) or
+           (PNG.Header.ColorType = COLOR_RGBALPHA) then
+        begin
+          PixelPtr := PColor32(@DstBitmap.Bits[0]);
+          for Y := 0 to DstBitmap.Height - 1 do
+          begin
+            AlphaPtr := PByte(PNG.AlphaScanline[Y]);
+            for X := 0 to DstBitmap.Width - 1 do
+            begin
+              PixelPtr^ := (PixelPtr^ and $00FFFFFF) or (TColor32(AlphaPtr^) shl 24);
+              Inc(PixelPtr);
+              Inc(AlphaPtr);
+            end;
+          end;
+        end;
+        Result := True;
+      end;
+    ptmBit:
+      begin
+        TransparentColor := Color32(PNG.TransparentColor);
+        PixelPtr := PColor32(@DstBitmap.Bits[0]);
+        for X := 0 to (DstBitmap.Height - 1) * (DstBitmap.Width - 1) do
+        begin
+          if PixelPtr^ = TransparentColor then
+            PixelPtr^ := PixelPtr^ and $00FFFFFF;
+          Inc(PixelPtr);
+        end;
+        Result := True;
+      end;
+    ptmNone: Result := False;
+  end;
+end;
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
@@ -104,9 +158,55 @@ begin
   Result := PChar('v1.7');
 end;
 
+function DLLGetResourceData(const ResName: PChar; Buffer: Pointer; var Length: Integer):boolean;stdcall;
+var
+  S: TResourceStream;
+  L: Integer;
+  Data: Pointer;
+begin
+  Result := False;
+  if (Buffer = nil) or (Length <= 0) then Exit;
+  try
+    S := TResourceStream.Create(HInstance, UpperCase(ResName), RT_RCDATA);
+    try
+      L := S.Size;
+      if Length < L then Exit;
+      S.ReadBuffer(Buffer^, L);
+      Length := L;
+      Result := True;
+    finally
+      S.Free;
+    end;
+  except
+  end;
+end;
+
+function DLLGetResourceSize(const ResName: PChar): Integer; stdcall;
+var
+  S: TResourceStream;
+begin
+  Result := 0;
+  try
+    S := TResourceStream.Create(HInstance, UpperCase(ResName), RT_RCDATA);
+    try
+      Result := S.Size;
+    finally
+      S.Free;
+    end;
+  except
+  end;
+end;
+
 procedure DLLShow;stdcall;
 begin
   Config.Show;
+end;
+
+procedure DLLAbout;stdcall;
+begin
+  about := tabout.Create(nil);
+  about.ShowModal;
+  about.Free;
 end;
 
 procedure DLLSendData(address, startvalue, endvalue, fadetime:integer;name:PChar);stdcall;
@@ -196,7 +296,10 @@ exports
   DLLIdentify,
   DLLGetVersion,
   DLLGetName,
+  DLLGetResourceData,
+  DLLGetResourceSize,
   DLLShow,
+  DLLAbout,
   DLLSendData,
   DLLSendMessage;
 

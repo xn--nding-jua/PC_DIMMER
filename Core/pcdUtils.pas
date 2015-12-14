@@ -3,7 +3,7 @@ unit pcdUtils;
 interface
 
 uses
-  Graphics, Classes;
+  Graphics, Classes, GR32, PNGImage;
 
 function WebColor(AColor: TColor): Integer;
 function RGB2TColor(const AR, AG, AB: Byte): Integer;
@@ -29,6 +29,8 @@ procedure MaximizeSaturation(var AR, AG, AB: byte; AMaximumSaturation: Word = 40
 
 function IntToThreadPriority(AInt: integer): TThreadPriority;
 function ThreadPriorityToInt(APriority: TThreadPriority): integer;
+
+function PNGToBitmap32(DstBitmap: TBitmap32; Png: TPngObject): Boolean;
 
 implementation
 
@@ -410,6 +412,55 @@ begin
     Result := 6
   else
     Result := 0;
+end;
+
+// Result is TRUE has Pngimage a Alphachannel.
+function PNGToBitmap32(DstBitmap: TBitmap32; Png: TPngObject): Boolean;
+var
+  TransparentColor: TColor32;
+  PixelPtr: PColor32;
+  AlphaPtr: PByte;
+  X, Y: Integer;
+begin
+  Result := False;
+
+  DstBitmap.Assign(PNG);
+  DstBitmap.ResetAlpha;
+
+  case PNG.TransparencyMode of
+    ptmPartial:
+      begin
+        if (PNG.Header.ColorType = COLOR_GRAYSCALEALPHA) or
+           (PNG.Header.ColorType = COLOR_RGBALPHA) then
+        begin
+          PixelPtr := PColor32(@DstBitmap.Bits[0]);
+          for Y := 0 to DstBitmap.Height - 1 do
+          begin
+            AlphaPtr := PByte(PNG.AlphaScanline[Y]);
+            for X := 0 to DstBitmap.Width - 1 do
+            begin
+              PixelPtr^ := (PixelPtr^ and $00FFFFFF) or (TColor32(AlphaPtr^) shl 24);
+              Inc(PixelPtr);
+              Inc(AlphaPtr);
+            end;
+          end;
+        end;
+        Result := True;
+      end;
+    ptmBit:
+      begin
+        TransparentColor := Color32(PNG.TransparentColor);
+        PixelPtr := PColor32(@DstBitmap.Bits[0]);
+        for X := 0 to (DstBitmap.Height - 1) * (DstBitmap.Width - 1) do
+        begin
+          if PixelPtr^ = TransparentColor then
+            PixelPtr^ := PixelPtr^ and $00FFFFFF;
+          Inc(PixelPtr);
+        end;
+        Result := True;
+      end;
+    ptmNone: Result := False;
+  end;
 end;
 
 end.

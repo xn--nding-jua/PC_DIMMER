@@ -560,6 +560,7 @@ type
     OnlineUpdateRibbonBtn: TdxBarLargeButton;
     CheckBox6: TCheckBox;
     Label16: TLabel;
+    PluginDemoRibbonBtn: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -13398,14 +13399,21 @@ var
 	LReg:TPCDRegistry;
   i,j,k,l,m,Count,Count2,Count3:integer;
   FuncCall,FuncCall2 : function : PChar;stdcall;
-  FuncCall4:function:TBitmap;stdcall;
   ProcCall: procedure(funktionsadresse0,funktionsadresse1,funktionsadresse2,funktionsadresse3:Pointer;funktionsadresse4:Pointer);stdcall;
   ProcCall2:procedure;stdcall;
   text1:string;
   ergebnisse:Variant;
-  Buffer:TMemoryStream;
   Wnd: hWnd;
   P: TdxPNGImage;
+
+  // Funktionen für Bild-Laden aus Plugins
+  DLLGetResourceData:function(const ResName: PChar; Buffer: Pointer; var Length: Integer):boolean;stdcall;
+  DLLGetResourceSize:function(const ResName: PChar): Integer; stdcall;
+  Buffer:array of Byte;
+  Size:Integer;
+  S: TMemoryStream;
+  PNG:TPNGObject;
+  BMP32:TBitmap32;
 begin
   if shutdown then exit;
 
@@ -13509,10 +13517,7 @@ begin
     ProgramPlugins[i].Handle:=LoadLibrary(PChar(workingdirectory+'\plugins\'+ProgramPlugins[i].Filename));
     FuncCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLGetName');
     FuncCall2 := GetProcAddress(ProgramPlugins[i].Handle,'DLLGetVersion');
-    try
-      FuncCall4 := GetProcAddress(ProgramPlugins[i].Handle,'DLLGetIcon');
-    except
-    end;
+
     if Assigned(FuncCall) then
     begin
       SplashProgress(1, 60+round(15*(((i+1)/length(ProgramPlugins)))), 100);
@@ -13521,19 +13526,55 @@ begin
 
       ProgramPlugins[i].Name:=FuncCall;
       ProgramPlugins[i].Version:=FuncCall2;
-      if Assigned(FuncCall4) then
-      begin
-        ProgramPlugins[i].Icon:=FuncCall4;
-      end else
-      begin
-        ProgramPlugins[i].Icon:=AmbilightRibbonBtn.HotGlyph;
+
+      try
+        DLLGetResourceData := GetProcAddress(ProgramPlugins[i].Handle, 'DLLGetResourceData');
+        DLLGetResourceSize := GetProcAddress(ProgramPlugins[i].Handle, 'DLLGetResourceSize');
+
+        if Assigned(DLLGetResourceData) and Assigned(DLLGetResourceSize) then
+        begin
+          Size := DLLGetResourceSize('PNGICON');
+          if Size > 0 then
+          begin
+            SetLength(Buffer, Size);
+            if DLLGetResourceData('PNGICON', @Buffer[0], Size) then
+            begin
+              S := TMemoryStream.Create;
+              try
+                S.WriteBuffer(Buffer[0], Size);
+                S.Position := 0;
+                PNG := TPNGObject.Create;
+                BMP32 := TBitmap32.Create;
+                try
+                  PNG.LoadFromStream(S);
+                  PNGToBitmap32(BMP32, PNG);
+                  ProgramPlugins[i].Icon:=TBitmap.Create;
+                  ProgramPlugins[i].Icon.Width:=BMP32.Width;
+                  ProgramPlugins[i].Icon.Height:=BMP32.Height;
+                  BitBlt(ProgramPlugins[i].Icon.Canvas.Handle, 0, 0, BMP32.Width, BMP32.Height, BMP32.Canvas.Handle, 0, 0, SrcCopy);
+                finally
+                  PNG.Free;
+                  BMP32.Free;
+                end;
+              finally
+                S.Free;
+              end;
+            end;
+          end;
+        end else
+        begin
+          ProgramPlugins[i].Icon:=PluginDemoRibbonBtn.HotGlyph;
+        end;
+      except
+        ProgramPlugins[i].Icon:=PluginDemoRibbonBtn.HotGlyph;
       end;
+
       with mainform.PluginsRibbonGroup.ItemLinks.AddItem(TdxBarSubItem).Item as TdxBarSubItem do
       begin
         with ItemLinks.AddItem(TdxBarSeparator).Item as TdxBarSeparator do
         begin
           Name:='PluginRibbonSeparator'+inttostr(i);
-          Caption:=_('Fenster');
+          Caption:=_(ProgramPlugins[i].Name);
         end;
         Caption:=ProgramPlugins[i].Name;
         Hint:=ProgramPlugins[i].Version;

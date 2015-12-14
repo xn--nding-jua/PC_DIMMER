@@ -4,7 +4,7 @@ object About: TAbout
   BorderStyle = bsToolWindow
   Caption = 'Info...'
   ClientHeight = 153
-  ClientWidth = 255
+  ClientWidth = 281
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -39,9 +39,9 @@ object About: TAbout
   object Label3: TLabel
     Left = 8
     Top = 48
-    Width = 230
+    Width = 257
     Height = 13
-    Caption = 'Copyrights (c) 2011 by Dipl.-Ing. Christian N'#246'ding'
+    Caption = 'Copyrights (c) 2011-2015 by Dipl.-Ing. Christian N'#246'ding'
   end
   object Label4: TLabel
     Left = 8
@@ -53,16 +53,16 @@ object About: TAbout
   object Bevel1: TBevel
     Left = 0
     Top = 112
-    Width = 257
+    Width = 281
     Height = 9
     Shape = bsTopLine
   end
   object Label5: TLabel
     Left = 8
     Top = 88
-    Width = 130
+    Width = 134
     Height = 13
-    Caption = 'christian.noeding@arcor.de'
+    Caption = 'christian@noeding-online.de'
   end
   object Button1: TButton
     Left = 8

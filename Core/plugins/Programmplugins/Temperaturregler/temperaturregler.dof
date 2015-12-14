@@ -105,6 +105,10 @@ HostApplication=D:\Cloud\Programmieren\Delphi\Fertige Programme\PHOENIXstudios P
 Launcher=
 UseLauncher=0
 DebugCWD=D:\Cloud\Programmieren\Delphi\PC_DIMMER\Core\plugins\
+[Language]
+ActiveLang=
+ProjectLang=
+RootDir=
 [Version Info]
 IncludeVerInfo=1
 AutoIncBuild=0
