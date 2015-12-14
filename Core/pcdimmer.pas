@@ -13574,7 +13574,7 @@ begin
         with ItemLinks.AddItem(TdxBarSeparator).Item as TdxBarSeparator do
         begin
           Name:='PluginRibbonSeparator'+inttostr(i);
-          Caption:=_(ProgramPlugins[i].Name);
+          Caption:=_(ProgramPlugins[i].Name+' '+ProgramPlugins[i].Version);
         end;
         Caption:=ProgramPlugins[i].Name;
         Hint:=ProgramPlugins[i].Version;

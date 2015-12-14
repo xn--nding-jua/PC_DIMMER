@@ -588,7 +588,7 @@ begin
       Rectangle(ARect);
 
       // Abfrage ob Haken zeichnen oder nicht
-      if mainform.OutputPlugins[plugingrid.Row].IsBlacklisted then
+      if mainform.OutputPlugins[ARow].IsBlacklisted then
       begin
         //Haken zeichnen
         AHaken1.X := ARect.Left + 2;
