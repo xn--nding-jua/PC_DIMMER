@@ -36,9 +36,6 @@ type
     RadioGroup1: TRadioGroup;
     Label27: TLabel;
     Button1: TButton;
-    GroupBox1: TGroupBox;
-    registerfiletypes: TButton;
-    unregisterfiletypes: TButton;
     Label25: TLabel;
     Label39: TLabel;
     BlendOutFormsCheckbox: TCheckBox;
@@ -250,8 +247,6 @@ type
       var Value: String);
     procedure PlugingridKeyPress(Sender: TObject; var Key: Char);
     procedure Button1Click(Sender: TObject);
-    procedure registerfiletypesClick(Sender: TObject);
-    procedure unregisterfiletypesClick(Sender: TObject);
     procedure HTTPServerActiveCheckboxMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure OnlyNumbersInTEdit(Sender: TObject; var Key: Word;
@@ -802,18 +797,6 @@ begin
   else
     accumessageform.percent.Caption:='- kein Akku gefunden -';
   accumessageform.show;
-end;
-
-procedure TOptionenBox.registerfiletypesClick(Sender: TObject);
-begin
-  mainform.RegisterPC_DIMMERFiles;
-  ShowMessage('Die PC_DIMMER Dateitypen wurden erfolgreich registriert.');
-end;
-
-procedure TOptionenBox.unregisterfiletypesClick(Sender: TObject);
-begin
-  mainform.UnRegisterPC_DIMMERFiles;
-  ShowMessage('Alle PC_DIMMER Dateitypen erfolgreich entfernt.');
 end;
 
 procedure TOptionenBox.HTTPServerActiveCheckboxMouseUp(Sender: TObject;

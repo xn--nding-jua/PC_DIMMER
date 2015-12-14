@@ -86,8 +86,8 @@ object cdplayerform: Tcdplayerform
   object lstTracks: TListBox
     Left = 9
     Top = 129
-    Width = 337
-    Height = 136
+    Width = 329
+    Height = 126
     Align = alClient
     ItemHeight = 13
     TabOrder = 0
@@ -98,7 +98,7 @@ object cdplayerform: Tcdplayerform
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 355
+    Width = 347
     Height = 129
     Align = alTop
     BevelOuter = bvNone
@@ -146,8 +146,8 @@ object cdplayerform: Tcdplayerform
     object timelbl: TLabel
       Left = 15
       Top = 71
-      Width = 152
-      Height = 36
+      Width = 153
+      Height = 32
       Caption = '0 - 0:00'
       Font.Charset = ANSI_CHARSET
       Font.Color = clLime
@@ -160,8 +160,8 @@ object cdplayerform: Tcdplayerform
     object timelbl2: TLabel
       Left = 242
       Top = 71
-      Width = 95
-      Height = 36
+      Width = 96
+      Height = 32
       Caption = '00:00'
       Font.Charset = ANSI_CHARSET
       Font.Color = clLime
@@ -194,8 +194,8 @@ object cdplayerform: Tcdplayerform
   end
   object Panel2: TPanel
     Left = 0
-    Top = 265
-    Width = 355
+    Top = 255
+    Width = 347
     Height = 100
     Align = alBottom
     BevelOuter = bvNone
@@ -907,16 +907,16 @@ object cdplayerform: Tcdplayerform
     Left = 0
     Top = 129
     Width = 9
-    Height = 136
+    Height = 126
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 3
   end
   object Panel4: TPanel
-    Left = 346
+    Left = 338
     Top = 129
     Width = 9
-    Height = 136
+    Height = 126
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
@@ -1185,9 +1185,5 @@ object cdplayerform: Tcdplayerform
       end>
     Left = 288
     Top = 48
-  end
-  object XPManifest1: TXPManifest
-    Left = 320
-    Top = 8
   end
 end

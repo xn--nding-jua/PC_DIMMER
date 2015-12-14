@@ -125,18 +125,17 @@ begin
           1: tempstring:='Windows 7';
           2: tempstring:='Windows 8';
           3: tempstring:='Windows 8.1';
-          4: tempstring:='Windows 10 Preview';
         else
           tempstring:='WindowsNT '+inttostr(OsVinfo.dwMajorVersion)+'.'+inttostr(OsVinfo.dwMinorVersion)
         end;
       end;
 
-  	  // MajorVersion = 7 will not be released
-	  
-      if (OsVinfo.dwMajorVersion > 6) then
+  	  // MajorVersion = 7, 8 and 9 will not be released
+
+      if (OsVinfo.dwMajorVersion >=10) then
       begin
 		    // Windows 10.0 will have MajorVersion = 10 and MinorVersion = x
-        tempstring:='Windows '+inttostr(OsVinfo.dwMajorVersion)+'.'+inttostr(OsVinfo.dwMinorVersion)
+        tempstring:='Windows '+inttostr(OsVinfo.dwMajorVersion)+'.'+inttostr(OsVinfo.dwMinorVersion) + ' Build '+inttostr(OsVInfo.dwBuildNumber)
       end;
     end;
   end;

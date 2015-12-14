@@ -1,5 +1,0 @@
-requireAdministrator ist das höchste Level, welches man anfordern kann. Es sagt, dass das Programm nur mit Admin-Rechten ausgeführt werden darf. Bekommt es diese nicht, wird das Programm nicht gestartet.
-
-highestAvailable ist das nächst kleinere Level. Es fragt nach Adminrechten, bekommt es diese nicht, wird das Programm mit den Standard-Userrechten ausgeführt.
-
-asInvoker bezeichnet das kleinste Level. Das Programm wird mit den Rechten gestartet, die der Prozess der das Programm starten will, hat. Also wenn ein Programm, welches Admin-Rechte hat, ein neues Programm mit dem Level (asInvoker) startet, bekommt es auch Admin-Rechte.

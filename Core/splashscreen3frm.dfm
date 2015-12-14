@@ -2,7 +2,7 @@ object splashscreen3: Tsplashscreen3
   Left = 474
   Top = 327
   BorderStyle = bsNone
-  Caption = 'PC_DIMMER2012'
+  Caption = 'PC_DIMMER'
   ClientHeight = 112
   ClientWidth = 508
   Color = clBtnFace
@@ -46,7 +46,7 @@ object splashscreen3: Tsplashscreen3
       Height = 19
       Alignment = taCenter
       AutoSize = False
-      Caption = 'PC_DIMMER2012 wird gestartet...'
+      Caption = 'PC_DIMMER wird gestartet...'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -16

@@ -39,7 +39,6 @@ type
     PngImageCollection1: TPngImageCollection;
     Label1: TLabel;
     Label2: TLabel;
-    XPManifest1: TXPManifest;
     timelbl: TLabel;
     timelbl2: TLabel;
     procedure FormCreate(Sender: TObject);

@@ -2,7 +2,6 @@ program PC_DIMMER;
 
 {%File 'Typdefinitionen.inc'}
 {%File 'GlobaleKonstanten.inc'}
-{$R 'resources.res' 'resources.rc'}
 {%File 'Channels_Commandsystem.inc'}
 {%File 'EditBefehl.inc'}
 
@@ -127,7 +126,8 @@ const
   sPC_DIMMERMutex = 'PC_DIMMER';
 
 {$R *.RES}
-{$R PCDIMMER.RES}
+{$R 'resources.res' 'resources.rc'}
+{$R MANIFEST.RES}
 
 type
   TFixedHintWindow = class(THintWindow)
@@ -151,6 +151,7 @@ var
   showtext:boolean;
 begin
 {
+  // Ggfs. nur eine Instanz des PC_DIMMERs zulassen
   if AlreadyStarted then
   begin
     if messagedlg(_('Der PC_DIMMER wurde bereits gestartet. Soll eine weitere Instanz des Programmes gestartet werden?'),mtConfirmation,
@@ -165,13 +166,16 @@ begin
   Application.Title := 'PC_DIMMER';
   Application.HelpFile := 'pc_dimmer.pdf';
 
+{
+  // PC_DIMMER kommt nun ohne Admin-Rechte aus :)
   if not IsUserAnAdmin then
   begin
     ShowMessage(_('Sie versuchen den PC_DIMMER ohne Administrator-Rechte zu starten.'+#10#13+'Dieses Programm nutzt jedoch Funktionen, welche diese Rechte voraussetzen.'+#13#10#13#10+'Bitte führen Sie das Programm als Administrator aus.'));
   end else
+}
   begin
     Application.CreateForm(Tmainform, mainform);
-  if showtext then mainform.SplashAddText(_('Erstelle Projektverwaltung')); mainform.RefreshSplashText;
+    if showtext then mainform.SplashAddText(_('Erstelle Projektverwaltung')); mainform.RefreshSplashText;
     Application.CreateForm(Tprojektverwaltung, projektverwaltung);
     if showtext then mainform.SplashAddText(_('Erstelle Beattool')); mainform.RefreshSplashText;
     Application.CreateForm(Tbeatform, beatform);

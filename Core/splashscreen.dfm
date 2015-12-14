@@ -28,10 +28,6 @@ object splash: Tsplash
     Width = 3
     Height = 13
   end
-  object XPManifest1: TXPManifest
-    Left = 728
-    Top = 8
-  end
   object Timer1: TSVATimer
     Interval = 30
     OnTimer = Timer1Timer

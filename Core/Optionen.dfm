@@ -634,7 +634,7 @@ object OptionenBox: TOptionenBox
       end
       object levelanzeigeoptionen: TRadioGroup
         Left = 16
-        Top = 104
+        Top = 200
         Width = 265
         Height = 113
         Caption = 'Darstellung der Faderlevel im Faderbereich '
@@ -685,46 +685,20 @@ object OptionenBox: TOptionenBox
         State = cbChecked
         TabOrder = 4
       end
-      object GroupBox1: TGroupBox
-        Left = 16
-        Top = 224
-        Width = 265
-        Height = 89
-        Caption = ' PC_DIMMER Dateitypen '
-        TabOrder = 6
-        object registerfiletypes: TButton
-          Left = 8
-          Top = 24
-          Width = 249
-          Height = 25
-          Caption = 'Dateitypen in Windows registrieren'
-          TabOrder = 0
-          OnClick = registerfiletypesClick
-        end
-        object unregisterfiletypes: TButton
-          Left = 8
-          Top = 56
-          Width = 249
-          Height = 25
-          Caption = 'Dateitypen entfernen'
-          TabOrder = 1
-          OnClick = unregisterfiletypesClick
-        end
-      end
       object BlendOutFormsCheckbox: TCheckBox
         Left = 16
-        Top = 80
+        Top = 112
         Width = 193
         Height = 17
         Caption = 'Fenster im Hintergrund transparent'
-        TabOrder = 7
+        TabOrder = 6
       end
       object Button1: TButton
-        Left = 192
-        Top = 64
-        Width = 49
-        Height = 17
-        Caption = 'Testen'
+        Left = 32
+        Top = 80
+        Width = 249
+        Height = 25
+        Caption = 'Akkuanzeige testen'
         TabOrder = 5
         OnClick = Button1Click
       end
@@ -734,7 +708,7 @@ object OptionenBox: TOptionenBox
         Width = 281
         Height = 305
         Caption = ' Aktualisierungsraten einzelner Programmteile '
-        TabOrder = 8
+        TabOrder = 7
         object Label35: TLabel
           Left = 9
           Top = 23
@@ -1001,7 +975,7 @@ object OptionenBox: TOptionenBox
         Width = 267
         Height = 25
         Caption = 'Aktualisierungsraten auf Standardwerte'
-        TabOrder = 9
+        TabOrder = 8
         OnClick = Button3Click
       end
     end

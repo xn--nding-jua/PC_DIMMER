@@ -4,7 +4,8 @@ uses
   Forms,
   welcomefrm in 'welcomefrm.pas' {welcomeform};
 
-{$R *.res}
+//{$R *.res}
+{$R MANIFEST.RES}
 
 begin
   Application.Initialize;

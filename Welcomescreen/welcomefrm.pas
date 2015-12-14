@@ -26,10 +26,7 @@ type
     lastproject5: TLabel;
     StartTimer: TTimer;
     JvXPButton7: TJvXPButton;
-    RadioButton1: TRadioButton;
-    RadioButton3: TRadioButton;
     restorelastvalues: TCheckBox;
-    RadioButton2: TRadioButton;
     PopupMenu1: TPopupMenu;
     Videoscreenffnen1: TMenuItem;
     MediaCenterServerstarten1: TMenuItem;
@@ -54,8 +51,6 @@ type
     procedure lastproject5Click(Sender: TObject);
     procedure StartTimerTimer(Sender: TObject);
     procedure JvXPButton7Click(Sender: TObject);
-    procedure RadioButton1MouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
     procedure Videoscreenffnen1Click(Sender: TObject);
     procedure JvXPButton3Click(Sender: TObject);
     procedure MediaCenterServerstarten1Click(Sender: TObject);
@@ -76,9 +71,7 @@ type
     ProjectToLoad:string;
     workingdirectory:string;
     nowelcomeagain:boolean;
-    windowsmajorversion,windowsminorversion,windowsbuildnumber:byte;
  	  osversion:string;
-    splashscreen:integer;
     procedure StartPCDIMMER(switch: string);
     procedure RefreshOpenHistory;
 		function GetFileVersionBuild(Const FileName:String):String;
@@ -139,7 +132,6 @@ end;
 
 procedure Twelcomeform.StartPCDIMMER(switch: string);
 var
-  i:integer;
   restore:string;
 begin
   if restorelastvalues.Checked then
@@ -147,47 +139,7 @@ begin
 
   if length(ProjectToLoad)>0 then
     ProjectToLoad:='"'+ProjectToLoad+'"';
-
-  for i:=1 to paramcount do
-  begin
-    if (paramstr(i)='/nosplash') or (paramstr(i)='-nosplash') then
-    begin
-      splashscreen:=0;
-    end;
-    if (paramstr(i)='/splash2') or (paramstr(i)='-splash2') then
-    begin
-      splashscreen:=2;
-    end;
-  end;
-
-  if Radiobutton1.Checked then
-    splashscreen:=1;
-  if Radiobutton2.Checked then
-    splashscreen:=2;
-  if Radiobutton3.Checked then
-    splashscreen:=0;
-
-  if splashscreen=-1 then
-    splashscreen:=1;
-
-  if IsUserAnAdmin then
-  begin
-    case splashscreen of
-      0: ShellExecute( 0, 'Open', pchar(workingdirectory+'PC_DIMMER.exe'),PChar('sp0 '+ProjectToLoad+' '+switch+' '+restore) ,pChar(workingdirectory),SW_SHOW);
-      1: ShellExecute( 0, 'Open', pchar(workingdirectory+'PC_DIMMER.exe'),PChar('sp1 '+ProjectToLoad+' '+switch+' '+restore) ,pChar(workingdirectory),SW_SHOW);
-      2: ShellExecute( 0, 'Open', pchar(workingdirectory+'PC_DIMMER.exe'),PChar('sp2 '+ProjectToLoad+' '+switch+' '+restore) ,pChar(workingdirectory),SW_SHOW);
-      3: ShellExecute( 0, 'Open', pchar(workingdirectory+'PC_DIMMER.exe'),PChar('sp3 '+ProjectToLoad+' '+switch+' '+restore) ,pChar(workingdirectory),SW_SHOW);
-    end;
-  end else
-  begin
-    case splashscreen of
-      0: ShellExecute( 0, 'RunAs', pchar(workingdirectory+'PC_DIMMER.exe'),PChar('sp0 '+ProjectToLoad+' '+switch+' '+restore) ,pChar(workingdirectory),SW_SHOW);
-      1: ShellExecute( 0, 'RunAs', pchar(workingdirectory+'PC_DIMMER.exe'),PChar('sp1 '+ProjectToLoad+' '+switch+' '+restore) ,pChar(workingdirectory),SW_SHOW);
-      2: ShellExecute( 0, 'RunAs', pchar(workingdirectory+'PC_DIMMER.exe'),PChar('sp2 '+ProjectToLoad+' '+switch+' '+restore) ,pChar(workingdirectory),SW_SHOW);
-      3: ShellExecute( 0, 'RunAs', pchar(workingdirectory+'PC_DIMMER.exe'),PChar('sp3 '+ProjectToLoad+' '+switch+' '+restore) ,pChar(workingdirectory),SW_SHOW);
-    end;
-  end;
-
+    ShellExecute( 0, 'Open', pchar(workingdirectory+'PC_DIMMER.exe'),PChar('/sp2 '+ProjectToLoad+' '+switch+' '+restore) ,pChar(workingdirectory),SW_SHOW);
   Close;
 end;
 
@@ -225,10 +177,6 @@ begin
 
   if GetVersionEx(OsVinfo) then
   begin
-    windowsmajorversion:=OsVinfo.dwMajorVersion;
-    windowsminorversion:=OsVinfo.dwMinorVersion;
-    windowsbuildnumber:=OsVinfo.dwBuildNumber;
-
     // WINDOWS9x
     if OsVinfo.dwPlatformId = VER_PLATFORM_WIN32_WINDOWS then
     begin
@@ -266,7 +214,7 @@ begin
         case (OsVinfo.dwMinorVersion) of
           0: tempstring:='Windows2000';
           1: tempstring:='WindowsXP';
-          2: tempstring:='Windows Server 2003';
+          2: tempstring:='WindowsXP 64Bit';
         else
           tempstring:='WindowsNT '+inttostr(OsVinfo.dwMajorVersion)+'.'+inttostr(OsVinfo.dwMinorVersion)
         end;
@@ -275,20 +223,21 @@ begin
       if (OsVinfo.dwMajorVersion = 6) then
       begin
         case (OsVinfo.dwMinorVersion) of
-          0: tempstring:='Windows Vista';
+          0: tempstring:='WindowsVista';
           1: tempstring:='Windows 7';
           2: tempstring:='Windows 8';
           3: tempstring:='Windows 8.1';
-          4: tempstring:='Windows 10 Preview';
         else
           tempstring:='WindowsNT '+inttostr(OsVinfo.dwMajorVersion)+'.'+inttostr(OsVinfo.dwMinorVersion)
         end;
       end;
 
-      if (OsVinfo.dwMajorVersion > 6) then
+  	  // MajorVersion = 7, 8 and 9 will not be released
+
+      if (OsVinfo.dwMajorVersion >=10) then
       begin
-        // Windows 7 hat MajorVersion = 10 und MinorVersion = xxx
-        tempstring:='Windows '+inttostr(OsVinfo.dwMajorVersion)+'.'+inttostr(OsVinfo.dwMinorVersion)
+		    // Windows 10.0 will have MajorVersion = 10 and MinorVersion = x
+        tempstring:='Windows '+inttostr(OsVinfo.dwMajorVersion)+'.'+inttostr(OsVinfo.dwMinorVersion) + ' Build '+inttostr(OsVInfo.dwBuildNumber)
       end;
     end;
   end;
@@ -328,7 +277,6 @@ begin
 }
 
   workingdirectory:=ExtractFilePath(paramstr(0));
-  splashscreen:=-1;
 
   // Sprache checken
   sprache:=GetWindowsLanguage;
@@ -395,15 +343,6 @@ begin
     if (paramstr(i)='/nowelcome') or (paramstr(i)='-nowelcome') or FileExists(paramstr(i)) then
       startimmediatly:=true;
 
-{
-  if DebuggerRunning then
-  begin
-    startimmediatly:=true;
-    nowelcomeagain:=true;
-    splashscreen:=0;
-  end;
-}
-
   if startimmediatly then
   begin
     Application.ShowMainForm:=false;
@@ -423,48 +362,11 @@ procedure Twelcomeform.FormShow(Sender: TObject);
 var
   i:integer;
   nowelcome:boolean;
-  LReg:TRegistry;
 begin
   RefreshOpenHistory;
 
   if firststart then
   begin
-    LReg := TRegistry.Create;
-    LReg.RootKey:=HKEY_CURRENT_USER;
-
-    if LReg.OpenKey('Software', True) then
-    begin
-      if not LReg.KeyExists('PHOENIXstudios') then
-        LReg.CreateKey('PHOENIXstudios');
-      if LReg.OpenKey('PHOENIXstudios',true) then
-      begin
-        if not LReg.KeyExists('PC_DIMMER') then
-          LReg.CreateKey('PC_DIMMER');
-        if LReg.OpenKey('PC_DIMMER',true) then
-        begin
-          if LReg.ValueExists('Splashscreen') then
-          begin
-            case LReg.ReadInteger('Splashscreen') of
-              0: Radiobutton3.Checked:=true;
-              1: Radiobutton1.Checked:=true;
-              2: Radiobutton2.Checked:=true;
-            end;
-          end else
-          begin
-            Radiobutton2.Checked:=true;
-          end;
-
-          if not LReg.ValueExists('Version') then
-          begin
-            Radiobutton2.Checked:=true;
-            RadioButton1MouseUp(nil, mbLeft, [], 0, 0);
-          end;
-        end;
-      end;
-    end;
-    LReg.CloseKey;
-    LReg.Free;
-
     nowelcome:=false;
     for i:=1 to paramcount do
     begin
@@ -496,41 +398,8 @@ begin
 end;
 
 procedure Twelcomeform.StartTimerTimer(Sender: TObject);
-var
-  LReg:TRegistry;
 begin
   StartTimer.enabled:=false;
-
-  LReg := TRegistry.Create;
-  LReg.RootKey:=HKEY_CURRENT_USER;
-
-  if LReg.OpenKey('Software', True) then
-  begin
-    if not LReg.KeyExists('PHOENIXstudios') then
-      LReg.CreateKey('PHOENIXstudios');
-    if LReg.OpenKey('PHOENIXstudios',true) then
-    begin
-      if not LReg.KeyExists('PC_DIMMER') then
-        LReg.CreateKey('PC_DIMMER');
-      if LReg.OpenKey('PC_DIMMER',true) then
-      begin
-        if LReg.ValueExists('Splashscreen') then
-        begin
-          case LReg.ReadInteger('Splashscreen') of
-            0: Radiobutton3.Checked:=true;
-            1: Radiobutton1.Checked:=true;
-            2: Radiobutton2.Checked:=true;
-          end;
-        end else
-        begin
-          Radiobutton2.Checked:=true;
-        end;
-      end;
-    end;
-  end;
-  LReg.CloseKey;
-  LReg.Free;
-
   StartPCDIMMER('');
 end;
 
@@ -673,34 +542,6 @@ begin
   ShellExecute(Handle, 'Open', PChar('http://www.pcdimmer.de/wiki/index.php/Kategorie:Handbuch'), PChar(''), nil, SW_SHOW);
 end;
 
-procedure Twelcomeform.RadioButton1MouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var
-  LReg:TRegistry;
-begin
-  LReg := TRegistry.Create;
-  LReg.RootKey:=HKEY_CURRENT_USER;
-
-  if LReg.OpenKey('Software', True) then
-  begin
-    if not LReg.KeyExists('PHOENIXstudios') then
-      LReg.CreateKey('PHOENIXstudios');
-    if LReg.OpenKey('PHOENIXstudios',true) then
-    begin
-      if not LReg.KeyExists('PC_DIMMER') then
-        LReg.CreateKey('PC_DIMMER');
-      if LReg.OpenKey('PC_DIMMER',true) then
-      begin
-        if Radiobutton1.Checked then LReg.WriteInteger('Splashscreen', 1);
-        if Radiobutton3.Checked then LReg.WriteInteger('Splashscreen', 0);
-        if Radiobutton2.Checked then LReg.WriteInteger('Splashscreen', 2);
-      end;
-    end;
-  end;
-  LReg.CloseKey;
-  LReg.Free;
-end;
-
 procedure Twelcomeform.Videoscreenffnen1Click(Sender: TObject);
 begin
   ShellExecute( 0, 'Open', pchar(workingdirectory+'Videoscreen.exe'),'' ,pChar(workingdirectory),SW_SHOW);
@@ -718,26 +559,35 @@ end;
 
 procedure Twelcomeform.PCDIMMERServerstarten1Click(Sender: TObject);
 begin
+  ShellExecute( 0, 'Open', pchar(workingdirectory+'PC_DIMMER_SVR.exe'),'' ,pChar(workingdirectory),SW_SHOW)
+{
   if IsUserAnAdmin then
     ShellExecute( 0, 'Open', pchar(workingdirectory+'PC_DIMMER_SVR.exe'),'' ,pChar(workingdirectory),SW_SHOW)
   else
     ShellExecute( 0, 'RunAs', pchar(workingdirectory+'PC_DIMMER_SVR.exe'),'' ,pChar(workingdirectory),SW_SHOW);
+}
 end;
 
 procedure Twelcomeform.SoftScannerstarten1Click(Sender: TObject);
 begin
+  ShellExecute( 0, 'Open', pchar(workingdirectory+'SoftScanner.exe'),'' ,pChar(workingdirectory),SW_SHOW)
+{
   if IsUserAnAdmin then
     ShellExecute( 0, 'Open', pchar(workingdirectory+'SoftScanner.exe'),'' ,pChar(workingdirectory),SW_SHOW)
   else
     ShellExecute( 0, 'RunAs', pchar(workingdirectory+'SoftScanner.exe'),'' ,pChar(workingdirectory),SW_SHOW);
+}
 end;
 
 procedure Twelcomeform.Plugintesterstarten1Click(Sender: TObject);
 begin
+  ShellExecute( 0, 'Open', pchar(workingdirectory+'PC_DIMMER_Plugintester.exe'),'' ,pChar(workingdirectory),SW_SHOW)
+{
   if IsUserAnAdmin then
     ShellExecute( 0, 'Open', pchar(workingdirectory+'PC_DIMMER_Plugintester.exe'),'' ,pChar(workingdirectory),SW_SHOW)
   else
     ShellExecute( 0, 'RunAs', pchar(workingdirectory+'PC_DIMMER_Plugintester.exe'),'' ,pChar(workingdirectory),SW_SHOW);
+}
 end;
 
 procedure Twelcomeform.CreateParams(var Params:TCreateParams);

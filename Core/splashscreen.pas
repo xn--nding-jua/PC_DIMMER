@@ -9,7 +9,6 @@ uses
 
 type
   Tsplash = class(TForm)
-    XPManifest1: TXPManifest;
     Label1: TLabel;
     Timer1: TSVATimer;
     procedure FormDestroy(Sender: TObject);

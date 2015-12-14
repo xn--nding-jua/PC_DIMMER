@@ -14,59 +14,6 @@
 {**                                                                             **}
 {*********************************************************************************}
 
-{$A8,B-,C-,D+,E-,F-,G+,H+,I+,J-,K-,L+,M-,N+,O+,P+,Q-,R-,S-,T-,U-,V+,W-,X+,Y-,Z1}
-{$MINSTACKSIZE $00004000}
-{$MAXSTACKSIZE $00100000}
-{$IMAGEBASE $00400000}
-{$APPTYPE GUI}
-{$WARN SYMBOL_DEPRECATED ON}
-{$WARN SYMBOL_LIBRARY ON}
-{$WARN SYMBOL_PLATFORM OFF}
-{$WARN UNIT_LIBRARY ON}
-{$WARN UNIT_PLATFORM ON}
-{$WARN UNIT_DEPRECATED ON}
-{$WARN HRESULT_COMPAT ON}
-{$WARN HIDING_MEMBER ON}
-{$WARN HIDDEN_VIRTUAL ON}
-{$WARN GARBAGE ON}
-{$WARN BOUNDS_ERROR ON}
-{$WARN ZERO_NIL_COMPAT ON}
-{$WARN STRING_CONST_TRUNCED ON}
-{$WARN FOR_LOOP_VAR_VARPAR ON}
-{$WARN TYPED_CONST_VARPAR ON}
-{$WARN ASG_TO_TYPED_CONST ON}
-{$WARN CASE_LABEL_RANGE ON}
-{$WARN FOR_VARIABLE ON}
-{$WARN CONSTRUCTING_ABSTRACT ON}
-{$WARN COMPARISON_FALSE ON}
-{$WARN COMPARISON_TRUE ON}
-{$WARN COMPARING_SIGNED_UNSIGNED OFF}
-{$WARN COMBINING_SIGNED_UNSIGNED OFF}
-{$WARN UNSUPPORTED_CONSTRUCT ON}
-{$WARN FILE_OPEN ON}
-{$WARN FILE_OPEN_UNITSRC ON}
-{$WARN BAD_GLOBAL_SYMBOL ON}
-{$WARN DUPLICATE_CTOR_DTOR ON}
-{$WARN INVALID_DIRECTIVE ON}
-{$WARN PACKAGE_NO_LINK ON}
-{$WARN PACKAGED_THREADVAR ON}
-{$WARN IMPLICIT_IMPORT ON}
-{$WARN HPPEMIT_IGNORED ON}
-{$WARN NO_RETVAL ON}
-{$WARN USE_BEFORE_DEF ON}
-{$WARN FOR_LOOP_VAR_UNDEF ON}
-{$WARN UNIT_NAME_MISMATCH ON}
-{$WARN NO_CFG_FILE_FOUND ON}
-{$WARN MESSAGE_DIRECTIVE ON}
-{$WARN IMPLICIT_VARIANTS ON}
-{$WARN UNICODE_TO_LOCALE ON}
-{$WARN LOCALE_TO_UNICODE ON}
-{$WARN IMAGEBASE_MULTIPLE ON}
-{$WARN SUSPICIOUS_TYPECAST ON}
-{$WARN PRIVATE_PROPACCESSOR ON}
-{$WARN UNSAFE_TYPE OFF}
-{$WARN UNSAFE_CODE OFF}
-{$WARN UNSAFE_CAST OFF}
 
 unit PCDIMMER;
 
@@ -1240,10 +1187,6 @@ type
     procedure DeleteFiles(FilenameMask: String);
     function DeleteDirectory(ADirName: String): Boolean;
     function levelstr(pos:integer):string;
-    procedure RegisterFileType(Extension, Description, OpenCommand, Icon : String);
-    procedure UnRegisterFileType(Extension : String);
-    procedure RegisterPC_DIMMERFiles;
-    procedure UnRegisterPC_DIMMERFiles;
     function MillisecondsToTime(ms:Integer):String;
     function MillisecondsToTimeShort(ms:Integer):String;
     function GetFileSize2(const FileName: String): Int64;
@@ -1736,36 +1679,22 @@ begin
 
   for i:=1 to paramcount do
   begin
-    if (paramstr(i)='/nosplash') or (paramstr(i)='-nosplash') then
+    if (paramstr(i)='/nosplash') then
     begin
       splashscreenvalue:=0;
-    end;
-    if (paramstr(i)='/splash2') or (paramstr(i)='-splash2') then
-    begin
-      splashscreenvalue:=2;
     end;
   end;
 
   for i:=1 to paramcount do
   begin
-    if StrPos(PChar(paramstr(i)), PChar('sp0'))<>nil then
-    begin
-      splashscreenvalue:=0;
-      break;
-    end;
-    if StrPos(PChar(paramstr(i)), PChar('sp1'))<>nil then
+    if paramstr(i)='/sp1' then
     begin
       splashscreenvalue:=1;
       break;
     end;
-    if StrPos(PChar(paramstr(i)), PChar('sp2'))<>nil then
+    if paramstr(i)='/sp2' then
     begin
       splashscreenvalue:=2;
-      break;
-    end;
-    if StrPos(PChar(paramstr(i)), PChar('sp3'))<>nil then
-    begin
-      splashscreenvalue:=3;
       break;
     end;
   end;
@@ -1779,13 +1708,7 @@ begin
   case splashscreenvalue of
     0:
     begin
-      splashscreen2:=Tsplashscreen2.Create(splashscreen2);
-      splashscreen2.Show;
-      splashscreen2.Refresh;
-      splashscreen2.label3.caption:=GetFileVersionBuild(paramstr(0));
-      splashscreen2.label3.refresh;
-      splashscreen2.label2.caption:=_('Initialisiere Anwendung...');
-      splashscreen2.label2.refresh;
+      // kein Splashscreen
     end;
     1:
     begin
@@ -1960,35 +1883,30 @@ begin
 
   for i:=1 to paramcount do
   begin
-    if (paramstr(i)='/debug') or (paramstr(i)='-debug') then
+    if (paramstr(i)='/debug') then
     begin
       SplashSwitchinfo(' /debug');
-      DebugAdd('Startparameter: -debug activated. Debuglistbox will be shown.', false);
+      DebugAdd('Startparameter: /debug activated. Debuglistbox will be shown.', false);
       debuglistbox.Visible:=true;
       debuglistbox.BringToFront;
     end;
-    if (paramstr(i)='/noaccu') or (paramstr(i)='-noaccu') then
+    if (paramstr(i)='/noaccu') then
     begin
       SplashSwitchinfo(' /noaccu');
-      DebugAdd('Startparameter: -noaccu activated. No continuos Accu-Refresh.', false);
+      DebugAdd('Startparameter: /noaccu activated. No continuos Accu-Refresh.', false);
       dontstartaccu:=true;
       _killaccu:=true;
     end;
-    if (paramstr(i)='/noproject') or (paramstr(i)='-noproject') then
+    if (paramstr(i)='/noproject') then
     begin
       SplashSwitchinfo(' /noproject');
-      DebugAdd('Startparameter: -nolastproject activated. No projectfile will be loaded on startup.', false);
+      DebugAdd('Startparameter: /nolastproject activated. No projectfile will be loaded on startup.', false);
       dontloadproject:=true;
     end;
-    if (paramstr(i)='/nowelcome') or (paramstr(i)='-nowelcome') then
-    begin
-      SplashSwitchinfo(' /nowelcome');
-      DebugAdd('Startparameter: -nowelcome activated. No Welcomescreen will be shown.', false);
-    end;
-    if (paramstr(i)='/minimized') or (paramstr(i)='-minimized') then
+    if (paramstr(i)='/minimized') then
     begin
       SplashSwitchinfo(' /minimized');
-      DebugAdd('Startparameter: -minimized activated. PC_DIMMER will go to Systray.', false);
+      DebugAdd('Startparameter: /minimized activated. PC_DIMMER will go to Systray.', false);
       gotosystray:=true;
     end;
   end;
@@ -2063,13 +1981,10 @@ begin
   LReg := TPCDRegistry.Create;
   if LReg.OpenRegKey('') then
   begin
-    if LReg.ValueExists('Version') and (GetFileVersionBuild(paramstr(0))<>LReg.ReadString('Version')) then
-      RegisterPC_DIMMERFiles;
     LReg.WriteString('Version',GetFileVersionBuild(paramstr(0)));
 
     if not LReg.ValueExists('Firststart') then
     begin
-      RegisterPC_DIMMERFiles;
       FirstStart := true;
       LReg.WriteBool('Firststart', false);
     end;
@@ -2546,7 +2461,8 @@ begin
   if startvalue<0 then startvalue:=0;
   if endvalue>maxres then endvalue:=maxres;
   if endvalue<0 then endvalue:=0;
-  if fadetime<DimmerkernelResolution then fadetime:=0;
+  i:=DimmerkernelResolution;
+  if fadetime<i then fadetime:=0;
   if delay<0 then delay:=0;
 
   if (maxres-endvalue)<channel_minvalue[address] then
@@ -12361,8 +12277,6 @@ begin
   Dateiname := '';
   anzahl := DragQueryFile(Msg.WParam, $FFFFFFFF, nil, 0);
 
-  showmessage(inttostr(anzahl));
-
   for i := 0 to (anzahl - 1) do
   begin
     size := DragQueryFile(Msg.WParam, i , nil, 0);
@@ -12406,13 +12320,14 @@ procedure TMainform.Startoptionen1Click(Sender: TObject);
 begin
   ShowMessage(
               '/nosplash'+#9+_('Zeigt beim Starten keinen Splashscreen an [ALT-Taste]')+#10+
+              '/sp1 oder /sp2'+#9+#9+_('Wahl zwischen zwei verschiedenen Ladebildschirmen')+#10+
+              '/debug'+#9+#9+_('Zeigt beim Starten die Logdatei an.')+#10+
               '/noaccu'+#9+#9+_('Verhindert den Start des Akku-Dienstes [Rechte SHIFT-Taste]')+#10+
               '/noproject'+#9+_('Verhindert das automatische Laden der letzten Projektdatei [Linke SHIFT-Taste]')+#10+
-              '/nowelcome'+#9+_('Startet PC_DIMMER ohne Willkommensbildschirm')+#10+
-              '/debug'+#9+#9+_('Zeigt beim Starten die Logdatei an.')+#10+
-              '/starttimer'+#9+_('Startet den Timer mit als "DateiX" übergebener Timerdatei')+#10+
               '/minimized'+#9+_('Startet PC_DIMMER minimiert')+#10+
               '/restorelastvalues'+#9+_('Startet PC_DIMMER mit letzten Werten')+#10+
+              '/starttimer'+#9+_('Startet den Timer mit als "DateiX" übergebener Timerdatei')+#10+
+              '/loadfastsave'+#9+_('Lädt die per Fastsave gespeicherte Projektdatei (bei sehr großen Projekten entfällt hierdurch das Entpacken)')+#10+
               '');
 end;
 
@@ -13762,7 +13677,7 @@ begin
   begin
     for i:=1 to paramcount do
     begin
-      if (paramstr(i)='/restorelastvalues') or (paramstr(i)='-restorelastvalues') then
+      if (paramstr(i)='/restorelastvalues') then
       begin
         RestoreLastValues:=true;
         RestoreValueBackup;
@@ -14163,10 +14078,17 @@ begin
   // Versuche Dateien zu laden
   for i:=1 to paramcount do
   begin
-    SplashCaptioninfo(_('Dateien öffnen...')+ExtractFileName(paramstr(i)));
-    SplashAddText(_('Lade Datei...')+ExtractFileName(paramstr(i)));
-    DebugAdd('FILE: Loading PC_DIMMER-File: '+paramstr(i));
-    OpenPCDIMMERFile(paramstr(i));
+    if length(paramstr(i))>=8 then
+    begin
+      SplashCaptioninfo(_('Dateien öffnen...')+ExtractFileName(paramstr(i)));
+      SplashAddText(_('Lade Datei...')+ExtractFileName(paramstr(i)));
+      DebugAdd('FILE: Loading PC_DIMMER-File: '+paramstr(i));
+
+      if (paramstr(i)<>'/nosplash') or (paramstr(i)<>'/sp1') or (paramstr(i)<>'/sp2') or (paramstr(i)<>'/debug') or
+        (paramstr(i)<>'/noaccu') or (paramstr(i)<>'/noproject') or (paramstr(i)<>'/minimized') or (paramstr(i)<>'/restorelastvalues') or
+        (paramstr(i)<>'/starttimer') or (paramstr(i)<>'/loadfastsave') then
+        OpenPCDIMMERFile(paramstr(i));
+    end;
   end;
 
   // Werte Parameterschalter aus
@@ -14196,7 +14118,7 @@ begin
   begin
     for i:=1 to paramcount do
     begin
-      if (paramstr(i)='/restorelastvalues') or (paramstr(i)='-restorelastvalues') then
+      if (paramstr(i)='/restorelastvalues') then
       begin
         RestoreLastValues:=true;
         RestoreValueBackup;
@@ -14305,9 +14227,7 @@ begin
   case splashscreenvalue of
     0:
     begin
-      splashscreen2.close;
-      splashscreen2.Release;
-      splashscreen2:=nil;
+      // kein Splashscreen
     end;
     1:
     begin
@@ -20870,147 +20790,6 @@ begin
   end;
 end;
 
-procedure Tmainform.RegisterFileType(Extension, Description, OpenCommand, Icon : String);
-var
-  LReg:TRegistry;
-begin
-  LReg := TRegistry.Create;
-  LReg.RootKey:=HKEY_CLASSES_ROOT;
-
-  if not LReg.KeyExists('.'+Extension) then
-    LReg.CreateKey('.'+Extension);
-  if LReg.OpenKey('.'+Extension, True) then
-  begin
-    LReg.WriteString('',Extension+'.File');
-
-    if not LReg.KeyExists('.'+Extension+'.File') then
-      LReg.CreateKey('.'+Extension+'.File');
-    if LReg.OpenKey('.'+Extension+'.File', True) then
-    begin
-      if not LReg.KeyExists('ShellNew') then
-        LReg.CreateKey('ShellNew');
-    end;
-  end;
-  LReg.CloseKey;
-
-  if not LReg.KeyExists(Extension+'.File') then
-    LReg.CreateKey(Extension+'.File');
-  if LReg.OpenKey(Extension+'.File', True) then
-  begin
-    LReg.WriteString('',Description);
-
-    if not LReg.KeyExists('DefaultIcon') then
-      LReg.CreateKey('DefaultIcon');
-    if LReg.OpenKey('DefaultIcon', True) then
-    begin
-      LReg.WriteString('',Icon);
-    end;
-  end;
-  LReg.CloseKey;
-
-  if LReg.OpenKey(Extension+'.File', True) then
-  begin
-    if not LReg.KeyExists('shell') then
-      LReg.CreateKey('shell');
-    if LReg.OpenKey('shell', True) then
-    begin
-      if not LReg.KeyExists('open') then
-        LReg.CreateKey('open');
-      if LReg.OpenKey('open', True) then
-      begin
-        LReg.WriteString('','Öffnen');
-
-        if not LReg.KeyExists('command') then
-          LReg.CreateKey('command');
-        if LReg.OpenKey('command', True) then
-        begin
-          LReg.WriteString('',OpenCommand);
-        end;
-      end;
-    end;
-  end;
-  LReg.CloseKey;
-  LReg.Free;
-end;
-
-procedure Tmainform.UnRegisterFileType(Extension : String);
-var
-  LReg:TRegistry;
-begin
-  LReg := TRegistry.Create;
-  LReg.RootKey:=HKEY_CLASSES_ROOT;
-
-  LReg.DeleteKey('.'+Extension);
-  LReg.DeleteKey(Extension+'.File');
-
-  LReg.CloseKey;
-  LReg.Free;
-end;
-
-procedure Tmainform.RegisterPC_DIMMERFiles;
-begin
-  RegisterFileType('pcdcpnl', _('PC_DIMMER Kontrollpanel'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdeaud', _('PC_DIMMER Effektaudio'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdelst', _('PC_DIMMER Effektliste'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdelyr', _('PC_DIMMER Effektlayer'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcderpt', _('PC_DIMMER Audioeffekt-Repeat'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdfigr', _('PC_DIMMER Figuren'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdfscn', _('PC_DIMMER Fastscene'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdlstg', _('PC_DIMMER Leistungsansicht'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdmidi', _('PC_DIMMER MIDI-Einstellungen'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdplst', _('PC_DIMMER Audioplaylist'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdscen', _('PC_DIMMER Szenenbibliothek'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdscnl', _('PC_DIMMER Szenenliste'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdscrp', _('PC_DIMMER Skript'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdstmr', _('PC_DIMMER Timerliste'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdsubm', _('PC_DIMMER Submaster'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdtmln', _('PC_DIMMER Effekt-Timeline'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdbkup', _('PC_DIMMER Autobackupdatei'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdupdt', _('PC_DIMMER Updatedatei'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdshct', _('PC_DIMMER Tastaturbelegung'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdcuel', _('PC_DIMMER Cue-Liste'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdtmcl', _('PC_DIMMER Timecode-Liste'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcddevc', _('PC_DIMMER Gerätebeschreibung'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdmtrx', _('PC_DIMMER Matrixeffekt'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdchse', _('PC_DIMMER Lauflichteffekt'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdpmmp', _('PC_DIMMER PartyMuckenModulPreset'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-  RegisterFileType('pcdjstk', _('PC_DIMMER Joysticksteuerung'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-
-  RegisterFileType('pcdproj', _('PC_DIMMER-Projekt'), '"'+workingdirectory+'PC_DIMMER.exe" "%1"', '"'+workingdirectory+'PC_DIMMER.exe",0');
-end;
-
-procedure Tmainform.UnRegisterPC_DIMMERFiles;
-begin
-  UnRegisterFileType('pcdcpnl');
-  UnRegisterFileType('pcdeaud');
-  UnRegisterFileType('pcdelst');
-  UnRegisterFileType('pcdelyr');
-  UnRegisterFileType('pcderpt');
-  UnRegisterFileType('pcdfigr');
-  UnRegisterFileType('pcdfscn');
-  UnRegisterFileType('pcdlstg');
-  UnRegisterFileType('pcdmidi');
-  UnRegisterFileType('pcdplst');
-  UnRegisterFileType('pcdscen');
-  UnRegisterFileType('pcdscnl');
-  UnRegisterFileType('pcdscrp');
-  UnRegisterFileType('pcdstmr');
-  UnRegisterFileType('pcdsubm');
-  UnRegisterFileType('pcdtmln');
-  UnRegisterFileType('pcdbkup');
-  UnRegisterFileType('pcdupdt');
-  UnRegisterFileType('pcdshct');
-  UnRegisterFileType('pcdcuel');
-  UnRegisterFileType('pcdtmcl');
-  UnRegisterFileType('pcddevc');
-  UnRegisterFileType('pcdmtrx');
-  UnRegisterFileType('pcdchse');
-  UnRegisterFileType('pcdpmmp');
-  UnRegisterFileType('pcdjstk');
-
-  UnRegisterFileType('pcdproj');
-end;
-
 procedure TMainform.TBItem13Click(Sender: TObject);
 begin
   audioeffektplayerform.show;
@@ -21763,7 +21542,7 @@ var
 begin
   FoundFileName:='';
 
-  Path := IncludeTrailingBackslash(PathName);
+  Path := IncludeTrailingPathDelimiter(PathName);
   if FindFirst(Path+FileName, faAnyFile-faDirectory, Rec)=0 then
   try
     repeat
@@ -26839,9 +26618,7 @@ begin
   case splashscreenvalue of
     0:
     begin
-      splashscreen2.label2.Caption:=text;
-      splashscreen2.BringToFront;
-      splashscreen2.label2.refresh;
+      // kein Splashscreen
     end;
     1:
     begin
@@ -26876,8 +26653,7 @@ begin
   case splashscreenvalue of
     0:
     begin
-      splashscreen2.label2.Caption:=text;
-      splashscreen2.label2.Refresh;
+      // kein Splashscreen
     end;
     1:
     begin
@@ -26906,10 +26682,7 @@ begin
   case splashscreenvalue of
     0:
     begin
-      splashscreen2.BringToFront;
-      splashscreen2.progressbar1.Maximum:=max;
-      splashscreen2.progressbar1.position:=position;
-      splashscreen2.progressbar1.Refresh;
+      // kein Splashscreen
     end;
     1:
     begin
