@@ -2,7 +2,7 @@ object nodecontrolform: Tnodecontrolform
   Left = 1048
   Top = 228
   Width = 777
-  Height = 585
+  Height = 529
   Caption = 'Knoten-Steuerung'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -157,7 +157,7 @@ object nodecontrolform: Tnodecontrolform
     Left = 0
     Top = 0
     Width = 489
-    Height = 546
+    Height = 490
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -165,7 +165,7 @@ object nodecontrolform: Tnodecontrolform
       Left = 0
       Top = 0
       Width = 489
-      Height = 320
+      Height = 264
       Align = alClient
       OnMouseDown = PaintBox1MouseDown
       OnMouseMove = PaintBox1MouseMove
@@ -330,7 +330,7 @@ object nodecontrolform: Tnodecontrolform
     end
     object Panel3: TPanel
       Left = 0
-      Top = 320
+      Top = 264
       Width = 489
       Height = 226
       Align = alBottom
@@ -363,7 +363,7 @@ object nodecontrolform: Tnodecontrolform
           Layout = lyHorizontal
           SelectionIndicator = siRect
           TabOrder = 0
-          OnMouseMove = ambersliderMouseMove
+          OnMouseMove = colorpickerMouseMove
           Value = 0
           SelectedColor = clBlack
         end
@@ -376,7 +376,7 @@ object nodecontrolform: Tnodecontrolform
           Layout = lyHorizontal
           SelectionIndicator = siRect
           TabOrder = 1
-          OnMouseMove = whitesliderMouseMove
+          OnMouseMove = colorpickerMouseMove
           Value = 0
           SelectedColor = clBlack
         end
@@ -435,7 +435,7 @@ object nodecontrolform: Tnodecontrolform
     Left = 489
     Top = 0
     Width = 272
-    Height = 546
+    Height = 490
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 1
@@ -443,19 +443,19 @@ object nodecontrolform: Tnodecontrolform
       Left = 8
       Top = 8
       Width = 257
-      Height = 433
+      Height = 473
       Caption = ' Steuerungsknoten '
       TabOrder = 0
       object Label5: TLabel
         Left = 8
-        Top = 256
+        Top = 296
         Width = 76
         Height = 13
         Caption = 'Knotenauswahl:'
       end
       object nodelist: TListBox
         Left = 8
-        Top = 272
+        Top = 312
         Width = 241
         Height = 121
         Enabled = False
@@ -467,7 +467,7 @@ object nodecontrolform: Tnodecontrolform
       end
       object addbtn: TPngBitBtn
         Left = 8
-        Top = 399
+        Top = 439
         Width = 38
         Height = 25
         Hint = 'F'#252'gt einen neuen Steuerungsknoten hinzu'
@@ -592,7 +592,7 @@ object nodecontrolform: Tnodecontrolform
       end
       object removebtn: TPngBitBtn
         Left = 51
-        Top = 399
+        Top = 439
         Width = 38
         Height = 25
         Hint = 'L'#246'scht den selektierten Steuerungsknoten'
@@ -719,7 +719,7 @@ object nodecontrolform: Tnodecontrolform
       end
       object renamebtn: TPngBitBtn
         Left = 95
-        Top = 399
+        Top = 439
         Width = 38
         Height = 25
         Hint = 'Nennt den selektierten Steuerungsknoten um'
@@ -1242,8 +1242,8 @@ object nodecontrolform: Tnodecontrolform
         Left = 8
         Top = 88
         Width = 241
-        Height = 161
-        Caption = ' Detail-Einstellungen f'#252'r alle Knoten '
+        Height = 201
+        Caption = ' Einstellungen f'#252'r alle Knoten '
         TabOrder = 8
         object Label1: TLabel
           Left = 8
@@ -1273,6 +1273,13 @@ object nodecontrolform: Tnodecontrolform
           Height = 13
           Caption = 'Einblendzeit:'
         end
+        object Label6: TLabel
+          Left = 121
+          Top = 117
+          Width = 88
+          Height = 13
+          Caption = 'B'#252'hnenskalierung:'
+        end
         object narrowslider: TScrollBar
           Left = 8
           Top = 40
@@ -1282,7 +1289,7 @@ object nodecontrolform: Tnodecontrolform
           PageSize = 0
           Position = 128000
           TabOrder = 0
-          OnChange = narrowsliderChange
+          OnChange = dimmersliderChange
         end
         object contrastslider: TScrollBar
           Left = 8
@@ -1293,7 +1300,7 @@ object nodecontrolform: Tnodecontrolform
           PageSize = 0
           Position = 20
           TabOrder = 1
-          OnChange = contrastsliderChange
+          OnChange = dimmersliderChange
         end
         object fadetimemsedit: TJvSpinEdit
           Left = 8
@@ -1303,83 +1310,68 @@ object nodecontrolform: Tnodecontrolform
           CheckMinValue = True
           Value = 75.000000000000000000
           TabOrder = 2
-          OnChange = fadetimemseditChange
+          OnChange = dimmersliderChange
         end
-      end
-    end
-    object GroupBox5: TGroupBox
-      Left = 8
-      Top = 448
-      Width = 257
-      Height = 89
-      Caption = ' Einstellungen f'#252'r alle Knoten '
-      TabOrder = 1
-      object Label6: TLabel
-        Left = 8
-        Top = 63
-        Width = 88
-        Height = 13
-        Caption = 'B'#252'hnenskalierung:'
-      end
-      object setrgbcheckbox: TCheckBox
-        Left = 8
-        Top = 24
-        Width = 105
-        Height = 17
-        Caption = 'Ver'#228'ndere RGB'
-        Checked = True
-        State = cbChecked
-        TabOrder = 0
-        OnClick = setrgbcheckboxClick
-      end
-      object setambercheckbox: TCheckBox
-        Left = 8
-        Top = 40
-        Width = 105
-        Height = 17
-        Caption = 'Ver'#228'ndere Amber'
-        TabOrder = 1
-        OnClick = setambercheckboxClick
-      end
-      object setdimmercheckbox: TCheckBox
-        Left = 128
-        Top = 40
-        Width = 121
-        Height = 17
-        Caption = 'Ver'#228'ndere Dimmer'
-        TabOrder = 2
-        OnClick = setdimmercheckboxClick
-      end
-      object setwhitecheckbox: TCheckBox
-        Left = 128
-        Top = 24
-        Width = 121
-        Height = 17
-        Caption = 'Ver'#228'ndere Wei'#223
-        TabOrder = 3
-        OnClick = setwhitecheckboxClick
-      end
-      object scalebox: TComboBox
-        Left = 128
-        Top = 60
-        Width = 65
-        Height = 21
-        Style = csDropDownList
-        ItemHeight = 13
-        ItemIndex = 5
-        TabOrder = 4
-        Text = '0,5x'
-        OnChange = scaleboxChange
-        Items.Strings = (
-          '1x'
-          '0,9x'
-          '0,8x'
-          '0,7x'
-          '0,6x'
-          '0,5x'
-          '0,4x'
-          '0,3x'
-          '0,2x')
+        object scalebox: TComboBox
+          Left = 120
+          Top = 132
+          Width = 65
+          Height = 21
+          Style = csDropDownList
+          ItemHeight = 13
+          ItemIndex = 5
+          TabOrder = 3
+          Text = '0,5x'
+          OnChange = scaleboxChange
+          Items.Strings = (
+            '1x'
+            '0,9x'
+            '0,8x'
+            '0,7x'
+            '0,6x'
+            '0,5x'
+            '0,4x'
+            '0,3x'
+            '0,2x')
+        end
+        object setrgbcheckbox: TCheckBox
+          Left = 8
+          Top = 160
+          Width = 105
+          Height = 17
+          Caption = 'Ver'#228'ndere RGB'
+          Checked = True
+          State = cbChecked
+          TabOrder = 4
+          OnClick = setrgbcheckboxClick
+        end
+        object setambercheckbox: TCheckBox
+          Left = 8
+          Top = 176
+          Width = 105
+          Height = 17
+          Caption = 'Ver'#228'ndere Amber'
+          TabOrder = 5
+          OnClick = setrgbcheckboxClick
+        end
+        object setdimmercheckbox: TCheckBox
+          Left = 120
+          Top = 176
+          Width = 113
+          Height = 17
+          Caption = 'Ver'#228'ndere Dimmer'
+          TabOrder = 6
+          OnClick = setrgbcheckboxClick
+        end
+        object setwhitecheckbox: TCheckBox
+          Left = 120
+          Top = 160
+          Width = 113
+          Height = 17
+          Caption = 'Ver'#228'ndere Wei'#223
+          TabOrder = 7
+          OnClick = setrgbcheckboxClick
+        end
       end
     end
   end

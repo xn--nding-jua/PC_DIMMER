@@ -892,6 +892,7 @@
   end;
 
   TNodeControlNode = record
+    ID:TGUID;
     Name:string[255];
     X,Y,Z:Word;
     R,G,B,A,W,Dimmer:byte;

@@ -54,7 +54,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=472;
+  actualprojectversion=473;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -5440,6 +5440,7 @@ begin
    	  Filestream.WriteBuffer(count2,sizeof(count2));
       for k:=0 to count2-1 do
      	begin
+        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].ID,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].ID));
         Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Name,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Name));
         Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].X,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].X));
         Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Y,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Y));
@@ -9683,6 +9684,10 @@ begin
         setlength(mainform.NodeControlSets[i].NodeControlNodes, count2);
         for k:=0 to count2-1 do
        	begin
+          if projektprogrammversionint>=473 then
+            Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].ID,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].ID))
+          else
+            CreateGUID(mainform.NodeControlSets[i].NodeControlNodes[k].ID);
           Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Name,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Name));
           Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].X,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].X));
           Filestream.ReadBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Y,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Y));
@@ -23938,7 +23943,7 @@ begin
       end;
 
       AContext.Connection.Socket.WriteLn(temp);
-    end else if (pos('get_nodes',cmd)>0) then // get_nodes
+    end else if (pos('get_nodesets',cmd)>0) then // get_nodesets
     begin
       temp:=cmd;
       temp:=copy(temp, pos(' ',temp)+1, length(temp));
@@ -23948,7 +23953,7 @@ begin
         temp:=copy(temp, 0, pos(' ', temp)-1);
       value[0]:=temp;
 
-      temp:='nodes ';                       
+      temp:='nodesets ';
       temp:=temp+inttostr(length(nodecontrolsets));
       for i:=0 to length(nodecontrolsets)-1 do
       begin
@@ -23956,7 +23961,7 @@ begin
       end;
 
       AContext.Connection.Socket.WriteLn(temp);
-    end else if (pos('get_subnodes',cmd)>0) then // get_subnodes GUID
+    end else if (pos('get_nodes',cmd)>0) then // get_nodes GUID
     begin
       temp:=cmd;
       temp:=copy(temp, pos(' ',temp)+1, length(temp));
@@ -23970,11 +23975,11 @@ begin
       begin
         if IsEqualGUID(stringtoguid(value[0]), nodecontrolsets[i].ID) then
         begin
-          temp:='subnodes ';
+          temp:='nodes ';
           temp:=temp+inttostr(length(nodecontrolsets[nodecontrolform.nodecontrolsetscombobox.ItemIndex].NodeControlNodes));
           for j:=0 to length(nodecontrolsets[nodecontrolform.nodecontrolsetscombobox.ItemIndex].NodeControlNodes)-1 do
           begin
-            temp:=temp+' '+inttostr(j+1)+':'+FilterTextForNetwork(nodecontrolsets[nodecontrolform.nodecontrolsetscombobox.ItemIndex].NodeControlNodes[i].Name);
+            temp:=temp+' '+inttostr(j+1)+':'+FilterTextForNetwork(nodecontrolsets[nodecontrolform.nodecontrolsetscombobox.ItemIndex].NodeControlNodes[i].Name)+','+GUIDtoString(nodecontrolsets[nodecontrolform.nodecontrolsetscombobox.ItemIndex].NodeControlNodes[i].ID);
           end;
 
           break;
@@ -24017,6 +24022,8 @@ procedure TMainform.ExecuteCommandServerCmd(cmd: string);
 var
   temp:string;
   value:array[0..9] of string;
+  i:integer;
+  Pos1, Pos2:integer;
 begin
   if (pos('set_channel',cmd)>0) or (pos('set_ch',cmd)>0) then  // set_ch GUID DIMMER -1 255 5000 0
   begin
@@ -24390,7 +24397,7 @@ begin
     TerminalSystem.GUID2:=StringToGUID(value[6]);
     StartBefehl(StringToGUID('{46368186-DF3D-467A-9792-DAC6B03A21E3}'), strtoint(value[7]));
   end;
-  if (pos('set_node',cmd)>0) then  // set_node nodeset node R G B A W D
+  if (pos('set_node',cmd)>0) then // set_node nodesetID nodeID X Y R G B A W D
   begin
     temp:=cmd;
     temp:=copy(temp, pos(' ',temp)+1, length(temp));
@@ -24416,66 +24423,97 @@ begin
     value[6]:=copy(temp, 0, pos(' ',temp)-1);
     temp:=copy(temp, pos(' ',temp)+1, length(temp));
 
+    value[7]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[8]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
     // Leerzeichen entfernen, sofern vorhanden
     if pos(' ', temp)>0 then
       temp:=copy(temp, 0, pos(' ', temp)-1);
-    value[7]:=temp;
+    value[9]:=temp;
 
-    if (strtoint(value[0])>=0) and (strtoint(value[0])<nodecontrolform.nodecontrolsetscombobox.Items.Count) then
+    Pos1:=-1;
+    Pos2:=-1;
+    for i:=0 to length(nodecontrolsets)-1 do
     begin
-      nodecontrolform.nodecontrolsetscombobox.ItemIndex:=strtoint(value[0]);
-
-      if (strtoint(value[1])>=0) and (strtoint(value[1])<nodecontrolform.nodelist.Items.Count) then
+      if IsEqualGUID(nodecontrolsets[i].ID, stringtoguid(value[0])) then
       begin
-        nodecontrolform.nodelist.ItemIndex:=strtoint(value[1]);
+        Pos1:=i;
+        break;
+      end;
+    end;
+    for i:=0 to length(nodecontrolsets[Pos1].NodeControlNodes)-1 do
+    begin
+      if IsEqualGUID(nodecontrolsets[Pos1].NodeControlNodes[i].ID, stringtoguid(value[1])) then
+      begin
+        Pos2:=i;
+        break;
+      end;
+    end;
 
-        if (value[2]='-1') or (value[3]='-1') or (value[4]='-1') then
+    if (Pos1>=0) and (Pos1<nodecontrolform.nodecontrolsetscombobox.Items.Count) then
+    begin
+      if nodecontrolform.nodecontrolsetscombobox.ItemIndex<>Pos1 then
+      begin
+        nodecontrolform.nodecontrolsetscombobox.ItemIndex:=Pos1;
+        nodecontrolform.nodecontrolsetscomboboxChange(nodecontrolform.nodecontrolsetscombobox);
+      end;
+
+      if (Pos2>=0) and (Pos2<nodecontrolform.nodelist.Items.Count) then
+      begin
+        if nodecontrolform.nodelist.ItemIndex<>Pos2 then
+        begin
+          nodecontrolform.nodelist.ItemIndex:=Pos2;
+          nodecontrolform.nodelistClick(nodecontrolform.nodelist);
+        end;
+
+        NodeControlSets[Pos1].NodeControlNodes[Pos2].X:=round(nodecontrolform.PaintBox1.Width*strtoint(value[2])/10000);
+        NodeControlSets[Pos1].NodeControlNodes[Pos2].Y:=round(nodecontrolform.PaintBox1.Height*strtoint(value[3])/10000);
+
+        if (value[4]='-1') or (value[5]='-1') or (value[6]='-1') then
         begin
           nodecontrolform.rgbcheckbox.Checked:=false;
-          nodecontrolform.rgbcheckboxMouseUp(nodecontrolform.rgbcheckbox, mbLeft, [ssLeft], 0, 0);
         end else
         begin
           nodecontrolform.rgbcheckbox.Checked:=true;
-          nodecontrolform.rgbcheckboxMouseUp(nodecontrolform.rgbcheckbox, mbLeft, [ssLeft], 0, 0);
-          nodecontrolform.colorpicker.Color:=pcdUtils.RGB2TColor(strtoint(value[2]), strtoint(value[3]), strtoint(value[4]));
-        end;
-
-        if (value[5]='-1') then
-        begin
-          nodecontrolform.ambercheckbox.Checked:=false;
-          nodecontrolform.ambercheckboxMouseUp(nodecontrolform.ambercheckbox, mbLeft, [ssLeft], 0, 0);
-        end else
-        begin
-          nodecontrolform.ambercheckbox.Checked:=false;
-          nodecontrolform.ambercheckboxMouseUp(nodecontrolform.ambercheckbox, mbLeft, [ssLeft], 0, 0);
-          nodecontrolform.amberslider.Value:=strtoint(value[5]);
-        end;
-
-        if (value[6]='-1') then
-        begin
-          nodecontrolform.whitecheckbox.Checked:=false;
-          nodecontrolform.whitecheckboxMouseUp(nodecontrolform.whitecheckbox, mbLeft, [ssLeft], 0, 0);
-        end else
-        begin
-          nodecontrolform.whitecheckbox.Checked:=false;
-          nodecontrolform.whitecheckboxMouseUp(nodecontrolform.whitecheckbox, mbLeft, [ssLeft], 0, 0);
-          nodecontrolform.whiteslider.Value:=strtoint(value[6]);
+          nodecontrolform.colorpicker.SelectedColor:=pcdUtils.RGB2TColor(strtoint(value[4]), strtoint(value[5]), strtoint(value[6]));
         end;
 
         if (value[7]='-1') then
         begin
+          nodecontrolform.ambercheckbox.Checked:=false;
+        end else
+        begin
+          nodecontrolform.ambercheckbox.Checked:=false;
+          nodecontrolform.amberslider.Value:=strtoint(value[7]);
+        end;
+
+        if (value[8]='-1') then
+        begin
+          nodecontrolform.whitecheckbox.Checked:=false;
+        end else
+        begin
+          nodecontrolform.whitecheckbox.Checked:=false;
+          nodecontrolform.whiteslider.Value:=strtoint(value[8]);
+        end;
+
+        if (value[9]='-1') then
+        begin
           nodecontrolform.dimmercheckbox.Checked:=false;
-          nodecontrolform.dimmercheckboxMouseUp(nodecontrolform.dimmercheckbox, mbLeft, [ssLeft], 0, 0);
         end else
         begin
           nodecontrolform.dimmercheckbox.Checked:=false;
-          nodecontrolform.dimmercheckboxMouseUp(nodecontrolform.dimmercheckbox, mbLeft, [ssLeft], 0, 0);
-          nodecontrolform.dimmerslider.Position:=strtoint(value[7]);
+          nodecontrolform.dimmerslider.Position:=strtoint(value[9]);
         end;
+
+        nodecontrolform.GUItoNodesets;
+        nodecontrolform.GUItoNode;
       end;
     end;
   end;
-  if (pos('set_node_config',cmd)>0) then  // set_node_config nodeset Ausdehnung Kontrast Fadetime UseRGB UseA UseW UseD
+  if (pos('set_nodeset',cmd)>0) then  // set_nodeset nodesetID Ausdehnung Kontrast Fadetime UseRGB UseA UseW UseD
   begin
     temp:=cmd;
     temp:=copy(temp, pos(' ',temp)+1, length(temp));
@@ -24506,25 +24544,33 @@ begin
       temp:=copy(temp, 0, pos(' ', temp)-1);
     value[7]:=temp;
 
-    if (strtoint(value[0])>=0) and (strtoint(value[0])<nodecontrolform.nodecontrolsetscombobox.Items.Count) then
+    Pos1:=-1;
+    for i:=0 to length(nodecontrolsets)-1 do
     begin
-      nodecontrolform.nodecontrolsetscombobox.ItemIndex:=strtoint(value[0]);
+      if IsEqualGUID(nodecontrolsets[i].ID, stringtoguid(value[0])) then
+      begin
+        Pos1:=i;
+        break;
+      end;
+    end;
+
+    if (Pos1>=0) and (Pos1<nodecontrolform.nodecontrolsetscombobox.Items.Count) then
+    begin
+      if nodecontrolform.nodecontrolsetscombobox.ItemIndex<>Pos1 then
+      begin
+        nodecontrolform.nodecontrolsetscombobox.ItemIndex:=Pos1;
+        nodecontrolform.nodecontrolsetscomboboxChange(nodecontrolform.nodecontrolsetscombobox);
+      end;
 
       nodecontrolform.narrowslider.Position:=strtoint(value[1]);
       nodecontrolform.contrastslider.Position:=strtoint(value[2]);
       nodecontrolform.fadetimemsedit.Value:=strtoint(value[3]);
 
       nodecontrolform.setrgbcheckbox.checked:=(value[4]<>'-1');
-      nodecontrolform.setrgbcheckboxClick(nodecontrolform.setrgbcheckbox);
-
       nodecontrolform.setambercheckbox.checked:=(value[5]<>'-1');
-      nodecontrolform.setambercheckboxClick(nodecontrolform.setambercheckbox);
-
       nodecontrolform.setwhitecheckbox.checked:=(value[6]<>'-1');
-      nodecontrolform.setwhitecheckboxClick(nodecontrolform.setwhitecheckbox);
-
       nodecontrolform.setdimmercheckbox.checked:=(value[7]<>'-1');
-      nodecontrolform.setdimmercheckboxClick(nodecontrolform.setdimmercheckbox);
+      nodecontrolform.GUItoNodesets;
     end;
   end;
 end;
