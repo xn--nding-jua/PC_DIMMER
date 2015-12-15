@@ -115,12 +115,12 @@ begin
 
   listbox1.Clear;
 
-  if FileExists(Extractfilepath(paramstr(0))+'Autobackup.pcdbkup') then
+  if FileExists(mainform.userdirectory+'Autobackup.pcdbkup') then
     listbox1.Items.Add('Autobackup.pcdbkup');
 
   for i:=1 to mainform.maxautobackupfiles-1 do
   begin
-    if FileExists(Extractfilepath(paramstr(0))+'Autobackup~'+inttostr(i)+'.pcdbkup') then
+    if FileExists(mainform.userdirectory+'Autobackup~'+inttostr(i)+'.pcdbkup') then
       listbox1.Items.Add('Autobackup~'+inttostr(i)+'.pcdbkup');
   end;
 end;
@@ -129,7 +129,7 @@ procedure Trecoveryform.ListBox1MouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   if (Listbox1.itemindex>-1) then
-    LoadInfos(mainform.workingdirectory+listbox1.Items[Listbox1.itemindex]);
+    LoadInfos(mainform.userdirectory+listbox1.Items[Listbox1.itemindex]);
 end;
 
 procedure Trecoveryform.FormCreate(Sender: TObject);
@@ -141,7 +141,7 @@ procedure Trecoveryform.ListBox1KeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if (Listbox1.itemindex>-1) then
-    LoadInfos(mainform.workingdirectory+listbox1.Items[Listbox1.itemindex]);
+    LoadInfos(mainform.userdirectory+listbox1.Items[Listbox1.itemindex]);
 end;
 
 procedure Trecoveryform.Button1Click(Sender: TObject);

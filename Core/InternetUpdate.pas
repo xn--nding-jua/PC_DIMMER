@@ -581,9 +581,9 @@ begin
      FRunning := true ;
      with TPingThread.Create  do begin
           AOwner :=  Self as TInternetUpdate ;
-          if not DirectoryExists(ExtractFilePath(paramstr(0))+'Downloads') then
-            CreateDir(ExtractFilePath(paramstr(0))+'Downloads');
-          (AOwner as TInternetUpdate).TempDir := ExtractFilePath(paramstr(0))+'Downloads\';//TempDir ;
+          if not DirectoryExists(mainform.userdirectory+'Downloads') then
+            CreateDir(mainform.userdirectory+'Downloads');
+          (AOwner as TInternetUpdate).TempDir := mainform.userdirectory+'Downloads\';//TempDir ;
           //PingThread := TPingThread.Create ;
           Priority := tpLowest ;
           EventNr := csStart ;

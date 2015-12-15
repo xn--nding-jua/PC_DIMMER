@@ -127,7 +127,7 @@ const
 
 {$R *.RES}
 {$R 'resources.RES'}
-//{$R MANIFEST.RES}
+{$R MANIFEST.RES}
 
 type
   TFixedHintWindow = class(THintWindow)

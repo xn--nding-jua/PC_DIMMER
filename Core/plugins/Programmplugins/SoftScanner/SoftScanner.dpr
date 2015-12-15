@@ -19,13 +19,27 @@ uses
   Dialogs,
   settingfrm in 'settingfrm.pas' {Settings},
   messagesystem in '..\..\..\messagesystem.pas',
-  DXPlayFm in 'DXPlayFm.pas' {DelphiXDXPlayForm};
+  DXPlayFm in 'DXPlayFm.pas' {DelphiXDXPlayForm},
+  aboutfrm in 'aboutfrm.pas' {About};
 
 {$R *.res}
+{$R plugin_icon.res}
+
+function GetModulePath : String;
+var
+  QueryRes: TMemoryBasicInformation;
+  LBuffer: String;
+begin
+  VirtualQuery(@GetModulePath, QueryRes, SizeOf(QueryRes));
+  SetLength(LBuffer, MAX_PATH);
+  SetLength(LBuffer, GetModuleFileName(Cardinal(QueryRes.AllocationBase),
+  PChar(LBuffer), Length(LBuffer)));
+  result:=LBuffer;
+end;
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
-  Application.CreateForm(TSettings, Settings);
+  Settings:=TSettings.Create(nil);
 end;
 
 procedure DLLStart;stdcall;
@@ -33,10 +47,21 @@ begin
 end;
 
 function DLLDestroy:boolean;stdcall;
+var
+  LReg:TRegistry;
 begin
   Settings.shutdown:=true;
   if Settings.DXPlay1.Opened then
     Settings.DXPlay1.Close;
+
+  LReg:=TRegistry.Create;
+  LReg.RootKey:=HKEY_CURRENT_USER;
+  LReg.OpenKey('Software', True);
+  LReg.OpenKey('PHOENIXstudios', True);
+  LReg.OpenKey('PC_DIMMER', True);
+  LReg.OpenKey(ExtractFileName(GetModulePath), True);
+  LReg.WriteBool('Showing Plugin', settings.Showing);
+  LReg.Free;
 
   Settings.Close;
   Settings.Free;
@@ -55,12 +80,57 @@ end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v1.1');
+  Result := PChar('v1.2');
+end;
+
+function DLLGetResourceData(const ResName: PChar; Buffer: Pointer; var Length: Integer):boolean;stdcall;
+var
+  S: TResourceStream;
+  L: Integer;
+begin
+  Result := False;
+  if (Buffer = nil) or (Length <= 0) then Exit;
+  try
+    S := TResourceStream.Create(HInstance, UpperCase(ResName), RT_RCDATA);
+    try
+      L := S.Size;
+      if Length < L then Exit;
+      S.ReadBuffer(Buffer^, L);
+      Length := L;
+      Result := True;
+    finally
+      S.Free;
+    end;
+  except
+  end;
+end;
+
+function DLLGetResourceSize(const ResName: PChar): Integer; stdcall;
+var
+  S: TResourceStream;
+begin
+  Result := 0;
+  try
+    S := TResourceStream.Create(HInstance, UpperCase(ResName), RT_RCDATA);
+    try
+      Result := S.Size;
+    finally
+      S.Free;
+    end;
+  except
+  end;
 end;
 
 procedure DLLShow;stdcall;
 begin
   Settings.Show;
+end;
+
+procedure DLLAbout;stdcall;
+begin
+  about := tabout.Create(nil);
+  about.ShowModal;
+  about.Free;
 end;
 
 procedure DLLSendData(channel, startvalue, endvalue, fadetime:integer; channelname:PChar);stdcall;
@@ -153,7 +223,10 @@ exports
   DLLIdentify,
   DLLGetVersion,
   DLLGetName,
+  DLLGetResourceData,
+  DLLGetResourceSize,
   DLLShow,
+  DLLAbout,
   DLLSendData,
   DLLSendMessage;
 

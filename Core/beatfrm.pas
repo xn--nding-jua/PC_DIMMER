@@ -451,7 +451,7 @@ var
   RecordDeviceVolume:single;
 begin
   mainform.debuglistbox.ItemIndex:=mainform.debuglistbox.Items.Add('['+inttostr(mainform.debuglistbox.Items.Count)+'] ['+Timetostr(now)+'] ['+Datetostr(now)+_('] AUDIO: Setting up Audio-Input...'));
-  mainform.debuglistbox.Items.SaveToFile(mainform.workingdirectory+'\PC_DIMMER.log');
+  mainform.debuglistbox.Items.SaveToFile(mainform.userdirectory+'\PC_DIMMER.log');
 
   beat_audioin_selection.Hint:=_('Audio-Eingang: ')+beat_audioin_selection.Items.Strings[beat_audioin_selection.ItemIndex];
 	// Das ausgewählte Gerät aktivieren

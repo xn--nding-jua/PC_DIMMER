@@ -147,6 +147,7 @@ object Config: TConfig
     F00FFFFFF807FFFFFC03FFFFFE03FFFFFF01FFFFFF83FFFFFFC3FFFFFFFF}
   OldCreateOrder = False
   Position = poScreenCenter
+  OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -157,8 +158,8 @@ object Config: TConfig
   object chart: TJvChart
     Left = 305
     Top = 9
-    Width = 1008
-    Height = 329
+    Width = 1000
+    Height = 320
     Align = alClient
     Options.XAxisValuesPerDivision = 0
     Options.XAxisLabelAlignment = taLeftJustify
@@ -195,8 +196,8 @@ object Config: TConfig
   end
   object Panel2: TPanel
     Left = 0
-    Top = 338
-    Width = 1322
+    Top = 329
+    Width = 1314
     Height = 115
     Align = alBottom
     BevelOuter = bvNone
@@ -559,7 +560,7 @@ object Config: TConfig
     Left = 0
     Top = 9
     Width = 305
-    Height = 329
+    Height = 320
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
@@ -917,17 +918,17 @@ object Config: TConfig
   object Panel3: TPanel
     Left = 0
     Top = 0
-    Width = 1322
+    Width = 1314
     Height = 9
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
   end
   object Panel4: TPanel
-    Left = 1313
+    Left = 1305
     Top = 9
     Width = 9
-    Height = 329
+    Height = 320
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3

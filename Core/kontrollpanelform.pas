@@ -410,12 +410,12 @@ begin
 
 	if savedialog1.Execute then
   begin
-	  If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp') then
-	   	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp');
-    If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel') then
-    	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+	  If not DirectoryExists(mainform.userdirectory+'ProjectTemp') then
+	   	CreateDir(mainform.userdirectory+'ProjectTemp');
+    If not DirectoryExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel') then
+    	CreateDir(mainform.userdirectory+'ProjectTemp\Kontrollpanel');
     try
-	    FileStream:=TFileStream.Create(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Kontrollpanel',fmCreate);
+	    FileStream:=TFileStream.Create(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Kontrollpanel',fmCreate);
 	    Filestream.WriteBuffer(mainform.kontrollpanelrecord,sizeof(mainform.kontrollpanelrecord));
 
       Count:=round(kontrollpanel.zeilen.value);
@@ -434,9 +434,9 @@ begin
       end;
 
 	    FileStream.Free;
-	    Compress.CompressDirectory(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\',false,savedialog1.FileName);
+	    Compress.CompressDirectory(mainform.userdirectory+'ProjectTemp\Kontrollpanel\',false,savedialog1.FileName);
     except
-    	ShowMessage(_('Fehler beim Zugriff auf die Datei "')+ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Kontrollpanel'+'"');
+    	ShowMessage(_('Fehler beim Zugriff auf die Datei "')+mainform.userdirectory+'ProjectTemp\Kontrollpanel\Kontrollpanel'+'"');
     end;
   end;
 end;
@@ -465,8 +465,8 @@ begin
     2:  // Skript
     begin
       // SKRIPT BEARBEITEN
-      if FileExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp') then
-        listbox.Items.LoadFromFile(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp');
+      if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp') then
+        listbox.Items.LoadFromFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp');
       if listbox.Items.Count>0 then
         if listbox.items[0]<>inttostr(listbox.items.count-1) then
           listbox.items.clear
@@ -485,8 +485,8 @@ begin
     5:  // Flashskript
     begin
       // SKRIPT BEARBEITEN
-      if FileExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp') then
-        listbox.Items.LoadFromFile(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp');
+      if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp') then
+        listbox.Items.LoadFromFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp');
       if listbox.Items.Count>0 then
         if listbox.items[0]<>inttostr(listbox.items.count-1) then
           listbox.items.clear
@@ -501,8 +501,8 @@ begin
     7:
     begin
       Listbox.items.Clear;
-      if FileExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas') then
-        listbox.Items.LoadFromFile(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas');
+      if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas') then
+        listbox.Items.LoadFromFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas');
       if listbox.Items.Count=0 then
       begin
         codeeditorform.Memo1.Lines.Add('unit ButtonCode;');
@@ -531,13 +531,13 @@ begin
 
       codeeditorform.showmodal;
 
-      If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp') then
-        CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp');
-      if not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel') then
-        CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+      If not DirectoryExists(mainform.userdirectory+'ProjectTemp') then
+        CreateDir(mainform.userdirectory+'ProjectTemp');
+      if not DirectoryExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel') then
+        CreateDir(mainform.userdirectory+'ProjectTemp\Kontrollpanel');
       listbox.Items.Clear;
       listbox.Items:=codeeditorform.Memo1.Lines;
-      listbox.Items.SaveToFile(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas');
+      listbox.Items.SaveToFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas');
     end;
   end;
 	CheckFileExistsTimer(nil);
@@ -1091,7 +1091,7 @@ begin
 	      2:
 	      begin
           // Skriptdatei
-          if not FileExists(ExtractFilePath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(i+1)+'x'+inttostr(j+1)+'.pcdscrp') then
+          if not FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(i+1)+'x'+inttostr(j+1)+'.pcdscrp') then
    				begin
           	labeltype[i][j].Caption:='Skript (Datei fehlt!)';
             labeltype[i][j].Transparent:=false;
@@ -1116,7 +1116,7 @@ begin
 	      5: // Flashskript
 	      begin
           // Skriptdatei
-          if not FileExists(ExtractFilePath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(i+1)+'x'+inttostr(j+1)+'.pcdscrp') then
+          if not FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(i+1)+'x'+inttostr(j+1)+'.pcdscrp') then
    				begin
           	labeltype[i][j].Caption:='Flashskript (Datei fehlt!)';
             labeltype[i][j].Transparent:=false;
@@ -1136,7 +1136,7 @@ begin
 	      7:
 	      begin
           // Programmcode
-          if not FileExists(ExtractFilePath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(i+1)+'x'+inttostr(j+1)+'.pas') then
+          if not FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(i+1)+'x'+inttostr(j+1)+'.pas') then
    				begin
           	labeltype[i][j].Caption:='Programmcode (Datei fehlt!)';
             labeltype[i][j].Transparent:=false;
@@ -1160,10 +1160,10 @@ procedure Tkontrollpanel.FormCreate(Sender: TObject);
 begin
   TranslateComponent(self);
 
-  If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp') then
-	 	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp');
-  If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel') then
-  	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+  If not DirectoryExists(mainform.userdirectory+'ProjectTemp') then
+	 	CreateDir(mainform.userdirectory+'ProjectTemp');
+  If not DirectoryExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel') then
+  	CreateDir(mainform.userdirectory+'ProjectTemp\Kontrollpanel');
 
   BtnDown.Y:=-1;
   BtnDown.X:=-1;
@@ -1321,7 +1321,7 @@ begin
     mainform.kontrollpanelbuttons[0][i].ID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
     mainform.kontrollpanelbuttons[0][i].Name:='Button 1x'+inttostr(i+1);
     mainform.kontrollpanelbuttons[0][i].Typ:=0;
-    mainform.kontrollpanelbuttons[0][i].Picture:=mainform.workingdirectory+'\Devicepictures\32 x 32\par56silber.png';
+    mainform.kontrollpanelbuttons[0][i].Picture:=mainform.pcdimmerdirectory+'\Devicepictures\32 x 32\par56silber.png';
     if not Assigned(mainform.kontrollpanelbuttons[0][i].PNG) then
       mainform.kontrollpanelbuttons[0][i].PNG:=TPNGObject.Create;
     mainform.kontrollpanelbuttons[0][i].PNG.LoadFromFile(mainform.kontrollpanelbuttons[0][i].Picture);
@@ -1483,10 +1483,10 @@ begin
     mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].PNG.LoadFromFile(mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Picture);
   end;
 
-  if FileExists(ExtractFilePath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pcdscrp') then
-    CopyFile(PChar((ExtractFilePath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pcdscrp')),PChar((ExtractFilePath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp')),False);
-  if FileExists(ExtractFilePath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pas') then
-    CopyFile(PChar((ExtractFilePath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pas')),PChar((ExtractFilePath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas')),False);
+  if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pcdscrp') then
+    CopyFile(PChar((mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pcdscrp')),PChar((mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp')),False);
+  if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pas') then
+    CopyFile(PChar((mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pas')),PChar((mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas')),False);
 
   StatusBar1.Panels.Items[0].Text:='Button '+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1);
 	buttonname.Text:=mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Name;
@@ -1511,10 +1511,10 @@ begin
     mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].PNG.Free;
     mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].PNG:=nil;
 
-    if FileExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pcdscrp') then
-      DeleteFile(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pcdscrp');
-    if FileExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pas') then
-      DeleteFile(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pas');
+    if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pcdscrp') then
+      DeleteFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pcdscrp');
+    if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pas') then
+      DeleteFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pas');
   end;
   CollectButtonInfo;
 end;
@@ -1545,10 +1545,10 @@ begin
   mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].PNG.Free;
   mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].PNG:=nil;
 
-  if FileExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp') then
-    DeleteFile(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp');
-  if FileExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas') then
-    DeleteFile(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas');
+  if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp') then
+    DeleteFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp');
+  if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas') then
+    DeleteFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas');
 	CheckFileExistsTimer(nil);
 
   StatusBar1.Panels.Items[0].Text:='Button '+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1);
@@ -1590,12 +1590,12 @@ procedure Tkontrollpanel.OpenFile(filename: string);
 var
   i,j, Count:integer;
 begin
-  If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp') then
-    CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp');
-  If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel') then
-    CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
-  Compress.DecompressFile(filename,ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\',true,false);
-  FileStream:=TFileStream.Create(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Kontrollpanel',fmOpenRead);
+  If not DirectoryExists(mainform.userdirectory+'ProjectTemp') then
+    CreateDir(mainform.userdirectory+'ProjectTemp');
+  If not DirectoryExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel') then
+    CreateDir(mainform.userdirectory+'ProjectTemp\Kontrollpanel');
+  Compress.DecompressFile(filename,mainform.userdirectory+'ProjectTemp\Kontrollpanel\',true,false);
+  FileStream:=TFileStream.Create(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Kontrollpanel',fmOpenRead);
   FileStream.ReadBuffer(mainform.kontrollpanelrecord,sizeof(mainform.kontrollpanelrecord));
 
   for i:=0 to length(mainform.kontrollpanelbuttons)-1 do
@@ -2445,10 +2445,10 @@ begin
         2:  // Skript
         begin
           // SKRIPTABLAUF STARTEN
-          if FileExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pcdscrp') then
+          if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pcdscrp') then
           begin
-            StatusBar1.Panels.Items[2].Text:='Skriptabruf aus '+ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pcdscrp';
-            listbox.Items.LoadFromFile(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pcdscrp');
+            StatusBar1.Panels.Items[2].Text:='Skriptabruf aus '+mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pcdscrp';
+            listbox.Items.LoadFromFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pcdscrp');
 
             if listbox.items[0]<>inttostr(listbox.items.count-1) then
               begin
@@ -2482,11 +2482,11 @@ begin
         begin
           // Aktuelles Skript abbrechen
           // FLASHSKRIPT STARTEN
-          if FileExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pcdscrp') then
+          if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pcdscrp') then
           begin
             repeatskript.checked:=true;
-            StatusBar1.Panels.Items[2].Text:='Skriptabruf aus '+ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pcdscrp';
-            listbox.Items.LoadFromFile(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pcdscrp');
+            StatusBar1.Panels.Items[2].Text:='Skriptabruf aus '+mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pcdscrp';
+            listbox.Items.LoadFromFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pcdscrp');
 
             if listbox.items[0]<>inttostr(listbox.items.count-1) then
               begin
@@ -2510,10 +2510,10 @@ begin
         end;
         7:
         begin
-          if FileExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas') then
+          if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas') then
           begin
-            StatusBar1.Panels.Items[2].Text:='Programmcode aus '+ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas';
-            listbox.Items.LoadFromFile(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas');
+            StatusBar1.Panels.Items[2].Text:='Programmcode aus '+mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas';
+            listbox.Items.LoadFromFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas');
             ScriptInterpreter.Pas:=listbox.Items;
             ScriptInterpreter.Compile;
             argumente.Count:=0;
@@ -2602,10 +2602,10 @@ begin
       end;
       7:
       begin
-        if FileExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas') then
+        if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas') then
         begin
-          StatusBar1.Panels.Items[2].Text:='Programmcode aus '+ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas';
-          listbox.Items.LoadFromFile(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas');
+          StatusBar1.Panels.Items[2].Text:='Programmcode aus '+mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas';
+          listbox.Items.LoadFromFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas');
           ScriptInterpreter.Pas:=listbox.Items;
           ScriptInterpreter.Compile;
           argumente.Count:=0;
@@ -2672,12 +2672,12 @@ begin
       mainform.kontrollpanelbuttons[i][j].Name:='Button '+inttostr(i+1)+'x'+inttostr(j+1);
       mainform.kontrollpanelbuttons[i][j].Color:=clWhite;
       mainform.kontrollpanelbuttons[i][j].Typ:=0;
-      mainform.kontrollpanelbuttons[i][j].Picture:=mainform.workingdirectory+'\Devicepictures\32 x 32\par56silber.png';
+      mainform.kontrollpanelbuttons[i][j].Picture:=mainform.pcdimmerdirectory+'\Devicepictures\32 x 32\par56silber.png';
 
       if not Assigned(mainform.kontrollpanelbuttons[i][j].PNG) then
         mainform.kontrollpanelbuttons[i][j].PNG:=TPNGObject.Create;
-      if FileExists(mainform.workingdirectory+'\Devicepictures\32 x 32\par56silber.png') then
-        mainform.kontrollpanelbuttons[i][j].PNG.LoadFromFile(mainform.workingdirectory+'\Devicepictures\32 x 32\par56silber.png');
+      if FileExists(mainform.pcdimmerdirectory+'\Devicepictures\32 x 32\par56silber.png') then
+        mainform.kontrollpanelbuttons[i][j].PNG.LoadFromFile(mainform.pcdimmerdirectory+'\Devicepictures\32 x 32\par56silber.png');
     end;
   end else
   begin
@@ -2732,12 +2732,12 @@ begin
         mainform.kontrollpanelbuttons[k][j].Name:='Button '+inttostr(k+1)+'x'+inttostr(j+1);
         mainform.kontrollpanelbuttons[k][j].Color:=clWhite;
         mainform.kontrollpanelbuttons[k][j].Typ:=0;
-        mainform.kontrollpanelbuttons[k][j].Picture:=mainform.workingdirectory+'\Devicepictures\32 x 32\par56silber.png';
+        mainform.kontrollpanelbuttons[k][j].Picture:=mainform.pcdimmerdirectory+'\Devicepictures\32 x 32\par56silber.png';
 
       if not Assigned(mainform.kontrollpanelbuttons[k][j].PNG) then
         mainform.kontrollpanelbuttons[k][j].PNG:=TPNGObject.Create;
-      if FileExists(mainform.workingdirectory+'\Devicepictures\32 x 32\par56silber.png') then
-        mainform.kontrollpanelbuttons[k][j].PNG.LoadFromFile(mainform.workingdirectory+'\Devicepictures\32 x 32\par56silber.png');
+      if FileExists(mainform.pcdimmerdirectory+'\Devicepictures\32 x 32\par56silber.png') then
+        mainform.kontrollpanelbuttons[k][j].PNG.LoadFromFile(mainform.pcdimmerdirectory+'\Devicepictures\32 x 32\par56silber.png');
       end;
     end else
     begin

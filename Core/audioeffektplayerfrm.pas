@@ -1090,7 +1090,7 @@ begin
 	  audioeffektfilenamebox.itemindex:=itemindex;
 
     if pos('\ProjectTemp\',dateiname)>0 then
-      dateiname:=mainform.workingdirectory+copy(dateiname,pos('ProjectTemp\',dateiname),length(dateiname));
+      dateiname:=mainform.userdirectory+copy(dateiname,pos('ProjectTemp\',dateiname),length(dateiname));
 
 	  mainform.effektaudio_record[audioeffektfilenamebox.ItemIndex].effektaudiodatei.volume:=100;
 
@@ -1263,9 +1263,9 @@ begin
 
     save_eqClick(Sender);
 
-    DeleteFile(mainform.workingdirectory+'Temp\*.*');
+    DeleteFile(mainform.userdirectory+'Temp\*.*');
     //Datei öffnen
-		FileStream:=TFileStream.Create(mainform.workingdirectory+'Temp\Effektaudio',fmCreate);
+		FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektaudio',fmCreate);
 
     // Projektversion
     count:=mainform.currentprojectversion;
@@ -1278,7 +1278,7 @@ begin
     for i:=0 to laenge-1 do
     begin
       if pos('\ProjectTemp\',mainform.effektaudio_record[i].audiopfad)>0 then
-        mainform.effektaudio_record[i].audiopfad:=mainform.workingdirectory+copy(mainform.effektaudio_record[i].audiopfad,pos('ProjectTemp\',mainform.effektaudio_record[i].audiopfad),length(mainform.effektaudio_record[i].audiopfad));
+        mainform.effektaudio_record[i].audiopfad:=mainform.userdirectory+copy(mainform.effektaudio_record[i].audiopfad,pos('ProjectTemp\',mainform.effektaudio_record[i].audiopfad),length(mainform.effektaudio_record[i].audiopfad));
 
 			Filestream.WriteBuffer(mainform.effektaudio_record[i].audiodatei,sizeof(mainform.effektaudio_record[i].audiodatei));
 			Filestream.WriteBuffer(mainform.effektaudio_record[i].audiopfad,sizeof(mainform.effektaudio_record[i].audiopfad));
@@ -1332,9 +1332,9 @@ begin
 		//Datei wieder freigeben
     FileStream.Free;
 
-    mainform.Compress.CompressDirectory(mainform.workingdirectory+'Temp\',false,filepath+filename);
+    mainform.Compress.CompressDirectory(mainform.userdirectory+'Temp\',false,filepath+filename);
     inprogress.Hide;
-    DeleteFile(mainform.workingdirectory+'Temp\*.*');
+    DeleteFile(mainform.userdirectory+'Temp\*.*');
   end;
 end;
 
@@ -2306,7 +2306,7 @@ begin
     i:=audioeffektfilenamebox.ItemIndex;
 
     if pos('\ProjectTemp\',mainform.effektaudio_record[audioeffektfilenamebox.ItemIndex].audiopfad)>0 then
-      mainform.effektaudio_record[audioeffektfilenamebox.ItemIndex].audiopfad:=mainform.workingdirectory+copy(mainform.effektaudio_record[audioeffektfilenamebox.ItemIndex].audiopfad,pos('ProjectTemp\',mainform.effektaudio_record[audioeffektfilenamebox.ItemIndex].audiopfad),length(mainform.effektaudio_record[audioeffektfilenamebox.ItemIndex].audiopfad));
+      mainform.effektaudio_record[audioeffektfilenamebox.ItemIndex].audiopfad:=mainform.userdirectory+copy(mainform.effektaudio_record[audioeffektfilenamebox.ItemIndex].audiopfad,pos('ProjectTemp\',mainform.effektaudio_record[audioeffektfilenamebox.ItemIndex].audiopfad),length(mainform.effektaudio_record[audioeffektfilenamebox.ItemIndex].audiopfad));
 
     if not FileExists(mainform.effektaudio_record[audioeffektfilenamebox.ItemIndex].audiopfad+mainform.effektaudio_record[audioeffektfilenamebox.ItemIndex].audiodatei) then
     begin
@@ -3263,15 +3263,15 @@ begin
     effectfilepath:=ExtractFilepath(openfile);
     effectfilename:=ExtractFileName(openfile);
 
-    DeleteFile(mainform.workingdirectory+'Temp\*.*');
-    mainform.Compress.DecompressFile(effectfilepath+effectfilename,mainform.workingdirectory+'Temp\',true,false);
+    DeleteFile(mainform.userdirectory+'Temp\*.*');
+    mainform.Compress.DecompressFile(effectfilepath+effectfilename,mainform.userdirectory+'Temp\',true,false);
     if not mainform.startingup then
       inprogress.Hide;
 
-		    if fileexists(mainform.workingdirectory+'Temp\Effektlayer') then
-					FileStream:=TFileStream.Create(mainform.workingdirectory+'Temp\Effektlayer',fmOpenRead)
+		    if fileexists(mainform.userdirectory+'Temp\Effektlayer') then
+					FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektlayer',fmOpenRead)
         else
-	        FileStream:=TFileStream.Create(mainform.workingdirectory+'Temp\'+effectfilename,fmOpenRead);
+	        FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\'+effectfilename,fmOpenRead);
         // Effektanzahl herausfinden
         FileStream.ReadBuffer(effektanzahl,sizeof(effektanzahl));
         maxaudioeffekte[_audioeffektlayer]:=effektanzahl;
@@ -3284,7 +3284,7 @@ begin
 	        Filestream.ReadBuffer(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt[k],sizeof(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt[k]));
         end;
  		FileStream.Free;
-    DeleteFile(mainform.workingdirectory+'Temp\*.*');
+    DeleteFile(mainform.userdirectory+'Temp\*.*');
 
 			layerboxChange(nil);
     end;
@@ -3311,8 +3311,8 @@ begin
       effectfilepath:=ExtractFilepath(savefile);
       effectfilename:=ExtractFileName(savefile);
 
-	    DeleteFile(mainform.workingdirectory+'Temp\*.*');
-			FileStream:=TFileStream.Create(mainform.workingdirectory+'Temp\Effektlayer',fmCreate);
+	    DeleteFile(mainform.userdirectory+'Temp\*.*');
+			FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektlayer',fmCreate);
         // Effektanzahl herausfinden
 	      effektanzahl:=length(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt);
 				// Effektanzahl abspeichern
@@ -3324,8 +3324,8 @@ begin
         end;
 			FileStream.Free;
 
-      mainform.Compress.CompressDirectory(mainform.workingdirectory+'Temp\',false,effectfilepath+effectfilename);
-	    DeleteFile(mainform.workingdirectory+'Temp\*.*');
+      mainform.Compress.CompressDirectory(mainform.userdirectory+'Temp\',false,effectfilepath+effectfilename);
+	    DeleteFile(mainform.userdirectory+'Temp\*.*');
       inprogress.Hide;
     end;
 end;
@@ -3415,10 +3415,10 @@ begin
     effectfilepath:=ExtractFilepath(openfile);
     effectfilename:=ExtractFileName(openfile);
 
-    DeleteFile(mainform.workingdirectory+'Temp\*.*');
-    mainform.Compress.DecompressFile(effectfilepath+effectfilename,mainform.workingdirectory+'Temp\',true,false);
+    DeleteFile(mainform.userdirectory+'Temp\*.*');
+    mainform.Compress.DecompressFile(effectfilepath+effectfilename,mainform.userdirectory+'Temp\',true,false);
 
-		FileStream:=TFileStream.Create(mainform.workingdirectory+'Temp\Effektliste',fmOpenRead);
+		FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektliste',fmOpenRead);
       Filestream.ReadBuffer(mainform.Effektaudiodatei_record.layeranzahl,sizeof(mainform.Effektaudiodatei_record.layeranzahl));
       // Einzelne Layer und Effekte laden
       for j:=1 to maxaudioeffektlayers do
@@ -3443,7 +3443,7 @@ begin
       Filestream.ReadBuffer(mainform.Effektaudiodatei_record.videoseeking,sizeof(mainform.Effektaudiodatei_record.videoseeking));
       Filestream.ReadBuffer(mainform.Effektaudiodatei_record.layername,sizeof(mainform.Effektaudiodatei_record.layername));
 		FileStream.Free;
-    DeleteFile(mainform.workingdirectory+'Temp\*.*');
+    DeleteFile(mainform.userdirectory+'Temp\*.*');
 
     repeataktiviert.Checked:=mainform.Effektaudiodatei_record.repeatactive;
     repeataktiviert1.Checked:=mainform.Effektaudiodatei_record.repeatactive;
@@ -3480,8 +3480,8 @@ begin
       effectfilepath:=ExtractFilepath(savefile);
       effectfilename:=ExtractFileName(savefile);
 
-      DeleteFile(mainform.workingdirectory+'Temp\*.*');
-			FileStream:=TFileStream.Create(mainform.workingdirectory+'Temp\Effektliste',fmCreate);
+      DeleteFile(mainform.userdirectory+'Temp\*.*');
+			FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektliste',fmCreate);
       // Einzelne Layer und Effekte speichern
       Filestream.WriteBuffer(mainform.Effektaudiodatei_record.layeranzahl,sizeof(mainform.Effektaudiodatei_record.layeranzahl));
       for j:=1 to maxaudioeffektlayers do
@@ -3506,9 +3506,9 @@ begin
       Filestream.WriteBuffer(mainform.Effektaudiodatei_record.layername,sizeof(mainform.Effektaudiodatei_record.layername));
 			FileStream.Free;
 
-      mainform.Compress.CompressDirectory(mainform.workingdirectory+'Temp\',false,effectfilepath+effectfilename);
+      mainform.Compress.CompressDirectory(mainform.userdirectory+'Temp\',false,effectfilepath+effectfilename);
       inprogress.Hide;
-      DeleteFile(mainform.workingdirectory+'Temp\*.*');
+      DeleteFile(mainform.userdirectory+'Temp\*.*');
     end;
 end;
 
@@ -3848,10 +3848,10 @@ begin
     effectfilepath:=ExtractFilepath(openfile);
     effectfilename:=ExtractFileName(openfile);
 
-    DeleteFile(mainform.workingdirectory+'Temp\*.*');
-    mainform.Compress.DecompressFile(effectfilepath+effectfilename,mainform.workingdirectory+'Temp\',true,false);
+    DeleteFile(mainform.userdirectory+'Temp\*.*');
+    mainform.Compress.DecompressFile(effectfilepath+effectfilename,mainform.userdirectory+'Temp\',true,false);
 
-		FileStream:=TFileStream.Create(mainform.workingdirectory+'Temp\Effektliste',fmOpenRead);
+		FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektliste',fmOpenRead);
       Filestream.ReadBuffer(mainform.Effektaudiodatei_record.layeranzahl,sizeof(mainform.Effektaudiodatei_record.layeranzahl));
       // Einzelne Layer und Effekte laden
       for j:=1 to maxaudioeffektlayers do
@@ -3966,7 +3966,7 @@ begin
       Filestream.ReadBuffer(mainform.Effektaudiodatei_record.layername,sizeof(mainform.Effektaudiodatei_record.layername));
 
       FileStream.Free;
-      DeleteFile(mainform.workingdirectory+'Temp\*.*');
+      DeleteFile(mainform.userdirectory+'Temp\*.*');
 
       repeataktiviert.Checked:=mainform.Effektaudiodatei_record.repeatactive;
       repeataktiviert1.Checked:=mainform.Effektaudiodatei_record.repeatactive;
@@ -3996,8 +3996,8 @@ begin
       effectfilepath:=ExtractFilepath(savefile);
       effectfilename:=ExtractFileName(savefile);
 
-      DeleteFile(mainform.workingdirectory+'Temp\*.*');
-			FileStream:=TFileStream.Create(mainform.workingdirectory+'Temp\Effektliste',fmCreate);
+      DeleteFile(mainform.userdirectory+'Temp\*.*');
+			FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektliste',fmCreate);
       // Einzelne Layer und Effekte speichern
       Filestream.WriteBuffer(mainform.Effektaudiodatei_record.layeranzahl,sizeof(mainform.Effektaudiodatei_record.layeranzahl));
       for j:=1 to maxaudioeffektlayers do
@@ -4098,9 +4098,9 @@ begin
       Filestream.WriteBuffer(mainform.Effektaudiodatei_record.layername,sizeof(mainform.Effektaudiodatei_record.layername));
 			FileStream.Free;
 
-      mainform.Compress.CompressDirectory(mainform.workingdirectory+'Temp\',false,effectfilepath+effectfilename);
+      mainform.Compress.CompressDirectory(mainform.userdirectory+'Temp\',false,effectfilepath+effectfilename);
       inprogress.Hide;
-      DeleteFile(mainform.workingdirectory+'Temp\*.*');
+      DeleteFile(mainform.userdirectory+'Temp\*.*');
     end;
 end;
 
@@ -4818,14 +4818,14 @@ begin
     filename:=extractfilename(audioeeffektfile);
     filepath:=extractfilepath(audioeeffektfile);
 
-    DeleteFile(mainform.workingdirectory+'Temp\*.*');
- 		mainform.Compress.DecompressFile(filepath+filename,mainform.workingdirectory+'Temp\',true,false);
+    DeleteFile(mainform.userdirectory+'Temp\*.*');
+ 		mainform.Compress.DecompressFile(filepath+filename,mainform.userdirectory+'Temp\',true,false);
 
     //Datei öffnen
-    if fileexists(mainform.workingdirectory+'Temp\Effektaudio') then
-			FileStream:=TFileStream.Create(mainform.workingdirectory+'Temp\Effektaudio',fmOpenRead)
+    if fileexists(mainform.userdirectory+'Temp\Effektaudio') then
+			FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektaudio',fmOpenRead)
     else
-    	FileStream:=TFileStream.Create(mainform.workingdirectory+'Temp\'+filename,fmOpenRead);
+    	FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\'+filename,fmOpenRead);
 
     // Projektversion
     Filestream.ReadBuffer(FileVersion, sizeof(FileVersion));
@@ -4893,14 +4893,14 @@ begin
     end;
 		//Datei wieder freigeben
     FileStream.Free;
-    DeleteFile(mainform.workingdirectory+'Temp\*.*');
+    DeleteFile(mainform.userdirectory+'Temp\*.*');
 
         audioeffektfilenamebox.Clear;
         for i:=0 to laenge-1 do
         begin
           if not FileExists(mainform.Effektaudio_record[i].audiopfad+mainform.Effektaudio_record[i].audiodatei) then
             if pos('\ProjectTemp\',mainform.Effektaudio_record[i].audiopfad)>0 then
-              mainform.Effektaudio_record[i].audiopfad:=mainform.workingdirectory+copy(mainform.Effektaudio_record[i].audiopfad,pos('ProjectTemp\',mainform.Effektaudio_record[i].audiopfad),length(mainform.Effektaudio_record[i].audiopfad));
+              mainform.Effektaudio_record[i].audiopfad:=mainform.userdirectory+copy(mainform.Effektaudio_record[i].audiopfad,pos('ProjectTemp\',mainform.Effektaudio_record[i].audiopfad),length(mainform.Effektaudio_record[i].audiopfad));
 
           if FileExists(mainform.Effektaudio_record[i].audiopfad+mainform.Effektaudio_record[i].audiodatei) then
           begin

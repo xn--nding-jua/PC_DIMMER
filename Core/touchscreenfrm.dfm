@@ -87,7 +87,7 @@ object touchscreenform: Ttouchscreenform
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 793
+    Width = 785
     Height = 89
     Align = alTop
     BevelOuter = bvNone
@@ -191,8 +191,8 @@ object touchscreenform: Ttouchscreenform
   end
   object Panel2: TPanel
     Left = 0
-    Top = 539
-    Width = 793
+    Top = 532
+    Width = 785
     Height = 65
     Align = alBottom
     BevelOuter = bvNone
@@ -296,16 +296,16 @@ object touchscreenform: Ttouchscreenform
   object Panel4: TPanel
     Left = 73
     Top = 89
-    Width = 649
-    Height = 450
+    Width = 641
+    Height = 443
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
     object PaintBox1: TPaintBox
       Left = 0
       Top = 0
-      Width = 649
-      Height = 450
+      Width = 641
+      Height = 443
       Align = alClient
       OnMouseDown = PaintBox1MouseDown
       OnMouseMove = PaintBox1MouseMove
@@ -314,8 +314,8 @@ object touchscreenform: Ttouchscreenform
     object dimmerpanel: TPanel
       Left = 0
       Top = 0
-      Width = 649
-      Height = 450
+      Width = 641
+      Height = 443
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 2
@@ -1387,8 +1387,8 @@ object touchscreenform: Ttouchscreenform
     object channelbox: TScrollBox
       Left = 0
       Top = 0
-      Width = 649
-      Height = 450
+      Width = 641
+      Height = 443
       HorzScrollBar.Smooth = True
       HorzScrollBar.ThumbSize = 10
       HorzScrollBar.Tracking = True
@@ -1405,7 +1405,7 @@ object touchscreenform: Ttouchscreenform
     Left = 0
     Top = 89
     Width = 73
-    Height = 450
+    Height = 443
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 3
@@ -1470,10 +1470,10 @@ object touchscreenform: Ttouchscreenform
     end
   end
   object Panel5: TPanel
-    Left = 722
+    Left = 714
     Top = 89
     Width = 71
-    Height = 450
+    Height = 443
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4

@@ -1025,16 +1025,16 @@ end;
 procedure Tddfeditorform.GerteeinstellungenalsXMLspeichern1Click(
   Sender: TObject);
 begin
-  SaveDialog1.InitialDir:=mainform.workingdirectory+'Devices';
+  SaveDialog1.InitialDir:=mainform.pcdimmerdirectory+'Devices';
   if Savedialog1.Execute then
   begin
     CreateXMLDDF;
     CurrentFileName:=Savedialog1.Filename;
     if FileExists(Savedialog1.FileName) then
     begin
-      if not DirectoryExists(mainform.workingdirectory+'Devices\Backup') then
-        CreateDir(mainform.workingdirectory+'Devices\Backup');
-      CopyFile(PCHar(Savedialog1.FileName),PChar(mainform.workingdirectory+'Devices\Backup\~'+ExtractFileName(Savedialog1.FileName)),false);
+      if not DirectoryExists(mainform.userdirectory+'Devices\Backup') then
+        CreateDir(mainform.userdirectory+'Devices\Backup');
+      CopyFile(PCHar(Savedialog1.FileName),PChar(mainform.userdirectory+'Devices\Backup\~'+ExtractFileName(Savedialog1.FileName)),false);
     end;
     Memo1.Lines.SaveToFile(Savedialog1.FileName);
   end;
@@ -1280,12 +1280,12 @@ begin
 
   if ((pagecontrol1.TabIndex=1) or (pagecontrol1.TabIndex=2) or ScanGobosForOpen) and (mbXPImageComboBox1.Items.Count=0) then
   begin
-    if (FindFirst(mainform.workingdirectory+'\Devicepictures\GobosSmall\*.bmp',faAnyFile-faDirectory,SR)=0) then
+    if (FindFirst(mainform.pcdimmerdirectory+'\Devicepictures\GobosSmall\*.bmp',faAnyFile-faDirectory,SR)=0) then
     begin
       repeat
         if (SR.Name<>'.') and (SR.Name<>'..') and (SR.Attr<>faDirectory) then
         begin
-          bmp.Picture.LoadFromFile(mainform.workingdirectory+'\Devicepictures\GobosSmall\'+SR.Name);
+          bmp.Picture.LoadFromFile(mainform.pcdimmerdirectory+'\Devicepictures\GobosSmall\'+SR.Name);
           ImageList1.Add(bmp.Picture.Bitmap, bmp.Picture.Bitmap);
           mbXPImageComboBox1.Items.Add(copy(SR.Name, 0, length(SR.Name)-4));
         end;
@@ -1479,14 +1479,14 @@ begin
   if devicepicturechangeform.ModalResult=mrOK then
   begin
     newpicturefile:=devicepicturechangeform.aktuellebilddatei;
-    if pos(mainform.workingdirectory+'Devicepictures\',newpicturefile)>-1 then
-      newpicturefile:=copy(newpicturefile,length(mainform.workingdirectory+'Devicepictures\32 x 32\')+1,length(newpicturefile));
+    if pos(mainform.pcdimmerdirectory+'Devicepictures\',newpicturefile)>-1 then
+      newpicturefile:=copy(newpicturefile,length(mainform.pcdimmerdirectory+'Devicepictures\32 x 32\')+1,length(newpicturefile));
     bildedit.text:=newpicturefile;
   end;
 
   deviceimage.width:=64;
   deviceimage.height:=64;
-  deviceimage.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\64 x 64\'+newpicturefile);
+  deviceimage.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\64 x 64\'+newpicturefile);
 end;
 
 procedure Tddfeditorform.funktionsliste2Select(Sender: TObject);
@@ -1973,7 +1973,7 @@ begin
   deviceimage.left:=8;
   deviceimage.width:=64;
   deviceimage.height:=64;
-  deviceimage.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\64 x 64\Par56silber.png');
+  deviceimage.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\64 x 64\Par56silber.png');
   devicename.Visible:=true;
   devicename.top:=24;
   devicename.left:=80;
@@ -2008,7 +2008,7 @@ begin
   ScanGobosForOpen:=true;
   PageControl1Change(nil);
 
-  OpenDialog1.InitialDir:=mainform.workingdirectory+'Devices';
+  OpenDialog1.InitialDir:=mainform.pcdimmerdirectory+'Devices';
   OpenDialog1.DefaultExt:='*.pcddevc';
   OpenDialog1.Filter:='DDF-Datei (*.pcddevc)|*.pcddevc|Alle Dateien (*.*)|*.*';
   if opendialog1.Execute then
@@ -2020,7 +2020,7 @@ begin
     bildedit.text:=copy(Xml.xml.root.Properties.Value('image'),Pos('\',Xml.xml.root.Properties.Value('image'))+1,length(Xml.xml.root.Properties.Value('image')));
     deviceimage.width:=64;
     deviceimage.height:=64;
-    deviceimage.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\64 x 64\'+bildedit.text);
+    deviceimage.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\64 x 64\'+bildedit.text);
 
     for j:=0 to XML.Xml.Root.Items.Count-1 do
     begin // <device>
@@ -2338,14 +2338,14 @@ begin
               if XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture')<>'' then
               begin
                 bildvorhanden:=true;
-                if FileExists(mainform.workingdirectory+'Devicepictures\GobosSmall\'+XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture')) then
-                  Bmp.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\GobosSmall\'+XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture'))
+                if FileExists(mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\'+XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture')) then
+                  Bmp.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\'+XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture'))
                 else
-                  Bmp.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\GobosSmall\leer.bmp');
+                  Bmp.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\leer.bmp');
                 ComboboxsImageList[length(ComboboxsImageList)-1].Add(Bmp.Picture.Bitmap,Bmp.Picture.Bitmap);
               end else
               begin
-                Bmp.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\GobosSmall\leer.bmp');
+                Bmp.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\leer.bmp');
                 ComboboxsImageList[length(ComboboxsImageList)-1].Add(Bmp.Picture.Bitmap,Bmp.Picture.Bitmap);
               end;
             end;
@@ -3461,13 +3461,13 @@ var
 }
 begin
 {
-  OpenDialog1.InitialDir:=mainform.workingdirectory+'Devicepictures\GobosSmall\';
+  OpenDialog1.InitialDir:=mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\';
   OpenDialog1.DefaultExt:='*.bmp';
   OpenDialog1.Filter:='Bild-Datei (*.bmp;*.ico)|*.bmp;*.ico|Alle Dateien (*.*)|*.*';
   if opendialog1.Execute then
   begin
     dateiname:=OpenDialog1.FileName;
-    if ExtractFilePath(dateiname)=mainform.workingdirectory+'Devicepictures\GobosSmall\' then
+    if ExtractFilePath(dateiname)=mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\' then
     begin
       bildedt.text:=ExtractFileName(dateiname);
       itempicture.Picture.LoadFromFile(dateiname);
@@ -3508,9 +3508,9 @@ var
 }
 begin
 {
-  if FileExists(mainform.workingdirectory+'Devicepictures\GobosSmall\'+bildedt.Text) then
+  if FileExists(mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\'+bildedt.Text) then
   begin
-    itempicture.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\GobosSmall\'+bildedt.Text);
+    itempicture.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\'+bildedt.Text);
   end else if FileExists(bildedt.Text) then
   begin
     itempicture.Picture.LoadFromFile(bildedt.Text);
@@ -3552,15 +3552,15 @@ begin
         itemvalueedit.Value:=comboboxproperties[i].itemvalue[itemlistbox.ItemIndex];
         itemvalueendedit.Value:=comboboxproperties[i].itemvalueend[itemlistbox.ItemIndex];
 
-        if FileExists(mainform.workingdirectory+'Devicepictures\GobosSmall\'+comboboxproperties[i].picture[itemlistbox.ItemIndex]) then
+        if FileExists(mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\'+comboboxproperties[i].picture[itemlistbox.ItemIndex]) then
         begin
-          itempicture.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\GobosSmall\'+comboboxproperties[i].picture[itemlistbox.ItemIndex]);
+          itempicture.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\'+comboboxproperties[i].picture[itemlistbox.ItemIndex]);
         end else if FileExists(comboboxproperties[i].picture[itemlistbox.ItemIndex]) then
         begin
           itempicture.Picture.LoadFromFile(comboboxproperties[i].picture[itemlistbox.ItemIndex]);
         end else
         begin
-          itempicture.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\GobosSmall\'+'leer.bmp');
+          itempicture.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\'+'leer.bmp');
         end;
       end;
     end;
@@ -3666,7 +3666,7 @@ procedure Tddfeditorform.mbXPImageComboBox1Select(Sender: TObject);
 var
   i:integer;
 begin
-  itempicture.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\GobosSmall\'+mbXPImageComboBox1.Items[mbXPImageComboBox1.ItemIndex]+'.bmp');
+  itempicture.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\'+mbXPImageComboBox1.Items[mbXPImageComboBox1.ItemIndex]+'.bmp');
 
   if itemlistbox.ItemIndex>-1 then
   begin
@@ -4521,9 +4521,9 @@ begin
   CreateXMLDDF;
   if FileExists(Savedialog1.FileName) then
   begin
-    if not DirectoryExists(mainform.workingdirectory+'Devices\Backup') then
-      CreateDir(mainform.workingdirectory+'Devices\Backup');
-    CopyFile(PCHar(CurrentFileName),PChar(mainform.workingdirectory+'Devices\Backup\~'+ExtractFileName(CurrentFileName)),false);
+    if not DirectoryExists(mainform.userdirectory+'Devices\Backup') then
+      CreateDir(mainform.userdirectory+'Devices\Backup');
+    CopyFile(PCHar(CurrentFileName),PChar(mainform.userdirectory+'Devices\Backup\~'+ExtractFileName(CurrentFileName)),false);
   end;
   Memo1.Lines.SaveToFile(CurrentFileName);
 end;

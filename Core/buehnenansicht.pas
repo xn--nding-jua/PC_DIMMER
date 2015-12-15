@@ -547,8 +547,6 @@ begin
 
 	startingup:=true;
 
-  mainform.workingdirectory:=ExtractFilePath(paramstr(0));
-
   setlength(mainform.buehnenansicht_background, 1);
   mainform.buehnenansicht_background[0]:='';
   mainform.buehnenansichtsetup.Buehnenansicht_width:=880;
@@ -570,7 +568,7 @@ end;
 procedure Tgrafischebuehnenansicht.Button6Click(Sender: TObject);
 begin
   OpenDialog1.Filter:=_('Bilddateien (*.bmp;*.jpg;*.gif;*.ico;*.png)|*.bmp;*.jpg;*.gif;*.ico;*.png|Alle Dateien (*.*)|*.*');
-  OpenDialog1.InitialDir:=mainform.workingdirectory+'ProjectTemp\';
+  OpenDialog1.InitialDir:=mainform.userdirectory+'ProjectTemp\';
   If OpenDialog1.Execute then
   begin
     Stage.Picture.LoadFromFile(OpenDialog1.Filename);
@@ -829,7 +827,7 @@ begin
   panel1.Visible:=mainform.buehnenansichtsetup.Buehnenansicht_panel;
 
   if pos('\ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex])>0 then
-    mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.workingdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
+    mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.userdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
 
   if mainform.buehnenansicht_background[BankSelect.ItemIndex]<>'' then
   begin
@@ -850,7 +848,7 @@ begin
           OpenDialog1.Filter:=_('Bilddateien (*.bmp;*.jpg;*.gif;*.ico;*.png)|*.bmp;*.jpg;*.gif;*.ico;*.png|Alle Dateien (*.*)|*.*');
           opendialog1.FileName:='';
           opendialog1.DefaultExt:='*.bmp;*.jpg;*.gif;*.ico;*.png';
-          opendialog1.InitialDir:=mainform.workingdirectory+'ProjectTemp\';
+          opendialog1.InitialDir:=mainform.userdirectory+'ProjectTemp\';
           if OpenDialog1.Execute then
           begin
             grafischebuehnenansicht.Stage.Picture.LoadFromFile(OpenDialog1.FileName);
@@ -1597,7 +1595,7 @@ begin
 	setlength(mainform.buehnenansichtdevices,length(mainform.buehnenansichtdevices)+1);
 
   i:=length(mainform.buehnenansichtdevices)-1;
-  mainform.buehnenansichtdevices[i].picture:=mainform.workingdirectory+'Devicepictures\32 x 32\par56silber.png';
+  mainform.buehnenansichtdevices[i].picture:=mainform.pcdimmerdirectory+'Devicepictures\32 x 32\par56silber.png';
   mainform.buehnenansichtdevices[i].channel:=1;
   mainform.buehnenansichtdevices[i].pictureispng:=true;
 	mainform.buehnenansichtdevices[i].color:=clWhite;
@@ -1619,16 +1617,16 @@ begin
     filepath:=extractfilepath(scenefilename);
 
     // Temp-Verzeichnis reinigen
-    mainform.DeleteDirectory(ExtractFilePath(paramstr(0))+'Temp');
-    CreateDir(ExtractFilePath(paramstr(0))+'Temp');
+    mainform.DeleteDirectory(mainform.userdirectory+'Temp');
+    CreateDir(mainform.userdirectory+'Temp');
 
-    if (filepath+filename)<>(ExtractFilePath(paramstr(0))+'ProjectTemp\Bühnenansicht\Bühnenansicht') then
-    	Compress.DecompressFile(filepath+filename,ExtractFilePath(paramstr(0))+'Temp\',true,false);
+    if (filepath+filename)<>(mainform.userdirectory+'ProjectTemp\Bühnenansicht\Bühnenansicht') then
+    	Compress.DecompressFile(filepath+filename,mainform.userdirectory+'Temp\',true,false);
 
-    if fileexists(ExtractFilePath(paramstr(0))+'Temp\Bühnenansicht') then
-	    FileStream:=TFileStream.Create(ExtractFilePath(paramstr(0))+'Temp\Bühnenansicht',fmOpenRead)
+    if fileexists(mainform.userdirectory+'Temp\Bühnenansicht') then
+	    FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Bühnenansicht',fmOpenRead)
     else
-      FileStream:=TFileStream.Create(ExtractFilePath(paramstr(0))+'Temp\'+filename,fmOpenRead);
+      FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\'+filename,fmOpenRead);
     FileStream.ReadBuffer(mainform.buehnenansichtsetup,sizeof(mainform.buehnenansichtsetup));
 
     FileStream.ReadBuffer(laenge,sizeof(laenge));
@@ -1664,11 +1662,11 @@ begin
     FileStream.Free;
 
     // Temp-Verzeichnis reinigen
-    mainform.DeleteDirectory(ExtractFilePath(paramstr(0))+'Temp');
-    CreateDir(ExtractFilePath(paramstr(0))+'Temp');
+    mainform.DeleteDirectory(mainform.userdirectory+'Temp');
+    CreateDir(mainform.userdirectory+'Temp');
 
     if pos('\ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex])>0 then
-      mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.workingdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
+      mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.userdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
 
 //{
     if not startingup then
@@ -1724,14 +1722,14 @@ begin
     filepath:=extractfilepath(scenefilename);
 
     if pos('\ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex])>0 then
-      mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.workingdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
+      mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.userdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
 
   try
     // Temp-Verzeichnis reinigen
-    mainform.DeleteDirectory(ExtractFilePath(paramstr(0))+'Temp');
-    CreateDir(ExtractFilePath(paramstr(0))+'Temp');
+    mainform.DeleteDirectory(mainform.userdirectory+'Temp');
+    CreateDir(mainform.userdirectory+'Temp');
 
-    FileStream:=TFileStream.Create(ExtractFilePath(paramstr(0))+'Temp\Bühnenansicht',fmCreate);
+    FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Bühnenansicht',fmCreate);
     FileStream.WriteBuffer(mainform.buehnenansichtsetup,sizeof(mainform.buehnenansichtsetup));
 
     laenge:=BankSelect.Items.Count;
@@ -1760,12 +1758,12 @@ begin
     end;
     FileStream.Free;
 
-    if (filepath+filename)<>(ExtractFilePath(paramstr(0))+'Temp\Bühnenansicht') then
-	    Compress.CompressDirectory(ExtractFilePath(paramstr(0))+'Temp\',false,filepath+filename);
+    if (filepath+filename)<>(mainform.userdirectory+'Temp\Bühnenansicht') then
+	    Compress.CompressDirectory(mainform.userdirectory+'Temp\',false,filepath+filename);
 
     // Temp-Verzeichnis reinigen
-    mainform.DeleteDirectory(ExtractFilePath(paramstr(0))+'Temp');
-    CreateDir(ExtractFilePath(paramstr(0))+'Temp');
+    mainform.DeleteDirectory(mainform.userdirectory+'Temp');
+    CreateDir(mainform.userdirectory+'Temp');
   except
     ShowMessage(_('Bühnenansicht: Es ist ein Fehler beim Speichern der Szene aufgetreten.'));
   end;
@@ -1801,7 +1799,7 @@ begin
   if (LastBuehnenansichtdevice<=length(mainform.buehnenansichtdevices)-1) and (LastBuehnenansichtdevice>-1) then
   begin
     OpenDialog1.Filter:=_('PNG-Datei (*.png)|*.png');
-    OpenDialog1.InitialDir:=mainform.workingdirectory+'Devicepictures\32 x 32\';
+    OpenDialog1.InitialDir:=mainform.pcdimmerdirectory+'Devicepictures\32 x 32\';
     opendialog1.FileName:='';
     opendialog1.Options:=[ofNoChangeDir, ofEnableSizing];
     If OpenDialog1.Execute then
@@ -1933,9 +1931,9 @@ begin
 	image1.Width:=panel2.Width;
   image1.Height:=panel2.Height;
 	panel2.PaintTo(image1.canvas,0,0);
-//  image1.Picture.SaveToFile(mainform.workingdirectory+'stageview.bmp');
-  mainform.SavePng(image1.Picture.Bitmap, mainform.workingdirectory+'stageview.png');
-  mainform.SaveJpg(image1.Picture.Bitmap, mainform.workingdirectory+'stageview.jpg');
+//  image1.Picture.SaveToFile(mainform.userdirectory+'stageview.bmp');
+  mainform.SavePng(image1.Picture.Bitmap, mainform.userdirectory+'stageview.png');
+  mainform.SaveJpg(image1.Picture.Bitmap, mainform.userdirectory+'stageview.jpg');
   image1.Free;
 end;
 
@@ -2078,7 +2076,7 @@ begin
   if (BankSelect.ItemIndex>-1) and (BankSelect.ItemIndex<length(mainform.buehnenansicht_background)) then
   begin
     if pos('\ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex])>0 then
-      mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.workingdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
+      mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.userdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
 
     if not startingup then
     begin
@@ -2134,7 +2132,7 @@ var
   image1:TImage;
 begin
     if pos('\ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex])>0 then
-      mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.workingdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
+      mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.userdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
 
 //{
     if (not startingup) and (BankSelect.ItemIndex>-1) and (BankSelect.ItemIndex<length(mainform.buehnenansicht_background)) then
@@ -2182,9 +2180,9 @@ begin
 	image1.Width:=panel2.Width;
   image1.Height:=panel2.Height;
 	panel2.PaintTo(image1.canvas,0,0);
-//  image1.Picture.SaveToFile(mainform.workingdirectory+'stageview.bmp');
-  mainform.SavePng(image1.Picture.Bitmap, mainform.workingdirectory+'stageview.png');
-  mainform.SaveJpg(image1.Picture.Bitmap, mainform.workingdirectory+'stageview.jpg');
+//  image1.Picture.SaveToFile(mainform.userdirectory+'stageview.bmp');
+  mainform.SavePng(image1.Picture.Bitmap, mainform.userdirectory+'stageview.png');
+  mainform.SaveJpg(image1.Picture.Bitmap, mainform.userdirectory+'stageview.jpg');
   image1.Free;
 
   BankSelect.ItemIndex:=0;
@@ -2384,9 +2382,9 @@ begin
       BitBlt(image1.Canvas.Handle, 0, 0, image1.width, image1.height, Puffer2.Canvas.Handle, 0, 0 , SRCCOPY);
 
       try
-//        image1.Picture.SaveToFile(mainform.workingdirectory+'stageview.bmp');
-        mainform.SavePng(image1.Picture.Bitmap, mainform.workingdirectory+'stageview.png');
-        mainform.SaveJpg(image1.Picture.Bitmap, mainform.workingdirectory+'stageview.jpg');
+//        image1.Picture.SaveToFile(mainform.userdirectory+'stageview.bmp');
+        mainform.SavePng(image1.Picture.Bitmap, mainform.userdirectory+'stageview.png');
+        mainform.SaveJpg(image1.Picture.Bitmap, mainform.userdirectory+'stageview.jpg');
       except
       end;
       image1.Free;
@@ -2489,7 +2487,7 @@ begin
   if mainform.buehnenansicht_background[BankSelect.ItemIndex]<>'' then
   begin
     if pos('\ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex])>0 then
-      mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.workingdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
+      mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.userdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
 
     if FileExists(mainform.buehnenansicht_background[BankSelect.ItemIndex]) then
       Stage.Picture.LoadFromFile(mainform.buehnenansicht_background[BankSelect.ItemIndex])

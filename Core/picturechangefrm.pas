@@ -63,27 +63,27 @@ begin
   Listbox1.Items.Clear;
   setlength(Dateien,0);
 
-  searchdirectory:=mainform.workingdirectory+'\DevicePictures\32 x 32';
+  searchdirectory:=mainform.pcdimmerdirectory+'\DevicePictures\32 x 32';
   if (FindFirst(searchdirectory+'\*.png',faAnyFile-faDirectory,SR)=0) then
   begin
     repeat
       if (SR.Name<>'.') and (SR.Name<>'..') and (SR.Attr<>faDirectory) then
       begin
         setlength(Dateien, length(Dateien)+1);
-        Dateien[length(Dateien)-1]:=mainform.workingdirectory+'\DevicePictures\32 x 32\'+SR.Name;
+        Dateien[length(Dateien)-1]:=mainform.pcdimmerdirectory+'\DevicePictures\32 x 32\'+SR.Name;
         Listbox1.Items.Add(SR.Name);
       end;
     until FindNext(SR)<>0;
     FindClose(SR);
   end;
-  searchdirectory:=mainform.workingdirectory+'\DevicePictures\Gobos';
+  searchdirectory:=mainform.pcdimmerdirectory+'\DevicePictures\Gobos';
   if (FindFirst(searchdirectory+'\*.png',faAnyFile-faDirectory,SR)=0) then
   begin
     repeat
       if (SR.Name<>'.') and (SR.Name<>'..') and (SR.Attr<>faDirectory) then
       begin
         setlength(Dateien, length(Dateien)+1);
-        Dateien[length(Dateien)-1]:=mainform.workingdirectory+'\DevicePictures\Gobos\'+SR.Name;
+        Dateien[length(Dateien)-1]:=mainform.pcdimmerdirectory+'\DevicePictures\Gobos\'+SR.Name;
         Listbox1.Items.Add(SR.Name);
       end;
     until FindNext(SR)<>0;

@@ -85,8 +85,10 @@ begin
   FResetTimer.Enabled := true;
 
   // Bilddateien und andere Dateien dem Clienten auf Anfrage zusenden
-  if FileExists(mainForm.workingdirectory+copy(ARequestInfo.Document,2,length(ARequestInfo.Document))) then
-    AResponseInfo.ServeFile(AContext,mainForm.workingdirectory+copy(ARequestInfo.Document,2,length(ARequestInfo.Document)))
+  if FileExists(mainForm.userdirectory+copy(ARequestInfo.Document,2,length(ARequestInfo.Document))) then
+    AResponseInfo.ServeFile(AContext,mainForm.userdirectory+copy(ARequestInfo.Document,2,length(ARequestInfo.Document)))
+  else if FileExists(mainForm.pcdimmerdirectory+copy(ARequestInfo.Document,2,length(ARequestInfo.Document))) then
+    AResponseInfo.ServeFile(AContext,mainForm.pcdimmerdirectory+copy(ARequestInfo.Document,2,length(ARequestInfo.Document)))
   else if FileExists(copy(ARequestInfo.Document,2,length(ARequestInfo.Document))) then
     AResponseInfo.ServeFile(AContext,copy(ARequestInfo.Document,2,length(ARequestInfo.Document)))
   else if FileExists(ARequestInfo.Document) then

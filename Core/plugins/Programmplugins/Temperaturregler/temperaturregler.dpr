@@ -21,6 +21,7 @@ uses
   ExtCtrls,
   GR32,
   PNGImage,
+  Registry,
   configfrm in 'configfrm.pas' {Config},
   setup in 'setup.pas' {setupform},
   messagesystem in 'messagesystem.pas',
@@ -31,6 +32,18 @@ var
   
 {$R *.res}
 {$R plugin_icon.res}
+
+function GetModulePath : String;
+var
+  QueryRes: TMemoryBasicInformation;
+  LBuffer: String;
+begin
+  VirtualQuery(@GetModulePath, QueryRes, SizeOf(QueryRes));
+  SetLength(LBuffer, MAX_PATH);
+  SetLength(LBuffer, GetModuleFileName(Cardinal(QueryRes.AllocationBase),
+  PChar(LBuffer), Length(LBuffer)));
+  result:=LBuffer;
+end;
 
 function PNGToBitmap32(DstBitmap: TBitmap32; Png: TPngObject): Boolean;
 var
@@ -99,6 +112,7 @@ end;
 function DLLDestroy:boolean;stdcall;
 var
   CurrYear, CurrMonth, CurrDay: Word;
+  LReg:TRegistry;
 begin
   ShuttingDown:=true;
 
@@ -129,6 +143,15 @@ begin
   if config.comport.Connected then
 		Config.comport.Disconnect;
   Config.SekundenTimer.Enabled:=false;
+
+  LReg:=TRegistry.Create;
+  LReg.RootKey:=HKEY_CURRENT_USER;
+  LReg.OpenKey('Software', True);
+  LReg.OpenKey('PHOENIXstudios', True);
+  LReg.OpenKey('PC_DIMMER', True);
+  LReg.OpenKey(ExtractFileName(GetModulePath), True);
+  LReg.WriteBool('Showing Plugin', config.Showing);
+  LReg.Free;
 
   Application.ProcessMessages;
   sleep(150);
@@ -162,7 +185,6 @@ function DLLGetResourceData(const ResName: PChar; Buffer: Pointer; var Length: I
 var
   S: TResourceStream;
   L: Integer;
-  Data: Pointer;
 begin
   Result := False;
   if (Buffer = nil) or (Length <= 0) then Exit;

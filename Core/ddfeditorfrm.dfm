@@ -24,7 +24,7 @@ object ddfeditorform: Tddfeditorform
   object Symbols: TTBDock
     Left = 0
     Top = 25
-    Width = 887
+    Width = 879
     Height = 26
     object gitternetzgroessen: TLabel
       Left = 440
@@ -194,8 +194,8 @@ object ddfeditorform: Tddfeditorform
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 493
-    Width = 887
+    Top = 484
+    Width = 879
     Height = 19
     Panels = <>
     SimplePanel = True
@@ -203,8 +203,8 @@ object ddfeditorform: Tddfeditorform
   object PageControl1: TPageControl
     Left = 233
     Top = 51
-    Width = 654
-    Height = 442
+    Width = 646
+    Height = 433
     ActivePage = TabSheet1
     Align = alClient
     TabOrder = 2
@@ -2832,7 +2832,7 @@ object ddfeditorform: Tddfeditorform
         Height = 21
         Style = csDropDownList
         DropDownCount = 16
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 2
         OnSelect = funktionsliste2Select
       end
@@ -3315,7 +3315,7 @@ object ddfeditorform: Tddfeditorform
       object Panel2: TPanel
         Left = 0
         Top = 0
-        Width = 646
+        Width = 638
         Height = 137
         Align = alTop
         BevelOuter = bvNone
@@ -3624,7 +3624,7 @@ object ddfeditorform: Tddfeditorform
           Height = 21
           Style = csDropDownList
           DropDownCount = 16
-          ItemHeight = 13
+          ItemHeight = 0
           TabOrder = 1
           OnSelect = funktionsliste1Select
         end
@@ -3845,8 +3845,8 @@ object ddfeditorform: Tddfeditorform
       object Memo2: TSynEdit
         Left = 0
         Top = 137
-        Width = 646
-        Height = 277
+        Width = 638
+        Height = 268
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -3891,7 +3891,7 @@ object ddfeditorform: Tddfeditorform
   object Mainmenu: TTBDock
     Left = 0
     Top = 0
-    Width = 887
+    Width = 879
     Height = 25
     object TBToolbar3: TTBToolbar
       Left = 0
@@ -4018,7 +4018,7 @@ object ddfeditorform: Tddfeditorform
     Left = 0
     Top = 51
     Width = 233
-    Height = 442
+    Height = 433
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 4
@@ -4026,7 +4026,7 @@ object ddfeditorform: Tddfeditorform
       Left = 0
       Top = 305
       Width = 233
-      Height = 137
+      Height = 128
       Align = alClient
       BevelInner = bvLowered
       BevelOuter = bvNone
@@ -4036,7 +4036,7 @@ object ddfeditorform: Tddfeditorform
         Left = 1
         Top = 1
         Width = 231
-        Height = 135
+        Height = 126
         StartColor = clGradientInactiveCaption
         EndColor = clWhite
       end

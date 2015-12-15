@@ -66,22 +66,22 @@ begin
   collection.Items.Clear;
   for i:=0 to length(mainform.Devices)-1 do
   begin
-    if FileExists(mainform.workingdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse) then
+    if FileExists(mainform.pcdimmerdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse) then
     begin                                    
-      if FileExists(mainform.workingdirectory+'Devicepictures\32 x 32\'+ExtractFileName(mainform.workingdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse)) then
-        bildadresse:=mainform.workingdirectory+'Devicepictures\32 x 32\'+ExtractFileName(mainform.workingdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse)
+      if FileExists(mainform.pcdimmerdirectory+'Devicepictures\32 x 32\'+ExtractFileName(mainform.pcdimmerdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse)) then
+        bildadresse:=mainform.pcdimmerdirectory+'Devicepictures\32 x 32\'+ExtractFileName(mainform.pcdimmerdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse)
       else
-        bildadresse:=mainform.workingdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse;
+        bildadresse:=mainform.pcdimmerdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse;
     end;
 
     if FileExists(bildadresse) then
     begin
       png:=collection.Items.Add(false);
       png.PngImage.LoadFromFile(bildadresse);
-    end else if FileExists(mainform.workingdirectory+'Devicepictures\32 x 32\par56silber.png') then
+    end else if FileExists(mainform.pcdimmerdirectory+'Devicepictures\32 x 32\par56silber.png') then
     begin
       png:=collection.Items.Add(false);
-      png.PngImage.LoadFromFile(mainform.workingdirectory+'Devicepictures\32 x 32\par56silber.png');
+      png.PngImage.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\32 x 32\par56silber.png');
     end else
     begin
       //png:=collection.Items.Add(false);

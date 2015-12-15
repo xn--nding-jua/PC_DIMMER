@@ -2,7 +2,7 @@ object Settings: TSettings
   Left = 191
   Top = 149
   BorderIcons = [biSystemMenu]
-  BorderStyle = bsToolWindow
+  BorderStyle = bsSingle
   Caption = 'SoftScanner Verbindungsplugin'
   ClientHeight = 233
   ClientWidth = 369
@@ -1379,9 +1379,9 @@ object Settings: TSettings
   object Label3: TLabel
     Left = 8
     Top = 88
-    Width = 133
+    Width = 162
     Height = 13
-    Caption = '(c) 2008 by Christian N'#246'ding'
+    Caption = '(c) 2008/2015 by Christian N'#246'ding'
   end
   object Bevel1: TBevel
     Left = 0

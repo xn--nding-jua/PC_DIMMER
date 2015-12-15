@@ -381,12 +381,12 @@ end;
 
 procedure Teditskriptfrm.OKClick(Sender: TObject);
 begin
-  If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp') then
-   	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp');
-  if not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel') then
-  	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+  If not DirectoryExists(mainform.userdirectory+'ProjectTemp') then
+   	CreateDir(mainform.userdirectory+'ProjectTemp');
+  if not DirectoryExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel') then
+  	CreateDir(mainform.userdirectory+'ProjectTemp\Kontrollpanel');
 	listbox.items.insert(0,inttostr(listbox.items.count));
-	listbox.Items.SaveToFile(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel\Button'+inttostr(aktuellezeile+1)+'x'+inttostr(aktuellespalte+1)+'.pcdscrp');
+	listbox.Items.SaveToFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(aktuellezeile+1)+'x'+inttostr(aktuellespalte+1)+'.pcdscrp');
 end;
 
 procedure Teditskriptfrm.Button8Click(Sender: TObject);

@@ -57,7 +57,7 @@ var
   searchdirectory:string;
   i:integer;
 begin
-  searchdirectory:=mainform.workingdirectory+'\DevicePictures\32 x 32';
+  searchdirectory:=mainform.pcdimmerdirectory+'\DevicePictures\32 x 32';
   Listbox1.Items.Clear;
   if (FindFirst(searchdirectory+'\*.bmp',faAnyFile-faDirectory,SR)=0) or
   (FindFirst(searchdirectory+'\*.jpg',faAnyFile-faDirectory,SR)=0) or
@@ -93,7 +93,7 @@ begin
   if (Listbox1.items.count>0) and (Listbox1.itemindex>-1) then
   begin
     bildname:=Listbox1.Items[Listbox1.ItemIndex];
-    bildpfad:=mainform.workingdirectory+'Devicepictures\32 x 32\';
+    bildpfad:=mainform.pcdimmerdirectory+'Devicepictures\32 x 32\';
 
     // das größte Bild für die Vorschau suchen
     if FileExists(copy(bildpfad,0,length(bildpfad)-8)+'128x128\'+bildname) then
@@ -120,10 +120,10 @@ begin
       ShowMessage(_('Die Datei scheint kein gültiges Bild zu sein...'));
     end;
 
-    px32.Visible:=FileExists(mainform.workingdirectory+'Devicepictures\32 x 32\'+Listbox1.Items[Listbox1.ItemIndex]);
-    px64.Visible:=FileExists(mainform.workingdirectory+'Devicepictures\64 x 64\'+Listbox1.Items[Listbox1.ItemIndex]);
-    px96.Visible:=FileExists(mainform.workingdirectory+'Devicepictures\96 x 96\'+Listbox1.Items[Listbox1.ItemIndex]);
-    px128.Visible:=FileExists(mainform.workingdirectory+'Devicepictures\128x128\'+Listbox1.Items[Listbox1.ItemIndex]);
+    px32.Visible:=FileExists(mainform.pcdimmerdirectory+'Devicepictures\32 x 32\'+Listbox1.Items[Listbox1.ItemIndex]);
+    px64.Visible:=FileExists(mainform.pcdimmerdirectory+'Devicepictures\64 x 64\'+Listbox1.Items[Listbox1.ItemIndex]);
+    px96.Visible:=FileExists(mainform.pcdimmerdirectory+'Devicepictures\96 x 96\'+Listbox1.Items[Listbox1.ItemIndex]);
+    px128.Visible:=FileExists(mainform.pcdimmerdirectory+'Devicepictures\128x128\'+Listbox1.Items[Listbox1.ItemIndex]);
   end;
 end;
 

@@ -435,7 +435,7 @@ begin
 
     DeviceID:=mainform.devices[i].ID;
 
-    XML.Xml.LoadFromFile(mainform.workingdirectory+'\Devices\'+geraetesteuerung.deviceprototyp[DevicePrototypPosition].ddffilename);
+    XML.Xml.LoadFromFile(mainform.pcdimmerdirectory+'\Devices\'+geraetesteuerung.deviceprototyp[DevicePrototypPosition].ddffilename);
     for j:=0 to XML.Xml.Root.Items.Count-1 do
     begin // <device>
       if XML.XML.Root.Items[j].Name='form' then
@@ -446,19 +446,19 @@ begin
         begin
           if XML.XML.Root.Items[j].Items[k].Name='deviceimage' then
           begin
-            if FileExists(mainform.workingdirectory+'Devicepictures\'+'64 x 64'+copy(mainform.devices[i].Bildadresse,8,length(mainform.devices[i].Bildadresse))) then
+            if FileExists(mainform.pcdimmerdirectory+'Devicepictures\'+'64 x 64'+copy(mainform.devices[i].Bildadresse,8,length(mainform.devices[i].Bildadresse))) then
             begin
               // versuche 64x64 Bild zu laden
-              deviceimage.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\'+'64 x 64'+copy(mainform.devices[i].Bildadresse,8,length(mainform.devices[i].Bildadresse)));
+              deviceimage.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\'+'64 x 64'+copy(mainform.devices[i].Bildadresse,8,length(mainform.devices[i].Bildadresse)));
             end else
-            if FileExists(mainform.workingdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse) then
+            if FileExists(mainform.pcdimmerdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse) then
             begin
               // 64x64 existiert nicht, eingestelltes Bild laden
-              deviceimage.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse);
-            end else if FileExists(mainform.workingdirectory+'\Devicepictures\'+geraetesteuerung.deviceprototyp[DevicePrototypPosition].Bildadresse) then
+              deviceimage.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\'+mainform.devices[i].Bildadresse);
+            end else if FileExists(mainform.pcdimmerdirectory+'\Devicepictures\'+geraetesteuerung.deviceprototyp[DevicePrototypPosition].Bildadresse) then
             begin
               // Gerätebild nicht verfügbar, Gerätegruppenbild laden
-              deviceimage.Picture.LoadFromFile(mainform.workingdirectory+'\Devicepictures\'+geraetesteuerung.deviceprototyp[DevicePrototypPosition].Bildadresse);
+              deviceimage.Picture.LoadFromFile(mainform.pcdimmerdirectory+'\Devicepictures\'+geraetesteuerung.deviceprototyp[DevicePrototypPosition].Bildadresse);
             end else
             begin
               deviceimage.Picture:=standardpicture.Picture;
@@ -626,23 +626,23 @@ begin
               if XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture')<>'' then
               begin
                 bildvorhanden:=true;
-                if FileExists(mainform.workingdirectory+'Devices\Icons\'+XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture')) then
+                if FileExists(mainform.pcdimmerdirectory+'Devices\Icons\'+XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture')) then
                 begin
-                  Bmp.Picture.LoadFromFile(mainform.workingdirectory+'Devices\Icons\'+XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture'));
-                end else if FileExists(mainform.workingdirectory+'Devicepictures\GobosSmall\'+XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture')) then
+                  Bmp.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devices\Icons\'+XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture'));
+                end else if FileExists(mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\'+XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture')) then
                 begin
-                  Bmp.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\GobosSmall\'+XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture'));
+                  Bmp.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\GobosSmall\'+XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture'));
                 end else if FileExists(XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture')) then
                 begin
                   Bmp.Picture.LoadFromFile(XML.XML.Root.Items[j].Items[k].Items[l].Properties.Value('picture'));
                 end else
                 begin
-                  Bmp.Picture.LoadFromFile(mainform.workingdirectory+'Devices\Icons\leer.bmp');
+                  Bmp.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devices\Icons\leer.bmp');
                 end;
                 ComboboxsImageList[length(ComboboxsImageList)-1].Add(Bmp.Picture.Bitmap,Bmp.Picture.Bitmap);
               end else
               begin
-                Bmp.Picture.LoadFromFile(mainform.workingdirectory+'Devices\Icons\leer.bmp');
+                Bmp.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devices\Icons\leer.bmp');
                 ComboboxsImageList[length(ComboboxsImageList)-1].Add(Bmp.Picture.Bitmap,Bmp.Picture.Bitmap);
               end;
             end;
@@ -845,7 +845,7 @@ begin
 
   deviceimage.Width:=128;
   deviceimage.Height:=128;
-  deviceimage.Picture.LoadFromFile(mainform.workingdirectory+'\Devicepictures\128x128\par56silber.png');
+  deviceimage.Picture.LoadFromFile(mainform.pcdimmerdirectory+'\Devicepictures\128x128\par56silber.png');
 
   devicename.Top:=150;
   devicename.Left:=8;

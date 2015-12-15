@@ -1760,7 +1760,7 @@ begin
       rect.Left:=textoffset+counter*buttonwidth+(buttonheight div 2)-16;
       rect.right:=textoffset+counter*buttonwidth+((buttonheight div 2)+32)-16;
       rect.Bottom:=textoffset+yoffset+line*buttonheight+2+32;
-      mainform.devicepictures32.Items.Items[geraetesteuerung.GetImageIndex(mainform.workingdirectory+'\Devicepictures\32 x 32\par56silber.png')].PngImage.Draw(_Buffer.Canvas, rect);
+      mainform.devicepictures32.Items.Items[geraetesteuerung.GetImageIndex(mainform.pcdimmerdirectory+'\Devicepictures\32 x 32\par56silber.png')].PngImage.Draw(_Buffer.Canvas, rect);
       // Zentriert
       _Buffer.Canvas.TextOut(round(textoffset+(counter+1)*buttonwidth-buttonwidth/2-_Buffer.Canvas.TextWidth(text1)/2), textoffset+yoffset+line*buttonheight+5+30, text1);
       _Buffer.Canvas.TextOut(round(textoffset+(counter+1)*buttonwidth-buttonwidth/2-_Buffer.Canvas.TextWidth(text2)/2), textoffset+yoffset+line*buttonheight+17+30, text2);
@@ -1770,7 +1770,7 @@ begin
       rect.Left:=textoffset+counter*buttonwidth+8;
       rect.right:=textoffset+counter*buttonwidth+8+32;
       rect.Bottom:=textoffset+yoffset+line*buttonheight+10+32;
-      mainform.devicepictures32.Items.Items[geraetesteuerung.GetImageIndex(mainform.workingdirectory+'\Devicepictures\32 x 32\par56silber.png')].PngImage.Draw(_Buffer.Canvas, rect);
+      mainform.devicepictures32.Items.Items[geraetesteuerung.GetImageIndex(mainform.pcdimmerdirectory+'\Devicepictures\32 x 32\par56silber.png')].PngImage.Draw(_Buffer.Canvas, rect);
       // Rechtsbündig
       _Buffer.Canvas.TextOut(textoffset+(counter+1)*buttonwidth-_Buffer.Canvas.TextWidth(text1)-5, textoffset+yoffset+line*buttonheight+5, text1);
       _Buffer.Canvas.TextOut(textoffset+(counter+1)*buttonwidth-_Buffer.Canvas.TextWidth(text2)-5, textoffset+yoffset+line*buttonheight+17, text2);

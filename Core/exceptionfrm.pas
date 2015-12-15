@@ -180,7 +180,7 @@ begin
   exceptionform.Height:=350;
   Button2.Caption:='Details >>';
   Listbox1.Items.Text:=DetailsMemo.Text;
-  Listbox1.Items.SaveToFile(mainform.workingdirectory+'\PC_DIMMER_Error.log');
+  Listbox1.Items.SaveToFile(mainform.userdirectory+'\PC_DIMMER_Error.log');
 end;
 
 procedure Texceptionform.Button2Click(Sender: TObject);

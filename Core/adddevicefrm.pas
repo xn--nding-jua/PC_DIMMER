@@ -296,8 +296,8 @@ begin
         SelectedPrototype:=geraetesteuerung.DevicePrototyp[l].ID;
         DeviceSelectionOK:=true;
 
-        if FileExists(mainform.workingdirectory+'Devicepictures\'+geraetesteuerung.DevicePrototyp[GetDevicePositionInDeviceArray(@geraetesteuerung.DevicePrototyp[l].ID)].Bildadresse) then
-          image1.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\'+geraetesteuerung.DevicePrototyp[GetDevicePositionInDeviceArray(@geraetesteuerung.DevicePrototyp[l].ID)].Bildadresse)
+        if FileExists(mainform.pcdimmerdirectory+'Devicepictures\'+geraetesteuerung.DevicePrototyp[GetDevicePositionInDeviceArray(@geraetesteuerung.DevicePrototyp[l].ID)].Bildadresse) then
+          image1.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\'+geraetesteuerung.DevicePrototyp[GetDevicePositionInDeviceArray(@geraetesteuerung.DevicePrototyp[l].ID)].Bildadresse)
         else
           image1.Picture:=standardpicture.Picture;
         namelabel.Caption:=geraetesteuerung.DevicePrototyp[GetDevicePositionInDeviceArray(@geraetesteuerung.DevicePrototyp[l].ID)].Name;
@@ -518,25 +518,27 @@ begin
 
   progressbar1.Visible:=true;
 
+{
   // Alte XML-DDFs verschieben
-  if (FindFirst(mainform.workingdirectory+'\Devices\*.xml',faAnyFile-faDirectory,SR)=0) then
+  if (FindFirst(mainform.pcdimmerdirectory+'\Devices\*.xml',faAnyFile-faDirectory,SR)=0) then
   begin
     repeat
       if (SR.Name<>'.') and (SR.Name<>'..') and (SR.Attr<>faDirectory) then
       begin
-        if not DirectoryExists(mainform.workingdirectory+'\Devices\XMLDDFs') then
-          CreateDirectory(PChar(mainform.workingdirectory+'\Devices\XMLDDFs'), nil);
-        CopyFileEx(mainform.workingdirectory+'\Devices\'+SR.Name, mainform.workingdirectory+'\Devices\XMLDDFs\'+SR.Name);
-        DeleteFile(mainform.workingdirectory+'\Devices\'+SR.Name);
+        if not DirectoryExists(mainform.pcdimmerdirectory+'\Devices\XMLDDFs') then
+          CreateDirectory(PChar(mainform.pcdimmerdirectory+'\Devices\XMLDDFs'), nil);
+        CopyFileEx(mainform.pcdimmerdirectory+'\Devices\'+SR.Name, mainform.pcdimmerdirectory+'\Devices\XMLDDFs\'+SR.Name);
+        DeleteFile(mainform.pcdimmerdirectory+'\Devices\'+SR.Name);
       end;
     until FindNext(SR)<>0;
     FindClose(SR);
   end;
+}
 
   // DDFs auflisten
-  dateianzahlinverzeichnis:=mainform.CountFiles(mainform.workingdirectory+'Devices\','*.pcddevc');
+  dateianzahlinverzeichnis:=mainform.CountFiles(mainform.pcdimmerdirectory+'Devices\','*.pcddevc');
   dateicounter:=0;
-  if (FindFirst(mainform.workingdirectory+'\Devices\*.pcddevc',faAnyFile-faDirectory,SR)=0) then
+  if (FindFirst(mainform.pcdimmerdirectory+'\Devices\*.pcddevc',faAnyFile-faDirectory,SR)=0) then
   begin
     repeat
       if (SR.Name<>'.') and (SR.Name<>'..') and (SR.Attr<>faDirectory) then
@@ -576,7 +578,7 @@ begin
       ProgressScreenSmall.Refresh;
     end;
 
-    XML.Xml.LoadFromFile(mainform.workingdirectory+'\Devices\'+ddfliste[i]);
+    XML.Xml.LoadFromFile(mainform.pcdimmerdirectory+'\Devices\'+ddfliste[i]);
     geraetesteuerung.DevicePrototyp[i].Bildadresse:=XML.XML.Root.Properties.Value('image');
 
     // nur zur Sicherheit
@@ -771,9 +773,9 @@ begin
       end;
     end;
 
-    if FileExists(copy(mainform.workingdirectory+'\Devices\'+ddfliste[i],0,length(mainform.workingdirectory+'\Devices\'+ddfliste[i])-3)+'colorlist') then
+    if FileExists(copy(mainform.pcdimmerdirectory+'\Devices\'+ddfliste[i],0,length(mainform.pcdimmerdirectory+'\Devices\'+ddfliste[i])-3)+'colorlist') then
     begin
-      listbox1.Items.LoadFromFile(copy(mainform.workingdirectory+'\Devices\'+ddfliste[i],0,length(mainform.workingdirectory+'\Devices\'+ddfliste[i])-3)+'colorlist');
+      listbox1.Items.LoadFromFile(copy(mainform.pcdimmerdirectory+'\Devices\'+ddfliste[i],0,length(mainform.pcdimmerdirectory+'\Devices\'+ddfliste[i])-3)+'colorlist');
       setlength(geraetesteuerung.DevicePrototyp[i].colors,listbox1.Items.Count);
       setlength(geraetesteuerung.DevicePrototyp[i].colorlevels,listbox1.Items.Count);
       setlength(geraetesteuerung.DevicePrototyp[i].colorendlevels,listbox1.Items.Count);

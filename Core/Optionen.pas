@@ -270,7 +270,6 @@ type
     MyHoverTickCount:byte;
   public
     { Public-Deklarationen }
-    workingdirectory:string;
   end;
 
 var
@@ -287,7 +286,7 @@ procedure TOptionenBox.FormShow(Sender: TObject);
 var
   i:integer;
 begin
-  mainform.debuglistbox.Items.LoadFromFile(workingdirectory+'\PC_DIMMER.log');
+  mainform.debuglistbox.Items.LoadFromFile(mainform.userdirectory+'\PC_DIMMER.log');
 
   for i:=0 to 8 do
   begin
@@ -423,7 +422,7 @@ begin
 	  	mainform.OutputPlugins[plugingrid.Row].Handle:=0;
 
 	    mainform.debuglistbox.Items.Add('['+inttostr(mainform.debuglistbox.Items.Count)+'] ['+Timetostr(now)+'] ['+Datetostr(now)+'] PLUGIN: Deactivated Outputplugin '+mainform.OutputPlugins[plugingrid.Row].Filename);
-	    mainform.debuglistbox.Items.SaveToFile(workingdirectory+'\PC_DIMMER.log');
+	    mainform.debuglistbox.Items.SaveToFile(mainform.userdirectory+'\PC_DIMMER.log');
 
       mainform.OutputPlugins[plugingrid.Row].IsActive:=false;
 
@@ -433,7 +432,7 @@ begin
 	  begin
 	    mainform.OutputPlugins[plugingrid.Row].IsEnabled:=true;
 
-	    mainform.OutputPlugins[plugingrid.Row].Handle := LoadLibrary(PChar(workingdirectory+'\plugins\'+mainform.OutputPlugins[plugingrid.Row].Filename));
+	    mainform.OutputPlugins[plugingrid.Row].Handle := LoadLibrary(PChar(mainform.pcdimmerdirectory+'\plugins\'+mainform.OutputPlugins[plugingrid.Row].Filename));
 
 	    ProcCall := GetProcAddress(mainform.OutputPlugins[plugingrid.Row].Handle,'DLLCreate');
       if not Assigned(ProcCall) then
@@ -442,12 +441,12 @@ begin
 	    begin
         Proccall(@CallbackGetDLLValue,@CallbackGetDLLValueEvent,@CallbackGetDLLName,@CallbackSetDLLValue,@CallbackMessage);
 	      mainform.debuglistbox.Items.Add('['+inttostr(mainform.debuglistbox.Items.Count)+'] ['+Timetostr(now)+'] ['+Datetostr(now)+'] PLUGIN: Activated Outputplugin '+mainform.OutputPlugins[plugingrid.Row].Filename);
-	      mainform.debuglistbox.Items.SaveToFile(workingdirectory+'\PC_DIMMER.log');
+	      mainform.debuglistbox.Items.SaveToFile(mainform.userdirectory+'\PC_DIMMER.log');
 	    end else
 	    begin
 	      ShowMessage('Fehler in DLL-Prozedur "DLLCreate" bzw. "DLLActivate"!');
 	      mainform.debuglistbox.Items.Add('['+inttostr(mainform.debuglistbox.Items.Count)+'] ['+Timetostr(now)+'] ['+Datetostr(now)+'] PLUGIN: Error in Outputplugin '+mainform.OutputPlugins[plugingrid.Row].Filename);
-	      mainform.debuglistbox.Items.SaveToFile(workingdirectory+'\PC_DIMMER.log');
+	      mainform.debuglistbox.Items.SaveToFile(mainform.userdirectory+'\PC_DIMMER.log');
 	    end;
 
       @mainform.OutputPlugins[plugingrid.Row].SendData := GetProcAddress(mainform.OutputPlugins[plugingrid.Row].Handle,'DLLSendData');

@@ -300,7 +300,7 @@ var
   tempstr:string;
   R,G,B:byte;
 begin
-  Opendialog1.InitialDir:=mainform.workingdirectory+'Devices';
+  Opendialog1.InitialDir:=mainform.pcdimmerdirectory+'Devices';
   if Opendialog1.Execute then
   begin
       listbox2.Items.LoadFromFile(opendialog1.FileName);
@@ -356,7 +356,7 @@ var
   tempstr:string;
   R,G,B:byte;
 begin
-  Savedialog1.InitialDir:=mainform.workingdirectory+'Devices';
+  Savedialog1.InitialDir:=mainform.pcdimmerdirectory+'Devices';
   if Savedialog1.Execute then
   begin
     listbox2.Items.Clear;

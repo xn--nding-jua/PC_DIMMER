@@ -1475,8 +1475,8 @@ begin
           AddGobo(mainform.Devices[length(mainform.Devices)-1].gobos2[i]);
         end;
 
-        bildname:=ExtractFileName(mainform.workingdirectory+'Devicepictures\'+mainform.Devices[length(mainform.Devices)-1].Bildadresse);
-        bildpfad:=ExtractFilePath(mainform.workingdirectory+'Devicepictures\'+mainform.Devices[length(mainform.Devices)-1].Bildadresse);
+        bildname:=ExtractFileName(mainform.pcdimmerdirectory+'Devicepictures\'+mainform.Devices[length(mainform.Devices)-1].Bildadresse);
+        bildpfad:=ExtractFilePath(mainform.pcdimmerdirectory+'Devicepictures\'+mainform.Devices[length(mainform.Devices)-1].Bildadresse);
 
         if adddevice.adddeviceicon.checked then
         begin
@@ -1544,7 +1544,7 @@ begin
       begin
         if mainform.devices[i].DeviceName=deviceprototyp[j].DeviceName then
         begin
-          XML.Xml.LoadFromFile(mainform.workingdirectory+'\Devices\'+deviceprototyp[j].ddffilename);
+          XML.Xml.LoadFromFile(mainform.pcdimmerdirectory+'\Devices\'+deviceprototyp[j].ddffilename);
           for k:=0 to XML.Xml.Root.Items.Count-1 do
           begin // <device>
             if XML.XML.Root.Items[k].Name='initvalues' then
@@ -2686,8 +2686,8 @@ begin
   if devicepicturechangeform.ModalResult=mrOK then
   begin
     newpicturefile:=devicepicturechangeform.aktuellebilddatei;
-    if pos(mainform.workingdirectory+'Devicepictures\',newpicturefile)>-1 then
-      newpicturefile:=copy(newpicturefile,length(mainform.workingdirectory+'Devicepictures\')+1,length(newpicturefile));
+    if pos(mainform.pcdimmerdirectory+'Devicepictures\',newpicturefile)>-1 then
+      newpicturefile:=copy(newpicturefile,length(mainform.pcdimmerdirectory+'Devicepictures\')+1,length(newpicturefile));
 
     for i:=0 to length(VSTDeviceNodes)-1 do
     for j:=0 to length(VSTDeviceNodes[i])-1 do
@@ -4430,27 +4430,28 @@ begin
   setlength(ddfliste,0);
   setlength(geraetesteuerung.DevicePrototyp,0);
 
+{
   // Alte XML-DDFs verschieben
-  if (FindFirst(mainform.workingdirectory+'\Devices\*.xml',faAnyFile-faDirectory,SR)=0) then
+  if (FindFirst(mainform.pcdimmerdirectory+'\Devices\*.xml',faAnyFile-faDirectory,SR)=0) then
   begin
     repeat
       if (SR.Name<>'.') and (SR.Name<>'..') and (SR.Attr<>faDirectory) then
       begin
-        if not DirectoryExists(mainform.workingdirectory+'\Devices\XMLDDFs') then
-          CreateDirectory(PChar(mainform.workingdirectory+'\Devices\XMLDDFs'), nil);
-        CopyFileEx(mainform.workingdirectory+'\Devices\'+SR.Name, mainform.workingdirectory+'\Devices\XMLDDFs\'+SR.Name);
-        DeleteFile(mainform.workingdirectory+'\Devices\'+SR.Name);
+        if not DirectoryExists(mainform.pcdimmerdirectory+'\Devices\XMLDDFs') then
+          CreateDirectory(PChar(mainform.pcdimmerdirectory+'\Devices\XMLDDFs'), nil);
+        CopyFileEx(mainform.pcdimmerdirectory+'\Devices\'+SR.Name, mainform.pcdimmerdirectory+'\Devices\XMLDDFs\'+SR.Name);
+        DeleteFile(mainform.pcdimmerdirectory+'\Devices\'+SR.Name);
       end;
     until FindNext(SR)<>0;
     FindClose(SR);
   end;
-
+}
   fortschrittsbalken.Max:=100;
 
   // DDFs auflisten
-  dateianzahlinverzeichnis:=mainform.CountFiles(mainform.workingdirectory+'Devices\','*.pcddevc');
+  dateianzahlinverzeichnis:=mainform.CountFiles(mainform.pcdimmerdirectory+'Devices\','*.pcddevc');
   dateicounter:=0;
-  if (FindFirst(mainform.workingdirectory+'\Devices\*.pcddevc',faAnyFile-faDirectory,SR)=0) then
+  if (FindFirst(mainform.pcdimmerdirectory+'\Devices\*.pcddevc',faAnyFile-faDirectory,SR)=0) then
   begin
     repeat
       if (SR.Name<>'.') and (SR.Name<>'..') and (SR.Attr<>faDirectory) then
@@ -4490,7 +4491,7 @@ begin
       ProgressScreenSmall.Refresh;
     end;
 
-    XML.Xml.LoadFromFile(mainform.workingdirectory+'Devices\'+ddfliste[i]);
+    XML.Xml.LoadFromFile(mainform.pcdimmerdirectory+'Devices\'+ddfliste[i]);
     geraetesteuerung.DevicePrototyp[i].Bildadresse:=XML.XML.Root.Properties.Value('image');
 
     // nur zur Sicherheit
@@ -4733,15 +4734,15 @@ begin
 
   if (not GoboAlreadyExists) then
   begin
-    if FileExists(mainform.workingdirectory+'\Devicepictures\Gobos\'+filename) then
+    if FileExists(mainform.pcdimmerdirectory+'\Devicepictures\Gobos\'+filename) then
     begin
       mainform.GoboPictures.Items.Add(false);
-      mainform.GoboPictures.Items.Items[mainform.GoboPictures.Items.Count-1].PngImage.LoadFromFile(mainform.workingdirectory+'\Devicepictures\Gobos\'+filename);
+      mainform.GoboPictures.Items.Items[mainform.GoboPictures.Items.Count-1].PngImage.LoadFromFile(mainform.pcdimmerdirectory+'\Devicepictures\Gobos\'+filename);
       mainform.GoboPictures.Items.Items[mainform.GoboPictures.Items.Count-1].Name:=filename;
     end else
     begin
       mainform.GoboPictures.Items.Add(false);
-      mainform.GoboPictures.Items.Items[mainform.GoboPictures.Items.Count-1].PngImage.LoadFromFile(mainform.workingdirectory+'\Devicepictures\Gobos\1.png');
+      mainform.GoboPictures.Items.Items[mainform.GoboPictures.Items.Count-1].PngImage.LoadFromFile(mainform.pcdimmerdirectory+'\Devicepictures\Gobos\1.png');
       mainform.GoboPictures.Items.Items[mainform.GoboPictures.Items.Count-1].Name:='1.png';
     end;
   end;

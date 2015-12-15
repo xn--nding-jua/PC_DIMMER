@@ -21,8 +21,8 @@ object picturechangeform: Tpicturechangeform
   object ListBox1: TListBox
     Left = 0
     Top = 78
-    Width = 166
-    Height = 200
+    Width = 158
+    Height = 191
     Align = alClient
     ItemHeight = 13
     TabOrder = 0
@@ -32,7 +32,7 @@ object picturechangeform: Tpicturechangeform
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 310
+    Width = 302
     Height = 57
     Align = alTop
     BevelOuter = bvNone
@@ -41,7 +41,7 @@ object picturechangeform: Tpicturechangeform
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 310
+      Width = 302
       Height = 57
       Style = grVertical
       StartColor = clWhite
@@ -384,8 +384,8 @@ object picturechangeform: Tpicturechangeform
   end
   object Panel2: TPanel
     Left = 0
-    Top = 278
-    Width = 310
+    Top = 269
+    Width = 302
     Height = 40
     Align = alBottom
     BevelOuter = bvNone
@@ -393,7 +393,7 @@ object picturechangeform: Tpicturechangeform
     object Shape1: TShape
       Left = 0
       Top = 1
-      Width = 310
+      Width = 302
       Height = 39
       Align = alClient
       Pen.Style = psClear
@@ -401,7 +401,7 @@ object picturechangeform: Tpicturechangeform
     object Shape2: TShape
       Left = 0
       Top = 0
-      Width = 310
+      Width = 302
       Height = 1
       Align = alTop
       Brush.Color = clBlack
@@ -426,10 +426,10 @@ object picturechangeform: Tpicturechangeform
     end
   end
   object Panel3: TPanel
-    Left = 166
+    Left = 158
     Top = 78
     Width = 144
-    Height = 200
+    Height = 191
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
@@ -582,7 +582,7 @@ object picturechangeform: Tpicturechangeform
   object Panel4: TPanel
     Left = 0
     Top = 57
-    Width = 310
+    Width = 302
     Height = 21
     Align = alTop
     BevelOuter = bvNone

@@ -696,8 +696,8 @@ type
     procedure CompressCompletedAction(Sender: TObject);
     procedure TBItem53Click(Sender: TObject);
     procedure WriteSettingsToRegistry;
-    procedure WriteConfigurationFile;
-    procedure ReadConfigurationFile;
+    procedure WriteConfiguration;
+    procedure ReadConfiguration;
     procedure TBItem54Click(Sender: TObject);
     procedure TBItem56Click(Sender: TObject);
     procedure MediaCenterSocketRead(Sender: TObject;
@@ -1028,7 +1028,7 @@ type
     project_folder : String;
     AudioMin, AudioMax : Integer;
     AudioTempMax : Integer;
-    workingdirectory:string;
+    pcdimmerdirectory, userdirectory:string;
     datanames:string[255];
     SzenenablaufArray : array of array of TGUID;
     shutdown:boolean;
@@ -1740,8 +1740,8 @@ begin
 
   if LastLanguage='' then
     LastLanguage:='EN';
-  if ((uppercase(LastLanguage)<>'DE') and (not DirectoryExists(workingdirectory+'locale\'+LastLanguage))) or
-     ((uppercase(LastLanguage)<>'DE') and (not DirectoryExists(workingdirectory+'locale\'+LastLanguage+'\LC_MESSAGES'))) then
+  if ((uppercase(LastLanguage)<>'DE') and (not DirectoryExists(pcdimmerdirectory+'locale\'+LastLanguage))) or
+     ((uppercase(LastLanguage)<>'DE') and (not DirectoryExists(pcdimmerdirectory+'locale\'+LastLanguage+'\LC_MESSAGES'))) then
   begin
     ShowMessage(_('The PC_DIMMER does not have a languagefile for your language "')+LastLanguage+_('". The PC_DIMMER will start in English now...'));
     LastLanguage:='EN';
@@ -1784,6 +1784,14 @@ begin
   ///////////////////////////////
   // VARIABLEN
   ///////////////////////////////
+
+  pcdimmerdirectory:=ExtractFilePath(paramstr(0));
+  userdirectory:=GetEnvironmentVariable('APPDATA')+'\PHOENIXstudios\PC_DIMMER\';
+  if not DirectoryExists(userdirectory) then
+  begin
+    CreateDir(GetEnvironmentVariable('APPDATA')+'\PHOENIXstudios\');
+    CreateDir(GetEnvironmentVariable('APPDATA')+'\PHOENIXstudios\PC_DIMMER');
+  end;
 
   currentprojectversion:=actualprojectversion;
 
@@ -1861,7 +1869,6 @@ begin
 
   {$I Channels_Commandsystem.inc}
 
-  workingdirectory:=ExtractFilePath(paramstr(0));
   debuglistbox.Clear;
   fadesplash:=false;
   Randomize;
@@ -1911,9 +1918,10 @@ begin
 
   DebugAdd('PC_DIMMER '+GetFileVersionBuild(paramstr(0))+' starting up...', false);
   DebugAdd('----------------------------------------------------------------------------', false);
-  DebugAdd('INIT: Workingdirectory: "'+workingdirectory+'"', false);
+  DebugAdd('INIT: pcdimmerdirectory: "'+pcdimmerdirectory+'"', false);
+  DebugAdd('INIT: userdirectory: "'+userdirectory+'"', false);
   try
-  	debuglistbox.Items.SaveToFile(workingdirectory+'\PC_DIMMER.log');
+  	debuglistbox.Items.SaveToFile(userdirectory+'\PC_DIMMER.log');
   except
 //    MessageDlg('PC_DIMMER kann nicht auf die Protokolldatei "PC_DIMMER.log" zugreifen!', mtError, [mbOk], 0);
     ownmessageform.captionlbl.Caption:=_('Fehler in Protokolldatei');
@@ -1928,13 +1936,13 @@ begin
   end;
   DebugAdd('INIT: Using '+osversion+' Frontend.');
 
-  If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp') then
+  If not DirectoryExists(userdirectory+'ProjectTemp') then
   begin
-  	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp');
-  	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+  	CreateDir(userdirectory+'ProjectTemp');
+  	CreateDir(userdirectory+'ProjectTemp\Kontrollpanel');
   end;
 
-  project_folder:=workingdirectory+'ProjectTemp\';
+  project_folder:=userdirectory+'ProjectTemp\';
 
   akkulevel:=100;
   akkuwarningmessageshownext:=15;
@@ -1946,10 +1954,10 @@ begin
   // Audioeffektplayer initialisieren
   setlength(effektaudio_record,0);
 
-  If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp') then
+  If not DirectoryExists(userdirectory+'ProjectTemp') then
   begin
-   	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp');
-  	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+   	CreateDir(userdirectory+'ProjectTemp');
+  	CreateDir(userdirectory+'ProjectTemp\Kontrollpanel');
   end;
 
   left:=0;
@@ -1984,7 +1992,7 @@ begin
     end;
     LReg.WriteBool('Running', true);
 
-    LReg.WriteString('Last used directory', workingdirectory);
+    LReg.WriteString('Last used directory', userdirectory);
 
     MainPriority := LReg.ReadWriteInt('Processpriority', 3);
     if MainPriority < 2 then
@@ -2117,7 +2125,7 @@ begin
   SplashCaptioninfo(_('Konfiguration öffnen'));
   RefreshSplashText;
 
-  ReadConfigurationFile;
+  ReadConfiguration;
 
   SplashProgress(1, 2, 100);
   SplashCaptioninfo(_('Oberfläche vorbereiten...'));
@@ -2147,14 +2155,14 @@ begin
   SplashCaptioninfo(_('Plugins suchen...'));
   RefreshSplashText;
 
-  PluginsToLoad:=CountFiles(workingdirectory+'Plugins\','*.dll');
+  PluginsToLoad:=CountFiles(pcdimmerdirectory+'Plugins\','*.dll');
   ActualPlugin:=-1;
 
 // DLLs suchen und Output- und Program-DLLs rausfiltern
   setlength(OutputPlugins, 0);
   setlength(ProgramPlugins, 0);
 
-  if (FindFirst(workingdirectory+'\plugins\*.dll',faAnyFile-faDirectory,SR)=0) then
+  if (FindFirst(pcdimmerdirectory+'\plugins\*.dll',faAnyFile-faDirectory,SR)=0) then
   begin
     repeat
       if (SR.Name<>'.') and (SR.Name<>'..') and (SR.Attr<>faDirectory) then
@@ -2162,7 +2170,7 @@ begin
         if (Pos(SR.Name, plugin_blacklist)=0) then
         begin
           try
-            DLL:=LoadLibrary(PChar(workingdirectory+'\plugins\'+SR.Name));
+            DLL:=LoadLibrary(PChar(pcdimmerdirectory+'\plugins\'+SR.Name));
             FuncCall := GetProcAddress(DLL,'DLLIdentify');
             FuncCall2 := GetProcAddress(DLL,'DLLGetName');
             FuncCall3 := GetProcAddress(DLL,'DLLGetVersion');
@@ -2276,9 +2284,9 @@ begin
   if dontloadproject then
   begin
     // Projektverzeichnis reinigen
-    DeleteDirectory(ExtractFilePath(paramstr(0))+'ProjectTemp');
-    CreateDir(ExtractFilePath(paramstr(0))+'ProjectTemp');
-  	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+    DeleteDirectory(userdirectory+'ProjectTemp');
+    CreateDir(userdirectory+'ProjectTemp');
+  	CreateDir(userdirectory+'ProjectTemp\Kontrollpanel');
   end;
 
   for i:=1 to lastchan do
@@ -3470,7 +3478,7 @@ begin
   end;
   LReg.Free;
 
-  WriteConfigurationFile;
+  WriteConfiguration;
   DebugAddToLine(' - OK');
 
 // Power-Switch am Computer-Gehäuse wieder aktivieren
@@ -3680,7 +3688,7 @@ begin
   DebugAdd('SETUP: Writing values into registry successful...');
 
   // Daten in der Konfigurationsdatei speichern
-  WriteConfigurationFile;
+  WriteConfiguration;
 
   DebugAdd('SETUP: PC_DIMMER reset successful.', false);
   DebugAdd('', true, false);
@@ -3714,7 +3722,7 @@ begin
   if audioeffektplayerform.StopEffektaudio.Enabled then audioeffektplayerform.StopEffektaudio.Click; // Audioeffektplayer anhalten
 
 //  project_folder:='';
-  project_folder:=workingdirectory+'ProjectTemp\';
+  project_folder:=userdirectory+'ProjectTemp\';
   project_file:='';
 
   LReg := TPCDRegistry.Create;
@@ -3958,10 +3966,10 @@ begin
   szenenverwaltung_formarray[0].TreeView2.Items.Clear;
 
   // Projektverzeichnis reinigen
-  DeleteDirectory(ExtractFilePath(paramstr(0))+'ProjectTemp');
-  //DeleteDir(ExtractFilePath(paramstr(0))+'ProjectTemp');
-  CreateDir(ExtractFilePath(paramstr(0))+'ProjectTemp');
-  CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+  DeleteDirectory(userdirectory+'ProjectTemp');
+  //DeleteDir(userdirectory+'ProjectTemp');
+  CreateDir(userdirectory+'ProjectTemp');
+  CreateDir(userdirectory+'ProjectTemp\Kontrollpanel');
   BASS_Init(sounddevice+1, BASSDLLFREQUENZ, BASS_DEVICE_SPEAKERS, Handle, nil);
 
   if showfirststeps then
@@ -4003,7 +4011,7 @@ begin
     projectfilepath:=ExtractFilepath(savefile);
     projectfilename:=ExtractFileName(savefile);
 //    project_folder:=projectfilepath;
-    project_folder:=workingdirectory+'ProjectTemp\';
+    project_folder:=userdirectory+'ProjectTemp\';
     mainform.Caption:=maincaption+' - ['+projectfilename+']';
     project_file:=savefile;
   end;
@@ -4018,7 +4026,7 @@ begin
   inprogress.Refresh;
 
   Application.ProcessMessages;
-  inprogress.Label2.caption:=_('Projektgröße: ')+Floattostrf(GetDirSize(workingdirectory+'ProjectTemp',true) / 1048576, ffGeneral, 4, 2) + ' MB';
+  inprogress.Label2.caption:=_('Projektgröße: ')+Floattostrf(GetDirSize(userdirectory+'ProjectTemp',true) / 1048576, ffGeneral, 4, 2) + ' MB';
   inprogress.Refresh;
 
   AutosaveProgress.Visible:=true;
@@ -4030,14 +4038,14 @@ begin
   projectfilepath:=ExtractFilepath(project_file);
   projectfilename:=ExtractFileName(project_file);
 //      project_folder:=projectfilepath;
-  project_folder:=workingdirectory+'ProjectTemp\';
+  project_folder:=userdirectory+'ProjectTemp\';
 
   inprogress.filename.Caption:=_('Sende Plugins Speichern-Befehl...');
   inprogress.ProgressBar1.Position:=20;
   AutosaveProgress.Position:=20;
   inprogress.Refresh;
 
-  SendMSG(MSG_SAVE,workingdirectory+'ProjectTemp\',0);
+  SendMSG(MSG_SAVE,userdirectory+'ProjectTemp\',0);
 
   kontrollpanel.MSGSave(nil);
   effektsequenzer.MSGSave;
@@ -4081,7 +4089,7 @@ begin
     AutosaveProgress.Position:=60;
     projektprogrammversion:=inttostr(actualprojectversion);//getfileversion(paramstr(0));
 
-		FileStream:=TFileStream.Create(workingdirectory+'ProjectTemp\Projekt',fmCreate);
+		FileStream:=TFileStream.Create(userdirectory+'ProjectTemp\Projekt',fmCreate);
     // Projekt-Header speichern
 	  inprogress.filename.Caption:=_('Schreibe Datei... Projekt-Header');
   	inprogress.Refresh;
@@ -4115,7 +4123,7 @@ begin
     for i:=0 to laenge-1 do
     begin
       if pos('\ProjectTemp\',Effektaudio_record[i].audiopfad)>0 then
-        Effektaudio_record[i].audiopfad:=workingdirectory+copy(Effektaudio_record[i].audiopfad,pos('ProjectTemp\',Effektaudio_record[i].audiopfad),length(Effektaudio_record[i].audiopfad));
+        Effektaudio_record[i].audiopfad:=userdirectory+copy(Effektaudio_record[i].audiopfad,pos('ProjectTemp\',Effektaudio_record[i].audiopfad),length(Effektaudio_record[i].audiopfad));
 
 			Filestream.WriteBuffer(Effektaudio_record[i].audiodatei,sizeof(Effektaudio_record[i].audiodatei));
 			Filestream.WriteBuffer(Effektaudio_record[i].audiopfad,sizeof(Effektaudio_record[i].audiopfad));
@@ -5458,7 +5466,7 @@ begin
         fastsaved:=false;
       end;
 
-      if (not fastsaved) and ((projectfilepath+projectfilename)<>(workingdirectory+'ProjectTemp\Projekt')) then
+      if (not fastsaved) and ((projectfilepath+projectfilename)<>(userdirectory+'ProjectTemp\Projekt')) then
       begin
 	  	  inprogress.filename.Caption:='';
         inprogress.Label1.Caption:='';
@@ -5487,12 +5495,12 @@ begin
 	    	inprogress.Refresh;
 
 //        filesinprojectdirectory:=0;
-        filesinprojectdirectory:=CountFiles(workingdirectory+'ProjectTemp\','*.*');
+        filesinprojectdirectory:=CountFiles(userdirectory+'ProjectTemp\','*.*');
         inprogress.ProgressBar2.Max:=filesinprojectdirectory;
         inprogress.Label1.Caption:=_('Datei (1/')+inttostr(filesinprojectdirectory)+')';
         inprogress.ProgressBar2.Position:=0;
 
-        Compress.CompressDirectory(workingdirectory+'ProjectTemp\',true,projectfilepath+projectfilename);
+        Compress.CompressDirectory(userdirectory+'ProjectTemp\',true,projectfilepath+projectfilename);
 
         // SETFILESUMMARYINFORMATIONS
         SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_TITLE,copy(projectfilename,0,length(projectfilename)-8));
@@ -5533,9 +5541,9 @@ begin
     AutosaveProgress.Max:=30;
     projectfilepath:=ExtractFilepath(project_file);
     projectfilename:=ExtractFileName(project_file);
-    project_folder:=workingdirectory+'ProjectTemp\';
+    project_folder:=userdirectory+'ProjectTemp\';
 
-    SendMSG(MSG_SAVE,workingdirectory+'ProjectTemp\',0);
+    SendMSG(MSG_SAVE,userdirectory+'ProjectTemp\',0);
 
     kontrollpanel.MSGSave(nil);
     effektsequenzer.MSGSave;
@@ -5605,7 +5613,7 @@ begin
     for i:=0 to laenge-1 do
     begin
       if pos('\ProjectTemp\',Effektaudio_record[i].audiopfad)>0 then
-        Effektaudio_record[i].audiopfad:=workingdirectory+copy(Effektaudio_record[i].audiopfad,pos('ProjectTemp\',Effektaudio_record[i].audiopfad),length(Effektaudio_record[i].audiopfad));
+        Effektaudio_record[i].audiopfad:=userdirectory+copy(Effektaudio_record[i].audiopfad,pos('ProjectTemp\',Effektaudio_record[i].audiopfad),length(Effektaudio_record[i].audiopfad));
 
 			Filestream.WriteBuffer(Effektaudio_record[i].audiodatei,sizeof(Effektaudio_record[i].audiodatei));
 			Filestream.WriteBuffer(Effektaudio_record[i].audiopfad,sizeof(Effektaudio_record[i].audiopfad));
@@ -6949,7 +6957,7 @@ begin
     Openfilename:=ExtractFilename(filename);
 
     project_file:=filename;
-    project_folder:=workingdirectory+'ProjectTemp\';
+    project_folder:=userdirectory+'ProjectTemp\';
   end;
 
   BASS_StreamFree(audioeffektplayerform._chan[0]);
@@ -6977,12 +6985,12 @@ begin
 
   if not OnlyProject then
   begin
-    if (filename<>(workingdirectory+'ProjectTemp\Projekt')) then
+    if (filename<>(userdirectory+'ProjectTemp\Projekt')) then
     begin
       // Projektverzeichnis reinigen
-      DeleteDirectory(ExtractFilePath(paramstr(0))+'ProjectTemp');
-      CreateDir(ExtractFilePath(paramstr(0))+'ProjectTemp');
-      CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+      DeleteDirectory(userdirectory+'ProjectTemp');
+      CreateDir(userdirectory+'ProjectTemp');
+      CreateDir(userdirectory+'ProjectTemp\Kontrollpanel');
 
       sleep(250);
 
@@ -7007,10 +7015,10 @@ begin
 
       //Containerdatei entpacken
       try
-        Compress.DecompressFile(Openfilepath+Openfilename,workingdirectory+'ProjectTemp\',true,true);
+        Compress.DecompressFile(Openfilepath+Openfilename,userdirectory+'ProjectTemp\',true,true);
       except
         inprogress.Hide;
-        CopyFile(PChar(Openfilepath+Openfilename),PChar(workingdirectory+'ProjectTemp\Projekt'),false);
+        CopyFile(PChar(Openfilepath+Openfilename),PChar(userdirectory+'ProjectTemp\Projekt'),false);
       end;
     end else
     begin
@@ -7043,7 +7051,7 @@ begin
       SplashProgress(1, 81, 100);
       RefreshSplashText;
     end;
-    SendMSG(MSG_OPEN,workingdirectory+'ProjectTemp\',0);
+    SendMSG(MSG_OPEN,userdirectory+'ProjectTemp\',0);
   end;
 
   // Den Plugins genügend Zeit geben
@@ -7060,10 +7068,10 @@ begin
   end;
 
   try
-    if fileexists(workingdirectory+'ProjectTemp\Projekt') then
-      FileStream:=TFileStream.Create(workingdirectory+'ProjectTemp\Projekt',fmOpenRead)
+    if fileexists(userdirectory+'ProjectTemp\Projekt') then
+      FileStream:=TFileStream.Create(userdirectory+'ProjectTemp\Projekt',fmOpenRead)
     else
-     	FileStream:=TFileStream.Create(workingdirectory+'ProjectTemp\'+Openfilename,fmOpenRead);
+     	FileStream:=TFileStream.Create(userdirectory+'ProjectTemp\'+Openfilename,fmOpenRead);
 
     // Projekt-Header öffnen
   	if not startingup then
@@ -7124,9 +7132,9 @@ begin
       ownmessageform.caption:=_('Projektdatei zurückgewiesen');
       ownmessageform.showmodal;
       // Projektverzeichnis reinigen
-      DeleteDirectory(ExtractFilePath(paramstr(0))+'ProjectTemp');
-      CreateDir(ExtractFilePath(paramstr(0))+'ProjectTemp');
-    	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+      DeleteDirectory(userdirectory+'ProjectTemp');
+      CreateDir(userdirectory+'ProjectTemp');
+    	CreateDir(userdirectory+'ProjectTemp\Kontrollpanel');
       exit;
     end;
 
@@ -7150,9 +7158,9 @@ begin
       ownmessageform.caption:=_('Hinweis...');
       ownmessageform.showmodal;
       // Projektverzeichnis reinigen
-      DeleteDirectory(ExtractFilePath(paramstr(0))+'ProjectTemp');
-      CreateDir(ExtractFilePath(paramstr(0))+'ProjectTemp');
-    	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+      DeleteDirectory(userdirectory+'ProjectTemp');
+      CreateDir(userdirectory+'ProjectTemp');
+    	CreateDir(userdirectory+'ProjectTemp\Kontrollpanel');
       exit;
     end;
 
@@ -9730,9 +9738,9 @@ begin
       ownmessageform.caption:=_('Fehler in Projektdatei');
       ownmessageform.showmodal;
       // Projektverzeichnis reinigen
-      DeleteDirectory(ExtractFilePath(paramstr(0))+'ProjectTemp');
-      CreateDir(ExtractFilePath(paramstr(0))+'ProjectTemp');
-    	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+      DeleteDirectory(userdirectory+'ProjectTemp');
+      CreateDir(userdirectory+'ProjectTemp');
+    	CreateDir(userdirectory+'ProjectTemp\Kontrollpanel');
     end;
   except
     FileStream.Free;
@@ -9757,9 +9765,9 @@ begin
     openerror:=true;
     DebugAdd('FILE: Loading PC_DIMMER-Project failed - bad file!');
     // Projektverzeichnis reinigen
-    DeleteDirectory(ExtractFilePath(paramstr(0))+'ProjectTemp');
-    CreateDir(ExtractFilePath(paramstr(0))+'ProjectTemp');
-  	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+    DeleteDirectory(userdirectory+'ProjectTemp');
+    CreateDir(userdirectory+'ProjectTemp');
+  	CreateDir(userdirectory+'ProjectTemp\Kontrollpanel');
   end;
 
   // Bugfix für Fehlerhafte Array-Länge bei Gruppeneinträgen in Geräteszenen von alten Projekten
@@ -9793,9 +9801,9 @@ begin
   begin
     project_file:='';
     // Projektverzeichnis reinigen
-    DeleteDirectory(ExtractFilePath(paramstr(0))+'ProjectTemp');
-    CreateDir(ExtractFilePath(paramstr(0))+'ProjectTemp');
-  	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+    DeleteDirectory(userdirectory+'ProjectTemp');
+    CreateDir(userdirectory+'ProjectTemp');
+  	CreateDir(userdirectory+'ProjectTemp\Kontrollpanel');
   end;
 
   if openerror=false then
@@ -9949,7 +9957,7 @@ begin
       project_file:=autoload_project_file;
       autoload_project_file:='';
     end;
-    if Openfilepath+Openfilename=workingdirectory+'ProjectTemp\Projekt' then
+    if Openfilepath+Openfilename=userdirectory+'ProjectTemp\Projekt' then
       mainform.Caption:=maincaption+_(' - [Nicht gespeichertes Projekt]')
     else
       mainform.Caption:=maincaption+' - ['+Openfilename+']';
@@ -9966,7 +9974,7 @@ begin
     begin
       if not FileExists(Effektaudio_record[i].audiopfad+Effektaudio_record[i].audiodatei) then
         if pos('\ProjectTemp\',Effektaudio_record[i].audiopfad)>0 then
-          Effektaudio_record[i].audiopfad:=workingdirectory+copy(Effektaudio_record[i].audiopfad,pos('ProjectTemp\',Effektaudio_record[i].audiopfad),length(Effektaudio_record[i].audiopfad));
+          Effektaudio_record[i].audiopfad:=userdirectory+copy(Effektaudio_record[i].audiopfad,pos('ProjectTemp\',Effektaudio_record[i].audiopfad),length(Effektaudio_record[i].audiopfad));
 
       if FileExists(mainform.Effektaudio_record[i].audiopfad+mainform.Effektaudio_record[i].audiodatei) then
       begin
@@ -10085,7 +10093,7 @@ begin
     begin
       if devices[i].DeviceName=geraetesteuerung.deviceprototyp[j].DeviceName then
       begin
-        XML.Xml.LoadFromFile(mainform.workingdirectory+'\Devices\'+geraetesteuerung.deviceprototyp[j].ddffilename);
+        XML.Xml.LoadFromFile(mainform.pcdimmerdirectory+'\Devices\'+geraetesteuerung.deviceprototyp[j].ddffilename);
         for k:=0 to XML.Xml.Root.Items.Count-1 do
         begin // <device>
           if XML.XML.Root.Items[k].Name='initvalues' then
@@ -10360,7 +10368,7 @@ begin
   if gnulicense=nil then
     gnulicense:=Tgnulicense.Create(gnulicense);
 
-  gnulicense.Memo1.Lines.LoadFromFile(workingdirectory+'\gpl.txt');
+  gnulicense.Memo1.Lines.LoadFromFile(pcdimmerdirectory+'\gpl.txt');
   gnulicense.Caption:='GNU General Public License';
   gnulicense.Label1.Caption:='Please read the license agreement below in its entirely. It describes the only conditions under which you may redistribute and';
   gnulicense.Label2.Caption:='modify the PHOENIXstudios PC_DIMMER, and that this program comes with no warranty.';
@@ -10373,7 +10381,7 @@ begin
   if gnulicense=nil then
     gnulicense:=Tgnulicense.Create(gnulicense);
 
-  gnulicense.Memo1.Lines.LoadFromFile(workingdirectory+'\revhist.txt');
+  gnulicense.Memo1.Lines.LoadFromFile(pcdimmerdirectory+'\revhist.txt');
   gnulicense.Caption:=_('PC_DIMMER Change log...');
   gnulicense.Label1.Caption:=_('PHOENIXstudios PC_DIMMER');
   gnulicense.Label2.Caption:=_('Keep looking on http://www.pcdimmer.de for updates');
@@ -10391,7 +10399,7 @@ begin
   with protocolbox do
   begin
 	  errorsoccured:=false;
-		debuglistbox.Items.LoadFromFile(workingdirectory+'\PC_DIMMER.log');
+		debuglistbox.Items.LoadFromFile(userdirectory+'\PC_DIMMER.log');
 		debuglistbox.ItemIndex:=debuglistbox.Items.Count-1;
 		for i:=0 to debuglistbox.Count-1 do
 	  begin
@@ -10428,7 +10436,7 @@ begin
     	canclose:=false;
     end else
     begin
-      if (length(project_file)>0) and (project_file<>workingdirectory+'ProjectTemp\Projekt') then
+      if (length(project_file)>0) and (project_file<>userdirectory+'ProjectTemp\Projekt') then
       begin
         if fastsaved then
           text:=_('Bislang wurde das Projekt nur per "Fastsave" gespeichert. Die Projektdatei wurde noch nicht aktualisiert.'+#10#13+'Sämtliche Änderungen könnten durch einen Klick auf "Neues Projekt" oder das Laden eines anderen Projektes gelöscht werden.'+#10#13+#10#13+'Möchten Sie die Projektdatei nun aktualisieren?'+#10#13#10#13+'Datei: "')+ExtractFileName(project_file)+'"'+#10#13+'Titel: '+projekttitel+#10#13+'Bearbeiter: '+projektbearbeiter
@@ -10539,7 +10547,6 @@ begin
   Optionenbox.lastchan_edit.Text:=inttostr(lastchan);
   Optionenbox.askforsaveproject_checkbox.Checked:=askforsaveproject;
   Optionenbox.levelanzeigeoptionen.ItemIndex:=levelanzeigeoptionen;
-  Optionenbox.workingdirectory:=workingdirectory;
   Optionenbox.deactivateoutputdllsonclose.Checked:=deactivateoutputdllsonclose;
   Optionenbox.deactivateinputdllsonclose.Checked:=deactivateinputdllsonclose;
   Optionenbox.prioritaet.Position:=mainpriority;
@@ -10824,7 +10831,7 @@ end;
 
 procedure TMainform.ToolButton4Click(Sender: TObject);
 begin
-  if (project_file=workingdirectory+'ProjectTemp\Projekt') then
+  if (project_file=userdirectory+'ProjectTemp\Projekt') then
   begin
     saveproject(false,false);
     exit;
@@ -12248,7 +12255,6 @@ begin
     SetLength(Dateiname, size);
 //    SetLength(Dateiname, DragQueryFile(Msg.WParam,i , PChar(Dateiname), size));
     DragQueryFile(Msg.WParam, i, PChar(Dateiname), size + 1);
-    showmessage(Dateiname);
     OpenPCDIMMERFile(Dateiname);
   end;
   DragFinish(Msg.WParam);
@@ -12825,7 +12831,7 @@ begin
 
   for i:=0 to length(ProgramPlugins)-1 do
   begin
-    ProgramPlugins[i].Handle := LoadLibrary(PChar(workingdirectory+'\plugins\'+ProgramPlugins[i].Filename));
+    ProgramPlugins[i].Handle := LoadLibrary(PChar(pcdimmerdirectory+'\plugins\'+ProgramPlugins[i].Filename));
     FuncCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLGetName');
     FuncCall2 := GetProcAddress(ProgramPlugins[i].Handle,'DLLGetVersion');
     if Assigned(FuncCall) then
@@ -13430,7 +13436,7 @@ begin
   // PLUGINS AKTIVIEREN
   ///////////////////////////////
 
-  debuglistbox.Items.LoadFromFile(workingdirectory+'\PC_DIMMER.log');
+  debuglistbox.Items.LoadFromFile(userdirectory+'\PC_DIMMER.log');
   DebugAdd('INIT: Found handle. PC_DIMMER Desktop is starting...');
 
   SplashCaptioninfo(_('Outputplugins aktivieren...'));
@@ -13467,7 +13473,7 @@ begin
     begin
       DebugAdd('PLUGIN: Try to activate outputplugin "'+OutputPlugins[i].Filename+'"...');
 
-      OutputPlugins[i].Handle:=LoadLibrary(PChar(workingdirectory+'\plugins\'+OutputPlugins[i].Filename));
+      OutputPlugins[i].Handle:=LoadLibrary(PChar(pcdimmerdirectory+'\plugins\'+OutputPlugins[i].Filename));
       SplashProgress(1, 45+round(15*(i / length(OutputPlugins))), 100);
       SplashAddText(_('Aktiviere ')+OutputPlugins[i].Name);
       RefreshSplashText;
@@ -13502,7 +13508,7 @@ begin
 
   DebugAdd('', false, false);
 
-  debuglistbox.Items.LoadFromFile(workingdirectory+'\PC_DIMMER.log');
+  debuglistbox.Items.LoadFromFile(userdirectory+'\PC_DIMMER.log');
   SplashCaptioninfo(_('Inputplugins aktivieren...'));
   SplashProgress(1, 60, 100);
   RefreshSplashText;
@@ -13514,7 +13520,7 @@ begin
   begin
     DebugAdd('PLUGIN: Try to activate inputplugin "'+ProgramPlugins[i].Filename+'"...');
 
-    ProgramPlugins[i].Handle:=LoadLibrary(PChar(workingdirectory+'\plugins\'+ProgramPlugins[i].Filename));
+    ProgramPlugins[i].Handle:=LoadLibrary(PChar(pcdimmerdirectory+'\plugins\'+ProgramPlugins[i].Filename));
     FuncCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLGetName');
     FuncCall2 := GetProcAddress(ProgramPlugins[i].Handle,'DLLGetVersion');
 
@@ -14064,7 +14070,7 @@ begin
   end;
   LReg.Free;
 
-  debuglistbox.Items.SaveToFile(workingdirectory+'\PC_DIMMER.log');
+  debuglistbox.Items.SaveToFile(userdirectory+'\PC_DIMMER.log');
   SplashProgress(1, 79, 100);
   SplashCaptioninfo(_('DDF Bilder laden...'));
   SplashAddText(_('DDF Bilder laden...'));
@@ -14076,7 +14082,7 @@ begin
   SplashCaptioninfo(_('Leeres Projekt erzeugen...'));
   NewProject;
 
-  debuglistbox.Items.SaveToFile(workingdirectory+'\PC_DIMMER.log');
+  debuglistbox.Items.SaveToFile(userdirectory+'\PC_DIMMER.log');
   SplashProgress(1, 85, 100);
   SplashCaptioninfo(_('Dateien öffnen...'));
   SplashAddText('');
@@ -14146,11 +14152,11 @@ begin
   if LastSessionWasCorrupt then
   begin
     SplashCaptioninfo(_('Projektwiederherstellung...'));
-    if FileExists(Extractfilepath(paramstr(0))+'Autobackup.pcdbkup') then
+    if FileExists(userdirectory+'Autobackup.pcdbkup') then
     begin
       if MessageDlg(_('Anscheinend wurde der PC_DIMMER beim letzten Mal nicht richtig beendet.'+#13#10#10+'Soll die letzte automatische Backupdatei wiederhergestellt werden (das letzte, nur schnellgespeicherte Projekt im Projektverzeichnis wird dabei überschrieben)?'), mtWarning, [mbYes, mbNo], 0)=mrYes then
       begin
-        copyfile(PChar(Extractfilepath(paramstr(0))+'Autobackup.pcdbkup'),PChar(Extractfilepath(paramstr(0))+'ProjectTemp\Projekt'),true);
+        copyfile(PChar(userdirectory+'Autobackup.pcdbkup'),PChar(userdirectory+'ProjectTemp\Projekt'),true);
         OpenProject('',true);
       end;
     end;
@@ -14204,7 +14210,7 @@ begin
       begin
         if devices[i].DeviceName=geraetesteuerung.deviceprototyp[j].DeviceName then
         begin
-          XML.Xml.LoadFromFile(mainform.workingdirectory+'\Devices\'+geraetesteuerung.deviceprototyp[j].ddffilename);
+          XML.Xml.LoadFromFile(mainform.pcdimmerdirectory+'\Devices\'+geraetesteuerung.deviceprototyp[j].ddffilename);
           for k:=0 to XML.Xml.Root.Items.Count-1 do
           begin // <device>
             if XML.XML.Root.Items[k].Name='initvalues' then
@@ -18711,8 +18717,8 @@ begin
       end;
 //        audioszeneneditor.audio_mono.Checked:=mainform.Audioszenen[j].Kanalsettings[0]=255;
 
-      if FileExists(workingdirectory+'ProjectTemp\'+mainform.Audioszenen[j].Datei) then
-        audioszeneneditor.label6.caption:=workingdirectory+'ProjectTemp\'+mainform.Audioszenen[j].Datei
+      if FileExists(userdirectory+'ProjectTemp\'+mainform.Audioszenen[j].Datei) then
+        audioszeneneditor.label6.caption:=userdirectory+'ProjectTemp\'+mainform.Audioszenen[j].Datei
       else
         audioszeneneditor.label6.caption:=mainform.Audioszenen[j].Datei;
 
@@ -20552,20 +20558,20 @@ begin
     Autobackupcounter:=0;
 
     // Autobackupdatei von alter PC_DIMMER Version löschen
-    if FileExists(Extractfilepath(paramstr(0))+'Autobackup~'+inttostr(maxautobackupfiles)+'.pcdbkup') then
-      DeleteFile(Extractfilepath(paramstr(0))+'Autobackup~'+inttostr(maxautobackupfiles)+'.pcdbkup');
+    if FileExists(userdirectory+'Autobackup~'+inttostr(maxautobackupfiles)+'.pcdbkup') then
+      DeleteFile(userdirectory+'Autobackup~'+inttostr(maxautobackupfiles)+'.pcdbkup');
 
     // Autobackupdateien chronologisch versetzen
     for i:=maxautobackupfiles-1 downto 1 do
     begin
-      if FileExists(Extractfilepath(paramstr(0))+'Autobackup~'+inttostr(i)+'.pcdbkup') then
-        RenameFile(Extractfilepath(paramstr(0))+'Autobackup~'+inttostr(i)+'.pcdbkup',Extractfilepath(paramstr(0))+'Autobackup~'+inttostr(i+1)+'.pcdbkup');
+      if FileExists(userdirectory+'Autobackup~'+inttostr(i)+'.pcdbkup') then
+        RenameFile(userdirectory+'Autobackup~'+inttostr(i)+'.pcdbkup',userdirectory+'Autobackup~'+inttostr(i+1)+'.pcdbkup');
     end;
 
-    if FileExists(Extractfilepath(paramstr(0))+'Autobackup.pcdbkup') then
-      RenameFile(Extractfilepath(paramstr(0))+'Autobackup.pcdbkup',Extractfilepath(paramstr(0))+'Autobackup~1.pcdbkup');
+    if FileExists(userdirectory+'Autobackup.pcdbkup') then
+      RenameFile(userdirectory+'Autobackup.pcdbkup',userdirectory+'Autobackup~1.pcdbkup');
 
-    AutoSaveproject(Extractfilepath(paramstr(0))+'Autobackup.pcdbkup');
+    AutoSaveproject(userdirectory+'Autobackup.pcdbkup');
   end;
 end;
 
@@ -20574,24 +20580,24 @@ begin
   if recoveryform=nil then
     recoveryform:=Trecoveryform.Create(recoveryform);
 {
-  if FileExists(Extractfilepath(paramstr(0))+'Autobackup.pcdbkup') then
+  if FileExists(userdirectory+'Autobackup.pcdbkup') then
   begin
-    If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp') then
-    	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp');
-    copyfile(PChar(Extractfilepath(paramstr(0))+'Autobackup.pcdbkup'),PChar(Extractfilepath(paramstr(0))+'ProjectTemp\Projekt'),true);
+    If not DirectoryExists(userdirectory+'ProjectTemp') then
+    	CreateDir(userdirectory+'ProjectTemp');
+    copyfile(PChar(userdirectory+'Autobackup.pcdbkup'),PChar(userdirectory+'ProjectTemp\Projekt'),true);
     OpenProject('',true);
   end;
 }
   if recoveryform.showmodal=mrOK then
   begin
-    If FileExists(Extractfilepath(paramstr(0))+recoveryform.listbox1.Items[recoveryform.listbox1.Itemindex]) then
+    If FileExists(userdirectory+recoveryform.listbox1.Items[recoveryform.listbox1.Itemindex]) then
     begin
-      If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp') then
+      If not DirectoryExists(userdirectory+'ProjectTemp') then
       begin
-      	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp');
-      	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp\Kontrollpanel');
+      	CreateDir(userdirectory+'ProjectTemp');
+      	CreateDir(userdirectory+'ProjectTemp\Kontrollpanel');
       end;
-      copyfile(PChar(Extractfilepath(paramstr(0))+recoveryform.listbox1.Items[recoveryform.listbox1.Itemindex]),PChar(Extractfilepath(paramstr(0))+'ProjectTemp\Projekt'),true);
+      copyfile(PChar(userdirectory+recoveryform.listbox1.Items[recoveryform.listbox1.Itemindex]),PChar(userdirectory+'ProjectTemp\Projekt'),true);
       OpenProject('',true);
     end;
   end;
@@ -21606,7 +21612,7 @@ begin
 
   newfilename:='';
 
-  // project_folder:=workingdirectory+'ProjectTemp\'
+  // project_folder:=userdirectory+'ProjectTemp\'
 
   if FileExists(filename) then
   begin
@@ -21627,22 +21633,22 @@ begin
   end else if FileExists(ExtractFilePath(project_file)+filename) and (project_file<>'') then
   begin
     newfilename:=ExtractFilePath(project_file)+filename;
-  end else if FileExists(mainform.workingdirectory+'\Devicepictures\32 x 32\'+ExtractFileName(filename)) and (project_file<>'') then
+  end else if FileExists(mainform.pcdimmerdirectory+'\Devicepictures\32 x 32\'+ExtractFileName(filename)) and (project_file<>'') then
   begin
     // Datei ist im Bildverzeichnis 32x32
-    newfilename:=mainform.workingdirectory+'\Devicepictures\32 x 32\'+ExtractFileName(filename);
-  end else if FileExists(mainform.workingdirectory+'\Devicepictures\32 x 32\'+ExtractFileName(filename)) and (project_file<>'') then
+    newfilename:=mainform.pcdimmerdirectory+'\Devicepictures\32 x 32\'+ExtractFileName(filename);
+  end else if FileExists(mainform.pcdimmerdirectory+'\Devicepictures\32 x 32\'+ExtractFileName(filename)) and (project_file<>'') then
   begin
     // Datei ist im Bildverzeichnis 64x64
-    newfilename:=mainform.workingdirectory+'\Devicepictures\64 x 64\'+ExtractFileName(filename);
-  end else if FileExists(mainform.workingdirectory+'\Devicepictures\64 x 64\'+ExtractFileName(filename)) and (project_file<>'') then
+    newfilename:=mainform.pcdimmerdirectory+'\Devicepictures\64 x 64\'+ExtractFileName(filename);
+  end else if FileExists(mainform.pcdimmerdirectory+'\Devicepictures\64 x 64\'+ExtractFileName(filename)) and (project_file<>'') then
   begin
     // Datei ist im Bildverzeichnis 96x96
-    newfilename:=mainform.workingdirectory+'\Devicepictures\96 x 96\'+ExtractFileName(filename);
-  end else if FileExists(mainform.workingdirectory+'\Devicepictures\96 x 96\'+ExtractFileName(filename)) and (project_file<>'') then
+    newfilename:=mainform.pcdimmerdirectory+'\Devicepictures\96 x 96\'+ExtractFileName(filename);
+  end else if FileExists(mainform.pcdimmerdirectory+'\Devicepictures\96 x 96\'+ExtractFileName(filename)) and (project_file<>'') then
   begin
     // Datei ist im Bildverzeichnis 128x128
-    newfilename:=mainform.workingdirectory+'\Devicepictures\128x128\'+ExtractFileName(filename);
+    newfilename:=mainform.pcdimmerdirectory+'\Devicepictures\128x128\'+ExtractFileName(filename);
   end else
   begin
     ProgressScreenSmall.Label2.Caption:=_('Suche nach Datei')+' "'+ExtractFileName(filename)+'" '+_('im Ordner')+' "'+project_folder+'"';
@@ -22893,7 +22899,7 @@ begin
     end;
   end;
 
-  if (not (data.openhistory[0]=projectfilepath+projectfilename)) and (DoesAlreadyExists=-1) and ((projectfilepath+projectfilename)<>(workingdirectory+'ProjectTemp\Projekt')) and (projectfilename<>'Projekt') then
+  if (not (data.openhistory[0]=projectfilepath+projectfilename)) and (DoesAlreadyExists=-1) and ((projectfilepath+projectfilename)<>(userdirectory+'ProjectTemp\Projekt')) and (projectfilename<>'Projekt') then
   begin
     // Alle Positionen um eins nach unten verschieben und neues Projekt an oberste Stelle
     for i:=0 to 3 do
@@ -22987,7 +22993,7 @@ begin
     LReg.WriteBool('Switchoff Lights on Shutdown',switchofflightsatshutdown);
     LReg.WriteBool('Ask for saving projectfile',askforsaveproject);
     LReg.WriteBool('Deactivate powerbutton',powerswitchoff);
-    LReg.WriteString('Last used directory',workingdirectory);
+    LReg.WriteString('Last used directory',userdirectory);
     LReg.WriteInteger('Style of Leveldisplay',levelanzeigeoptionen);
     LReg.WriteBool('Deactivate Outputplugins on Shutdown',deactivateoutputdllsonclose);
     LReg.WriteBool('Deactivate Inputplugins on Shutdown',deactivateinputdllsonclose);
@@ -23046,7 +23052,7 @@ begin
   LReg.Free;
 end;
 
-procedure Tmainform.WriteConfigurationFile;
+procedure Tmainform.WriteConfiguration;
 var
   LReg:TPCDRegistry;
   i:integer;
@@ -23077,56 +23083,29 @@ begin
   LReg.Free;
 end;
 
-procedure Tmainform.ReadConfigurationFile;
+procedure Tmainform.ReadConfiguration;
 var
   i:integer;
   LReg:TPCDRegistry;
-  myint:array[0..31] of integer;
-  mystring:array[0..31] of string[255];
 begin
-  if FileExists(workingdirectory+'\'+'config.cfg') then
+  // Konfiguration aus Registry lesen
+  LReg := TPCDRegistry.Create;
+  if LReg.OpenRegKey('') then
   begin
-    // Alte Konfigurationsdatei laden (nach Laden wird diese gelöscht)
-    FileStream:=TFilestream.Create(workingdirectory+'\'+'config.cfg',fmOpenRead);
-    if FileStream.Size=10088 then
-    begin
-      FileStream.ReadBuffer(myint,sizeof(myint)); // Dummywerte auslesen
-      FileStream.ReadBuffer(myint,sizeof(myint)); // Dummywerte auslesen
-      FileStream.ReadBuffer(mystring,sizeof(mystring));
-      FileStream.ReadBuffer(data.page,sizeof(data.page));
-      FileStream.ReadBuffer(data.preheatvalue,sizeof(data.preheatvalue));
-      FileStream.ReadBuffer(data.Shortcutnames,sizeof(data.Shortcutnames));
-      FileStream.ReadBuffer(data.openhistory,sizeof(data.openhistory));
-    end;
-    FileStream.Free;
-    DeleteFile(workingdirectory+'\'+'config.cfg');
-    WriteConfigurationFile;
+    if LReg.ValueExists('Openhistory1') then
+      data.openhistory[0]:=LReg.ReadString('Openhistory1');
+    if LReg.ValueExists('Openhistory2') then
+      data.openhistory[1]:=LReg.ReadString('Openhistory2');
+    if LReg.ValueExists('Openhistory3') then
+      data.openhistory[2]:=LReg.ReadString('Openhistory3');
+    if LReg.ValueExists('Openhistory4') then
+      data.openhistory[3]:=LReg.ReadString('Openhistory4');
+    if LReg.ValueExists('Openhistory5') then
+      data.openhistory[4]:=LReg.ReadString('Openhistory5');
 
-    data.page:=0;
-    data.preheatvalue:=0;
-    for i:=0 to 16 do
-      data.Shortcutnames[i]:='Shortcut '+inttostr(i+1);
-  end else
-  begin
-    // Konfiguration aus Registry lesen
-    LReg := TPCDRegistry.Create;
-    if LReg.OpenRegKey('') then
-    begin
-      if LReg.ValueExists('Openhistory1') then
-        data.openhistory[0]:=LReg.ReadString('Openhistory1');
-      if LReg.ValueExists('Openhistory2') then
-        data.openhistory[1]:=LReg.ReadString('Openhistory2');
-      if LReg.ValueExists('Openhistory3') then
-        data.openhistory[2]:=LReg.ReadString('Openhistory3');
-      if LReg.ValueExists('Openhistory4') then
-        data.openhistory[3]:=LReg.ReadString('Openhistory4');
-      if LReg.ValueExists('Openhistory5') then
-        data.openhistory[4]:=LReg.ReadString('Openhistory5');
-
-      LReg.CloseKey;
-    end;
-    LReg.Free;
+    LReg.CloseKey;
   end;
+  LReg.Free;
 
   for i:=0 to length(OutputPlugins)-1 do
   begin
@@ -23513,7 +23492,7 @@ procedure Tmainform.CreateValueBackup;
 var
   i:integer;
 begin
-  FileStream:=TFileStream.Create(workingdirectory+'~LastSession.val',fmCreate);
+  FileStream:=TFileStream.Create(userdirectory+'~LastSession.val',fmCreate);
 
   FileStream.WriteBuffer(lastchan,sizeof(lastchan));
   for i:=1 to lastchan do
@@ -23521,9 +23500,9 @@ begin
 
   FileStream.Free;
 
-  if FileExists(workingdirectory+'LastSession.val') then
-    DeleteFile(workingdirectory+'LastSession.val');
-  MoveFile(PCHar(workingdirectory+'~LastSession.val'),PChar(workingdirectory+'LastSession.val'));
+  if FileExists(userdirectory+'LastSession.val') then
+    DeleteFile(userdirectory+'LastSession.val');
+  MoveFile(PCHar(userdirectory+'~LastSession.val'),PChar(userdirectory+'LastSession.val'));
 end;
 
 procedure Tmainform.RestoreValueBackup;
@@ -23531,11 +23510,11 @@ var
   i,last:integer;
   values:array[1..chan] of byte;
 begin
-  if FileExists(workingdirectory+'LastSession.val') then
+  if FileExists(userdirectory+'LastSession.val') then
   begin
-    CopyFile(PCHar(workingdirectory+'LastSession.val'), PChar(workingdirectory+'LastSessionR.val'), false);
+    CopyFile(PCHar(userdirectory+'LastSession.val'), PChar(userdirectory+'LastSessionR.val'), false);
 
-    FileStream:=TFileStream.Create(workingdirectory+'LastSessionR.val',fmOpenRead);
+    FileStream:=TFileStream.Create(userdirectory+'LastSessionR.val',fmOpenRead);
 
     FileStream.ReadBuffer(last,sizeof(last));
     for i:=1 to last do
@@ -23545,8 +23524,8 @@ begin
     end;
     FileStream.Free;
 
-    if FileExists(workingdirectory+'LastSessionR.val') then
-      DeleteFile(workingdirectory+'LastSessionR.val');
+    if FileExists(userdirectory+'LastSessionR.val') then
+      DeleteFile(userdirectory+'LastSessionR.val');
 
     for i:=1 to lastchan do
     begin
@@ -26446,48 +26425,48 @@ begin
     devicepictures128.Items.Delete(i);
 
   // neue Bilder laden
-  if (FindFirst(workingdirectory+'\Devicepictures\32 x 32\*.png',faAnyFile-faDirectory,SR)=0) then
+  if (FindFirst(pcdimmerdirectory+'\Devicepictures\32 x 32\*.png',faAnyFile-faDirectory,SR)=0) then
   begin
     repeat
       if (SR.Name<>'.') and (SR.Name<>'..') and (SR.Attr<>faDirectory) then
       begin
         bild:=devicepictures32.Items.Add(false);
-        bild.PngImage.LoadFromFile(workingdirectory+'\Devicepictures\32 x 32\'+SR.Name);
+        bild.PngImage.LoadFromFile(pcdimmerdirectory+'\Devicepictures\32 x 32\'+SR.Name);
         bild.Name:=SR.Name;
 
-        if FileExists(workingdirectory+'\Devicepictures\64 x 64\'+SR.Name) then
+        if FileExists(pcdimmerdirectory+'\Devicepictures\64 x 64\'+SR.Name) then
         begin
           bild:=devicepictures64.Items.Add(false);
-          bild.PngImage.LoadFromFile(workingdirectory+'\Devicepictures\64 x 64\'+SR.Name);
+          bild.PngImage.LoadFromFile(pcdimmerdirectory+'\Devicepictures\64 x 64\'+SR.Name);
           bild.Name:=SR.Name;
         end else
         begin
           bild:=devicepictures64.Items.Add(false);
-          bild.PngImage.LoadFromFile(workingdirectory+'\Devicepictures\standard64.png');
+          bild.PngImage.LoadFromFile(pcdimmerdirectory+'\Devicepictures\standard64.png');
           bild.Name:=SR.Name;
         end;
 
-        if FileExists(workingdirectory+'\Devicepictures\96 x 96\'+SR.Name) then
+        if FileExists(pcdimmerdirectory+'\Devicepictures\96 x 96\'+SR.Name) then
         begin
           bild:=devicepictures96.Items.Add(false);
-          bild.PngImage.LoadFromFile(workingdirectory+'\Devicepictures\96 x 96\'+SR.Name);
+          bild.PngImage.LoadFromFile(pcdimmerdirectory+'\Devicepictures\96 x 96\'+SR.Name);
           bild.Name:=SR.Name;
         end else
         begin
           bild:=devicepictures96.Items.Add(false);
-          bild.PngImage.LoadFromFile(workingdirectory+'\Devicepictures\standard96.png');
+          bild.PngImage.LoadFromFile(pcdimmerdirectory+'\Devicepictures\standard96.png');
           bild.Name:=SR.Name;
         end;
 
-        if FileExists(workingdirectory+'\Devicepictures\128x128\'+SR.Name) then
+        if FileExists(pcdimmerdirectory+'\Devicepictures\128x128\'+SR.Name) then
         begin
           bild:=devicepictures128.Items.Add(false);
-          bild.PngImage.LoadFromFile(workingdirectory+'\Devicepictures\128x128\'+SR.Name);
+          bild.PngImage.LoadFromFile(pcdimmerdirectory+'\Devicepictures\128x128\'+SR.Name);
           bild.Name:=SR.Name;
         end else
         begin
           bild:=devicepictures128.Items.Add(false);
-          bild.PngImage.LoadFromFile(workingdirectory+'\Devicepictures\standard128.png');
+          bild.PngImage.LoadFromFile(pcdimmerdirectory+'\Devicepictures\standard128.png');
           bild.Name:=SR.Name;
         end;
       end;
@@ -27003,7 +26982,7 @@ begin
   else
     debuglistbox.ItemIndex := debuglistbox.Items.Add(Text);
   try
-    debuglistbox.Items.SaveToFile(workingdirectory+'\PC_DIMMER.log');
+    debuglistbox.Items.SaveToFile(userdirectory+'\PC_DIMMER.log');
   except
     on E : Exception do
       debuglistbox.ItemIndex := debuglistbox.Items.Add('['+inttostr(debuglistbox.Items.Count)+'] ['+Timetostr(now)+'] ['+Datetostr(now)+'] ' + 'ERROR: Cannot write into log file: ' + E.Message);
@@ -27014,7 +26993,7 @@ procedure TMainform.DebugAddToLine(Text: string; Save: boolean);
 begin
   debuglistbox.Items.Strings[debuglistbox.Items.Count-1] := debuglistbox.Items.Strings[debuglistbox.Items.Count-1] + Text;
   try
-    debuglistbox.Items.SaveToFile(workingdirectory+'\PC_DIMMER.log');
+    debuglistbox.Items.SaveToFile(userdirectory+'\PC_DIMMER.log');
   except
     on E : Exception do
       debuglistbox.ItemIndex := debuglistbox.Items.Add('['+inttostr(debuglistbox.Items.Count)+'] ['+Timetostr(now)+'] ['+Datetostr(now)+'] ' + 'ERROR: Cannot write into log file: ' + E.Message);

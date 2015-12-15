@@ -492,14 +492,14 @@ var
   filename:string;
 begin
   geraetesteuerung.PngBitBtn1Click(nil);
-  if FileExists(mainform.workingdirectory+'Devicepictures\'+mainform.devices[Combobox1.itemindex].Bildadresse) then
+  if FileExists(mainform.pcdimmerdirectory+'Devicepictures\'+mainform.devices[Combobox1.itemindex].Bildadresse) then
   begin
-    filename:=ExtractFileName(mainform.workingdirectory+'Devicepictures\'+mainform.devices[Combobox1.itemindex].Bildadresse);
+    filename:=ExtractFileName(mainform.pcdimmerdirectory+'Devicepictures\'+mainform.devices[Combobox1.itemindex].Bildadresse);
   end;
 
   if (Combobox1.itemindex>-1) and (Combobox1.itemindex<length(mainform.devices)) then
-    if FileExists(mainform.workingdirectory+'Devicepictures\64 x 64\'+filename) then
-      Image2.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\64 x 64\'+filename);
+    if FileExists(mainform.pcdimmerdirectory+'Devicepictures\64 x 64\'+filename) then
+      Image2.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\64 x 64\'+filename);
 end;
 
 procedure Tfirststepsform.JvXPButton12Click(Sender: TObject);
@@ -631,12 +631,12 @@ begin
     DontUpdateDevStartaddressEdit:=false;
 
     buttonfarbe.Color:=mainform.devices[Combobox1.itemindex].color;
-    if FileExists(mainform.workingdirectory+'Devicepictures\'+mainform.devices[Combobox1.itemindex].Bildadresse) then
+    if FileExists(mainform.pcdimmerdirectory+'Devicepictures\'+mainform.devices[Combobox1.itemindex].Bildadresse) then
     begin
-      filename:=ExtractFileName(mainform.workingdirectory+'Devicepictures\'+mainform.devices[Combobox1.itemindex].Bildadresse);
+      filename:=ExtractFileName(mainform.pcdimmerdirectory+'Devicepictures\'+mainform.devices[Combobox1.itemindex].Bildadresse);
     end;
-    if FileExists(mainform.workingdirectory+'Devicepictures\64 x 64\'+filename) then
-      Image2.Picture.LoadFromFile(mainform.workingdirectory+'Devicepictures\64 x 64\'+filename);
+    if FileExists(mainform.pcdimmerdirectory+'Devicepictures\64 x 64\'+filename) then
+      Image2.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\64 x 64\'+filename);
     label15.caption:=inttostr(mainform.devices[Combobox1.itemindex].Power)+' W';
 
     label17.caption:=mainform.devices[Combobox1.itemindex].Vendor;

@@ -125,16 +125,16 @@ begin
 
     if TreeView1.Selected<>nil then
     begin
-      if DirectoryExists(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected)) then
+      if DirectoryExists(mainform.userdirectory+''+NodePath(TreeView1.Selected)) then
       begin
-       	ProgressCopyFile(PChar(Dateiname),PChar(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected)+'\'+ExtractFileName(Dateiname)),True);
-      end else if DirectoryExists(ExtractFilePath(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected))) then
+       	ProgressCopyFile(PChar(Dateiname),PChar(mainform.userdirectory+''+NodePath(TreeView1.Selected)+'\'+ExtractFileName(Dateiname)),True);
+      end else if DirectoryExists(ExtractFilePath(mainform.userdirectory+''+NodePath(TreeView1.Selected))) then
   	  begin
-      	ProgressCopyFile(PChar(Dateiname),PChar(ExtractFilePath(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected))+ExtractFileName(Dateiname)),True);
+      	ProgressCopyFile(PChar(Dateiname),PChar(ExtractFilePath(mainform.userdirectory+''+NodePath(TreeView1.Selected))+ExtractFileName(Dateiname)),True);
       end;
     end else
     begin
-      ProgressCopyFile(PChar(Dateiname),PChar(ExtractFilePath(paramstr(0))+''+ExtractFileName(Dateiname)),True);
+      ProgressCopyFile(PChar(Dateiname),PChar(mainform.userdirectory+''+ExtractFileName(Dateiname)),True);
     end;
   end;
   OnShow(nil);
@@ -220,19 +220,19 @@ var
 	i:integer;
   expanded:array of boolean;
 begin
-  If not DirectoryExists(ExtractFilepath(paramstr(0))+'ProjectTemp') then
-   	CreateDir(ExtractFilepath(paramstr(0))+'ProjectTemp');
+  If not DirectoryExists(mainform.userdirectory+'ProjectTemp') then
+   	CreateDir(mainform.userdirectory+'ProjectTemp');
 
   setlength(expanded, TreeView1.Items.Count);
   for i:=0 to TreeView1.Items.Count-1 do
 	  if TreeView1.Items.Item[i].Expanded then expanded[i]:=true else expanded[i]:=false;
 
   TreeView1.Items.Clear;
-//  einlesen(TreeView1, ExtractFilepath(paramstr(0))+'ProjectTemp\', nil, True);
+//  einlesen(TreeView1, mainform.userdirectory+'ProjectTemp\', nil, True);
   TreeView1.Items.AddChild(nil, 'ProjectTemp\');
   TreeView1.Items.Item[0].ImageIndex:=31; // 31=PC_DIMMER Symbol
   TreeView1.Items.Item[0].SelectedIndex:=31; // 31=PC_DIMMER Symbol
-  einlesen(TreeView1, ExtractFilepath(paramstr(0))+'ProjectTemp\', TreeView1.Items[0], True);
+  einlesen(TreeView1, mainform.userdirectory+'ProjectTemp\', TreeView1.Items[0], True);
 
   setlength(expanded, TreeView1.Items.Count);
   for i:=0 to TreeView1.Items.Count-1 do
@@ -240,7 +240,7 @@ begin
 
   Label4.Caption:='wird ermittelt...';
   Label4.Refresh;
-  Label4.Caption:=FloatToStrf(mainform.GetDirSize(mainform.workingdirectory+'ProjectTemp', True) / 1048576, ffGeneral , 4, 2) + ' MB';
+  Label4.Caption:=FloatToStrf(mainform.GetDirSize(mainform.userdirectory+'ProjectTemp', True) / 1048576, ffGeneral , 4, 2) + ' MB';
   TreeView1.Items[0].Expand(false);
   TreeView1.Select(Treeview1.Items[0]);
 
@@ -250,7 +250,7 @@ begin
   Edit1.Text:=mainform.projekttitel;
   Edit2.Text:=mainform.projektversion;
   Edit3.Text:=mainform.projektbearbeiter;
-  label1.caption:=ExtractFilepath(paramstr(0))+'ProjectTemp\';
+  label1.caption:=mainform.userdirectory+'ProjectTemp\';
   label9.caption:=mainform.projektprogrammversion;
   label11.Caption:=mainform.projektdatum;
   label14.Caption:=mainform.projektuhrzeit;
@@ -271,16 +271,16 @@ procedure Tprojektverwaltung.TreeView1KeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if (Treeview1.SelectionCount=0) and (Treeview1.Items.Count>0) then Treeview1.Items.Item[0].Selected:=true;
-  Label1.Caption:=ExtractFilePath(ExtractFilePath(paramstr(0))+''+NodePath(Treeview1.Selected));
+  Label1.Caption:=ExtractFilePath(mainform.userdirectory+''+NodePath(Treeview1.Selected));
 
 	if Key=vk_return then
   begin
- 	  RenameFile(ExtractFilePath(paramstr(0))+''+OldNodeText,ExtractFilePath(paramstr(0))+''+NewNodeText);
+ 	  RenameFile(mainform.userdirectory+''+OldNodeText,mainform.userdirectory+''+NewNodeText);
   end;
   if Key=vk_f2 then
   begin
     TreeView1.Selected.Text:=inputbox(_('Datei umbenennen'),_('Bitte geben eine neue Bezeichnung für das Objekt ein:'),TreeView1.Selected.Text);
-	  RenameFile(ExtractFilePath(paramstr(0))+''+OldNodeText,ExtractFilePath(paramstr(0))+''+NewNodeText);
+	  RenameFile(mainform.userdirectory+''+OldNodeText,mainform.userdirectory+''+NewNodeText);
   end;
 end;
 
@@ -299,7 +299,7 @@ begin
 		oldfilename:=NodePath(TreeView1.Selected);
 		newfilename:=ExtractFilePath(NodePath(TreeView1.Selected))+InputBox(_('Umbenennen...'),_('Bitte geben Sie eine neue Bezeichnung ein:'),ExtractFileName(oldfilename));
 	  TreeView1.Selected.Text:=newfilename;
-	  RenameFile(ExtractFilePath(paramstr(0))+''+oldfilename,ExtractFilePath(paramstr(0))+''+newfilename);
+	  RenameFile(mainform.userdirectory+''+oldfilename,mainform.userdirectory+''+newfilename);
 		OnShow(nil);
   end;
 end;
@@ -316,25 +316,25 @@ begin
 	  	[mbYes,mbNo],0)=mrYes then
   	for i:=0 to treeview1.SelectionCount-1 do
     begin
-      if DirectoryExists(ExtractFilePath(paramstr(0))+''+NodePath(treeview1.Selections[i])) then
+      if DirectoryExists(mainform.userdirectory+''+NodePath(treeview1.Selections[i])) then
       begin
-        mainform.DeleteDirectory(ExtractFilePath(paramstr(0))+''+NodePath(treeview1.Selections[i]));
-//        mainform.DeleteDir(ExtractFilePath(paramstr(0))+''+NodePath(treeview1.Selections[i]));
+        mainform.DeleteDirectory(mainform.userdirectory+''+NodePath(treeview1.Selections[i]));
+//        mainform.DeleteDir(mainform.userdirectory+''+NodePath(treeview1.Selections[i]));
       end else
     	begin
-	    	DeleteFile(ExtractFilePath(paramstr(0))+''+NodePath(treeview1.Selections[i]));
+	    	DeleteFile(mainform.userdirectory+''+NodePath(treeview1.Selections[i]));
 	    end;
     end;
 		OnShow(nil);
   end else
   begin
-    if DirectoryExists(ExtractFilePath(paramstr(0))+''+NodePath(treeview1.Selected)) then
+    if DirectoryExists(mainform.userdirectory+''+NodePath(treeview1.Selected)) then
     begin
 			if messagedlg(_('Das Verzeichnis "')+TreeView1.Selected.Text+_('" wirklich löschen?'),mtConfirmation,
 		  	[mbYes,mbNo],0)=mrYes then
 		  	begin
-          mainform.DeleteDirectory(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected));
-//        	mainform.DeleteDir(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected));
+          mainform.DeleteDirectory(mainform.userdirectory+''+NodePath(TreeView1.Selected));
+//        	mainform.DeleteDir(mainform.userdirectory+''+NodePath(TreeView1.Selected));
           TreeView1.Items.Delete(TreeView1.Selected);
         end;
     end else
@@ -342,7 +342,7 @@ begin
 			if messagedlg(_('Die Datei "')+TreeView1.Selected.Text+_('" wirklich löschen?'),mtConfirmation,
 		  	[mbYes,mbNo],0)=mrYes then
 		  	begin
-		  		DeleteFile(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected));
+		  		DeleteFile(mainform.userdirectory+''+NodePath(TreeView1.Selected));
           TreeView1.Items.Delete(TreeView1.Selected);
         end;
     end;
@@ -376,10 +376,10 @@ begin
       inprogress.Label1.Refresh;
       inprogress.filename.Refresh;
 
-      if DirectoryExists(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected)) then
-	    	ProgressCopyFile(PChar(OpenDialog1.Files[i]),PChar(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected)+'\'+ExtractFileName(OpenDialog1.Files[i])),True)
-      else if DirectoryExists(ExtractFilePath(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected))) then
-	    	ProgressCopyFile(PChar(OpenDialog1.Files[i]),PChar(ExtractFilePath(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected))+ExtractFileName(OpenDialog1.Files[i])),True);
+      if DirectoryExists(mainform.userdirectory+''+NodePath(TreeView1.Selected)) then
+	    	ProgressCopyFile(PChar(OpenDialog1.Files[i]),PChar(mainform.userdirectory+''+NodePath(TreeView1.Selected)+'\'+ExtractFileName(OpenDialog1.Files[i])),True)
+      else if DirectoryExists(ExtractFilePath(mainform.userdirectory+''+NodePath(TreeView1.Selected))) then
+	    	ProgressCopyFile(PChar(OpenDialog1.Files[i]),PChar(ExtractFilePath(mainform.userdirectory+''+NodePath(TreeView1.Selected))+ExtractFileName(OpenDialog1.Files[i])),True);
     end;
     inprogress.Hide;
 		OnShow(nil);
@@ -392,10 +392,10 @@ var
 	newdir:string;
 begin
 	newdir:=InputBox(_('Neues Verzeichnis erstellen...'),_('Bitte geben Sie eine Bezeichnung für das neue Verzeichnis ein:'),'');
-  if DirectoryExists(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected)) then
-    CreateDir(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected)+'\'+newdir+'\')
+  if DirectoryExists(mainform.userdirectory+''+NodePath(TreeView1.Selected)) then
+    CreateDir(mainform.userdirectory+''+NodePath(TreeView1.Selected)+'\'+newdir+'\')
 	else
-    CreateDir(ExtractFilePath(paramstr(0))+''+ExtractFilePath(NodePath(TreeView1.Selected))+'\'+newdir+'\');
+    CreateDir(mainform.userdirectory+''+ExtractFilePath(NodePath(TreeView1.Selected))+'\'+newdir+'\');
 	OnShow(nil);
 end;
 
@@ -403,19 +403,19 @@ procedure Tprojektverwaltung.TreeView1MouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   if (Treeview1.SelectionCount=0) and (Treeview1.Items.Count>0) then Treeview1.Items.Item[0].Selected:=true;
-  Label1.Caption:=ExtractFilePath(ExtractFilePath(paramstr(0))+''+NodePath(Treeview1.Selected));
+  Label1.Caption:=ExtractFilePath(mainform.userdirectory+''+NodePath(Treeview1.Selected));
 end;
 
 procedure Tprojektverwaltung.AusschneidenClick(Sender: TObject);
 begin
-	FileToCopy:=ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected);
+	FileToCopy:=mainform.userdirectory+''+NodePath(TreeView1.Selected);
   Einfgen1.Enabled:=true;
   copyorcut:=false;
 end;
 
 procedure Tprojektverwaltung.Kopieren1Click(Sender: TObject);
 begin
-	FileToCopy:=ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected);
+	FileToCopy:=mainform.userdirectory+''+NodePath(TreeView1.Selected);
   Einfgen1.Enabled:=true;
   copyorcut:=true;
 end;
@@ -424,10 +424,10 @@ procedure Tprojektverwaltung.Einfgen1Click(Sender: TObject);
 var
 	dest:string;
 begin
-  if DirectoryExists(ExtractFilePath(paramstr(0))+''+NodePath(treeview1.Selected)) then
-  	dest:=ExtractFilePath(paramstr(0))+''+NodePath(treeview1.Selected)
+  if DirectoryExists(mainform.userdirectory+''+NodePath(treeview1.Selected)) then
+  	dest:=mainform.userdirectory+''+NodePath(treeview1.Selected)
   else
-    dest:=ExtractFilePath(paramstr(0))+''+ExtractFilePath(NodePath(treeview1.Selected));
+    dest:=mainform.userdirectory+''+ExtractFilePath(NodePath(treeview1.Selected));
 
   if copyorcut=true then
 		ProgressCopyFile(PChar(FileToCopy),PChar(dest+'\'+ExtractFileName(FileToCopy)),True)
@@ -477,7 +477,7 @@ begin
       inprogress.Label1.Refresh;
       inprogress.filename.Refresh;
 
-     	ProgressCopyFile(PChar(OpenDialog1.Files[i]),PChar(ExtractFilePath(paramstr(0))+'ProjectTemp\'+ExtractFileName(OpenDialog1.Files[i])),True);
+     	ProgressCopyFile(PChar(OpenDialog1.Files[i]),PChar(mainform.userdirectory+'ProjectTemp\'+ExtractFileName(OpenDialog1.Files[i])),True);
     end;
     inprogress.Hide;
 		OnShow(nil);
@@ -562,12 +562,12 @@ end;
 
 procedure Tprojektverwaltung.TreeView1DblClick(Sender: TObject);
 begin
-  shellexecute(application.handle,'open',PChar(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected)),'',PChar(ExtractFilePath(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected))),SW_SHOWNORMAL);
+  shellexecute(application.handle,'open',PChar(mainform.userdirectory+''+NodePath(TreeView1.Selected)),'',PChar(ExtractFilePath(mainform.userdirectory+''+NodePath(TreeView1.Selected))),SW_SHOWNORMAL);
 end;
 
 procedure Tprojektverwaltung.ffnen1Click(Sender: TObject);
 begin
-  shellexecute(application.handle,'open',PChar(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected)),'',PChar(ExtractFilePath(ExtractFilePath(paramstr(0))+''+NodePath(TreeView1.Selected))),SW_SHOWNORMAL);
+  shellexecute(application.handle,'open',PChar(mainform.userdirectory+''+NodePath(TreeView1.Selected)),'',PChar(ExtractFilePath(mainform.userdirectory+''+NodePath(TreeView1.Selected))),SW_SHOWNORMAL);
 end;
 
 end.

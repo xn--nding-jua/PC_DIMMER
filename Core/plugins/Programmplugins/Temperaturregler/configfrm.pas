@@ -113,6 +113,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure TestCaseBtnClick(Sender: TObject);
     procedure DemoDataTimer(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private-Deklarationen }
     procedure DLLSendMessageTest(MSG, Data1, Data2: Variant);
@@ -1119,6 +1120,22 @@ begin
 
       config.temp2lbl.caption:=floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+'°C';
       config.temp3lbl.caption:=floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+'°C';
+end;
+
+procedure TConfig.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  LReg:TRegistry;
+begin
+  LReg:=TRegistry.Create;
+  LReg.RootKey:=HKEY_CURRENT_USER;
+  LReg.OpenKey('Software', True);
+  LReg.OpenKey('PHOENIXstudios', True);
+  LReg.OpenKey('PC_DIMMER', True);
+  if not LReg.KeyExists(ExtractFileName(GetModulePath)) then
+    LReg.CreateKey(ExtractFileName(GetModulePath));
+  LReg.OpenKey(ExtractFileName(GetModulePath), False);
+  LReg.WriteBool('Showing Plugin', True);
+  LReg.Free;
 end;
 
 end.

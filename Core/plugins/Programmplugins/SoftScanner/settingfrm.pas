@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, jpeg, ExtCtrls, XPMan, ColorGrd, JvFullColorSpaces,
   ComCtrls, Registry, DXPlay, messagesystem, Mask, JvExMask, JvSpin,
-  pngimage;
+  pngimage, gnugettext;
   
 type
   TCallbackValues = procedure(address,startvalue,endvalue,fadetime:integer);stdcall;
@@ -197,7 +197,7 @@ end;
 
 procedure TSettings.Button2Click(Sender: TObject);
 begin
-  close;
+  settings.close;
 end;
 
 procedure TSettings.Button3Click(Sender: TObject);

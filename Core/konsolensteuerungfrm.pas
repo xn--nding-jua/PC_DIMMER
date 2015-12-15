@@ -205,12 +205,12 @@ begin
 	  CSV := TStringlist.Create;
 	  For i :=0 To length(MidiEventArray)-1 do
 	  	CSV.Add(inttostr(MidiEventArray[i].MIDIMessage)+','+inttostr(MidiEventArray[i].MIDIData1)+','+inttostr(MidiEventArray[i].MIDIData2)+','+inttostr(MidiEventArray[i].Typ)+','+inttostr(MidiEventArray[i].Wert1)+','+inttostr(MidiEventArray[i].Wert2)+','+inttostr(MidiEventArray[i].Data1orData2)+','+GUIDtoString(MidiEventArray[i].ID));
-	  CSV.SaveToFile(ExtractFilepath(paramstr(0))+'Projekt\MIDISettings.pcdmidi');
+	  CSV.SaveToFile(mainform.userdirectory+'Projekt\MIDISettings.pcdmidi');
 	  CSV.Free;
   end else
   begin
-  	if FileExists(ExtractFilepath(paramstr(0))+'Projekt\MIDISettings.pcdmidi') then
-    	DeleteFile(ExtractFilepath(paramstr(0))+'Projekt\MIDISettings.pcdmidi');
+  	if FileExists(mainform.userdirectory+'Projekt\MIDISettings.pcdmidi') then
+    	DeleteFile(mainform.userdirectory+'Projekt\MIDISettings.pcdmidi');
   end;
   end;
 end;

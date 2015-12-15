@@ -258,10 +258,10 @@ begin
   begin
     if Edit1.Text='' then
       Edit1.Text:=ExtractFileName(openmedia.FileName);
-    if pos(mainform.workingdirectory+'ProjectTemp\',openmedia.FileName)>0 then
+    if pos(mainform.userdirectory+'ProjectTemp\',openmedia.FileName)>0 then
     begin
-      Edit3.Text:=copy(openmedia.FileName,length(mainform.workingdirectory+'ProjectTemp\')+1,length(openmedia.FileName));
-      label6.Caption:=copy(openmedia.FileName,length(mainform.workingdirectory+'ProjectTemp\')+1,length(openmedia.FileName));
+      Edit3.Text:=copy(openmedia.FileName,length(mainform.userdirectory+'ProjectTemp\')+1,length(openmedia.FileName));
+      label6.Caption:=copy(openmedia.FileName,length(mainform.userdirectory+'ProjectTemp\')+1,length(openmedia.FileName));
     end else if pos(ExtractFilePath(mainform.project_file),openmedia.FileName)>0 then
     begin
       Edit3.Text:=copy(openmedia.FileName,length(ExtractFilePath(mainform.project_file))+1,length(openmedia.FileName));
