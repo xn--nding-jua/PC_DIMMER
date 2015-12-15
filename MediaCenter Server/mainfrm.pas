@@ -60,6 +60,7 @@ type
     KeepAspectRatio:boolean;
     sounddevice:integer;
     _chan:cardinal;
+    userdirectory:string;
     procedure VideoLoadFile(FileName: string);
     procedure VideoPlay;
     procedure VideoPause;
@@ -181,7 +182,7 @@ begin
   begin
     memo1.lines.add(TimeToStr(now)+', '+DateToStr(now)+' Found Video Input Device '+inttostr(i)+': '+VideoInputDevices.Filters[i].FriendlyName);
   end;
-  memo1.Lines.SaveToFile(ExtractFilePath(paramstr(0))+'\PC_DIMMER_MCS.log');
+  memo1.Lines.SaveToFile(userdirectory+'PC_DIMMER_MCS.log');
 end;
 
 procedure Tmainform.VideoInputShowDevice(Device: integer);
@@ -281,6 +282,8 @@ var
 begin
   Application.OnException:=AppException;
 
+  userdirectory:=GetEnvironmentVariable('APPDATA')+'\PHOENIXstudios\PC_DIMMER\';
+
   LReg := TRegistry.Create;
   LReg.RootKey:=HKEY_CURRENT_USER;
 
@@ -318,7 +321,7 @@ begin
   memo1.Lines.Add('MediaCenter Server Logfile:');
   memo1.Lines.Add('-----------------------------------------');
   memo1.lines.add(TimeToStr(now)+', '+DateToStr(now)+' MediaCenter Server erfolgreich gestartet.');
-  memo1.Lines.SaveToFile(ExtractFilePath(paramstr(0))+'\PC_DIMMER_MCS.log');
+  memo1.Lines.SaveToFile(userdirectory+'PC_DIMMER_MCS.log');
   screen.Cursor:=crNone;
 
 //  UdpSocket.Open;
@@ -421,7 +424,7 @@ begin
       end else
       begin
         memo1.lines.add(TimeToStr(now)+', '+DateToStr(now)+' Error: Falsches Bilddateiformat ('+ExtractFileExt(MediaCenterCommand.Text)+')');
-        memo1.Lines.SaveToFile(ExtractFilePath(paramstr(0))+'\PC_DIMMER_MCS.log');
+        memo1.Lines.SaveToFile(userdirectory+'PC_DIMMER_MCS.log');
       end;
     end;
     21:
@@ -510,7 +513,7 @@ procedure Tmainform.ServerSocket1ClientError(Sender: TObject;
   var ErrorCode: Integer);
 begin
   memo1.lines.add(TimeToStr(now)+', '+DateToStr(now)+' Error: '+SysErrorMessage(errorcode));
-  memo1.Lines.SaveToFile(ExtractFilePath(paramstr(0))+'\PC_DIMMER_MCS.log');
+  memo1.Lines.SaveToFile(userdirectory+'PC_DIMMER_MCS.log');
   ErrorCode:=0;
 end;
 
@@ -528,16 +531,16 @@ procedure Tmainform.ServerSocket1ClientConnect(Sender: TObject;
   Socket: TCustomWinSocket);
 begin
   memo1.lines.add(TimeToStr(now)+', '+DateToStr(now)+' Client Connected ('+Socket.RemoteHost+', '+Socket.RemoteAddress+')');
-  memo1.Lines.SaveToFile(ExtractFilePath(paramstr(0))+'\PC_DIMMER_MCS.log');
-  antTaskbarIcon1.Hint:='PC_DIMMER2010 MediaCenter Server [Verbunden]';
+  memo1.Lines.SaveToFile(userdirectory+'PC_DIMMER_MCS.log');
+  antTaskbarIcon1.Hint:='PC_DIMMER MediaCenter Server [Verbunden]';
 end;
 
 procedure Tmainform.ServerSocket1ClientDisconnect(Sender: TObject;
   Socket: TCustomWinSocket);
 begin
   memo1.lines.add(TimeToStr(now)+', '+DateToStr(now)+' Client Disconnected ('+Socket.RemoteHost+', '+Socket.RemoteAddress+')');
-  memo1.Lines.SaveToFile(ExtractFilePath(paramstr(0))+'\PC_DIMMER_MCS.log');
-  antTaskbarIcon1.Hint:='PC_DIMMER2010 MediaCenter Server [Nicht verbunden]';
+  memo1.Lines.SaveToFile(userdirectory+'PC_DIMMER_MCS.log');
+  antTaskbarIcon1.Hint:='PC_DIMMER MediaCenter Server [Nicht verbunden]';
 end;
 
 procedure Tmainform.Porteinstellen1Click(Sender: TObject);
@@ -585,7 +588,7 @@ begin
   memo1.Lines.Add('');
   memo1.Lines.Add('');
   memo1.Lines.Add('MediaCenter Server erfolgreich beendet.');
-  memo1.Lines.SaveToFile(ExtractFilePath(paramstr(0))+'\PC_DIMMER_MCS.log');
+  memo1.Lines.SaveToFile(userdirectory+'PC_DIMMER_MCS.log');
 end;
 
 procedure Tmainform.VideoWindow1DblClick(Sender: TObject);
@@ -596,7 +599,7 @@ end;
 procedure TMainform.AppException(Sender: TObject; E: Exception);
 begin
   memo1.lines.add(TimeToStr(now)+', '+DateToStr(now)+' Exception: '+E.Message+' ('+E.ClassName+'), '+sender.ClassName+', '+TControl(Sender).Name);
-  memo1.Lines.SaveToFile(ExtractFilePath(paramstr(0))+'\PC_DIMMER_MCS.log');
+  memo1.Lines.SaveToFile(userdirectory+'PC_DIMMER_MCS.log');
 // Nachricht:
 // E.Message
 

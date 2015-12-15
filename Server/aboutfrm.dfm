@@ -434,7 +434,7 @@ object aboutform: Taboutform
     Top = 68
     Width = 296
     Height = 13
-    Caption = 'Copyrights (c) 2004-2009 Dipl.-Ing. Christian N'#246'ding'
+    Caption = 'Copyrights (c) 2004-2015 Dipl.-Ing. Christian N'#246'ding'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11

@@ -5,12 +5,12 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, antTaskbarIcon, Menus, ImgList, Sockets, ScktComp,
-  ExtCtrls, XPMan, PowerButton, Registry, WinSock, ComCtrls, DXPlay,
-  CHHighResTimer, messagesystem, pngimage, gnugettext, TB2Item, TB2Dock,
-  TB2Toolbar, PngImageList, PowerButton1;
+  ExtCtrls, XPMan, PowerButton1, Registry, WinSock, ComCtrls, DXPlay,
+  CHHighResTimer, pngimage, gnugettext, TB2Item, TB2Dock,
+  TB2Toolbar, PngImageList, messagesystem;
 
 const
-  builtdate = 'Version 5.0.1 build on 23.09.2010';
+  builtdate = 'Version 5.1.0 build on 15.12.2015';
   chan = 8192;
 
 type
@@ -140,6 +140,8 @@ type
     channel_increase:array[1..chan] of integer;
     channel_value:array[1..chan] of byte;
     lastchan:integer;
+
+    userdirectory:string;
   end;
 
 	procedure CallbackGetDLLValues(address,startvalue,endvalue,fadetime,delay:integer);stdcall;
@@ -172,6 +174,9 @@ var
   FuncCall: function : PChar;
 begin
   TranslateComponent(Self);
+
+  userdirectory:=GetEnvironmentVariable('APPDATA')+'\PHOENIXstudios\PC_DIMMER\';
+
   lastchan:=8192;
 
   _closing:=false;

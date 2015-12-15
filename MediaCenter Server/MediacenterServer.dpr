@@ -8,7 +8,7 @@ uses
 
 begin
   Application.Initialize;
-  Application.Title := 'PC_DIMMER2010 Mediacenter Server';
+  Application.Title := 'PC_DIMMER MediaCenter Server';
   Application.CreateForm(Tmainform, mainform);
   Application.Run;
 end.
