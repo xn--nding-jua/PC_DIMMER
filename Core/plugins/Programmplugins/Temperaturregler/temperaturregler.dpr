@@ -98,7 +98,7 @@ begin
   SetProcessAffinityMask(GetCurrentProcess, 1); // 1=CPU0 , 2=CPU1
 
   ShuttingDown:=false;
-  Application.CreateForm(TConfig, Config);
+  config:=Tconfig.Create(nil);
   @Config.SetDLLEvent:=CallbackSetDLLValueEvent;
   @Config.SendMSG:=CallbackSendMessage;
 end;
