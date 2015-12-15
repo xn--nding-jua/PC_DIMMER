@@ -1,6 +1,6 @@
 object nodecontrolform: Tnodecontrolform
-  Left = 601
-  Top = 205
+  Left = 1048
+  Top = 228
   Width = 777
   Height = 585
   Caption = 'Knoten-Steuerung'
@@ -1243,7 +1243,7 @@ object nodecontrolform: Tnodecontrolform
         Top = 88
         Width = 241
         Height = 161
-        Caption = ' Detail-Einstellungen '
+        Caption = ' Detail-Einstellungen f'#252'r alle Knoten '
         TabOrder = 8
         object Label1: TLabel
           Left = 8

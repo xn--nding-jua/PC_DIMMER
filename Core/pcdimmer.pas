@@ -23938,6 +23938,53 @@ begin
       end;
 
       AContext.Connection.Socket.WriteLn(temp);
+    end else if (pos('get_nodes',cmd)>0) then // get_nodes
+    begin
+      temp:=cmd;
+      temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+      // Leerzeichen entfernen, sofern vorhanden
+      if pos(' ', temp)>0 then
+        temp:=copy(temp, 0, pos(' ', temp)-1);
+      value[0]:=temp;
+
+      temp:='nodes ';                       
+      temp:=temp+inttostr(length(nodecontrolsets));
+      for i:=0 to length(nodecontrolsets)-1 do
+      begin
+        temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(nodecontrolsets[i].Name)+','+GUIDtoString(nodecontrolsets[i].ID);
+      end;
+
+      AContext.Connection.Socket.WriteLn(temp);
+    end else if (pos('get_subnodes',cmd)>0) then // get_subnodes GUID
+    begin
+      temp:=cmd;
+      temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+      // Leerzeichen entfernen, sofern vorhanden
+      if pos(' ', temp)>0 then
+        temp:=copy(temp, 0, pos(' ', temp)-1);
+      value[0]:=temp;
+
+      for i:=0 to length(nodecontrolsets)-1 do
+      begin
+        if IsEqualGUID(stringtoguid(value[0]), nodecontrolsets[i].ID) then
+        begin
+          temp:='subnodes ';
+          temp:=temp+inttostr(length(nodecontrolsets[nodecontrolform.nodecontrolsetscombobox.ItemIndex].NodeControlNodes));
+          for j:=0 to length(nodecontrolsets[nodecontrolform.nodecontrolsetscombobox.ItemIndex].NodeControlNodes)-1 do
+          begin
+            temp:=temp+' '+inttostr(j+1)+':'+FilterTextForNetwork(nodecontrolsets[nodecontrolform.nodecontrolsetscombobox.ItemIndex].NodeControlNodes[i].Name);
+          end;
+
+          break;
+        end else
+        begin
+          temp:='subnodes 0'; // keine passende ID gefunden
+        end;
+      end;
+
+      AContext.Connection.Socket.WriteLn(temp);
     end else
     begin
       if pos(';',cmd)>0 then
@@ -23969,7 +24016,7 @@ end;
 procedure TMainform.ExecuteCommandServerCmd(cmd: string);
 var
   temp:string;
-  value:array[0..7] of string;
+  value:array[0..9] of string;
 begin
   if (pos('set_channel',cmd)>0) or (pos('set_ch',cmd)>0) then  // set_ch GUID DIMMER -1 255 5000 0
   begin
@@ -24342,6 +24389,143 @@ begin
     TerminalSystem.GUID1:=StringToGUID(value[5]);
     TerminalSystem.GUID2:=StringToGUID(value[6]);
     StartBefehl(StringToGUID('{46368186-DF3D-467A-9792-DAC6B03A21E3}'), strtoint(value[7]));
+  end;
+  if (pos('set_node',cmd)>0) then  // set_node nodeset node R G B A W D
+  begin
+    temp:=cmd;
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[0]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[1]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[2]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[3]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[4]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[5]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[6]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    // Leerzeichen entfernen, sofern vorhanden
+    if pos(' ', temp)>0 then
+      temp:=copy(temp, 0, pos(' ', temp)-1);
+    value[7]:=temp;
+
+    if (strtoint(value[0])>=0) and (strtoint(value[0])<nodecontrolform.nodecontrolsetscombobox.Items.Count) then
+    begin
+      nodecontrolform.nodecontrolsetscombobox.ItemIndex:=strtoint(value[0]);
+
+      if (strtoint(value[1])>=0) and (strtoint(value[1])<nodecontrolform.nodelist.Items.Count) then
+      begin
+        nodecontrolform.nodelist.ItemIndex:=strtoint(value[1]);
+
+        if (value[2]='-1') or (value[3]='-1') or (value[4]='-1') then
+        begin
+          nodecontrolform.rgbcheckbox.Checked:=false;
+          nodecontrolform.rgbcheckboxMouseUp(nodecontrolform.rgbcheckbox, mbLeft, [ssLeft], 0, 0);
+        end else
+        begin
+          nodecontrolform.rgbcheckbox.Checked:=true;
+          nodecontrolform.rgbcheckboxMouseUp(nodecontrolform.rgbcheckbox, mbLeft, [ssLeft], 0, 0);
+          nodecontrolform.colorpicker.Color:=pcdUtils.RGB2TColor(strtoint(value[2]), strtoint(value[3]), strtoint(value[4]));
+        end;
+
+        if (value[5]='-1') then
+        begin
+          nodecontrolform.ambercheckbox.Checked:=false;
+          nodecontrolform.ambercheckboxMouseUp(nodecontrolform.ambercheckbox, mbLeft, [ssLeft], 0, 0);
+        end else
+        begin
+          nodecontrolform.ambercheckbox.Checked:=false;
+          nodecontrolform.ambercheckboxMouseUp(nodecontrolform.ambercheckbox, mbLeft, [ssLeft], 0, 0);
+          nodecontrolform.amberslider.Value:=strtoint(value[5]);
+        end;
+
+        if (value[6]='-1') then
+        begin
+          nodecontrolform.whitecheckbox.Checked:=false;
+          nodecontrolform.whitecheckboxMouseUp(nodecontrolform.whitecheckbox, mbLeft, [ssLeft], 0, 0);
+        end else
+        begin
+          nodecontrolform.whitecheckbox.Checked:=false;
+          nodecontrolform.whitecheckboxMouseUp(nodecontrolform.whitecheckbox, mbLeft, [ssLeft], 0, 0);
+          nodecontrolform.whiteslider.Value:=strtoint(value[6]);
+        end;
+
+        if (value[7]='-1') then
+        begin
+          nodecontrolform.dimmercheckbox.Checked:=false;
+          nodecontrolform.dimmercheckboxMouseUp(nodecontrolform.dimmercheckbox, mbLeft, [ssLeft], 0, 0);
+        end else
+        begin
+          nodecontrolform.dimmercheckbox.Checked:=false;
+          nodecontrolform.dimmercheckboxMouseUp(nodecontrolform.dimmercheckbox, mbLeft, [ssLeft], 0, 0);
+          nodecontrolform.dimmerslider.Position:=strtoint(value[7]);
+        end;
+      end;
+    end;
+  end;
+  if (pos('set_node_config',cmd)>0) then  // set_node_config nodeset Ausdehnung Kontrast Fadetime UseRGB UseA UseW UseD
+  begin
+    temp:=cmd;
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[0]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[1]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[2]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[3]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[4]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[5]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[6]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    // Leerzeichen entfernen, sofern vorhanden
+    if pos(' ', temp)>0 then
+      temp:=copy(temp, 0, pos(' ', temp)-1);
+    value[7]:=temp;
+
+    if (strtoint(value[0])>=0) and (strtoint(value[0])<nodecontrolform.nodecontrolsetscombobox.Items.Count) then
+    begin
+      nodecontrolform.nodecontrolsetscombobox.ItemIndex:=strtoint(value[0]);
+
+      nodecontrolform.narrowslider.Position:=strtoint(value[1]);
+      nodecontrolform.contrastslider.Position:=strtoint(value[2]);
+      nodecontrolform.fadetimemsedit.Value:=strtoint(value[3]);
+
+      nodecontrolform.setrgbcheckbox.checked:=(value[4]<>'-1');
+      nodecontrolform.setrgbcheckboxClick(nodecontrolform.setrgbcheckbox);
+
+      nodecontrolform.setambercheckbox.checked:=(value[5]<>'-1');
+      nodecontrolform.setambercheckboxClick(nodecontrolform.setambercheckbox);
+
+      nodecontrolform.setwhitecheckbox.checked:=(value[6]<>'-1');
+      nodecontrolform.setwhitecheckboxClick(nodecontrolform.setwhitecheckbox);
+
+      nodecontrolform.setdimmercheckbox.checked:=(value[7]<>'-1');
+      nodecontrolform.setdimmercheckboxClick(nodecontrolform.setdimmercheckbox);
+    end;
   end;
 end;
 

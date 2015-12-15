@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, jpeg, ExtCtrls, StdCtrls, Buttons, PngBitBtn, CheckLst,
   JvExCheckLst, JvCheckListBox, gnugettext, ComCtrls, Mask, JvExMask,
-  JvSpin, Registry;
+  JvSpin, Registry, dxGDIPlusClasses;
 
 type
   Tpmmform = class(TForm)
