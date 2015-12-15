@@ -23,7 +23,7 @@ uses
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
-  Application.CreateForm(TConfig, Config);
+  config:=tconfig.create(Application);
 end;
 
 procedure DLLStart;stdcall;
@@ -59,15 +59,10 @@ begin
 end;
 
 procedure DLLAbout;stdcall;
-var
-  dllForm: TForm;
 begin
-  dllForm :=TAbout.Create(Application);
-  try
-    dllForm.ShowModal;
-  finally
-    dllForm.Release;
-  end;
+  about:=tabout.create(nil);
+  about.showmodal;
+  about.release;
 end;
 
 procedure DLLSendData(address, startvalue, endvalue, fadetime:integer;name:PChar);stdcall;

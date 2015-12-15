@@ -14,7 +14,7 @@ uses
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
-  Application.CreateForm(TMainform, Mainform);
+  mainform:=tmainform.create(Application);
   mainform.uDMXTimer.Enabled:=true;
 end;
 
@@ -51,15 +51,10 @@ begin
 end;
 
 procedure DLLAbout;stdcall;
-var
-  dllForm: TForm;
 begin
-  dllForm :=TAbout.Create(Application);
-  try
-    dllForm.ShowModal;
-  finally
-    dllForm.Release;
-  end;
+  about:=Tabout.create(nil);
+  about.showmodal;
+  about.release;
 end;
 
 procedure DLLSenddata(address, startvalue, endvalue, fadetime:integer;name:PChar);stdcall;

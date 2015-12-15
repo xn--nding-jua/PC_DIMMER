@@ -48,12 +48,10 @@ begin
 end;
 
 procedure DLLAbout;stdcall;
-var
-  about:Tabout;
 begin
-  about:=Tabout.Create(Application);
-  about.ShowModal;
-  about.Free;
+  about:=Tabout.create(nil);
+  about.showmodal;
+  about.release;
 end;
 
 procedure DLLSendData(address, startvalue, endvalue, fadetime:integer;name:PChar);stdcall;

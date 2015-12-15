@@ -194,7 +194,7 @@ end;
 
 procedure Tmainform.FormShow(Sender: TObject);
 var
-  i,ID:integer;
+  i:integer;
   PortIndex:DWORD;
   Desc:array[0..49] of char;
   Port:Integer;

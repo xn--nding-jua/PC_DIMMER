@@ -27,8 +27,8 @@ procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLL
 begin
   SetProcessAffinityMask(GetCurrentProcess, 1); // 1=CPU0 , 2=CPU1
 
-  Application.CreateForm(TConfig, Config);
-  Application.CreateForm(Ttimingform, timingform);
+  config:=tconfig.create(Application);
+  timingform:=ttimingform.create(config);
   @Config.RefreshDLLEvent:=CallbackSetDLLValueEvent;
 end;
 
@@ -70,8 +70,8 @@ begin
   sleep(150);
 
   // Forms entfernen
-  timingform.free;
-  Config.free;
+  timingform.release;
+  Config.release;
 
   Result:=True;
 end;
@@ -97,15 +97,10 @@ begin
 end;
 
 procedure DLLAbout;stdcall;
-var
-  dllForm: TForm;
 begin
-  dllForm :=TAbout.Create(Application);
-  try
-    dllForm.ShowModal;
-  finally
-    dllForm.Release;
-  end;
+  about:=tabout.create(nil);
+  about.showmodal;
+  about.release;
 end;
 
 procedure DLLSendData(address, startvalue, endvalue, fadetime:integer;name:PChar);stdcall;

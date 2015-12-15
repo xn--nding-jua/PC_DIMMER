@@ -39,7 +39,7 @@ end;
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
-  Settings:=TSettings.Create(nil);
+  Settings:=TSettings.Create(Application);
 end;
 
 procedure DLLStart;stdcall;
@@ -63,8 +63,9 @@ begin
   LReg.WriteBool('Showing Plugin', settings.Showing);
   LReg.Free;
 
-  Settings.Close;
-  Settings.Free;
+  if settings.Showing then
+    Settings.Close;
+  Settings.release;
   Result:=True;
 end;
 
@@ -130,7 +131,7 @@ procedure DLLAbout;stdcall;
 begin
   about := tabout.Create(nil);
   about.ShowModal;
-  about.Free;
+  about.release;
 end;
 
 procedure DLLSendData(channel, startvalue, endvalue, fadetime:integer; channelname:PChar);stdcall;

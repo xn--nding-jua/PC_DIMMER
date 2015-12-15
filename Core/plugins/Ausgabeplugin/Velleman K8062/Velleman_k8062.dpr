@@ -23,7 +23,7 @@ uses
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
-  Application.CreateForm(TForm1, Form1);
+  form1:=tform1.create(Application);
 end;
 
 procedure DLLStart;stdcall;
@@ -33,11 +33,7 @@ end;
 
 function DLLDestroy:boolean;stdcall;
 begin
-  try
-	  Form1.Release;
-  except
-  end;
-
+  Form1.Release;
   Result:=True;
 end;
 

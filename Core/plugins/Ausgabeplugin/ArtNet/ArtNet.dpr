@@ -14,7 +14,7 @@ uses
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
-  Application.CreateForm(TMainform, Mainform);
+  mainform:=Tmainform.create(Application);
   @mainform.SetDLLValues:=CallbackSetDLLValues; // Lets you set value and fadeintime of a single channel
   @mainform.SetDLLValueEvent:=CallbackSetDLLValueEvent; // Lets you set values in the DataIn Window
   @mainform.SetDLLNames:=CallbackSetDLLNames; // Lets you set a name of a single channel
@@ -36,7 +36,7 @@ begin
     @mainform.GetDLLValue:=nil;
     @mainform.SendMSG:=nil;
 
-	  mainform.Release;
+	  mainform.release;
   except
   end;
 
@@ -64,15 +64,10 @@ begin
 end;
 
 procedure DLLAbout;stdcall;
-var
-  dllForm: TForm;
 begin
-  dllForm :=TAboutform.Create(Application);
-  try
-    dllForm.ShowModal;
-  finally
-    dllForm.Release;
-  end;
+  aboutform :=TAboutform.Create(nil);
+  aboutform.ShowModal;
+  aboutform.release;
 end;
 
 procedure DLLSenddata(address, startvalue, endvalue, fadetime:integer;name:PChar);stdcall;

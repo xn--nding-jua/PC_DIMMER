@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=2
 MinorVer=0
 Release=0
-Build=136
+Build=138
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=DasLight DVC Plugin
-FileVersion=2.0.0.136
+FileVersion=2.0.0.138
 InternalName=
 LegalCopyright=(c) 2009-2012 by Dipl.-Ing. M.Sc. Christian Nöding
 LegalTrademarks=

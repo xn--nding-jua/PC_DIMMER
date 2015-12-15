@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, CPDrv, ExtCtrls, Registry, CPort;
+  Dialogs, StdCtrls, CPDrv, ExtCtrls, Registry;
 
 type
   TCallback = procedure(address,startvalue,endvalue,fadetime,delay:integer);stdcall;
@@ -22,10 +22,8 @@ type
     Image1: TImage;
     Label4: TLabel;
     rs232input: TCheckBox;
-    comport2: TComPort;
     Bevel2: TBevel;
     RadioGroup1: TRadioGroup;
-    RadioGroup2: TRadioGroup;
     Button1: TButton;
     Label5: TLabel;
     statuslabel: TLabel;
@@ -33,10 +31,6 @@ type
       DataSize: Cardinal);
     procedure rs232inputMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure RadioButton1MouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure RadioGroup2Click(Sender: TObject);
-    procedure RadioGroup1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure ActivateCOMPort(portnumber: integer);
     procedure portchangeSelect(Sender: TObject);
@@ -164,116 +158,12 @@ begin
   LReg.Free;
 end;
 
-procedure TConfig.RadioButton1MouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var
-  LReg:TRegistry;
-begin
-  LReg := TRegistry.Create;
-  LReg.RootKey:=HKEY_CURRENT_USER;
-
-  if LReg.OpenKey('Software', True) then
-  begin
-    if not LReg.KeyExists('PHOENIXstudios') then
-      LReg.CreateKey('PHOENIXstudios');
-    if LReg.OpenKey('PHOENIXstudios',true) then
-    begin
-      if not LReg.KeyExists('PC_DIMMER') then
-        LReg.CreateKey('PC_DIMMER');
-      if LReg.OpenKey('PC_DIMMER',true) then
-      begin
-        if not LReg.KeyExists(ExtractFileName(GetModulePath)) then
-	        LReg.CreateKey(ExtractFileName(GetModulePath));
-	      if LReg.OpenKey(ExtractFileName(GetModulePath),true) then
-	      begin
-          case RadioGroup2.ItemIndex of
-            0: LReg.WriteInteger('RS232 Driver',1);
-            1: LReg.WriteInteger('RS232 Driver',2);
-          end;
-        end;
-      end;
-    end;
-  end;
-  LReg.CloseKey;
-  LReg.Free;
-end;
-
-procedure TConfig.RadioGroup2Click(Sender: TObject);
-var
-  LReg:TRegistry;
-begin
-  LReg := TRegistry.Create;
-  LReg.RootKey:=HKEY_CURRENT_USER;
-
-  if LReg.OpenKey('Software', True) then
-  begin
-    if not LReg.KeyExists('PHOENIXstudios') then
-      LReg.CreateKey('PHOENIXstudios');
-    if LReg.OpenKey('PHOENIXstudios',true) then
-    begin
-      if not LReg.KeyExists('PC_DIMMER') then
-        LReg.CreateKey('PC_DIMMER');
-      if LReg.OpenKey('PC_DIMMER',true) then
-      begin
-        if not LReg.KeyExists(ExtractFileName(GetModulePath)) then
-	        LReg.CreateKey(ExtractFileName(GetModulePath));
-	      if LReg.OpenKey(ExtractFileName(GetModulePath),true) then
-	      begin
-          case Radiogroup2.ItemIndex of
-            0: LReg.WriteInteger('RS232 Driver',1);
-            1: LReg.WriteInteger('RS232 Driver',2);
-          end;
-        end;
-      end;
-    end;
-  end;
-  LReg.CloseKey;
-  LReg.Free;
-
-  portchangeSelect(Sender);
-end;
-
-procedure TConfig.RadioGroup1Click(Sender: TObject);
-var
-  LReg:TRegistry;
-begin
-  LReg := TRegistry.Create;
-  LReg.RootKey:=HKEY_CURRENT_USER;
-
-  if LReg.OpenKey('Software', True) then
-  begin
-    if not LReg.KeyExists('PHOENIXstudios') then
-      LReg.CreateKey('PHOENIXstudios');
-    if LReg.OpenKey('PHOENIXstudios',true) then
-    begin
-      if not LReg.KeyExists('PC_DIMMER') then
-        LReg.CreateKey('PC_DIMMER');
-      if LReg.OpenKey('PC_DIMMER',true) then
-      begin
-        if not LReg.KeyExists(ExtractFileName(GetModulePath)) then
-	        LReg.CreateKey(ExtractFileName(GetModulePath));
-	      if LReg.OpenKey(ExtractFileName(GetModulePath),true) then
-	      begin
-          case Radiogroup1.ItemIndex of
-            0: LReg.WriteInteger('Dimmtype',1);
-            1: LReg.WriteInteger('Dimmtype',2);
-          end;
-        end;
-      end;
-    end;
-  end;
-  LReg.CloseKey;
-  LReg.Free;
-end;
-
 procedure TConfig.Button1Click(Sender: TObject);
 var
   i, TestHandle:integer;
 begin
   if config.comport.Connected then
   	Config.comport.Disconnect;
-  if comport2.Connected then
-    comport2.Close;
 
 	portchange.Clear;
 	for i:=1 to 16 do
@@ -341,15 +231,7 @@ begin
       13: comport.port:=pnCOM13;   14: comport.port:=pnCOM14;
       15: comport.port:=pnCOM15;   16: comport.port:=pnCOM16;
     end;
-    if (RadioGroup2.ItemIndex=0) then
-      comport.Connect;
-
-    if comport2.Connected then
-      comport2.Close;
-    if (comportnumber>=1) and (comportnumber<=16) then
-      comport2.port:='COM'+inttostr(comportnumber);
-    if (RadioGroup2.ItemIndex=1) then
-      comport2.Open;
+    comport.Connect;
 
     LReg := TRegistry.Create;
     LReg.RootKey:=HKEY_CURRENT_USER;
@@ -378,11 +260,7 @@ begin
 
   if comport.Connected then
   begin
-    statuslabel.Caption:='Verbunden über Treiber 1 an COM'+inttostr(comportnumber)+' @ '+inttostr(baudrate);
-    statuslabel.Font.Color:=clGreen;
-  end else if comport2.Connected then
-  begin
-    statuslabel.Caption:='Verbunden über Treiber 2 an COM'+inttostr(comportnumber)+' @ '+inttostr(baudrate);
+    statuslabel.Caption:='Verbunden mit COM'+inttostr(comportnumber)+' @ '+inttostr(baudrate);
     statuslabel.Font.Color:=clGreen;
   end else
   begin
@@ -400,21 +278,8 @@ begin
   if comport.Connected then
    	comport.Disconnect;
   comport.BaudRateValue:=baudrate;
-  if (portchange.ItemIndex>-1) and (RadioGroup2.ItemIndex=0) then
+  if (portchange.ItemIndex>-1) then
     comport.Connect;
-
-  if comport2.Connected then
-   	comport2.close;
-  case baudrate of
-    115200: comport2.BaudRate:=br115200;
-    57600: comport2.BaudRate:=br57600;
-    38400: comport2.BaudRate:=br38400;
-    9600: comport2.BaudRate:=br9600;
-  else
-    comport2.BaudRate:=br115200;
-  end;
-  if (portchange.ItemIndex>-1) and (RadioGroup2.ItemIndex=1) then
-    comport2.open;
 
   LReg := TRegistry.Create;
   LReg.RootKey:=HKEY_CURRENT_USER;
@@ -443,11 +308,7 @@ begin
 
   if comport.Connected then
   begin
-    statuslabel.Caption:='Verbunden über Treiber 1 an COM'+inttostr(comportnumber)+' @ '+inttostr(baudrate);
-    statuslabel.Font.Color:=clGreen;
-  end else if comport2.Connected then
-  begin
-    statuslabel.Caption:='Verbunden über Treiber 2 an COM'+inttostr(comportnumber)+' @ '+inttostr(baudrate);
+    statuslabel.Caption:='Verbunden mit COM'+inttostr(comportnumber)+' @ '+inttostr(baudrate);
     statuslabel.Font.Color:=clGreen;
   end else
   begin
@@ -514,12 +375,6 @@ begin
 	        case LReg.ReadInteger('Dimmtype') of
             1: RadioGroup1.ItemIndex:=0;
             2: RadioGroup1.ItemIndex:=1;
-          end;
-	        if not LReg.ValueExists('RS232 Driver') then
-	          LReg.WriteInteger('RS232 Driver',1);
-	        case LReg.ReadInteger('RS232 Driver') of
-            1: RadioGroup2.ItemIndex:=0;
-            2: RadioGroup2.ItemIndex:=1;
           end;
 	        if not LReg.ValueExists('COMPort') then
 	          LReg.WriteInteger('COMPort',2);

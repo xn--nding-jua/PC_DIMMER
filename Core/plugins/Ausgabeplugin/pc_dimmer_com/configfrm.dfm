@@ -4,7 +4,7 @@ object Config: TConfig
   BorderStyle = bsToolWindow
   Caption = 'Konfiguration'
   ClientHeight = 185
-  ClientWidth = 641
+  ClientWidth = 530
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -2370,7 +2370,7 @@ object Config: TConfig
   object Bevel2: TBevel
     Left = 0
     Top = 144
-    Width = 641
+    Width = 529
     Height = 9
     Shape = bsTopLine
   end
@@ -2434,8 +2434,8 @@ object Config: TConfig
     TabOrder = 3
   end
   object rs232input: TCheckBox
-    Left = 496
-    Top = 48
+    Left = 392
+    Top = 80
     Width = 137
     Height = 17
     Caption = 'RS232 Input benutzen'
@@ -2459,26 +2459,6 @@ object Config: TConfig
     ParentShowHint = False
     ShowHint = True
     TabOrder = 5
-    OnClick = RadioGroup1Click
-  end
-  object RadioGroup2: TRadioGroup
-    Left = 392
-    Top = 72
-    Width = 241
-    Height = 65
-    Hint = 
-      'W'#228'hlen Sie zwischen verschiedenen Comport-Treibern. Alle Treiber' +
-      ' haben gleiche Eigenschaften, greifen jedoch unterschiedlich auf' +
-      ' die Schnittstelle zu.'
-    Caption = ' COM-Port Treiber '
-    ItemIndex = 1
-    Items.Strings = (
-      'Treiber 1 (TCommPort by Marco Cocco)'
-      'Treiber 2 (TComPort by SourceForge.net)')
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 6
-    OnClick = RadioGroup2Click
   end
   object portchange: TComboBox
     Left = 144
@@ -2519,7 +2499,7 @@ object Config: TConfig
     Caption = 'COM-Ports neu suchen'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 7
+    TabOrder = 6
     OnClick = Button1Click
   end
   object comport: TCommPortDriver
@@ -2532,22 +2512,7 @@ object Config: TConfig
     OutputTimeout = 100
     InputTimeout = 100
     OnReceiveData = comportReceiveData
-    Left = 520
-  end
-  object comport2: TComPort
-    BaudRate = br115200
-    Port = 'COM1'
-    Parity.Bits = prNone
-    StopBits = sbOneStopBit
-    DataBits = dbEight
-    Events = []
-    FlowControl.OutCTSFlow = False
-    FlowControl.OutDSRFlow = False
-    FlowControl.ControlDTR = dtrDisable
-    FlowControl.ControlRTS = rtsDisable
-    FlowControl.XonXoffOut = False
-    FlowControl.XonXoffIn = False
-    SyncMethod = smNone
-    Left = 488
+    Left = 432
+    Top = 8
   end
 end

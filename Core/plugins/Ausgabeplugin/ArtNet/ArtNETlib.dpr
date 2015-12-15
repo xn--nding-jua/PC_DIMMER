@@ -15,7 +15,7 @@ type
 
 procedure ArtNET_Activate(ReceiveDMXUniverse, ReceiveSingleValue:Pointer);stdcall;
 begin
-  Application.CreateForm(Tmainform, mainform);
+  mainform:=tmainform.create(Application);
   @mainform.ReceiveDMXUniverse:=ReceiveDMXUniverse;
   @mainform.ReceiveSingleValue:=ReceiveSingleValue;
   mainform.cbArtNETSubnetSelect(nil);
@@ -36,7 +36,7 @@ begin
     @mainform.ReceiveDMXUniverse:=nil;
     @mainform.ReceiveSingleValue:=nil;
 
-    mainform.Free;
+    mainform.release;
   except
   end;
 end;
@@ -115,9 +115,9 @@ end;
 
 procedure ArtNET_ShowAbout;stdcall;
 begin
-  Application.CreateForm(Taboutform, aboutform);
+  aboutform:=taboutform.Create(nil);
   aboutform.showmodal;
-  aboutform.free;
+  aboutform.release;
 end;
 
 procedure ArtNET_SetReceiveUniverseOnOff(ArtNETSubNet:integer; ArtNetUniverse:integer; Enabled: boolean);stdcall;

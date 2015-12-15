@@ -110,7 +110,6 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure RegisterPluginCommandsTimer(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
     procedure TestCaseBtnClick(Sender: TObject);
     procedure DemoDataTimer(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -215,7 +214,6 @@ end;
 
 procedure TConfig.FormCreate(Sender: TObject);
 begin
-  Application.CreateForm(Tsetupform, setupform);
   FirstShow:=true;
 end;
 
@@ -1049,11 +1047,6 @@ begin
 
   SendMSG(MSG_CREATEPLUGINSCENE, '{EB86EDF4-F750-420C-81D9-3023741988E8}', 'Temperaturregler: Ein');
   SendMSG(MSG_CREATEPLUGINSCENE, '{4950EE57-ACAC-4BB3-ACA6-9CBD4D9F1B56}', 'Temperaturregler: Aus');
-end;
-
-procedure TConfig.FormDestroy(Sender: TObject);
-begin
-	setupform.Free;
 end;
 
 procedure TConfig.TestCaseBtnClick(Sender: TObject);

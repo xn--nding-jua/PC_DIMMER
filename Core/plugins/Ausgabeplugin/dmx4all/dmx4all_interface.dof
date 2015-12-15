@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=2
 MinorVer=1
 Release=0
-Build=267
+Build=270
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=DMX4ALL Interfaceplugin
-FileVersion=2.1.0.267
+FileVersion=2.1.0.270
 InternalName=
 LegalCopyright=(c) 2008 by Christian Nöding
 LegalTrademarks=

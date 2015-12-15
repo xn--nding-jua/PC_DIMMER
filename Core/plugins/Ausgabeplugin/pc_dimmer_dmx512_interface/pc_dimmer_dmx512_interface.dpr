@@ -25,7 +25,7 @@ uses
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
-  Application.CreateForm(TConfig, Config);
+  config:=tconfig.Create(Application);
   @Config.RefreshDLLValues:=CallbackSetDLLValues;
   @Config.RefreshDLLEvent:=CallbackSetDLLValueEvent;
 end;
@@ -45,7 +45,7 @@ begin
     @config.RefreshDLLValues:=nil;
     @Config.RefreshDLLEvent:=nil;
 
-	  Config.Free;
+	  Config.release;
   except
   end;
   Result:=True;
@@ -72,15 +72,10 @@ begin
 end;
 
 procedure DLLAbout;stdcall;
-var
-  dllForm: TForm;
 begin
-  dllForm :=TAbout.Create(Application);
-  try
-    dllForm.ShowModal;
-  finally
-    dllForm.Release;
-  end;
+  about:=tabout.create(nil);
+  about.showmodal;
+  about.release;
 end;
 
 procedure DLLSendData(address, startvalue, endvalue, fadetime:integer;name:PChar);stdcall;

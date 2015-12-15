@@ -4,8 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, JvComponentBase, JvHidControllerClass, HID,
-  pngimage;
+  Dialogs, StdCtrls, ExtCtrls, JvComponentBase, HID,
+  pngimage, JvHidControllerClass;
 
 type
   TCallbackValues = procedure(address,startvalue,endvalue,fadetime,delay:integer);stdcall;

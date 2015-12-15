@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, Registry, CPort, CHHighResTimer, jpeg;
+  Dialogs, StdCtrls, ExtCtrls, Registry, CHHighResTimer, jpeg, CPDrv;
 
 type
   TCallback = procedure(address,startvalue,endvalue,fadetime:integer);stdcall;
@@ -18,7 +18,6 @@ type
     Abbrechen: TButton;
     Bevel1: TBevel;
     Label4: TLabel;
-    comport2: TComPort;
     DMXValueRefreshTimer: TCHHighResTimer;
     Edit2: TEdit;
     Label7: TLabel;
@@ -27,6 +26,7 @@ type
     Shape2: TShape;
     Image1: TImage;
     Label5: TLabel;
+    comport: TCommPortDriver;
     procedure FormShow(Sender: TObject);
     procedure DMXValueRefreshTimerTimer(Sender: TObject);
     procedure input_number(var pos:integer; var s:string);
@@ -169,7 +169,7 @@ procedure TConfig.SendChannel(Channel:integer; Value: Byte);
 var
   RS232Frame:array[0..2] of Byte;
 begin
-  if comport2.Connected then
+  if comport.Connected then
   begin
     case Channel of
       1..255:
@@ -191,7 +191,7 @@ begin
 
     RS232Frame[2]:=Byte(Value);
 
-    connectionproblem:=(comport2.Write(RS232Frame, 3)<>3);
+    connectionproblem:=(comport.SendData(@RS232Frame, 3)<>3);
     if connectionproblem then
     begin
       statuslabel.Caption:='Verbindungsproblem!';
@@ -213,7 +213,7 @@ var
   RS232Frame3:array[0..2] of Byte;
   i:integer;
 begin
-  if comport2.Connected then
+  if comport.Connected then
   begin
     // Kanal 1-255 senden
     RS232BlockFrame1[0]:=4; // Block für Kanal 1-255
@@ -223,7 +223,7 @@ begin
     for i:=0 to 254 do
       RS232BlockFrame1[i+3]:=Byte(rs232frame[i]);
 
-    comport2.Write(RS232BlockFrame1, 258);
+    comport.SendData(@RS232BlockFrame1, 258);
 
     // Kanal 256-511 senden
     RS232BlockFrame2[0]:=5; // Block für Kanal 256-511
@@ -233,14 +233,14 @@ begin
     for i:=0 to 255 do
       RS232BlockFrame2[i+3]:=Byte(rs232frame[i+255]);
 
-    comport2.Write(RS232BlockFrame2, 259);
+    comport.SendData(@RS232BlockFrame2, 259);
 
     // Kanal 512 senden
     RS232Frame3[0]:=Byte(2);  // Kanal 1-255 oder 512 senden
     RS232Frame3[1]:=Byte(0);  // Kanalwert
     RS232Frame3[2]:=Byte(rs232frame[511]);
 
-    comport2.Write(RS232Frame3, 3);
+    comport.SendData(@RS232Frame3, 3);
   end;
 end;
 
@@ -252,7 +252,7 @@ begin
     RS232Frame[1]:=Byte(Value);  // Masterfaderwert (0..200)
     RS232Frame[2]:=Byte(Fadetime);  // Fadetime (0..254)
 
-    comport2.Write(RS232Frame, 3);
+    comport.SendData(@RS232Frame, 3);
 end;
 
 procedure TConfig.LoadPreset(Preset:Byte);
@@ -263,7 +263,7 @@ begin
     RS232Frame[1]:=Byte(0);  // Kompatibilität (immer =0)
     RS232Frame[2]:=Byte(Preset);  // Preset-Nr (0..239)
 
-    comport2.Write(RS232Frame, 3);
+    comport.SendData(@RS232Frame, 3);
 end;
 
 procedure TConfig.input_number(var pos:integer; var s:string);
@@ -395,21 +395,21 @@ begin
       comportnumber:=strtoint(temp);
 
     try
-      if comport2.Connected then
-        comport2.close;
+      if comport.Connected then
+        comport.Disconnect;
     except
     end;
       case comportnumber of
-        1: comport2.port:='COM1';   2: comport2.port:='COM2';
-        3: comport2.port:='COM3';   4: comport2.port:='COM4';
-        5: comport2.port:='COM5';   6: comport2.port:='COM6';
-        7: comport2.port:='COM7';   8: comport2.port:='COM8';
-        9: comport2.port:='COM9';   10: comport2.port:='COM10';
-        11: comport2.port:='COM11';   12: comport2.port:='COM12';
-        13: comport2.port:='COM13';   14: comport2.port:='COM14';
-        15: comport2.port:='COM15';   16: comport2.port:='COM16';
+        1: comport.port:=pnCOM1;   2: comport.port:=pnCOM2;
+        3: comport.port:=pnCOM3;   4: comport.port:=pnCOM4;
+        5: comport.port:=pnCOM5;   6: comport.port:=pnCOM6;
+        7: comport.port:=pnCOM7;   8: comport.port:=pnCOM8;
+        9: comport.port:=pnCOM9;   10: comport.port:=pnCOM10;
+        11: comport.port:=pnCOM11;   12: comport.port:=pnCOM12;
+        13: comport.port:=pnCOM13;   14: comport.port:=pnCOM14;
+        15: comport.port:=pnCOM15;   16: comport.port:=pnCOM16;
       end;
-    comport2.open;
+    comport.connect;
 
     LReg := TRegistry.Create;
     LReg.RootKey:=HKEY_CURRENT_USER;
@@ -437,7 +437,7 @@ begin
     LReg.Free;
   end;
 
-  if comport2.Connected then
+  if comport.Connected then
   begin
     statuslabel.Caption:='Verbunden mit COM'+inttostr(comportnumber);
     statuslabel.Font.Color:=clGreen;
@@ -520,8 +520,8 @@ begin
   LReg.Free;
 
   try
-    if comport2.Connected then
-	  	comport2.close;
+    if comport.Connected then
+	  	comport.disconnect;
   except
   end;
 //{

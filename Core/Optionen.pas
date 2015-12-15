@@ -221,6 +221,7 @@ type
     MevpThreadPriority: TTrackBar;
     Label64: TLabel;
     QuitWithoutConfirmation: TCheckBox;
+    Label86: TLabel;
     procedure input_number(var pos:integer; var s:string);
     procedure FormShow(Sender: TObject);
     procedure prioritaetChange(Sender: TObject);
@@ -311,14 +312,10 @@ begin
     pluginabout.Enabled:=false;
   end;
 
-  for i:=0 to length(mainform.OutputPlugins)-1 do
+  if (length(mainform.plugin_blacklist)>0) or (length(mainform.plugin_blacklist_new)>0) then
   begin
-    if mainform.OutputPlugins[i].IsBlacklisted then
-    begin
-      label48.Visible:=true;
-      button2.Visible:=true;
-      break;
-    end;
+    label48.Visible:=true;
+    button2.Visible:=true;
   end;
 
   Timer2.enabled:=true;

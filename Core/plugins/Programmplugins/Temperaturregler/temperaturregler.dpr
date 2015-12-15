@@ -98,7 +98,8 @@ begin
   SetProcessAffinityMask(GetCurrentProcess, 1); // 1=CPU0 , 2=CPU1
 
   ShuttingDown:=false;
-  config:=Tconfig.Create(nil);
+  config:=Tconfig.Create(Application);
+  setupform:=tsetupform.create(config);
   @Config.SetDLLEvent:=CallbackSetDLLValueEvent;
   @Config.SendMSG:=CallbackSendMessage;
 end;
@@ -158,7 +159,8 @@ begin
 
 	@config.SetDLLEvent:=nil;
 
-	Config.free;
+  setupform.release;
+	Config.release;
 
   Application.ProcessMessages;
   sleep(150);
@@ -228,7 +230,7 @@ procedure DLLAbout;stdcall;
 begin
   about := tabout.Create(nil);
   about.ShowModal;
-  about.Free;
+  about.release;
 end;
 
 procedure DLLSendData(address, startvalue, endvalue, fadetime:integer;name:PChar);stdcall;

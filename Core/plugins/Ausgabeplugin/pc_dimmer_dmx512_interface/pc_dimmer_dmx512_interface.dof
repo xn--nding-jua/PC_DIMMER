@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=2
 MinorVer=3
 Release=0
-Build=84
+Build=86
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=PC_DIMMER DMX512 Interface Plugin
-FileVersion=2.3.0.84
+FileVersion=2.3.0.86
 InternalName=
 LegalCopyright=(c) 2008-2011 by Dipl.-Ing. M.Sc. Christian Nöding
 LegalTrademarks=

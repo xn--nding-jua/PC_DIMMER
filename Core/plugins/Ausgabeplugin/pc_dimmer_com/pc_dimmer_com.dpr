@@ -25,7 +25,7 @@ uses
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
-  Application.CreateForm(TConfig, Config);
+  config:=tconfig.create(Application);
   @Config.RefreshDLLValues:=CallbackSetDLLValues;
   @Config.RefreshDLLEvent:=CallbackSetDLLValueEvent;
 end;
@@ -39,15 +39,13 @@ function DLLDestroy:boolean;stdcall;
 begin
   config.shutdown:=true;
 
-//  if config.comport.Connected then
-//		Config.comport.Disconnect;
-  if config.comport2.Connected then
-    config.comport2.Close;
+  if config.comport.Connected then
+		Config.comport.Disconnect;
 
 	@config.RefreshDLLValues:=nil;
 	@config.RefreshDLLEvent:=nil;
 
-	Config.Free;
+	Config.release;
 
   Result:=True;
 end;
@@ -73,12 +71,10 @@ begin
 end;
 
 procedure DLLAbout;stdcall;
-var
-  dllForm: TForm;
 begin
-  dllForm :=TAbout.Create(Application);
-  dllForm.ShowModal;
-  dllForm.Free;
+  about:=tabout.create(nil);
+  about.showmodal;
+  about.release;
 end;
 
 procedure DLLSendData(address, startvalue, endvalue, fadetime:integer;name:PChar);stdcall;
@@ -145,18 +141,8 @@ begin
   rs232frame_new[5]:=b;                           {sechste Byte in Puffer schreiben}
 
   count:=6;
-  case config.RadioGroup2.ItemIndex of
-    0:
-    begin
-      if config.comport.Connected then
-        config.comport.SendData(@rs232frame_new,6);
-    end;
-    1:
-    begin
-      if config.comport2.Connected then
-        config.comport2.Write(rs232frame_new,count);
-    end;
-  end;
+  if config.comport.Connected then
+    config.comport.SendData(@rs232frame_new,6);
 end;
 
 function DLLIsSending:boolean;stdcall;
@@ -186,18 +172,8 @@ begin
         rs232frame_new[5]:=b;
 
         count:=6;
-        case config.RadioGroup2.ItemIndex of
-          0:
-          begin
-            if config.comport.Connected then
-              config.comport.SendData(@rs232frame_new,6);
-          end;
-          1:
-          begin
-            if config.comport2.Connected then
-              config.comport2.Write(rs232frame_new,count);
-          end;
-        end;
+        if config.comport.Connected then
+          config.comport.SendData(@rs232frame_new,6);
       end;
     end;
   end;

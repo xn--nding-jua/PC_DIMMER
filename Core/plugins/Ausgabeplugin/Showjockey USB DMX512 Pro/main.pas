@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, gnugettext, pngimage, U_Usb, Registry;
+  Dialogs, StdCtrls, ExtCtrls, pngimage, U_Usb, Registry;
 
 type
   // Funktionen für PC_DIMMER

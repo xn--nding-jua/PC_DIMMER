@@ -83,7 +83,7 @@ object OptionenBox: TOptionenBox
         Left = 8
         Top = 48
         Width = 560
-        Height = 261
+        Height = 256
         Align = alClient
         ColCount = 7
         DefaultColWidth = 70
@@ -169,9 +169,9 @@ object OptionenBox: TOptionenBox
         object Label47: TLabel
           Left = 515
           Top = 32
-          Width = 47
+          Width = 56
           Height = 13
-          Caption = 'Ignorieren'
+          Caption = 'Ausblenden'
         end
         object Label34: TLabel
           Left = 251
@@ -183,20 +183,20 @@ object OptionenBox: TOptionenBox
       end
       object Panel4: TPanel
         Left = 0
-        Top = 309
+        Top = 304
         Width = 576
-        Height = 41
+        Height = 46
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 2
         object Label48: TLabel
-          Left = 216
-          Top = 8
-          Width = 161
-          Height = 33
+          Left = 336
+          Top = 0
+          Width = 225
+          Height = 17
           Alignment = taRightJustify
           AutoSize = False
-          Caption = 'Es wurden beim Start nicht alle Plugins geladen -->'
+          Caption = 'Einige Plugins wurden ausgeblendet...'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -228,11 +228,11 @@ object OptionenBox: TOptionenBox
           OnClick = pluginaboutClick
         end
         object Button2: TButton
-          Left = 384
-          Top = 8
-          Width = 163
+          Left = 344
+          Top = 16
+          Width = 219
           Height = 25
-          Caption = 'Ignorierte Plugins wieder laden'
+          Caption = 'Alle Plugins bei n'#228'chstem Start laden'
           TabOrder = 2
           Visible = False
           OnClick = Button2Click
@@ -242,7 +242,7 @@ object OptionenBox: TOptionenBox
         Left = 0
         Top = 48
         Width = 8
-        Height = 261
+        Height = 256
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 3
@@ -251,7 +251,7 @@ object OptionenBox: TOptionenBox
         Left = 568
         Top = 48
         Width = 8
-        Height = 261
+        Height = 256
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 4
@@ -1010,7 +1010,7 @@ object OptionenBox: TOptionenBox
         Height = 21
         Hint = 'Soundkarte: '
         Style = csDropDownList
-        ItemHeight = 0
+        ItemHeight = 13
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
@@ -1776,6 +1776,16 @@ object OptionenBox: TOptionenBox
       Width = 720
       Height = 1
       Brush.Color = clBlack
+    end
+    object Label86: TLabel
+      Left = 208
+      Top = 16
+      Width = 355
+      Height = 13
+      Caption = 
+        'Hinweis: Weitere Plugins sind im Unterordner "Plugins\Unused" zu' +
+        ' finden...'
+      Transparent = True
     end
     object OKBtn: TButton
       Left = 8

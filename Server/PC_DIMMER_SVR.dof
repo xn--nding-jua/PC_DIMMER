@@ -116,9 +116,9 @@ RootDir=
 IncludeVerInfo=1
 AutoIncBuild=1
 MajorVer=5
-MinorVer=0
+MinorVer=1
 Release=0
-Build=44
+Build=46
 Debug=0
 PreRelease=0
 Special=0
@@ -129,16 +129,14 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=PC_DIMMER Netzwerk-Server
-FileVersion=5.0.0.44
+FileVersion=5.1.0.46
 InternalName=PC_DIMMER Netzwerk-Server
-LegalCopyright=(c) 2004-2010 PHOENIXstudios Remsfeld
+LegalCopyright=(c) 2004-2015 PHOENIXstudios Remsfeld
 LegalTrademarks=
 OriginalFilename=pc_dimmer_svr.exe
 ProductName=PC_DIMMER Netzwerk-Server
-ProductVersion=5.0.0.0
+ProductVersion=5.1.0.0
 Comments=http://www.pcdimmer.de
-[Excluded Packages]
-c:\programme\borland\delphi7\Bin\dclindy70.bpl=Internet Direct (Indy) für Delphi 7 Eigenschafts- und Komponenten-Editoren
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;

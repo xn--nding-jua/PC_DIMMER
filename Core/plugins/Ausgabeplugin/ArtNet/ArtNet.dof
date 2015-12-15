@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=1
 MinorVer=4
 Release=0
-Build=321
+Build=326
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=PC_DIMMER ArtNet Transceiver
-FileVersion=1.4.0.321
+FileVersion=1.4.0.326
 InternalName=
 LegalCopyright=(c) 2008-2015 by Dipl.-Ing. M.Sc. Christian Nöding
 LegalTrademarks=

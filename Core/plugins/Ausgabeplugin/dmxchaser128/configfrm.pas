@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, CPDrv, ExtCtrls, Registry, pngimage, CPort,
+  Dialogs, StdCtrls, CPDrv, ExtCtrls, Registry, pngimage,
   CHHighResTimer;
 
 type

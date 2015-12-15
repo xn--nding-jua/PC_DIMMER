@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=1
 MinorVer=3
 Release=0
-Build=319
+Build=324
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=ArtNET Library Testprogramm
-FileVersion=1.3.0.319
+FileVersion=1.3.0.324
 InternalName=
 LegalCopyright=(c) 2008-2012 by Dipl.-Ing. M.Sc. Christian Nöding
 LegalTrademarks=

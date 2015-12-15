@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=2
 MinorVer=0
 Release=0
-Build=79
+Build=81
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=Michael Dworkin
 FileDescription=Dworkin-DMX Pro 2 Output Plugin
-FileVersion=2.0.0.79
+FileVersion=2.0.0.81
 InternalName=
 LegalCopyright=(c) 2008 by Christian Nöding
 LegalTrademarks=

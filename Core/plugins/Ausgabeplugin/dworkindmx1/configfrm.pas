@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, Registry, CPort, CHHighResTimer, CPDrv;
+  Dialogs, StdCtrls, ExtCtrls, Registry, CHHighResTimer, CPDrv;
 
 type
   TCallback = procedure(address,startvalue,endvalue,fadetime:integer);stdcall;
@@ -18,7 +18,6 @@ type
     Abbrechen: TButton;
     Bevel1: TBevel;
     Label4: TLabel;
-    comport2: TComPort;
     DMXValueRefreshTimer: TCHHighResTimer;
     Label6: TLabel;
     Edit1: TEdit;
@@ -26,6 +25,7 @@ type
     Label7: TLabel;
     Label3: TLabel;
     statuslabel: TLabel;
+    comport: TCommPortDriver;
     procedure FormShow(Sender: TObject);
     procedure InitializeInterface;
     procedure DMXValueRefreshTimerTimer(Sender: TObject);
@@ -128,21 +128,21 @@ end;
 
 procedure TConfig.InitializeInterface;
 begin
-  if comport2.Connected then
-    comport2.WriteStr('R'); // Konverter Resetten
+  if comport.Connected then
+    comport.SendString('R'); // Konverter Resetten
 end;
 
 procedure TConfig.DMXValueRefreshTimerTimer(Sender: TObject);
 begin
 // "P" ; 5 ; 0; 10; 255; 128; 50; "P" ; 5 ; 0; 10; 255; 128; 50;
-  if comport2.Connected then
+  if comport.Connected then
   begin
     rs232frame_new[0]:=ord('P'); // "P"
     rs232frame_new[1]:=maxchan+1; // Anzahl der Kanäle
     rs232frame_new[2]:=0; // Kanal 0 = 0
 
-    if comport2.Connected then
-      connectionproblem:=(comport2.Write(rs232frame_new,maxchan+3)<>(maxchan+3));
+    if comport.Connected then
+      connectionproblem:=(comport.SendData(@rs232frame_new,maxchan+3)<>(maxchan+3));
     if connectionproblem then
     begin
       statuslabel.Caption:='Verbindungsproblem!';
@@ -352,21 +352,21 @@ begin
       comportnumber:=strtoint(temp);
 
     try
-      if comport2.Connected then
-        comport2.close;
+      if comport.Connected then
+        comport.disconnect;
     except
     end;
       case comportnumber of
-        1: comport2.port:='COM1';   2: comport2.port:='COM2';
-        3: comport2.port:='COM3';   4: comport2.port:='COM4';
-        5: comport2.port:='COM5';   6: comport2.port:='COM6';
-        7: comport2.port:='COM7';   8: comport2.port:='COM8';
-        9: comport2.port:='COM9';   10: comport2.port:='COM10';
-        11: comport2.port:='COM11';   12: comport2.port:='COM12';
-        13: comport2.port:='COM13';   14: comport2.port:='COM14';
-        15: comport2.port:='COM15';   16: comport2.port:='COM16';
+        1: comport.port:=pnCOM1;   2: comport.port:=pnCOM2;
+        3: comport.port:=pnCOM3;   4: comport.port:=pnCOM4;
+        5: comport.port:=pnCOM5;   6: comport.port:=pnCOM6;
+        7: comport.port:=pnCOM7;   8: comport.port:=pnCOM8;
+        9: comport.port:=pnCOM9;   10: comport.port:=pnCOM10;
+        11: comport.port:=pnCOM11;   12: comport.port:=pnCOM12;
+        13: comport.port:=pnCOM13;   14: comport.port:=pnCOM14;
+        15: comport.port:=pnCOM15;   16: comport.port:=pnCOM16;
       end;
-    comport2.open;
+    comport.connect;
 
     InitializeInterface;
 
@@ -396,7 +396,7 @@ begin
     LReg.Free;
   end;
 
-  if comport2.Connected then
+  if comport.Connected then
   begin
     statuslabel.Caption:='Verbunden mit COM'+inttostr(comportnumber);
     statuslabel.Font.Color:=clGreen;
@@ -484,8 +484,8 @@ begin
   LReg.Free;
 
   try
-    if comport2.Connected then
-	  	comport2.close;
+    if comport.Connected then
+	  	comport.disconnect;
   except
   end;
 {

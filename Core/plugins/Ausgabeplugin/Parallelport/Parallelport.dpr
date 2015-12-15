@@ -112,27 +112,26 @@ end;
 
 procedure DLLConfigure;stdcall;
 var
-  dllForm: TConfig;
   LReg:TRegistry;
 begin
-  dllForm :=TConfig.Create(Application);
+  config :=TConfig.Create(nil);
   try
     begin
-      dllForm.prefading.checked:=prefading;
-      dllForm.switchvaluechange.ItemIndex:=round((255-switchvalue)*100/255);
-      if lptport=888 then dllForm.lptchange.Itemindex:=0;
-      if lptport=632 then dllForm.lptchange.Itemindex:=1;
-      if lptport=956 then dllForm.lptchange.Itemindex:=2;
-      dllForm.ShowModal;
-      if dllForm.lptchange.Items[dllForm.lptchange.Itemindex]='LPT 1' then lptport:=888;
-      if dllForm.lptchange.Items[dllForm.lptchange.Itemindex]='LPT 2' then lptport:=632;
-      if dllForm.lptchange.Items[dllForm.lptchange.Itemindex]='LPT 3' then lptport:=956;
-      switchvalue:=strtoint(copy(dllForm.switchvaluechange.Items[dllForm.switchvaluechange.ItemIndex],0,length(dllForm.switchvaluechange.Items[dllForm.switchvaluechange.ItemIndex])-1));
+      config.prefading.checked:=prefading;
+      config.switchvaluechange.ItemIndex:=round((255-switchvalue)*100/255);
+      if lptport=888 then config.lptchange.Itemindex:=0;
+      if lptport=632 then config.lptchange.Itemindex:=1;
+      if lptport=956 then config.lptchange.Itemindex:=2;
+      config.ShowModal;
+      if config.lptchange.Items[config.lptchange.Itemindex]='LPT 1' then lptport:=888;
+      if config.lptchange.Items[config.lptchange.Itemindex]='LPT 2' then lptport:=632;
+      if config.lptchange.Items[config.lptchange.Itemindex]='LPT 3' then lptport:=956;
+      switchvalue:=strtoint(copy(config.switchvaluechange.Items[config.switchvaluechange.ItemIndex],0,length(config.switchvaluechange.Items[config.switchvaluechange.ItemIndex])-1));
       switchvalue:=round((switchvalue*255)/100);
-      prefading:=dllForm.prefading.checked;
+      prefading:=config.prefading.checked;
     end;
   finally
-    dllForm.Release;
+    config.Release;
   end;
 
   LReg := TRegistry.Create;
@@ -163,15 +162,10 @@ begin
 end;
 
 procedure DLLAbout;stdcall;
-var
-  dllForm: TForm;
 begin
-  dllForm :=TAbout.Create(Application);
-  try
-    dllForm.ShowModal;
-  finally
-    dllForm.Release;
-  end;
+  about:=tabout.create(nil);
+  about.showmodal;
+  about.release;
 end;
 
 procedure DLLSendData(address, startvalue, endvalue, fadetime: integer;name:PChar);stdcall;

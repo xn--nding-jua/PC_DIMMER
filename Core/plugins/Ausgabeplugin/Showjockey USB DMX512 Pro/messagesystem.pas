@@ -20,8 +20,6 @@ messages like this:
 
 interface
 
-uses gnugettext;
-
 const
   // ID=String einer TGUID (z.B.: '{E627400F-BB66-40DB-B6C0-7F5FD78DE36D}')
 
@@ -151,7 +149,7 @@ begin
     43: text:='MSG_STARTEFFECT';//43; Data1';//ID
     44: text:='MSG_STOPEFFECT';//44; Data1';//ID
     else
-      text:=_('Befehl nicht gefunden...');
+      text:='Befehl nicht gefunden...';
   end;
 
   result:=text;

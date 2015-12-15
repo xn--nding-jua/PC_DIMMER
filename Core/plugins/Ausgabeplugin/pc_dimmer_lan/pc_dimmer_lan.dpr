@@ -25,8 +25,8 @@ uses
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
-  Application.CreateForm(TConfig, Config);
-  Application.CreateForm(TDelphiXDXPlayForm, DelphiXDXPlayForm);
+  config:=tconfig.create(Application);
+  DelphiXDXPlayForm:=TDelphiXDXPlayForm.Create(config);
   @Config.RefreshDLLValues:=CallbackSetDLLValues;
   @Config.RefreshDLLNames:=CallbackSetDLLNames;
   @Config.RequestDLLValue:=CallbackGetDLLValue;
@@ -43,6 +43,7 @@ begin
   if config.DXplay1.Opened then
     config.DXplay1.Close;
 
+  DelphiXDXPlayForm.Release;
   Config.Release;
   Result:=True;
 end;
@@ -68,15 +69,10 @@ begin
 end;
 
 procedure DLLAbout;stdcall;
-var
-  dllForm: TForm;
 begin
-  dllForm :=TAbout.Create(Application);
-  try
-    dllForm.ShowModal;
-  finally
-    dllForm.Release;
-  end;
+  about:=Tabout.create(nil);
+  about.showmodal;
+  about.release;
 end;
 
 procedure DLLSendData(address, startvalue, endvalue, fadetime:integer;name:PChar);stdcall;

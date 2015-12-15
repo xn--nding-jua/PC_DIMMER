@@ -32,7 +32,7 @@ begin
   // DLLActivate is called during mainprogram startup or pluginreset
 
   // Create Mainform
-  mainform:=Tmainform.Create(nil);
+  mainform:=Tmainform.Create(Application);
 
   // connect plugin-procedures with mainprogram-procedures by given pointers
   @mainform.SetDLLValues:=CallbackSetDLLValues; // Lets you set value and fadeintime of a single channel
@@ -135,7 +135,7 @@ procedure DLLAbout;stdcall;
 begin
   about := tabout.Create(nil);
   about.ShowModal;
-  about.Free;
+  about.release;
 end;
 
 procedure DLLSendData(channel, startvalue, endvalue, fadetime:integer; channelname:PChar);stdcall;

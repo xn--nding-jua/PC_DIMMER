@@ -882,7 +882,6 @@ type
     autoload_project_file:string;
     LastEvent:string;
     commandline_changechannel:array[1..chan] of bool;
-    plugin_blacklist,plugin_blacklistnew:string;
     LastMidiClock:Int64;
     LastMidiTempo:extended;
     LastMidiMMR:byte;
@@ -943,6 +942,7 @@ type
     _MainformBuffer,_MainformPreBuffer: TBitmap32;
     RefreshMainformScreen:boolean;
 
+    plugin_blacklist, plugin_blacklist_new:string;
     splashscreenvalue:integer;
     UseBilinearInterpolation:boolean;
     MBS_Online:boolean;
@@ -22985,6 +22985,7 @@ end;
 procedure Tmainform.WriteSettingsToRegistry;
 var
   LReg:TPCDRegistry;
+  i:integer;
 begin
   LReg := TPCDRegistry.Create;
   if LReg.OpenRegKey('') then
@@ -23020,7 +23021,14 @@ begin
     LReg.WriteString('Position of MEVP.DLL', mevp.MEVPDLLPath);
     LReg.WriteBool('Mevp Use Thread', mevp.UseThread);
     LReg.WriteInteger('Mevp Thread Priority', ThreadPriorityToInt(mevp.ThreadPriority));
-    LReg.WriteString('Plugin Blacklist',plugin_blacklist+plugin_blacklistnew);
+
+    plugin_blacklist_new:='';
+    for i:=0 to length(Outputplugins)-1 do
+    begin
+      if OutputPlugins[i].IsBlacklisted then
+        plugin_blacklist_new:=plugin_blacklist_new+Outputplugins[i].Filename;
+    end;
+    LReg.WriteString('Plugin Blacklist',plugin_blacklist+plugin_blacklist_new);
     LReg.WriteInteger('MinimumDimmerkernelResolution', MinDimmerkernelResolution);
     LReg.WriteBool('Autoset DimmerkernelResolution', DimmerkernelResolutionAutoset);
     LReg.WriteInteger('Autolocktime',autolocktime);

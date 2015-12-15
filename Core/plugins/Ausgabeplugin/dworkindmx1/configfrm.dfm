@@ -165,26 +165,17 @@ object Config: TConfig
     OnChange = Edit2Change
     OnKeyUp = Edit2KeyUp
   end
-  object comport2: TComPort
-    BaudRate = br19200
-    Port = 'COM1'
-    Parity.Bits = prNone
-    StopBits = sbTwoStopBits
-    DataBits = dbEight
-    Events = [evRxChar, evTxEmpty, evRxFlag, evRing, evBreak, evCTS, evDSR, evError, evRLSD, evRx80Full]
-    FlowControl.OutCTSFlow = False
-    FlowControl.OutDSRFlow = False
-    FlowControl.ControlDTR = dtrDisable
-    FlowControl.ControlRTS = rtsDisable
-    FlowControl.XonXoffOut = False
-    FlowControl.XonXoffIn = False
-    Left = 152
-  end
   object DMXValueRefreshTimer: TCHHighResTimer
     OnTimer = DMXValueRefreshTimerTimer
     Interval = 75
     Accuracy = 0
     Enabled = True
     Left = 120
+  end
+  object comport: TCommPortDriver
+    PortName = '\\.\COM2'
+    BaudRate = br19200
+    BaudRateValue = 19200
+    Left = 152
   end
 end

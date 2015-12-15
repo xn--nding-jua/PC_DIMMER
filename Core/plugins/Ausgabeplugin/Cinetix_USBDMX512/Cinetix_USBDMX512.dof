@@ -113,7 +113,7 @@ RootDir=C:\Programme\Borland\Delphi7\Bin\
 IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=2
-MinorVer=0
+MinorVer=1
 Release=0
 Build=0
 Debug=0
@@ -126,18 +126,14 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=Cinetix
 FileDescription=Cinetix USB DMX512 Interface Plugin
-FileVersion=2.0.0.0
+FileVersion=2.1.0.0
 InternalName=
-LegalCopyright=(c) 2011-2012 by Dipl.-Ing. Christian Nöding
+LegalCopyright=(c) 2011-2015 by Dipl.-Ing. Christian Nöding
 LegalTrademarks=
 OriginalFilename=
 ProductName=
-ProductVersion=2.0.0.0
+ProductVersion=2.1.0.0
 Comments=http://www.pcdimmer.de
-[Excluded Packages]
-c:\programme\borland\delphi7\Bin\dclindy70.bpl=Internet Direct (Indy) für Delphi 7 Eigenschafts- und Komponenten-Editoren
-C:\Programme\Developer Express Inc\Library\Delphi7\dxLayoutControldxEditAdaptersD7.bpl=ExpressLayoutControl Adapters for ExpressEditors Library by Developer Express Inc.
-C:\Programme\Developer Express Inc\Library\Delphi7\dclcxSchedulerGridD7.bpl=ExpressScheduler 3 connection to ExpressQuantumGrid by Developer Express Inc.
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
