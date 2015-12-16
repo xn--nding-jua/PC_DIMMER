@@ -24482,7 +24482,7 @@ begin
         end else
         begin
           nodecontrolform.rgbcheckbox.Checked:=true;
-          nodecontrolform.colorpicker.SelectedColor:=pcdUtils.RGB2TColor(strtoint(value[4]), strtoint(value[5]), strtoint(value[6]));
+          nodecontrolform.colorpicker.SelectedColor:=pcdUtils.RGB2TColor(strtoint(value[3]), strtoint(value[4]), strtoint(value[5]));
         end;
 
         if (value[6]='-1') then
@@ -24490,7 +24490,7 @@ begin
           nodecontrolform.ambercheckbox.Checked:=false;
         end else
         begin
-          nodecontrolform.ambercheckbox.Checked:=false;
+          nodecontrolform.ambercheckbox.Checked:=true;
           nodecontrolform.amberslider.Value:=strtoint(value[6]);
         end;
 
@@ -24499,7 +24499,7 @@ begin
           nodecontrolform.whitecheckbox.Checked:=false;
         end else
         begin
-          nodecontrolform.whitecheckbox.Checked:=false;
+          nodecontrolform.whitecheckbox.Checked:=true;
           nodecontrolform.whiteslider.Value:=strtoint(value[7]);
         end;
 
@@ -24508,7 +24508,7 @@ begin
           nodecontrolform.dimmercheckbox.Checked:=false;
         end else
         begin
-          nodecontrolform.dimmercheckbox.Checked:=false;
+          nodecontrolform.dimmercheckbox.Checked:=true;
           nodecontrolform.dimmerslider.Position:=strtoint(value[8]);
         end;
 
