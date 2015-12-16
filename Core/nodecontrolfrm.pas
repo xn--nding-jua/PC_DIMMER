@@ -192,6 +192,15 @@ begin
     mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=X-16;
     mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=Y-16;
 
+    if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X<16 then
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=16;
+    if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y<16 then
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=16;
+    if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X>(Paintbox1.Width-16) then
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=Paintbox1.Width-16;
+    if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y>(Paintbox1.Height-16) then
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=Paintbox1.Height-16;
+
     PleaseRecalculateDistances:=true;
   end;
 end;
