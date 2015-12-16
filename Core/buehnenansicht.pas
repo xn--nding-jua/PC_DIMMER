@@ -256,6 +256,7 @@ type
     function ClickOnProgress(X,Y:integer):integer;
     function ClickOnBuehnenansichtProgress(X,Y:integer):integer;
     function ClickOnBuehnenansichtColor(X,Y:integer):integer;
+    procedure SaveStageviewToFile(Filetype: string);
   end;
 
 var
@@ -1896,45 +1897,36 @@ begin
 end;
 
 procedure Tgrafischebuehnenansicht.NewPanel;
-var
-  image1:TImage;
 begin
-    application.ProcessMessages;
-    sleep(100);
+  application.ProcessMessages;
+  sleep(100);
 
-    stage.Picture:=Referenzbild2.Picture;
+  stage.Picture:=Referenzbild2.Picture;
 
-    trackbar1.Position:=2;
-    mainform.buehnenansichtsetup.Buehnenansicht_width:=880;
-    mainform.buehnenansichtsetup.Buehnenansicht_height:=450;
-    mainform.buehnenansichtsetup.Buehnenansicht_panel:=true;
+  trackbar1.Position:=2;
+  mainform.buehnenansichtsetup.Buehnenansicht_width:=880;
+  mainform.buehnenansichtsetup.Buehnenansicht_height:=450;
+  mainform.buehnenansichtsetup.Buehnenansicht_panel:=true;
 
-    BankSelect.Clear;
-    BankCopy.Clear;
-    BankSelect.Items.Add(_('Bühne 1'));
-    BankCopy.Items.Add(_('Bühne 1'));
-    BankSelect.Itemindex:=0;
-    mainform.BankSelect.Items:=BankSelect.Items;
-    mainform.BankSelect.Itemindex:=BankSelect.Itemindex;
-    mainform.BankCopy.Items:=BankCopy.Items;
-    mainform.BankCopy.Itemindex:=BankCopy.Itemindex;
-    setlength(mainform.buehnenansicht_background,1);
-    mainform.buehnenansicht_background[BankSelect.ItemIndex]:='';
+  BankSelect.Clear;
+  BankCopy.Clear;
+  BankSelect.Items.Add(_('Bühne 1'));
+  BankCopy.Items.Add(_('Bühne 1'));
+  BankSelect.Itemindex:=0;
+  mainform.BankSelect.Items:=BankSelect.Items;
+  mainform.BankSelect.Itemindex:=BankSelect.Itemindex;
+  mainform.BankCopy.Items:=BankCopy.Items;
+  mainform.BankCopy.Itemindex:=BankCopy.Itemindex;
+  setlength(mainform.buehnenansicht_background,1);
+  mainform.buehnenansicht_background[BankSelect.ItemIndex]:='';
 
-		setlength(mainform.buehnenansichtdevices,0);
+  setlength(mainform.buehnenansichtdevices,0);
 
-	  grafischebuehnenansicht.Width:=mainform.buehnenansichtsetup.Buehnenansicht_width;
-	  grafischebuehnenansicht.Height:=mainform.buehnenansichtsetup.Buehnenansicht_height;
-	  panel1.Visible:=mainform.buehnenansichtsetup.Buehnenansicht_panel;
+  grafischebuehnenansicht.Width:=mainform.buehnenansichtsetup.Buehnenansicht_width;
+  grafischebuehnenansicht.Height:=mainform.buehnenansichtsetup.Buehnenansicht_height;
+  panel1.Visible:=mainform.buehnenansichtsetup.Buehnenansicht_panel;
 
-  image1:=TImage.Create(Self);
-	image1.Width:=panel2.Width;
-  image1.Height:=panel2.Height;
-	panel2.PaintTo(image1.canvas,0,0);
-//  image1.Picture.SaveToFile(mainform.userdirectory+'stageview.bmp');
-  mainform.SavePng(image1.Picture.Bitmap, mainform.userdirectory+'stageview.png');
-  mainform.SaveJpg(image1.Picture.Bitmap, mainform.userdirectory+'stageview.jpg');
-  image1.Free;
+  SaveStageviewToFile('jpg');
 end;
 
 procedure Tgrafischebuehnenansicht.Trackbar1Change(Sender: TObject);
@@ -2128,8 +2120,6 @@ begin
 end;
 
 procedure Tgrafischebuehnenansicht.MSGOpen;
-var
-  image1:TImage;
 begin
     if pos('\ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex])>0 then
       mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.userdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
@@ -2176,14 +2166,7 @@ begin
   grafischebuehnenansicht.Height:=mainform.buehnenansichtsetup.Buehnenansicht_height;
   panel1.Visible:=mainform.buehnenansichtsetup.Buehnenansicht_panel;
 
-  image1:=TImage.Create(Self);
-	image1.Width:=panel2.Width;
-  image1.Height:=panel2.Height;
-	panel2.PaintTo(image1.canvas,0,0);
-//  image1.Picture.SaveToFile(mainform.userdirectory+'stageview.bmp');
-  mainform.SavePng(image1.Picture.Bitmap, mainform.userdirectory+'stageview.png');
-  mainform.SaveJpg(image1.Picture.Bitmap, mainform.userdirectory+'stageview.jpg');
-  image1.Free;
+  SaveStageviewToFile('jpg');
 
   BankSelect.ItemIndex:=0;
   BankSelectSelect(nil);
@@ -2263,7 +2246,6 @@ end;
 procedure Tgrafischebuehnenansicht.RefreshTimerTimer(Sender: TObject);
 var
   i:integer;
-  image1:Timage;
 begin
   RefreshTimer.Interval:=mainform.Rfr_Buehnenansicht;
 
@@ -2375,6 +2357,9 @@ begin
     if SaveToBMP then
     begin
       SaveToBMP:=false;
+      SaveStageviewToFile('jpg');
+
+{
       image1:=TImage.Create(Self);
 	    image1.Width:=paintbox1.Width;
       image1.Height:=paintbox1.Height;
@@ -2388,6 +2373,7 @@ begin
       except
       end;
       image1.Free;
+}
     end;
   end;
 end;
@@ -3945,6 +3931,26 @@ procedure Tgrafischebuehnenansicht.CheckBox6MouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   mainform.CheckBox6.Checked:=Checkbox6.Checked;
+end;
+
+procedure Tgrafischebuehnenansicht.SaveStageviewToFile(Filetype: string);
+var
+  image1:TImage;
+begin
+  image1:=TImage.Create(Self);
+  image1.Width:=paintbox1.Width;
+  image1.Height:=paintbox1.Height;
+
+  BitBlt(image1.Canvas.Handle, 0, 0, image1.width, image1.height, Puffer2.Canvas.Handle, 0, 0 , SRCCOPY);
+
+  if Filetype='bmp' then
+    image1.Picture.SaveToFile(mainform.userdirectory+'stageview.bmp')
+  else if Filetype='png' then
+    mainform.SavePng(image1.Picture.Bitmap, mainform.userdirectory+'stageview.png')
+  else
+    mainform.SaveJpg(image1.Picture.Bitmap, mainform.userdirectory+'stageview.jpg');
+
+  image1.Free;
 end;
 
 end.

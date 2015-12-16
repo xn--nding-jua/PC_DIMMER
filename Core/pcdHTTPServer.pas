@@ -85,6 +85,11 @@ begin
   FResetTimer.Enabled := true;
 
   // Bilddateien und andere Dateien dem Clienten auf Anfrage zusenden
+  if pos('stageview', ARequestInfo.Document)<>0 then
+  begin
+    grafischebuehnenansicht.SaveStageviewToFile('jpg');
+  end;
+
   if FileExists(mainForm.userdirectory+copy(ARequestInfo.Document,2,length(ARequestInfo.Document))) then
     AResponseInfo.ServeFile(AContext,mainForm.userdirectory+copy(ARequestInfo.Document,2,length(ARequestInfo.Document)))
   else if FileExists(mainForm.pcdimmerdirectory+copy(ARequestInfo.Document,2,length(ARequestInfo.Document))) then
