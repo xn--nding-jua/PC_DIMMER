@@ -24473,8 +24473,22 @@ begin
           nodecontrolform.nodelistClick(nodecontrolform.nodelist);
         end;
 
-        NodeControlSets[Pos1].NodeControlNodes[Pos2].X:=round(nodecontrolform.PaintBox1.Width*strtoint(value[1])/10000);
-        NodeControlSets[Pos1].NodeControlNodes[Pos2].Y:=round(nodecontrolform.PaintBox1.Height*strtoint(value[2])/10000);
+        i:=round(nodecontrolform.PaintBox1.Width*strtoint(value[1])/10000);
+        j:=round(nodecontrolform.PaintBox1.Height*strtoint(value[2])/10000);
+
+        if i<0 then
+          NodeControlSets[Pos1].NodeControlNodes[Pos2].X:=0
+        else if i>(Paintbox1.Width) then
+          NodeControlSets[Pos1].NodeControlNodes[Pos2].X:=Paintbox1.Width
+        else
+          NodeControlSets[Pos1].NodeControlNodes[Pos2].X:=i;
+
+        if j<0 then
+          NodeControlSets[Pos1].NodeControlNodes[Pos2].Y:=0
+        else if j>(Paintbox1.Height) then
+          NodeControlSets[Pos1].NodeControlNodes[Pos2].Y:=Paintbox1.Height
+        else
+          NodeControlSets[Pos1].NodeControlNodes[Pos2].Y:=j;
 
         if (value[3]='-1') or (value[4]='-1') or (value[5]='-1') then
         begin
