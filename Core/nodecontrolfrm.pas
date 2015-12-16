@@ -111,6 +111,7 @@ uses buehnenansicht, PCDIMMER, geraetesteuerungfrm;
 procedure Tnodecontrolform.RedrawTimerTimer(Sender: TObject);
 var
   i, textposition:integer;
+  X,Y:integer;
 begin
   if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
     (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
@@ -137,6 +138,9 @@ begin
 
   for i:=0 to length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1 do
   begin
+    X:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X-16;
+    Y:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y-16;
+
     if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].UseRGB then
     begin
       ShadowCanvas.Canvas.Brush.Color:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].R + (mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].G shl 8) + (mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].B shl 16);
@@ -146,28 +150,28 @@ begin
       ShadowCanvas.Canvas.Brush.Color:=clWhite;
       ShadowCanvas.Canvas.Pen.Color:=clWhite;
     end;
-    ShadowCanvas.Canvas.Rectangle(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X, mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y, mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X+32, mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y+32);
-    ShadowCanvas.Canvas.Draw(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X, mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y, Image1.Picture.Graphic);
+    ShadowCanvas.Canvas.Rectangle(X, Y, X+32, Y+32);
+    ShadowCanvas.Canvas.Draw(X, Y, Image1.Picture.Graphic);
 
     ShadowCanvas.Canvas.Pen.Color:=clWhite;
     ShadowCanvas.Canvas.Brush.Color:=clWhite;
-    textposition:=mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y+22;
+    textposition:=Y+22;
     textposition:=textposition+10;
-    ShadowCanvas.Canvas.TextOut(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X, textposition, mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Name);
+    ShadowCanvas.Canvas.TextOut(X, textposition, mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Name);
     if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].UseA then
     begin
       textposition:=textposition+10;
-      ShadowCanvas.Canvas.TextOut(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X, textposition, _('Amber')+': '+floattostrf(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].A/2.55, ffFixed, 3, 1)+'%');
+      ShadowCanvas.Canvas.TextOut(X, textposition, _('Amber')+': '+floattostrf(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].A/2.55, ffFixed, 3, 1)+'%');
     end;
     if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].UseW then
     begin
       textposition:=textposition+10;
-      ShadowCanvas.Canvas.TextOut(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X, textposition, _('Weiß')+': '+floattostrf(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].W/2.55, ffFixed, 3, 1)+'%');
+      ShadowCanvas.Canvas.TextOut(X, textposition, _('Weiß')+': '+floattostrf(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].W/2.55, ffFixed, 3, 1)+'%');
     end;
     if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].UseDimmer then
     begin
       textposition:=textposition+10;
-      ShadowCanvas.Canvas.TextOut(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X, textposition, _('Dimmer')+': '+floattostrf(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Dimmer/2.55, ffFixed, 3, 1)+'%');
+      ShadowCanvas.Canvas.TextOut(X, textposition, _('Dimmer')+': '+floattostrf(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Dimmer/2.55, ffFixed, 3, 1)+'%');
     end;
   end;
 
@@ -189,17 +193,19 @@ begin
 
   if (shift=[ssLeft]) and (nodelist.ItemIndex>-1) then
   begin
-    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=X-16;
-    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=Y-16;
+    if X<0 then
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=0
+    else if X>(Paintbox1.Width) then
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=Paintbox1.Width
+    else
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=X;
 
-    if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X<16 then
-      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=16;
-    if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y<16 then
-      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=16;
-    if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X>(Paintbox1.Width-16) then
-      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=Paintbox1.Width-16;
-    if mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y>(Paintbox1.Height-16) then
-      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=Paintbox1.Height-16;
+    if Y<0 then
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=0
+    else if Y>(Paintbox1.Height) then
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=Paintbox1.Height
+    else
+      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=Y;
 
     PleaseRecalculateDistances:=true;
   end;
@@ -233,6 +239,8 @@ begin
   CreateGUID(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1].ID);
   mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1].Name:=_('Neuer Knoten')+' '+inttostr(length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes));
   mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1].UseRGB:=true;
+  mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1].X:=16;
+  mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1].Y:=16;
   nodelist.Items.add(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1].Name);
   nodelist.itemindex:=nodelist.items.count-1;
   RefreshNodeList;

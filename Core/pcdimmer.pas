@@ -24476,15 +24476,6 @@ begin
         NodeControlSets[Pos1].NodeControlNodes[Pos2].X:=round(nodecontrolform.PaintBox1.Width*strtoint(value[1])/10000);
         NodeControlSets[Pos1].NodeControlNodes[Pos2].Y:=round(nodecontrolform.PaintBox1.Height*strtoint(value[2])/10000);
 
-        if NodeControlSets[Pos1].NodeControlNodes[Pos2].X<16 then
-          NodeControlSets[Pos1].NodeControlNodes[Pos2].X:=16;
-        if NodeControlSets[Pos1].NodeControlNodes[Pos2].Y<16 then
-          NodeControlSets[Pos1].NodeControlNodes[Pos2].Y:=16;
-        if NodeControlSets[Pos1].NodeControlNodes[Pos2].X>(nodecontrolform.Paintbox1.Width-16) then
-          NodeControlSets[Pos1].NodeControlNodes[Pos2].X:=nodecontrolform.Paintbox1.Width-16;
-        if NodeControlSets[Pos1].NodeControlNodes[Pos2].Y>(nodecontrolform.Paintbox1.Height-16) then
-          NodeControlSets[Pos1].NodeControlNodes[Pos2].Y:=nodecontrolform.Paintbox1.Height-16;
-
         if (value[3]='-1') or (value[4]='-1') or (value[5]='-1') then
         begin
           nodecontrolform.rgbcheckbox.Checked:=false;
