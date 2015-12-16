@@ -397,7 +397,7 @@ object nodecontrolform: Tnodecontrolform
           Height = 17
           Caption = 'Dimmer'
           TabOrder = 3
-          OnMouseUp = dimmercheckboxMouseUp
+          OnMouseUp = rgbcheckboxMouseUp
         end
         object whitecheckbox: TCheckBox
           Left = 234
@@ -406,7 +406,7 @@ object nodecontrolform: Tnodecontrolform
           Height = 17
           Caption = 'Wei'#223
           TabOrder = 4
-          OnMouseUp = whitecheckboxMouseUp
+          OnMouseUp = rgbcheckboxMouseUp
         end
         object ambercheckbox: TCheckBox
           Left = 234
@@ -415,7 +415,7 @@ object nodecontrolform: Tnodecontrolform
           Height = 17
           Caption = 'Amber'
           TabOrder = 5
-          OnMouseUp = ambercheckboxMouseUp
+          OnMouseUp = rgbcheckboxMouseUp
         end
         object rgbcheckbox: TCheckBox
           Left = 8

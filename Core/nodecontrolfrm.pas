@@ -64,12 +64,6 @@ type
     procedure renamebtnClick(Sender: TObject);
     procedure PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure ambercheckboxMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure whitecheckboxMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure dimmercheckboxMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
     procedure FormResize(Sender: TObject);
     procedure rgbcheckboxMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -520,48 +514,6 @@ begin
   end;
 end;
 
-procedure Tnodecontrolform.ambercheckboxMouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
-  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
-    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
-    exit;
-
-  if nodelist.ItemIndex>-1 then
-  begin
-    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseA:=ambercheckbox.checked;
-    PleaseRecalculateDistances:=true;
-  end;
-end;
-
-procedure Tnodecontrolform.whitecheckboxMouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
-  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
-    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
-    exit;
-
-  if nodelist.ItemIndex>-1 then
-  begin
-    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseW:=whitecheckbox.checked;
-    PleaseRecalculateDistances:=true;
-  end;
-end;
-
-procedure Tnodecontrolform.dimmercheckboxMouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
-  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
-    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
-    exit;
-
-  if nodelist.ItemIndex>-1 then
-  begin
-    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseDimmer:=dimmercheckbox.checked;
-    PleaseRecalculateDistances:=true;
-  end;
-end;
-
 procedure Tnodecontrolform.FormResize(Sender: TObject);
 begin
   ShadowCanvas.Width:=Paintbox1.Width;
@@ -571,15 +523,7 @@ end;
 procedure Tnodecontrolform.rgbcheckboxMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
-    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
-    exit;
-
-  if nodelist.ItemIndex>-1 then
-  begin
-    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseRGB:=rgbcheckbox.checked;
-    PleaseRecalculateDistances:=true;
-  end;
+  GUItoNode;
 end;
 
 procedure Tnodecontrolform.CreateParams(var Params:TCreateParams);
@@ -838,6 +782,11 @@ begin
     mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].A:=amberslider.Value;
     mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].W:=whiteslider.Value;
     mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].Dimmer:=dimmerslider.position;
+
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseRGB:=rgbcheckbox.checked;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseA:=ambercheckbox.checked;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseW:=whitecheckbox.checked;
+    mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.itemindex].UseDimmer:=dimmercheckbox.checked;
 
     PleaseRecalculateDistances:=true;
   end;
