@@ -54,7 +54,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=473;
+  actualprojectversion=474;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -904,8 +904,7 @@ type
     // END OF WORKAROUND FOR MEVP
 
     procedure NewProject;
-    function Saveproject(savewithoutprompt,fastsave:boolean):boolean;
-    procedure AutoSaveproject(filename:string);
+    function Saveproject(savewithoutprompt,fastsave, Autosave:boolean):boolean;
     function Openproject(openfile:string; OnlyProject:boolean):boolean;
     function pcdimmerreset(Sender: TObject):boolean;
     function FilterWithDimmcurve(channel:Word; value:byte):byte;
@@ -3912,6 +3911,8 @@ begin
   BeatImpuls.Channel:=1;
   BeatImpuls.OnValue:=255;
   BeatImpuls.OffValue:=0;
+  BeatImpuls.Stopscene:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+  BeatImpuls.Startscene:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
 
   ShortCutChecker.Enabled:=true;
 
@@ -3979,7 +3980,7 @@ begin
   end;
 end;
 
-function TMainform.Saveproject(savewithoutprompt,fastsave:boolean):boolean;
+function TMainform.Saveproject(savewithoutprompt,fastsave, Autosave:boolean):boolean;
 var
   i,j,k,l,m,effektanzahl,laenge, Count, Count2, Count3, Count4:integer;
   savefile,projectfilename,projectfilepath:string;
@@ -4083,325 +4084,325 @@ begin
   	effektaudio_record[audioeffektplayerform.audioeffektfilenamebox.ItemIndex].waveform.effekte:=waveformdata_record.effekte;
   end;
 
-	  inprogress.filename.Caption:=_('Schreibe Datei...');
-  	inprogress.Refresh;
-	  inprogress.ProgressBar1.Position:=60;
-    AutosaveProgress.Position:=60;
-    projektprogrammversion:=inttostr(actualprojectversion);//getfileversion(paramstr(0));
+  inprogress.filename.Caption:=_('Schreibe Datei...');
+  inprogress.Refresh;
+  inprogress.ProgressBar1.Position:=60;
+  AutosaveProgress.Position:=60;
+  projektprogrammversion:=inttostr(actualprojectversion);//getfileversion(paramstr(0));
 
-		FileStream:=TFileStream.Create(userdirectory+'ProjectTemp\Projekt',fmCreate);
-    // Projekt-Header speichern
-	  inprogress.filename.Caption:=_('Schreibe Datei... Projekt-Header');
-  	inprogress.Refresh;
-    FileStream.WriteBuffer(projektprogrammversion,256);
-    projektdatum:=DateToStr(now);
-    FileStream.WriteBuffer(projektdatum,256);
-    projektuhrzeit:=TimeToStr(now);
-    FileStream.WriteBuffer(projektuhrzeit,256);
-    FileStream.WriteBuffer(lastchan,sizeof(lastchan));
-    FileStream.WriteBuffer(LastChan,sizeof(LastChan));
-    if projekttitel=_('Neues Projekt') then
-      projekttitel:=copy(projectfilename, 1, Pos('.', projectfilename)-1);
-    FileStream.WriteBuffer(projekttitel,256);
-    FileStream.WriteBuffer(projektversion,256);
-    if autoinsertcomputerusername then
-      projektbearbeiter:=JvComputerInfoEx1.Identification.LocalUserName;
-    FileStream.WriteBuffer(projektbearbeiter,256);
-    if projektspeicheranzahl<>'' then
-      projektspeicheranzahl:=inttostr(strtoint(projektspeicheranzahl)+1)
-    else
-      projektspeicheranzahl:='1';
-    FileStream.WriteBuffer(projektspeicheranzahl,256);
+  FileStream:=TFileStream.Create(userdirectory+'ProjectTemp\Projekt',fmCreate);
+  // Projekt-Header speichern
+  inprogress.filename.Caption:=_('Schreibe Datei... Projekt-Header');
+  inprogress.Refresh;
+  FileStream.WriteBuffer(projektprogrammversion,256);
+  projektdatum:=DateToStr(now);
+  FileStream.WriteBuffer(projektdatum,256);
+  projektuhrzeit:=TimeToStr(now);
+  FileStream.WriteBuffer(projektuhrzeit,256);
+  FileStream.WriteBuffer(lastchan,sizeof(lastchan));
+  FileStream.WriteBuffer(LastChan,sizeof(LastChan));
+  if projekttitel=_('Neues Projekt') then
+    projekttitel:=copy(projectfilename, 1, Pos('.', projectfilename)-1);
+  FileStream.WriteBuffer(projekttitel,256);
+  FileStream.WriteBuffer(projektversion,256);
+  if autoinsertcomputerusername then
+    projektbearbeiter:=JvComputerInfoEx1.Identification.LocalUserName;
+  FileStream.WriteBuffer(projektbearbeiter,256);
+  if projektspeicheranzahl<>'' then
+    projektspeicheranzahl:=inttostr(strtoint(projektspeicheranzahl)+1)
+  else
+    projektspeicheranzahl:='1';
+  FileStream.WriteBuffer(projektspeicheranzahl,256);
 
-		//Effektaudio speichern
-	  inprogress.filename.Caption:=_('Schreibe Datei... Audioeffektplayer');
-  	inprogress.Refresh;
-    //Länge der Array feststellen und als erstes abspeichern
-    laenge:=length(Effektaudio_record);
-    FileStream.WriteBuffer(laenge,sizeof(laenge));
-    // nun alle Array einzeln nacheinander speichern
-    for i:=0 to laenge-1 do
+  //Effektaudio speichern
+  inprogress.filename.Caption:=_('Schreibe Datei... Audioeffektplayer');
+  inprogress.Refresh;
+  //Länge der Array feststellen und als erstes abspeichern
+  laenge:=length(Effektaudio_record);
+  FileStream.WriteBuffer(laenge,sizeof(laenge));
+  // nun alle Array einzeln nacheinander speichern
+  for i:=0 to laenge-1 do
+  begin
+    if pos('\ProjectTemp\',Effektaudio_record[i].audiopfad)>0 then
+      Effektaudio_record[i].audiopfad:=userdirectory+copy(Effektaudio_record[i].audiopfad,pos('ProjectTemp\',Effektaudio_record[i].audiopfad),length(Effektaudio_record[i].audiopfad));
+
+    Filestream.WriteBuffer(Effektaudio_record[i].audiodatei,sizeof(Effektaudio_record[i].audiodatei));
+    Filestream.WriteBuffer(Effektaudio_record[i].audiopfad,sizeof(Effektaudio_record[i].audiopfad));
+    // Einzelne Layer und Effekte speichern
+    Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layeranzahl,sizeof(Effektaudio_record[i].effektaudiodatei.layeranzahl));
+    for j:=1 to maxaudioeffektlayers do
     begin
-      if pos('\ProjectTemp\',Effektaudio_record[i].audiopfad)>0 then
-        Effektaudio_record[i].audiopfad:=userdirectory+copy(Effektaudio_record[i].audiopfad,pos('ProjectTemp\',Effektaudio_record[i].audiopfad),length(Effektaudio_record[i].audiopfad));
-
-			Filestream.WriteBuffer(Effektaudio_record[i].audiodatei,sizeof(Effektaudio_record[i].audiodatei));
-			Filestream.WriteBuffer(Effektaudio_record[i].audiopfad,sizeof(Effektaudio_record[i].audiopfad));
-      // Einzelne Layer und Effekte speichern
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layeranzahl,sizeof(Effektaudio_record[i].effektaudiodatei.layeranzahl));
-      for j:=1 to maxaudioeffektlayers do
+      // Effektanzahl herausfinden und abspeichern
+      effektanzahl:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt);
+      FileStream.WriteBuffer(effektanzahl,sizeof(effektanzahl));
+      // Effektarray abspeichern
+      for k:=0 to effektanzahl-1 do
       begin
-        // Effektanzahl herausfinden und abspeichern
-	      effektanzahl:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt);
-        FileStream.WriteBuffer(effektanzahl,sizeof(effektanzahl));
-        // Effektarray abspeichern
-        for k:=0 to effektanzahl-1 do
-        begin
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].ID,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].ID));
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Name,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Name));
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Beschreibung,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Beschreibung));
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].StopScene,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].StopScene));
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].audioeffektposition,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].audioeffektposition));
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].UseIDScene,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].UseIDScene));
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].fadetime,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].fadetime));
+        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].ID,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].ID));
+        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Name,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Name));
+        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Beschreibung,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Beschreibung));
+        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].StopScene,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].StopScene));
+        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].audioeffektposition,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].audioeffektposition));
+        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].UseIDScene,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].UseIDScene));
+        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].fadetime,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].fadetime));
 //	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].ch,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].ch));
 //	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].active,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].active));
-          Count:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices);
-	        Filestream.WriteBuffer(Count,sizeof(Count));
-          for l:=0 to Count-1 do
+        Count:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices);
+        Filestream.WriteBuffer(Count,sizeof(Count));
+        for l:=0 to Count-1 do
+        begin
+          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ID,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ID));
+          Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActive);
+          Filestream.WriteBuffer(Count2,sizeof(Count2));
+          for m:=0 to Count2-1 do
           begin
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ID,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ID));
-            Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActive);
-  	        Filestream.WriteBuffer(Count2,sizeof(Count2));
-            for m:=0 to Count2-1 do
-            begin
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActive[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActive[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValue[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValue[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActiveRandom[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActiveRandom[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValueRandom[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValueRandom[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanDelay[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanDelay[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanFadetime[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanFadetime[m]));
-            end;
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActive[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActive[m]));
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValue[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValue[m]));
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActiveRandom[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActiveRandom[m]));
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValueRandom[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValueRandom[m]));
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanDelay[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanDelay[m]));
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanFadetime[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanFadetime[m]));
           end;
-          Count:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle);
-	        Filestream.WriteBuffer(Count,sizeof(Count));
-          for l:=0 to Count-1 do
+        end;
+        Count:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle);
+        Filestream.WriteBuffer(Count,sizeof(Count));
+        for l:=0 to Count-1 do
+        begin
+          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ID,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ID));
+          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Typ,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Typ));
+          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Name,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Name));
+          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Beschreibung,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Beschreibung));
+          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].OnValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].OnValue));
+          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].SwitchValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].SwitchValue));
+          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].InvertSwitchValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].InvertSwitchValue));
+          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].OffValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].OffValue));
+          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ScaleValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ScaleValue));
+
+          Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgInteger);
+          Filestream.WriteBuffer(Count2,sizeof(Count2));
+          for m:=0 to Count2-1 do
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgInteger[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgInteger[m]));
+          Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgString);
+          Filestream.WriteBuffer(Count2,sizeof(Count2));
+          for m:=0 to Count2-1 do
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgString[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgString[m]));
+          Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID);
+          Filestream.WriteBuffer(Count2,sizeof(Count2));
+          for m:=0 to Count2-1 do
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID[m]));
+
+
+          Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActive);
+          Filestream.WriteBuffer(Count2,sizeof(Count2));
+          for m:=0 to Count2-1 do
           begin
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ID,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ID));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Typ,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Typ));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Name,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Name));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Beschreibung,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Beschreibung));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].OnValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].OnValue));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].SwitchValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].SwitchValue));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].InvertSwitchValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].InvertSwitchValue));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].OffValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].OffValue));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ScaleValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ScaleValue));
-
-            Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgInteger);
-  	        Filestream.WriteBuffer(Count2,sizeof(Count2));
-            for m:=0 to Count2-1 do
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgInteger[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgInteger[m]));
-            Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgString);
-  	        Filestream.WriteBuffer(Count2,sizeof(Count2));
-            for m:=0 to Count2-1 do
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgString[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgString[m]));
-            Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID);
-  	        Filestream.WriteBuffer(Count2,sizeof(Count2));
-            for m:=0 to Count2-1 do
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID[m]));
-
-
-            Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActive);
-  	        Filestream.WriteBuffer(Count2,sizeof(Count2));
-            for m:=0 to Count2-1 do
-  	        begin
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActive[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActive[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanValue[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanValue[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActiveRandom[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActiveRandom[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanValueRandom[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanValueRandom[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanDelay[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanDelay[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanFadetime[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanFadetime[m]));
-            end;
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActive[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActive[m]));
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanValue[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanValue[m]));
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActiveRandom[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActiveRandom[m]));
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanValueRandom[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanValueRandom[m]));
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanDelay[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanDelay[m]));
+            Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanFadetime[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanFadetime[m]));
           end;
-      	end;
-        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].layeractive,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].layeractive));
+        end;
       end;
-			Filestream.WriteBuffer(Effektaudio_record[i].waveform,sizeof(Effektaudio_record[i].waveform));
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.repeatjump,sizeof(Effektaudio_record[i].effektaudiodatei.repeatjump));
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.repeatdestination,sizeof(Effektaudio_record[i].effektaudiodatei.repeatdestination));
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.repeatactive,sizeof(Effektaudio_record[i].effektaudiodatei.repeatactive));
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.volume,sizeof(Effektaudio_record[i].effektaudiodatei.volume));
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.videoseeking,sizeof(Effektaudio_record[i].effektaudiodatei.videoseeking));
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layername,sizeof(Effektaudio_record[i].effektaudiodatei.layername));
+      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].layeractive,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].layeractive));
     end;
+    Filestream.WriteBuffer(Effektaudio_record[i].waveform,sizeof(Effektaudio_record[i].waveform));
+    Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.repeatjump,sizeof(Effektaudio_record[i].effektaudiodatei.repeatjump));
+    Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.repeatdestination,sizeof(Effektaudio_record[i].effektaudiodatei.repeatdestination));
+    Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.repeatactive,sizeof(Effektaudio_record[i].effektaudiodatei.repeatactive));
+    Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.volume,sizeof(Effektaudio_record[i].effektaudiodatei.volume));
+    Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.videoseeking,sizeof(Effektaudio_record[i].effektaudiodatei.videoseeking));
+    Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layername,sizeof(Effektaudio_record[i].effektaudiodatei.layername));
+  end;
 //Effektaudio fertig
 //Projekteinstellungen speichern
-	  inprogress.filename.Caption:=_('Schreibe Datei... Projekteinstellungen');
-  	inprogress.Refresh;
-      Count:=length(data.ch);
-      Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to Count-1 do
-        Filestream.WriteBuffer(data.ch[i],sizeof(data.ch[i]));
-      Count:=length(data.names);
-      Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to Count-1 do
-        Filestream.WriteBuffer(data.names[i],sizeof(data.names[i]));
-      Count:=length(data.sdirect);
-      Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to Count-1 do
-        Filestream.WriteBuffer(data.sdirect[i],sizeof(data.sdirect[i]));
-      Count:=length(data.combine);
-      Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to Count-1 do
-        Filestream.WriteBuffer(data.combine[i],sizeof(data.combine[i]));
-      Filestream.WriteBuffer(data.page,sizeof(data.page));
-      Filestream.WriteBuffer(data.Shortcutnames,sizeof(data.Shortcutnames));
+    inprogress.filename.Caption:=_('Schreibe Datei... Projekteinstellungen');
+    inprogress.Refresh;
+    Count:=length(data.ch);
+    Filestream.WriteBuffer(Count,sizeof(Count));
+    for i:=0 to Count-1 do
+      Filestream.WriteBuffer(data.ch[i],sizeof(data.ch[i]));
+    Count:=length(data.names);
+    Filestream.WriteBuffer(Count,sizeof(Count));
+    for i:=0 to Count-1 do
+      Filestream.WriteBuffer(data.names[i],sizeof(data.names[i]));
+    Count:=length(data.sdirect);
+    Filestream.WriteBuffer(Count,sizeof(Count));
+    for i:=0 to Count-1 do
+      Filestream.WriteBuffer(data.sdirect[i],sizeof(data.sdirect[i]));
+    Count:=length(data.combine);
+    Filestream.WriteBuffer(Count,sizeof(Count));
+    for i:=0 to Count-1 do
+      Filestream.WriteBuffer(data.combine[i],sizeof(data.combine[i]));
+    Filestream.WriteBuffer(data.page,sizeof(data.page));
+    Filestream.WriteBuffer(data.Shortcutnames,sizeof(data.Shortcutnames));
 //Projekteinstellungen fertig
 
 // Kanalmin/maxwerte speichern
-      Count:=length(channel_minvalue);
-      Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=1 to Count do
-      begin
-        Filestream.WriteBuffer(channel_minvalue[i],sizeof(channel_minvalue[i]));
-        Filestream.WriteBuffer(channel_maxvalue[i],sizeof(channel_maxvalue[i]));
-      end;
+    Count:=length(channel_minvalue);
+    Filestream.WriteBuffer(Count,sizeof(Count));
+    for i:=1 to Count do
+    begin
+      Filestream.WriteBuffer(channel_minvalue[i],sizeof(channel_minvalue[i]));
+      Filestream.WriteBuffer(channel_maxvalue[i],sizeof(channel_maxvalue[i]));
+    end;
 // Kanalmin/maxwerte speichern fertig
 
 //Figuren speichern
-	  inprogress.filename.Caption:=_('Schreibe Datei... Figuren');
-  	inprogress.Refresh;
-      Count:=length(Figuren);
-  	  Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to Count-1 do
+    inprogress.filename.Caption:=_('Schreibe Datei... Figuren');
+    inprogress.Refresh;
+    Count:=length(Figuren);
+    Filestream.WriteBuffer(Count,sizeof(Count));
+    for i:=0 to Count-1 do
+    begin
+      Filestream.WriteBuffer(Figuren[i].ID,sizeof(Figuren[i].ID));
+      Filestream.WriteBuffer(Figuren[i].name,sizeof(Figuren[i].name));
+      Filestream.WriteBuffer(Figuren[i].invertpan,sizeof(Figuren[i].invertpan));
+      Filestream.WriteBuffer(Figuren[i].inverttilt,sizeof(Figuren[i].inverttilt));
+      Count2:=length(Figuren[i].posx);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for k:=0 to Count2-1 do
       begin
-     	  Filestream.WriteBuffer(Figuren[i].ID,sizeof(Figuren[i].ID));
-    	  Filestream.WriteBuffer(Figuren[i].name,sizeof(Figuren[i].name));
-    	  Filestream.WriteBuffer(Figuren[i].invertpan,sizeof(Figuren[i].invertpan));
-    	  Filestream.WriteBuffer(Figuren[i].inverttilt,sizeof(Figuren[i].inverttilt));
-        Count2:=length(Figuren[i].posx);
-    	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for k:=0 to Count2-1 do
-        begin
-      	  Filestream.WriteBuffer(Figuren[i].posx[k],sizeof(Figuren[i].posx[k]));
-      	  Filestream.WriteBuffer(Figuren[i].posy[k],sizeof(Figuren[i].posy[k]));
-        end;
-    	  Filestream.WriteBuffer(Figuren[i].gesamtlaenge,sizeof(Figuren[i].gesamtlaenge));
+        Filestream.WriteBuffer(Figuren[i].posx[k],sizeof(Figuren[i].posx[k]));
+        Filestream.WriteBuffer(Figuren[i].posy[k],sizeof(Figuren[i].posy[k]));
       end;
+      Filestream.WriteBuffer(Figuren[i].gesamtlaenge,sizeof(Figuren[i].gesamtlaenge));
+    end;
 // Ende Figuren speichern
 // Einfache-, Bewegungs- und Audioszenen, sowie Befehle speichern
-	  inprogress.filename.Caption:=_('Schreibe Datei... Szenen');
-  	inprogress.Refresh;
-      Count:=length(Einfacheszenen);
-   	  Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to length(Einfacheszenen)-1 do
-      begin
-        Filestream.WriteBuffer(Einfacheszenen[i].ID,sizeof(Einfacheszenen[i].ID));
-        Filestream.WriteBuffer(Einfacheszenen[i].Name,sizeof(Einfacheszenen[i].Name));
-        Filestream.WriteBuffer(Einfacheszenen[i].Beschreibung,sizeof(Einfacheszenen[i].Beschreibung));
-        Filestream.WriteBuffer(Einfacheszenen[i].einblendzeit,sizeof(Einfacheszenen[i].einblendzeit));
-        Filestream.WriteBuffer(Einfacheszenen[i].kanal,sizeof(Einfacheszenen[i].kanal));
-        Filestream.WriteBuffer(Einfacheszenen[i].kanalaktiv,sizeof(Einfacheszenen[i].kanalaktiv));
-        Filestream.WriteBuffer(Einfacheszenen[i].Category,sizeof(Einfacheszenen[i].Category));
-      end;
+  inprogress.filename.Caption:=_('Schreibe Datei... Szenen');
+  inprogress.Refresh;
+    Count:=length(Einfacheszenen);
+    Filestream.WriteBuffer(Count,sizeof(Count));
+    for i:=0 to length(Einfacheszenen)-1 do
+    begin
+      Filestream.WriteBuffer(Einfacheszenen[i].ID,sizeof(Einfacheszenen[i].ID));
+      Filestream.WriteBuffer(Einfacheszenen[i].Name,sizeof(Einfacheszenen[i].Name));
+      Filestream.WriteBuffer(Einfacheszenen[i].Beschreibung,sizeof(Einfacheszenen[i].Beschreibung));
+      Filestream.WriteBuffer(Einfacheszenen[i].einblendzeit,sizeof(Einfacheszenen[i].einblendzeit));
+      Filestream.WriteBuffer(Einfacheszenen[i].kanal,sizeof(Einfacheszenen[i].kanal));
+      Filestream.WriteBuffer(Einfacheszenen[i].kanalaktiv,sizeof(Einfacheszenen[i].kanalaktiv));
+      Filestream.WriteBuffer(Einfacheszenen[i].Category,sizeof(Einfacheszenen[i].Category));
+    end;
 
-      Count:=length(Audioszenen);
-   	  Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to length(Audioszenen)-1 do
-      begin
-        Filestream.WriteBuffer(Audioszenen[i].ID,sizeof(Audioszenen[i].ID));
-        Filestream.WriteBuffer(Audioszenen[i].Name,sizeof(Audioszenen[i].Name));
-        Filestream.WriteBuffer(Audioszenen[i].Beschreibung,sizeof(Audioszenen[i].Beschreibung));
-        Filestream.WriteBuffer(Audioszenen[i].Datei,sizeof(Audioszenen[i].Datei));
-        Filestream.WriteBuffer(Audioszenen[i].Dauer,sizeof(Audioszenen[i].Dauer));
-        Filestream.WriteBuffer(Audioszenen[i].Volume,sizeof(Audioszenen[i].Volume));
-        Filestream.WriteBuffer(Audioszenen[i].FadeinTime,sizeof(Audioszenen[i].FadeinTime));
-        Filestream.WriteBuffer(Audioszenen[i].FadeoutTime,sizeof(Audioszenen[i].FadeoutTime));
-        Filestream.WriteBuffer(Audioszenen[i].matrix,sizeof(Audioszenen[i].matrix));
-        Filestream.WriteBuffer(Audioszenen[i].Kanalsettings,sizeof(Audioszenen[i].Kanalsettings));
-        Filestream.WriteBuffer(Audioszenen[i].Category,sizeof(Audioszenen[i].Category));
-      end;
+    Count:=length(Audioszenen);
+    Filestream.WriteBuffer(Count,sizeof(Count));
+    for i:=0 to length(Audioszenen)-1 do
+    begin
+      Filestream.WriteBuffer(Audioszenen[i].ID,sizeof(Audioszenen[i].ID));
+      Filestream.WriteBuffer(Audioszenen[i].Name,sizeof(Audioszenen[i].Name));
+      Filestream.WriteBuffer(Audioszenen[i].Beschreibung,sizeof(Audioszenen[i].Beschreibung));
+      Filestream.WriteBuffer(Audioszenen[i].Datei,sizeof(Audioszenen[i].Datei));
+      Filestream.WriteBuffer(Audioszenen[i].Dauer,sizeof(Audioszenen[i].Dauer));
+      Filestream.WriteBuffer(Audioszenen[i].Volume,sizeof(Audioszenen[i].Volume));
+      Filestream.WriteBuffer(Audioszenen[i].FadeinTime,sizeof(Audioszenen[i].FadeinTime));
+      Filestream.WriteBuffer(Audioszenen[i].FadeoutTime,sizeof(Audioszenen[i].FadeoutTime));
+      Filestream.WriteBuffer(Audioszenen[i].matrix,sizeof(Audioszenen[i].matrix));
+      Filestream.WriteBuffer(Audioszenen[i].Kanalsettings,sizeof(Audioszenen[i].Kanalsettings));
+      Filestream.WriteBuffer(Audioszenen[i].Category,sizeof(Audioszenen[i].Category));
+    end;
 
-      Count:=length(Bewegungsszenen);
-   	  Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to length(Bewegungsszenen)-1 do
-    	begin
-        Filestream.WriteBuffer(Bewegungsszenen[i].ID,sizeof(Bewegungsszenen[i].ID));
-        Filestream.WriteBuffer(Bewegungsszenen[i].Name,sizeof(Bewegungsszenen[i].Name));
-        Filestream.WriteBuffer(Bewegungsszenen[i].Beschreibung,sizeof(Bewegungsszenen[i].Beschreibung));
-        Filestream.WriteBuffer(Bewegungsszenen[i].IsBeatControlled,sizeof(Bewegungsszenen[i].IsBeatControlled));
-        Filestream.WriteBuffer(Bewegungsszenen[i].figur,sizeof(Bewegungsszenen[i].figur));
-        Filestream.WriteBuffer(Bewegungsszenen[i].dauer,sizeof(Bewegungsszenen[i].dauer));
-        Filestream.WriteBuffer(Bewegungsszenen[i].DontFade,sizeof(Bewegungsszenen[i].DontFade));
-        Filestream.WriteBuffer(Bewegungsszenen[i].repeats,sizeof(Bewegungsszenen[i].repeats));
-        Filestream.WriteBuffer(Bewegungsszenen[i].identischespurgeschwidigkeit,sizeof(Bewegungsszenen[i].identischespurgeschwidigkeit));
-        Filestream.WriteBuffer(Bewegungsszenen[i].startpositionrelativ,sizeof(Bewegungsszenen[i].startpositionrelativ));
-        Filestream.WriteBuffer(Bewegungsszenen[i].Category,sizeof(Bewegungsszenen[i].Category));
-        Count2:=length(Bewegungsszenen[i].Devices);
-     	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for j:=0 to Count2-1 do
+    Count:=length(Bewegungsszenen);
+    Filestream.WriteBuffer(Count,sizeof(Count));
+    for i:=0 to length(Bewegungsszenen)-1 do
+    begin
+      Filestream.WriteBuffer(Bewegungsszenen[i].ID,sizeof(Bewegungsszenen[i].ID));
+      Filestream.WriteBuffer(Bewegungsszenen[i].Name,sizeof(Bewegungsszenen[i].Name));
+      Filestream.WriteBuffer(Bewegungsszenen[i].Beschreibung,sizeof(Bewegungsszenen[i].Beschreibung));
+      Filestream.WriteBuffer(Bewegungsszenen[i].IsBeatControlled,sizeof(Bewegungsszenen[i].IsBeatControlled));
+      Filestream.WriteBuffer(Bewegungsszenen[i].figur,sizeof(Bewegungsszenen[i].figur));
+      Filestream.WriteBuffer(Bewegungsszenen[i].dauer,sizeof(Bewegungsszenen[i].dauer));
+      Filestream.WriteBuffer(Bewegungsszenen[i].DontFade,sizeof(Bewegungsszenen[i].DontFade));
+      Filestream.WriteBuffer(Bewegungsszenen[i].repeats,sizeof(Bewegungsszenen[i].repeats));
+      Filestream.WriteBuffer(Bewegungsszenen[i].identischespurgeschwidigkeit,sizeof(Bewegungsszenen[i].identischespurgeschwidigkeit));
+      Filestream.WriteBuffer(Bewegungsszenen[i].startpositionrelativ,sizeof(Bewegungsszenen[i].startpositionrelativ));
+      Filestream.WriteBuffer(Bewegungsszenen[i].Category,sizeof(Bewegungsszenen[i].Category));
+      Count2:=length(Bewegungsszenen[i].Devices);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for j:=0 to Count2-1 do
+      begin
+        Filestream.WriteBuffer(Bewegungsszenen[i].Devices[j].ID,sizeof(Bewegungsszenen[i].Devices[j].ID));
+
+        Count3:=length(Bewegungsszenen[i].Devices[j].DeviceChannel);
+        Filestream.WriteBuffer(Count3,sizeof(Count3));
+        for k:=0 to Count3-1 do
         begin
-          Filestream.WriteBuffer(Bewegungsszenen[i].Devices[j].ID,sizeof(Bewegungsszenen[i].Devices[j].ID));
+          Filestream.WriteBuffer(Bewegungsszenen[i].Devices[j].DeviceChannel[k],sizeof(Bewegungsszenen[i].Devices[j].DeviceChannel[k]));
 
-          Count3:=length(Bewegungsszenen[i].Devices[j].DeviceChannel);
-          Filestream.WriteBuffer(Count3,sizeof(Count3));
-          for k:=0 to Count3-1 do
+          Count4:=length(Bewegungsszenen[i].Devices[j].Szenen[k]);
+          Filestream.WriteBuffer(Count4,sizeof(Count4));
+          for l:=0 to Count4-1 do
           begin
-            Filestream.WriteBuffer(Bewegungsszenen[i].Devices[j].DeviceChannel[k],sizeof(Bewegungsszenen[i].Devices[j].DeviceChannel[k]));
-
-            Count4:=length(Bewegungsszenen[i].Devices[j].Szenen[k]);
-            Filestream.WriteBuffer(Count4,sizeof(Count4));
-            for l:=0 to Count4-1 do
-            begin
-              Filestream.WriteBuffer(Bewegungsszenen[i].Devices[j].Szenen[k][l],sizeof(Bewegungsszenen[i].Devices[j].Szenen[k][l]));
-            end;
+            Filestream.WriteBuffer(Bewegungsszenen[i].Devices[j].Szenen[k][l],sizeof(Bewegungsszenen[i].Devices[j].Szenen[k][l]));
           end;
         end;
       end;
+    end;
 
-      Count:=length(Befehle2);
-   	  Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to Count-1 do
-    	begin
-        Filestream.WriteBuffer(Befehle2[i].ID,sizeof(Befehle2[i].ID));
-        Filestream.WriteBuffer(Befehle2[i].Typ,sizeof(Befehle2[i].Typ));
-        Filestream.WriteBuffer(Befehle2[i].Name,sizeof(Befehle2[i].Name));
-        Filestream.WriteBuffer(Befehle2[i].Beschreibung,sizeof(Befehle2[i].Beschreibung));
-        Filestream.WriteBuffer(Befehle2[i].OnValue,sizeof(Befehle2[i].OnValue));
-        Filestream.WriteBuffer(Befehle2[i].SwitchValue,sizeof(Befehle2[i].SwitchValue));
-        Filestream.WriteBuffer(Befehle2[i].InvertSwitchValue,sizeof(Befehle2[i].InvertSwitchValue));
-        Filestream.WriteBuffer(Befehle2[i].OffValue,sizeof(Befehle2[i].OffValue));
-        Filestream.WriteBuffer(Befehle2[i].ScaleValue,sizeof(Befehle2[i].ScaleValue));
-        Filestream.WriteBuffer(Befehle2[i].RunOnProjectLoad,sizeof(Befehle2[i].RunOnProjectLoad));
-        Filestream.WriteBuffer(Befehle2[i].Category,sizeof(Befehle2[i].Category));
-        Count2:=length(Befehle2[i].ArgInteger);
-     	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for j:=0 to Count2-1 do
-        begin
-          Filestream.WriteBuffer(Befehle2[i].ArgInteger[j],sizeof(Befehle2[i].ArgInteger[j]));
-        end;
-        Count2:=length(Befehle2[i].ArgString);
-     	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for j:=0 to Count2-1 do
-        begin
-          Filestream.WriteBuffer(Befehle2[i].ArgString[j],sizeof(Befehle2[i].ArgString[j]));
-        end;
-        Count2:=length(Befehle2[i].ArgGUID);
-     	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for j:=0 to Count2-1 do
-        begin
-          Filestream.WriteBuffer(Befehle2[i].ArgGUID[j],sizeof(Befehle2[i].ArgGUID[j]));
-        end;
-      end;
-
-      Count:=length(Kompositionsszenen);
-   	  Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to length(Kompositionsszenen)-1 do
-    	begin
-        Filestream.WriteBuffer(Kompositionsszenen[i].ID,sizeof(Kompositionsszenen[i].ID));
-        Filestream.WriteBuffer(Kompositionsszenen[i].Name,sizeof(Kompositionsszenen[i].Name));
-        Filestream.WriteBuffer(Kompositionsszenen[i].Beschreibung,sizeof(Kompositionsszenen[i].Beschreibung));
-        Filestream.WriteBuffer(Kompositionsszenen[i].Category,sizeof(Kompositionsszenen[i].Category));
-
-        Count2:=length(Kompositionsszenen[i].IDs);
-        Filestream.WriteBuffer(Count2, sizeof(Count2));
-        for j:=0 to length(Kompositionsszenen[i].IDs)-1 do
-        begin
-          Filestream.WriteBuffer(Kompositionsszenen[i].IDs[j],sizeof(Kompositionsszenen[i].IDs[j]));
-          Filestream.WriteBuffer(Kompositionsszenen[i].StopScene[j],sizeof(Kompositionsszenen[i].StopScene[j]));
-        end;
-      end;
-
-      Count:=length(SzenenablaufArray);
-      Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to length(SzenenablaufArray)-1 do
+    Count:=length(Befehle2);
+    Filestream.WriteBuffer(Count,sizeof(Count));
+    for i:=0 to Count-1 do
+    begin
+      Filestream.WriteBuffer(Befehle2[i].ID,sizeof(Befehle2[i].ID));
+      Filestream.WriteBuffer(Befehle2[i].Typ,sizeof(Befehle2[i].Typ));
+      Filestream.WriteBuffer(Befehle2[i].Name,sizeof(Befehle2[i].Name));
+      Filestream.WriteBuffer(Befehle2[i].Beschreibung,sizeof(Befehle2[i].Beschreibung));
+      Filestream.WriteBuffer(Befehle2[i].OnValue,sizeof(Befehle2[i].OnValue));
+      Filestream.WriteBuffer(Befehle2[i].SwitchValue,sizeof(Befehle2[i].SwitchValue));
+      Filestream.WriteBuffer(Befehle2[i].InvertSwitchValue,sizeof(Befehle2[i].InvertSwitchValue));
+      Filestream.WriteBuffer(Befehle2[i].OffValue,sizeof(Befehle2[i].OffValue));
+      Filestream.WriteBuffer(Befehle2[i].ScaleValue,sizeof(Befehle2[i].ScaleValue));
+      Filestream.WriteBuffer(Befehle2[i].RunOnProjectLoad,sizeof(Befehle2[i].RunOnProjectLoad));
+      Filestream.WriteBuffer(Befehle2[i].Category,sizeof(Befehle2[i].Category));
+      Count2:=length(Befehle2[i].ArgInteger);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for j:=0 to Count2-1 do
       begin
-        Filestream.WriteBuffer(text,sizeof(text));
-        Count2:=length(SzenenablaufArray[i]);
-        Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for j:=0 to Count2-1 do
-          Filestream.WriteBuffer(SzenenablaufArray[i][j],sizeof(SzenenablaufArray[i][j]));
+        Filestream.WriteBuffer(Befehle2[i].ArgInteger[j],sizeof(Befehle2[i].ArgInteger[j]));
       end;
+      Count2:=length(Befehle2[i].ArgString);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for j:=0 to Count2-1 do
+      begin
+        Filestream.WriteBuffer(Befehle2[i].ArgString[j],sizeof(Befehle2[i].ArgString[j]));
+      end;
+      Count2:=length(Befehle2[i].ArgGUID);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for j:=0 to Count2-1 do
+      begin
+        Filestream.WriteBuffer(Befehle2[i].ArgGUID[j],sizeof(Befehle2[i].ArgGUID[j]));
+      end;
+    end;
+
+    Count:=length(Kompositionsszenen);
+    Filestream.WriteBuffer(Count,sizeof(Count));
+    for i:=0 to length(Kompositionsszenen)-1 do
+    begin
+      Filestream.WriteBuffer(Kompositionsszenen[i].ID,sizeof(Kompositionsszenen[i].ID));
+      Filestream.WriteBuffer(Kompositionsszenen[i].Name,sizeof(Kompositionsszenen[i].Name));
+      Filestream.WriteBuffer(Kompositionsszenen[i].Beschreibung,sizeof(Kompositionsszenen[i].Beschreibung));
+      Filestream.WriteBuffer(Kompositionsszenen[i].Category,sizeof(Kompositionsszenen[i].Category));
+
+      Count2:=length(Kompositionsszenen[i].IDs);
+      Filestream.WriteBuffer(Count2, sizeof(Count2));
+      for j:=0 to length(Kompositionsszenen[i].IDs)-1 do
+      begin
+        Filestream.WriteBuffer(Kompositionsszenen[i].IDs[j],sizeof(Kompositionsszenen[i].IDs[j]));
+        Filestream.WriteBuffer(Kompositionsszenen[i].StopScene[j],sizeof(Kompositionsszenen[i].StopScene[j]));
+      end;
+    end;
+
+    Count:=length(SzenenablaufArray);
+    Filestream.WriteBuffer(Count,sizeof(Count));
+    for i:=0 to length(SzenenablaufArray)-1 do
+    begin
+      Filestream.WriteBuffer(text,sizeof(text));
+      Count2:=length(SzenenablaufArray[i]);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for j:=0 to Count2-1 do
+        Filestream.WriteBuffer(SzenenablaufArray[i][j],sizeof(SzenenablaufArray[i][j]));
+    end;
 // Ende Szenenspeichern
 // Timeline speichern
 	  inprogress.filename.Caption:=_('Schreibe Datei... Timeline');
@@ -5326,6 +5327,9 @@ begin
     Filestream.WriteBuffer(mainform.BeatImpuls.Channel,sizeof(mainform.BeatImpuls.Channel));
     Filestream.WriteBuffer(mainform.BeatImpuls.OnValue,sizeof(mainform.BeatImpuls.OnValue));
     Filestream.WriteBuffer(mainform.BeatImpuls.OffValue,sizeof(mainform.BeatImpuls.OffValue));
+    Filestream.WriteBuffer(mainform.BeatImpuls.Stopscene,sizeof(mainform.BeatImpuls.Stopscene));
+    Filestream.WriteBuffer(mainform.BeatImpuls.Startscene,sizeof(mainform.BeatImpuls.Startscene));
+//5333
 // Ende BeatImpuls speichern
 // Geräteselektionen speichern
     Count:=length(DeviceSelectedIDs);
@@ -5527,1397 +5531,6 @@ begin
       inprogress.Label2.caption:='';
       inprogress.ProgressBar2.Position:=0;
       result:=true;
-end;
-
-procedure TMainform.AutoSaveproject(filename:string);
-var
-  i,j,k,l,m,effektanzahl,laenge, Count, Count2, Count3, Count4:integer;
-  savefile,projectfilename,projectfilepath:string;
-  version,datum,uhrzeit:string[255];
-  text:string[30];
-begin
-  try
-    AutosaveProgress.visible:=true;
-    AutosaveProgress.Position:=0;
-    AutosaveProgress.Max:=30;
-    projectfilepath:=ExtractFilepath(project_file);
-    projectfilename:=ExtractFileName(project_file);
-    project_folder:=userdirectory+'ProjectTemp\';
-
-    SendMSG(MSG_SAVE,userdirectory+'ProjectTemp\',0);
-
-    kontrollpanel.MSGSave(nil);
-    effektsequenzer.MSGSave;
-    kanaluebersichtform.MSGSave;
-    geraetesteuerung.MSGSave;
-    submasterform.MSGSave;
-    grafischebuehnenansicht.MSGSave;
-    audioeffektplayerform.MSGSave;
-    beatform.MSGSave;
-    kanaluebersichtform.MSGSave;
-    szenenverwaltung_formarray[0].MSGSave;
-    SaveWindowPositions('all');
-
-    audioeffektplayerform.audioeffektfilenameboxDropDown(nil);
-
-    for i:=1 to 8 do
-    begin
-      Waveformdata_record.fadervalues[i]:=TScrollbar(audioeffektplayerform.FindComponent('eq_scrollbar'+inttostr(i))).position;
-      Waveformdata_record.effekte[i]:=TCheckBox(audioeffektplayerform.FindComponent('eq_check'+inttostr(i))).checked;
-    end;
-
-    for i:=0 to 10 do
-      Waveformdata_record.equalizer[i]:=TProgressBar(audioeffektplayerform.FindComponent('equalizer_progressbar'+inttostr(i))).Position;
-
-    if length(effektaudio_record)>0 then
-    begin
-      effektaudio_record[audioeffektplayerform.audioeffektfilenamebox.ItemIndex].waveform.fadervalues:=waveformdata_record.fadervalues;
-      effektaudio_record[audioeffektplayerform.audioeffektfilenamebox.ItemIndex].waveform.equalizer:=waveformdata_record.equalizer;
-      effektaudio_record[audioeffektplayerform.audioeffektfilenamebox.ItemIndex].waveform.effekte:=waveformdata_record.effekte;
-    end;
-
-    projektprogrammversion:=inttostr(actualprojectversion);//getfileversion(paramstr(0));
-
-		FileStream:=TFileStream.Create(filename,fmCreate);
-
-/////////////////////////////////////////////////////////
-    // Projekt-Header speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Projekt-Header');
-  	AutosaveProgress.StepIt;
-    FileStream.WriteBuffer(projektprogrammversion,256);
-    projektdatum:=DateToStr(now);
-    FileStream.WriteBuffer(projektdatum,256);
-    projektuhrzeit:=TimeToStr(now);
-    FileStream.WriteBuffer(projektuhrzeit,256);
-    FileStream.WriteBuffer(lastchan,sizeof(lastchan));
-    FileStream.WriteBuffer(LastChan,sizeof(LastChan));
-    if projekttitel=_('Neues Projekt') then
-      projekttitel:=copy(projectfilename, 1, Pos('.', projectfilename)-1);
-    FileStream.WriteBuffer(projekttitel,256);
-    FileStream.WriteBuffer(projektversion,256);
-    if autoinsertcomputerusername then
-      projektbearbeiter:=JvComputerInfoEx1.Identification.LocalUserName;
-    FileStream.WriteBuffer(projektbearbeiter,256);
-    if projektspeicheranzahl<>'' then
-      projektspeicheranzahl:=inttostr(strtoint(projektspeicheranzahl)+1)
-    else
-      projektspeicheranzahl:='1';
-    FileStream.WriteBuffer(projektspeicheranzahl,256);
-
-		//Effektaudio speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Audioeffektplayer');
-  	AutosaveProgress.StepIt;
-    //Länge der Array feststellen und als erstes abspeichern
-    laenge:=length(Effektaudio_record);
-    FileStream.WriteBuffer(laenge,sizeof(laenge));
-    // nun alle Array einzeln nacheinander speichern
-    for i:=0 to laenge-1 do
-    begin
-      if pos('\ProjectTemp\',Effektaudio_record[i].audiopfad)>0 then
-        Effektaudio_record[i].audiopfad:=userdirectory+copy(Effektaudio_record[i].audiopfad,pos('ProjectTemp\',Effektaudio_record[i].audiopfad),length(Effektaudio_record[i].audiopfad));
-
-			Filestream.WriteBuffer(Effektaudio_record[i].audiodatei,sizeof(Effektaudio_record[i].audiodatei));
-			Filestream.WriteBuffer(Effektaudio_record[i].audiopfad,sizeof(Effektaudio_record[i].audiopfad));
-      // Einzelne Layer und Effekte speichern
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layeranzahl,sizeof(Effektaudio_record[i].effektaudiodatei.layeranzahl));
-      for j:=1 to maxaudioeffektlayers do
-      begin
-        // Effektanzahl herausfinden und abspeichern
-	      effektanzahl:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt);
-        FileStream.WriteBuffer(effektanzahl,sizeof(effektanzahl));
-        // Effektarray abspeichern
-        for k:=0 to effektanzahl-1 do
-        begin
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].ID,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].ID));
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Name,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Name));
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Beschreibung,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Beschreibung));
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].StopScene,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].StopScene));
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].audioeffektposition,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].audioeffektposition));
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].UseIDScene,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].UseIDScene));
-	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].fadetime,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].fadetime));
-//	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].ch,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].ch));
-//	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].active,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].active));
-          Count:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices);
-	        Filestream.WriteBuffer(Count,sizeof(Count));
-          for l:=0 to Count-1 do
-          begin
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ID,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ID));
-            Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActive);
-  	        Filestream.WriteBuffer(Count2,sizeof(Count2));
-            for m:=0 to Count2-1 do
-            begin
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActive[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActive[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValue[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValue[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActiveRandom[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActiveRandom[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValueRandom[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValueRandom[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanDelay[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanDelay[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanFadetime[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanFadetime[m]));
-            end;
-          end;
-          Count:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle);
-	        Filestream.WriteBuffer(Count,sizeof(Count));
-          for l:=0 to Count-1 do
-          begin
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ID,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ID));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Typ,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Typ));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Name,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Name));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Beschreibung,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].Beschreibung));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].OnValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].OnValue));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].SwitchValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].SwitchValue));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].InvertSwitchValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].InvertSwitchValue));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].OffValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].OffValue));
-  	        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ScaleValue,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ScaleValue));
-
-            Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgInteger);
-  	        Filestream.WriteBuffer(Count2,sizeof(Count2));
-            for m:=0 to Count2-1 do
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgInteger[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgInteger[m]));
-            Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgString);
-  	        Filestream.WriteBuffer(Count2,sizeof(Count2));
-            for m:=0 to Count2-1 do
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgString[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgString[m]));
-            Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID);
-  	        Filestream.WriteBuffer(Count2,sizeof(Count2));
-            for m:=0 to Count2-1 do
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID[m]));
-
-                      
-            Count2:=length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActive);
-  	        Filestream.WriteBuffer(Count2,sizeof(Count2));
-            for m:=0 to Count2-1 do
-  	        begin
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActive[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActive[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanValue[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanValue[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActiveRandom[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanActiveRandom[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanValueRandom[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanValueRandom[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanDelay[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanDelay[m]));
-  	          Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanFadetime[m],sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehlswerte[l].ChanFadetime[m]));
-            end;
-          end;
-      	end;
-        Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layer[j].layeractive,sizeof(Effektaudio_record[i].effektaudiodatei.layer[j].layeractive));
-      end;
-			Filestream.WriteBuffer(Effektaudio_record[i].waveform,sizeof(Effektaudio_record[i].waveform));
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.repeatjump,sizeof(Effektaudio_record[i].effektaudiodatei.repeatjump));
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.repeatdestination,sizeof(Effektaudio_record[i].effektaudiodatei.repeatdestination));
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.repeatactive,sizeof(Effektaudio_record[i].effektaudiodatei.repeatactive));
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.volume,sizeof(Effektaudio_record[i].effektaudiodatei.volume));
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.videoseeking,sizeof(Effektaudio_record[i].effektaudiodatei.videoseeking));
-      Filestream.WriteBuffer(Effektaudio_record[i].effektaudiodatei.layername,sizeof(Effektaudio_record[i].effektaudiodatei.layername));
-    end;
-//Effektaudio fertig
-//Projekteinstellungen speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Projekteinstellungen');
-  	AutosaveProgress.StepIt;
-      Count:=length(data.ch);
-      Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to Count-1 do
-        Filestream.WriteBuffer(data.ch[i],sizeof(data.ch[i]));
-      Count:=length(data.names);
-      Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to Count-1 do
-        Filestream.WriteBuffer(data.names[i],sizeof(data.names[i]));
-      Count:=length(data.sdirect);
-      Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to Count-1 do
-        Filestream.WriteBuffer(data.sdirect[i],sizeof(data.sdirect[i]));
-      Count:=length(data.combine);
-      Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to Count-1 do
-        Filestream.WriteBuffer(data.combine[i],sizeof(data.combine[i]));
-      Filestream.WriteBuffer(data.page,sizeof(data.page));
-      Filestream.WriteBuffer(data.Shortcutnames,sizeof(data.Shortcutnames));
-//Projekteinstellungen fertig
-
-// Kanalmin/maxwerte speichern
-      Count:=length(channel_minvalue);
-      Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=1 to Count do
-      begin
-        Filestream.WriteBuffer(channel_minvalue[i],sizeof(channel_minvalue[i]));
-        Filestream.WriteBuffer(channel_maxvalue[i],sizeof(channel_maxvalue[i]));
-      end;
-// Kanalmin/maxwerte speichern fertig
-
-//Figuren speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Figuren');
-  	AutosaveProgress.StepIt;
-      Count:=length(Figuren);
-  	  Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to Count-1 do
-      begin
-     	  Filestream.WriteBuffer(Figuren[i].ID,sizeof(Figuren[i].ID));
-    	  Filestream.WriteBuffer(Figuren[i].name,sizeof(Figuren[i].name));
-    	  Filestream.WriteBuffer(Figuren[i].invertpan,sizeof(Figuren[i].invertpan));
-    	  Filestream.WriteBuffer(Figuren[i].inverttilt,sizeof(Figuren[i].inverttilt));
-        Count2:=length(Figuren[i].posx);
-    	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for k:=0 to Count2-1 do
-        begin
-      	  Filestream.WriteBuffer(Figuren[i].posx[k],sizeof(Figuren[i].posx[k]));
-      	  Filestream.WriteBuffer(Figuren[i].posy[k],sizeof(Figuren[i].posy[k]));
-        end;
-    	  Filestream.WriteBuffer(Figuren[i].gesamtlaenge,sizeof(Figuren[i].gesamtlaenge));
-      end;
-// Ende Figuren speichern
-// Einfache-, Bewegungs- und Audioszenen, sowie Befehle speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Szenen');
-  	AutosaveProgress.StepIt;
-      Count:=length(Einfacheszenen);
-   	  Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to length(Einfacheszenen)-1 do
-      begin
-        Filestream.WriteBuffer(Einfacheszenen[i].ID,sizeof(Einfacheszenen[i].ID));
-        Filestream.WriteBuffer(Einfacheszenen[i].Name,sizeof(Einfacheszenen[i].Name));
-        Filestream.WriteBuffer(Einfacheszenen[i].Beschreibung,sizeof(Einfacheszenen[i].Beschreibung));
-        Filestream.WriteBuffer(Einfacheszenen[i].einblendzeit,sizeof(Einfacheszenen[i].einblendzeit));
-        Filestream.WriteBuffer(Einfacheszenen[i].kanal,sizeof(Einfacheszenen[i].kanal));
-        Filestream.WriteBuffer(Einfacheszenen[i].kanalaktiv,sizeof(Einfacheszenen[i].kanalaktiv));
-        Filestream.WriteBuffer(Einfacheszenen[i].Category,sizeof(Einfacheszenen[i].Category));
-      end;
-
-      Count:=length(Audioszenen);
-   	  Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to length(Audioszenen)-1 do
-      begin
-        Filestream.WriteBuffer(Audioszenen[i].ID,sizeof(Audioszenen[i].ID));
-        Filestream.WriteBuffer(Audioszenen[i].Name,sizeof(Audioszenen[i].Name));
-        Filestream.WriteBuffer(Audioszenen[i].Beschreibung,sizeof(Audioszenen[i].Beschreibung));
-        Filestream.WriteBuffer(Audioszenen[i].Datei,sizeof(Audioszenen[i].Datei));
-        Filestream.WriteBuffer(Audioszenen[i].Dauer,sizeof(Audioszenen[i].Dauer));
-        Filestream.WriteBuffer(Audioszenen[i].Volume,sizeof(Audioszenen[i].Volume));
-        Filestream.WriteBuffer(Audioszenen[i].FadeinTime,sizeof(Audioszenen[i].FadeinTime));
-        Filestream.WriteBuffer(Audioszenen[i].FadeoutTime,sizeof(Audioszenen[i].FadeoutTime));
-        Filestream.WriteBuffer(Audioszenen[i].matrix,sizeof(Audioszenen[i].matrix));
-        Filestream.WriteBuffer(Audioszenen[i].Kanalsettings,sizeof(Audioszenen[i].Kanalsettings));
-        Filestream.WriteBuffer(Audioszenen[i].Category,sizeof(Audioszenen[i].Category));
-      end;
-
-      Count:=length(Bewegungsszenen);
-   	  Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to length(Bewegungsszenen)-1 do
-    	begin
-        Filestream.WriteBuffer(Bewegungsszenen[i].ID,sizeof(Bewegungsszenen[i].ID));
-        Filestream.WriteBuffer(Bewegungsszenen[i].Name,sizeof(Bewegungsszenen[i].Name));
-        Filestream.WriteBuffer(Bewegungsszenen[i].Beschreibung,sizeof(Bewegungsszenen[i].Beschreibung));
-        Filestream.WriteBuffer(Bewegungsszenen[i].IsBeatControlled,sizeof(Bewegungsszenen[i].IsBeatControlled));
-        Filestream.WriteBuffer(Bewegungsszenen[i].figur,sizeof(Bewegungsszenen[i].figur));
-        Filestream.WriteBuffer(Bewegungsszenen[i].dauer,sizeof(Bewegungsszenen[i].dauer));
-        Filestream.WriteBuffer(Bewegungsszenen[i].DontFade,sizeof(Bewegungsszenen[i].DontFade));
-        Filestream.WriteBuffer(Bewegungsszenen[i].repeats,sizeof(Bewegungsszenen[i].repeats));
-        Filestream.WriteBuffer(Bewegungsszenen[i].identischespurgeschwidigkeit,sizeof(Bewegungsszenen[i].identischespurgeschwidigkeit));
-        Filestream.WriteBuffer(Bewegungsszenen[i].startpositionrelativ,sizeof(Bewegungsszenen[i].startpositionrelativ));
-        Filestream.WriteBuffer(Bewegungsszenen[i].Category,sizeof(Bewegungsszenen[i].Category));
-        Count2:=length(Bewegungsszenen[i].Devices);
-     	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for j:=0 to Count2-1 do
-        begin
-          Filestream.WriteBuffer(Bewegungsszenen[i].Devices[j].ID,sizeof(Bewegungsszenen[i].Devices[j].ID));
-
-          Count3:=length(Bewegungsszenen[i].Devices[j].DeviceChannel);
-          Filestream.WriteBuffer(Count3,sizeof(Count3));
-          for k:=0 to Count3-1 do
-          begin
-            Filestream.WriteBuffer(Bewegungsszenen[i].Devices[j].DeviceChannel[k],sizeof(Bewegungsszenen[i].Devices[j].DeviceChannel[k]));
-
-            Count4:=length(Bewegungsszenen[i].Devices[j].Szenen[k]);
-            Filestream.WriteBuffer(Count4,sizeof(Count4));
-            for l:=0 to Count4-1 do
-            begin
-              Filestream.WriteBuffer(Bewegungsszenen[i].Devices[j].Szenen[k][l],sizeof(Bewegungsszenen[i].Devices[j].Szenen[k][l]));
-            end;
-          end;
-        end;
-      end;
-
-      Count:=length(Befehle2);
-   	  Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to Count-1 do
-    	begin
-        Filestream.WriteBuffer(Befehle2[i].ID,sizeof(Befehle2[i].ID));
-        Filestream.WriteBuffer(Befehle2[i].Typ,sizeof(Befehle2[i].Typ));
-        Filestream.WriteBuffer(Befehle2[i].Name,sizeof(Befehle2[i].Name));
-        Filestream.WriteBuffer(Befehle2[i].Beschreibung,sizeof(Befehle2[i].Beschreibung));
-        Filestream.WriteBuffer(Befehle2[i].OnValue,sizeof(Befehle2[i].OnValue));
-        Filestream.WriteBuffer(Befehle2[i].SwitchValue,sizeof(Befehle2[i].SwitchValue));
-        Filestream.WriteBuffer(Befehle2[i].InvertSwitchValue,sizeof(Befehle2[i].InvertSwitchValue));
-        Filestream.WriteBuffer(Befehle2[i].OffValue,sizeof(Befehle2[i].OffValue));
-        Filestream.WriteBuffer(Befehle2[i].ScaleValue,sizeof(Befehle2[i].ScaleValue));
-        Filestream.WriteBuffer(Befehle2[i].RunOnProjectLoad,sizeof(Befehle2[i].RunOnProjectLoad));
-        Filestream.WriteBuffer(Befehle2[i].Category,sizeof(Befehle2[i].Category));
-        Count2:=length(Befehle2[i].ArgInteger);
-     	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for j:=0 to Count2-1 do
-        begin
-          Filestream.WriteBuffer(Befehle2[i].ArgInteger[j],sizeof(Befehle2[i].ArgInteger[j]));
-        end;
-        Count2:=length(Befehle2[i].ArgString);
-     	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for j:=0 to Count2-1 do
-        begin
-          Filestream.WriteBuffer(Befehle2[i].ArgString[j],sizeof(Befehle2[i].ArgString[j]));
-        end;
-        Count2:=length(Befehle2[i].ArgGUID);
-     	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for j:=0 to Count2-1 do
-        begin
-          Filestream.WriteBuffer(Befehle2[i].ArgGUID[j],sizeof(Befehle2[i].ArgGUID[j]));
-        end;
-      end;
-
-      Count:=length(Kompositionsszenen);
-   	  Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to length(Kompositionsszenen)-1 do
-    	begin
-        Filestream.WriteBuffer(Kompositionsszenen[i].ID,sizeof(Kompositionsszenen[i].ID));
-        Filestream.WriteBuffer(Kompositionsszenen[i].Name,sizeof(Kompositionsszenen[i].Name));
-        Filestream.WriteBuffer(Kompositionsszenen[i].Beschreibung,sizeof(Kompositionsszenen[i].Beschreibung));
-        Filestream.WriteBuffer(Kompositionsszenen[i].Category,sizeof(Kompositionsszenen[i].Category));
-
-        Count2:=length(Kompositionsszenen[i].IDs);
-        Filestream.WriteBuffer(Count2, sizeof(Count2));
-        for j:=0 to length(Kompositionsszenen[i].IDs)-1 do
-        begin
-          Filestream.WriteBuffer(Kompositionsszenen[i].IDs[j],sizeof(Kompositionsszenen[i].IDs[j]));
-          Filestream.WriteBuffer(Kompositionsszenen[i].StopScene[j],sizeof(Kompositionsszenen[i].StopScene[j]));
-        end;
-      end;
-
-      Count:=length(SzenenablaufArray);
-      Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to length(SzenenablaufArray)-1 do
-      begin
-        Filestream.WriteBuffer(text,sizeof(text));
-        Count2:=length(SzenenablaufArray[i]);
-        Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for j:=0 to Count2-1 do
-          Filestream.WriteBuffer(SzenenablaufArray[i][j],sizeof(SzenenablaufArray[i][j]));
-      end;
-// Ende Szenenspeichern
-// Timeline speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Timeline');
-  	AutosaveProgress.StepIt;
-    Count:=length(Effekttimeline);
-		Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-  	begin
-    	Filestream.WriteBuffer(Effekttimeline[i].name,sizeof(Effekttimeline[i].name));
-      Count2:=length(Effekttimeline[i].value);
-    	Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-      	Filestream.WriteBuffer(Effekttimeline[i].value[j],sizeof(Effekttimeline[i].value[j]));
-    	Filestream.WriteBuffer(Effekttimeline[i].checked,sizeof(Effekttimeline[i].checked));
-    	Filestream.WriteBuffer(Effekttimeline[i].steps,sizeof(Effekttimeline[i].steps));
-    	Filestream.WriteBuffer(Effekttimeline[i].blendzeit,sizeof(Effekttimeline[i].blendzeit));
-    	Filestream.WriteBuffer(Effekttimeline[i].blitzfunktion,sizeof(Effekttimeline[i].blitzfunktion));
-    	Filestream.WriteBuffer(Effekttimeline[i].blitzzeit,sizeof(Effekttimeline[i].blitzzeit));
-    	Filestream.WriteBuffer(Effekttimeline[i].pendeln,sizeof(Effekttimeline[i].pendeln));
-    	Filestream.WriteBuffer(Effekttimeline[i].zufall,sizeof(Effekttimeline[i].zufall));
-    end;
-// Ende Timeline speichern
-// Skripttimer speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Skripttimer');
-  	AutosaveProgress.StepIt;
-    Count:=length(AblaufTimer);
-		Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-  		Filestream.WriteBuffer(AblaufTimer[i],sizeof(AblaufTimer[i]));
-// Ende Skripttimer speichern
-
-// Hotkeys speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Hotkeys');
-  	AutosaveProgress.StepIt;
-
-    Count:=length(TastencodeArray);
-		Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-  	begin
-    	Filestream.WriteBuffer(TastencodeArray[i].ID,sizeof(TastencodeArray[i].ID));
-    	Filestream.WriteBuffer(TastencodeArray[i].active,sizeof(TastencodeArray[i].active));
-    	Filestream.WriteBuffer(TastencodeArray[i].Hotkey,sizeof(TastencodeArray[i].Hotkey));
-    	Filestream.WriteBuffer(TastencodeArray[i].Global,sizeof(TastencodeArray[i].Global));
-    	Filestream.WriteBuffer(TastencodeArray[i].Repeated,sizeof(TastencodeArray[i].Repeated));
-    	Filestream.WriteBuffer(TastencodeArray[i].UseKeyUp,sizeof(TastencodeArray[i].UseKeyUp));
-      Filestream.WriteBuffer(TastencodeArray[i].KeyDownValue,sizeof(TastencodeArray[i].KeyDownValue));
-      Filestream.WriteBuffer(TastencodeArray[i].KeyUpValue,sizeof(TastencodeArray[i].KeyUpValue));
-
-      Filestream.WriteBuffer(TastencodeArray[i].Befehl.Typ,sizeof(TastencodeArray[i].Befehl.Typ));
-      Filestream.WriteBuffer(TastencodeArray[i].Befehl.OnValue,sizeof(TastencodeArray[i].Befehl.OnValue));
-      Filestream.WriteBuffer(TastencodeArray[i].Befehl.SwitchValue,sizeof(TastencodeArray[i].Befehl.SwitchValue));
-      Filestream.WriteBuffer(TastencodeArray[i].Befehl.InvertSwitchValue,sizeof(TastencodeArray[i].Befehl.InvertSwitchValue));
-      Filestream.WriteBuffer(TastencodeArray[i].Befehl.OffValue,sizeof(TastencodeArray[i].Befehl.OffValue));
-      Filestream.WriteBuffer(TastencodeArray[i].Befehl.ScaleValue,sizeof(TastencodeArray[i].Befehl.ScaleValue));
-      Count2:=length(TastencodeArray[i].Befehl.ArgInteger);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-        Filestream.WriteBuffer(TastencodeArray[i].Befehl.ArgInteger[j],sizeof(TastencodeArray[i].Befehl.ArgInteger[j]));
-      Count2:=length(TastencodeArray[i].Befehl.ArgString);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-        Filestream.WriteBuffer(TastencodeArray[i].Befehl.ArgString[j],sizeof(TastencodeArray[i].Befehl.ArgString[j]));
-      Count2:=length(TastencodeArray[i].Befehl.ArgGUID);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-        Filestream.WriteBuffer(TastencodeArray[i].Befehl.ArgGUID[j],sizeof(TastencodeArray[i].Befehl.ArgGUID[j]));
-    end;
-// Ende Hotkey speichern
-
-// Nebelmaschineneinstellungen
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Nebelmaschine');
-  	AutosaveProgress.StepIt;
- 		Filestream.WriteBuffer(fogtimer,sizeof(fogtimer));
-// Ende Nebelmaschineneinstellungen
-
-// Geräte speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Geräte');
-  	AutosaveProgress.StepIt;
-    Count:=length(mainform.Devices);
-	  Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-    begin
-   	  Filestream.WriteBuffer(mainform.Devices[i].ID,sizeof(mainform.Devices[i].ID));
-   	  Filestream.WriteBuffer(mainform.Devices[i].Name,sizeof(mainform.Devices[i].Name));
-   	  Filestream.WriteBuffer(mainform.Devices[i].DeviceName,sizeof(mainform.Devices[i].DeviceName));
-   	  Filestream.WriteBuffer(mainform.Devices[i].Beschreibung,sizeof(mainform.Devices[i].Beschreibung));
-   	  Filestream.WriteBuffer(mainform.Devices[i].Vendor,sizeof(mainform.Devices[i].Vendor));
-   	  Filestream.WriteBuffer(mainform.Devices[i].Bildadresse,sizeof(mainform.Devices[i].Bildadresse));
-   	  Filestream.WriteBuffer(mainform.Devices[i].Startaddress,sizeof(mainform.Devices[i].Startaddress));
-   	  Filestream.WriteBuffer(mainform.Devices[i].MaxChan,sizeof(mainform.Devices[i].MaxChan));
-   	  Filestream.WriteBuffer(mainform.Devices[i].invertpan,sizeof(mainform.Devices[i].invertpan));
-   	  Filestream.WriteBuffer(mainform.Devices[i].inverttilt,sizeof(mainform.Devices[i].inverttilt));
-   	  Filestream.WriteBuffer(mainform.Devices[i].typeofscannercalibration,sizeof(mainform.Devices[i].typeofscannercalibration));
-
-      Count2:=17;//length(mainform.Devices[i].ScannerCalibrations);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-   	    Filestream.WriteBuffer(mainform.Devices[i].ScannerCalibrations[j],sizeof(mainform.Devices[i].ScannerCalibrations[j]));
-
-      // Bilddarstellung für Bühnenansicht
-   	  Filestream.WriteBuffer(mainform.Devices[i].ShowInStageView,sizeof(mainform.Devices[i].ShowInStageView));
-   	  Filestream.WriteBuffer(mainform.Devices[i].color,sizeof(mainform.Devices[i].color));
-   	  Filestream.WriteBuffer(mainform.Devices[i].picturesize,sizeof(mainform.Devices[i].picturesize));
-   	  Filestream.WriteBuffer(mainform.Devices[i].pictureangle,sizeof(mainform.Devices[i].pictureangle));
-   	  Filestream.WriteBuffer(mainform.Devices[i].picturefliphor,sizeof(mainform.Devices[i].picturefliphor));
-   	  Filestream.WriteBuffer(mainform.Devices[i].pictureflipver,sizeof(mainform.Devices[i].pictureflipver));
-   	  Filestream.WriteBuffer(mainform.Devices[i].pictureispng,sizeof(mainform.Devices[i].pictureispng));
-
-      Count2:=length(mainform.Devices[i].top);
-   	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-      begin
-     	  Filestream.WriteBuffer(mainform.Devices[i].top[j],sizeof(mainform.Devices[i].top[j]));
-     	  Filestream.WriteBuffer(mainform.Devices[i].left[j],sizeof(mainform.Devices[i].left[j]));
-     	  Filestream.WriteBuffer(mainform.Devices[i].bank[j],sizeof(mainform.Devices[i].bank[j]));
-      end;
-   	  Filestream.WriteBuffer(mainform.Devices[i].hasDimmer,sizeof(mainform.Devices[i].hasDIMMER));
-   	  Filestream.WriteBuffer(mainform.Devices[i].hasVirtualRGBAWDimmer,sizeof(mainform.Devices[i].hasVirtualRGBAWDIMMER));
-   	  Filestream.WriteBuffer(mainform.Devices[i].hasRGB,sizeof(mainform.Devices[i].hasRGB));
-   	  Filestream.WriteBuffer(mainform.Devices[i].hasCMY,sizeof(mainform.Devices[i].hasCMY));
-   	  Filestream.WriteBuffer(mainform.Devices[i].hasAmber,sizeof(mainform.Devices[i].hasAmber));
-   	  Filestream.WriteBuffer(mainform.Devices[i].hasWhite,sizeof(mainform.Devices[i].hasWhite));
-   	  Filestream.WriteBuffer(mainform.Devices[i].UseAmberMixing,sizeof(mainform.Devices[i].UseAmberMixing));
-   	  Filestream.WriteBuffer(mainform.Devices[i].AmberMixingCompensateRG,sizeof(mainform.Devices[i].AmberMixingCompensateRG));
-   	  Filestream.WriteBuffer(mainform.Devices[i].AmberMixingCompensateBlue,sizeof(mainform.Devices[i].AmberMixingCompensateBlue));
-   	  Filestream.WriteBuffer(mainform.Devices[i].AmberRatioR,sizeof(mainform.Devices[i].AmberRatioR));
-   	  Filestream.WriteBuffer(mainform.Devices[i].AmberRatioG,sizeof(mainform.Devices[i].AmberRatioG));
-   	  Filestream.WriteBuffer(mainform.Devices[i].hasPANTILT,sizeof(mainform.Devices[i].hasPANTILT));
-   	  Filestream.WriteBuffer(mainform.Devices[i].hasColor,sizeof(mainform.Devices[i].hasColor));
-   	  Filestream.WriteBuffer(mainform.Devices[i].hasColor2,sizeof(mainform.Devices[i].hasColor2));
-   	  Filestream.WriteBuffer(mainform.Devices[i].hasGobo,sizeof(mainform.Devices[i].hasGobo));
-   	  Filestream.WriteBuffer(mainform.Devices[i].hasGobo2,sizeof(mainform.Devices[i].hasGobo2));
-
-      Count2:=length(mainform.Devices[i].colors);
-   	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-    	begin
-        Filestream.WriteBuffer(mainform.Devices[i].colors[j],sizeof(mainform.Devices[i].colors[j]));
-        Filestream.WriteBuffer(mainform.Devices[i].colorlevels[j],sizeof(mainform.Devices[i].colorlevels[j]));
-        Filestream.WriteBuffer(mainform.Devices[i].colorendlevels[j],sizeof(mainform.Devices[i].colorendlevels[j]));
-        Filestream.WriteBuffer(mainform.Devices[i].colornames[j],sizeof(mainform.Devices[i].colornames[j]));
-   	  end;
-      Filestream.WriteBuffer(mainform.Devices[i].colortolerance,sizeof(mainform.Devices[i].colortolerance));
-      Filestream.WriteBuffer(mainform.Devices[i].autoscening,sizeof(mainform.Devices[i].autoscening));
-
-      Count2:=length(mainform.Devices[i].colors2);
-   	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-    	begin
-        Filestream.WriteBuffer(mainform.Devices[i].colors2[j],sizeof(mainform.Devices[i].colors2[j]));
-        Filestream.WriteBuffer(mainform.Devices[i].colorlevels2[j],sizeof(mainform.Devices[i].colorlevels2[j]));
-        Filestream.WriteBuffer(mainform.Devices[i].colorendlevels2[j],sizeof(mainform.Devices[i].colorendlevels2[j]));
-        Filestream.WriteBuffer(mainform.Devices[i].colornames2[j],sizeof(mainform.Devices[i].colornames2[j]));
-   	  end;
-      Count2:=length(mainform.Devices[i].gobos);
-   	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-    	begin
-        Filestream.WriteBuffer(mainform.Devices[i].gobos[j],sizeof(mainform.Devices[i].gobos[j]));
-        Filestream.WriteBuffer(mainform.Devices[i].gobolevels[j],sizeof(mainform.Devices[i].gobolevels[j]));
-        Filestream.WriteBuffer(mainform.Devices[i].goboendlevels[j],sizeof(mainform.Devices[i].goboendlevels[j]));
-        Filestream.WriteBuffer(mainform.Devices[i].gobonames[j],sizeof(mainform.Devices[i].gobonames[j]));
-        Count3:=length(mainform.Devices[i].bestgobos[j]);
-        Filestream.WriteBuffer(Count3,sizeof(Count3));
-        for k:=0 to length(mainform.Devices[i].bestgobos[j])-1 do
-        begin
-          Filestream.WriteBuffer(mainform.Devices[i].bestgobos[j][k].GoboName,sizeof(mainform.Devices[i].bestgobos[j][k].GoboName));
-          Filestream.WriteBuffer(mainform.Devices[i].bestgobos[j][k].Percent,sizeof(mainform.Devices[i].bestgobos[j][k].Percent));
-        end;
-   	  end;
-      Count2:=length(mainform.Devices[i].gobos2);
-   	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-    	begin
-        Filestream.WriteBuffer(mainform.Devices[i].gobos2[j],sizeof(mainform.Devices[i].gobos2[j]));
-        Filestream.WriteBuffer(mainform.Devices[i].gobolevels2[j],sizeof(mainform.Devices[i].gobolevels2[j]));
-        Filestream.WriteBuffer(mainform.Devices[i].goboendlevels2[j],sizeof(mainform.Devices[i].goboendlevels2[j]));
-        Filestream.WriteBuffer(mainform.Devices[i].gobonames2[j],sizeof(mainform.Devices[i].gobonames2[j]));
-        Count3:=length(mainform.Devices[i].bestgobos2[j]);
-        Filestream.WriteBuffer(Count3,sizeof(Count3));
-        for k:=0 to length(mainform.Devices[i].bestgobos2[j])-1 do
-        begin
-          Filestream.WriteBuffer(mainform.Devices[i].bestgobos2[j][k].GoboName,sizeof(mainform.Devices[i].bestgobos2[j][k].GoboName));
-          Filestream.WriteBuffer(mainform.Devices[i].bestgobos2[j][k].Percent,sizeof(mainform.Devices[i].bestgobos2[j][k].Percent));
-        end;
-   	  end;
-
-      Filestream.WriteBuffer(mainform.Devices[i].ShutterOpenValue,sizeof(mainform.Devices[i].ShutterOpenValue));
-      Filestream.WriteBuffer(mainform.Devices[i].ShutterCloseValue,sizeof(mainform.Devices[i].ShutterCloseValue));
-      Filestream.WriteBuffer(mainform.Devices[i].ShutterChannel,sizeof(mainform.Devices[i].ShutterChannel));
-      Filestream.WriteBuffer(mainform.Devices[i].StrobeOffValue,sizeof(mainform.Devices[i].StrobeOffValue));
-      Filestream.WriteBuffer(mainform.Devices[i].StrobeMinValue,sizeof(mainform.Devices[i].StrobeMinValue));
-      Filestream.WriteBuffer(mainform.Devices[i].StrobeMaxValue,sizeof(mainform.Devices[i].StrobeMaxValue));
-      Filestream.WriteBuffer(mainform.Devices[i].StrobeChannel,sizeof(mainform.Devices[i].StrobeChannel));
-      Filestream.WriteBuffer(mainform.Devices[i].DimmerOffValue,sizeof(mainform.Devices[i].DimmerOffValue));
-      Filestream.WriteBuffer(mainform.Devices[i].DimmerMaxValue,sizeof(mainform.Devices[i].DimmerMaxValue));
-      Filestream.WriteBuffer(mainform.Devices[i].Gobo1RotLeftminValue,sizeof(mainform.Devices[i].Gobo1RotLeftminValue));
-      Filestream.WriteBuffer(mainform.Devices[i].Gobo1RotLeftValue,sizeof(mainform.Devices[i].Gobo1RotLeftValue));
-      Filestream.WriteBuffer(mainform.Devices[i].Gobo1RotOffValue,sizeof(mainform.Devices[i].Gobo1RotOffValue));
-      Filestream.WriteBuffer(mainform.Devices[i].Gobo1RotRightminValue,sizeof(mainform.Devices[i].Gobo1RotRightminValue));
-      Filestream.WriteBuffer(mainform.Devices[i].Gobo1RotRightValue,sizeof(mainform.Devices[i].Gobo1RotRightValue));
-      Filestream.WriteBuffer(mainform.Devices[i].Gobo1RotChannel,sizeof(mainform.Devices[i].Gobo1RotChannel));
-      Filestream.WriteBuffer(mainform.Devices[i].Gobo2RotLeftminValue,sizeof(mainform.Devices[i].Gobo2RotLeftminValue));
-      Filestream.WriteBuffer(mainform.Devices[i].Gobo2RotLeftValue,sizeof(mainform.Devices[i].Gobo2RotLeftValue));
-      Filestream.WriteBuffer(mainform.Devices[i].Gobo2RotOffValue,sizeof(mainform.Devices[i].Gobo2RotOffValue));
-      Filestream.WriteBuffer(mainform.Devices[i].Gobo2RotRightminValue,sizeof(mainform.Devices[i].Gobo2RotRightminValue));
-      Filestream.WriteBuffer(mainform.Devices[i].Gobo2RotRightValue,sizeof(mainform.Devices[i].Gobo2RotRightValue));
-      Filestream.WriteBuffer(mainform.Devices[i].Gobo2RotChannel,sizeof(mainform.Devices[i].Gobo2RotChannel));
-
-      Filestream.WriteBuffer(mainform.Devices[i].PrismaSingleValue,sizeof(mainform.Devices[i].PrismaSingleValue));
-      Filestream.WriteBuffer(mainform.Devices[i].PrismaTripleValue,sizeof(mainform.Devices[i].PrismaTripleValue));
-      Filestream.WriteBuffer(mainform.Devices[i].PrismaRotOffValue,sizeof(mainform.Devices[i].PrismaRotOffValue));
-      Filestream.WriteBuffer(mainform.Devices[i].PrismaRotLeftminValue,sizeof(mainform.Devices[i].PrismaRotLeftminValue));
-      Filestream.WriteBuffer(mainform.Devices[i].PrismaRotLeftmaxValue,sizeof(mainform.Devices[i].PrismaRotLeftmaxValue));
-      Filestream.WriteBuffer(mainform.Devices[i].PrismaRotRightminValue,sizeof(mainform.Devices[i].PrismaRotRightminValue));
-      Filestream.WriteBuffer(mainform.Devices[i].PrismaRotRightmaxValue,sizeof(mainform.Devices[i].PrismaRotRightmaxValue));
-      Filestream.WriteBuffer(mainform.Devices[i].PrismaRotChannel,sizeof(mainform.Devices[i].PrismaRotChannel));
-      Filestream.WriteBuffer(mainform.Devices[i].IrisCloseValue,sizeof(mainform.Devices[i].IrisCloseValue));
-      Filestream.WriteBuffer(mainform.Devices[i].IrisOpenValue,sizeof(mainform.Devices[i].IrisOpenValue));
-      Filestream.WriteBuffer(mainform.Devices[i].IrisMinValue,sizeof(mainform.Devices[i].IrisMinValue));
-      Filestream.WriteBuffer(mainform.Devices[i].IrisMaxValue,sizeof(mainform.Devices[i].IrisMaxValue));
-
-      Filestream.WriteBuffer(mainform.Devices[i].UseInPowerdiagram,sizeof(mainform.Devices[i].UseInPowerdiagram));
-      Filestream.WriteBuffer(mainform.Devices[i].AlwaysOn,sizeof(mainform.Devices[i].AlwaysOn));
-      Filestream.WriteBuffer(mainform.Devices[i].ChannelForPower,sizeof(mainform.Devices[i].ChannelForPower));
-      Filestream.WriteBuffer(mainform.Devices[i].Power,sizeof(mainform.Devices[i].Power));
-      Filestream.WriteBuffer(mainform.Devices[i].Phase,sizeof(mainform.Devices[i].Phase));
-
-      Count2:=length(mainform.Devices[i].kanaltyp);
-  	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to length(mainform.Devices[i].kanaltyp)-1 do
-      begin
-     	  Filestream.WriteBuffer(mainform.Devices[i].KanalMinValue[j],sizeof(mainform.Devices[i].KanalMinValue[j]));
-     	  Filestream.WriteBuffer(mainform.Devices[i].KanalMaxValue[j],sizeof(mainform.Devices[i].KanalMaxValue[j]));
-     	  Filestream.WriteBuffer(mainform.Devices[i].kanaltyp[j],sizeof(mainform.Devices[i].kanaltyp[j]));
-     	  Filestream.WriteBuffer(mainform.Devices[i].kanalname[j],sizeof(mainform.Devices[i].kanalname[j]));
-     	  Filestream.WriteBuffer(mainform.Devices[i].kanalfade[j],sizeof(mainform.Devices[i].kanalfade[j]));
-     	  Filestream.WriteBuffer(mainform.Devices[i].kanaldimmcurve[j],sizeof(mainform.Devices[i].kanaldimmcurve[j]));
-     	  Filestream.WriteBuffer(mainform.Devices[i].kanalabsolutedimmcurve[j],sizeof(mainform.Devices[i].kanalabsolutedimmcurve[j]));
-      end;
-    end;
-// Ende Geräte
-// Presets speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Presets');
-  	AutosaveProgress.StepIt;
-    Count:=length(mainform.DevicePresets);
-	  Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-    begin
-   	  Filestream.WriteBuffer(mainform.DevicePresets[i].ID,sizeof(mainform.DevicePresets[i].ID));
-   	  Filestream.WriteBuffer(mainform.DevicePresets[i].Name,sizeof(mainform.DevicePresets[i].Name));
-   	  Filestream.WriteBuffer(mainform.DevicePresets[i].Beschreibung,sizeof(mainform.DevicePresets[i].Beschreibung));
-   	  Filestream.WriteBuffer(mainform.DevicePresets[i].Category,sizeof(mainform.DevicePresets[i].Category));
-      count2:=length(mainform.DevicePresets[i].ChanTyp);
-   	  Filestream.WriteBuffer(count2,sizeof(count2));
-      for k:=0 to count2-1 do
-      begin
-     	  Filestream.WriteBuffer(mainform.DevicePresets[i].ChanTyp[k],sizeof(mainform.DevicePresets[i].ChanTyp[k]));
-     	  Filestream.WriteBuffer(mainform.DevicePresets[i].ChanValue[k],sizeof(mainform.DevicePresets[i].ChanValue[k]));
-     	  Filestream.WriteBuffer(mainform.DevicePresets[i].ChanActive[k],sizeof(mainform.DevicePresets[i].ChanActive[k]));
-      end;
-
-      Filestream.WriteBuffer(mainform.DevicePresets[i].UseNewInterface,sizeof(mainform.DevicePresets[i].UseNewInterface));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].Color,sizeof(mainform.DevicePresets[i].Color));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].Shutter,sizeof(mainform.DevicePresets[i].Shutter));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].Dimmer,sizeof(mainform.DevicePresets[i].Dimmer));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].Iris,sizeof(mainform.DevicePresets[i].Iris));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].Focus,sizeof(mainform.DevicePresets[i].Focus));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].PrismaRot,sizeof(mainform.DevicePresets[i].PrismaRot));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].PrismaEnabled,sizeof(mainform.DevicePresets[i].PrismaEnabled));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].Strobe,sizeof(mainform.DevicePresets[i].Strobe));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].Pan,sizeof(mainform.DevicePresets[i].Pan));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].Tilt,sizeof(mainform.DevicePresets[i].Tilt));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].PanFine,sizeof(mainform.DevicePresets[i].PanFine));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].TiltFine,sizeof(mainform.DevicePresets[i].TiltFine));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].Gobo,sizeof(mainform.DevicePresets[i].Gobo));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].GoboRot1,sizeof(mainform.DevicePresets[i].GoboRot1));
-      Filestream.WriteBuffer(mainform.DevicePresets[i].GoboRot2,sizeof(mainform.DevicePresets[i].GoboRot2));
-    end;
-// Ende Presets
-// Geräteszenen speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Geräteszenen');
-  	AutosaveProgress.StepIt;
-      Count:=length(DeviceScenes);
-   	  Filestream.WriteBuffer(Count,sizeof(Count));
-      for i:=0 to length(DeviceScenes)-1 do
-    	begin
-        Filestream.WriteBuffer(DeviceScenes[i].ID,sizeof(DeviceScenes[i].ID));
-        Filestream.WriteBuffer(DeviceScenes[i].Name,sizeof(DeviceScenes[i].Name));
-        Filestream.WriteBuffer(DeviceScenes[i].Beschreibung,sizeof(DeviceScenes[i].Beschreibung));
-        Filestream.WriteBuffer(DeviceScenes[i].Fadetime,sizeof(DeviceScenes[i].Fadetime));
-        Filestream.WriteBuffer(DeviceScenes[i].Category,sizeof(DeviceScenes[i].Category));
-        Count2:=length(DeviceScenes[i].Devices);
-     	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for j:=0 to Count2-1 do
-        begin
-          Filestream.WriteBuffer(DeviceScenes[i].Devices[j].ID,sizeof(DeviceScenes[i].Devices[j].ID));
-          Count3:=length(DeviceScenes[i].Devices[j].ChanActive);
-       	  Filestream.WriteBuffer(Count3,sizeof(Count3));
-          for k:=0 to Count3-1 do
-            Filestream.WriteBuffer(DeviceScenes[i].Devices[j].ChanActive[k],sizeof(DeviceScenes[i].Devices[j].ChanActive[k]));
-
-          Count3:=length(DeviceScenes[i].Devices[j].ChanValue);
-       	  Filestream.WriteBuffer(Count3,sizeof(Count3));
-          for k:=0 to Count3-1 do
-            Filestream.WriteBuffer(DeviceScenes[i].Devices[j].ChanValue[k],sizeof(DeviceScenes[i].Devices[j].ChanValue[k]));
-
-          Count3:=length(DeviceScenes[i].Devices[j].ChanActiveRandom);
-       	  Filestream.WriteBuffer(Count3,sizeof(Count3));
-          for k:=0 to Count3-1 do
-            Filestream.WriteBuffer(DeviceScenes[i].Devices[j].ChanActiveRandom[k],sizeof(DeviceScenes[i].Devices[j].ChanActiveRandom[k]));
-
-          Count3:=length(DeviceScenes[i].Devices[j].ChanValueRandom);
-       	  Filestream.WriteBuffer(Count3,sizeof(Count3));
-          for k:=0 to Count3-1 do
-            Filestream.WriteBuffer(DeviceScenes[i].Devices[j].ChanValueRandom[k],sizeof(DeviceScenes[i].Devices[j].ChanValueRandom[k]));
-
-          Count3:=length(DeviceScenes[i].Devices[j].ChanDelay);
-       	  Filestream.WriteBuffer(Count3,sizeof(Count3));
-          for k:=0 to Count3-1 do
-            Filestream.WriteBuffer(DeviceScenes[i].Devices[j].ChanDelay[k],sizeof(DeviceScenes[i].Devices[j].ChanDelay[k]));
-
-          Count3:=length(DeviceScenes[i].Devices[j].ChanFadetime);
-       	  Filestream.WriteBuffer(Count3,sizeof(Count3));
-          for k:=0 to Count3-1 do
-            Filestream.WriteBuffer(DeviceScenes[i].Devices[j].ChanFadetime[k],sizeof(DeviceScenes[i].Devices[j].ChanFadetime[k]));
-        end;
-        Count:=length(DeviceScenes[i].Befehle);
-        Filestream.WriteBuffer(Count,sizeof(Count));
-        for l:=0 to Count-1 do
-        begin
-          Filestream.WriteBuffer(DeviceScenes[i].Befehle[l].ID,sizeof(DeviceScenes[i].Befehle[l].ID));
-          Filestream.WriteBuffer(DeviceScenes[i].Befehle[l].Typ,sizeof(DeviceScenes[i].Befehle[l].Typ));
-          Filestream.WriteBuffer(DeviceScenes[i].Befehle[l].Name,sizeof(DeviceScenes[i].Befehle[l].Name));
-          Filestream.WriteBuffer(DeviceScenes[i].Befehle[l].Beschreibung,sizeof(DeviceScenes[i].Befehle[l].Beschreibung));
-          Filestream.WriteBuffer(DeviceScenes[i].Befehle[l].OnValue,sizeof(DeviceScenes[i].Befehle[l].OnValue));
-          Filestream.WriteBuffer(DeviceScenes[i].Befehle[l].SwitchValue,sizeof(DeviceScenes[i].Befehle[l].SwitchValue));
-          Filestream.WriteBuffer(DeviceScenes[i].Befehle[l].InvertSwitchValue,sizeof(DeviceScenes[i].Befehle[l].InvertSwitchValue));
-          Filestream.WriteBuffer(DeviceScenes[i].Befehle[l].OffValue,sizeof(DeviceScenes[i].Befehle[l].OffValue));
-          Filestream.WriteBuffer(DeviceScenes[i].Befehle[l].ScaleValue,sizeof(DeviceScenes[i].Befehle[l].ScaleValue));
-
-          Count2:=length(DeviceScenes[i].Befehle[l].ArgInteger);
-          Filestream.WriteBuffer(Count2,sizeof(Count2));
-          for m:=0 to Count2-1 do
-            Filestream.WriteBuffer(DeviceScenes[i].Befehle[l].ArgInteger[m],sizeof(DeviceScenes[i].Befehle[l].ArgInteger[m]));
-          Count2:=length(DeviceScenes[i].Befehle[l].ArgString);
-          Filestream.WriteBuffer(Count2,sizeof(Count2));
-          for m:=0 to Count2-1 do
-            Filestream.WriteBuffer(DeviceScenes[i].Befehle[l].ArgString[m],sizeof(DeviceScenes[i].Befehle[l].ArgString[m]));
-          Count2:=length(DeviceScenes[i].Befehle[l].ArgGUID);
-          Filestream.WriteBuffer(Count2,sizeof(Count2));
-          for m:=0 to Count2-1 do
-            Filestream.WriteBuffer(DeviceScenes[i].Befehle[l].ArgGUID[m],sizeof(DeviceScenes[i].Befehle[l].ArgGUID[m]));
-
-
-          Count2:=length(DeviceScenes[i].Befehlswerte[l].ChanActive);
-          Filestream.WriteBuffer(Count2,sizeof(Count2));
-          for m:=0 to Count2-1 do
-          begin
-            Filestream.WriteBuffer(DeviceScenes[i].Befehlswerte[l].ChanActive[m],sizeof(DeviceScenes[i].Befehlswerte[l].ChanActive[m]));
-            Filestream.WriteBuffer(DeviceScenes[i].Befehlswerte[l].ChanValue[m],sizeof(DeviceScenes[i].Befehlswerte[l].ChanValue[m]));
-            Filestream.WriteBuffer(DeviceScenes[i].Befehlswerte[l].ChanActiveRandom[m],sizeof(DeviceScenes[i].Befehlswerte[l].ChanActiveRandom[m]));
-            Filestream.WriteBuffer(DeviceScenes[i].Befehlswerte[l].ChanValueRandom[m],sizeof(DeviceScenes[i].Befehlswerte[l].ChanValueRandom[m]));
-            Filestream.WriteBuffer(DeviceScenes[i].Befehlswerte[l].ChanDelay[m],sizeof(DeviceScenes[i].Befehlswerte[l].ChanDelay[m]));
-            Filestream.WriteBuffer(DeviceScenes[i].Befehlswerte[l].ChanFadetime[m],sizeof(DeviceScenes[i].Befehlswerte[l].ChanFadetime[m]));
-          end;
-        end;
-      end;
-// Ende Geräteszenen
-// Gruppen speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Gerätegruppen');
-  	AutosaveProgress.StepIt;
-    Count:=length(mainform.DeviceGroups);
-	  Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-    begin
-   	  Filestream.WriteBuffer(mainform.DeviceGroups[i].Active,sizeof(mainform.DeviceGroups[i].Active));
-   	  Filestream.WriteBuffer(mainform.DeviceGroups[i].ID,sizeof(mainform.DeviceGroups[i].ID));
-   	  Filestream.WriteBuffer(mainform.DeviceGroups[i].Name,sizeof(mainform.DeviceGroups[i].Name));
-   	  Filestream.WriteBuffer(mainform.DeviceGroups[i].Beschreibung,sizeof(mainform.DeviceGroups[i].Beschreibung));
-      Count2:=length(mainform.DeviceGroups[i].IDs);
-  	  Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for k:=0 to Count2-1 do
-      begin
-     	  Filestream.WriteBuffer(mainform.DeviceGroups[i].IDs[k],sizeof(mainform.DeviceGroups[i].IDs[k]));
-     	  Filestream.WriteBuffer(mainform.DeviceGroups[i].IDActive[k],sizeof(mainform.DeviceGroups[i].IDActive[k]));
-     	  Filestream.WriteBuffer(mainform.DeviceGroups[i].Delays[k],sizeof(mainform.DeviceGroups[i].Delays[k]));
-      end;
-      Filestream.WriteBuffer(mainform.DeviceGroups[i].MasterDevice,sizeof(mainform.DeviceGroups[i].MasterDevice));
-   	  Filestream.WriteBuffer(mainform.DeviceGroups[i].UseMaster,sizeof(mainform.DeviceGroups[i].UseMaster));
-   	  Filestream.WriteBuffer(mainform.DeviceGroups[i].FanMode,sizeof(mainform.DeviceGroups[i].FanMode));
-   	  Filestream.WriteBuffer(mainform.DeviceGroups[i].FanMorph,sizeof(mainform.DeviceGroups[i].FanMorph));
-   	  Filestream.WriteBuffer(mainform.DeviceGroups[i].Delay,sizeof(mainform.DeviceGroups[i].Delay));
-    end;
-// Ende Gruppen
-// Softpatch speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Softpatch');
-  	AutosaveProgress.StepIt;
-    Count:=length(mainform.Softpatch);
-    Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-    begin
-   	  Filestream.WriteBuffer(mainform.softpatch[i].Channel,sizeof(mainform.softpatch[i].Channel));
-      Count2:=length(mainform.Softpatch[i].RouteToInputChan);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for k:=0 to Count2-1 do
-      begin
-     	  Filestream.WriteBuffer(mainform.softpatch[i].RouteToInputChan[k],sizeof(mainform.softpatch[i].RouteToInputChan[k]));
-      end;
-    end;
-
-    Count:=length(mainform.Softpatch2);
-    Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-    begin
-      Filestream.WriteBuffer(mainform.softpatch2[i].Channel2,sizeof(mainform.softpatch2[i].Channel2));
-      Count2:=length(mainform.softpatch2[i].RouteToPC_DIMMERChan);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for k:=0 to Count2-1 do
-      begin
-        Filestream.WriteBuffer(mainform.softpatch2[i].RouteToPC_DIMMERChan[k],sizeof(mainform.softpatch2[i].RouteToPC_DIMMERChan[k]));
-      end;
-    end;
-// Ende Softpatch
-// Effekte speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Effekte');
-  	AutosaveProgress.StepIt;
-    Count:=length(Effektsequenzereffekte);
-    Filestream.WriteBuffer(Count, sizeof(Count));
-    for i:=0 to Count-1 do
-    begin
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].ID,sizeof(Effektsequenzereffekte[i].ID));
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].Name,sizeof(Effektsequenzereffekte[i].Name));
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].Beschreibung,sizeof(Effektsequenzereffekte[i].Beschreibung));
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].TabPosition,sizeof(Effektsequenzereffekte[i].TabPosition));
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].AnzahlderDurchlaufe,sizeof(Effektsequenzereffekte[i].AnzahlderDurchlaufe));
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].modus,sizeof(Effektsequenzereffekte[i].modus));
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].Repeating,sizeof(Effektsequenzereffekte[i].Repeating));
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].intensitaet,sizeof(Effektsequenzereffekte[i].intensitaet));
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].speed,sizeof(Effektsequenzereffekte[i].speed));
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].startwithstepone,sizeof(Effektsequenzereffekte[i].startwithstepone));
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].blackoutonstop,sizeof(Effektsequenzereffekte[i].blackoutonstop));
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].Startscene,sizeof(Effektsequenzereffekte[i].Startscene));
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].Stopscene,sizeof(Effektsequenzereffekte[i].Stopscene));
-
-      Count2:=length(Effektsequenzereffekte[i].effektschritte);
-      Filestream.WriteBuffer(Count2, sizeof(Count2));
-      for k:=0 to Count2-1 do
-      begin
-        Count3:=length(Effektsequenzereffekte[i].effektschritte[k].IDs);
-        Filestream.WriteBuffer(Count3, sizeof(Count3));
-        for l:=0 to Count3-1 do
-          Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].IDs[l],sizeof(Effektsequenzereffekte[i].effektschritte[k].IDs[l]));
-        Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Typ,sizeof(Effektsequenzereffekte[i].effektschritte[k].Typ));
-        Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Name,sizeof(Effektsequenzereffekte[i].effektschritte[k].Name));
-        Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Beschreibung,sizeof(Effektsequenzereffekte[i].effektschritte[k].Beschreibung));
-        Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].einblendzeit,sizeof(Effektsequenzereffekte[i].effektschritte[k].einblendzeit));
-        Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].wartezeit,sizeof(Effektsequenzereffekte[i].effektschritte[k].wartezeit));
-        Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].AnzahlBeats,sizeof(Effektsequenzereffekte[i].effektschritte[k].AnzahlBeats));
-        Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].DeactivateLastScene,sizeof(Effektsequenzereffekte[i].effektschritte[k].DeactivateLastScene));
-
-        Count3:=length(Effektsequenzereffekte[i].effektschritte[k].Devices);
-        Filestream.WriteBuffer(Count3,sizeof(Count3));
-        for l:=0 to Count3-1 do
-        begin
-          Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ID,sizeof(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ID));
-          Count4:=length(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ChanActive);
-          Filestream.WriteBuffer(Count4,sizeof(Count4));
-          for m:=0 to Count4-1 do
-          begin
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ChanActive[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ChanActive[m]));
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ChanValue[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ChanValue[m]));
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ChanActiveRandom[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ChanActiveRandom[m]));
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ChanValueRandom[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ChanValueRandom[m]));
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ChanDelay[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ChanDelay[m]));
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ChanFadetime[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Devices[l].ChanFadetime[m]));
-          end;
-        end;
-        Count:=length(Effektsequenzereffekte[i].effektschritte[k].Befehle);
-        Filestream.WriteBuffer(Count,sizeof(Count));
-        for l:=0 to Count-1 do
-        begin
-          Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].ID,sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].ID));
-          Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].Typ,sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].Typ));
-          Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].Name,sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].Name));
-          Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].Beschreibung,sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].Beschreibung));
-          Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].OnValue,sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].OnValue));
-          Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].SwitchValue,sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].SwitchValue));
-          Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].InvertSwitchValue,sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].InvertSwitchValue));
-          Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].OffValue,sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].OffValue));
-          Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].ScaleValue,sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].ScaleValue));
-
-          Count2:=length(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].ArgInteger);
-          Filestream.WriteBuffer(Count2,sizeof(Count2));
-          for m:=0 to Count2-1 do
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].ArgInteger[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].ArgInteger[m]));
-          Count2:=length(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].ArgString);
-          Filestream.WriteBuffer(Count2,sizeof(Count2));
-          for m:=0 to Count2-1 do
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].ArgString[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].ArgString[m]));
-          Count2:=length(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].ArgGUID);
-          Filestream.WriteBuffer(Count2,sizeof(Count2));
-          for m:=0 to Count2-1 do
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].ArgGUID[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehle[l].ArgGUID[m]));
-
-          Count2:=length(Effektsequenzereffekte[i].effektschritte[k].Befehlswerte[l].ChanActive);
-          Filestream.WriteBuffer(Count2,sizeof(Count2));
-          for m:=0 to Count2-1 do
-          begin
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehlswerte[l].ChanActive[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehlswerte[l].ChanActive[m]));
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehlswerte[l].ChanValue[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehlswerte[l].ChanValue[m]));
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehlswerte[l].ChanActiveRandom[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehlswerte[l].ChanActiveRandom[m]));
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehlswerte[l].ChanValueRandom[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehlswerte[l].ChanValueRandom[m]));
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehlswerte[l].ChanDelay[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehlswerte[l].ChanDelay[m]));
-            Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].Befehlswerte[l].ChanFadetime[m],sizeof(Effektsequenzereffekte[i].effektschritte[k].Befehlswerte[l].ChanFadetime[m]));
-          end;
-        end;
-        Filestream.WriteBuffer(Effektsequenzereffekte[i].effektschritte[k].ActivateTimecontrol,sizeof(Effektsequenzereffekte[i].effektschritte[k].ActivateTimecontrol));
-      end;
-    end;
-
-    Count:=length(EffektsequenzerTabs);
-    Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-      Filestream.WriteBuffer(EffektsequenzerTabs[i],sizeof(EffektsequenzerTabs[i]));
-// Ende Effekte speichern
-// Bühnenansicht speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Bühnenansicht');
-  	AutosaveProgress.StepIt;
-    FileStream.WriteBuffer(mainform.buehnenansichtsetup,sizeof(mainform.buehnenansichtsetup));
-
-    count:=grafischebuehnenansicht.BankSelect.Items.Count;
-    FileStream.WriteBuffer(count,sizeof(count));
-    for i:=0 to grafischebuehnenansicht.BankSelect.Items.Count-1 do
-    begin
-      text:=grafischebuehnenansicht.BankSelect.Items[i];
-      FileStream.WriteBuffer(text, sizeof(text));
-      FileStream.WriteBuffer(buehnenansicht_background[i], sizeof(buehnenansicht_background[i]));
-    end;
-
-    count:=length(mainform.buehnenansichtdevices);
-    FileStream.WriteBuffer(count,sizeof(count));
-    for i:=0 to count-1 do
-    begin
-    	FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].channel,sizeof(mainform.buehnenansichtdevices[i].channel));
-    	FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].color,sizeof(mainform.buehnenansichtdevices[i].color));
-    	FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].picture,sizeof(mainform.buehnenansichtdevices[i].picture));
-      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].picturesize,sizeof(mainform.buehnenansichtdevices[i].picturesize));
-      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].pictureangle,sizeof(mainform.buehnenansichtdevices[i].pictureangle));
-      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].picturefliphor,sizeof(mainform.buehnenansichtdevices[i].picturefliphor));
-      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].pictureflipver,sizeof(mainform.buehnenansichtdevices[i].pictureflipver));
-      FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].pictureispng,sizeof(mainform.buehnenansichtdevices[i].pictureispng));
-    	FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].top,sizeof(mainform.buehnenansichtdevices[i].top));
-    	FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].left,sizeof(mainform.buehnenansichtdevices[i].left));
-    	FileStream.WriteBuffer(mainform.buehnenansichtdevices[i].bank,sizeof(mainform.buehnenansichtdevices[i].bank));
-    end;
-// Bühnenansicht ende
-// Submaster (alt) speichern
-    count:=length(mainform.Submasterfader);
-    FileStream.WriteBuffer(count,sizeof(count));
-    for i:=0 to count-1 do
-    begin
-    	FileStream.WriteBuffer(mainform.Submasterfader[i],sizeof(mainform.Submasterfader[i]));
-    end;
-// Submaster Ende
-// Desktopproperties speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Desktopeinstellungen');
-  	AutosaveProgress.StepIt;
-  for i:=1 to 9 do
-  begin
-    FileStream.WriteBuffer(desktopproperties[i].name,sizeof(desktopproperties[i].name));
-    FileStream.WriteBuffer(desktopproperties[i].maintop,sizeof(desktopproperties[i].maintop));
-    FileStream.WriteBuffer(desktopproperties[i].mainleft,sizeof(desktopproperties[i].mainleft));
-    FileStream.WriteBuffer(desktopproperties[i].mainheight,sizeof(desktopproperties[i].mainheight));
-    FileStream.WriteBuffer(desktopproperties[i].mainwidth,sizeof(desktopproperties[i].mainwidth));
-    count:=length(desktopproperties[i].top);
-    FileStream.WriteBuffer(Count,sizeof(Count));
-    for k:=0 to Count-1 do
-    begin
-      FileStream.WriteBuffer(desktopproperties[i].top[k],sizeof(desktopproperties[i].top[k]));
-      FileStream.WriteBuffer(desktopproperties[i].left[k],sizeof(desktopproperties[i].left[k]));
-      FileStream.WriteBuffer(desktopproperties[i].height[k],sizeof(desktopproperties[i].height[k]));
-      FileStream.WriteBuffer(desktopproperties[i].width[k],sizeof(desktopproperties[i].width[k]));
-      FileStream.WriteBuffer(desktopproperties[i].visible[k],sizeof(desktopproperties[i].visible[k]));
-    end;
-  end;
-// Desktopproperties Ende
-// Joystickeinstellungen Speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Joystickeinstellungen');
-  	AutosaveProgress.StepIt;
-    for i:=0 to length(JoystickEvents)-1 do
-    begin
-      Filestream.WriteBuffer(JoystickEvents[i].ID,sizeof(JoystickEvents[i].ID));
-      Filestream.WriteBuffer(JoystickEvents[i].UseEvent,sizeof(JoystickEvents[i].UseEvent));
-      Filestream.WriteBuffer(JoystickEvents[i].positionrelativ,sizeof(JoystickEvents[i].positionrelativ));
-      Filestream.WriteBuffer(JoystickEvents[i].invert,sizeof(JoystickEvents[i].invert));
-      Filestream.WriteBuffer(JoystickEvents[i].deaktivierterbereich,sizeof(JoystickEvents[i].deaktivierterbereich));
-      Filestream.WriteBuffer(JoystickEvents[i].beschleunigung,sizeof(JoystickEvents[i].beschleunigung));
-      Filestream.WriteBuffer(JoystickEvents[i].offset,sizeof(JoystickEvents[i].offset));
-      Filestream.WriteBuffer(JoystickEvents[i].PermanentUpdate,sizeof(JoystickEvents[i].PermanentUpdate));
-
-      Filestream.WriteBuffer(JoystickEvents[i].Befehl.Typ,sizeof(JoystickEvents[i].Befehl.Typ));
-      Filestream.WriteBuffer(JoystickEvents[i].Befehl.OnValue,sizeof(JoystickEvents[i].Befehl.OnValue));
-      Filestream.WriteBuffer(JoystickEvents[i].Befehl.SwitchValue,sizeof(JoystickEvents[i].Befehl.SwitchValue));
-      Filestream.WriteBuffer(JoystickEvents[i].Befehl.InvertSwitchValue,sizeof(JoystickEvents[i].Befehl.InvertSwitchValue));
-      Filestream.WriteBuffer(JoystickEvents[i].Befehl.OffValue,sizeof(JoystickEvents[i].Befehl.OffValue));
-      Filestream.WriteBuffer(JoystickEvents[i].Befehl.ScaleValue,sizeof(JoystickEvents[i].Befehl.ScaleValue));
-      Count2:=length(JoystickEvents[i].Befehl.ArgInteger);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-        Filestream.WriteBuffer(JoystickEvents[i].Befehl.ArgInteger[j],sizeof(JoystickEvents[i].Befehl.ArgInteger[j]));
-      Count2:=length(JoystickEvents[i].Befehl.ArgString);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-        Filestream.WriteBuffer(JoystickEvents[i].Befehl.ArgString[j],sizeof(JoystickEvents[i].Befehl.ArgString[j]));
-      Count2:=length(JoystickEvents[i].Befehl.ArgGUID);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-        Filestream.WriteBuffer(JoystickEvents[i].Befehl.ArgGUID[j],sizeof(JoystickEvents[i].Befehl.ArgGUID[j]));
-    end;
-// Joystickeinstellungen Ende
-// Kontrollpanel speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Kontrollpanel');
-  	AutosaveProgress.StepIt;
-
-    mainform.kontrollpanelrecord.zeilenanzahl:=kontrollpanel.zeilen.AsInteger-1;
-    mainform.kontrollpanelrecord.spaltenanzahl:=kontrollpanel.spalten.AsInteger-1;
-    mainform.kontrollpanelrecord.formwidth:=kontrollpanel.Width;
-    mainform.kontrollpanelrecord.formheight:=kontrollpanel.Height;
-
-    Filestream.WriteBuffer(kontrollpanelrecord,sizeof(kontrollpanelrecord));
-
-    Count:=round(kontrollpanel.zeilen.value);
-    Filestream.WriteBuffer(Count,sizeof(Count));
-    Count:=round(kontrollpanel.spalten.value);
-    Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to round(kontrollpanel.zeilen.value)-1 do
-    for j:=0 to round(kontrollpanel.spalten.value)-1 do
-    begin
-      Filestream.WriteBuffer(kontrollpanelbuttons[i][j].ID,sizeof(kontrollpanelbuttons[i][j].ID));
-      Filestream.WriteBuffer(kontrollpanelbuttons[i][j].Name,sizeof(kontrollpanelbuttons[i][j].Name));
-      Filestream.WriteBuffer(kontrollpanelbuttons[i][j].Color,sizeof(kontrollpanelbuttons[i][j].Color));
-      Filestream.WriteBuffer(kontrollpanelbuttons[i][j].Typ,sizeof(kontrollpanelbuttons[i][j].Typ));
-      Filestream.WriteBuffer(kontrollpanelbuttons[i][j].Shortcut,sizeof(kontrollpanelbuttons[i][j].Shortcut));
-      Filestream.WriteBuffer(kontrollpanelbuttons[i][j].Picture,sizeof(kontrollpanelbuttons[i][j].Picture));
-    end;
-// Kontrollpanel ende
-// MIDI-IN Event speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... MIDI-In');
-  	AutosaveProgress.StepIt;
-    Count:=length(MidiEventArray);
-    Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-    begin
-      Filestream.WriteBuffer(MidiEventArray[i].ID,sizeof(MidiEventArray[i].ID));
-      Filestream.WriteBuffer(MidiEventArray[i].MIDIMessage,sizeof(MidiEventArray[i].MIDIMessage));
-      Filestream.WriteBuffer(MidiEventArray[i].MIDIData1,sizeof(MidiEventArray[i].MIDIData1));
-      Filestream.WriteBuffer(MidiEventArray[i].MIDIData2,sizeof(MidiEventArray[i].MIDIData2));
-
-      Filestream.WriteBuffer(MidiEventArray[i].Befehl.Typ,sizeof(MidiEventArray[i].Befehl.Typ));
-      Filestream.WriteBuffer(MidiEventArray[i].Befehl.OnValue,sizeof(MidiEventArray[i].Befehl.OnValue));
-      Filestream.WriteBuffer(MidiEventArray[i].Befehl.SwitchValue,sizeof(MidiEventArray[i].Befehl.SwitchValue));
-      Filestream.WriteBuffer(MidiEventArray[i].Befehl.InvertSwitchValue,sizeof(MidiEventArray[i].Befehl.InvertSwitchValue));
-      Filestream.WriteBuffer(MidiEventArray[i].Befehl.OffValue,sizeof(MidiEventArray[i].Befehl.OffValue));
-      Filestream.WriteBuffer(MidiEventArray[i].Befehl.ScaleValue,sizeof(MidiEventArray[i].Befehl.ScaleValue));
-      Count2:=length(MidiEventArray[i].Befehl.ArgInteger);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-        Filestream.WriteBuffer(MidiEventArray[i].Befehl.ArgInteger[j],sizeof(MidiEventArray[i].Befehl.ArgInteger[j]));
-      Count2:=length(MidiEventArray[i].Befehl.ArgString);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-        Filestream.WriteBuffer(MidiEventArray[i].Befehl.ArgString[j],sizeof(MidiEventArray[i].Befehl.ArgString[j]));
-      Count2:=length(MidiEventArray[i].Befehl.ArgGUID);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-        Filestream.WriteBuffer(MidiEventArray[i].Befehl.ArgGUID[j],sizeof(MidiEventArray[i].Befehl.ArgGUID[j]));
-
-      Filestream.WriteBuffer(MidiEventArray[i].Data1orData2,sizeof(MidiEventArray[i].Data1orData2));
-      Filestream.WriteBuffer(MidiEventArray[i].UseMidiBacktrack,sizeof(MidiEventArray[i].UseMidiBacktrack));
-    end;
-// MIDI-IN Event Ende
-// Data-IN Event speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Data-In');
-  	AutosaveProgress.StepIt;
-    Count:=length(DataInEventArray);
-    Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-    begin
-      Filestream.WriteBuffer(DataInEventArray[i].ID,sizeof(DataInEventArray[i].ID));
-      Filestream.WriteBuffer(DataInEventArray[i].Channel,sizeof(DataInEventArray[i].Channel));
-      Filestream.WriteBuffer(DataInEventArray[i].Value,sizeof(DataInEventArray[i].Value));
-
-      Filestream.WriteBuffer(DatainEventArray[i].Befehl.Typ,sizeof(DatainEventArray[i].Befehl.Typ));
-      Filestream.WriteBuffer(DatainEventArray[i].Befehl.OnValue,sizeof(DatainEventArray[i].Befehl.OnValue));
-      Filestream.WriteBuffer(DatainEventArray[i].Befehl.SwitchValue,sizeof(DatainEventArray[i].Befehl.SwitchValue));
-      Filestream.WriteBuffer(DatainEventArray[i].Befehl.InvertSwitchValue,sizeof(DatainEventArray[i].Befehl.InvertSwitchValue));
-      Filestream.WriteBuffer(DatainEventArray[i].Befehl.OffValue,sizeof(DatainEventArray[i].Befehl.OffValue));
-      Filestream.WriteBuffer(DatainEventArray[i].Befehl.ScaleValue,sizeof(DatainEventArray[i].Befehl.ScaleValue));
-      Count2:=length(DatainEventArray[i].Befehl.ArgInteger);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-        Filestream.WriteBuffer(DatainEventArray[i].Befehl.ArgInteger[j],sizeof(DatainEventArray[i].Befehl.ArgInteger[j]));
-      Count2:=length(DatainEventArray[i].Befehl.ArgString);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-        Filestream.WriteBuffer(DatainEventArray[i].Befehl.ArgString[j],sizeof(DatainEventArray[i].Befehl.ArgString[j]));
-      Count2:=length(DatainEventArray[i].Befehl.ArgGUID);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-      for j:=0 to Count2-1 do
-        Filestream.WriteBuffer(DatainEventArray[i].Befehl.ArgGUID[j],sizeof(DatainEventArray[i].Befehl.ArgGUID[j]));
-    end;
-// Data-IN Event Ende
-// Leistungsdaten speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Leistungssteuerung');
-  	AutosaveProgress.StepIt;
-  Filestream.WriteBuffer(leistungsdaten.ampere,sizeof(leistungsdaten.ampere));
-  Filestream.WriteBuffer(leistungsdaten.usesinus,sizeof(leistungsdaten.usesinus));
-  Count:=length(leistungsdaten.channel);
-  Filestream.WriteBuffer(Count,sizeof(Count));
-  for i:=0 to Count-1 do
-  begin
-    Filestream.WriteBuffer(leistungsdaten.channel[i],sizeof(leistungsdaten.channel[i]));
-    Filestream.WriteBuffer(leistungsdaten.phase[i],sizeof(leistungsdaten.phase[i]));
-    Filestream.WriteBuffer(leistungsdaten.leistung[i],sizeof(leistungsdaten.leistung[i]));
-    Filestream.WriteBuffer(leistungsdaten.deactivatechannelonoverload[i],sizeof(leistungsdaten.deactivatechannelonoverload[i]));
-  end;
-// Leistungsdaten Ende
-// Leistungsdaten2 speichern
-  for i:=0 to 11 do
-    Filestream.WriteBuffer(leistungssteuerungform2.maxpower[i],sizeof(leistungssteuerungform2.maxpower[i]));
-// Leistungsdaten2 Ende
-// Autoszenen speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Autoszenen');
-  	AutosaveProgress.StepIt;
-    Count:=length(mainform.Autoszenen);
-	  Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-    begin
-   	  Filestream.WriteBuffer(mainform.Autoszenen[i].ID,sizeof(mainform.Autoszenen[i].ID));
-   	  Filestream.WriteBuffer(mainform.Autoszenen[i].Name,sizeof(mainform.Autoszenen[i].Name));
-   	  Filestream.WriteBuffer(mainform.Autoszenen[i].Beschreibung,sizeof(mainform.Autoszenen[i].Beschreibung));
-   	  Filestream.WriteBuffer(mainform.Autoszenen[i].fadetime,sizeof(mainform.Autoszenen[i].fadetime));
-   	  Filestream.WriteBuffer(mainform.Autoszenen[i].R,sizeof(mainform.Autoszenen[i].R));
-   	  Filestream.WriteBuffer(mainform.Autoszenen[i].G,sizeof(mainform.Autoszenen[i].G));
-   	  Filestream.WriteBuffer(mainform.Autoszenen[i].B,sizeof(mainform.Autoszenen[i].B));
-   	  Filestream.WriteBuffer(mainform.Autoszenen[i].accuracy,sizeof(mainform.Autoszenen[i].accuracy));
-   	  Filestream.WriteBuffer(mainform.Autoszenen[i].helligkeit,sizeof(mainform.Autoszenen[i].helligkeit));
-   	  Filestream.WriteBuffer(mainform.Autoszenen[i].Category,sizeof(mainform.Autoszenen[i].Category));
-    end;
-// Ende Autoszenen
-
- 	  Filestream.WriteBuffer(textbuchform.TextBuchFile,sizeof(textbuchform.TextBuchFile));
-
-    count:=length(SendValueOfSelectedDevicesToMidi);
- 	  Filestream.WriteBuffer(count,sizeof(count));
-    for i:=0 to count-1 do
-    begin
-      Filestream.WriteBuffer(SendValueOfSelectedDevicesToMidi[i].MSG,sizeof(SendValueOfSelectedDevicesToMidi[i].MSG));
-      Filestream.WriteBuffer(SendValueOfSelectedDevicesToMidi[i].Data1,sizeof(SendValueOfSelectedDevicesToMidi[i].Data1));
-      Filestream.WriteBuffer(SendValueOfSelectedDevicesToMidi[i].UseData2,sizeof(SendValueOfSelectedDevicesToMidi[i].UseData2));
-    end;
-
-// Submaster (neu) speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Submaster');
-  	AutosaveProgress.StepIt;
-    count:=length(Submasterbank);
-    FileStream.WriteBuffer(count,sizeof(count));
-    for i:=0 to count-1 do
-    begin
-      FileStream.WriteBuffer(Submasterbank[i].BankName, sizeof(Submasterbank[i].BankName));
-      for j:=1 to 16 do
-      begin
-        FileStream.WriteBuffer(Submasterbank[i].SubmasterName[j], sizeof(Submasterbank[i].SubmasterName[j]));
-        FileStream.WriteBuffer(Submasterbank[i].UseScene[j], sizeof(Submasterbank[i].UseScene[j]));
-        FileStream.WriteBuffer(Submasterbank[i].SubmasterScene[j], sizeof(Submasterbank[i].SubmasterScene[j]));
-
-        count2:=length(Submasterbank[i].Submasterdevices[j]);
-        FileStream.WriteBuffer(count2,sizeof(count2));
-        for k:=0 to count2-1 do
-        begin
-          FileStream.WriteBuffer(Submasterbank[i].Submasterdevices[j][k].ID,sizeof(Submasterbank[i].Submasterdevices[j][k].ID));
-          count3:=length(Submasterbank[i].Submasterdevices[j][k].ChanActive);
-          FileStream.WriteBuffer(count3,sizeof(count3));
-          for l:=0 to count3-1 do
-          begin
-            FileStream.WriteBuffer(Submasterbank[i].Submasterdevices[j][k].ChanActive[l],sizeof(Submasterbank[i].Submasterdevices[j][k].ChanActive[l]));;
-            FileStream.WriteBuffer(Submasterbank[i].Submasterdevices[j][k].ChanValue[l],sizeof(Submasterbank[i].Submasterdevices[j][k].ChanValue[l]));;
-            FileStream.WriteBuffer(Submasterbank[i].Submasterdevices[j][k].ChanDelay[l],sizeof(Submasterbank[i].Submasterdevices[j][k].ChanDelay[l]));;
-          end;
-        end;                             
-
-        FileStream.WriteBuffer(Submasterbank[i].UseBefehl[j], sizeof(Submasterbank[i].UseBefehl[j]));
-
-        Filestream.WriteBuffer(Submasterbank[i].Befehl[j].ID,sizeof(Submasterbank[i].Befehl[j].ID));
-        Filestream.WriteBuffer(Submasterbank[i].Befehl[j].Typ,sizeof(Submasterbank[i].Befehl[j].Typ));
-        Filestream.WriteBuffer(Submasterbank[i].Befehl[j].OnValue,sizeof(Submasterbank[i].Befehl[j].OnValue));
-        Filestream.WriteBuffer(Submasterbank[i].Befehl[j].SwitchValue,sizeof(Submasterbank[i].Befehl[j].SwitchValue));
-        Filestream.WriteBuffer(Submasterbank[i].Befehl[j].InvertSwitchValue,sizeof(Submasterbank[i].Befehl[j].InvertSwitchValue));
-        Filestream.WriteBuffer(Submasterbank[i].Befehl[j].OffValue,sizeof(Submasterbank[i].Befehl[j].OffValue));
-        Filestream.WriteBuffer(Submasterbank[i].Befehl[j].ScaleValue,sizeof(Submasterbank[i].Befehl[j].ScaleValue));
-        Count2:=length(Submasterbank[i].Befehl[j].ArgInteger);
-        Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for k:=0 to Count2-1 do
-          Filestream.WriteBuffer(Submasterbank[i].Befehl[j].ArgInteger[k],sizeof(Submasterbank[i].Befehl[j].ArgInteger[k]));
-        Count2:=length(Submasterbank[i].Befehl[j].ArgString);
-        Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for k:=0 to Count2-1 do
-          Filestream.WriteBuffer(Submasterbank[i].Befehl[j].ArgString[k],sizeof(Submasterbank[i].Befehl[j].ArgString[k]));
-        Count2:=length(Submasterbank[i].Befehl[j].ArgGUID);
-        Filestream.WriteBuffer(Count2,sizeof(Count2));
-        for k:=0 to Count2-1 do
-          Filestream.WriteBuffer(Submasterbank[i].Befehl[j].ArgGUID[k],sizeof(Submasterbank[i].Befehl[j].ArgGUID[k]));
-      end;
-    end;
-// Submaster Ende
-
-// Cue-Liste speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Cueliste');
-  	AutosaveProgress.StepIt;
-
-    count:=length(Cuelistbank);
-    FileStream.WriteBuffer(count,sizeof(count));
-    for i:=0 to count-1 do
-    begin
-      FileStream.WriteBuffer(Cuelistbank[i].BankName,sizeof(Cuelistbank[i].BankName));
-
-      count2:=length(Cuelistbank[i].cuelistbankitems);
-      FileStream.WriteBuffer(count2,sizeof(count2));
-      for j:=0 to count2-1 do
-      begin
-        FileStream.WriteBuffer(Cuelistbank[i].cuelistbankitems[j].ID,sizeof(Cuelistbank[i].cuelistbankitems[j].ID));
-        count3:=sizeof(Cuelistbank[i].cuelistbankitems[j].OwnDescription);
-        FileStream.WriteBuffer(count3,sizeof(count3));
-        FileStream.WriteBuffer(Cuelistbank[i].cuelistbankitems[j].OwnDescription,sizeof(Cuelistbank[i].cuelistbankitems[j].OwnDescription));
-        FileStream.WriteBuffer(Cuelistbank[i].cuelistbankitems[j].Typ,sizeof(Cuelistbank[i].cuelistbankitems[j].Typ));
-        FileStream.WriteBuffer(Cuelistbank[i].cuelistbankitems[j].UseFadetime,sizeof(Cuelistbank[i].cuelistbankitems[j].UseFadetime));
-        FileStream.WriteBuffer(Cuelistbank[i].cuelistbankitems[j].Fadetime,sizeof(Cuelistbank[i].cuelistbankitems[j].Fadetime));
-        FileStream.WriteBuffer(Cuelistbank[i].cuelistbankitems[j].LiveTime,sizeof(Cuelistbank[i].cuelistbankitems[j].LiveTime));
-        FileStream.WriteBuffer(Cuelistbank[i].cuelistbankitems[j].StopCueIfTimeOver,sizeof(Cuelistbank[i].cuelistbankitems[j].StopCueIfTimeOver));
-      end;
-    end;
-// Cue-Liste Ende
-
-// Timecodeplayer-Liste speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Timecodeplayer');
-  	AutosaveProgress.StepIt;
-
-    count:=length(TimeCodePlayerBank);
-    FileStream.WriteBuffer(count,sizeof(count));
-    for i:=0 to count-1 do
-    begin
-      FileStream.WriteBuffer(TimeCodePlayerBank[i].BankName,sizeof(TimeCodePlayerBank[i].BankName));
-      count2:=length(TimeCodePlayerBank[i].TimeCodePlayerBankItems);
-      FileStream.WriteBuffer(count2,sizeof(count2));
-      for j:=0 to count2-1 do
-      begin
-        FileStream.WriteBuffer(TimeCodePlayerBank[i].TimeCodePlayerBankItems[j],sizeof(TimeCodePlayerBank[i].TimeCodePlayerBankItems[j]));
-        FileStream.WriteBuffer(TimeCodePlayerBank[i].Time[j],sizeof(TimeCodePlayerBank[i].Time[j]));
-        FileStream.WriteBuffer(TimeCodePlayerBank[i].Frame[j],sizeof(TimeCodePlayerBank[i].Frame[j]));
-      end;
-    end;
-// Timecodeplayer-Liste Ende
-
-// IR FB speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... IR Fernbedienung');
-  	AutosaveProgress.StepIt;
-
-    count:=length(mainform.IREvent);
-    FileStream.WriteBuffer(count,sizeof(count));
-    for i:=0 to length(mainform.IREvent)-1 do
-    begin
-      FileStream.WriteBuffer(mainform.IREvent[i].id,sizeof(mainform.IREvent[i].id));
-      FileStream.WriteBuffer(mainform.IREvent[i].fernbedienung,sizeof(mainform.IREvent[i].fernbedienung));
-      FileStream.WriteBuffer(mainform.IREvent[i].taste,sizeof(mainform.IREvent[i].taste));
-      FileStream.WriteBuffer(mainform.IREvent[i].taste_raw,sizeof(mainform.IREvent[i].taste_raw));
-    end;
-// IR FB Ende
-
-// MediaCenter Szenen speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... MediaCenter Szenen');
-  	AutosaveProgress.StepIt;
-    Count:=length(mainform.MediaCenterSzenen);
-	  Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-    begin
-   	  Filestream.WriteBuffer(mainform.MediaCenterSzenen[i].ID,sizeof(mainform.MediaCenterSzenen[i].ID));
-   	  Filestream.WriteBuffer(mainform.MediaCenterSzenen[i].Name,sizeof(mainform.MediaCenterSzenen[i].Name));
-   	  Filestream.WriteBuffer(mainform.MediaCenterSzenen[i].Beschreibung,sizeof(mainform.MediaCenterSzenen[i].Beschreibung));
-   	  Filestream.WriteBuffer(mainform.MediaCenterSzenen[i].Adresse,sizeof(mainform.MediaCenterSzenen[i].Adresse));
-   	  Filestream.WriteBuffer(mainform.MediaCenterSzenen[i].Port,sizeof(mainform.MediaCenterSzenen[i].Port));
-   	  Filestream.WriteBuffer(mainform.MediaCenterSzenen[i].Befehl,sizeof(mainform.MediaCenterSzenen[i].Befehl));
-   	  Filestream.WriteBuffer(mainform.MediaCenterSzenen[i].Data1,sizeof(mainform.MediaCenterSzenen[i].Data1));
-   	  Filestream.WriteBuffer(mainform.MediaCenterSzenen[i].Data2,sizeof(mainform.MediaCenterSzenen[i].Data2));
-   	  Filestream.WriteBuffer(mainform.MediaCenterSzenen[i].Text,sizeof(mainform.MediaCenterSzenen[i].Text));
-   	  Filestream.WriteBuffer(mainform.MediaCenterSzenen[i].Category,sizeof(mainform.MediaCenterSzenen[i].Category));
-    end;
-// Ende MediaCenter Szenen
-
-// Plugin Szenen speichern
-	  //inprogress.filename.Caption:=_('Schreibe Datei... Pluginszenen');
-  	AutosaveProgress.StepIt;
-    Count:=length(mainform.PluginSzenen);
-	  Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-    begin
-   	  Filestream.WriteBuffer(mainform.PluginSzenen[i].ID,sizeof(mainform.PluginSzenen[i].ID));
-   	  Filestream.WriteBuffer(mainform.PluginSzenen[i].Name,sizeof(mainform.PluginSzenen[i].Name));
-   	  Filestream.WriteBuffer(mainform.PluginSzenen[i].Category,sizeof(mainform.PluginSzenen[i].Category));
-    end;
-// Ende Plugin Szenen
-// FFTDataIn speichern
-    for i:=0 to 31 do
-    begin
-      Filestream.WriteBuffer(mainform.FFTDataIn[i].Active,sizeof(mainform.FFTDataIn[i].Active));
-      Filestream.WriteBuffer(mainform.FFTDataIn[i].Channel,sizeof(mainform.FFTDataIn[i].Channel));
-      Filestream.WriteBuffer(mainform.FFTDataIn[i].Faktor,sizeof(mainform.FFTDataIn[i].Faktor));
-    end;
-// Ende FFTDataIn speichern
-// BeatImpuls speichern
-    Filestream.WriteBuffer(mainform.BeatImpuls.Active,sizeof(mainform.BeatImpuls.Active));
-    Filestream.WriteBuffer(mainform.BeatImpuls.Channel,sizeof(mainform.BeatImpuls.Channel));
-    Filestream.WriteBuffer(mainform.BeatImpuls.OnValue,sizeof(mainform.BeatImpuls.OnValue));
-    Filestream.WriteBuffer(mainform.BeatImpuls.OffValue,sizeof(mainform.BeatImpuls.OffValue));
-// Ende BeatImpuls speichern
-// Geräteselektionen speichern
-    Count:=length(DeviceSelectedIDs);
-    Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to length(DeviceSelectedIDs)-1 do
-    begin
-      Count2:=length(DeviceSelectedIDs[i]);
-      Filestream.WriteBuffer(Count2,sizeof(Count2));
-
-      FileStream.WriteBuffer(DeviceSelectedIDsName[i], sizeof(DeviceSelectedIDsName[i]));
-
-      for j:=0 to length(DeviceSelectedIDs[i])-1 do
-        FileStream.WriteBuffer(DeviceSelectedIDs[i][j], sizeof(DeviceSelectedIDs[i][j]));
-    end;
-// Geräteselektionen speichern Ende
-// Ambilight speichern
-  Count:=length(ambilights);
-  Filestream.WriteBuffer(Count,sizeof(Count));
-  for i:=0 to Count-1 do
-  begin
-    Count2:=length(ambilights[i]);
-    Filestream.WriteBuffer(Count2,sizeof(Count2));
-    for j:=0 to Count2-1 do
-      Filestream.WriteBuffer(ambilights[i][j],sizeof(ambilights[i][j]));
-  end;
-// Ambilight speichern Ende
-// PartyMuckenModul speichern
-  Count:=length(pmmlights);
-  Filestream.WriteBuffer(Count,sizeof(Count));
-  for i:=0 to Count-1 do
-    Filestream.WriteBuffer(pmmlights[i],sizeof(pmmlights[i]));
-
-  Count:=length(PartyMuckenModul);
-  Filestream.WriteBuffer(Count,sizeof(Count));
-  for i:=0 to Count-1 do
-  begin
-    Filestream.WriteBuffer(PartyMuckenModul[i].Name,sizeof(PartyMuckenModul[i].Name));
-    Filestream.WriteBuffer(PartyMuckenModul[i].ControlMode,sizeof(PartyMuckenModul[i].ControlMode));
-    Filestream.WriteBuffer(PartyMuckenModul[i].UsePanTilt,sizeof(PartyMuckenModul[i].UsePanTilt));
-    Filestream.WriteBuffer(PartyMuckenModul[i].UseRandom,sizeof(PartyMuckenModul[i].UseRandom));
-    Filestream.WriteBuffer(PartyMuckenModul[i].MaxFadetime,sizeof(PartyMuckenModul[i].MaxFadetime));
-    Filestream.WriteBuffer(PartyMuckenModul[i].MaxPanTiltTime,sizeof(PartyMuckenModul[i].MaxPanTiltTime));
-    Filestream.WriteBuffer(PartyMuckenModul[i].MaxDelayTime,sizeof(PartyMuckenModul[i].MaxDelayTime));
-    Filestream.WriteBuffer(PartyMuckenModul[i].UseRed,sizeof(PartyMuckenModul[i].UseRed));
-    Filestream.WriteBuffer(PartyMuckenModul[i].UseGreen,sizeof(PartyMuckenModul[i].UseGreen));
-    Filestream.WriteBuffer(PartyMuckenModul[i].UseBlue,sizeof(PartyMuckenModul[i].UseBlue));
-    Filestream.WriteBuffer(PartyMuckenModul[i].MaxRed,sizeof(PartyMuckenModul[i].MaxRed));
-    Filestream.WriteBuffer(PartyMuckenModul[i].MaxGreen,sizeof(PartyMuckenModul[i].MaxGreen));
-    Filestream.WriteBuffer(PartyMuckenModul[i].MaxBlue,sizeof(PartyMuckenModul[i].MaxBlue));
-    Filestream.WriteBuffer(PartyMuckenModul[i].AllowMixing,sizeof(PartyMuckenModul[i].AllowMixing));
-    Filestream.WriteBuffer(PartyMuckenModul[i].NoBlackDevices,sizeof(PartyMuckenModul[i].NoBlackDevices));
-    Filestream.WriteBuffer(PartyMuckenModul[i].UseRGB,sizeof(PartyMuckenModul[i].UseRGB));
-    Filestream.WriteBuffer(PartyMuckenModul[i].UseDimmer,sizeof(PartyMuckenModul[i].UseDimmer));
-    Filestream.WriteBuffer(PartyMuckenModul[i].UseColor12,sizeof(PartyMuckenModul[i].UseColor12));
-    Filestream.WriteBuffer(PartyMuckenModul[i].MaxLuminance,sizeof(PartyMuckenModul[i].MaxLuminance));
-    Filestream.WriteBuffer(PartyMuckenModul[i].MinLuminance,sizeof(PartyMuckenModul[i].MinLuminance));
-  end;
-// PartyMuckenModul speichern Ende
-// PresetSzenen speichern
-    Count:=length(mainform.PresetScenes);
-	  Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-    begin
-   	  Filestream.WriteBuffer(mainform.PresetScenes[i].ID,sizeof(mainform.PresetScenes[i].ID));
-   	  Filestream.WriteBuffer(mainform.PresetScenes[i].Name,sizeof(mainform.PresetScenes[i].Name));
-   	  Filestream.WriteBuffer(mainform.PresetScenes[i].Beschreibung,sizeof(mainform.PresetScenes[i].Beschreibung));
-   	  Filestream.WriteBuffer(mainform.PresetScenes[i].Category,sizeof(mainform.PresetScenes[i].Category));
-
-      count2:=length(mainform.PresetScenes[i].Devices);
-   	  Filestream.WriteBuffer(count2,sizeof(count2));
-      for k:=0 to count2-1 do
-     	  Filestream.WriteBuffer(mainform.PresetScenes[i].Devices[k],sizeof(mainform.PresetScenes[i].Devices[k]));
-
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Color,sizeof(mainform.PresetScenes[i].Color));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Shutter,sizeof(mainform.PresetScenes[i].Shutter));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Dimmer,sizeof(mainform.PresetScenes[i].Dimmer));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Iris,sizeof(mainform.PresetScenes[i].Iris));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Focus,sizeof(mainform.PresetScenes[i].Focus));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].PrismaRot,sizeof(mainform.PresetScenes[i].PrismaRot));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].PrismaEnabled,sizeof(mainform.PresetScenes[i].PrismaEnabled));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Strobe,sizeof(mainform.PresetScenes[i].Strobe));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Pan,sizeof(mainform.PresetScenes[i].Pan));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Tilt,sizeof(mainform.PresetScenes[i].Tilt));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].PanFine,sizeof(mainform.PresetScenes[i].PanFine));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].TiltFine,sizeof(mainform.PresetScenes[i].TiltFine));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Gobo,sizeof(mainform.PresetScenes[i].Gobo));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].GoboRot1,sizeof(mainform.PresetScenes[i].GoboRot1));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].GoboRot2,sizeof(mainform.PresetScenes[i].GoboRot2));
-    end;
-// Ende Presets
-
-	  //inprogress.filename.Caption:=_('Schreibe Datei...');
-  	AutosaveProgress.StepIt;
-/////////////////////////////////////////////////////////
-	  // inprogress.filename.Caption:='Schreibe Datei...';
-  	AutosaveProgress.StepIt;
-  except
-    ShowMessage(_('Das Autobackup konnte nicht erstellt werden...'));
-  end;
-  FileStream.Free;
-  AutosaveProgress.visible:=false;
 end;
 
 function TMainform.Openproject(openfile:string; OnlyProject:boolean):boolean;
@@ -10450,13 +9063,13 @@ begin
 
         case mymessagedlg(text,mtConfirmation,[mbYes,mbNo,mbRetry,mbCancel],[_('&Ja'),_('&Nein'),_('&Fastsave'),_('&Abbrechen')]) of
 //    		  case messagedlg(text,mtConfirmation,[mbYes,mbNo,mbCancel],0) of
-            mrYes: begin saveonclosing:=true; saveproject(true,false); end;
+            mrYes: begin saveonclosing:=true; saveproject(true,false,false); end;
             mrNo: ;
-            mrCancel: begin saveonclosing:=true; saveproject(true,true);end;
+            mrCancel: begin saveonclosing:=true; saveproject(true,true,false);end;
             mrRetry: canclose:=false;
 {
           case mymessagedlg(text,mtConfirmation,[mbYes,mbNo,mbCancel],[_('&Ja'),_('&Nein'),_('&Abbrechen')]) of
-              mrYes: begin saveonclosing:=true; saveproject(true,false); end;
+              mrYes: begin saveonclosing:=true; saveproject(true,false,false); end;
               mrNo: ;
               mrCancel: canclose:=false;
           end;
@@ -10471,14 +9084,14 @@ begin
           text:=_('Möchten Sie das aktuelle Projekt vor dem Beenden speichern?');
         case mymessagedlg(text,mtConfirmation,[mbYes,mbNo,mbRetry,mbCancel],[_('&Ja'),_('&Nein'),_('&Fastsave'),_('&Abbrechen')]) of
 //     		  case messagedlg(text,mtConfirmation,[mbYes,mbNo,mbCancel],0) of
-            mrYes: begin saveonclosing:=true; saveproject(false,false); end;
+            mrYes: begin saveonclosing:=true; saveproject(false,false,false); end;
             mrNo: ;
-            mrCancel: begin saveonclosing:=true; saveproject(true,true); end;
+            mrCancel: begin saveonclosing:=true; saveproject(true,true,false); end;
             mrRetry: canclose:=false;
         end;
 {
         case mymessagedlg(text,mtConfirmation,[mbYes,mbNo,mbCancel],[_('&Ja'),_('&Nein'),_('&Abbrechen')]) of
-            mrYes: begin saveonclosing:=true; saveproject(false,false); end;
+            mrYes: begin saveonclosing:=true; saveproject(false,false,false); end;
             mrNo: ;
             mrCancel: canclose:=false;
         end;
@@ -10829,7 +9442,7 @@ var
 begin
     choice:=messagedlg(_('Aktuelles Projekt speichern?'),mtConfirmation,
        [mbYes,mbNo,mbCancel],0);
-    if choice=6 then begin if saveproject(false,false) then NewProject; end;
+    if choice=6 then begin if saveproject(false,false,false) then NewProject; end;
     if choice=7 then NewProject;
     if choice=2 then begin end;
 end;
@@ -10838,7 +9451,7 @@ procedure TMainform.ToolButton4Click(Sender: TObject);
 begin
   if (project_file=userdirectory+'ProjectTemp\Projekt') then
   begin
-    saveproject(false,false);
+    saveproject(false,false,false);
     exit;
   end else
   begin
@@ -10847,19 +9460,19 @@ begin
       begin
         case messagedlg('Aktuelles Projekt in Datei "'+project_file+'" speichern?',mtConfirmation,
            [mbYes,mbNo,mbCancel],0) of
-    	    mrYes: saveproject(true,false);
-      	  mrNo: saveproject(false,false);
+    	    mrYes: saveproject(true,false,false);
+      	  mrNo: saveproject(false,false,false);
     		end;
       end else
       begin
-        saveproject(false,false)
+        saveproject(false,false,false)
       end
     else
     begin
       if length(project_file)>0 then
-      	saveproject(true,false)
+      	saveproject(true,false,false)
       else
-      	saveproject(false,false);
+      	saveproject(false,false,false);
     end;
   end;
 end;
@@ -10897,7 +9510,7 @@ end;
 
 procedure TMainform.Projektspeichern1Click(Sender: TObject);
 begin
-  saveproject(false,false);
+  saveproject(false,false,false);
 end;
 
 procedure TMainform.BlackoutClick(Sender: TObject);
@@ -12427,7 +11040,7 @@ begin
       end;
       MSG_NEW: ToolButton1Click(nil);
       MSG_OPEN: openproject(Data1, false);
-      MSG_SAVE: saveproject(false,false);
+      MSG_SAVE: saveproject(false,false,false);
       MSG_BEATIMPULSE: // Boolean
       begin
         if (beatform.Temposourcebox.ItemIndex=2) then
@@ -12948,7 +11561,7 @@ end;
 procedure TMainform.Schnellspeichern1Click(Sender: TObject);
 begin
   fastsaved:=true;
-  saveproject(true,true);
+  saveproject(true,true,false);
 end;
 
 procedure TMainform.MidiInput1MidiInput(Sender: TObject);
@@ -20576,7 +19189,7 @@ begin
     if FileExists(userdirectory+'Autobackup.pcdbkup') then
       RenameFile(userdirectory+'Autobackup.pcdbkup',userdirectory+'Autobackup~1.pcdbkup');
 
-    AutoSaveproject(userdirectory+'Autobackup.pcdbkup');
+    saveproject(true, false, true);
   end;
 end;
 

@@ -843,6 +843,8 @@
     Channel:Word;
     OnValue:byte;
     OffValue:byte;
+    Stopscene:TGUID;
+    Startscene:TGUID;
   end;
 
   TTerminalSystem = record
