@@ -9,7 +9,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, StdCtrls, IAeverProgressBar, ComCtrls, Registry, bass,
   messagesystem, gnugettext, Mask, JvExMask, JvSpin, GR32,
-  Math, SVATimer;
+  Math, SVATimer, Buttons, PngBitBtn, szenenverwaltung;
 
 const
   samples_count:integer=1024;
@@ -18,6 +18,17 @@ const
   ChannelThresholdLevel=1000;//Grenze der minimalen Lautstärke, bei der ein Beat erkannt wird.
 
 type
+  PTreeData = ^TTreeData;
+  TTreeData = record
+    NodeType: integer; // 0 Einfache Szenen, 1 Geräteszenen, 2 Audioszenen, 3 Bewegungsszenen, 4 Befehle, 5 Kombinationsszenen, 6 Presets, 7 Automatikszenen, 8 Effekt, 9 MediaCenter Szenen
+    IsRootNode:boolean;
+    IsCatNode:boolean;
+    Caption:WideString;
+    Beschreibung:WideString;
+    Fadetime:WideString;
+    ID:TGUID;
+  end;
+
   THistArray= array[0..43] of Single;
   Tbeatform = class(TForm)
     beat_syncLabel: TLabel;
@@ -67,6 +78,22 @@ type
     Label14: TLabel;
     ComboBox1: TComboBox;
     BeatTimer: TSVATimer;
+    GroupBox3: TGroupBox;
+    editstartscenebtn: TPngBitBtn;
+    removestartscenebtn: TPngBitBtn;
+    editstopscenebtn: TPngBitBtn;
+    removestopscenebtn: TPngBitBtn;
+    Label18: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
+    Label19: TLabel;
+    Label15: TLabel;
+    timeoutedit: TJvSpinEdit;
+    Label20: TLabel;
+    Label21: TLabel;
+    TimeoutTimer: TTimer;
+    Label22: TLabel;
+    timeoutlbl: TLabel;
     procedure TemposourceboxChange(Sender: TObject);
     procedure CreateParams(var Params:TCreateParams);override;
     procedure soundcardselectChange(Sender: TObject);
@@ -107,6 +134,12 @@ type
     procedure JvSpinEdit5Change(Sender: TObject);
     procedure JvSpinEdit6Change(Sender: TObject);
     procedure ComboBox1Select(Sender: TObject);
+    procedure editstartscenebtnClick(Sender: TObject);
+    procedure editstopscenebtnClick(Sender: TObject);
+    procedure removestartscenebtnClick(Sender: TObject);
+    procedure removestopscenebtnClick(Sender: TObject);
+    procedure TimeoutTimerTimer(Sender: TObject);
+    procedure timeouteditChange(Sender: TObject);
     // Ende von BeatDetection
   private
     { Private-Deklarationen }
@@ -134,7 +167,11 @@ type
     TimeBetweenBeats:Cardinal;
     _BeatBuffer:array of Word;
     _BeatCounter:integer;
+    TimeoutCounter:integer;
+    BeatLostSceneStarted, BeatStartSceneStarted:boolean;
+    procedure MSGNew;
     procedure MSGSave;
+    procedure MSGOpen;
     procedure CalculateBeatTime;
     procedure UpdateBPM(value:extended);
   end;
@@ -160,7 +197,7 @@ begin
   BeatTimer.Enabled:=false;
   mainform.AudioIn.StopAtOnce;
   Timer1.Enabled:=false;
-  ClientHeight:=244;
+  ClientHeight:=382;
 
   checkbox1.visible:=false;
   checkbox2.visible:=false;
@@ -393,7 +430,7 @@ begin
       BeatTimer.enabled:=true;
       Channel := BASS_RecordStart(44100, 1, 0, @DuffRecording, nil);
       beatform.Timer1.Enabled:=true;
-      beatform.ClientHeight:=327;
+      beatform.ClientHeight:=462;
     end;
   end;
 
@@ -510,6 +547,9 @@ var
 begin
   TranslateComponent(self);
 
+  BeatLostSceneStarted:=false;
+  BeatStartSceneStarted:=false;
+
   // BeatDetection
   Histposition:=0;
   fWaitingTime:=300;
@@ -611,10 +651,7 @@ begin
   LReg.CloseKey;
   LReg.Free;
 
-  checkbox4.Checked:=mainform.BeatImpuls.Active;
-  JvSpinEdit4.value:=mainform.BeatImpuls.Channel;
-  JvSpinEdit5.value:=mainform.BeatImpuls.OnValue;
-  JvSpinEdit6.value:=mainform.BeatImpuls.OffValue;
+  MSGOpen;
 
   Timer1.Enabled:=true;
 end;
@@ -622,6 +659,18 @@ end;
 procedure Tbeatform.TrackBar1Change(Sender: TObject);
 begin
   beatform.AlphaBlendValue:=Trackbar1.Position;
+end;
+
+procedure Tbeatform.MSGNew;
+begin
+  mainform.BeatImpuls.Active:=false;
+  mainform.BeatImpuls.Channel:=1;
+  mainform.BeatImpuls.OnValue:=255;
+  mainform.BeatImpuls.OffValue:=0;
+  mainform.BeatImpuls.SceneOnBeatLost:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+  mainform.BeatImpuls.SceneOnBeatStart:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+  mainform.BeatImpuls.Timeout:=5;
+  MSGOpen;
 end;
 
 procedure Tbeatform.MSGSave;
@@ -654,6 +703,18 @@ begin
   end;
   LReg.CloseKey;
   LReg.Free;
+end;
+
+procedure Tbeatform.MSGOpen;
+begin
+  checkbox4.Checked:=mainform.BeatImpuls.Active;
+  JvSpinEdit4.value:=mainform.BeatImpuls.Channel;
+  JvSpinEdit5.value:=mainform.BeatImpuls.OnValue;
+  JvSpinEdit6.value:=mainform.BeatImpuls.OffValue;
+
+  label19.Caption:=mainform.GetSceneInfo2(mainform.BeatImpuls.SceneonBeatLost, 'type')+': '+mainform.GetSceneInfo2(mainform.BeatImpuls.SceneonBeatLost, 'name')+' ('+mainform.GetSceneInfo2(mainform.BeatImpuls.SceneonBeatLost, 'desc')+')';
+  label17.Caption:=mainform.GetSceneInfo2(mainform.BeatImpuls.SceneonBeatStart, 'type')+': '+mainform.GetSceneInfo2(mainform.BeatImpuls.SceneonBeatStart, 'name')+' ('+mainform.GetSceneInfo2(mainform.BeatImpuls.SceneonBeatStart, 'desc')+')';
+  timeoutedit.Value:=mainform.BeatImpuls.Timeout;
 end;
 
 procedure Tbeatform.FormHide(Sender: TObject);
@@ -1110,6 +1171,86 @@ begin
   Checkbox3.checked:=mainform.FFTDataIn[fSelectedBand].Active;
   JvSpinEdit2.Value:=mainform.FFTDataIn[fSelectedBand].Channel;
   JvSpinEdit4.Value:=mainform.FFTDataIn[fSelectedBand].Faktor;
+end;
+
+procedure Tbeatform.editstartscenebtnClick(Sender: TObject);
+var
+  SzenenData:PTreeData;
+begin
+  // Szene aus Verwaltung editieren
+  setlength(szenenverwaltung_formarray,length(szenenverwaltung_formarray)+1);
+  szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1]:=Tszenenverwaltungform.Create(self);
+  szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].multiselect:=false;
+
+  szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].positionselection:=mainform.BeatImpuls.SceneOnBeatLost;
+
+  if szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].ShowModal=mrOK then
+  begin
+    if szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].VST.SelectedCount=0 then exit;
+    SzenenData:=szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].VST.GetNodeData(szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].VST.FocusedNode);
+
+    mainform.BeatImpuls.SceneOnBeatLost:=SzenenData^.ID;
+    label19.Caption:=mainform.GetSceneInfo2(mainform.BeatImpuls.SceneOnBeatLost, 'type')+': '+mainform.GetSceneInfo2(mainform.BeatImpuls.SceneOnBeatLost, 'name')+' ('+mainform.GetSceneInfo2(mainform.BeatImpuls.SceneOnBeatLost, 'desc')+')';
+
+    szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].Free;
+    setlength(szenenverwaltung_formarray,length(szenenverwaltung_formarray)-1);
+  end;
+end;
+
+procedure Tbeatform.editstopscenebtnClick(Sender: TObject);
+var
+  SzenenData:PTreeData;
+begin
+  // Szene aus Verwaltung editieren
+  setlength(szenenverwaltung_formarray,length(szenenverwaltung_formarray)+1);
+  szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1]:=Tszenenverwaltungform.Create(self);
+  szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].multiselect:=false;
+
+  szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].positionselection:=mainform.BeatImpuls.SceneOnBeatStart;
+
+  if szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].ShowModal=mrOK then
+  begin
+    if szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].VST.SelectedCount=0 then exit;
+    SzenenData:=szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].VST.GetNodeData(szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].VST.FocusedNode);
+
+    mainform.BeatImpuls.SceneOnBeatStart:=SzenenData^.ID;
+    label17.Caption:=mainform.GetSceneInfo2(mainform.BeatImpuls.SceneOnBeatStart, 'type')+': '+mainform.GetSceneInfo2(mainform.BeatImpuls.SceneOnBeatStart, 'name')+' ('+mainform.GetSceneInfo2(mainform.BeatImpuls.SceneOnBeatStart, 'desc')+')';
+
+    szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].Free;
+    setlength(szenenverwaltung_formarray,length(szenenverwaltung_formarray)-1);
+  end;
+end;
+
+procedure Tbeatform.removestartscenebtnClick(Sender: TObject);
+begin
+  mainform.BeatImpuls.SceneOnBeatLost:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+  label19.Caption:='...';
+end;
+
+procedure Tbeatform.removestopscenebtnClick(Sender: TObject);
+begin
+  mainform.BeatImpuls.SceneOnBeatStart:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+  label17.Caption:='...';
+end;
+
+procedure Tbeatform.TimeoutTimerTimer(Sender: TObject);
+begin
+  if TimeoutCounter>0 then
+    TimeoutCounter:=TimeoutCounter-1;
+
+  timeoutlbl.caption:=inttostr(TimeoutCounter)+'s';
+
+  if (TimeoutCounter=0) and (not BeatLostSceneStarted) then
+  begin
+    mainform.StartScene(mainform.BeatImpuls.SceneOnBeatLost);
+    BeatLostSceneStarted:=true;
+    BeatStartSceneStarted:=false;
+  end;
+end;
+
+procedure Tbeatform.timeouteditChange(Sender: TObject);
+begin
+  mainform.Beatimpuls.Timeout:=round(timeoutedit.value);
 end;
 
 end.

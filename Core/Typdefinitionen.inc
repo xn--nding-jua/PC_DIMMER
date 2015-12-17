@@ -843,8 +843,9 @@
     Channel:Word;
     OnValue:byte;
     OffValue:byte;
-    Stopscene:TGUID;
-    Startscene:TGUID;
+    SceneOnBeatLost:TGUID;
+    SceneOnBeatStart:TGUID;
+    Timeout:integer;
   end;
 
   TTerminalSystem = record

@@ -3878,28 +3878,18 @@ begin
   Autoszenen[5].helligkeit:=255;
 //////////////////////
 
-  // Bühnenansicht zurücksetzen
   grafischebuehnenansicht.NewPanel;
-  // Submaster zurücksetzen
   submasterform.NewFile;
-  // Kontrollpanel zurücksetzen
   kontrollpanel.MSGNew;
-  // Effektsequenzer zurücksetzen
   effektsequenzer.NewFile;
-  // Gerätesteuerung zurücksetzen
   geraetesteuerung.NewFile;
-  // Textbuch zurücksetzen
   textbuchform.MSGNew;
-  // Cuelist zurücksetzen
   cuelistform.MSGNew;
-  // Timecodeplayer zurücksetzen
   TimeCodePlayerForm.NewFile;
-  // Infrarotsteuerung zurücksetzen
   winlircform.MSGNew;
-  // Knotensteuerung zurücksetzen
   nodecontrolform.MSGNew;
-  // Joysticksteuerung zurücksetzen
   joystickform.MSGNew;
+  beatform.MSGNew;
 
   for i:=0 to 31 do
   begin
@@ -3911,8 +3901,9 @@ begin
   BeatImpuls.Channel:=1;
   BeatImpuls.OnValue:=255;
   BeatImpuls.OffValue:=0;
-  BeatImpuls.Stopscene:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
-  BeatImpuls.Startscene:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+  BeatImpuls.SceneOnBeatLost:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+  BeatImpuls.SceneOnBeatStart:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+  BeatImpuls.Timeout:=5;
 
   ShortCutChecker.Enabled:=true;
 
@@ -5332,9 +5323,9 @@ begin
     Filestream.WriteBuffer(mainform.BeatImpuls.Channel,sizeof(mainform.BeatImpuls.Channel));
     Filestream.WriteBuffer(mainform.BeatImpuls.OnValue,sizeof(mainform.BeatImpuls.OnValue));
     Filestream.WriteBuffer(mainform.BeatImpuls.OffValue,sizeof(mainform.BeatImpuls.OffValue));
-    Filestream.WriteBuffer(mainform.BeatImpuls.Stopscene,sizeof(mainform.BeatImpuls.Stopscene));
-    Filestream.WriteBuffer(mainform.BeatImpuls.Startscene,sizeof(mainform.BeatImpuls.Startscene));
-//5333
+    Filestream.WriteBuffer(mainform.BeatImpuls.SceneOnBeatLost,sizeof(mainform.BeatImpuls.SceneOnBeatLost));
+    Filestream.WriteBuffer(mainform.BeatImpuls.SceneOnBeatStart,sizeof(mainform.BeatImpuls.SceneOnBeatStart));
+    Filestream.WriteBuffer(mainform.BeatImpuls.Timeout,sizeof(mainform.BeatImpuls.Timeout));
 // Ende BeatImpuls speichern
 // Geräteselektionen speichern
     Count:=length(DeviceSelectedIDs);
@@ -5601,6 +5592,9 @@ begin
   cuelistform.MSGNew;
   winlircform.MSGNew;
   nodecontrolform.MSGNew;
+  textbuchform.MSGNew;
+  joystickform.MSGNew;
+  beatform.MSGNew;
 
   if not OnlyProject then
   begin
@@ -8150,12 +8144,26 @@ begin
       Filestream.ReadBuffer(mainform.BeatImpuls.Channel,sizeof(mainform.BeatImpuls.Channel));
       Filestream.ReadBuffer(mainform.BeatImpuls.OnValue,sizeof(mainform.BeatImpuls.OnValue));
       Filestream.ReadBuffer(mainform.BeatImpuls.OffValue,sizeof(mainform.BeatImpuls.OffValue));
+      if projektprogrammversionint>=474 then
+      begin
+        Filestream.ReadBuffer(mainform.BeatImpuls.SceneOnBeatLost,sizeof(mainform.BeatImpuls.SceneOnBeatLost));
+        Filestream.ReadBuffer(mainform.BeatImpuls.SceneOnBeatStart,sizeof(mainform.BeatImpuls.SceneOnBeatStart));
+        Filestream.ReadBuffer(mainform.BeatImpuls.Timeout,sizeof(mainform.BeatImpuls.Timeout));
+      end else
+      begin
+        BeatImpuls.SceneOnBeatLost:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+        BeatImpuls.SceneOnBeatStart:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+        BeatImpuls.Timeout:=5;
+      end;
     end else
     begin
       BeatImpuls.Active:=false;
       BeatImpuls.Channel:=1;
       BeatImpuls.OnValue:=255;
       BeatImpuls.OffValue:=0;
+      BeatImpuls.SceneOnBeatLost:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+      BeatImpuls.SceneOnBeatStart:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+      BeatImpuls.Timeout:=5;
     end;
 // Ende BeatImpuls
 // Geräteselektionen laden
@@ -8455,6 +8463,16 @@ begin
       RefreshSplashText;
     end;
     effektsequenzer.MSGopen;
+    if not startingup then
+    begin
+      inprogress.filename.Caption:=_('Sende Öffnen-Befehl...Beattool');
+      inprogress.Refresh;
+    end else
+    begin
+      SplashCaptioninfo(_('Sende Öffnen-Befehl... Beattool'));
+      RefreshSplashText;
+    end;
+    beatform.MSGopen;
     if not startingup then
     begin
       inprogress.filename.Caption:=_('Sende Öffnen-Befehl...Gerätesteuerung');
@@ -18319,7 +18337,7 @@ begin
     end;
   end;
 
-  if not scenefound then
+  if (not scenefound) and (not IsEqualGUID(ID, StringToGUID('{00000000-0000-0000-0000-000000000000}'))) then
   begin
     scenenotfoundform.guidlbl.Caption:=GUIDtoString(ID);
     scenenotfoundform.show;
@@ -18482,7 +18500,7 @@ begin
     end;
   end;
 
-  if not scenefound then
+  if (not scenefound) and (not IsEqualGUID(ID, StringToGUID('{00000000-0000-0000-0000-000000000000}'))) then
   begin
     scenenotfoundform.guidlbl.Caption:=GUIDtoString(ID);
     scenenotfoundform.show;
@@ -25354,6 +25372,14 @@ var
   i:integer;
 begin
   // Beat ausführen
+  beatform.TimeoutCounter:=BeatImpuls.Timeout;
+  if not beatform.BeatStartSceneStarted then
+  begin
+    StartScene(BeatImpuls.SceneOnBeatStart);
+    beatform.BeatStartSceneStarted:=true;
+    beatform.BeatLostSceneStarted:=false;
+  end;
+
   if beatform.beat.Color=clMaroon then
   begin
     beatform.beat.Color:=clblack;
