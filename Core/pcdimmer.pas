@@ -3999,7 +3999,7 @@ begin
   if fastsave then fastsaved:=true;
   result:=false;
 
-  if not savewithoutprompt then
+  if (not savewithoutprompt) then
   begin
     savedialog.InitialDir:=JvComputerInfoEx1.Folders.Desktop;
     savedialog.Title:=_('PC_DIMMER Projekt speichern...');
@@ -4023,7 +4023,8 @@ begin
   inprogress.Label2.caption:=_('Projektgröße: ');
   inprogress.label8.Caption:=_(' Speichere Datei... ');
   inprogress.ProgressBar1.Position:=0;
-  inprogress.Show;
+  if not Autosave then
+    inprogress.Show;
   inprogress.Refresh;
 
   Application.ProcessMessages;
@@ -4034,11 +4035,11 @@ begin
   AutosaveProgress.Position:=0;
 
   // OpenHistory aktualisieren
-  AddToOpenHistory(projectfilepath+projectfilename);
+  if not Autosave then
+    AddToOpenHistory(projectfilepath+projectfilename);
 
   projectfilepath:=ExtractFilepath(project_file);
   projectfilename:=ExtractFileName(project_file);
-//      project_folder:=projectfilepath;
   project_folder:=userdirectory+'ProjectTemp\';
 
   inprogress.filename.Caption:=_('Sende Plugins Speichern-Befehl...');
@@ -4090,7 +4091,10 @@ begin
   AutosaveProgress.Position:=60;
   projektprogrammversion:=inttostr(actualprojectversion);//getfileversion(paramstr(0));
 
-  FileStream:=TFileStream.Create(userdirectory+'ProjectTemp\Projekt',fmCreate);
+  if Autosave then
+    FileStream:=TFileStream.Create(userdirectory+'Autobackup.pcdbkup',fmCreate)
+  else
+    FileStream:=TFileStream.Create(userdirectory+'ProjectTemp\Projekt',fmCreate);
   // Projekt-Header speichern
   inprogress.filename.Caption:=_('Schreibe Datei... Projekt-Header');
   inprogress.Refresh;
@@ -4109,7 +4113,8 @@ begin
     projektbearbeiter:=JvComputerInfoEx1.Identification.LocalUserName;
   FileStream.WriteBuffer(projektbearbeiter,256);
   if projektspeicheranzahl<>'' then
-    projektspeicheranzahl:=inttostr(strtoint(projektspeicheranzahl)+1)
+    if not Autosave then
+      projektspeicheranzahl:=inttostr(strtoint(projektspeicheranzahl)+1)
   else
     projektspeicheranzahl:='1';
   FileStream.WriteBuffer(projektspeicheranzahl,256);
@@ -5389,148 +5394,148 @@ begin
   end;
 // PartyMuckenModul speichern Ende
 // PresetSzenen speichern
-	  inprogress.filename.Caption:=_('Schreibe Datei... Preset-Szenen');
-  	inprogress.Refresh;
-    Count:=length(mainform.PresetScenes);
-	  Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
-    begin
-   	  Filestream.WriteBuffer(mainform.PresetScenes[i].ID,sizeof(mainform.PresetScenes[i].ID));
-   	  Filestream.WriteBuffer(mainform.PresetScenes[i].Name,sizeof(mainform.PresetScenes[i].Name));
-   	  Filestream.WriteBuffer(mainform.PresetScenes[i].Beschreibung,sizeof(mainform.PresetScenes[i].Beschreibung));
-   	  Filestream.WriteBuffer(mainform.PresetScenes[i].Category,sizeof(mainform.PresetScenes[i].Category));
+  inprogress.filename.Caption:=_('Schreibe Datei... Preset-Szenen');
+  inprogress.Refresh;
+  Count:=length(mainform.PresetScenes);
+  Filestream.WriteBuffer(Count,sizeof(Count));
+  for i:=0 to Count-1 do
+  begin
+    Filestream.WriteBuffer(mainform.PresetScenes[i].ID,sizeof(mainform.PresetScenes[i].ID));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].Name,sizeof(mainform.PresetScenes[i].Name));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].Beschreibung,sizeof(mainform.PresetScenes[i].Beschreibung));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].Category,sizeof(mainform.PresetScenes[i].Category));
 
-      count2:=length(mainform.PresetScenes[i].Devices);
-   	  Filestream.WriteBuffer(count2,sizeof(count2));
-      for k:=0 to count2-1 do
-     	  Filestream.WriteBuffer(mainform.PresetScenes[i].Devices[k],sizeof(mainform.PresetScenes[i].Devices[k]));
+    count2:=length(mainform.PresetScenes[i].Devices);
+    Filestream.WriteBuffer(count2,sizeof(count2));
+    for k:=0 to count2-1 do
+      Filestream.WriteBuffer(mainform.PresetScenes[i].Devices[k],sizeof(mainform.PresetScenes[i].Devices[k]));
 
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Color,sizeof(mainform.PresetScenes[i].Color));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Shutter,sizeof(mainform.PresetScenes[i].Shutter));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Dimmer,sizeof(mainform.PresetScenes[i].Dimmer));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Iris,sizeof(mainform.PresetScenes[i].Iris));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Focus,sizeof(mainform.PresetScenes[i].Focus));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].PrismaRot,sizeof(mainform.PresetScenes[i].PrismaRot));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].PrismaEnabled,sizeof(mainform.PresetScenes[i].PrismaEnabled));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Strobe,sizeof(mainform.PresetScenes[i].Strobe));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Pan,sizeof(mainform.PresetScenes[i].Pan));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Tilt,sizeof(mainform.PresetScenes[i].Tilt));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].PanFine,sizeof(mainform.PresetScenes[i].PanFine));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].TiltFine,sizeof(mainform.PresetScenes[i].TiltFine));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].Gobo,sizeof(mainform.PresetScenes[i].Gobo));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].GoboRot1,sizeof(mainform.PresetScenes[i].GoboRot1));
-      Filestream.WriteBuffer(mainform.PresetScenes[i].GoboRot2,sizeof(mainform.PresetScenes[i].GoboRot2));
-    end;
+    Filestream.WriteBuffer(mainform.PresetScenes[i].Color,sizeof(mainform.PresetScenes[i].Color));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].Shutter,sizeof(mainform.PresetScenes[i].Shutter));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].Dimmer,sizeof(mainform.PresetScenes[i].Dimmer));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].Iris,sizeof(mainform.PresetScenes[i].Iris));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].Focus,sizeof(mainform.PresetScenes[i].Focus));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].PrismaRot,sizeof(mainform.PresetScenes[i].PrismaRot));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].PrismaEnabled,sizeof(mainform.PresetScenes[i].PrismaEnabled));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].Strobe,sizeof(mainform.PresetScenes[i].Strobe));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].Pan,sizeof(mainform.PresetScenes[i].Pan));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].Tilt,sizeof(mainform.PresetScenes[i].Tilt));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].PanFine,sizeof(mainform.PresetScenes[i].PanFine));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].TiltFine,sizeof(mainform.PresetScenes[i].TiltFine));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].Gobo,sizeof(mainform.PresetScenes[i].Gobo));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].GoboRot1,sizeof(mainform.PresetScenes[i].GoboRot1));
+    Filestream.WriteBuffer(mainform.PresetScenes[i].GoboRot2,sizeof(mainform.PresetScenes[i].GoboRot2));
+  end;
 // Ende Presets
 // NodeControl speichern
-	  inprogress.filename.Caption:=_('Schreibe Datei... Knotensteuerung');
-  	inprogress.Refresh;
-    Count:=length(mainform.NodeControlSets);
-	  Filestream.WriteBuffer(Count,sizeof(Count));
-    for i:=0 to Count-1 do
+  inprogress.filename.Caption:=_('Schreibe Datei... Knotensteuerung');
+  inprogress.Refresh;
+  Count:=length(mainform.NodeControlSets);
+  Filestream.WriteBuffer(Count,sizeof(Count));
+  for i:=0 to Count-1 do
+  begin
+    Filestream.WriteBuffer(mainform.NodeControlSets[i].ID,sizeof(mainform.NodeControlSets[i].ID));
+    Filestream.WriteBuffer(mainform.NodeControlSets[i].Name,sizeof(mainform.NodeControlSets[i].Name));
+    Filestream.WriteBuffer(mainform.NodeControlSets[i].stretching,sizeof(mainform.NodeControlSets[i].stretching));
+    Filestream.WriteBuffer(mainform.NodeControlSets[i].contrast,sizeof(mainform.NodeControlSets[i].contrast));
+    Filestream.WriteBuffer(mainform.NodeControlSets[i].fadetime,sizeof(mainform.NodeControlSets[i].fadetime));
+    Filestream.WriteBuffer(mainform.NodeControlSets[i].ChangeRGB,sizeof(mainform.NodeControlSets[i].ChangeRGB));
+    Filestream.WriteBuffer(mainform.NodeControlSets[i].ChangeA,sizeof(mainform.NodeControlSets[i].ChangeA));
+    Filestream.WriteBuffer(mainform.NodeControlSets[i].ChangeW,sizeof(mainform.NodeControlSets[i].ChangeW));
+    Filestream.WriteBuffer(mainform.NodeControlSets[i].ChangeDimmer,sizeof(mainform.NodeControlSets[i].ChangeDimmer));
+    Filestream.WriteBuffer(mainform.NodeControlSets[i].StageViewScaling,sizeof(mainform.NodeControlSets[i].StageViewScaling));
+
+    count2:=length(mainform.NodeControlSets[i].NodeControlNodes);
+    Filestream.WriteBuffer(count2,sizeof(count2));
+    for k:=0 to count2-1 do
     begin
-   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].ID,sizeof(mainform.NodeControlSets[i].ID));
-   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].Name,sizeof(mainform.NodeControlSets[i].Name));
-   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].stretching,sizeof(mainform.NodeControlSets[i].stretching));
-   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].contrast,sizeof(mainform.NodeControlSets[i].contrast));
-   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].fadetime,sizeof(mainform.NodeControlSets[i].fadetime));
-   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].ChangeRGB,sizeof(mainform.NodeControlSets[i].ChangeRGB));
-   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].ChangeA,sizeof(mainform.NodeControlSets[i].ChangeA));
-   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].ChangeW,sizeof(mainform.NodeControlSets[i].ChangeW));
-   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].ChangeDimmer,sizeof(mainform.NodeControlSets[i].ChangeDimmer));
-   	  Filestream.WriteBuffer(mainform.NodeControlSets[i].StageViewScaling,sizeof(mainform.NodeControlSets[i].StageViewScaling));
-
-      count2:=length(mainform.NodeControlSets[i].NodeControlNodes);
-   	  Filestream.WriteBuffer(count2,sizeof(count2));
-      for k:=0 to count2-1 do
-     	begin
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].ID,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].ID));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Name,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Name));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].X,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].X));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Y,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Y));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Z,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Z));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].R,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].R));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].G,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].G));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].B,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].B));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].A,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].A));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].W,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].W));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Dimmer,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Dimmer));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseRGB,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseRGB));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseA,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseA));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseW,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseW));
-        Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseDimmer,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseDimmer));
-      end;
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].ID,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].ID));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Name,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Name));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].X,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].X));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Y,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Y));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Z,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Z));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].R,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].R));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].G,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].G));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].B,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].B));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].A,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].A));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].W,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].W));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].Dimmer,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].Dimmer));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseRGB,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseRGB));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseA,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseA));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseW,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseW));
+      Filestream.WriteBuffer(mainform.NodeControlSets[i].NodeControlNodes[k].UseDimmer,sizeof(mainform.NodeControlSets[i].NodeControlNodes[k].UseDimmer));
     end;
+  end;
 // Ende NodeControl
-	  inprogress.filename.Caption:=_('Schreibe Datei...');
-  	inprogress.Refresh;
-      FileStream.Free;
+  inprogress.filename.Caption:=_('Schreibe Datei...');
+  inprogress.Refresh;
+  FileStream.Free;
 
-      if not fastsave then
-      begin
-        fastsaved:=false;
-      end;
+  if (not fastsave) then
+  begin
+    fastsaved:=false;
+  end;
 
-      if (not fastsaved) and ((projectfilepath+projectfilename)<>(userdirectory+'ProjectTemp\Projekt')) then
-      begin
-	  	  inprogress.filename.Caption:='';
-        inprogress.Label1.Caption:='';
-		    inprogress.ProgressBar1.Position:=80;
-        AutosaveProgress.Position:=80;
-        inprogress.ProgressBar2.Position:=0;
-	    	inprogress.Label1.Refresh;
-	    	inprogress.Refresh;
+  if (not fastsaved) and ((projectfilepath+projectfilename)<>(userdirectory+'ProjectTemp\Projekt')) then
+  begin
+    inprogress.filename.Caption:='';
+    inprogress.Label1.Caption:='';
+    inprogress.ProgressBar1.Position:=80;
+    AutosaveProgress.Position:=80;
+    inprogress.ProgressBar2.Position:=0;
+    inprogress.Label1.Refresh;
+    inprogress.Refresh;
 
 
-        if FileExists(projectfilepath+projectfilename) then
-        begin
-  	  	  inprogress.filename.Caption:=_('Erstelle Backup-Datei "')+'~Backup of '+projectfilename+'" ...';
-  	    	inprogress.Refresh;
+    if FileExists(projectfilepath+projectfilename) then
+    begin
+      inprogress.filename.Caption:=_('Erstelle Backup-Datei "')+'~Backup of '+projectfilename+'" ...';
+      inprogress.Refresh;
 
-          // Alte Backupdatei löschen, falls vorhanden
-          if FileExists(projectfilepath+'~Backup of '+projectfilename) then
-            DeleteFile(projectfilepath+'~Backup of '+projectfilename);
-          // Alte Projektdatei umbennenen
-          renamefile(projectfilepath+projectfilename,projectfilepath+'~Backup of '+projectfilename);
-        end;
+      // Alte Backupdatei löschen, falls vorhanden
+      if FileExists(projectfilepath+'~Backup of '+projectfilename) then
+        DeleteFile(projectfilepath+'~Backup of '+projectfilename);
+      // Alte Projektdatei umbennenen
+      renamefile(projectfilepath+projectfilename,projectfilepath+'~Backup of '+projectfilename);
+    end;
 
-	  	  inprogress.filename.Caption:=_('Komprimiere Projektdatei...');
-		    inprogress.ProgressBar1.Position:=90;
-        AutosaveProgress.Position:=90;
-	    	inprogress.Refresh;
+    inprogress.filename.Caption:=_('Komprimiere Projektdatei...');
+    inprogress.ProgressBar1.Position:=90;
+    AutosaveProgress.Position:=90;
+    inprogress.Refresh;
 
 //        filesinprojectdirectory:=0;
-        filesinprojectdirectory:=CountFiles(userdirectory+'ProjectTemp\','*.*');
-        inprogress.ProgressBar2.Max:=filesinprojectdirectory;
-        inprogress.Label1.Caption:=_('Datei (1/')+inttostr(filesinprojectdirectory)+')';
-        inprogress.ProgressBar2.Position:=0;
+    filesinprojectdirectory:=CountFiles(userdirectory+'ProjectTemp\','*.*');
+    inprogress.ProgressBar2.Max:=filesinprojectdirectory;
+    inprogress.Label1.Caption:=_('Datei (1/')+inttostr(filesinprojectdirectory)+')';
+    inprogress.ProgressBar2.Position:=0;
 
-        Compress.CompressDirectory(userdirectory+'ProjectTemp\',true,projectfilepath+projectfilename);
+    Compress.CompressDirectory(userdirectory+'ProjectTemp\',true,projectfilepath+projectfilename);
 
-        // SETFILESUMMARYINFORMATIONS
-        SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_TITLE,copy(projectfilename,0,length(projectfilename)-8));
-        SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_SUBJECT,'Beleuchtungstechnik');
-        SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_AUTHOR,JvComputerInfoEx1.Identification.LocalUserName);
-        SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_COMMENTS,'Insgesamt: '+inttostr(filesinprojectdirectory)+' Dateien im Projekt. Gespeichert mit '+GetFileVersionBuild(paramstr(0)));
-        SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_APPNAME,'PC_DIMMER');
-        SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_CREATE_DTM,DateToStr(now)+' '+TimeToStr(now));
-        SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_REVNUMBER,GetFileVersion(paramstr(0)));
-        SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_PAGECOUNT,inttostr(filesinprojectdirectory));
+    // SETFILESUMMARYINFORMATIONS
+    SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_TITLE,copy(projectfilename,0,length(projectfilename)-8));
+    SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_SUBJECT,'Beleuchtungstechnik');
+    SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_AUTHOR,JvComputerInfoEx1.Identification.LocalUserName);
+    SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_COMMENTS,'Insgesamt: '+inttostr(filesinprojectdirectory)+' Dateien im Projekt. Gespeichert mit '+GetFileVersionBuild(paramstr(0)));
+    SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_APPNAME,'PC_DIMMER');
+    SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_CREATE_DTM,DateToStr(now)+' '+TimeToStr(now));
+    SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_REVNUMBER,GetFileVersion(paramstr(0)));
+    SetFileSummaryInfo(projectfilepath+projectfilename,FmtID_SummaryInformation,PID_PAGECOUNT,inttostr(filesinprojectdirectory));
 
-        SetFileSummaryInfo(projectfilepath+projectfilename,FMTID_MediaFileSummaryInformation,PIDMSI_SOURCE,'http://www.pcdimmer.de');
-        SetFileSummaryInfo(projectfilepath+projectfilename,FMTID_MediaFileSummaryInformation,PIDMSI_COPYRIGHT,'Christian Nöding');
+    SetFileSummaryInfo(projectfilepath+projectfilename,FMTID_MediaFileSummaryInformation,PIDMSI_SOURCE,'http://www.pcdimmer.de');
+    SetFileSummaryInfo(projectfilepath+projectfilename,FMTID_MediaFileSummaryInformation,PIDMSI_COPYRIGHT,'Christian Nöding');
 
-        SetFileSummaryInfo(projectfilepath+projectfilename,FMTID_DocSummaryInformation,PID_COMPANY,'PHOENIXstudios');
-        //MSIFILEINFO
-      end;
+    SetFileSummaryInfo(projectfilepath+projectfilename,FMTID_DocSummaryInformation,PID_COMPANY,'PHOENIXstudios');
+    //MSIFILEINFO
+  end;
 
-      if not saveonclosing then
-        inprogress.Hide;
-      AutosaveProgress.Visible:=false;
-      inprogress.Label1.Caption:='';
-      inprogress.Label2.caption:='';
-      inprogress.ProgressBar2.Position:=0;
-      result:=true;
+  if not saveonclosing then
+    inprogress.Hide;
+  AutosaveProgress.Visible:=false;
+  inprogress.Label1.Caption:='';
+  inprogress.Label2.caption:='';
+  inprogress.ProgressBar2.Position:=0;
+  result:=true;
 end;
 
 function TMainform.Openproject(openfile:string; OnlyProject:boolean):boolean;
@@ -19189,14 +19194,13 @@ begin
     if FileExists(userdirectory+'Autobackup.pcdbkup') then
       RenameFile(userdirectory+'Autobackup.pcdbkup',userdirectory+'Autobackup~1.pcdbkup');
 
-    saveproject(true, false, true);
+    saveproject(true, true, true);
   end;
 end;
 
 procedure TMainform.LoadAutoBackupBtnClick(Sender: TObject);
 begin
-  if recoveryform=nil then
-    recoveryform:=Trecoveryform.Create(recoveryform);
+  recoveryform:=Trecoveryform.Create(Application);
 {
   if FileExists(userdirectory+'Autobackup.pcdbkup') then
   begin
@@ -19215,10 +19219,11 @@ begin
       	CreateDir(userdirectory+'ProjectTemp');
       	CreateDir(userdirectory+'ProjectTemp\Kontrollpanel');
       end;
-      copyfile(PChar(userdirectory+recoveryform.listbox1.Items[recoveryform.listbox1.Itemindex]),PChar(userdirectory+'ProjectTemp\Projekt'),true);
+      copyfile(PChar(userdirectory+recoveryform.listbox1.Items[recoveryform.listbox1.Itemindex]),PChar(userdirectory+'ProjectTemp\Projekt'),false);
       OpenProject('',true);
     end;
   end;
+  recoveryform.Release;
 end;
 
 procedure TMainform.AutoFaderTimer(Sender: TObject);

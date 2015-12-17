@@ -118,11 +118,12 @@ begin
   if FileExists(mainform.userdirectory+'Autobackup.pcdbkup') then
     listbox1.Items.Add('Autobackup.pcdbkup');
 
-  for i:=1 to mainform.maxautobackupfiles-1 do
-  begin
+  i:=0;
+  repeat
+    i:=i+1;
     if FileExists(mainform.userdirectory+'Autobackup~'+inttostr(i)+'.pcdbkup') then
       listbox1.Items.Add('Autobackup~'+inttostr(i)+'.pcdbkup');
-  end;
+  until (FileExists(mainform.userdirectory+'Autobackup~'+inttostr(i)+'.pcdbkup')=false);
 end;
 
 procedure Trecoveryform.ListBox1MouseUp(Sender: TObject;
