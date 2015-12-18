@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-12-17 22:23\n"
-"PO-Revision-Date: 2015-12-17 22:23\n"
+"POT-Creation-Date: 2015-12-18 00:27\n"
+"PO-Revision-Date: 2015-12-18 00:27\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3131,6 +3131,10 @@ msgstr ""
 #: beatfrm.dfm:155
 #. beatform..GroupBox1..Label9..Caption
 #: beatfrm.dfm:428
+#. beatform..GroupBox3..Label17..Caption
+#: beatfrm.dfm:629
+#. beatform..GroupBox3..Label19..Caption
+#: beatfrm.dfm:637
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..Label6..Caption
 #: buehnenansicht.dfm:2510
 #. commandform..Label1..Caption
@@ -3296,9 +3300,9 @@ msgstr ""
 #. Config..Panel2..GroupBox7..TimeToSollwertLbl..Caption
 #: plugins/Programmplugins/Temperaturregler/configfrm.dfm:513
 #. GUIDtoString(ID); // Name
-#: pcdimmer.pas:22280
-#: pcdimmer.pas:22281
-#: pcdimmer.pas:22283
+#: pcdimmer.pas:20916
+#: pcdimmer.pas:20917
+#: pcdimmer.pas:20919
 msgid "..."
 msgstr ""
 
@@ -4141,8 +4145,8 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:582
 #: kontrollpanelform.pas:559
 #. Standard-Autoszenen erstellen
-#: pcdimmer.pas:3822
-#: pcdimmer.pas:25736
+#: pcdimmer.pas:3821
+#: pcdimmer.pas:24372
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1027
 msgid "Rot"
 msgstr ""
@@ -4154,8 +4158,8 @@ msgstr ""
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:585
 #: kontrollpanelform.pas:561
-#: pcdimmer.pas:3832
-#: pcdimmer.pas:25738
+#: pcdimmer.pas:3831
+#: pcdimmer.pas:24374
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1029
 msgid "Grün"
 msgstr ""
@@ -4167,8 +4171,8 @@ msgstr ""
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:587
 #: kontrollpanelform.pas:566
-#: pcdimmer.pas:3842
-#: pcdimmer.pas:25743
+#: pcdimmer.pas:3841
+#: pcdimmer.pas:24379
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1034
 msgid "Blau"
 msgstr ""
@@ -4317,7 +4321,7 @@ msgstr ""
 #: ambilight.dfm:3841
 #: ambilight.pas:1061
 #. Ambilight aus
-#: pcdimmer.pas:15703
+#: pcdimmer.pas:14339
 msgid "Ambilight einschalten"
 msgstr ""
 
@@ -4650,7 +4654,7 @@ msgstr ""
 #: Channels_Commandsystem.inc:942
 #: Channels_Commandsystem.inc:974
 #: audioeffektplayerfrm.pas:5706
-#: beatfrm.pas:486
+#: beatfrm.pas:523
 #: befehleditorform.pas:815
 #: befehleditorform.pas:875
 #: bewegungsszeneneditor.pas:503
@@ -5660,6 +5664,8 @@ msgstr ""
 #: audioszeneeditorform.dfm:316
 #. audioszeneneditor..GroupBox1..Label18..Caption
 #: audioszeneeditorform.dfm:344
+#. beatform..GroupBox3..Label21..Caption
+#: beatfrm.dfm:658
 #. befehlseditor..GroupBox1..ZeitBox..Label6..Caption
 #: befehleditorform.dfm:220
 #. befehlseditor2..GroupBox1..ZeitBox..Label6..Caption
@@ -5782,7 +5788,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Audioszene1..Caption
 #: szenenverwaltung.dfm:1445
 #. Name
-#: pcdimmer.pas:22119
+#: pcdimmer.pas:20755
 #: szenenverwaltung.pas:1528
 msgid "Audioszene"
 msgstr ""
@@ -5898,7 +5904,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Automatikszene1..Caption
 #: szenenverwaltung.dfm:1470
 #. Name
-#: pcdimmer.pas:22200
+#: pcdimmer.pas:20836
 #: szenenverwaltung.pas:1820
 msgid "Automatikszene"
 msgstr ""
@@ -6188,7 +6194,7 @@ msgstr ""
 
 #. beatform..beat_syncBtn..Caption
 #: beatfrm.dfm:282
-#: beatfrm.pas:492
+#: beatfrm.pas:529
 msgid "Beat-Sync"
 msgstr ""
 
@@ -6281,6 +6287,61 @@ msgstr ""
 #. beatform..GroupBox2..CheckBox4..Caption
 #: beatfrm.dfm:567
 msgid "Sende Kanalwert an DataIn"
+msgstr ""
+
+#. beatform..GroupBox3..Caption
+#: beatfrm.dfm:607
+#. effekttimelineform..GroupBox3..Caption
+#: effekttimelinefrm.dfm:266
+msgid " Zusatzeinstellungen "
+msgstr ""
+
+#. beatform..GroupBox3..Label18..Caption
+#: beatfrm.dfm:614
+msgid "Bei Verlust:"
+msgstr ""
+
+#. beatform..GroupBox3..Label16..Caption
+#: beatfrm.dfm:621
+msgid "Bei Beginn:"
+msgstr ""
+
+#. beatform..GroupBox3..Label15..Caption
+#: beatfrm.dfm:644
+msgid "Szenen bei Ausbleiben und bei Beginn eines Beatsignals "
+"starten:"
+msgstr ""
+
+#. beatform..GroupBox3..Label20..Caption
+#: beatfrm.dfm:651
+msgid "Timeout bis Verlust:"
+msgstr ""
+
+#. beatform..GroupBox3..Label22..Caption
+#: beatfrm.dfm:665
+msgid "Timeout in:"
+msgstr ""
+
+#. beatform..GroupBox3..timeoutlbl..Caption
+#: beatfrm.dfm:672
+msgid "5s"
+msgstr ""
+
+#. beatform..GroupBox3..editstartscenebtn..Hint
+#: beatfrm.dfm:679
+msgid "Szene bei Verlust des Beatsignals wählen"
+msgstr ""
+
+#. beatform..GroupBox3..removestartscenebtn..Hint
+#: beatfrm.dfm:808
+#. beatform..GroupBox3..removestopscenebtn..Hint
+#: beatfrm.dfm:1063
+msgid "Szene entfernen"
+msgstr ""
+
+#. beatform..GroupBox3..editstopscenebtn..Hint
+#: beatfrm.dfm:934
+msgid "Szene bei Beginn des Beatsignals wählen"
 msgstr ""
 
 #. befehlseditor..Caption
@@ -6649,7 +6710,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Befehle1..Caption
 #: szenenverwaltung.dfm:1455
 #. Name
-#: pcdimmer.pas:22156
+#: pcdimmer.pas:20792
 #: szenenverwaltung.pas:1641
 msgid "Befehl"
 msgstr ""
@@ -8353,10 +8414,10 @@ msgstr ""
 #: commandfrm.pas:276
 #: commandfrm.pas:286
 #: commandfrm.pas:296
-#: pcdimmer.pas:23191
-#: pcdimmer.pas:23202
-#: pcdimmer.pas:23217
-#: pcdimmer.pas:23234
+#: pcdimmer.pas:21827
+#: pcdimmer.pas:21838
+#: pcdimmer.pas:21853
+#: pcdimmer.pas:21870
 msgid "Kommando hier eingeben..."
 msgstr ""
 
@@ -11004,10 +11065,10 @@ msgstr ""
 #: geraetesteuerungfrm.pas:2921
 #: geraetesteuerungfrm.pas:2936
 #. Name
-#: pcdimmer.pas:22104
-#: pcdimmer.pas:26493
+#: pcdimmer.pas:20740
+#: pcdimmer.pas:25129
 #. Werte einfügen
-#: pcdimmer.pas:26590
+#: pcdimmer.pas:25226
 #: szenenverwaltung.pas:1415
 #. Geräteszene
 #: szenenverwaltung.pas:4031
@@ -11610,7 +11671,7 @@ msgstr ""
 #: touchscreenfrm.dfm:387
 #: devicelistfrm.pas:120
 #: nodecontrolfrm.pas:174
-#: pcdimmer.pas:23587
+#: pcdimmer.pas:22223
 #: preseteditorform.pas:857
 #: preseteditorform.pas:859
 #: presetsceneeditorform.pas:583
@@ -11867,8 +11928,8 @@ msgstr ""
 #: devicechannelselectionfrm.pas:1943
 #: devicescenefrm.pas:2434
 #: insscene.pas:289
-#: pcdimmer.pas:12709
-#: pcdimmer.pas:12711
+#: pcdimmer.pas:11345
+#: pcdimmer.pas:11347
 #: SetNames.pas:83
 #: plugins/Programmplugins/Alt/Kontrollpanel/insscene.pas:242
 #: plugins/Programmplugins/Alt/Leistungsplugin/settingfrm.pas:351
@@ -12288,7 +12349,7 @@ msgstr ""
 #. alle Effekte bis zur aktuellen Position abspielen
 #: audioeffektplayerfrm.pas:6137
 #: audioeffektplayerfrm.pas:6160
-#: pcdimmer.pas:22230
+#: pcdimmer.pas:20866
 #: szenenverwaltung.pas:2064
 msgid "Effekt"
 msgstr ""
@@ -12686,11 +12747,6 @@ msgstr ""
 #. effekttimelineform..GroupBox2..timeline_scrollbar..Hint
 #: effekttimelinefrm.dfm:250
 msgid "Timeline"
-msgstr ""
-
-#. effekttimelineform..GroupBox3..Caption
-#: effekttimelinefrm.dfm:266
-msgid " Zusatzeinstellungen "
 msgstr ""
 
 #. effekttimelineform..GroupBox3..Label16..Caption
@@ -13449,7 +13505,7 @@ msgstr ""
 #. firststepsform..Notebook1....GroupBox8..CheckBox5..Caption
 #: firststepsfrm.dfm:8714
 #: devicelistfrm.pas:117
-#: pcdimmer.pas:23583
+#: pcdimmer.pas:22219
 msgid "Farbrad"
 msgstr ""
 
@@ -16035,7 +16091,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..EinfacheSzene1..Caption
 #: szenenverwaltung.dfm:1435
 #. Name
-#: pcdimmer.pas:22089
+#: pcdimmer.pas:20725
 #: szenenverwaltung.pas:1373
 msgid "Einfache Szene"
 msgstr ""
@@ -16628,7 +16684,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Kompositionsszene1..Caption
 #: szenenverwaltung.dfm:1460
 #. Name
-#: pcdimmer.pas:22170
+#: pcdimmer.pas:20806
 #: szenenverwaltung.pas:1699
 msgid "Kombinationsszene"
 msgstr ""
@@ -16856,7 +16912,7 @@ msgstr ""
 #: pcdimmer.dfm:1662
 #. mainform..Panel1..ComboBox1....Items.Strings
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:472
-#: pcdimmer.pas:27144
+#: pcdimmer.pas:25788
 msgid "<Leer>"
 msgstr ""
 
@@ -17405,7 +17461,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:581
 #: kontrollpanelform.pas:563
 #: nodecontrolfrm.pas:169
-#: pcdimmer.pas:25740
+#: pcdimmer.pas:24376
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1031
 msgid "Weiß"
 msgstr ""
@@ -17918,7 +17974,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..MediaCenterSzene1..Caption
 #: szenenverwaltung.dfm:1475
 #. Name
-#: pcdimmer.pas:22244
+#: pcdimmer.pas:20880
 #: szenenverwaltung.pas:1910
 msgid "MediaCenter Szene"
 msgstr ""
@@ -18326,7 +18382,7 @@ msgstr ""
 #. pmmform..GroupBox3..usergbcheck..Caption
 #: pmm.dfm:6076
 #: devicelistfrm.pas:119
-#: pcdimmer.pas:23585
+#: pcdimmer.pas:22221
 msgid "RGB"
 msgstr ""
 
@@ -18932,9 +18988,9 @@ msgstr ""
 #. OptionenBox..Notebook1....sounddevices..Hint
 #: Optionen.dfm:1011
 #. Aufnahmegeräte für Beat-Detection initialisieren
-#: beatfrm.pas:410
+#: beatfrm.pas:447
 #. Aufnahmegeräte für Beat-Detection initialisieren
-#: beatfrm.pas:443
+#: beatfrm.pas:480
 msgid "Soundkarte: "
 msgstr ""
 
@@ -19523,7 +19579,7 @@ msgstr ""
 
 #. MainForm..dxRibbonStatusBar1......Text
 #: pcdimmer.dfm:319
-#: pcdimmer.pas:15594
+#: pcdimmer.pas:14230
 msgid "1 Einschalten"
 msgstr ""
 
@@ -19732,7 +19788,7 @@ msgstr ""
 #: plugins/Programmplugins/SoftScanner/aboutfrm.dfm:5
 #. About..Caption
 #: plugins/Programmplugins/Temperaturregler/aboutfrm.dfm:5
-#: pcdimmer.pas:13605
+#: pcdimmer.pas:12241
 msgid "Info..."
 msgstr ""
 
@@ -20745,10 +20801,8 @@ msgstr ""
 #: pcdimmer.dfm:18679
 #. MainForm..dxBarManager1..New2RibbonBtn..Hint
 #: pcdimmer.dfm:18681
-#: pcdimmer.pas:3704
-#: pcdimmer.pas:4103
-#. inprogress.filename.Caption:=_('Schreibe Datei... Projekt-Header');
-#: pcdimmer.pas:5594
+#: pcdimmer.pas:3703
+#: pcdimmer.pas:4099
 msgid "Neues Projekt"
 msgstr ""
 
@@ -23453,8 +23507,8 @@ msgstr ""
 #. splashscreen2..Label2..Caption
 #: splashscreen2frm.dfm:729
 #. Splashscreen anzeigen
-#: pcdimmer.pas:1708
-#: pcdimmer.pas:1722
+#: pcdimmer.pas:1707
+#: pcdimmer.pas:1721
 msgid "Initialisiere Anwendung..."
 msgstr ""
 
@@ -23612,7 +23666,7 @@ msgstr ""
 
 #. szenenverwaltungform..PopupMenu1..Bewegungsszene1..Caption
 #: szenenverwaltung.dfm:1450
-#: pcdimmer.pas:22142
+#: pcdimmer.pas:20778
 #: szenenverwaltung.pas:1570
 msgid "Bewegungsszene"
 msgstr ""
@@ -23620,7 +23674,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Preset1..Caption
 #: szenenverwaltung.dfm:1465
 #. Name
-#: pcdimmer.pas:22185
+#: pcdimmer.pas:20821
 msgid "Preset"
 msgstr ""
 
@@ -24161,15 +24215,15 @@ msgstr ""
 
 #. frmInternetUpdateFound..Panel2..Button1..Caption
 #: UpdateFoundFormD4.dfm:169
-#: pcdimmer.pas:10451
-#: pcdimmer.pas:10472
+#: pcdimmer.pas:9087
+#: pcdimmer.pas:9108
 msgid "&Ja"
 msgstr ""
 
 #. frmInternetUpdateFound..Panel2..Button2..Caption
 #: UpdateFoundFormD4.dfm:187
-#: pcdimmer.pas:10451
-#: pcdimmer.pas:10472
+#: pcdimmer.pas:9087
+#: pcdimmer.pas:9108
 msgid "&Nein"
 msgstr ""
 
@@ -30898,7 +30952,7 @@ msgstr ""
 #: lauflichtassistentfrm.pas:923
 #: lauflichtassistentownpatternfrm.pas:264
 #: matrixeditorfrm.pas:236
-#: pcdimmer.pas:26050
+#: pcdimmer.pas:24686
 msgid "n/a"
 msgstr ""
 
@@ -30979,21 +31033,21 @@ msgstr ""
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:583
 #: kontrollpanelform.pas:560
-#: pcdimmer.pas:3852
-#: pcdimmer.pas:25737
+#: pcdimmer.pas:3851
+#: pcdimmer.pas:24373
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1028
 msgid "Gelb"
 msgstr ""
 
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:584
-#: pcdimmer.pas:3872
+#: pcdimmer.pas:3871
 msgid "Violett"
 msgstr ""
 
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:586
-#: pcdimmer.pas:3862
+#: pcdimmer.pas:3861
 msgid "Orange"
 msgstr ""
 
@@ -32501,7 +32555,7 @@ msgstr ""
 #. Master
 #: befehleditorform.pas:846
 #. Grandmaster abfragen
-#: pcdimmer.pas:15505
+#: pcdimmer.pas:14141
 msgid "Grandmaster setzen"
 msgstr ""
 
@@ -32517,7 +32571,7 @@ msgstr ""
 #: Channels_Commandsystem.inc:243
 #: befehleditorform.pas:848
 #. Flashmaster auf abfragen
-#: pcdimmer.pas:15520
+#: pcdimmer.pas:14156
 msgid "Flashmaster setzen"
 msgstr ""
 
@@ -32532,7 +32586,7 @@ msgstr ""
 
 #: Channels_Commandsystem.inc:264
 #. Speedmaster abfragen
-#: pcdimmer.pas:15535
+#: pcdimmer.pas:14171
 msgid "Speedmaster setzen"
 msgstr ""
 
@@ -32546,7 +32600,7 @@ msgstr ""
 
 #: Channels_Commandsystem.inc:285
 #. Audiomaster abfragen
-#: pcdimmer.pas:15550
+#: pcdimmer.pas:14186
 msgid "Audiomaster setzen"
 msgstr ""
 
@@ -33540,7 +33594,7 @@ msgstr ""
 #: adddevicefrm.pas:803
 #: geraetesteuerungfrm.pas:1565
 #: geraetesteuerungfrm.pas:4700
-#: pcdimmer.pas:14250
+#: pcdimmer.pas:12886
 msgid "Fertig."
 msgstr ""
 
@@ -33756,9 +33810,9 @@ msgid "Möchten Sie das Ambilight einschalten?"
 msgstr ""
 
 #: ambilight.pas:1065
-#: pcdimmer.pas:13825
+#: pcdimmer.pas:12461
 #. Ambilight ein
-#: pcdimmer.pas:15697
+#: pcdimmer.pas:14333
 msgid "Ambilight ausschalten"
 msgstr ""
 
@@ -33856,7 +33910,7 @@ msgid "Bewegungsszene starten"
 msgstr ""
 
 #: audioeffektplayerfrm.pas:2073
-#: pcdimmer.pas:22140
+#: pcdimmer.pas:20776
 msgid "Unbegrenzt"
 msgstr ""
 
@@ -33891,7 +33945,7 @@ msgid "Automatikszene starten"
 msgstr ""
 
 #: audioeffektplayerfrm.pas:2186
-#: pcdimmer.pas:22227
+#: pcdimmer.pas:20863
 msgid "Unendlich"
 msgstr ""
 
@@ -33917,13 +33971,13 @@ msgstr ""
 
 #: audioeffektplayerfrm.pas:2320
 #: audioeffektplayerfrm.pas:4920
-#: pcdimmer.pas:9999
+#: pcdimmer.pas:8635
 msgid "Die Audiodatei \""
 msgstr ""
 
 #: audioeffektplayerfrm.pas:2320
 #: audioeffektplayerfrm.pas:4920
-#: pcdimmer.pas:9999
+#: pcdimmer.pas:8635
 msgid "\" wurde nicht gefunden. Möchten Sie jetzt danach "
 "suchen?"
 msgstr ""
@@ -33935,7 +33989,7 @@ msgstr ""
 
 #: audioeffektplayerfrm.pas:2324
 #: audioeffektplayerfrm.pas:4924
-#: pcdimmer.pas:10003
+#: pcdimmer.pas:8639
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:915
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1000
 msgid "Audiodatei öffnen"
@@ -34219,11 +34273,11 @@ msgstr ""
 msgid "B.3.2"
 msgstr ""
 
-#: beatfrm.pas:453
+#: beatfrm.pas:490
 msgid "] AUDIO: Setting up Audio-Input..."
 msgstr ""
 
-#: beatfrm.pas:456
+#: beatfrm.pas:493
 msgid "Audio-Eingang: "
 msgstr ""
 
@@ -34543,14 +34597,14 @@ msgstr ""
 #: buehnenansicht.pas:1513
 #: buehnenansicht.pas:1839
 #. Kanalnummer ändern
-#: pcdimmer.pas:25395
+#: pcdimmer.pas:24031
 msgid "Kanaleinstellung"
 msgstr ""
 
 #: buehnenansicht.pas:1494
 #: buehnenansicht.pas:1513
 #: buehnenansicht.pas:1839
-#: pcdimmer.pas:25395
+#: pcdimmer.pas:24031
 msgid "Welcher Kanal soll für dieses Gerät "
 "gelten:"
 msgstr ""
@@ -34637,7 +34691,7 @@ msgid "aber entriegelt"
 msgstr ""
 
 #: codeeditorfrm.pas:203
-#: pcdimmer.pas:10890
+#: pcdimmer.pas:9526
 #. mainform.DeleteDir(mainform.userdirectory+''+NodePath(TreeView1.Selected));
 #: projektverwaltungfrm.pas:342
 msgid "Die Datei \""
@@ -35003,13 +35057,13 @@ msgstr ""
 #: devicelistfrm.pas:111
 #: geraetesteuerungfrm.pas:4376
 #. HEADER
-#: pcdimmer.pas:23577
+#: pcdimmer.pas:22213
 #: reordergroupfrm.pas:138
 msgid "Gerätename"
 msgstr ""
 
 #: devicelistfrm.pas:112
-#: pcdimmer.pas:23578
+#: pcdimmer.pas:22214
 #: reordergroupfrm.pas:141
 msgid "Hersteller"
 msgstr ""
@@ -35019,18 +35073,18 @@ msgid "P [W]"
 msgstr ""
 
 #: devicelistfrm.pas:116
-#: pcdimmer.pas:23582
+#: pcdimmer.pas:22218
 #: plugins/Programmplugins/Alt/Leistungsplugin/settingfrm.pas:352
 msgid "Phase"
 msgstr ""
 
 #: devicelistfrm.pas:118
-#: pcdimmer.pas:23584
+#: pcdimmer.pas:22220
 msgid "Pan/Tilt"
 msgstr ""
 
 #: devicelistfrm.pas:121
-#: pcdimmer.pas:23588
+#: pcdimmer.pas:22224
 msgid "Autoscening"
 msgstr ""
 
@@ -35633,12 +35687,12 @@ msgstr ""
 #: geraetesteuerungfrm.pas:3141
 #: insscene.pas:492
 #: konsolensteuerungfrm.pas:391
-#: pcdimmer.pas:2137
-#: pcdimmer.pas:3760
+#: pcdimmer.pas:2136
+#: pcdimmer.pas:3759
 #. Ungerade Kanäle
-#: pcdimmer.pas:12719
+#: pcdimmer.pas:11355
 #. Gerade Kanäle
-#: pcdimmer.pas:12722
+#: pcdimmer.pas:11358
 #: SetNames.pas:58
 #: SetNames.pas:59
 msgid "Kanal "
@@ -35802,8 +35856,8 @@ msgid "Sie können maximal 255 Zeichen eingeben"
 msgstr ""
 
 #: insscene.pas:290
-#: pcdimmer.pas:12710
-#: pcdimmer.pas:12712
+#: pcdimmer.pas:11346
+#: pcdimmer.pas:11348
 #: SetNames.pas:84
 #: plugins/Programmplugins/Alt/Kontrollpanel/insscene.pas:243
 #: plugins/Programmplugins/Alt/Leistungsplugin/settingfrm.pas:354
@@ -35937,12 +35991,12 @@ msgid "PC_DIMMER Joystick-Einstellungen öffnen"
 msgstr ""
 
 #: kanaluebersichtfrm.pas:477
-#: pcdimmer.pas:25634
+#: pcdimmer.pas:24270
 msgid "Kanalwert ändern"
 msgstr ""
 
 #: kanaluebersichtfrm.pas:477
-#: pcdimmer.pas:25634
+#: pcdimmer.pas:24270
 msgid "Bitte geben Sie einen neuen Endwert "
 "an:"
 msgstr ""
@@ -36013,19 +36067,19 @@ msgid "Fehler beim Zugriff auf die Datei \""
 msgstr ""
 
 #: kontrollpanelform.pas:562
-#: pcdimmer.pas:25739
+#: pcdimmer.pas:24375
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1030
 msgid "Schwarz"
 msgstr ""
 
 #: kontrollpanelform.pas:564
-#: pcdimmer.pas:25741
+#: pcdimmer.pas:24377
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1032
 msgid "Grau"
 msgstr ""
 
 #: kontrollpanelform.pas:565
-#: pcdimmer.pas:25742
+#: pcdimmer.pas:24378
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1033
 msgid "Rosa"
 msgstr ""
@@ -36431,50 +36485,50 @@ msgstr ""
 msgid "Pluginscenes"
 msgstr ""
 
-#: pcdimmer.pas:1746
+#: pcdimmer.pas:1745
 msgid "The PC_DIMMER does not have a languagefile for your language "
 "\""
 msgstr ""
 
-#: pcdimmer.pas:1746
+#: pcdimmer.pas:1745
 msgid "\". The PC_DIMMER will start in English "
 "now..."
 msgstr ""
 
-#: pcdimmer.pas:1811
+#: pcdimmer.pas:1810
 msgid "Sie haben während des Startens die linke Shift-Taste gedrückt.\n"
 "\n\n"
 "Soll das Laden der letzten Projektdatei verhindert "
 "werden?"
 msgstr ""
 
-#: pcdimmer.pas:1819
+#: pcdimmer.pas:1818
 msgid "Sie haben während des Startens die rechte Shift-Taste gedrückt.\n"
 "\n\n"
 "Soll der Start der Akkukontrolle verhindert "
 "werden?"
 msgstr ""
 
-#: pcdimmer.pas:1913
+#: pcdimmer.pas:1912
 msgid "Startwerte..."
 msgstr ""
 
 #. MessageDlg('PC_DIMMER kann nicht auf die Protokolldatei "PC_DIMMER.log" zugreifen!', mtError, [mbOk], 0);
-#: pcdimmer.pas:1927
-#: pcdimmer.pas:1934
+#: pcdimmer.pas:1926
+#: pcdimmer.pas:1933
 msgid "Fehler in Protokolldatei"
 msgstr ""
 
-#: pcdimmer.pas:1930
+#: pcdimmer.pas:1929
 msgid "PC_DIMMER kann nicht auf die Protokolldatei \"PC_DIMMER.log\" "
 "zugreifen!"
 msgstr ""
 
-#: pcdimmer.pas:1975
+#: pcdimmer.pas:1974
 msgid "Registrywerte auslesen"
 msgstr ""
 
-#: pcdimmer.pas:1999
+#: pcdimmer.pas:1998
 msgid "Die Ausführungs-Priorität des PC_DIMMERs liegt unterhalb von "
 "\"Normal\".\n"
 "\n"
@@ -36484,355 +36538,355 @@ msgid "Die Ausführungs-Priorität des PC_DIMMERs liegt unterhalb von "
 "\"Höher\"."
 msgstr ""
 
-#: pcdimmer.pas:2125
+#: pcdimmer.pas:2124
 msgid "Konfiguration öffnen"
 msgstr ""
 
-#: pcdimmer.pas:2131
+#: pcdimmer.pas:2130
 msgid "Oberfläche vorbereiten..."
 msgstr ""
 
-#: pcdimmer.pas:2155
+#: pcdimmer.pas:2154
 msgid "Plugins suchen..."
 msgstr ""
 
-#: pcdimmer.pas:2190
+#: pcdimmer.pas:2189
 msgid "Outputplugin: "
 msgstr ""
 
-#: pcdimmer.pas:2201
+#: pcdimmer.pas:2200
 msgid "Programmplugin: "
 msgstr ""
 
-#: pcdimmer.pas:2227
+#: pcdimmer.pas:2226
 msgid "Es sind keine Ausgabeplugins installiert.\n"
 "\n"
 "Plugins sind auf der Website \"http://downloads.pcdimmer.de\" kostenlos "
 "herunterladbar."
 msgstr ""
 
-#: pcdimmer.pas:2247
+#: pcdimmer.pas:2246
 msgid "Audiosystem einrichten..."
 msgstr ""
 
-#: pcdimmer.pas:2256
+#: pcdimmer.pas:2255
 msgid "Die Datei \"bass.dll\" liegt in einer falschen Version "
 "("
 msgstr ""
 
-#: pcdimmer.pas:2256
+#: pcdimmer.pas:2255
 msgid ") statt "
 msgstr ""
 
-#: pcdimmer.pas:2256
+#: pcdimmer.pas:2255
 msgid " vor."
 msgstr ""
 
-#: pcdimmer.pas:2273
+#: pcdimmer.pas:2272
 msgid "Power-Button deaktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:2296
+#: pcdimmer.pas:2295
 msgid "Hauptfenster erstellen..."
 msgstr ""
 
-#: pcdimmer.pas:3060
+#: pcdimmer.pas:3059
 msgid "Möchten Sie wirklich alle Einstellungen des PC_DIMMERs "
 "zurücksetzen?"
 msgstr ""
 
-#: pcdimmer.pas:3094
+#: pcdimmer.pas:3093
 msgid " Beende PC_DIMMER... "
 msgstr ""
 
-#: pcdimmer.pas:3102
+#: pcdimmer.pas:3101
 msgid "Bereite Shutdown vor..."
 msgstr ""
 
 #. Program-Plugins deaktivieren
-#: pcdimmer.pas:3353
+#: pcdimmer.pas:3352
 #. Input-Plugins deaktivieren
-#: pcdimmer.pas:12800
+#: pcdimmer.pas:11436
 msgid "Deaktiviere Input-Plugin "
 msgstr ""
 
 #. FreeLibrary(InputDLL[i]);
-#: pcdimmer.pas:3377
+#: pcdimmer.pas:3376
 msgid "Hinweis: Das Deaktivieren der Programmplugins ist in den Optionen "
 "deaktiviert.Dies ist nur für Testzwecke zu empfehlen. Bitte die "
 "Einstellungen kontrollieren."
 msgstr ""
 
 #. Output-Plugin deaktivieren
-#: pcdimmer.pas:3393
+#: pcdimmer.pas:3392
 msgid "Deaktiviere Output-Plugin "
 msgstr ""
 
-#: pcdimmer.pas:3403
-#: pcdimmer.pas:12810
+#: pcdimmer.pas:3402
+#: pcdimmer.pas:11446
 msgid "Das Plugin \""
 msgstr ""
 
-#: pcdimmer.pas:3403
-#: pcdimmer.pas:12810
+#: pcdimmer.pas:3402
+#: pcdimmer.pas:11446
 msgid "\" hat einen Fehler beim Deaktivieren "
 "gemeldet."
 msgstr ""
 
-#: pcdimmer.pas:3413
+#: pcdimmer.pas:3412
 msgid "Hinweis: Das Deaktivieren der Ausgabeplugins ist in den Optionen "
 "deaktiviert.Dies ist nur für Testzwecke zu empfehlen. Bitte die "
 "Einstellungen kontrollieren."
 msgstr ""
 
-#: pcdimmer.pas:3425
+#: pcdimmer.pas:3424
 msgid "Schreibe Konfigurationsdatei..."
 msgstr ""
 
 #. Pluginreferenzen entfernen
-#: pcdimmer.pas:3498
-#: pcdimmer.pas:12820
+#: pcdimmer.pas:3497
+#: pcdimmer.pas:11456
 msgid "Entferne DLL-Referenzen..."
 msgstr ""
 
-#: pcdimmer.pas:3518
+#: pcdimmer.pas:3517
 msgid "Entferne Fenster..."
 msgstr ""
 
 #. Wait for accu thread to stop
-#: pcdimmer.pas:3523
+#: pcdimmer.pas:3522
 msgid "Stopping accu thread..."
 msgstr ""
 
-#: pcdimmer.pas:3617
+#: pcdimmer.pas:3616
 msgid "Beende Programm..."
 msgstr ""
 
 #. Oberfläche resetten
-#: pcdimmer.pas:3717
+#: pcdimmer.pas:3716
 msgid " - [Neues Projekt]"
 msgstr ""
 
 #. 'Neue Audiodatei...' setzen
-#: pcdimmer.pas:3772
-#: pcdimmer.pas:10016
+#: pcdimmer.pas:3771
+#: pcdimmer.pas:8652
 msgid "Neue Audiodatei..."
 msgstr ""
 
-#: pcdimmer.pas:3823
+#: pcdimmer.pas:3822
 msgid "Setzt alle Geräte mit aktiviertem Autoscening auf "
 "Rot"
 msgstr ""
 
-#: pcdimmer.pas:3833
+#: pcdimmer.pas:3832
 msgid "Setzt alle Geräte mit aktiviertem Autoscening auf "
 "Grün"
 msgstr ""
 
-#: pcdimmer.pas:3843
+#: pcdimmer.pas:3842
 msgid "Setzt alle Geräte mit aktiviertem Autoscening auf "
 "Blau"
 msgstr ""
 
-#: pcdimmer.pas:3853
+#: pcdimmer.pas:3852
 msgid "Setzt alle Geräte mit aktiviertem Autoscening auf "
 "Gelb"
 msgstr ""
 
-#: pcdimmer.pas:3863
+#: pcdimmer.pas:3862
 msgid "Setzt alle Geräte mit aktiviertem Autoscening auf "
 "Orange"
 msgstr ""
 
-#: pcdimmer.pas:3873
+#: pcdimmer.pas:3872
 msgid "Setzt alle Geräte mit aktiviertem Autoscening auf "
 "Violett"
 msgstr ""
 
-#: pcdimmer.pas:4004
+#: pcdimmer.pas:3996
 msgid "PC_DIMMER Projekt speichern..."
 msgstr ""
 
-#: pcdimmer.pas:4005
-#: pcdimmer.pas:10870
+#: pcdimmer.pas:3997
+#: pcdimmer.pas:9506
 msgid "PC_DIMMER Projekt (*.pcdproj)|*.pcdproj|*.*|*.*"
 msgstr ""
 
 #. Anzeigen vorbereiten
-#: pcdimmer.pas:4020
+#: pcdimmer.pas:4012
 msgid "Speichere Projekt..."
 msgstr ""
 
-#: pcdimmer.pas:4021
+#: pcdimmer.pas:4013
 msgid "Bereite Speicherung vor..."
 msgstr ""
 
+#: pcdimmer.pas:4014
 #: pcdimmer.pas:4022
-#: pcdimmer.pas:4029
 msgid "Projektgröße: "
 msgstr ""
 
-#: pcdimmer.pas:4023
-#: pcdimmer.pas:12211
+#: pcdimmer.pas:4015
+#: pcdimmer.pas:10847
 msgid " Speichere Datei... "
 msgstr ""
 
-#: pcdimmer.pas:4043
+#: pcdimmer.pas:4036
 msgid "Sende Plugins Speichern-Befehl..."
 msgstr ""
 
-#: pcdimmer.pas:4063
+#: pcdimmer.pas:4056
 msgid "Sammle Hauptprogrammdaten..."
 msgstr ""
 
-#: pcdimmer.pas:4086
+#: pcdimmer.pas:4079
 #. Ende NodeControl
 #: pcdimmer.pas:5461
 msgid "Schreibe Datei..."
 msgstr ""
 
 #. Projekt-Header speichern
-#: pcdimmer.pas:4094
+#: pcdimmer.pas:4090
 msgid "Schreibe Datei... Projekt-Header"
 msgstr ""
 
 #. Effektaudio speichern
-#: pcdimmer.pas:4117
+#: pcdimmer.pas:4114
 msgid "Schreibe Datei... Audioeffektplayer"
 msgstr ""
 
 #. Projekteinstellungen speichern
-#: pcdimmer.pas:4219
+#: pcdimmer.pas:4216
 msgid "Schreibe Datei... Projekteinstellungen"
 msgstr ""
 
 #. Figuren speichern
-#: pcdimmer.pas:4252
+#: pcdimmer.pas:4249
 msgid "Schreibe Datei... Figuren"
 msgstr ""
 
 #. Einfache-, Bewegungs- und Audioszenen, sowie Befehle speichern
-#: pcdimmer.pas:4273
+#: pcdimmer.pas:4270
 msgid "Schreibe Datei... Szenen"
 msgstr ""
 
 #. Timeline speichern
-#: pcdimmer.pas:4407
+#: pcdimmer.pas:4404
 msgid "Schreibe Datei... Timeline"
 msgstr ""
 
 #. Skripttimer speichern
-#: pcdimmer.pas:4428
+#: pcdimmer.pas:4425
 msgid "Schreibe Datei... Skripttimer"
 msgstr ""
 
 #. Hotkeys speichern
-#: pcdimmer.pas:4437
+#: pcdimmer.pas:4434
 msgid "Schreibe Datei... Hotkeys"
 msgstr ""
 
 #. Nebelmaschineneinstellungen
-#: pcdimmer.pas:4475
+#: pcdimmer.pas:4472
 msgid "Schreibe Datei... Nebelmaschine"
 msgstr ""
 
 #. Geräte speichern
-#: pcdimmer.pas:4481
+#: pcdimmer.pas:4478
 msgid "Schreibe Datei... Geräte"
 msgstr ""
 
 #. Presets speichern
-#: pcdimmer.pas:4648
+#: pcdimmer.pas:4645
 msgid "Schreibe Datei... Presets"
 msgstr ""
 
 #. Geräteszenen speichern
-#: pcdimmer.pas:4686
+#: pcdimmer.pas:4683
 msgid "Schreibe Datei... Geräteszenen"
 msgstr ""
 
 #. Gruppen speichern
-#: pcdimmer.pas:4775
+#: pcdimmer.pas:4772
 msgid "Schreibe Datei... Gerätegruppen"
 msgstr ""
 
 #. Softpatch speichern
-#: pcdimmer.pas:4801
+#: pcdimmer.pas:4798
 msgid "Schreibe Datei... Softpatch"
 msgstr ""
 
 #. Effekte speichern
-#: pcdimmer.pas:4830
+#: pcdimmer.pas:4827
 msgid "Schreibe Datei... Effekte"
 msgstr ""
 
 #. Bühnenansicht speichern
-#: pcdimmer.pas:4932
+#: pcdimmer.pas:4929
 msgid "Schreibe Datei... Bühnenansicht"
 msgstr ""
 
 #. Desktopproperties speichern
-#: pcdimmer.pas:4971
+#: pcdimmer.pas:4968
 msgid "Schreibe Datei... Desktopeinstellungen"
 msgstr ""
 
 #. Joystickeinstellungen Speichern
-#: pcdimmer.pas:4993
+#: pcdimmer.pas:4990
 msgid "Schreibe Datei... Joystickeinstellungen"
 msgstr ""
 
 #. Kontrollpanel speichern
-#: pcdimmer.pas:5027
+#: pcdimmer.pas:5024
 msgid "Schreibe Datei... Kontrollpanel"
 msgstr ""
 
 #. MIDI-IN Event speichern
-#: pcdimmer.pas:5053
+#: pcdimmer.pas:5050
 msgid "Schreibe Datei... MIDI-In"
 msgstr ""
 
 #. Data-IN Event speichern
-#: pcdimmer.pas:5088
+#: pcdimmer.pas:5085
 msgid "Schreibe Datei... Data-In"
 msgstr ""
 
 #. Leistungsdaten speichern
-#: pcdimmer.pas:5119
+#: pcdimmer.pas:5116
 msgid "Schreibe Datei... Leistungssteuerung"
 msgstr ""
 
 #. Autoszenen speichern
-#: pcdimmer.pas:5138
+#: pcdimmer.pas:5135
 msgid "Schreibe Datei... Autoszenen"
 msgstr ""
 
 #. Submaster (neu) speichern
-#: pcdimmer.pas:5169
+#: pcdimmer.pas:5166
 msgid "Schreibe Datei... Submaster"
 msgstr ""
 
 #. Cue-Liste speichern
-#: pcdimmer.pas:5223
+#: pcdimmer.pas:5220
 msgid "Schreibe Datei... Cueliste"
 msgstr ""
 
 #. Timecodeplayer-Liste speichern
-#: pcdimmer.pas:5250
+#: pcdimmer.pas:5247
 msgid "Schreibe Datei... Timecodeplayer"
 msgstr ""
 
 #. IR FB speichern
-#: pcdimmer.pas:5270
+#: pcdimmer.pas:5267
 msgid "Schreibe Datei... IR Fernbedienung"
 msgstr ""
 
 #. MediaCenter Szenen speichern
-#: pcdimmer.pas:5285
+#: pcdimmer.pas:5282
 msgid "Schreibe Datei... MediaCenter Szenen"
 msgstr ""
 
 #. Plugin Szenen speichern
-#: pcdimmer.pas:5305
+#: pcdimmer.pas:5302
 msgid "Schreibe Datei... Pluginszenen"
 msgstr ""
 
@@ -36857,142 +36911,136 @@ msgstr ""
 #. filesinprojectdirectory:=0;
 #: pcdimmer.pas:5501
 #. ShowMessage('Informationen über aktuelle Projektdatei:'+#13#10#13#10+GetFileSummaryInfo(Openfilepath+Openfilename));
-#: pcdimmer.pas:7013
+#: pcdimmer.pas:5625
 msgid "Datei (1/"
 msgstr ""
 
-#. inprogress.filename.Caption:='Schreibe Datei...';
-#: pcdimmer.pas:6917
-msgid "Das Autobackup konnte nicht erstellt "
-"werden..."
-msgstr ""
-
-#: pcdimmer.pas:6999
+#: pcdimmer.pas:5611
 msgid "Achtung: Sie versuchen eine Datei als Projekt zu öffnen, die nicht "
 "die Endung \"pcdproj\" besitzt!"
 msgstr ""
 
-#: pcdimmer.pas:7033
-#: pcdimmer.pas:14134
+#: pcdimmer.pas:5645
+#: pcdimmer.pas:12770
 msgid "Lade Projekt..."
 msgstr ""
 
-#: pcdimmer.pas:7034
+#: pcdimmer.pas:5646
 msgid " Öffne Datei... "
 msgstr ""
 
-#: pcdimmer.pas:7046
-#: pcdimmer.pas:7051
+#: pcdimmer.pas:5658
+#: pcdimmer.pas:5663
 msgid "Sende Öffnen-Befehl...Plugins"
 msgstr ""
 
 #. hier aus Datei in Records schreiben
-#: pcdimmer.pas:7066
-#: pcdimmer.pas:9720
+#: pcdimmer.pas:5678
+#: pcdimmer.pas:8346
 msgid "Lese Daten ein..."
 msgstr ""
 
 #. Projekt-Header öffnen
-#: pcdimmer.pas:7080
+#: pcdimmer.pas:5692
 msgid "Lese Daten ein... Projekt-Header"
 msgstr ""
 
-#: pcdimmer.pas:7084
+#: pcdimmer.pas:5696
 msgid "Lese Daten ein...Projekt-Header"
 msgstr ""
 
 #. Version vor 4.x
-#: pcdimmer.pas:7122
-#: pcdimmer.pas:7133
+#: pcdimmer.pas:5734
+#: pcdimmer.pas:5745
 msgid "Projektdatei zurückgewiesen"
 msgstr ""
 
-#: pcdimmer.pas:7123
-#: pcdimmer.pas:9731
+#: pcdimmer.pas:5735
+#: pcdimmer.pas:8357
 msgid "Die Projektdatei ist veraltet"
 msgstr ""
 
-#: pcdimmer.pas:7125
+#: pcdimmer.pas:5737
 msgid "Aufgrund großer Änderungen am Projektformat können die bisherigen "
 "Projekte leider nicht weiter verwendet werden. Zum Teil können "
 "Programmteile über die jeweilige Speicherfunktion exportiert und "
 "reimportiert werden."
 msgstr ""
 
-#: pcdimmer.pas:7127
-#: pcdimmer.pas:7153
-#: pcdimmer.pas:7179
-#: pcdimmer.pas:9735
-#: pcdimmer.pas:9759
+#: pcdimmer.pas:5739
+#: pcdimmer.pas:5765
+#: pcdimmer.pas:5791
+#: pcdimmer.pas:8361
+#: pcdimmer.pas:8385
 msgid "Projektversion: "
 msgstr ""
 
-#: pcdimmer.pas:7128
-#: pcdimmer.pas:9736
-#: pcdimmer.pas:9760
+#: pcdimmer.pas:5740
+#: pcdimmer.pas:8362
+#: pcdimmer.pas:8386
 msgid "Datum: "
 msgstr ""
 
-#: pcdimmer.pas:7129
-#: pcdimmer.pas:9737
-#: pcdimmer.pas:9761
+#: pcdimmer.pas:5741
+#: pcdimmer.pas:8363
+#: pcdimmer.pas:8387
 msgid "Uhrzeit: "
 msgstr ""
 
 #. Hinweise zu neueren Projekten, als diese Programmversion
-#: pcdimmer.pas:7145
+#: pcdimmer.pas:5757
 msgid "Projekt einer neueren Programmversion"
 msgstr ""
 
-#: pcdimmer.pas:7146
+#: pcdimmer.pas:5758
 msgid "Das Projekt wurde mit einer neueren PC_DIMMER Version "
 "gespeichert."
 msgstr ""
 
-#: pcdimmer.pas:7148
+#: pcdimmer.pas:5760
 msgid "Die zu ladende Projektdatei wurde mit einer neueren PC_DIMMER-Version "
 "gespeichert und kann mit der aktuellen Version nicht fehlerfrei "
 "geöffnet werden."
 msgstr ""
 
-#: pcdimmer.pas:7150
+#: pcdimmer.pas:5762
 msgid "Bitte laden Sie sich eine aktuelle Version des PC_DIMMERs von der "
 "Seite http://www.pcdimmer.de herunter."
 msgstr ""
 
-#: pcdimmer.pas:7154
-#: pcdimmer.pas:7180
+#: pcdimmer.pas:5766
+#: pcdimmer.pas:5792
 msgid "Projektdatum: "
 msgstr ""
 
-#: pcdimmer.pas:7155
-#: pcdimmer.pas:7181
+#: pcdimmer.pas:5767
+#: pcdimmer.pas:5793
 msgid "Projektzeit: "
 msgstr ""
 
-#: pcdimmer.pas:7159
-#: pcdimmer.pas:7185
+#: pcdimmer.pas:5771
+#: pcdimmer.pas:5797
 msgid "Hinweis..."
 msgstr ""
 
 #. Hinweise zu älteren Projekten
-#: pcdimmer.pas:7171
+#: pcdimmer.pas:5783
 msgid "Projekt einer früheren Programmversion"
 msgstr ""
 
-#: pcdimmer.pas:7172
+#: pcdimmer.pas:5784
 msgid "Das Projekt wurde mit einer älteren PC_DIMMER Version "
 "gespeichert."
 msgstr ""
 
-#: pcdimmer.pas:7174
+#: pcdimmer.pas:5786
 msgid "Die zu ladende Projektdatei wurde mit einer älteren PC_DIMMER-Version "
 "gespeichert. Die Projektdatei wird beim nächsten Speichervorgang "
 "automatisch konvertiert und als neue Version "
 "abgespeichert."
 msgstr ""
 
-#: pcdimmer.pas:7176
+#: pcdimmer.pas:5788
 msgid "Nach der Konvertierung kann das Projekt nicht mehr in einer älteren "
 "Version des PC_DIMMERs geladen werden. Möchten Sie parallel eine "
 "ältere PC_DIMMER-Version benutzen, sollten Sie eine Sicherungskopie "
@@ -37000,400 +37048,408 @@ msgid "Nach der Konvertierung kann das Projekt nicht mehr in einer älteren "
 "anfertigen."
 msgstr ""
 
-#: pcdimmer.pas:7179
+#: pcdimmer.pas:5791
 msgid " (wird bei nächster Speicherung konvertiert zu Projektversion "
 msgstr ""
 
 #. Effektaudio laden
-#: pcdimmer.pas:7197
+#: pcdimmer.pas:5809
 msgid "Lese Daten ein... Audioeffektplayer"
 msgstr ""
 
-#: pcdimmer.pas:7201
+#: pcdimmer.pas:5813
 msgid "Lese Daten ein...Audioeffektplayer"
 msgstr ""
 
 #. Lese Projekteinstellungen
-#: pcdimmer.pas:7368
+#: pcdimmer.pas:5980
 msgid "Lese Daten ein... Projekteinstellungen"
 msgstr ""
 
-#: pcdimmer.pas:7372
+#: pcdimmer.pas:5984
 msgid "Lese Daten ein...Projekteinstellungen"
 msgstr ""
 
 #. Lese Figurendaten
-#: pcdimmer.pas:7423
+#: pcdimmer.pas:6035
 msgid "Lese Daten ein... Figuren"
 msgstr ""
 
-#: pcdimmer.pas:7428
+#: pcdimmer.pas:6040
 msgid "Lese Daten ein...Figuren"
 msgstr ""
 
 #. Einfache-, Bewegungs- und Audioszenen, sowie Befehle öffnen
-#: pcdimmer.pas:7455
+#: pcdimmer.pas:6067
 msgid "Lese Daten ein... Szenen"
 msgstr ""
 
-#: pcdimmer.pas:7459
+#: pcdimmer.pas:6071
 msgid "Lese Daten ein...Szenen"
 msgstr ""
 
 #. Timeline öffnen
-#: pcdimmer.pas:7749
+#: pcdimmer.pas:6361
 msgid "Lese Daten ein... Timeline"
 msgstr ""
 
-#: pcdimmer.pas:7753
+#: pcdimmer.pas:6365
 msgid "Lese Daten ein...Timeline"
 msgstr ""
 
 #. Skripttimer öffnen
-#: pcdimmer.pas:7778
+#: pcdimmer.pas:6390
 msgid "Lese Daten ein... Skripttimer"
 msgstr ""
 
-#: pcdimmer.pas:7782
+#: pcdimmer.pas:6394
 msgid "Lese Daten ein...Skripttimer"
 msgstr ""
 
 #. Hotkeys öffnen
-#: pcdimmer.pas:7794
+#: pcdimmer.pas:6406
 msgid "Lese Daten ein... Hotkeys"
 msgstr ""
 
-#: pcdimmer.pas:7799
+#: pcdimmer.pas:6411
 msgid "Lese Daten ein...Hotkeys"
 msgstr ""
 
 #. Nebelmaschineneinstellungen laden
-#: pcdimmer.pas:7887
+#: pcdimmer.pas:6499
 msgid "Lese Daten ein... Nebelmaschine"
 msgstr ""
 
-#: pcdimmer.pas:7891
+#: pcdimmer.pas:6503
 msgid "Lese Daten ein...Nebelmaschine"
 msgstr ""
 
 #. Geräte öffnen
-#: pcdimmer.pas:7899
+#: pcdimmer.pas:6511
 msgid "Lese Daten ein... Geräte"
 msgstr ""
 
-#: pcdimmer.pas:7903
+#: pcdimmer.pas:6515
 msgid "Lese Daten ein...Geräte"
 msgstr ""
 
-#: pcdimmer.pas:7930
+#: pcdimmer.pas:6542
 msgid "Konv. Kalibrierung"
 msgstr ""
 
-#: pcdimmer.pas:7942
+#: pcdimmer.pas:6554
 msgid "Konv. Verfolgerkalib."
 msgstr ""
 
 #. Presets öffnen
-#: pcdimmer.pas:8206
+#: pcdimmer.pas:6818
 msgid "Lese Daten ein... Presets"
 msgstr ""
 
-#: pcdimmer.pas:8210
+#: pcdimmer.pas:6822
 msgid "Lese Daten ein...Presets"
 msgstr ""
 
 #. Geräteszenen öffnen
-#: pcdimmer.pas:8262
+#: pcdimmer.pas:6874
 msgid "Lese Daten ein... Geräteszenen"
 msgstr ""
 
-#: pcdimmer.pas:8267
+#: pcdimmer.pas:6879
 msgid "Lese Daten ein...Geräteszenen"
 msgstr ""
 
 #. Gruppen öffnen
-#: pcdimmer.pas:8396
+#: pcdimmer.pas:7008
 msgid "Lese Daten... Gerätegruppen"
 msgstr ""
 
-#: pcdimmer.pas:8400
+#: pcdimmer.pas:7012
 msgid "Lese Daten ein...Gerätegruppen"
 msgstr ""
 
 #. Softpatch öffnen
-#: pcdimmer.pas:8446
+#: pcdimmer.pas:7058
 msgid "Lese Daten ein... Softpatch"
 msgstr ""
 
-#: pcdimmer.pas:8450
+#: pcdimmer.pas:7062
 msgid "Lese Daten ein...Softpatch"
 msgstr ""
 
 #. Effekte Öffnen
-#: pcdimmer.pas:8488
-#: pcdimmer.pas:8492
+#: pcdimmer.pas:7100
+#: pcdimmer.pas:7104
 msgid "Lese Daten ein... Effekte"
 msgstr ""
 
 #. Bühnenansicht öffnen
-#: pcdimmer.pas:8659
-#: pcdimmer.pas:8664
+#: pcdimmer.pas:7271
+#: pcdimmer.pas:7276
 msgid "Lese Daten ein... Bühnenansicht"
 msgstr ""
 
 #. Desktopproperties öffnen
-#: pcdimmer.pas:8735
-#: pcdimmer.pas:8739
+#: pcdimmer.pas:7347
+#: pcdimmer.pas:7351
 msgid "Lese Daten ein... Desktopeinstellungen"
 msgstr ""
 
 #. Joystickeinstellungen öffnen
-#: pcdimmer.pas:8769
-#: pcdimmer.pas:8773
+#: pcdimmer.pas:7381
+#: pcdimmer.pas:7385
 msgid "Lese Daten ein... Joystickeinstellungen"
 msgstr ""
 
 #. Kontrollpanel öffnen
-#: pcdimmer.pas:8860
-#: pcdimmer.pas:8864
+#: pcdimmer.pas:7472
+#: pcdimmer.pas:7476
 msgid "Lese Daten ein... Kontrollpanel"
 msgstr ""
 
 #. MIDI-IN Event öffnen
-#: pcdimmer.pas:8949
-#: pcdimmer.pas:8954
+#: pcdimmer.pas:7561
+#: pcdimmer.pas:7566
 msgid "Lese Daten ein... MIDI Einstellungen"
 msgstr ""
 
 #. Data-IN Event öffnen
-#: pcdimmer.pas:9030
-#: pcdimmer.pas:9034
+#: pcdimmer.pas:7642
+#: pcdimmer.pas:7646
 msgid "Lese Daten ein... DataIn Einstellungen"
 msgstr ""
 
 #. Leistungsdaten öffnen
-#: pcdimmer.pas:9098
-#: pcdimmer.pas:9102
+#: pcdimmer.pas:7710
+#: pcdimmer.pas:7714
 msgid "Lese Daten ein... Leistungssteuerung"
 msgstr ""
 
 #. Autoszenen öffnen
-#: pcdimmer.pas:9142
-#: pcdimmer.pas:9146
+#: pcdimmer.pas:7754
+#: pcdimmer.pas:7758
 msgid "Lese Daten ein... Automatikszenen"
 msgstr ""
 
 #. Textbuch
-#: pcdimmer.pas:9170
-#: pcdimmer.pas:9175
+#: pcdimmer.pas:7782
+#: pcdimmer.pas:7787
 msgid "Lese Daten ein... Textbuch"
 msgstr ""
 
 #. MIDI-DirectSending
-#: pcdimmer.pas:9188
-#: pcdimmer.pas:9192
+#: pcdimmer.pas:7800
+#: pcdimmer.pas:7804
 msgid "Lese Daten ein... MIDI-Informationen"
 msgstr ""
 
 #. Submaster
-#: pcdimmer.pas:9217
-#: pcdimmer.pas:9221
+#: pcdimmer.pas:7829
+#: pcdimmer.pas:7833
 msgid "Lese Daten ein... Submaster"
 msgstr ""
 
-#: pcdimmer.pas:9334
-#: pcdimmer.pas:9338
+#: pcdimmer.pas:7946
+#: pcdimmer.pas:7950
 msgid "Lese Daten ein... Cue-Liste"
 msgstr ""
 
 #. Timecodeplayer-Liste laden
-#: pcdimmer.pas:9404
-#: pcdimmer.pas:9408
+#: pcdimmer.pas:8016
+#: pcdimmer.pas:8020
 msgid "Lese Daten ein... Timecodeplayer"
 msgstr ""
 
 #. IR FB laden
-#: pcdimmer.pas:9436
-#: pcdimmer.pas:9440
+#: pcdimmer.pas:8048
+#: pcdimmer.pas:8052
 msgid "Lese Daten ein... IR Fernbedienung"
 msgstr ""
 
 #. MediaCenter Szenen laden
-#: pcdimmer.pas:9461
-#: pcdimmer.pas:9465
+#: pcdimmer.pas:8073
+#: pcdimmer.pas:8077
 msgid "Lese Daten ein... MediaCenter Szenen"
 msgstr ""
 
 #. Plugin Szenen laden
-#: pcdimmer.pas:9492
-#: pcdimmer.pas:9496
+#: pcdimmer.pas:8104
+#: pcdimmer.pas:8108
 msgid "Lese Daten ein... Pluginszenen"
 msgstr ""
 
 #. PresetSzenen öffnen
-#: pcdimmer.pas:9615
+#: pcdimmer.pas:8241
 msgid "Lese Daten ein... Preset-Szenen"
 msgstr ""
 
-#: pcdimmer.pas:9619
+#: pcdimmer.pas:8245
 msgid "Lese Daten ein...Preset-Szenen"
 msgstr ""
 
 #. NodeControl laden
-#: pcdimmer.pas:9660
+#: pcdimmer.pas:8286
 msgid "Lese Daten ein... Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:9664
+#: pcdimmer.pas:8290
 msgid "Lese Daten ein...Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:9713
+#: pcdimmer.pas:8339
 msgid "Lese Daten ein... Fertig."
 msgstr ""
 
-#: pcdimmer.pas:9718
+#: pcdimmer.pas:8344
 msgid "Lese Daten ein...Fertig."
 msgstr ""
 
 #. MessageDlg('Die Projektdatei ist in einem alten Format. Bitte nutzen Sie die Projektkonvertierung, um das Projekt in die neue Version zu konvertieren.'+#10+#10+'Projektversion: '+projektprogrammversion+#10+'Datum: '+projektdatum+#10+'Uhrzeit: '+projektuhrzeit, mtError, [mbOk], 0);
-#: pcdimmer.pas:9730
-#: pcdimmer.pas:9743
-#: pcdimmer.pas:9754
-#: pcdimmer.pas:9767
+#: pcdimmer.pas:8356
+#: pcdimmer.pas:8369
+#: pcdimmer.pas:8380
+#: pcdimmer.pas:8393
 msgid "Fehler in Projektdatei"
 msgstr ""
 
-#: pcdimmer.pas:9733
+#: pcdimmer.pas:8359
 msgid "Die Projektdatei ist in einem alten Format. Bitte nutzen Sie die "
 "Projektkonvertierung, um das Projekt in die neue Version zu "
 "konvertieren."
 msgstr ""
 
-#: pcdimmer.pas:9739
-#: pcdimmer.pas:9763
+#: pcdimmer.pas:8365
+#: pcdimmer.pas:8389
 msgid "Letzte Meldung: "
 msgstr ""
 
-#: pcdimmer.pas:9755
+#: pcdimmer.pas:8381
 msgid "Projektdatei konnte aufgrund eines Fehlers nicht geöffnet "
 "werden..."
 msgstr ""
 
-#: pcdimmer.pas:9757
+#: pcdimmer.pas:8383
 msgid "Die Projektdatei ist möglicherweise beschädigt, oder in einem "
 "falschen Format! Senden Sie das Projekt bitte an das "
 "PC_DIMMER-Team."
 msgstr ""
 
-#: pcdimmer.pas:9818
+#: pcdimmer.pas:8444
 msgid "Sende Öffnen-Befehl...Kontrollpanel"
 msgstr ""
 
-#: pcdimmer.pas:9823
+#: pcdimmer.pas:8449
 msgid "Sende Öffnen-Befehl... Kontrollpanel"
 msgstr ""
 
-#: pcdimmer.pas:9830
+#: pcdimmer.pas:8456
 msgid "Sende Öffnen-Befehl...Effektsequenzer"
 msgstr ""
 
-#: pcdimmer.pas:9835
+#: pcdimmer.pas:8461
 msgid "Sende Öffnen-Befehl... Effektsequenzer"
 msgstr ""
 
-#: pcdimmer.pas:9842
+#: pcdimmer.pas:8468
+msgid "Sende Öffnen-Befehl...Beattool"
+msgstr ""
+
+#: pcdimmer.pas:8472
+msgid "Sende Öffnen-Befehl... Beattool"
+msgstr ""
+
+#: pcdimmer.pas:8478
 msgid "Sende Öffnen-Befehl...Gerätesteuerung"
 msgstr ""
 
-#: pcdimmer.pas:9846
+#: pcdimmer.pas:8482
 msgid "Sende Öffnen-Befehl... Gerätesteuerung"
 msgstr ""
 
-#: pcdimmer.pas:9853
+#: pcdimmer.pas:8489
 msgid "Sende Öffnen-Befehl...Submaster"
 msgstr ""
 
-#: pcdimmer.pas:9858
+#: pcdimmer.pas:8494
 msgid "Sende Öffnen-Befehl... Submaster"
 msgstr ""
 
-#: pcdimmer.pas:9865
+#: pcdimmer.pas:8501
 msgid "Sende Öffnen-Befehl...Grafische Bühnenansicht"
 msgstr ""
 
-#: pcdimmer.pas:9869
+#: pcdimmer.pas:8505
 msgid "Sende Öffnen-Befehl... Bühnenansicht"
 msgstr ""
 
-#: pcdimmer.pas:9875
+#: pcdimmer.pas:8511
 msgid "Sende Öffnen-Befehl...Audioeffektplayer"
 msgstr ""
 
-#: pcdimmer.pas:9879
+#: pcdimmer.pas:8515
 msgid "Sende Öffnen-Befehl... Audioeffektplayer"
 msgstr ""
 
-#: pcdimmer.pas:9884
+#: pcdimmer.pas:8520
 msgid "Sende Öffnen-Befehl...Textbuch"
 msgstr ""
 
-#: pcdimmer.pas:9889
+#: pcdimmer.pas:8525
 msgid "Sende Öffnen-Befehl... Textbuch"
 msgstr ""
 
-#: pcdimmer.pas:9897
+#: pcdimmer.pas:8533
 msgid "Sende Öffnen-Befehl...Cue-List"
 msgstr ""
 
-#: pcdimmer.pas:9901
+#: pcdimmer.pas:8537
 msgid "Sende Öffnen-Befehl... Cue-List"
 msgstr ""
 
-#: pcdimmer.pas:9908
+#: pcdimmer.pas:8544
 msgid "Sende Öffnen-Befehl...Timecodeplayer"
 msgstr ""
 
-#: pcdimmer.pas:9912
+#: pcdimmer.pas:8548
 msgid "Sende Öffnen-Befehl... Timecodeplayer"
 msgstr ""
 
-#: pcdimmer.pas:9919
+#: pcdimmer.pas:8555
 msgid "Sende Öffnen-Befehl...IR Steuerung"
 msgstr ""
 
-#: pcdimmer.pas:9923
+#: pcdimmer.pas:8559
 msgid "Sende Öffnen-Befehl... IR Steuerung"
 msgstr ""
 
-#: pcdimmer.pas:9937
+#: pcdimmer.pas:8573
 msgid "Sende Öffnen-Befehl...Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:9941
+#: pcdimmer.pas:8577
 msgid "Sende Öffnen-Befehl... Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:9948
-#: pcdimmer.pas:9953
+#: pcdimmer.pas:8584
+#: pcdimmer.pas:8589
 msgid "Aktualisiere Hauptprogramm"
 msgstr ""
 
-#: pcdimmer.pas:9954
+#: pcdimmer.pas:8590
 msgid "Sende Öffnen-Befehl..."
 msgstr ""
 
-#: pcdimmer.pas:9966
+#: pcdimmer.pas:8602
 msgid " - [Nicht gespeichertes Projekt]"
 msgstr ""
 
-#: pcdimmer.pas:10002
+#: pcdimmer.pas:8638
 msgid "Audiodateien (*.wav;*.mp3)|*.wav;*.mp3|All files "
 "(*.*)|*.*"
 msgstr ""
 
-#: pcdimmer.pas:10044
-#: pcdimmer.pas:10054
+#: pcdimmer.pas:8680
+#: pcdimmer.pas:8690
 #: schedulerfrm.pas:171
 #: schedulerfrm.pas:181
 #: schedulerfrm.pas:266
@@ -37406,8 +37462,8 @@ msgstr ""
 msgid "<EINMALIG>    "
 msgstr ""
 
-#: pcdimmer.pas:10045
-#: pcdimmer.pas:10055
+#: pcdimmer.pas:8681
+#: pcdimmer.pas:8691
 #: schedulerfrm.pas:172
 #: schedulerfrm.pas:182
 #: schedulerfrm.pas:267
@@ -37419,8 +37475,8 @@ msgstr ""
 msgid "<TÄGLICH>     "
 msgstr ""
 
-#: pcdimmer.pas:10046
-#: pcdimmer.pas:10056
+#: pcdimmer.pas:8682
+#: pcdimmer.pas:8692
 #: schedulerfrm.pas:173
 #: schedulerfrm.pas:183
 #: schedulerfrm.pas:268
@@ -37432,8 +37488,8 @@ msgstr ""
 msgid "<WÖCHENTLICH> "
 msgstr ""
 
-#: pcdimmer.pas:10047
-#: pcdimmer.pas:10057
+#: pcdimmer.pas:8683
+#: pcdimmer.pas:8693
 #: schedulerfrm.pas:174
 #: schedulerfrm.pas:184
 #: schedulerfrm.pas:269
@@ -37445,8 +37501,8 @@ msgstr ""
 msgid "<MONATLICH>   "
 msgstr ""
 
-#: pcdimmer.pas:10047
-#: pcdimmer.pas:10057
+#: pcdimmer.pas:8683
+#: pcdimmer.pas:8693
 #: schedulerfrm.pas:174
 #: schedulerfrm.pas:184
 #: schedulerfrm.pas:269
@@ -37458,8 +37514,8 @@ msgstr ""
 msgid "jeden"
 msgstr ""
 
-#: pcdimmer.pas:10048
-#: pcdimmer.pas:10058
+#: pcdimmer.pas:8684
+#: pcdimmer.pas:8694
 #: schedulerfrm.pas:175
 #: schedulerfrm.pas:185
 #: schedulerfrm.pas:270
@@ -37471,36 +37527,36 @@ msgstr ""
 msgid "<JÄHRLICH>    "
 msgstr ""
 
-#: pcdimmer.pas:10220
+#: pcdimmer.pas:8856
 msgid "Scheduler: Warten... (Noch "
 msgstr ""
 
-#: pcdimmer.pas:10222
+#: pcdimmer.pas:8858
 msgid "Scheduler im Leerlauf..."
 msgstr ""
 
-#: pcdimmer.pas:10225
+#: pcdimmer.pas:8861
 msgid "Scheduler: Deaktiviert"
 msgstr ""
 
-#: pcdimmer.pas:10390
+#: pcdimmer.pas:9026
 msgid "PC_DIMMER Change log..."
 msgstr ""
 
-#: pcdimmer.pas:10391
+#: pcdimmer.pas:9027
 msgid "PHOENIXstudios PC_DIMMER"
 msgstr ""
 
-#: pcdimmer.pas:10392
+#: pcdimmer.pas:9028
 msgid "Keep looking on http://www.pcdimmer.de for "
 "updates"
 msgstr ""
 
-#: pcdimmer.pas:10439
+#: pcdimmer.pas:9075
 msgid "PC_DIMMER jetzt beenden?"
 msgstr ""
 
-#: pcdimmer.pas:10447
+#: pcdimmer.pas:9083
 msgid "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Die "
 "Projektdatei wurde noch nicht aktualisiert.\n"
 "Sämtliche Änderungen könnten durch einen Klick auf \"Neues Projekt\" "
@@ -37509,24 +37565,24 @@ msgid "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Die "
 "Datei: \""
 msgstr ""
 
-#: pcdimmer.pas:10449
-#: pcdimmer.pas:10471
+#: pcdimmer.pas:9085
+#: pcdimmer.pas:9107
 msgid "Möchten Sie das aktuelle Projekt vor dem Beenden "
 "speichern?"
 msgstr ""
 
-#: pcdimmer.pas:10451
-#: pcdimmer.pas:10472
+#: pcdimmer.pas:9087
+#: pcdimmer.pas:9108
 msgid "&Fastsave"
 msgstr ""
 
-#: pcdimmer.pas:10451
-#: pcdimmer.pas:10472
+#: pcdimmer.pas:9087
+#: pcdimmer.pas:9108
 msgid "&Abbrechen"
 msgstr ""
 
 #. case messagedlg(text,mtConfirmation,[mbYes,mbNo,mbCancel],0) of
-#: pcdimmer.pas:10469
+#: pcdimmer.pas:9105
 msgid "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Es wurde "
 "noch keine externe Projektdatei erzeugt.\n"
 "Sämtliche Daten könnten derzeit durch einen Klick auf \"Neues Projekt\" "
@@ -37537,104 +37593,104 @@ msgid "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Es wurde "
 msgstr ""
 
 #. messagedlg('Der Ein-/Aus-Schalter am Computergehäuse ist jetzt deaktiviert.'+#13#10#13#10+'Beim kurzen(!) Drücken auf diesen Schalter wird Windows bei Computern mit ATX-Netzteil NICHT heruntergefahren.',mtInformation,[mbOK],0)
-#: pcdimmer.pas:10501
-#: pcdimmer.pas:10511
+#: pcdimmer.pas:9137
+#: pcdimmer.pas:9147
 msgid "Ein-/Ausschalter deaktiviert"
 msgstr ""
 
-#: pcdimmer.pas:10504
+#: pcdimmer.pas:9140
 msgid "Der Ein-/Aus-Schalter am Computergehäuse ist jetzt "
 "deaktiviert."
 msgstr ""
 
-#: pcdimmer.pas:10506
+#: pcdimmer.pas:9142
 msgid "Beim kurzen(!) Drücken auf diesen Schalter wird Windows bei Computern "
 "mit ATX-Netzteil NICHT heruntergefahren."
 msgstr ""
 
 #. messagedlg('Der Ein-/Aus-Schalter am Computergehäuse ist wieder aktiviert.'+#13#10#13#10+'Durch Drücken dieser Taste wird Windows jetzt wieder heruntergefahren.',mtInformation,[mbOK],0)
-#: pcdimmer.pas:10519
+#: pcdimmer.pas:9155
 msgid "Ein-/Ausschalter aktiviert"
 msgstr ""
 
-#: pcdimmer.pas:10522
+#: pcdimmer.pas:9158
 msgid "Der Ein-/Aus-Schalter am Computergehäuse ist wieder "
 "aktiviert."
 msgstr ""
 
-#: pcdimmer.pas:10524
+#: pcdimmer.pas:9160
 msgid "Durch Drücken dieser Taste wird Windows jetzt wieder "
 "heruntergefahren."
 msgstr ""
 
-#: pcdimmer.pas:10528
+#: pcdimmer.pas:9164
 msgid "Ein/-Ausschalter aktiviert"
 msgstr ""
 
-#: pcdimmer.pas:10813
+#: pcdimmer.pas:9449
 msgid "Bildschirmhelligkeit: "
 msgstr ""
 
-#: pcdimmer.pas:10830
+#: pcdimmer.pas:9466
 msgid "Aktuelles Projekt speichern?"
 msgstr ""
 
-#: pcdimmer.pas:10869
+#: pcdimmer.pas:9505
 msgid "PC_DIMMER Projekt öffnen..."
 msgstr ""
 
-#: pcdimmer.pas:10890
+#: pcdimmer.pas:9526
 msgid "\" ist nicht mehr verfügbar!"
 msgstr ""
 
 #. Ladezustand der Batterie
-#: pcdimmer.pas:11052
+#: pcdimmer.pas:9688
 msgid "Unbekannter Status"
 msgstr ""
 
-#: pcdimmer.pas:11054
-#: pcdimmer.pas:11095
+#: pcdimmer.pas:9690
+#: pcdimmer.pas:9731
 msgid "Es existiert kein Akku"
 msgstr ""
 
-#: pcdimmer.pas:11058
+#: pcdimmer.pas:9694
 msgid "Hoher Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:11059
+#: pcdimmer.pas:9695
 msgid "Niedriger Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:11060
+#: pcdimmer.pas:9696
 msgid "Kritischer Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:11062
+#: pcdimmer.pas:9698
 msgid "Unbekannter Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:11065
+#: pcdimmer.pas:9701
 msgid " - Akku wird geladen"
 msgstr ""
 
 #. Vista Progressbar Workaround
-#: pcdimmer.pas:12164
+#: pcdimmer.pas:10800
 msgid " Fortschritt: "
 msgstr ""
 
-#: pcdimmer.pas:12174
+#: pcdimmer.pas:10810
 msgid " Lade Datei... "
 msgstr ""
 
-#: pcdimmer.pas:12177
-#: pcdimmer.pas:12202
+#: pcdimmer.pas:10813
+#: pcdimmer.pas:10838
 msgid "Dekomprimiere: "
 msgstr ""
 
 #. Vista Progressbar Workaround
-#: pcdimmer.pas:12187
+#: pcdimmer.pas:10823
 #. Vista Progressbar Workaround
-#: pcdimmer.pas:12222
+#: pcdimmer.pas:10858
 #. Vista Progressbar Workaround
 #: projektverwaltungfrm.pas:375
 #. Vista Progressbar Workaround
@@ -37642,69 +37698,69 @@ msgstr ""
 msgid "Datei ("
 msgstr ""
 
-#: pcdimmer.pas:12198
+#: pcdimmer.pas:10834
 msgid "Dekomprimiere ("
 msgstr ""
 
-#: pcdimmer.pas:12214
+#: pcdimmer.pas:10850
 msgid "Komprimiere: "
 msgstr ""
 
 #. inprogress.Hide;
-#: pcdimmer.pas:12236
+#: pcdimmer.pas:10872
 msgid "Projekt vollständig geladen"
 msgstr ""
 
-#: pcdimmer.pas:12272
+#: pcdimmer.pas:10908
 msgid "Zeigt beim Starten keinen Splashscreen an "
 "[ALT-Taste]"
 msgstr ""
 
-#: pcdimmer.pas:12273
+#: pcdimmer.pas:10909
 msgid "Wahl zwischen zwei verschiedenen Ladebildschirmen"
 msgstr ""
 
-#: pcdimmer.pas:12274
+#: pcdimmer.pas:10910
 msgid "Zeigt beim Starten die Logdatei an."
 msgstr ""
 
-#: pcdimmer.pas:12275
+#: pcdimmer.pas:10911
 msgid "Verhindert den Start des Akku-Dienstes [Rechte "
 "SHIFT-Taste]"
 msgstr ""
 
-#: pcdimmer.pas:12276
+#: pcdimmer.pas:10912
 msgid "Verhindert das automatische Laden der letzten Projektdatei [Linke "
 "SHIFT-Taste]"
 msgstr ""
 
-#: pcdimmer.pas:12277
+#: pcdimmer.pas:10913
 msgid "Startet PC_DIMMER minimiert"
 msgstr ""
 
-#: pcdimmer.pas:12278
+#: pcdimmer.pas:10914
 msgid "Startet PC_DIMMER mit letzten Werten"
 msgstr ""
 
-#: pcdimmer.pas:12279
+#: pcdimmer.pas:10915
 msgid "Startet den Timer mit als \"DateiX\" übergebener "
 "Timerdatei"
 msgstr ""
 
-#: pcdimmer.pas:12280
+#: pcdimmer.pas:10916
 msgid "Lädt die per Fastsave gespeicherte Projektdatei (bei sehr großen "
 "Projekten entfällt hierdurch das Entpacken)"
 msgstr ""
 
-#: pcdimmer.pas:12680
+#: pcdimmer.pas:11316
 msgid "Es sind keine Drucker im System installiert."
 msgstr ""
 
-#: pcdimmer.pas:12698
+#: pcdimmer.pas:11334
 msgid "PC_DIMMER Kanalnamenübersicht ("
 msgstr ""
 
-#: pcdimmer.pas:12769
+#: pcdimmer.pas:11405
 msgid "Die Power-Taste Ihres Computers wurde gedrückt!\n"
 "Diese Funktion ist im PC_DIMMER jedoch deaktiviert worden.\n"
 "\n"
@@ -37713,141 +37769,141 @@ msgid "Die Power-Taste Ihres Computers wurde gedrückt!\n"
 "werden."
 msgstr ""
 
-#: pcdimmer.pas:12781
+#: pcdimmer.pas:11417
 msgid " Plugin-Reset... "
 msgstr ""
 
-#: pcdimmer.pas:12785
+#: pcdimmer.pas:11421
 msgid "Bereite Reset vor..."
 msgstr ""
 
-#: pcdimmer.pas:12857
+#: pcdimmer.pas:11493
 msgid "Reaktiviere Input-Plugin "
 msgstr ""
 
 #. Plugins starten
-#: pcdimmer.pas:12877
+#: pcdimmer.pas:11513
 msgid "Starte Input-Plugin "
 msgstr ""
 
-#: pcdimmer.pas:12886
+#: pcdimmer.pas:11522
 msgid "Sende allen Plugins aktuelle Werte..."
 msgstr ""
 
-#: pcdimmer.pas:12898
+#: pcdimmer.pas:11534
 msgid "Öffne Plugin "
 msgstr ""
 
-#: pcdimmer.pas:13447
+#: pcdimmer.pas:12083
 msgid "Outputplugins aktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:13483
-#: pcdimmer.pas:13535
+#: pcdimmer.pas:12119
+#: pcdimmer.pas:12171
 msgid "Aktiviere "
 msgstr ""
 
-#: pcdimmer.pas:13517
-#: pcdimmer.pas:13521
+#: pcdimmer.pas:12153
+#: pcdimmer.pas:12157
 msgid "Inputplugins aktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:13599
+#: pcdimmer.pas:12235
 msgid "Anzeigen..."
 msgstr ""
 
-#: pcdimmer.pas:13643
+#: pcdimmer.pas:12279
 msgid "Werte an Interfaces übergeben..."
 msgstr ""
 
-#: pcdimmer.pas:13664
+#: pcdimmer.pas:12300
 msgid "Letztgenutzte Plugins anzeigen..."
 msgstr ""
 
-#: pcdimmer.pas:13717
+#: pcdimmer.pas:12353
 msgid "Letzte Module starten..."
 msgstr ""
 
 #. Dimmerkernel starten
-#: pcdimmer.pas:13725
+#: pcdimmer.pas:12361
 msgid "Starte Dimmerkernel..."
 msgstr ""
 
 #. Joystick starten
-#: pcdimmer.pas:13736
+#: pcdimmer.pas:12372
 msgid "Starte Joystick..."
 msgstr ""
 
 #. MIDI starten
-#: pcdimmer.pas:13746
+#: pcdimmer.pas:12382
 msgid "Starte MIDI-In..."
 msgstr ""
 
-#: pcdimmer.pas:13751
+#: pcdimmer.pas:12387
 msgid "Starte MIDI-Out..."
 msgstr ""
 
 #. Akkukontrolle starten
-#: pcdimmer.pas:13773
+#: pcdimmer.pas:12409
 msgid "Starte Akkukontrolle..."
 msgstr ""
 
 #. Timecodeplayer starten
-#: pcdimmer.pas:13785
+#: pcdimmer.pas:12421
 msgid "Starte MIDI-Timecodeplayer..."
 msgstr ""
 
-#: pcdimmer.pas:13792
+#: pcdimmer.pas:12428
 msgid "Netzwerk und Ambilight aktivieren..."
 msgstr ""
 
 #. Ambilight aktivieren, sofern beim letzten mal aktiv
-#: pcdimmer.pas:13821
+#: pcdimmer.pas:12457
 msgid "Ambilight war in der letzten Sitzung aktiviert. Möchten Sie das "
 "Ambilight nun wieder einschalten?"
 msgstr ""
 
-#: pcdimmer.pas:13832
+#: pcdimmer.pas:12468
 msgid "Letzte Einstellungen laden..."
 msgstr ""
 
-#: pcdimmer.pas:13983
+#: pcdimmer.pas:12619
 msgid "Fenster öffnen..."
 msgstr ""
 
-#: pcdimmer.pas:14080
-#: pcdimmer.pas:14081
+#: pcdimmer.pas:12716
+#: pcdimmer.pas:12717
 msgid "DDF Bilder laden..."
 msgstr ""
 
-#: pcdimmer.pas:14087
+#: pcdimmer.pas:12723
 msgid "Leeres Projekt erzeugen..."
 msgstr ""
 
-#: pcdimmer.pas:14092
+#: pcdimmer.pas:12728
 #. Versuche Dateien zu laden
-#: pcdimmer.pas:14110
+#: pcdimmer.pas:12746
 msgid "Dateien öffnen..."
 msgstr ""
 
-#: pcdimmer.pas:14111
+#: pcdimmer.pas:12747
 msgid "Lade Datei..."
 msgstr ""
 
 #. Falls Skripttimerdatei gestartet werden soll
-#: pcdimmer.pas:14127
+#: pcdimmer.pas:12763
 msgid "Starte Skripttimer..."
 msgstr ""
 
-#: pcdimmer.pas:14133
+#: pcdimmer.pas:12769
 msgid "Dateien öffnen...Projekt"
 msgstr ""
 
-#: pcdimmer.pas:14159
+#: pcdimmer.pas:12795
 msgid "Projektwiederherstellung..."
 msgstr ""
 
-#: pcdimmer.pas:14162
+#: pcdimmer.pas:12798
 msgid "Anscheinend wurde der PC_DIMMER beim letzten Mal nicht richtig "
 "beendet.\n"
 "\n"
@@ -37856,290 +37912,290 @@ msgid "Anscheinend wurde der PC_DIMMER beim letzten Mal nicht richtig "
 "wird dabei überschrieben)?"
 msgstr ""
 
-#: pcdimmer.pas:14171
+#: pcdimmer.pas:12807
 msgid "Timer aktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:14185
+#: pcdimmer.pas:12821
 msgid "Abschließende Arbeiten"
 msgstr ""
 
-#: pcdimmer.pas:14199
+#: pcdimmer.pas:12835
 msgid "Oberfläche aktualisieren..."
 msgstr ""
 
-#: pcdimmer.pas:14209
+#: pcdimmer.pas:12845
 msgid "Geräte initialisieren..."
 msgstr ""
 
-#: pcdimmer.pas:14241
+#: pcdimmer.pas:12877
 msgid "Beatquelle setzen..."
 msgstr ""
 
-#: pcdimmer.pas:15129
+#: pcdimmer.pas:13765
 msgid "Tastatur: "
 msgstr ""
 
-#: pcdimmer.pas:15193
+#: pcdimmer.pas:13829
 msgid "Geräteszene: "
 msgstr ""
 
-#: pcdimmer.pas:15226
+#: pcdimmer.pas:13862
 msgid "Direktszene AEP: "
 msgstr ""
 
-#: pcdimmer.pas:15258
+#: pcdimmer.pas:13894
 msgid "Direktszene Effekt: "
 msgstr ""
 
-#: pcdimmer.pas:15270
+#: pcdimmer.pas:13906
 msgid "Terminal-Schnittstelle"
 msgstr ""
 
 #. BPM-Wert abfragen
-#: pcdimmer.pas:15474
+#: pcdimmer.pas:14110
 msgid "Geschwindigkeit eingeben"
 msgstr ""
 
-#: pcdimmer.pas:15474
+#: pcdimmer.pas:14110
 msgid "Bitte geben Sie eine Geschwindigkeit in Beats-Per-Minute (BPM) "
 "an:"
 msgstr ""
 
-#: pcdimmer.pas:15505
+#: pcdimmer.pas:14141
 msgid "Bitte geben Sie einen Wert für den Grandmaster an [Wert von "
 "0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:15520
+#: pcdimmer.pas:14156
 msgid "Bitte geben Sie einen Wert für den Flashmaster an [Wert von "
 "0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:15535
+#: pcdimmer.pas:14171
 msgid "Bitte geben Sie einen Wert für den Speedmaster an [Wert von "
 "-100..0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:15550
+#: pcdimmer.pas:14186
 msgid "Bitte geben Sie einen Wert für den Audiomaster an [Wert von "
 "0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:15595
+#: pcdimmer.pas:14231
 msgid "2 Ausschalten"
 msgstr ""
 
-#: pcdimmer.pas:15596
+#: pcdimmer.pas:14232
 msgid "3 Einblenden"
 msgstr ""
 
-#: pcdimmer.pas:15597
+#: pcdimmer.pas:14233
 msgid "4 Ausblenden"
 msgstr ""
 
-#: pcdimmer.pas:15598
+#: pcdimmer.pas:14234
 msgid "5 Flashen"
 msgstr ""
 
 #. Abgefragter Wert schalten
-#: pcdimmer.pas:15754
+#: pcdimmer.pas:14390
 #. Abgefragten Wert dimmen
-#: pcdimmer.pas:15772
+#: pcdimmer.pas:14408
 msgid "Kanalwert eingeben"
 msgstr ""
 
-#: pcdimmer.pas:15754
-#: pcdimmer.pas:15772
+#: pcdimmer.pas:14390
+#: pcdimmer.pas:14408
 msgid "Bitte geben Sie einen Kanalwert [0..255] ein, auf den der Kanal "
 "\""
 msgstr ""
 
-#: pcdimmer.pas:15754
+#: pcdimmer.pas:14390
 msgid "\" geschaltet werden soll:"
 msgstr ""
 
-#: pcdimmer.pas:15772
+#: pcdimmer.pas:14408
 msgid "\" gedimmt werden soll:"
 msgstr ""
 
 #. Auf abgefragten Wert schalten
-#: pcdimmer.pas:16875
+#: pcdimmer.pas:15511
 msgid "Faderwert eingeben"
 msgstr ""
 
-#: pcdimmer.pas:16875
+#: pcdimmer.pas:15511
 msgid "Bitte geben Sie einen Faderwert [0..255] ein, auf den der Fader "
 "\""
 msgstr ""
 
-#: pcdimmer.pas:16875
+#: pcdimmer.pas:15511
 msgid "\" gesetzt werden soll:"
 msgstr ""
 
-#: pcdimmer.pas:17500
+#: pcdimmer.pas:16136
 msgid "Es konnte keine Verbindung zum MediaCenter Server hergestellt werden. "
 "Bitte kontrollieren Sie ihre Angaben in den Feldern \"Adresse\" und "
 "\"Port\" der entsprechenden MediaCenter "
 "Szene."
 msgstr ""
 
-#: pcdimmer.pas:18499
+#: pcdimmer.pas:17135
 msgid "Einfache Szene bearbeiten"
 msgstr ""
 
 #. ShowMessage(E.Message); // EConvertError ist nur nervig
-#: pcdimmer.pas:20373
+#: pcdimmer.pas:19009
 msgid "Es wurde aufgrund eines Fehlers versucht eine Größe durch Null zu "
 "teilen."
 msgstr ""
 
-#: pcdimmer.pas:20380
-#: pcdimmer.pas:20389
+#: pcdimmer.pas:19016
+#: pcdimmer.pas:19025
 msgid "Fehlertyp: "
 msgstr ""
 
 #. +' "'+TControl(Sender).Name+'"';
-#: pcdimmer.pas:20381
+#: pcdimmer.pas:19017
 #. +' "'+TControl(Sender).Name+'"');
-#: pcdimmer.pas:20391
+#: pcdimmer.pas:19027
 msgid "Verursacher: "
 msgstr ""
 
-#: pcdimmer.pas:20387
+#: pcdimmer.pas:19023
 msgid "Fehlerbericht vom "
 msgstr ""
 
-#: pcdimmer.pas:20827
+#: pcdimmer.pas:19463
 msgid "Möchten Sie wirklich alle laufenden Effekte und Szenen "
 "beenden?"
 msgstr ""
 
-#: pcdimmer.pas:20873
+#: pcdimmer.pas:19509
 msgid "  Akku: "
 msgstr ""
 
-#: pcdimmer.pas:21607
+#: pcdimmer.pas:20243
 msgid "Datei wird gesucht..."
 msgstr ""
 
 #. Datei ist im Bildverzeichnis 128x128
-#: pcdimmer.pas:21659
+#: pcdimmer.pas:20295
 #. Suchen im Project-Temp
-#: pcdimmer.pas:21668
+#: pcdimmer.pas:20304
 msgid "Suche nach Datei"
 msgstr ""
 
-#: pcdimmer.pas:21659
-#: pcdimmer.pas:21668
+#: pcdimmer.pas:20295
+#: pcdimmer.pas:20304
 msgid "im Ordner"
 msgstr ""
 
 #. ProgressScreenSmall.close;
-#: pcdimmer.pas:21684
+#: pcdimmer.pas:20320
 msgid "Dateioperation abgeschlossen."
 msgstr ""
 
 #. Name
-#: pcdimmer.pas:22259
+#: pcdimmer.pas:20895
 msgid "Presetszene"
 msgstr ""
 
 #. Name
-#: pcdimmer.pas:22273
+#: pcdimmer.pas:20909
 #: szenenverwaltung.pas:2021
 msgid "Plugin Szene"
 msgstr ""
 
 #. Falls Joysticksteuerungsdatei
-#: pcdimmer.pas:22862
+#: pcdimmer.pas:21498
 msgid "Die zu öffnende Datei konnte nicht gefunden "
 "werden"
 msgstr ""
 
-#: pcdimmer.pas:23185
+#: pcdimmer.pas:21821
 msgid "MediaCenter Verbindung:"
 msgstr ""
 
 #. Sprache des 3D-Visualizers setzen
-#: pcdimmer.pas:23481
+#: pcdimmer.pas:22117
 msgid "Der 3D Visualizer wurde nicht gefunden. Bitte kontrollieren Sie die "
 "Pfadangabe in den erweiterten Einstellungen..."
 msgstr ""
 
-#: pcdimmer.pas:23553
+#: pcdimmer.pas:22189
 msgid "Kennwort festlegen"
 msgstr ""
 
-#: pcdimmer.pas:23553
+#: pcdimmer.pas:22189
 msgid "In den erweiterten Optionen ist kein Standardkennwort hinterlegt. "
 "Geben Sie daher bitte ein Kennwort für die aktuelle Sperrung "
 "ein:"
 msgstr ""
 
-#: pcdimmer.pas:23568
+#: pcdimmer.pas:22204
 msgid "CSV-Datei (*.csv)|*.csv|*.*|*.*"
 msgstr ""
 
-#: pcdimmer.pas:23569
+#: pcdimmer.pas:22205
 msgid "Gerätedaten exportieren"
 msgstr ""
 
-#: pcdimmer.pas:23579
+#: pcdimmer.pas:22215
 msgid "Startadresse"
 msgstr ""
 
-#: pcdimmer.pas:23580
+#: pcdimmer.pas:22216
 msgid "Kanalanzahl"
 msgstr ""
 
-#: pcdimmer.pas:23581
+#: pcdimmer.pas:22217
 msgid "Leistung [W]"
 msgstr ""
 
-#: pcdimmer.pas:23586
+#: pcdimmer.pas:22222
 msgid "CMY"
 msgstr ""
 
-#: pcdimmer.pas:23589
+#: pcdimmer.pas:22225
 msgid "DIP-Startadresse"
 msgstr ""
 
 #. Installierte Geräte
-#: pcdimmer.pas:26195
+#: pcdimmer.pas:24831
 msgid "Installierte Geräte:"
 msgstr ""
 
 #. Anzahl der Szenen
-#: pcdimmer.pas:26199
+#: pcdimmer.pas:24835
 msgid "Erstellte Szenen:"
 msgstr ""
 
 #. Dimmerkernelzeit
-#: pcdimmer.pas:26203
-#: pcdimmer.pas:26205
+#: pcdimmer.pas:24839
+#: pcdimmer.pas:24841
 msgid "Dimmerkernel:"
 msgstr ""
 
-#: pcdimmer.pas:26203
+#: pcdimmer.pas:24839
 msgid "Job"
 msgstr ""
 
-#: pcdimmer.pas:26205
+#: pcdimmer.pas:24841
 msgid "Jobs"
 msgstr ""
 
 #. Kanaländerungen pro Sekunde
-#: pcdimmer.pas:26214
+#: pcdimmer.pas:24850
 msgid "Kanaländerung/s:"
 msgstr ""
 
-#: pcdimmer.pas:26496
-#: pcdimmer.pas:26593
+#: pcdimmer.pas:25132
+#: pcdimmer.pas:25229
 msgid "Aufgenommen"
 msgstr ""
 
-#: pcdimmer.pas:26804
+#: pcdimmer.pas:25448
 msgid "Möchten Sie wirklich alle laufenden Audiowiedergaben "
 "beenden?"
 msgstr ""
@@ -38263,15 +38319,15 @@ msgstr ""
 msgid " [Projektfremd!]"
 msgstr ""
 
-#: recoveryfrm.pas:149
+#: recoveryfrm.pas:150
 msgid "Es wird versucht das Autobackup \""
 msgstr ""
 
-#: recoveryfrm.pas:149
+#: recoveryfrm.pas:150
 msgid "\" vom "
 msgstr ""
 
-#: recoveryfrm.pas:149
+#: recoveryfrm.pas:150
 msgid " wiederherzustellen. Fortfahren?"
 msgstr ""
 
