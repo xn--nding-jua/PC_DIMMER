@@ -8,7 +8,7 @@ uses
   JvComponent, JvZlibMultiple, JvExExtCtrls, Printers, JvOfficeColorPanel,
   jpeg, JvComponentBase, JvExtComponent, JvPanel, JvAppStorage,
   JvAppXMLStorage, ddfwindowfrm, PngBitBtn, Grids,
-  JvExMask, JvSpin, gnugettext, pngimage, Math;
+  JvExMask, JvSpin, gnugettext, pngimage, Math, GR32;
 
 const
   {$I GlobaleKonstanten.inc}
@@ -214,6 +214,7 @@ type
       MousePos: TPoint; var Handled: Boolean);
     procedure CheckBox6MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private-Deklarationen }
     Puffer1, Puffer2:TBitmap;
@@ -223,6 +224,7 @@ type
     Counter, Counter2:integer;
     oldvalues:array[1..8192] of byte;
     SelectedIcons:array of TSelectedIcons;
+    pngobject:TPNGObject;
     procedure DrawGrafischeBuehnenansichtDevices(_Buffer:TCanvas);
     procedure DrawGrafischeBuehnenansicht(_Buffer:TCanvas);
     procedure GetSelectedIcons(X,Y:integer);
@@ -553,6 +555,8 @@ begin
   mainform.buehnenansichtsetup.Buehnenansicht_width:=880;
   mainform.buehnenansichtsetup.Buehnenansicht_height:=450;
   mainform.buehnenansichtsetup.Buehnenansicht_panel:=true;
+
+  pngobject:=TPNGObject.Create;
 
   startingup:=false;
 end;
@@ -2893,7 +2897,6 @@ procedure TGrafischeBuehnenansicht.DrawGrafischeBuehnenansichtDevices(_Buffer:TC
 var
   i,j,k,l, temp:integer;
   rect:TRect;
-  bild:TPNGObject;
   gobolevel:byte;
 begin
   // Canvas bereit machen
@@ -2919,32 +2922,28 @@ begin
       case mainform.devices[i].picturesize of
         0..48:
         begin
-          bild:=mainform.devicepictures32.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage;
-//          mainform.devicepictures32.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage.Draw(_Buffer, rect);
+          pngobject.Assign(mainform.devicepictures32.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage);
         end;
         49..80:
         begin
-          bild:=mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage;
-//          mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage.Draw(_Buffer, rect);
+          pngobject.Assign(mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage);
         end;
         81..112:
         begin
-          bild:=mainform.devicepictures96.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage;
-//          mainform.devicepictures96.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage.Draw(_Buffer, rect);
+          pngobject.Assign(mainform.devicepictures96.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage);
         end;
         113..255:
         begin
-          bild:=mainform.devicepictures128.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage;
-//          mainform.devicepictures128.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage.Draw(_Buffer, rect);
+          pngobject.Assign(mainform.devicepictures128.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage);
         end;
       end;
-      bild.Resize(mainform.devices[i].picturesize,mainform.devices[i].picturesize);
+      pngobject.Resize(mainform.devices[i].picturesize,mainform.devices[i].picturesize);
 
       temp:=mainform.devices[i].pictureangle;
-      mainform.devices[i].pictureangle:=0;
+//      mainform.devices[i].pictureangle:=0;
       for k:=1 to temp do
-        SmoothRotate(bild,90);
-      bild.Draw(_Buffer, rect);
+        SmoothRotate(pngobject,90);
+      pngobject.Draw(_Buffer, rect);
 
       // Gobos 1 darstellen
       if mainform.devices[i].hasGobo then
@@ -3012,42 +3011,38 @@ begin
   for i:=0 to length(mainform.buehnenansichtdevices)-1 do
   if mainform.buehnenansichtdevices[i].bank=BankSelect.ItemIndex then
   begin
-      rect.Top:=mainform.buehnenansichtdevices[i].top;
-      rect.Left:=mainform.buehnenansichtdevices[i].left;
+    rect.Top:=mainform.buehnenansichtdevices[i].top;
+    rect.Left:=mainform.buehnenansichtdevices[i].left;
 
-      // Bild zeichnen
-      rect.right:=mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize;
-      rect.Bottom:=mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize;
-      case mainform.buehnenansichtdevices[i].picturesize of
-        0..48:
-        begin
-          bild:=mainform.devicepictures32.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage;
-//          mainform.devicepictures32.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage.Draw(_Buffer, rect);
-        end;
-        49..80:
-        begin
-          bild:=mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage;
-//          mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage.Draw(_Buffer, rect);
-        end;
-        81..112:
-        begin
-          bild:=mainform.devicepictures96.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage;
-//          mainform.devicepictures96.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage.Draw(_Buffer, rect);
-        end;
-        113..255:
-        begin
-          bild:=mainform.devicepictures128.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage;
-//          mainform.devicepictures128.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage.Draw(_Buffer, rect);
-        end;
+    // Bild zeichnen
+    rect.right:=mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize;
+    rect.Bottom:=mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize;
+    case mainform.buehnenansichtdevices[i].picturesize of
+      0..48:
+      begin
+        pngobject.Assign(mainform.devicepictures32.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage);
       end;
-      bild.Resize(mainform.buehnenansichtdevices[i].picturesize,mainform.buehnenansichtdevices[i].picturesize);
+      49..80:
+      begin
+        pngobject.Assign(mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage);
+      end;
+      81..112:
+      begin
+        pngobject.Assign(mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage);
+      end;
+      113..255:
+      begin
+        pngobject.Assign(mainform.devicepictures128.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage);
+      end;
+    end;
+    pngobject.Resize(mainform.buehnenansichtdevices[i].picturesize,mainform.buehnenansichtdevices[i].picturesize);
 
-      temp:=mainform.buehnenansichtdevices[i].pictureangle;
-      mainform.buehnenansichtdevices[i].pictureangle:=0;
-      for k:=1 to temp do
-        SmoothRotate(bild,90);
+    temp:=mainform.buehnenansichtdevices[i].pictureangle;
+    mainform.buehnenansichtdevices[i].pictureangle:=0;
+    for k:=1 to temp do
+      SmoothRotate(pngobject,90);
 
-      bild.Draw(_Buffer, rect);
+    pngobject.Draw(_Buffer, rect);
   end;
 end;
 
@@ -3084,38 +3079,6 @@ begin
 
       rect.Top:=mainform.devices[i].top[j];
       rect.Left:=mainform.devices[i].left[j];
-
-{
-      // Bild zeichnen
-      case mainform.devices[i].picturesize of
-        0..48:
-        begin
-          bild:=mainform.devicepictures32.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage;
-        end;
-        49..80:
-        begin
-          bild:=mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage;
-        end;
-        81..112:
-        begin
-          bild:=mainform.devicepictures96.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage;
-        end;
-        113..255:
-        begin
-          bild:=mainform.devicepictures128.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage;
-        end;
-      end;
-      rect.right:=mainform.devices[i].left[j]+mainform.devices[i].picturesize;
-      rect.Bottom:=mainform.devices[i].top[j]+mainform.devices[i].picturesize;
-//      bild.Resize(mainform.devices[i].picturesize,mainform.devices[i].picturesize);
-
-      temp:=mainform.devices[i].pictureangle;
-      mainform.devices[i].pictureangle:=0;
-      for k:=1 to temp do
-        SmoothRotate(bild,90);
-
-      bild.Draw(_Buffer, rect);
-}
       rect.right:=mainform.devices[i].left[j]+mainform.devices[i].picturesize;
       rect.Bottom:=mainform.devices[i].top[j]+mainform.devices[i].picturesize;
 
@@ -3448,38 +3411,6 @@ begin
   begin
       rect.Top:=mainform.buehnenansichtdevices[i].top;
       rect.Left:=mainform.buehnenansichtdevices[i].left;
-
-{
-      // Bild zeichnen
-      case mainform.buehnenansichtdevices[i].picturesize of
-        0..48:
-        begin
-          bild:=mainform.devicepictures32.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage;
-        end;
-        49..80:
-        begin
-          bild:=mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage;
-        end;
-        81..112:
-        begin
-          bild:=mainform.devicepictures96.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage;
-        end;
-        113..255:
-        begin
-          bild:=mainform.devicepictures128.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage;
-        end;
-      end;
-      rect.right:=mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize;
-      rect.Bottom:=mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize;
-//      bild.Resize(mainform.buehnenansichtdevices[i].picturesize,mainform.buehnenansichtdevices[i].picturesize);
-
-      temp:=mainform.buehnenansichtdevices[i].pictureangle;
-      mainform.buehnenansichtdevices[i].pictureangle:=0;
-      for k:=1 to temp do
-        SmoothRotate(bild,90);
-
-      bild.Draw(_Buffer, rect);
-}
       rect.right:=mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize;
       rect.Bottom:=mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize;
 
@@ -3951,6 +3882,11 @@ begin
     mainform.SaveJpg(image1.Picture.Bitmap, mainform.userdirectory+'stageview.jpg');
 
   image1.Free;
+end;
+
+procedure Tgrafischebuehnenansicht.FormDestroy(Sender: TObject);
+begin
+  pngobject.free;
 end;
 
 end.

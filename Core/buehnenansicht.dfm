@@ -53,6 +53,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
   OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnDeactivate = FormDeactivate
   OnHide = FormHide
   OnMouseWheelDown = FormMouseWheelDown

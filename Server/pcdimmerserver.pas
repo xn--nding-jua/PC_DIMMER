@@ -157,7 +157,7 @@ var
   DLLSenddata:TDLLSenddata;
   DLLSendMessage:TDLLSendMessage;
   pc_dimmer_plugins : array[0..63] of string[255];
-  ProcCall: procedure;
+  ProcCall: procedure; stdcall;
   ProcCall2: procedure(Callback0,Callback1,Callback2,Callback3,Callback4:Pointer);stdcall;
 
 implementation
@@ -171,7 +171,7 @@ var
   LReg:TRegistry;
   i:integer;
   SR: TSearchRec;
-  FuncCall: function : PChar;
+  FuncCall: function : PChar; stdcall;
 begin
   TranslateComponent(Self);
 
@@ -238,16 +238,16 @@ begin
 // DLLs suchen und Output-DLLs rausfiltern
   i:=1;
   pc_dimmer_plugins[0]:='0';
-  if (FindFirst(workingdirectory+'\plugins\*.dll',faAnyFile-faDirectory,SR)=0) then
+  if (FindFirst(workingdirectory+'plugins\*.dll',faAnyFile-faDirectory,SR)=0) then
   begin
     repeat
       if (SR.Name<>'.') and (SR.Name<>'..') and (SR.Attr<>faDirectory) then
       begin
-        OutputDLL:=LoadLibrary(PChar(workingdirectory+'\plugins\'+SR.Name));
+        OutputDLL:=LoadLibrary(PChar(workingdirectory+'Plugins\'+SR.Name));
         FuncCall := GetProcAddress(OutputDLL,'DLLIdentify');
         if Assigned(FuncCall) then
         begin
-          if FuncCall=StrPas('Output') then
+          if FuncCall[0]=StrPas('O') then
           begin
             pc_dimmer_plugins[i]:=SR.Name;
             FuncCall := GetProcAddress(OutputDLL,'DLLGetName');
@@ -272,8 +272,8 @@ begin
     if pc_dimmer_plugins[i]=lastusedoutputplugin then
     begin
       lastusedoutputpluginnumber:=i;
-      OutputDLL:=LoadLibrary(PChar(workingdirectory+'\plugins\'+pc_dimmer_plugins[i]));
-      ProcCall2 := GetProcAddress(OutputDLL,'DLLActivate');
+      OutputDLL:=LoadLibrary(PChar(workingdirectory+'plugins\'+pc_dimmer_plugins[i]));
+      ProcCall2 := GetProcAddress(OutputDLL,'DLLCreate');
       ProcCall2(@CallbackGetDLLValues,@CallbackGetDLLValueEvent,@CallbackGetDLLNames,@CallbackPluginFirstStart,@CallbackMessage);
       //FuncCall := GetProcAddress(OutputDLL,'DLLGetName');
       //pluginlist.Text:=StrPas(FuncCall);
@@ -513,7 +513,7 @@ begin
 
   _closing:=true;
 // Output-Plugin deaktivieren
-  ProcCall := GetProcAddress(OutputDLL,'DLLDeactivate');
+  ProcCall := GetProcAddress(OutputDLL,'DLLDestroy');
   if Assigned(ProcCall) then ProcCall;
   FreeLibrary(OutputDLL);
 
@@ -580,12 +580,12 @@ procedure TPCDimmer_Server.pluginlistChange(Sender: TObject);
 begin
   if OutputDLL<>0 then
   begin
-    ProcCall := GetProcAddress(OutputDLL,'DLLDeactivate');
+    ProcCall := GetProcAddress(OutputDLL,'DLLDestroy');
     ProcCall;
   end;
   FreeLibrary(OutputDLL);
-  OutputDLL := LoadLibrary(PChar(workingdirectory+'\plugins\'+pc_dimmer_plugins[pluginlist.Itemindex+1]));
-  ProcCall2 := GetProcAddress(OutputDLL,'DLLActivate');
+  OutputDLL := LoadLibrary(PChar(workingdirectory+'plugins\'+pc_dimmer_plugins[pluginlist.Itemindex+1]));
+  ProcCall2 := GetProcAddress(OutputDLL,'DLLCreate');
   if Assigned(ProcCall2) then ProcCall2(@CallbackGetDLLValues,@CallbackGetDLLValueEvent,@CallbackGetDLLNames,@CallbackPluginFirstStart,@CallbackMessage) else ShowMessage('Fehlerhafte DLL!');
 
   @DLLSenddata := GetProcAddress(OutputDLL,'DLLSendData');
