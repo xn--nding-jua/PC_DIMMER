@@ -132,6 +132,7 @@ type
     removestartscenebtn: TPngBitBtn;
     Label19: TLabel;
     PngBitBtn3: TPngBitBtn;
+    CheckBox6: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -235,6 +236,8 @@ type
     procedure editstartscenebtnClick(Sender: TObject);
     procedure removestartscenebtnClick(Sender: TObject);
     procedure PngBitBtn3Click(Sender: TObject);
+    procedure CheckBox6MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private-Deklarationen }
     ExpandedNodes:array of boolean;
@@ -1594,14 +1597,18 @@ begin
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].ID,sizeof(mainform.Effektsequenzereffekte[i].ID));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Name,sizeof(mainform.Effektsequenzereffekte[i].Name));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Beschreibung,sizeof(mainform.Effektsequenzereffekte[i].Beschreibung));
-    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].TabPosition,sizeof(mainform.Effektsequenzereffekte[i].TabPosition));
+    if Version>=431 then
+      Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].TabPosition,sizeof(mainform.Effektsequenzereffekte[i].TabPosition));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].AnzahlderDurchlaufe,sizeof(mainform.Effektsequenzereffekte[i].AnzahlderDurchlaufe));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].modus,sizeof(mainform.Effektsequenzereffekte[i].modus));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Repeating,sizeof(mainform.Effektsequenzereffekte[i].Repeating));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].intensitaet,sizeof(mainform.Effektsequenzereffekte[i].intensitaet));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].speed,sizeof(mainform.Effektsequenzereffekte[i].speed));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].startwithstepone,sizeof(mainform.Effektsequenzereffekte[i].startwithstepone));
-    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].blackoutonstop,sizeof(mainform.Effektsequenzereffekte[i].blackoutonstop));
+    if Version>=442 then
+      Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].blackoutonstop,sizeof(mainform.Effektsequenzereffekte[i].blackoutonstop));
+    if Version>=475 then
+      Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].blackoutonend,sizeof(mainform.Effektsequenzereffekte[i].blackoutonend));
     if Version>=465 then
     begin
       Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Startscene,sizeof(mainform.Effektsequenzereffekte[i].Startscene));
@@ -1719,14 +1726,18 @@ begin
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].ID,sizeof(mainform.Effektsequenzereffekte[i].ID));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Name,sizeof(mainform.Effektsequenzereffekte[i].Name));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Beschreibung,sizeof(mainform.Effektsequenzereffekte[i].Beschreibung));
-    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].TabPosition,sizeof(mainform.Effektsequenzereffekte[i].TabPosition));
+    if Version>=431 then
+      Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].TabPosition,sizeof(mainform.Effektsequenzereffekte[i].TabPosition));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].AnzahlderDurchlaufe,sizeof(mainform.Effektsequenzereffekte[i].AnzahlderDurchlaufe));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].modus,sizeof(mainform.Effektsequenzereffekte[i].modus));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Repeating,sizeof(mainform.Effektsequenzereffekte[i].Repeating));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].intensitaet,sizeof(mainform.Effektsequenzereffekte[i].intensitaet));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].speed,sizeof(mainform.Effektsequenzereffekte[i].speed));
     Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].startwithstepone,sizeof(mainform.Effektsequenzereffekte[i].startwithstepone));
-    Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].blackoutonstop,sizeof(mainform.Effektsequenzereffekte[i].blackoutonstop));
+    if Version>=442 then
+      Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].blackoutonstop,sizeof(mainform.Effektsequenzereffekte[i].blackoutonstop));
+    if Version>=475 then
+      Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].blackoutonend,sizeof(mainform.Effektsequenzereffekte[i].blackoutonend));
     if Version>=465 then
     begin
       Filestream.ReadBuffer(mainform.Effektsequenzereffekte[i].Startscene,sizeof(mainform.Effektsequenzereffekte[i].Startscene));
@@ -1852,6 +1863,7 @@ begin
     Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].speed,sizeof(mainform.Effektsequenzereffekte[i].speed));
     Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].StartwithStepOne,sizeof(mainform.Effektsequenzereffekte[i].StartwithStepOne));
     Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].blackoutonstop,sizeof(mainform.Effektsequenzereffekte[i].blackoutonstop));
+    Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].blackoutonend,sizeof(mainform.Effektsequenzereffekte[i].blackoutonend));
     Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].Startscene,sizeof(mainform.Effektsequenzereffekte[i].Startscene));
     Filestream.WriteBuffer(mainform.Effektsequenzereffekte[i].Stopscene,sizeof(mainform.Effektsequenzereffekte[i].Stopscene));
 
@@ -2465,6 +2477,7 @@ begin
   mainform.Effektsequenzereffekte[Destination].speed:=mainform.Effektsequenzereffekte[Source].speed;
   mainform.Effektsequenzereffekte[Destination].startwithstepone:=mainform.Effektsequenzereffekte[Source].startwithstepone;
   mainform.Effektsequenzereffekte[Destination].blackoutonstop:=mainform.Effektsequenzereffekte[Source].blackoutonstop;
+  mainform.Effektsequenzereffekte[Destination].blackoutonend:=mainform.Effektsequenzereffekte[Source].blackoutonend;
   mainform.Effektsequenzereffekte[Destination].Startscene:=mainform.Effektsequenzereffekte[Source].Startscene;
   mainform.Effektsequenzereffekte[Destination].Stopscene:=mainform.Effektsequenzereffekte[Source].Stopscene;
 
@@ -2999,6 +3012,7 @@ begin
     checkbox1.Checked:=mainform.Effektsequenzereffekte[Data^.Effektnummer].Repeating;
     checkbox4.Checked:=mainform.Effektsequenzereffekte[Data^.Effektnummer].startwithstepone;
     checkbox5.Checked:=mainform.Effektsequenzereffekte[Data^.Effektnummer].blackoutonstop;
+    checkbox6.Checked:=mainform.Effektsequenzereffekte[Data^.Effektnummer].blackoutonend;
     label19.Caption:=mainform.GetSceneInfo2(mainform.Effektsequenzereffekte[Data^.Effektnummer].Startscene, 'type')+': '+mainform.GetSceneInfo2(mainform.Effektsequenzereffekte[Data^.Effektnummer].Startscene, 'name')+' ('+mainform.GetSceneInfo2(mainform.Effektsequenzereffekte[Data^.Effektnummer].Startscene, 'desc')+')';
     label17.Caption:=mainform.GetSceneInfo2(mainform.Effektsequenzereffekte[Data^.Effektnummer].Stopscene, 'type')+': '+mainform.GetSceneInfo2(mainform.Effektsequenzereffekte[Data^.Effektnummer].Stopscene, 'name')+' ('+mainform.GetSceneInfo2(mainform.Effektsequenzereffekte[Data^.Effektnummer].Stopscene, 'desc')+')';
 
@@ -3082,6 +3096,7 @@ begin
     checkbox1.Checked:=mainform.Effektsequenzereffekte[Data^.Effektnummer].Repeating;
     checkbox4.Checked:=mainform.Effektsequenzereffekte[Data^.Effektnummer].startwithstepone;
     checkbox5.Checked:=mainform.Effektsequenzereffekte[Data^.Effektnummer].blackoutonstop;
+    checkbox6.Checked:=mainform.Effektsequenzereffekte[Data^.Effektnummer].blackoutonend;
     label19.Caption:=mainform.GetSceneInfo2(mainform.Effektsequenzereffekte[Data^.Effektnummer].Startscene, 'type')+': '+mainform.GetSceneInfo2(mainform.Effektsequenzereffekte[Data^.Effektnummer].Startscene, 'name')+' ('+mainform.GetSceneInfo2(mainform.Effektsequenzereffekte[Data^.Effektnummer].Startscene, 'desc')+')';
     label17.Caption:=mainform.GetSceneInfo2(mainform.Effektsequenzereffekte[Data^.Effektnummer].Stopscene, 'type')+': '+mainform.GetSceneInfo2(mainform.Effektsequenzereffekte[Data^.Effektnummer].Stopscene, 'name')+' ('+mainform.GetSceneInfo2(mainform.Effektsequenzereffekte[Data^.Effektnummer].Stopscene, 'desc')+')';
 
@@ -3710,6 +3725,28 @@ begin
 
   // noch die Form kaputt machen
   addcolorandgobotoeffectform.Free;
+end;
+
+procedure Teffektsequenzer.CheckBox6MouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  Data: PTreeData;
+  i,j:integer;
+begin
+  if VST.SelectedCount=1 then
+  begin
+    Data:=VST.GetNodeData(VST.FocusedNode);
+    mainform.Effektsequenzereffekte[Data^.Effektnummer].blackoutonend:=CheckBox6.Checked;
+  end else
+  begin
+    for i:=0 to length(VSTEffektNodes)-1 do
+    for j:=0 to length(VSTEffektNodes[i])-1 do
+    if VST.Selected[VSTEffektNodes[i][j]] or VST.Selected[VSTEffektNodes[i][j].Parent] then
+    begin
+      Data:=VST.GetNodeData(VSTEffektNodes[i][j]);
+      mainform.Effektsequenzereffekte[Data^.Effektnummer].blackoutonend:=CheckBox6.Checked;
+    end;
+  end;
 end;
 
 end.
