@@ -22612,8 +22612,8 @@ begin
         if IsEqualGUID(stringtoguid(value[0]), nodecontrolsets[i].ID) then
         begin
           temp:='nodes ';
-          temp:=temp+inttostr(length(nodecontrolsets[nodecontrolform.nodecontrolsetscombobox.ItemIndex].NodeControlNodes));
-          for j:=0 to length(nodecontrolsets[nodecontrolform.nodecontrolsetscombobox.ItemIndex].NodeControlNodes)-1 do
+          temp:=temp+inttostr(length(nodecontrolsets[i].NodeControlNodes));
+          for j:=0 to length(nodecontrolsets[i].NodeControlNodes)-1 do
           begin
             temp:=temp+' '+inttostr(j+1)+':'+FilterTextForNetwork(nodecontrolsets[i].NodeControlNodes[j].Name)+','+GUIDtoString(nodecontrolsets[i].NodeControlNodes[j].ID);
           end;
@@ -22621,7 +22621,7 @@ begin
           break;
         end else
         begin
-          temp:='subnodes 0'; // keine passende ID gefunden
+          temp:='nodes 0'; // keine passende ID gefunden
         end;
       end;
 
