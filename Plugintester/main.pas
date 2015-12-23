@@ -101,8 +101,8 @@ type
     DLLStart:procedure;stdcall;
     DLLDestroy:function:boolean;stdcall;
     DLLIdentify:function:PChar;stdcall;
-    DLLGetVersion:function:PChar;
-    DLLGetName:function:PChar;
+    DLLGetVersion:function:PChar;stdcall;
+    DLLGetName:function:PChar;stdcall;
     DLLConfigure:procedure;stdcall;
     DLLShow:procedure;stdcall;
     DLLAbout:procedure;stdcall;

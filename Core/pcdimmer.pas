@@ -54,7 +54,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=474;
+  actualprojectversion=475;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -4841,6 +4841,7 @@ begin
       Filestream.WriteBuffer(Effektsequenzereffekte[i].speed,sizeof(Effektsequenzereffekte[i].speed));
       Filestream.WriteBuffer(Effektsequenzereffekte[i].startwithstepone,sizeof(Effektsequenzereffekte[i].startwithstepone));
       Filestream.WriteBuffer(Effektsequenzereffekte[i].blackoutonstop,sizeof(Effektsequenzereffekte[i].blackoutonstop));
+      Filestream.WriteBuffer(Effektsequenzereffekte[i].blackoutonend,sizeof(Effektsequenzereffekte[i].blackoutonend));
       Filestream.WriteBuffer(Effektsequenzereffekte[i].Startscene,sizeof(Effektsequenzereffekte[i].Startscene));
       Filestream.WriteBuffer(Effektsequenzereffekte[i].Stopscene,sizeof(Effektsequenzereffekte[i].Stopscene));
 
@@ -7123,6 +7124,8 @@ begin
       Filestream.ReadBuffer(Effektsequenzereffekte[i].startwithstepone,sizeof(Effektsequenzereffekte[i].startwithstepone));
       if projektprogrammversionint>=442 then
         Filestream.ReadBuffer(Effektsequenzereffekte[i].blackoutonstop,sizeof(Effektsequenzereffekte[i].blackoutonstop));
+      if projektprogrammversionint>=475 then
+        Filestream.ReadBuffer(Effektsequenzereffekte[i].blackoutonend,sizeof(Effektsequenzereffekte[i].blackoutonend));
       if projektprogrammversionint>=465 then
       begin
         Filestream.ReadBuffer(Effektsequenzereffekte[i].Startscene,sizeof(Effektsequenzereffekte[i].Startscene));
@@ -16725,7 +16728,7 @@ begin
         end;
       end;
 
-      if effektsequenzereffekte[i].blackoutonstop then
+      if effektsequenzereffekte[i].blackoutonstop or effektsequenzereffekte[i].blackoutonend then
       begin
         for j:=0 to length(effektsequenzereffekte[i].Effektschritte)-1 do
         begin
@@ -16754,7 +16757,8 @@ begin
             end;
             1:
             begin
-              // hier könnte man ggfs. Objekte aus Szenenverwaltung ausblenden: StartScene(ID, false, false, 0, 200);
+              StartScene(ID, false, false, 0, 200);
+              StopScene(ID);
             end;
           end;
         end;

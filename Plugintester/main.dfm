@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 501
   Top = 186
   BorderStyle = bsSingle
-  Caption = 'PC_DIMMER2012 Plugintester'
+  Caption = 'PC_DIMMER Plugintester'
   ClientHeight = 527
   ClientWidth = 713
   Color = clBtnFace

@@ -61,15 +61,15 @@ object effektsequenzer: Teffektsequenzer
   object Panel3: TPanel
     Left = 0
     Top = 0
-    Width = 400
-    Height = 561
+    Width = 392
+    Height = 552
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
     object Panel2: TPanel
       Left = 0
-      Top = 320
-      Width = 400
+      Top = 311
+      Width = 392
       Height = 241
       Align = alBottom
       BevelOuter = bvNone
@@ -1314,8 +1314,8 @@ object effektsequenzer: Teffektsequenzer
     object VST: TVirtualStringTree
       Left = 0
       Top = 0
-      Width = 400
-      Height = 295
+      Width = 392
+      Height = 286
       Align = alClient
       Colors.UnfocusedSelectionColor = clInactiveBorder
       Colors.UnfocusedSelectionBorderColor = clInactiveBorder
@@ -1327,6 +1327,7 @@ object effektsequenzer: Teffektsequenzer
       Header.Font.Height = -11
       Header.Font.Name = 'MS Sans Serif'
       Header.Font.Style = []
+      Header.Height = 17
       Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
       Images = MainForm.PngImageList1
       PopupMenu = PopupMenu1
@@ -1361,8 +1362,8 @@ object effektsequenzer: Teffektsequenzer
     end
     object Panel4: TPanel
       Left = 0
-      Top = 295
-      Width = 400
+      Top = 286
+      Width = 392
       Height = 25
       Align = alBottom
       BevelOuter = bvNone
@@ -1370,7 +1371,7 @@ object effektsequenzer: Teffektsequenzer
       object TabControl1: TTabControl
         Left = 0
         Top = 0
-        Width = 320
+        Width = 312
         Height = 25
         Align = alClient
         PopupMenu = PopupMenu2
@@ -1382,7 +1383,7 @@ object effektsequenzer: Teffektsequenzer
         OnChange = TabControl1Change
       end
       object Panel5: TPanel
-        Left = 320
+        Left = 312
         Top = 0
         Width = 80
         Height = 25
@@ -1764,10 +1765,10 @@ object effektsequenzer: Teffektsequenzer
     end
   end
   object Panel1: TPanel
-    Left = 400
+    Left = 392
     Top = 0
     Width = 282
-    Height = 561
+    Height = 552
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 0

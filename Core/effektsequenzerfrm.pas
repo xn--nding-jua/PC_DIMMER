@@ -1533,9 +1533,9 @@ begin
   if length(mainform.EffektsequenzerTabs)=0 then
   begin
     setlength(mainform.EffektsequenzerTabs,1);
-    mainform.EffektsequenzerTabs[0]:=_('Alle');
   end;
 
+  mainform.EffektsequenzerTabs[0]:=_('Alle');
   for i:=0 to length(mainform.EffektsequenzerTabs)-1 do
     TabControl1.Tabs.Add(mainform.EffektsequenzerTabs[i]);
 
@@ -3141,7 +3141,7 @@ end;
 procedure Teffektsequenzer.NeuesTabhinzufgen1Click(Sender: TObject);
 begin
   setlength(mainform.EffektsequenzerTabs, length(mainform.EffektsequenzerTabs)+1);
-  mainform.EffektsequenzerTabs[length(mainform.EffektsequenzerTabs)-1]:=InputBox(_('Tab bezeichnen...'),_('Bitte geben Sie eine Bezeichnung für das neue Tab ein:'),_('Neues Tab'));
+  mainform.EffektsequenzerTabs[length(mainform.EffektsequenzerTabs)-1]:=InputBox(_('Tab bezeichnen...'),_('Bitte geben Sie eine Bezeichnung für das neue Tab ein:'),_('Neuer Tab'));
   TabControl1.Tabs.Add(mainform.EffektsequenzerTabs[length(mainform.EffektsequenzerTabs)-1]);
   effekttotab.Items.Add(mainform.EffektsequenzerTabs[length(mainform.EffektsequenzerTabs)-1]);
 end;

@@ -653,6 +653,7 @@
     speed:Integer;
     startwithstepone:boolean;
     blackoutonstop:boolean;
+    blackoutonend:boolean;
     Stopscene:TGUID;
     Startscene:TGUID;
   end;

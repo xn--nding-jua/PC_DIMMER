@@ -3789,9 +3789,9 @@ var
   sceneinuse:boolean;
   i,j,k,l,m,t:integer;
   h,min,s,ms:string;
-  Bewegungsszenen, Befehle, Kombinationsszenen, Effekte, Kontrollpanel, MIDIIn,
+  Bewegungsszenen, Befehle, Kombinationsszenen, Effekte, mKontrollpanel, MIDIIn,
   DataIn, Tastatursteuerung, Joysticksteuerung, Audioeffektplayer, Cuelist,
-  Geraeteszene,Submaster:TTreeNode;
+  Geraeteszene,Submaster,Sonstige:TTreeNode;
 begin
   Treeview.Items.Clear;
   sceneinuse:=false;
@@ -3799,7 +3799,7 @@ begin
   Befehle:=nil;
   Kombinationsszenen:=nil;
   Effekte:=nil;
-  Kontrollpanel:=nil;
+  mKontrollpanel:=nil;
   MidiIn:=nil;
   DataIn:=nil;
   Tastatursteuerung:=nil;
@@ -3807,153 +3807,207 @@ begin
   Audioeffektplayer:=nil;
   Cuelist:=nil;
   Geraeteszene:=nil;
+  Sonstige:=nil;
 
   //  Bewegungsszenen
-    for i:=0 to length(mainform.Bewegungsszenen)-1 do
+  for i:=0 to length(mainform.Bewegungsszenen)-1 do
+  begin
+    for j:=0 to length(mainform.Bewegungsszenen[i].Devices)-1 do
+    for l:=0 to length(mainform.Bewegungsszenen[i].Devices[j].Szenen)-1 do
+    for k:=0 to length(mainform.Bewegungsszenen[i].Devices[j].Szenen[l])-1 do
+    if IsEqualGUID(mainform.Bewegungsszenen[i].Devices[j].Szenen[l][k].ID,ID) then
     begin
-      for j:=0 to length(mainform.Bewegungsszenen[i].Devices)-1 do
-      for l:=0 to length(mainform.Bewegungsszenen[i].Devices[j].Szenen)-1 do
-      for k:=0 to length(mainform.Bewegungsszenen[i].Devices[j].Szenen[l])-1 do
-      if IsEqualGUID(mainform.Bewegungsszenen[i].Devices[j].Szenen[l][k].ID,ID) then
+      if Bewegungsszenen=nil then
+        Bewegungsszenen:=Treeview.Items.Add(nil, _('Bewegungsszenen'));
+      Bewegungsszenen.ImageIndex:=23;
+      Bewegungsszenen.SelectedIndex:=23;
+      Treeview.Items.AddChild(Bewegungsszenen,mainform.Bewegungsszenen[i].Name);
+      sceneinuse:=true;
+    end;
+  end;
+// Ende Bewegungsszenen
+//  Befehle
+  if not sceneinuse then
+  for i:=0 to length(mainform.Befehle2)-1 do
+  begin
+    for j:=0 to length(mainform.Befehle2[i].ArgGUID)-1 do
+    begin
+      if IsEqualGUID(mainform.Befehle2[i].ArgGUID[j],ID) then
       begin
-        if Bewegungsszenen=nil then
-          Bewegungsszenen:=Treeview.Items.Add(nil, _('Bewegungsszenen'));
-        Bewegungsszenen.ImageIndex:=23;
-        Bewegungsszenen.SelectedIndex:=23;
-        Treeview.Items.AddChild(Bewegungsszenen,mainform.Bewegungsszenen[i].Name);
+        if Befehle=nil then
+          Befehle:=Treeview.Items.Add(nil, _('Befehle'));
+        Befehle.ImageIndex:=15;
+        Befehle.SelectedIndex:=15;
+        Treeview.Items.AddChild(Befehle,mainform.Befehle2[i].Name);
         sceneinuse:=true;
       end;
     end;
-  // Ende Bewegungsszenen
-  //  Befehle
-    for i:=0 to length(mainform.Befehle2)-1 do
+  end;
+// Ende Befehle
+//  Kombinationsszenen
+  if not sceneinuse then
+  for i:=0 to length(mainform.Kompositionsszenen)-1 do
+  begin
+    for j:=0 to length(mainform.Kompositionsszenen[i].IDs)-1 do
+    if IsEqualGUID(mainform.Kompositionsszenen[i].IDs[j],ID) then
     begin
-      for j:=0 to length(mainform.Befehle2[i].ArgGUID)-1 do
+      if Kombinationsszenen=nil then
+        Kombinationsszenen:=Treeview.Items.Add(nil, _('Kombinationsszenen'));
+      Kombinationsszenen.ImageIndex:=89;
+      Kombinationsszenen.SelectedIndex:=89;
+      Treeview.Items.AddChild(Kombinationsszenen,mainform.Kompositionsszenen[i].Name);
+      sceneinuse:=true;
+    end;
+  end;
+// Ende Kombinationsszenen
+//  Effekte
+  if not sceneinuse then
+  for i:=0 to length(mainform.Effektsequenzereffekte)-1 do
+  begin
+    for j:=0 to length(mainform.Effektsequenzereffekte[i].Effektschritte)-1 do
+    for k:=0 to length(mainform.Effektsequenzereffekte[i].Effektschritte[j].IDs)-1 do
+    if IsEqualGUID(mainform.Effektsequenzereffekte[i].Effektschritte[j].IDs[k],ID) then
+    begin
+      if Effekte=nil then
+        Effekte:=Treeview.Items.Add(nil, _('Effekte'));
+      Effekte.ImageIndex:=20;
+      Effekte.SelectedIndex:=20;
+      Treeview.Items.AddChild(Effekte,mainform.Effektsequenzereffekte[i].Name+', '+mainform.Effektsequenzereffekte[i].Effektschritte[j].Name);
+      sceneinuse:=true;
+    end;
+
+    if IsEqualGUID(mainform.Effektsequenzereffekte[i].Startscene, ID) then
+    begin
+      if Effekte=nil then
+        Effekte:=Treeview.Items.Add(nil, _('Effekte'));
+      Effekte.ImageIndex:=20;
+      Effekte.SelectedIndex:=20;
+      Treeview.Items.AddChild(Effekte, _('Bei Start von')+' '+mainform.Effektsequenzereffekte[i].Name);
+      sceneinuse:=true;
+    end;
+
+    if IsEqualGUID(mainform.Effektsequenzereffekte[i].Stopscene, ID) then
+    begin
+      if Effekte=nil then
+        Effekte:=Treeview.Items.Add(nil, _('Effekte'));
+      Effekte.ImageIndex:=20;
+      Effekte.SelectedIndex:=20;
+      Treeview.Items.AddChild(Effekte, _('Bei Stop von')+' '+mainform.Effektsequenzereffekte[i].Name);
+      sceneinuse:=true;
+    end;
+  end;
+// Ende Effekte
+//  Kontrollpanel
+  if not sceneinuse then
+  for i:=0 to 24 do
+  for j:=0 to 24 do
+    if IsEqualGUID(mainform.kontrollpanelrecord.ID[i][j],ID) then
+    begin
+      if mKontrollpanel=nil then
+        mKontrollpanel:=Treeview.Items.Add(nil, _('Kontrollpanelbuttons'));
+      mKontrollpanel.ImageIndex:=21;
+      mKontrollpanel.SelectedIndex:=21;
+      Treeview.Items.AddChild(mKontrollpanel,_('Button ')+inttostr(i+1)+'x'+inttostr(j+1)+': '+mainform.kontrollpanelrecord.buttonname[i][j]);
+      sceneinuse:=true;
+    end;
+// Ende Kontrollpanel
+//  MIDI-Events
+  if not sceneinuse then
+  for i:=0 to length(mainform.MidiEventArray)-1 do
+  begin
+    if length(mainform.MidiEventArray[i].Befehl.ArgGUID)>0 then
+    if IsEqualGUID(mainform.MidiEventArray[i].Befehl.ArgGUID[0],ID) then
+    begin
+      if MIDIIn=nil then
+        MIDIIn:=Treeview.Items.Add(nil, _('MIDI-In'));
+      MIDIIn.ImageIndex:=17;
+      MIDIIn.SelectedIndex:=17;
+      Treeview.Items.AddChild(MIDIIn,_('Message: ')+inttostr(mainform.MidiEventArray[i].MIDIMessage));
+      sceneinuse:=true;
+    end;
+  end;
+// Ende MIDI-Events
+//  DataIn-Events
+  if not sceneinuse then
+  for i:=0 to length(mainform.DataInEventArray)-1 do
+  begin
+    if length(mainform.DataInEventArray[i].Befehl.ArgGUID)>0 then
+    if IsEqualGUID(mainform.DataInEventArray[i].Befehl.ArgGUID[0],ID) then
+    begin
+      if DataIn=nil then
+        DataIn:=Treeview.Items.Add(nil, _('Data-In'));
+      DataIn.ImageIndex:=49;
+      DataIn.SelectedIndex:=49;
+      Treeview.Items.AddChild(DataIn,_('Kanal: ')+inttostr(mainform.DataInEventArray[i].Channel));
+      sceneinuse:=true;
+    end;
+  end;
+// Ende DataIn-Events
+//  Tastatursteuerung
+  if not sceneinuse then
+  for i:=0 to length(mainform.TastencodeArray)-1 do
+  begin
+    if length(mainform.TastencodeArray[i].Befehl.ArgGUID)>0 then
+    if IsEqualGUID(mainform.TastencodeArray[i].Befehl.ArgGUID[0],ID) then
+    begin
+      if Tastatursteuerung=nil then
+        Tastatursteuerung:=Treeview.Items.Add(nil, _('Tastatursteuerung'));
+      Tastatursteuerung.ImageIndex:=24;
+      Tastatursteuerung.SelectedIndex:=24;
+      Treeview.Items.AddChild(Tastatursteuerung,ShortCutToText(mainform.TastencodeArray[i].Hotkey));
+      sceneinuse:=true;
+    end;
+  end;
+// Ende Tastatursteuerung
+//  Joysticksteuerung
+  if not sceneinuse then
+  for i:=0 to 43 do
+  begin
+    if length(mainform.JoystickEvents[i].Befehl.ArgGUID)>0 then
+    if IsEqualGUID(mainform.JoystickEvents[i].Befehl.ArgGUID[0],ID) then
+    begin
+      if Joysticksteuerung=nil then
+        Joysticksteuerung:=Treeview.Items.Add(nil, _('Joysticksteuerung'));
+      Joysticksteuerung.ImageIndex:=28;
+      Joysticksteuerung.SelectedIndex:=28;
+      Treeview.Items.AddChild(Joysticksteuerung,_('Button ')+inttostr(i));
+      sceneinuse:=true;
+    end;
+  end;
+// Ende Joysticksteuerung
+//  Audioeffektplayer
+  if not sceneinuse then
+  for i:=0 to length(mainform.Effektaudio_record)-1 do
+  begin
+    for j:=1 to maxaudioeffektlayers do
+    begin
+      for k:=0 to length(mainform.Effektaudio_record[i].effektaudiodatei.layer[j].effekt)-1 do
       begin
-        if IsEqualGUID(mainform.Befehle2[i].ArgGUID[j],ID) then
+        if IsEqualGUID(mainform.Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].ID,ID) then
         begin
-          if Befehle=nil then
-            Befehle:=Treeview.Items.Add(nil, _('Befehle'));
-          Befehle.ImageIndex:=15;
-          Befehle.SelectedIndex:=15;
-          Treeview.Items.AddChild(Befehle,mainform.Befehle2[i].Name);
+          if Audioeffektplayer=nil then
+            Audioeffektplayer:=Treeview.Items.Add(nil, _('Audioeffektplayer'));
+          Audioeffektplayer.ImageIndex:=50;
+          Audioeffektplayer.SelectedIndex:=50;
+
+          t:=trunc(mainform.Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].audioeffektposition*1000);
+          h:=inttostr(t div 3600000); t:=t mod 3600000;
+          min:=inttostr(t div 60000); t:=t mod 60000;
+          s:=inttostr(t div 1000); t:=t mod 1000;
+          ms:=inttostr(t);
+          if length(min)=1 then min:='0'+min;
+          if length(s)=1 then s:='0'+s;
+          if length(ms)=1 then ms:='0'+ms;
+          if length(ms)=2 then ms:='0'+ms;
+
+          Treeview.Items.AddChild(Audioeffektplayer,mainform.Effektaudio_record[i].audiodatei+_(', Layer: ')+inttostr(j)+_(', Position: ')+h+':'+min+':'+s+':'+ms+_(', Effekt: ')+inttostr(k));
           sceneinuse:=true;
         end;
-      end;
-    end;
-  // Ende Befehle
-  //  Kombinationsszenen
-    for i:=0 to length(mainform.Kompositionsszenen)-1 do
-    begin
-      for j:=0 to length(mainform.Kompositionsszenen[i].IDs)-1 do
-      if IsEqualGUID(mainform.Kompositionsszenen[i].IDs[j],ID) then
-      begin
-        if Kombinationsszenen=nil then
-          Kombinationsszenen:=Treeview.Items.Add(nil, _('Kombinationsszenen'));
-        Kombinationsszenen.ImageIndex:=89;
-        Kombinationsszenen.SelectedIndex:=89;
-        Treeview.Items.AddChild(Kombinationsszenen,mainform.Kompositionsszenen[i].Name);
-        sceneinuse:=true;
-      end;
-    end;
-  // Ende Kombinationsszenen
-  //  Effekte
-    for i:=0 to length(mainform.Effektsequenzereffekte)-1 do
-    begin
-      for j:=0 to length(mainform.Effektsequenzereffekte[i].Effektschritte)-1 do
-      for k:=0 to length(mainform.Effektsequenzereffekte[i].Effektschritte[j].IDs)-1 do
-      if IsEqualGUID(mainform.Effektsequenzereffekte[i].Effektschritte[j].IDs[k],ID) then
-      begin
-        if Effekte=nil then
-          Effekte:=Treeview.Items.Add(nil, _('Effekte'));
-        Effekte.ImageIndex:=20;
-        Effekte.SelectedIndex:=20;
-        Treeview.Items.AddChild(Effekte,mainform.Effektsequenzereffekte[i].Name+', '+mainform.Effektsequenzereffekte[i].Effektschritte[j].Name);
-        sceneinuse:=true;
-      end;
-    end;
-  // Ende Effekte
-  //  Kontrollpanel
-    for i:=0 to 24 do
-    for j:=0 to 24 do
-      if IsEqualGUID(mainform.kontrollpanelrecord.ID[i][j],ID) then
-      begin
-        if Kontrollpanel=nil then
-          Kontrollpanel:=Treeview.Items.Add(nil, _('Kontrollpanelbuttons'));
-        Kontrollpanel.ImageIndex:=21;
-        Kontrollpanel.SelectedIndex:=21;
-        Treeview.Items.AddChild(Kontrollpanel,_('Button ')+inttostr(i+1)+'x'+inttostr(j+1)+': '+mainform.kontrollpanelrecord.buttonname[i][j]);
-        sceneinuse:=true;
-      end;
-  // Ende Kontrollpanel
-  //  MIDI-Events
-    for i:=0 to length(mainform.MidiEventArray)-1 do
-    begin
-      if length(mainform.MidiEventArray[i].Befehl.ArgGUID)>0 then
-      if IsEqualGUID(mainform.MidiEventArray[i].Befehl.ArgGUID[0],ID) then
-      begin
-        if MIDIIn=nil then
-          MIDIIn:=Treeview.Items.Add(nil, _('MIDI-In'));
-        MIDIIn.ImageIndex:=17;
-        MIDIIn.SelectedIndex:=17;
-        Treeview.Items.AddChild(MIDIIn,_('Message: ')+inttostr(mainform.MidiEventArray[i].MIDIMessage));
-        sceneinuse:=true;
-      end;
-    end;
-  // Ende MIDI-Events
-  //  DataIn-Events
-    for i:=0 to length(mainform.DataInEventArray)-1 do
-    begin
-      if length(mainform.DataInEventArray[i].Befehl.ArgGUID)>0 then
-      if IsEqualGUID(mainform.DataInEventArray[i].Befehl.ArgGUID[0],ID) then
-      begin
-        if DataIn=nil then
-          DataIn:=Treeview.Items.Add(nil, _('Data-In'));
-        DataIn.ImageIndex:=49;
-        DataIn.SelectedIndex:=49;
-        Treeview.Items.AddChild(DataIn,_('Kanal: ')+inttostr(mainform.DataInEventArray[i].Channel));
-        sceneinuse:=true;
-      end;
-    end;
-  // Ende DataIn-Events
-  //  Tastatursteuerung
-    for i:=0 to length(mainform.TastencodeArray)-1 do
-    begin
-      if length(mainform.TastencodeArray[i].Befehl.ArgGUID)>0 then
-      if IsEqualGUID(mainform.TastencodeArray[i].Befehl.ArgGUID[0],ID) then
-      begin
-        if Tastatursteuerung=nil then
-          Tastatursteuerung:=Treeview.Items.Add(nil, _('Tastatursteuerung'));
-        Tastatursteuerung.ImageIndex:=24;
-        Tastatursteuerung.SelectedIndex:=24;
-        Treeview.Items.AddChild(Tastatursteuerung,ShortCutToText(mainform.TastencodeArray[i].Hotkey));
-        sceneinuse:=true;
-      end;
-    end;
-  // Ende Tastatursteuerung
-  //  Joysticksteuerung
-    for i:=0 to 43 do
-    begin
-      if length(mainform.JoystickEvents[i].Befehl.ArgGUID)>0 then
-      if IsEqualGUID(mainform.JoystickEvents[i].Befehl.ArgGUID[0],ID) then
-      begin
-        if Joysticksteuerung=nil then
-          Joysticksteuerung:=Treeview.Items.Add(nil, _('Joysticksteuerung'));
-        Joysticksteuerung.ImageIndex:=28;
-        Joysticksteuerung.SelectedIndex:=28;
-        Treeview.Items.AddChild(Joysticksteuerung,_('Button ')+inttostr(i));
-        sceneinuse:=true;
-      end;
-    end;
-  // Ende Joysticksteuerung
-  //  Audioeffektplayer
-    for i:=0 to length(mainform.Effektaudio_record)-1 do
-    begin
-      for j:=1 to maxaudioeffektlayers do
-      begin
-        for k:=0 to length(mainform.Effektaudio_record[i].effektaudiodatei.layer[j].effekt)-1 do
+
+        for l:=0 to length(mainform.Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle)-1 do
+        for m:=0 to length(mainform.Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID)-1 do
         begin
-          if IsEqualGUID(mainform.Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].ID,ID) then
+          if IsEqualGUID(mainform.Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID[m],ID) then
           begin
             if Audioeffektplayer=nil then
               Audioeffektplayer:=Treeview.Items.Add(nil, _('Audioeffektplayer'));
@@ -3973,88 +4027,92 @@ begin
             Treeview.Items.AddChild(Audioeffektplayer,mainform.Effektaudio_record[i].audiodatei+_(', Layer: ')+inttostr(j)+_(', Position: ')+h+':'+min+':'+s+':'+ms+_(', Effekt: ')+inttostr(k));
             sceneinuse:=true;
           end;
-
-          for l:=0 to length(mainform.Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle)-1 do
-          for m:=0 to length(mainform.Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID)-1 do
-          begin
-            if IsEqualGUID(mainform.Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Befehle[l].ArgGUID[m],ID) then
-            begin
-              if Audioeffektplayer=nil then
-                Audioeffektplayer:=Treeview.Items.Add(nil, _('Audioeffektplayer'));
-              Audioeffektplayer.ImageIndex:=50;
-              Audioeffektplayer.SelectedIndex:=50;
-
-              t:=trunc(mainform.Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].audioeffektposition*1000);
-              h:=inttostr(t div 3600000); t:=t mod 3600000;
-              min:=inttostr(t div 60000); t:=t mod 60000;
-              s:=inttostr(t div 1000); t:=t mod 1000;
-              ms:=inttostr(t);
-              if length(min)=1 then min:='0'+min;
-              if length(s)=1 then s:='0'+s;
-              if length(ms)=1 then ms:='0'+ms;
-              if length(ms)=2 then ms:='0'+ms;
-
-              Treeview.Items.AddChild(Audioeffektplayer,mainform.Effektaudio_record[i].audiodatei+_(', Layer: ')+inttostr(j)+_(', Position: ')+h+':'+min+':'+s+':'+ms+_(', Effekt: ')+inttostr(k));
-              sceneinuse:=true;
-            end;
-          end;
         end;
       end;
     end;
-  // Ende Audioeffektplayer
-  // Cuelist
-    for i:=0 to length(mainform.Cuelistbank)-1 do
+  end;
+// Ende Audioeffektplayer
+// Cuelist
+  if not sceneinuse then
+  for i:=0 to length(mainform.Cuelistbank)-1 do
+  begin
+    for j:=0 to length(mainform.Cuelistbank[i].cuelistbankitems)-1 do
     begin
-      for j:=0 to length(mainform.Cuelistbank[i].cuelistbankitems)-1 do
+      if IsEqualGUID(mainform.Cuelistbank[i].cuelistbankitems[j].ID,ID) then
       begin
-        if IsEqualGUID(mainform.Cuelistbank[i].cuelistbankitems[j].ID,ID) then
-        begin
-          if Cuelist=nil then
-            Cuelist:=Treeview.Items.Add(nil, _('Cuelist'));
-          Cuelist.ImageIndex:=63;
-          Cuelist.SelectedIndex:=63;
-          Treeview.Items.AddChild(Cuelist,_('Bank ')+inttostr(i));
-          sceneinuse:=true;
-        end;
+        if Cuelist=nil then
+          Cuelist:=Treeview.Items.Add(nil, _('Cuelist'));
+        Cuelist.ImageIndex:=63;
+        Cuelist.SelectedIndex:=63;
+        Treeview.Items.AddChild(Cuelist,_('Bank ')+inttostr(i));
+        sceneinuse:=true;
       end;
     end;
-  // Ende Cuelist
-  // Geräteszene
-    for i:=0 to length(mainform.DeviceScenes)-1 do
+  end;
+// Ende Cuelist
+// Geräteszene
+  if not sceneinuse then
+  for i:=0 to length(mainform.DeviceScenes)-1 do
+  begin
+    for j:=0 to length(mainform.DeviceScenes[i].Befehle)-1 do
+    for k:=0 to length(mainform.DeviceScenes[i].Befehle[j].ArgGUID)-1 do
     begin
-      for j:=0 to length(mainform.DeviceScenes[i].Befehle)-1 do
-      for k:=0 to length(mainform.DeviceScenes[i].Befehle[j].ArgGUID)-1 do
+      if IsEqualGUID(mainform.DeviceScenes[i].Befehle[j].ArgGUID[k],ID) then
       begin
-        if IsEqualGUID(mainform.DeviceScenes[i].Befehle[j].ArgGUID[k],ID) then
-        begin
-          if Geraeteszene=nil then
-            Geraeteszene:=Treeview.Items.Add(nil, _('Geräteszene'));
-          Geraeteszene.ImageIndex:=25;
-          Geraeteszene.SelectedIndex:=25;
-          Treeview.Items.AddChild(Geraeteszene,mainform.DeviceScenes[i].Name);
-          sceneinuse:=true;
-        end;
+        if Geraeteszene=nil then
+          Geraeteszene:=Treeview.Items.Add(nil, _('Geräteszene'));
+        Geraeteszene.ImageIndex:=25;
+        Geraeteszene.SelectedIndex:=25;
+        Treeview.Items.AddChild(Geraeteszene,mainform.DeviceScenes[i].Name);
+        sceneinuse:=true;
       end;
     end;
-  // Ende Geräteszene
-  // Submaster
-    for i:=0 to length(mainform.Submasterbank)-1 do
+  end;
+// Ende Geräteszene
+// Submaster
+  if not sceneinuse then
+  for i:=0 to length(mainform.Submasterbank)-1 do
+  begin
+    for j:=1 to 16 do
+    for k:=0 to length(mainform.Submasterbank[i].Befehl[j].ArgGUID)-1 do
     begin
-      for j:=1 to 16 do
-      for k:=0 to length(mainform.Submasterbank[i].Befehl[j].ArgGUID)-1 do
+      if IsEqualGUID(mainform.Submasterbank[i].Befehl[j].ArgGUID[k],ID) then
       begin
-        if IsEqualGUID(mainform.Submasterbank[i].Befehl[j].ArgGUID[k],ID) then
-        begin
-          if Geraeteszene=nil then
-            Geraeteszene:=Treeview.Items.Add(nil, _('Geräteszene'));
-          Geraeteszene.ImageIndex:=25;
-          Geraeteszene.SelectedIndex:=25;
-          Treeview.Items.AddChild(Geraeteszene,mainform.DeviceScenes[i].Name);
-          sceneinuse:=true;
-        end;
+        if Geraeteszene=nil then
+          Geraeteszene:=Treeview.Items.Add(nil, _('Geräteszene'));
+        Geraeteszene.ImageIndex:=25;
+        Geraeteszene.SelectedIndex:=25;
+        Treeview.Items.AddChild(Geraeteszene,mainform.DeviceScenes[i].Name);
+        sceneinuse:=true;
       end;
     end;
+  end;
   // Ende Submaster
+  // Beattool
+  if not sceneinuse then
+  begin
+    if IsEqualGUID(mainform.BeatImpuls.SceneOnBeatLost, ID) then
+    begin
+      if Sonstige=nil then
+        Sonstige:=Treeview.Items.Add(nil, _('Sonstiges'));
+      Sonstige.ImageIndex:=31;
+      Sonstige.SelectedIndex:=31;
+      Treeview.Items.AddChild(Sonstige,_('Beattool: Bei Beatverlust'));
+      sceneinuse:=true;
+    end;
+
+    if IsEqualGUID(mainform.BeatImpuls.SceneOnBeatStart, ID) then
+    begin
+      if Sonstige=nil then
+        Sonstige:=Treeview.Items.Add(nil, _('Sonstiges'));
+      Sonstige.ImageIndex:=31;
+      Sonstige.SelectedIndex:=31;
+      Treeview.Items.AddChild(Sonstige,_('Beattool: Bei Beatbeginn'));
+      sceneinuse:=true;
+    end;
+  end;
+  // Ende Beattool
+
 
   Treeview.FullExpand;
   result:=sceneinuse;

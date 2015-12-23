@@ -494,7 +494,7 @@ procedure Tmainform.StartUp;
 var
   LReg:TRegistry;
 begin
-  Application.CreateForm(Tmessagefrm, messagefrm);
+  messagefrm:=Tmessagefrm.Create(Application);
   messagefrm.show;
   messagefrm.memo1.lines.add('DMX4ALL-Interfaces werden gesucht...');
   messagefrm.refresh;
@@ -593,7 +593,7 @@ begin
   LReg.Free;
 
   messagefrm.hide;
-  messagefrm.Free;
+  messagefrm.Release;
 end;
 
 end.
