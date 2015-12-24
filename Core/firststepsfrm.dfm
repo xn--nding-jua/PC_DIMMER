@@ -178,10 +178,10 @@ object firststepsform: Tfirststepsform
         Height = 29
         AutoSize = False
         Caption = 
-          'Hinweis: Der PC_DIMMER2008 bietet noch weitaus umfangreichere Fu' +
-          'nktionen. Es sollen in dieser '#220'bersicht allerdings nur die wicht' +
-          'igsten Funktionen beschrieben werden, um einen schnellen Einstie' +
-          'g in das Programm zu bekommen.'
+          'Hinweis: Der PC_DIMMER bietet noch weitaus umfangreichere Funkti' +
+          'onen. Es sollen in dieser '#220'bersicht allerdings nur die wichtigst' +
+          'en Funktionen beschrieben werden, um einen schnellen Einstieg in' +
+          ' das Programm zu bekommen.'
         Transparent = False
         WordWrap = True
       end
@@ -7806,7 +7806,7 @@ object firststepsform: Tfirststepsform
         Width = 321
         Height = 21
         Style = csDropDownList
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 4
         OnDropDown = ComboBox1DropDown
         OnSelect = ComboBox1Select

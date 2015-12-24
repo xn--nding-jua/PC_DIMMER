@@ -120,7 +120,9 @@ uses
   pcdUtils in 'pcdUtils.pas',
   nodecontrolfrm in 'nodecontrolfrm.pas' {nodecontrolform},
   opensourcefrm in 'opensourcefrm.pas' {opensourceform},
-  D7GesturesHeader in 'D7GesturesHeader.pas';
+  D7GesturesHeader in 'D7GesturesHeader.pas',
+  usermgmtfrm in 'usermgmtfrm.pas' {usermgmtform},
+  changeuserfrm in 'changeuserfrm.pas' {changeuserform};
 
 const
   sPC_DIMMERMutex = 'PC_DIMMER';
@@ -318,6 +320,8 @@ begin
     Application.CreateForm(Tnodecontrolform, nodecontrolform);
     if showtext then mainform.SplashAddText(_('Erstelle OpenSource-Form')); mainform.RefreshSplashText;
     Application.CreateForm(Topensourceform, opensourceform);
+    if showtext then mainform.SplashAddText(_('Erstelle Benutzerverwaltung-Form')); mainform.RefreshSplashText;
+    Application.CreateForm(Tusermgmtform, usermgmtform);
 
     // bitte neue Fenster im "OnClose"-Event des Hauptfensters zunächst schließen (wenn nötig) und dann "free"en!
 

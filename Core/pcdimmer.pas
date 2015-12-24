@@ -58,6 +58,7 @@ const
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
+  blowfishscramblekey = 'rejnbfui34w87fr243hf8bv8734g38zbf873cb48';
 
   // Konstanten für Thread-Multicore-Zuweisung
   THREAD_TERMINATE                 = $0001;
@@ -561,6 +562,8 @@ type
     CheckBox6: TCheckBox;
     Label16: TLabel;
     PluginDemoRibbonBtn: TdxBarLargeButton;
+    dxBarLargeButton6: TdxBarLargeButton;
+    dxBarLargeButton7: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -832,6 +835,8 @@ type
     procedure CheckBox3KeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure dxBarLargeButton6Click(Sender: TObject);
+    procedure dxBarLargeButton7Click(Sender: TObject);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -1101,6 +1106,7 @@ type
     PresetScenes: array of TPresetScene;
     NodeControlSets: array of TNodeControlSet;
     UserAccounts: array of TUserAccount;
+    CurrentUser: integer;
 
 //    DeviceForms:array of Tdeviceformprototyp;
     Desktopproperties : array[1..9] of TDesktopproperties;
@@ -1207,6 +1213,7 @@ type
     procedure SavePng(Bitmap: TBitmap; Destination:string);
     procedure SaveJpg(Bitmap: TBitmap; Destination:string);
     procedure PluginRibbonBtnClick(Sender: TObject);
+    function UserAccessGranted(Level: integer):boolean;
   end;
 
 // Callbackfunktionen der Plugin-Dlls
@@ -1263,7 +1270,7 @@ uses
   videoscreensynchronisierenfrm, ambilight, pmm, touchscreenfrm,
   ddfeditorassistant, dynguifrm, audiomanagerfrm, ProgressScreenSmallFrm,
   presetsceneeditorform, adddevicefrm, pcdUtils, pcdRegistry,
-  nodecontrolfrm, opensourcefrm;
+  nodecontrolfrm, opensourcefrm, usermgmtfrm, changeuserfrm;
 
 {$R *.DFM}
 
@@ -2081,17 +2088,25 @@ begin
     CheckUpdatesOnStartup := LReg.ReadWriteBool('Check updates on Startup', true);
     QuitWithoutConfirmation := LReg.ReadWriteBool('Do not ask for exit', false);
 
-    if LReg.ValueExists('NumberOfUserAccounts') then
+    if LReg.ValueExists('Number of Useraccounts') then
     begin
-      count:=LReg.ReadInteger('NumberOfUserAccounts');
+      count:=LReg.ReadInteger('Number of Useraccounts');
       setlength(UserAccounts, count);
       for i:=0 to length(UserAccounts)-1 do
       begin
-        LReg.ReadBinaryData('UserAccount '+inttostr(i)+'ID', UserAccounts[i].ID, sizeof(UserAccounts[i].ID));
-        LReg.ReadBinaryData('UserAccount '+inttostr(i)+'Name', UserAccounts[i].Name, sizeof(UserAccounts[i].Name));
-        LReg.ReadBinaryData('UserAccount '+inttostr(i)+'Password', UserAccounts[i].PasswordScrambled, sizeof(UserAccounts[i].PasswordScrambled));
-        // TODO: Descramble Password
-        LReg.ReadBinaryData('UserAccount '+inttostr(i)+'AccountLevel', UserAccounts[i].AccountLevel, sizeof(UserAccounts[i].AccountLevel));
+        LReg.ReadBinaryData('UserAccount '+inttostr(i)+' ID', UserAccounts[i].ID, sizeof(UserAccounts[i].ID));
+        LReg.ReadBinaryData('UserAccount '+inttostr(i)+' Name', UserAccounts[i].Name, sizeof(UserAccounts[i].Name));
+        LReg.ReadBinaryData('UserAccount '+inttostr(i)+' Password', UserAccounts[i].PasswordScrambled, sizeof(UserAccounts[i].PasswordScrambled));
+
+        with TCipher_Blowfish.Create do
+        try
+          Init(blowfishscramblekey);
+          UserAccounts[i].Password := DecodeBinary(UserAccounts[i].PasswordScrambled, TFormat_Copy);
+        finally
+          Free;
+        end;
+
+        LReg.ReadBinaryData('UserAccount '+inttostr(i)+' AccessLevel', UserAccounts[i].AccessLevel, sizeof(UserAccounts[i].AccessLevel));
       end;
     end;
     if length(UserAccounts)=0 then
@@ -2100,8 +2115,16 @@ begin
       CreateGUID(UserAccounts[0].ID);
       UserAccounts[0].Name:='Admin';
       UserAccounts[0].Password:='';
-      // TODO: Scramble Password
-      UserAccounts[0].AccountLevel:=0;
+
+      with TCipher_Blowfish.Create do
+      try
+        Init(blowfishscramblekey);
+        UserAccounts[0].PasswordScrambled:=EncodeBinary(UserAccounts[0].Password, TFormat_Copy);
+      finally
+        Free;
+      end;
+
+      UserAccounts[0].AccessLevel:=0;
     end;
     
     
@@ -2435,7 +2458,6 @@ var
   virtualdimmerfaktor:single;
 begin
   // hier ist 255=aus und 0=100%
-
   IsPanTiltChannel:=false;
   FineChannel:=0;
 
@@ -3462,15 +3484,23 @@ begin
     LReg.WriteString('Last Midi Outputdevices',lastmidioutputdevices);
     LReg.WriteInteger('Midi Backtrack Interval',MidiCallbackTimer.Interval);
     LReg.WriteBool('Small Windowstyle',mainpanel.Visible);
-    
-    LReg.WriteInteger('NumberOfUserAccounts', length(UserAccounts));
+
+    LReg.WriteInteger('Number of Useraccounts', length(UserAccounts));
     for i:=0 to length(UserAccounts)-1 do
     begin
-      LReg.WriteBinaryData('UserAccount '+inttostr(i)+'ID', UserAccounts[i].ID, sizeof(UserAccounts[i].ID));
-      LReg.WriteBinaryData('UserAccount '+inttostr(i)+'Name', UserAccounts[i].Name, sizeof(UserAccounts[i].Name));
-      // TODO: Scramble Password
-      LReg.WriteBinaryData('UserAccount '+inttostr(i)+'Password', UserAccounts[i].PasswordScrambled, sizeof(UserAccounts[i].PasswordScrambled));
-      LReg.WriteBinaryData('UserAccount '+inttostr(i)+'AccountLevel', UserAccounts[i].AccountLevel, sizeof(UserAccounts[i].AccountLevel));
+      LReg.WriteBinaryData('UserAccount '+inttostr(i)+' ID', UserAccounts[i].ID, sizeof(UserAccounts[i].ID));
+      LReg.WriteBinaryData('UserAccount '+inttostr(i)+' Name', UserAccounts[i].Name, sizeof(UserAccounts[i].Name));
+
+      with TCipher_Blowfish.Create do
+      try
+        Init(blowfishscramblekey);
+        UserAccounts[i].PasswordScrambled:=EncodeBinary(UserAccounts[i].Password, TFormat_Copy);
+      finally
+        Free;
+      end;
+
+      LReg.WriteBinaryData('UserAccount '+inttostr(i)+' Password', UserAccounts[i].PasswordScrambled, sizeof(UserAccounts[i].PasswordScrambled));
+      LReg.WriteBinaryData('UserAccount '+inttostr(i)+' AccessLevel', UserAccounts[i].AccessLevel, sizeof(UserAccounts[i].AccessLevel));
     end;
     
     LReg.CloseKey;
@@ -3610,6 +3640,7 @@ begin
   presetsceneeditor.free;
   nodecontrolform.free;
   opensourceform.free;
+  usermgmtform.free;
 
   // Finito :)
 
@@ -3700,6 +3731,8 @@ var
 	i:integer;
   LReg:TPCDRegistry;
 begin
+  if not UserAccessGranted(2) then exit;
+
   projekttitel:=_('Neues Projekt');
   projektversion:='1.0';
   projektbearbeiter:=JvComputerInfoEx1.Identification.LocalUserName;
@@ -3986,6 +4019,8 @@ begin
   -> Lauflicht
   -> Matrix
 }
+
+  if not UserAccessGranted(2) then exit;
 
   if fastsave then fastsaved:=true;
   result:=false;
@@ -5559,6 +5594,8 @@ var
   OldEinfacheszene:TOldEinfacheszene;
   DummyByte:Byte;
 begin
+  if not UserAccessGranted(2) then exit;
+
   scan:=false;
   openerror:=false;
   Autobackuptimer.Enabled:=false;
@@ -9091,6 +9128,12 @@ procedure TMainform.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 var
   text:string;
 begin
+  if not UserAccessGranted(2) then
+  begin
+    CanClose:=false;
+    exit;
+  end;
+
   if (QuitWithoutConfirmation=false) then
   begin
     if messagedlg(_('PC_DIMMER jetzt beenden?'),mtConfirmation,[mbYes,mbNo],0) <> mrYes then
@@ -9150,6 +9193,8 @@ end;
 
 procedure TMainform.poweroffswitch_on_offClick(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   if powerbutton1.PowerOffEnable then
   begin
     PowerRibbonBtn.Down:=false;
@@ -9196,6 +9241,8 @@ var
   oldsounddevicespeakers:integer;
   BassDeviceInfo:BASS_DEVICEINFO;
 begin
+  if not UserAccessGranted(1) then exit;
+
   Optionenbox.Notebook1.PageIndex:=0;
 
   oldsounddevicespeakers:=sounddevicespeakers;
@@ -9484,11 +9531,11 @@ procedure TMainform.ToolButton1Click(Sender: TObject);
 var
 	choice:integer;
 begin
-    choice:=messagedlg(_('Aktuelles Projekt speichern?'),mtConfirmation,
-       [mbYes,mbNo,mbCancel],0);
-    if choice=6 then begin if saveproject(false,false,false) then NewProject; end;
-    if choice=7 then NewProject;
-    if choice=2 then begin end;
+  choice:=messagedlg(_('Aktuelles Projekt speichern?'),mtConfirmation,
+     [mbYes,mbNo,mbCancel],0);
+  if choice=6 then begin if saveproject(false,false,false) then NewProject; end;
+  if choice=7 then NewProject;
+  if choice=2 then begin end;
 end;
 
 procedure TMainform.ToolButton4Click(Sender: TObject);
@@ -9561,6 +9608,8 @@ procedure TMainform.BlackoutClick(Sender: TObject);
 var
   i:integer;
 begin
+  if not UserAccessGranted(2) then exit;
+
   if IsBlackoutMode then
   begin
     BlackoutRibbonBtn.Down:=true;
@@ -11582,6 +11631,8 @@ end;
 
 procedure TMainform.Projektverwaltung1Click(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   if autoinsertcomputerusername then
     projektbearbeiter:=JvComputerInfoEx1.Identification.LocalUserName;
 
@@ -12058,6 +12109,8 @@ end;
 
 procedure TMainform.MIDIEinstellungen1Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   refreshmidi;
   midieventfrm.Show;
 end;
@@ -12514,7 +12567,7 @@ begin
 
       with TCipher_Blowfish.Create do
       try
-        Init('rejnbfui34w87fr243hf8bv8734g38zbf873cb48');
+        Init(blowfishscramblekey);
         FHTTPServer.Password := DecodeBinary(httppasswordscrambled, TFormat_Copy);
       finally
         Free;
@@ -12528,7 +12581,7 @@ begin
 
       with TCipher_Blowfish.Create do
       try
-        Init('rejnbfui34w87fr243hf8bv8734g38zbf873cb48');
+        Init(blowfishscramblekey);
         autolockcode := DecodeBinary(autolockcodescrambled, TFormat_Copy);
       finally
         Free;
@@ -13242,6 +13295,8 @@ end;
 
 procedure TMainform.Szenenverwaltung1Click(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   szenenverwaltung_formarray[0].Show;
 end;
 
@@ -17107,6 +17162,8 @@ end;
 
 procedure TMainform.Kontrollpanel1Click(Sender: TObject);
 begin
+  if not UserAccessGranted(3) then exit;
+
   if kontrollpanel.Showing then
     kontrollpanel.BringToFront
   else
@@ -18798,11 +18855,15 @@ end;
 
 procedure TMainform.Effektsequenzer1Click(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   effektsequenzer.show;
 end;
 
 procedure TMainform.GlobaleTastenabfrage1Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   with Tastenabfrage do
   begin
     lastrow:=StringGrid1.Row;
@@ -18925,6 +18986,8 @@ end;
 
 procedure TMainform.Gertesteuerung2Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   geraetesteuerung.show;
 end;
 
@@ -19076,6 +19139,8 @@ end;
 
 procedure TMainform.Bhnenansicht1Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   if FirstStartofStageview then
   begin
     FirstStartofStageview:=false;
@@ -19086,17 +19151,23 @@ end;
 
 procedure TMainform.Submaster1Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   submasterform.show;
 end;
 
 procedure TMainform.Joysticksteuerung1Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   joystickform.CheckBox1.Checked:=enablejoystick;
   joystickform.show;
 end;
 
 procedure TMainform.DataInEinstellungenClick(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   refreshdatain;
   dataineventfrm.show;
 end;
@@ -19252,6 +19323,8 @@ end;
 
 procedure TMainform.LoadAutoBackupBtnClick(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   recoveryform:=Trecoveryform.Create(Application);
 {
   if FileExists(userdirectory+'Autobackup.pcdbkup') then
@@ -19361,6 +19434,8 @@ end;
 
 procedure TMainform.TBItem20Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   ddfeditorform.show;
 end;
 
@@ -19489,11 +19564,15 @@ end;
 
 procedure TMainform.TBItem13Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   audioeffektplayerform.show;
 end;
 
 procedure TMainform.TBItem22Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   if messagedlg(_('Möchten Sie wirklich alle laufenden Effekte und Szenen beenden?'),mtConfirmation, [mbYes,mbNo],0)=mrYes then
   begin
     StopAllEffects;
@@ -19502,6 +19581,8 @@ end;
 
 procedure TMainform.TBItem23Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   timecodeplayerform.show;
 end;
 
@@ -19545,6 +19626,8 @@ end;
 
 procedure TMainform.TBItem25Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   schedulerform.show;
 end;
 
@@ -19597,6 +19680,8 @@ end;
 
 procedure TMainform.TBItem27Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   if videoscreenform=nil then
     videoscreenform:=Tvideoscreenform.Create(videoscreenform);
   videoscreenform.Show;
@@ -19604,6 +19689,8 @@ end;
 
 procedure TMainform.TBItem29Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   kanaluebersichtform.show;
 end;
 
@@ -19639,6 +19726,8 @@ end;
 
 procedure TMainform.TBItem31Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   beatform.Show;
 end;
 
@@ -20194,6 +20283,8 @@ end;
 
 procedure TMainform.TBItem36Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   IsFreezeMode:=not IsFreezeMode;
 
   if IsFreezeMode then
@@ -20228,6 +20319,8 @@ end;
 
 procedure TMainform.TBItem39Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   Textbuchform.show;
 end;
 
@@ -20735,6 +20828,8 @@ end;
 
 procedure TMainform.TBItem41Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   cuelistform.show;
 end;
 
@@ -21414,6 +21509,8 @@ end;
 
 procedure TMainform.TBItem43Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   masterform.show;
 end;
 
@@ -21606,6 +21703,8 @@ end;
 
 procedure TMainform.TBItem46Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   if cdplayerform=nil then
     cdplayerform:=Tcdplayerform.Create(cdplayerform);
   cdplayerform.Show;
@@ -21613,6 +21712,8 @@ end;
 
 procedure TMainform.TBItem48Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   groupeditorform.show;
 end;
 
@@ -21714,7 +21815,7 @@ begin
 
     with TCipher_Blowfish.Create do
     try
-      Init('rejnbfui34w87fr243hf8bv8734g38zbf873cb48');
+      Init(blowfishscramblekey);
       httppasswordscrambled := EncodeBinary(OptionenBox.HTTPServerPassword.Text, TFormat_Copy);
     finally
       Free;
@@ -21723,7 +21824,7 @@ begin
 
     with TCipher_Blowfish.Create do
     try
-      Init('rejnbfui34w87fr243hf8bv8734g38zbf873cb48');
+      Init(blowfishscramblekey);
       autolockcodescrambled := EncodeBinary(autolockcode, TFormat_Copy);
     finally
       Free;
@@ -21808,6 +21909,8 @@ end;
 
 procedure TMainform.TBItem56Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   winlircform.show;
 end;
 
@@ -22049,6 +22152,8 @@ procedure TMainform.TBItem59Click(Sender: TObject);
 var
   LReg:TPCDRegistry;
 begin
+  if not UserAccessGranted(2) then exit;
+
   if MCTRibbonBox.Down then
   begin
     MediaCenterTimeCodeSocket.LocalPort:=mediacenterport;
@@ -22066,6 +22171,8 @@ end;
 
 procedure TMainform.TBItem60Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   joystickform.CheckBox1.Checked:=ActiveJoystickRibbonBox.Down;
   joystickform.JoystickTimer.Enabled:=ActiveJoystickRibbonBox.Down;
   enablejoystick:=ActiveJoystickRibbonBox.Down;
@@ -22219,6 +22326,8 @@ end;
 
 procedure TMainform.TBItem17Click(Sender: TObject);
 begin
+  if not UserAccessGranted(3) then exit;
+
   if autolockcode='' then
     lockedform.itsmylife:=inputbox(_('Kennwort festlegen'), _('In den erweiterten Optionen ist kein Standardkennwort hinterlegt. Geben Sie daher bitte ein Kennwort für die aktuelle Sperrung ein:'),'')
   else
@@ -22309,6 +22418,8 @@ procedure TMainform.CommandservericonClick(Sender: TObject);
 var
   LReg:TPCDRegistry;
 begin
+  if not UserAccessGranted(2) then exit;
+
   Commandserver.DefaultPort:=terminalport;
   Commandserver.Active:=ActivateCommandReceiverRibbonBox.Down;
 
@@ -23271,6 +23382,8 @@ end;
 
 procedure TMainform.TBItem68Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   faderpanelform.show;
 end;
 
@@ -25091,6 +25204,8 @@ end;
 
 procedure TMainform.SmallWindowRibbonBtnClick(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   Panel1.Visible:=not Panel1.Visible;
   mainpanel.Visible:=not panel1.Visible;
   smallwindowstyle:=mainpanel.Visible;
@@ -25479,6 +25594,8 @@ procedure TMainform.dxBarButton22Click(Sender: TObject);
 var
   i:integer;
 begin
+  if not UserAccessGranted(2) then exit;
+
   if messagedlg(_('Möchten Sie wirklich alle laufenden Audiowiedergaben beenden?'),mtConfirmation, [mbYes,mbNo],0)=mrYes then
   begin
     for i:=0 to length(audioszenen)-1 do
@@ -25722,6 +25839,7 @@ begin
   ReTranslateComponent(picturechangeform);
   ReTranslateComponent(nodecontrolform);
   ReTranslateComponent(opensourceform);
+  ReTranslateComponent(usermgmtform);
 
   // Plugins neu initiieren
   mainform.Pluginsreaktivieren1Click(nil);
@@ -25777,6 +25895,8 @@ end;
 
 procedure TMainform.AmbilightRibbonBtnClick(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   if ambilightform.Showing then
     ambilightform.BringToFront
   else
@@ -25787,6 +25907,8 @@ end;
 
 procedure TMainform.PartyMuckenModulRibbonBtnClick(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   if pmmform.Showing then
     pmmform.BringToFront
   else
@@ -25797,6 +25919,8 @@ end;
 
 procedure TMainform.dxBarLargeButton4Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   touchscreenform.show;
 end;
 
@@ -25826,11 +25950,15 @@ end;
 
 procedure TMainform.DDFAssistantRibbonBtnClick(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   DDFEditorAssistantForm.show;
 end;
 
 procedure TMainform.dxBarLargeButton5Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   dynguiform.show;
 end;
 
@@ -25901,6 +26029,8 @@ end;
 
 procedure TMainform.dxBarButton26Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   audiomanagerform.show;
 end;
 
@@ -25948,6 +26078,8 @@ end;
 
 procedure TMainform.NodeControlRibbonBtnClick(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   nodecontrolform.show;
 end;
 
@@ -26095,6 +26227,61 @@ begin
         end;
       break;
     end;
+  end;
+end;
+
+procedure TMainform.dxBarLargeButton6Click(Sender: TObject);
+begin
+  if not UserAccessGranted(0) then exit;
+
+  usermgmtform.ShowModal;
+end;
+
+procedure TMainform.dxBarLargeButton7Click(Sender: TObject);
+var
+  i:integer;
+  Denied:boolean;
+begin
+  changeuserform:=Tchangeuserform.Create(Application);
+
+  changeuserform.edit1.text:='';
+  changeuserform.edit2.text:='';
+
+  changeuserform.showmodal;
+
+  Denied:=true;
+  if changeuserform.modalresult=mrOK then
+  begin
+    for i:=0 to length(UserAccounts)-1 do
+    begin
+      if changeuserform.edit1.text=UserAccounts[i].Name then
+      begin
+        if changeuserform.edit2.text=UserAccounts[i].Password then
+        begin
+          // Change user
+          CurrentUser:=i;
+          Denied:=false;
+        end;
+        break;
+      end;
+    end;
+
+    if Denied then
+      ShowMessage(_('Zugang verweigert!'));
+  end;
+
+  changeuserform.Release;
+end;
+
+function Tmainform.UserAccessGranted(Level: integer):boolean;
+begin
+  if UserAccounts[CurrentUser].AccessLevel<=Level then
+  begin
+    result:=true;
+  end else
+  begin
+    result:=false;
+    ShowMessage(UserAccounts[CurrentUser].Name+' '+_('besitzt keine ausreichenden Rechte für diese Operation!'));
   end;
 end;
 

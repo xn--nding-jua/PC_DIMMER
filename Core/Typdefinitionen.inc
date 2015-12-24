@@ -921,5 +921,5 @@
     Name:string[255];
     PasswordScrambled:string[255];
     Password:string[255];
-    AccountLevel:integer;
+    AccessLevel:integer;
   end;
