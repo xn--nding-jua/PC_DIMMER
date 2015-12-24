@@ -59,15 +59,15 @@ object szenenverwaltungform: Tszenenverwaltungform
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
-    Left = 302
+    Left = 294
     Top = 90
-    Height = 233
+    Height = 224
     Align = alRight
   end
   object Panel1: TPanel
     Left = 0
-    Top = 323
-    Width = 522
+    Top = 314
+    Width = 514
     Height = 97
     Align = alBottom
     BevelOuter = bvNone
@@ -1144,7 +1144,7 @@ object szenenverwaltungform: Tszenenverwaltungform
   object Panel2: TPanel
     Left = 0
     Top = 57
-    Width = 522
+    Width = 514
     Height = 33
     Align = alTop
     BevelOuter = bvNone
@@ -1204,10 +1204,10 @@ object szenenverwaltungform: Tszenenverwaltungform
     end
   end
   object TreeView2: TTreeView
-    Left = 305
+    Left = 297
     Top = 90
     Width = 217
-    Height = 233
+    Height = 224
     Hint = 'Zeigt die Verwendungsorte der aktuellen Szene an'
     Align = alRight
     Images = MainForm.PngImageList1
@@ -1219,7 +1219,7 @@ object szenenverwaltungform: Tszenenverwaltungform
   object Panel3: TPanel
     Left = 0
     Top = 0
-    Width = 522
+    Width = 514
     Height = 57
     Align = alTop
     BevelOuter = bvNone
@@ -1228,7 +1228,7 @@ object szenenverwaltungform: Tszenenverwaltungform
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 522
+      Width = 514
       Height = 57
       Style = grVertical
       StartColor = clWhite
@@ -1374,8 +1374,8 @@ object szenenverwaltungform: Tszenenverwaltungform
   object VST: TVirtualStringTree
     Left = 0
     Top = 90
-    Width = 302
-    Height = 233
+    Width = 294
+    Height = 224
     Align = alClient
     Colors.UnfocusedSelectionColor = clInactiveBorder
     Colors.UnfocusedSelectionBorderColor = clInactiveBorder

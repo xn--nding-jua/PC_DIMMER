@@ -872,7 +872,7 @@ object geraetesteuerung: Tgeraetesteuerung
       Header.Font.Name = 'MS Sans Serif'
       Header.Font.Style = []
       Header.Height = 17
-      Header.Options = [hoColumnResize, hoDrag, hoShowImages, hoShowSortGlyphs, hoVisible]
+      Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
       Images = MainForm.PngImageList1
       TabOrder = 4
       TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScroll, toAutoScrollOnExpand, toAutoTristateTracking, toAutoDeleteMovedNodes]

@@ -813,6 +813,8 @@ begin
       Data^.Beschreibung:=mainform.EinfacheSzenen[i].Beschreibung;
       Data^.Fadetime:=mainform.GetSceneInfo2(mainform.Einfacheszenen[i].ID, 'time');
       Data^.ID:=mainform.EinfacheSzenen[i].ID;
+
+      VST.Sort(CatNode, 0, sdAscending);
     end;
 
     for i:=0 to length(mainform.DeviceScenes)-1 do
@@ -853,6 +855,8 @@ begin
       Data^.Beschreibung:=mainform.DeviceScenes[i].Beschreibung;
       Data^.Fadetime:=mainform.GetSceneInfo2(mainform.DeviceScenes[i].ID, 'time');
       Data^.ID:=mainform.DeviceScenes[i].ID;
+
+      VST.Sort(CatNode, 0, sdAscending);
     end;
 
     for i:=0 to length(mainform.Audioszenen)-1 do
@@ -893,6 +897,8 @@ begin
       Data^.Beschreibung:=mainform.Audioszenen[i].Beschreibung;
       Data^.Fadetime:=mainform.GetSceneInfo2(mainform.Audioszenen[i].ID, 'time');
       Data^.ID:=mainform.Audioszenen[i].ID;
+
+      VST.Sort(CatNode, 0, sdAscending);
     end;
 
     for i:=0 to length(mainform.Bewegungsszenen)-1 do
@@ -933,6 +939,8 @@ begin
       Data^.Beschreibung:=mainform.Bewegungsszenen[i].Beschreibung;
       Data^.Fadetime:=mainform.GetSceneInfo2(mainform.Bewegungsszenen[i].ID, 'time');
       Data^.ID:=mainform.Bewegungsszenen[i].ID;
+
+      VST.Sort(CatNode, 0, sdAscending);
     end;
 
     for i:=0 to length(mainform.Befehle2)-1 do
@@ -972,6 +980,8 @@ begin
       Data^.Caption:=mainform.Befehle2[i].Name;
       Data^.Beschreibung:=mainform.Befehle2[i].Beschreibung;
       Data^.ID:=mainform.Befehle2[i].ID;
+
+      VST.Sort(CatNode, 0, sdAscending);
     end;
 
     for i:=0 to length(mainform.Kompositionsszenen)-1 do
@@ -1012,6 +1022,8 @@ begin
       Data^.Beschreibung:=mainform.Kompositionsszenen[i].Beschreibung;
       Data^.Fadetime:='';
       Data^.ID:=mainform.Kompositionsszenen[i].ID;
+
+      VST.Sort(CatNode, 0, sdAscending);
     end;
 
     for i:=0 to length(mainform.DevicePresets)-1 do
@@ -1052,6 +1064,8 @@ begin
       Data^.Beschreibung:=mainform.DevicePresets[i].Beschreibung;
       Data^.Fadetime:='';
       Data^.ID:=mainform.DevicePresets[i].ID;
+
+      VST.Sort(CatNode, 0, sdAscending);
     end;
 
     for i:=0 to length(mainform.Autoszenen)-1 do
@@ -1092,6 +1106,8 @@ begin
       Data^.Beschreibung:=mainform.Autoszenen[i].Beschreibung;
       Data^.Fadetime:=mainform.GetSceneInfo2(mainform.Autoszenen[i].ID, 'time');
       Data^.ID:=mainform.Autoszenen[i].ID;
+
+      VST.Sort(CatNode, 0, sdAscending);
     end;
 
     for i:=0 to length(mainform.effektsequenzereffekte)-1 do
@@ -1132,6 +1148,8 @@ begin
       Data^.Beschreibung:=mainform.effektsequenzereffekte[i].Beschreibung;
       Data^.Fadetime:='';
       Data^.ID:=mainform.effektsequenzereffekte[i].ID;
+
+      VST.Sort(CatNode, 0, sdAscending);
     end;
 
     for i:=0 to length(mainform.Mediacenterszenen)-1 do
@@ -1172,6 +1190,8 @@ begin
       Data^.Beschreibung:=mainform.Mediacenterszenen[i].Beschreibung;
       Data^.Fadetime:='';
       Data^.ID:=mainform.Mediacenterszenen[i].ID;
+
+      VST.Sort(CatNode, 0, sdAscending);
     end;
 
     for i:=0 to length(mainform.presetscenes)-1 do
@@ -1212,6 +1232,8 @@ begin
       Data^.Beschreibung:=mainform.presetscenes[i].Beschreibung;
       Data^.Fadetime:='';
       Data^.ID:=mainform.presetscenes[i].ID;
+
+      VST.Sort(CatNode, 0, sdAscending);
     end;
 
     for i:=0 to length(mainform.PluginSzenen)-1 do
@@ -1252,6 +1274,8 @@ begin
       Data^.Beschreibung:='';
       Data^.Fadetime:='0';
       Data^.ID:=mainform.PluginSzenen[i].ID;
+
+      VST.Sort(CatNode, 0, sdAscending);
     end;
 
     // noch schnell die Einträge alphabetisch sortieren
