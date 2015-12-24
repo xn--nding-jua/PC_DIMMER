@@ -1249,6 +1249,16 @@ object leistungssteuerungform2: Tleistungssteuerungform2
     TabOrder = 1
     OnChange = JvSpinEdit2Change
   end
+  object Button1: TButton
+    Left = 160
+    Top = 592
+    Width = 83
+    Height = 25
+    Caption = 'Testen'
+    TabOrder = 2
+    OnMouseDown = Button1MouseDown
+    OnMouseUp = Button1MouseUp
+  end
   object Timer1: TTimer
     Enabled = False
     Interval = 500

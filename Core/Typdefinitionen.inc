@@ -487,10 +487,13 @@
     IrisMinValue:byte;
     IrisMaxValue:byte;
 
-    UseInPowerdiagram:boolean;
+    UseChannelBasedPower:boolean;
     AlwaysOn:boolean;
     ChannelForPower:byte;
+    CalcPowerAboveValue:byte;
     Power:integer;
+    UseFullPowerOnChannelvalue:boolean;
+    ContinuousPower:integer;
     Phase:byte;
   end;
 
@@ -615,6 +618,7 @@
   // Typen für Effekte
   TRunningEffekt = record
     Aktiv:boolean;
+    PleaseStopOnNextStep:boolean;
     rueckwaerts:boolean;
     AktuellerSchritt:integer;
     Zeit:Cardinal;
@@ -653,7 +657,6 @@
     speed:Integer;
     startwithstepone:boolean;
     blackoutonstop:boolean;
-    blackoutonend:boolean;
     Stopscene:TGUID;
     Startscene:TGUID;
   end;

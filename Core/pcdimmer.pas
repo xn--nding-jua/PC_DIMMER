@@ -4621,11 +4621,14 @@ begin
       Filestream.WriteBuffer(mainform.Devices[i].IrisMinValue,sizeof(mainform.Devices[i].IrisMinValue));
       Filestream.WriteBuffer(mainform.Devices[i].IrisMaxValue,sizeof(mainform.Devices[i].IrisMaxValue));
 
-      Filestream.WriteBuffer(mainform.Devices[i].UseInPowerdiagram,sizeof(mainform.Devices[i].UseInPowerdiagram));
-      Filestream.WriteBuffer(mainform.Devices[i].AlwaysOn,sizeof(mainform.Devices[i].AlwaysOn));
+      Filestream.WriteBuffer(mainform.Devices[i].UseChannelBasedPower,sizeof(mainform.Devices[i].UseChannelBasedPower));
+      //Filestream.WriteBuffer(mainform.Devices[i].AlwaysOn,sizeof(mainform.Devices[i].AlwaysOn));
       Filestream.WriteBuffer(mainform.Devices[i].ChannelForPower,sizeof(mainform.Devices[i].ChannelForPower));
       Filestream.WriteBuffer(mainform.Devices[i].Power,sizeof(mainform.Devices[i].Power));
       Filestream.WriteBuffer(mainform.Devices[i].Phase,sizeof(mainform.Devices[i].Phase));
+      Filestream.WriteBuffer(mainform.Devices[i].CalcPowerAboveValue,sizeof(mainform.Devices[i].CalcPowerAboveValue));
+      Filestream.WriteBuffer(mainform.Devices[i].ContinuousPower,sizeof(mainform.Devices[i].ContinuousPower));
+      Filestream.WriteBuffer(mainform.Devices[i].UseFullPowerOnChannelvalue,sizeof(mainform.Devices[i].UseFullPowerOnChannelvalue));
 
       Count2:=length(mainform.Devices[i].kanaltyp);
   	  Filestream.WriteBuffer(Count2,sizeof(Count2));
@@ -4841,7 +4844,6 @@ begin
       Filestream.WriteBuffer(Effektsequenzereffekte[i].speed,sizeof(Effektsequenzereffekte[i].speed));
       Filestream.WriteBuffer(Effektsequenzereffekte[i].startwithstepone,sizeof(Effektsequenzereffekte[i].startwithstepone));
       Filestream.WriteBuffer(Effektsequenzereffekte[i].blackoutonstop,sizeof(Effektsequenzereffekte[i].blackoutonstop));
-      Filestream.WriteBuffer(Effektsequenzereffekte[i].blackoutonend,sizeof(Effektsequenzereffekte[i].blackoutonend));
       Filestream.WriteBuffer(Effektsequenzereffekte[i].Startscene,sizeof(Effektsequenzereffekte[i].Startscene));
       Filestream.WriteBuffer(Effektsequenzereffekte[i].Stopscene,sizeof(Effektsequenzereffekte[i].Stopscene));
 
@@ -6783,11 +6785,29 @@ begin
 
       if projektprogrammversionint>=426 then
       begin
-        Filestream.ReadBuffer(mainform.Devices[i].UseInPowerdiagram,sizeof(mainform.Devices[i].UseInPowerdiagram));
-        Filestream.ReadBuffer(mainform.Devices[i].AlwaysOn,sizeof(mainform.Devices[i].AlwaysOn));
+        Filestream.ReadBuffer(mainform.Devices[i].UseChannelBasedPower,sizeof(mainform.Devices[i].UseChannelBasedPower));
+        if projektprogrammversionint<475 then
+          Filestream.ReadBuffer(mainform.Devices[i].AlwaysOn,sizeof(mainform.Devices[i].AlwaysOn));
         Filestream.ReadBuffer(mainform.Devices[i].ChannelForPower,sizeof(mainform.Devices[i].ChannelForPower));
         Filestream.ReadBuffer(mainform.Devices[i].Power,sizeof(mainform.Devices[i].Power));
         Filestream.ReadBuffer(mainform.Devices[i].Phase,sizeof(mainform.Devices[i].Phase));
+        if projektprogrammversionint>=475 then
+        begin
+          Filestream.ReadBuffer(mainform.Devices[i].CalcPowerAboveValue,sizeof(mainform.Devices[i].CalcPowerAboveValue));
+          Filestream.ReadBuffer(mainform.Devices[i].ContinuousPower,sizeof(mainform.Devices[i].ContinuousPower));
+          Filestream.ReadBuffer(mainform.Devices[i].UseFullPowerOnChannelvalue,sizeof(mainform.Devices[i].UseFullPowerOnChannelvalue));
+        end else
+        begin
+          mainform.Devices[i].CalcPowerAboveValue:=0;
+          mainform.Devices[i].UseFullPowerOnChannelvalue:=false;
+          if mainform.Devices[i].AlwaysOn then
+          begin
+            mainform.Devices[i].ContinuousPower:=mainform.Devices[i].Power;
+            mainform.Devices[i].Power:=0;
+            mainform.Devices[i].UseChannelBasedPower:=false;
+          end else
+            mainform.Devices[i].ContinuousPower:=0;
+        end;
       end;
 
   	  Filestream.ReadBuffer(Count2,sizeof(Count2));
@@ -7124,8 +7144,6 @@ begin
       Filestream.ReadBuffer(Effektsequenzereffekte[i].startwithstepone,sizeof(Effektsequenzereffekte[i].startwithstepone));
       if projektprogrammversionint>=442 then
         Filestream.ReadBuffer(Effektsequenzereffekte[i].blackoutonstop,sizeof(Effektsequenzereffekte[i].blackoutonstop));
-      if projektprogrammversionint>=475 then
-        Filestream.ReadBuffer(Effektsequenzereffekte[i].blackoutonend,sizeof(Effektsequenzereffekte[i].blackoutonend));
       if projektprogrammversionint>=465 then
       begin
         Filestream.ReadBuffer(Effektsequenzereffekte[i].Startscene,sizeof(Effektsequenzereffekte[i].Startscene));
@@ -16683,6 +16701,7 @@ begin
       end;
 
       AktuellerEffekt[i].Durchlauf:=0;
+      AktuellerEffekt[i].PleaseStopOnNextStep:=false;
 
       if effektsequenzereffekte[i].startwithstepone then
       begin
@@ -16715,8 +16734,9 @@ begin
       // i=aktueller Effekt
 
       AktuellerEffekt[i].Aktiv:=false;
-      for k:=0 to length(mainform.AktuellerEffekt[i].LastScene)-1 do
-        StopScene(mainform.AktuellerEffekt[i].LastScene[k]);
+      AktuellerEffekt[i].PleaseStopOnNextStep:=false;
+      for k:=0 to length(AktuellerEffekt[i].LastScene)-1 do
+        StopScene(AktuellerEffekt[i].LastScene[k]);
 
       for j:=0 to length(effektsequenzereffekte[i].Effektschritte)-1 do
       begin
@@ -16728,7 +16748,7 @@ begin
         end;
       end;
 
-      if effektsequenzereffekte[i].blackoutonstop or effektsequenzereffekte[i].blackoutonend then
+      if effektsequenzereffekte[i].blackoutonstop then
       begin
         for j:=0 to length(effektsequenzereffekte[i].Effektschritte)-1 do
         begin
@@ -16746,10 +16766,11 @@ begin
                   begin
                     if effektsequenzereffekte[i].Effektschritte[j].Devices[k].ChanActive[l] then
                     begin
-
                       channeltype:=mainform.devices[deviceposition].kanaltyp[l];
-                      if (lowercase(channeltype)='dimmer') or (lowercase(channeltype)='r') or (lowercase(channeltype)='g') or (lowercase(channeltype)='b') then
+                      if (lowercase(channeltype)='dimmer') or (lowercase(channeltype)='r') or (lowercase(channeltype)='g') or (lowercase(channeltype)='b') or (lowercase(channeltype)='a') or (lowercase(channeltype)='w') then
                         geraetesteuerung.set_channel(effektsequenzereffekte[i].Effektschritte[j].Devices[k].ID, channeltype, -1, 0, 200);
+                      if (lowercase(channeltype)='shutter') then
+                        geraetesteuerung.set_shutter(effektsequenzereffekte[i].Effektschritte[j].Devices[k].ID, 0);
                     end;
                   end;
                 end;
@@ -16757,8 +16778,11 @@ begin
             end;
             1:
             begin
-              StartScene(ID, false, false, 0, 200);
-              StopScene(ID);
+              for k:=0 to length(effektsequenzereffekte[i].Effektschritte[j].IDs)-1 do
+              begin
+                StopScene(effektsequenzereffekte[i].Effektschritte[j].IDs[k]);
+                //StartScene(effektsequenzereffekte[i].Effektschritte[j].IDs[k], false, false, 0, 200);
+              end;
             end;
           end;
         end;
@@ -18911,36 +18935,41 @@ var
 begin
   i:=WelcherEffekt;
 
+  if AktuellerEffekt[i].PleaseStopOnNextStep then
+  begin
+    StopEffekt(effektsequenzereffekte[i].ID);
+  end else
+  begin
     if ((not (Sender=Optotimer))) or ((AktuellerEffekt[i].Aktiv) and (AktuellerEffekt[i].beatgesteuert) and (Sender=Optotimer)) then
     begin
-        // Effektablauf wieder stoppen, falls nur manueller SingleStep
-        if AktuellerEffekt[i].SingleStep then
+      // Effektablauf wieder stoppen, falls nur manueller SingleStep
+      if AktuellerEffekt[i].SingleStep then
+      begin
+        AktuellerEffekt[i].Aktiv:=false;
+        AktuellerEffekt[i].SingleStep:=false;
+      end;
+
+      // bereits durchgeführte Schritte um eins erhöhen
+      AktuellerEffekt[i].AnzahlderSchritte:=AktuellerEffekt[i].AnzahlderSchritte+1;
+
+      // Anzahl der bisherigen Durchläufe um eins erhöhen, wenn Schrittzahl des Effekts einmal erreicht
+      if AktuellerEffekt[i].AnzahlderSchritte>=length(effektsequenzereffekte[i].Effektschritte) then
+      begin
+        AktuellerEffekt[i].Durchlauf:=AktuellerEffekt[i].Durchlauf+1;
+        AktuellerEffekt[i].AnzahlderSchritte:=0;
+      end;
+
+      // Wenn Anzahl der Durchläufe begrenzt, dann nach erreichen Abschalten
+      if not effektsequenzereffekte[i].Repeating then
+      begin
+        if AktuellerEffekt[i].Durchlauf>=effektsequenzereffekte[i].AnzahlderDurchlaufe then
         begin
-          AktuellerEffekt[i].Aktiv:=false;
-          AktuellerEffekt[i].SingleStep:=false;
+          AktuellerEffekt[i].PleaseStopOnNextStep:=true; // -> Stoppen vormerken -> Wartezeit wird abgewartet
+          //StopEffekt(effektsequenzereffekte[i].ID); // direkt stoppen -> Wartezeit des letzten Schritts wird ignoriert
         end;
+      end;
 
-        // bereits durchgeführte Schritte um eins erhöhen
-        AktuellerEffekt[i].AnzahlderSchritte:=AktuellerEffekt[i].AnzahlderSchritte+1;
-
-        // Anzahl der bisherigen Durchläufe um eins erhöhen, wenn Schrittzahl des Effekts einmal erreicht
-        if AktuellerEffekt[i].AnzahlderSchritte>=length(effektsequenzereffekte[i].Effektschritte) then
-        begin
-          AktuellerEffekt[i].Durchlauf:=AktuellerEffekt[i].Durchlauf+1;
-          AktuellerEffekt[i].AnzahlderSchritte:=0;
-        end;
-
-        // Wenn Anzahl der Durchläufe begrenzt, dann nach erreichen Abschalten
-        if not effektsequenzereffekte[i].Repeating then
-        begin
-          if AktuellerEffekt[i].Durchlauf>=effektsequenzereffekte[i].AnzahlderDurchlaufe then
-          begin
-//            AktuellerEffekt[i].Aktiv:=false;
-            StopEffekt(effektsequenzereffekte[i].ID);
-          end;
-        end;
-
-        case effektsequenzereffekte[i].modus of
+      case effektsequenzereffekte[i].modus of
         0:
         begin // Nächsten Schritt ausführen
           if AktuellerEffekt[i].AktuellerSchritt<length(effektsequenzereffekte[i].Effektschritte)-1 then
@@ -18997,10 +19026,11 @@ begin
 
           StartEffektstep(effektsequenzereffekte[i].ID, AktuellerEffekt[i].AktuellerSchritt);
         end;
-        end;
+      end;
 
       effektsequenzer.RefreshGUI:=true;
     end;
+  end;
 end;
 
 procedure TMainform.AppException(Sender: TObject; E: Exception);

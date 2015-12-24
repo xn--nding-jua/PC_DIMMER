@@ -1,9 +1,9 @@
 object devicepowerform: Tdevicepowerform
-  Left = 598
-  Top = 88
+  Left = 582
+  Top = 80
   BorderStyle = bsSingle
   Caption = 'Leistungseinstellung'
-  ClientHeight = 231
+  ClientHeight = 303
   ClientWidth = 473
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,15 +19,15 @@ object devicepowerform: Tdevicepowerform
   TextHeight = 13
   object Shape1: TShape
     Left = 0
-    Top = 190
+    Top = 262
     Width = 473
     Height = 41
     Align = alBottom
     Pen.Style = psClear
   end
   object Shape2: TShape
-    Left = -96
-    Top = 190
+    Left = -64
+    Top = 262
     Width = 569
     Height = 1
     Brush.Color = clBlack
@@ -328,7 +328,7 @@ object devicepowerform: Tdevicepowerform
   end
   object Button1: TButton
     Left = 8
-    Top = 200
+    Top = 270
     Width = 75
     Height = 25
     Caption = 'OK'
@@ -340,85 +340,138 @@ object devicepowerform: Tdevicepowerform
     Left = 8
     Top = 64
     Width = 457
-    Height = 121
+    Height = 193
     Caption = ' Einstellung der Ger'#228'teleistung '
     TabOrder = 2
-    object Label1: TLabel
-      Left = 232
-      Top = 72
-      Width = 209
-      Height = 13
-      Caption = 'Verwende folgenden Kanal zur Berechnung:'
-    end
-    object Label2: TLabel
-      Left = 8
-      Top = 72
-      Width = 63
-      Height = 13
-      Caption = 'Leistung [W]:'
-    end
     object Label3: TLabel
-      Left = 120
-      Top = 72
+      Left = 8
+      Top = 24
       Width = 108
       Height = 13
       Caption = 'Phase im Stromsystem:'
     end
+    object Label4: TLabel
+      Left = 259
+      Top = 44
+      Width = 23
+      Height = 13
+      Caption = 'Watt'
+    end
+    object Label6: TLabel
+      Left = 144
+      Top = 24
+      Width = 115
+      Height = 13
+      Caption = 'Kontinuierliche Leistung:'
+    end
     object CheckBox1: TCheckBox
       Left = 8
-      Top = 24
-      Width = 217
+      Top = 72
+      Width = 297
       Height = 17
-      Caption = 'Ger'#228't f'#252'r Leistungs'#252'bersicht verwenden'
+      Caption = 'Ger'#228't f'#252'r kanalabh'#228'ngige Leistungs'#252'bersicht verwenden'
       TabOrder = 0
       OnKeyUp = CheckBox1KeyUp
       OnMouseUp = CheckBox1MouseUp
     end
-    object CheckBox2: TCheckBox
-      Left = 8
-      Top = 48
-      Width = 145
-      Height = 17
-      Caption = 'Verbraucher ist immer an'
-      Enabled = False
-      TabOrder = 1
-      OnKeyUp = CheckBox2KeyUp
-      OnMouseUp = CheckBox2MouseUp
-    end
-    object ComboBox1: TComboBox
-      Left = 232
-      Top = 88
-      Width = 217
-      Height = 21
-      Style = csDropDownList
-      Enabled = False
-      ItemHeight = 13
-      TabOrder = 2
-    end
-    object JvSpinEdit1: TJvSpinEdit
-      Left = 8
-      Top = 88
-      Width = 105
-      Height = 21
-      Value = 500.000000000000000000
-      Enabled = False
-      TabOrder = 3
-    end
     object JvSpinEdit2: TJvSpinEdit
-      Left = 120
-      Top = 88
+      Left = 8
+      Top = 40
       Width = 105
       Height = 21
       MaxValue = 12.000000000000000000
       MinValue = 1.000000000000000000
       Value = 1.000000000000000000
-      Enabled = False
-      TabOrder = 4
+      TabOrder = 1
+    end
+    object JvSpinEdit3: TJvSpinEdit
+      Left = 144
+      Top = 40
+      Width = 113
+      Height = 21
+      CheckMinValue = True
+      TabOrder = 2
+    end
+    object GroupBox2: TGroupBox
+      Left = 8
+      Top = 96
+      Width = 441
+      Height = 89
+      Caption = ' Einstellungen zur kanalabh'#228'ngigen Leistungsberechnung '
+      TabOrder = 3
+      object Label1: TLabel
+        Left = 144
+        Top = 20
+        Width = 106
+        Height = 13
+        Caption = 'Kanal f'#252'r Berechnung:'
+      end
+      object Label2: TLabel
+        Left = 115
+        Top = 40
+        Width = 23
+        Height = 13
+        Caption = 'Watt'
+      end
+      object Label5: TLabel
+        Left = 8
+        Top = 20
+        Width = 43
+        Height = 13
+        Caption = 'Leistung:'
+      end
+      object Label7: TLabel
+        Left = 264
+        Top = 20
+        Width = 135
+        Height = 13
+        Caption = 'Berechne ab Kanalwert von:'
+      end
+      object ComboBox1: TComboBox
+        Left = 144
+        Top = 36
+        Width = 113
+        Height = 21
+        Style = csDropDownList
+        Enabled = False
+        ItemHeight = 13
+        TabOrder = 0
+      end
+      object JvSpinEdit1: TJvSpinEdit
+        Left = 8
+        Top = 36
+        Width = 105
+        Height = 21
+        CheckMinValue = True
+        Value = 500.000000000000000000
+        Enabled = False
+        TabOrder = 1
+      end
+      object JvSpinEdit4: TJvSpinEdit
+        Left = 264
+        Top = 36
+        Width = 105
+        Height = 21
+        MaxValue = 254.000000000000000000
+        Enabled = False
+        TabOrder = 2
+      end
+      object CheckBox2: TCheckBox
+        Left = 8
+        Top = 64
+        Width = 425
+        Height = 17
+        Caption = 
+          'Ger'#228't verbraucht 100% der angegebenen Leistung wenn Kanalwert er' +
+          'reicht wird'
+        Enabled = False
+        TabOrder = 3
+      end
     end
   end
   object Button2: TButton
     Left = 88
-    Top = 200
+    Top = 270
     Width = 75
     Height = 25
     Caption = 'Abbrechen'

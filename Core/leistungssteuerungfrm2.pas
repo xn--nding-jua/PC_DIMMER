@@ -42,6 +42,7 @@ type
     JvLabel10: TJvLabel;
     JvLabel11: TJvLabel;
     JvLabel12: TJvLabel;
+    Button1: TButton;
     procedure Timer1Timer(Sender: TObject);
     procedure FormClick(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -57,11 +58,16 @@ type
     procedure PngSpeedButton1Click(Sender: TObject);
     procedure PaintBox1MouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
+    procedure Button1MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure Button1MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private-Deklarationen }
     timer:byte;
     power:array[0..11] of integer;
     _Buffer: TBitmap32;
+    powertest:boolean;
   public
     { Public-Deklarationen }
     maxpower:array[0..11] of integer;
@@ -173,22 +179,39 @@ procedure Tleistungssteuerungform2.Timer2Timer(Sender: TObject);
 var
   i,value1,temp:integer;
   Rect: TRect;
+  channelvalue:byte;
 begin
   for i:=0 to 11 do
   begin
     power[i]:=0;
   end;
 
-  for i:=0 to length(mainform.devices)-1 do
+  if powertest then
   begin
-    if mainform.devices[i].UseInPowerdiagram then
+    for i:=0 to length(mainform.devices)-1 do
     begin
-      if mainform.devices[i].AlwaysOn then
+      power[mainform.devices[i].Phase-1]:=power[mainform.devices[i].Phase-1]+round(mainform.devices[i].Power*1.00)+mainform.devices[i].ContinuousPower; // max. power for test
+    end;
+  end else
+  begin
+    for i:=0 to length(mainform.devices)-1 do
+    begin
+      power[mainform.devices[i].Phase-1]:=power[mainform.devices[i].Phase-1]+mainform.devices[i].ContinuousPower;
+
+      if mainform.devices[i].UseChannelBasedPower then
       begin
-        power[mainform.devices[i].Phase-1]:=power[mainform.devices[i].Phase-1]+mainform.devices[i].Power;
-      end else
-      begin
-        power[mainform.devices[i].Phase-1]:=power[mainform.devices[i].Phase-1]+round(mainform.devices[i].Power*(geraetesteuerung.get_channel(mainform.devices[i].ID, mainform.devices[i].kanaltyp[mainform.devices[i].ChannelForPower])/255));
+        channelvalue:=geraetesteuerung.get_channel(mainform.devices[i].ID, mainform.devices[i].kanaltyp[mainform.devices[i].ChannelForPower]);
+
+        if channelvalue>mainform.devices[i].CalcPowerAboveValue then
+        begin
+          if mainform.devices[i].UseFullPowerOnChannelvalue then
+          begin
+            power[mainform.devices[i].Phase-1]:=power[mainform.devices[i].Phase-1]+round(mainform.devices[i].Power);
+          end else
+          begin
+            power[mainform.devices[i].Phase-1]:=power[mainform.devices[i].Phase-1]+round(mainform.devices[i].Power*(channelvalue/255));
+          end;
+        end;
       end;
     end;
   end;
@@ -309,6 +332,18 @@ begin
   Timer2.enabled:=true;
   Timer1.Enabled:=not PngSpeedButton1.Down;
   timer:=0;
+end;
+
+procedure Tleistungssteuerungform2.Button1MouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  powertest:=true;
+end;
+
+procedure Tleistungssteuerungform2.Button1MouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  powertest:=false; 
 end;
 
 end.

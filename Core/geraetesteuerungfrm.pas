@@ -904,10 +904,13 @@ begin
         mainform.Devices[i].IrisMaxValue:=255;
       end;
 
-      Filestream.ReadBuffer(mainform.Devices[i].UseInPowerdiagram,sizeof(mainform.Devices[i].UseInPowerdiagram));
+      Filestream.ReadBuffer(mainform.Devices[i].UseChannelBasedPower,sizeof(mainform.Devices[i].UseChannelBasedPower));
       Filestream.ReadBuffer(mainform.Devices[i].AlwaysOn,sizeof(mainform.Devices[i].AlwaysOn));
       Filestream.ReadBuffer(mainform.Devices[i].ChannelForPower,sizeof(mainform.Devices[i].ChannelForPower));
+      Filestream.ReadBuffer(mainform.Devices[i].CalcPowerAboveValue,sizeof(mainform.Devices[i].CalcPowerAboveValue));
       Filestream.ReadBuffer(mainform.Devices[i].Power,sizeof(mainform.Devices[i].Power));
+      Filestream.ReadBuffer(mainform.Devices[i].UseFullPowerOnChannelvalue,sizeof(mainform.Devices[i].UseFullPowerOnChannelvalue));
+      Filestream.ReadBuffer(mainform.Devices[i].ContinuousPower,sizeof(mainform.Devices[i].ContinuousPower));
       Filestream.ReadBuffer(mainform.Devices[i].Phase,sizeof(mainform.Devices[i].Phase));
 
   	  Filestream.ReadBuffer(Count2,sizeof(Count2));
@@ -1118,11 +1121,14 @@ begin
     Filestream.WriteBuffer(mainform.Devices[i].IrisMinValue,sizeof(mainform.Devices[i].IrisMinValue));
     Filestream.WriteBuffer(mainform.Devices[i].IrisMaxValue,sizeof(mainform.Devices[i].IrisMaxValue));
 
-    Filestream.WriteBuffer(mainform.Devices[i].UseInPowerdiagram,sizeof(mainform.Devices[i].UseInPowerdiagram));
-    Filestream.WriteBuffer(mainform.Devices[i].AlwaysOn,sizeof(mainform.Devices[i].AlwaysOn));
-    Filestream.WriteBuffer(mainform.Devices[i].ChannelForPower,sizeof(mainform.Devices[i].ChannelForPower));
-    Filestream.WriteBuffer(mainform.Devices[i].Power,sizeof(mainform.Devices[i].Power));
-    Filestream.WriteBuffer(mainform.Devices[i].Phase,sizeof(mainform.Devices[i].Phase));
+    Filestream.ReadBuffer(mainform.Devices[i].UseChannelBasedPower,sizeof(mainform.Devices[i].UseChannelBasedPower));
+    Filestream.ReadBuffer(mainform.Devices[i].AlwaysOn,sizeof(mainform.Devices[i].AlwaysOn));
+    Filestream.ReadBuffer(mainform.Devices[i].ChannelForPower,sizeof(mainform.Devices[i].ChannelForPower));
+    Filestream.ReadBuffer(mainform.Devices[i].CalcPowerAboveValue,sizeof(mainform.Devices[i].CalcPowerAboveValue));
+    Filestream.ReadBuffer(mainform.Devices[i].Power,sizeof(mainform.Devices[i].Power));
+    Filestream.ReadBuffer(mainform.Devices[i].UseFullPowerOnChannelvalue,sizeof(mainform.Devices[i].UseFullPowerOnChannelvalue));
+    Filestream.ReadBuffer(mainform.Devices[i].ContinuousPower,sizeof(mainform.Devices[i].ContinuousPower));
+    Filestream.ReadBuffer(mainform.Devices[i].Phase,sizeof(mainform.Devices[i].Phase));
 
     Count2:=length(mainform.Devices[i].kanaltyp);
     Filestream.WriteBuffer(Count2,sizeof(Count2));
@@ -3980,10 +3986,13 @@ begin
     end;
   end;
 
-  mainform.devices[Destination].UseInPowerdiagram:=mainform.devices[Source].UseInPowerdiagram;
+  mainform.devices[Destination].UseChannelBasedPower:=mainform.devices[Source].UseChannelBasedPower;
   mainform.devices[Destination].AlwaysOn:=mainform.devices[Source].AlwaysOn;
   mainform.devices[Destination].ChannelForPower:=mainform.devices[Source].ChannelForPower;
+  mainform.devices[Destination].ChannelForPower:=mainform.devices[Source].ChannelForPower;
   mainform.devices[Destination].Power:=mainform.devices[Source].Power;
+  mainform.devices[Destination].UseFullPowerOnChannelvalue:=mainform.devices[Source].UseFullPowerOnChannelvalue;
+  mainform.devices[Destination].ContinuousPower:=mainform.devices[Source].ContinuousPower;
   mainform.devices[Destination].Phase:=mainform.devices[Source].Phase;
 end;
 

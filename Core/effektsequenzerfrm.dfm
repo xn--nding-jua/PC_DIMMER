@@ -2668,15 +2668,6 @@ object effektsequenzer: Teffektsequenzer
         TabOrder = 7
         OnMouseUp = CheckBox5MouseUp
       end
-      object CheckBox6: TCheckBox
-        Left = 128
-        Top = 154
-        Width = 113
-        Height = 17
-        Caption = 'Blackout bei Ende'
-        TabOrder = 8
-        OnMouseUp = CheckBox6MouseUp
-      end
     end
     object GroupBox2: TGroupBox
       Left = 9
