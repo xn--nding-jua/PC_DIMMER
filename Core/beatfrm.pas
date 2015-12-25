@@ -1177,6 +1177,8 @@ procedure Tbeatform.editstartscenebtnClick(Sender: TObject);
 var
   SzenenData:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   // Szene aus Verwaltung editieren
   setlength(szenenverwaltung_formarray,length(szenenverwaltung_formarray)+1);
   szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1]:=Tszenenverwaltungform.Create(self);
@@ -1201,6 +1203,8 @@ procedure Tbeatform.editstopscenebtnClick(Sender: TObject);
 var
   SzenenData:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   // Szene aus Verwaltung editieren
   setlength(szenenverwaltung_formarray,length(szenenverwaltung_formarray)+1);
   szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1]:=Tszenenverwaltungform.Create(self);
@@ -1223,12 +1227,16 @@ end;
 
 procedure Tbeatform.removestartscenebtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   mainform.BeatImpuls.SceneOnBeatLost:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
   label19.Caption:='...';
 end;
 
 procedure Tbeatform.removestopscenebtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   mainform.BeatImpuls.SceneOnBeatStart:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
   label17.Caption:='...';
 end;

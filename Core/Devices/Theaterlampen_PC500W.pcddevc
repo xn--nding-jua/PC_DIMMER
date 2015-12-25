@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\PC_500W.png">
+ <information id="PC_DIMMER">
+ <name>PC 500W</name>
+ <vendor>Theaterlampen</vendor>
+ <author>amptrax.de</author>
+ <description>PC 500W</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="DIMMER" fade="yes" type="dimmer"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="195" height="272">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="16" left="80"/>
+  <deviceadress top="32" left="80"/>
+  <devicedipswitch top="50" left="80"/>
+  <edit name="fadezeit" top="240" left="10" width="40" height="21" text="3000" action=""/>
+  <checkbox name="usefadezeit" top="240" left="60" width="120" height="17" caption="Einblendzeit nutzen" action="" checked="true"/>
+  <slider name="slider1" top="110" left="10" width="170" height="20" action="sliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="label1" top="90" left="10" width="30" height="13" caption="Fader:"/>
+  <label name="percent" top="90" left="150" width="14" height="13" caption="0%"/>
+  <label name="Label3" top="230" left="10" width="40" height="13" caption="Zeit [ms]"/>
+  <button name="off" top="140" left="10" width="50" height="40" action="offclick" caption="Aus"/>
+  <button name="half" top="140" left="70" width="50" height="40" action="halfclick" caption="50%"/>
+  <button name="on" top="140" left="130" width="50" height="40" action="onclick" caption="Ein"/>
+  <button name="stopbtn" top="190" left="10" width="170" height="30" action="StopBtn" caption="Fade-Stop"/>
+ </form>
+ <code>
+  unit GenericDimmer;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure sliderchange;
+  procedure onclick;
+  procedure halfclick;
+  procedure offclick;
+  procedure StopBtn;
+
+  implementation
+
+	var
+		dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // bitte hier die eigene Funktion eintragen
+  end;
+  procedure FormShow;
+    begin
+    end;
+  procedure FormRefresh(channel:Integer);
+    begin
+      if not dontrefresh then
+        slider1.position:=get_channel('DIMMER');
+      percent.caption:=levelstr(slider1.position);
+      dontrefresh:=false;
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure sliderchange;
+    begin
+      dontrefresh:=true;
+      set_channel('dimmer',slider1.position,slider1.position,0);  
+      percent.caption:=levelstr(slider1.position);
+    end;
+  procedure onclick;
+    var
+      zeit:integer;
+    begin
+      if usefadezeit.checked then
+        zeit:=strtoint(fadezeit.text)
+      else
+        zeit:=0;
+
+      set_channel('dimmer',get_channel('DIMMER'),255,zeit);
+    end;
+  procedure halfclick;
+    var
+      zeit:integer;
+    begin
+      if usefadezeit.checked then
+        zeit:=strtoint(fadezeit.text)
+      else
+        zeit:=0;
+
+      set_channel('dimmer',get_channel('DIMMER'),127,zeit);
+    end;
+  procedure offclick;
+    var
+      zeit:integer;
+    begin
+      if usefadezeit.checked then
+        zeit:=strtoint(fadezeit.text)
+      else
+        zeit:=0;
+
+      set_channel('dimmer',get_channel('DIMMER'),0,zeit);
+    end;
+  procedure StopBtn;
+  begin
+    set_channel('dimmer',get_channel('DIMMER'),get_channel('DIMMER'),0);
+  end;
+  end.
+ </code>
+</device>

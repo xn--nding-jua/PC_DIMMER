@@ -691,6 +691,8 @@ end;
 procedure Tsidebarform.FormMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   usersetting:=false;
 
   Timer1.Enabled:=not PngSpeedButton1.Down;

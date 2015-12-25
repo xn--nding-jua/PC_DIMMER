@@ -85,7 +85,7 @@ begin
   case accesslevelbox.ItemIndex of
     0: label5.Caption:=_('Vollzugriff in der gesamten Software');
     1: label5.Caption:=_('Vollzugriff in der gesamten Software, jedoch keine Benutzerbearbeitung.');
-    2: label5.Caption:=_('Steuerkontrolle, aber keine Benutzer-, Szenen- oder Effektbearbeitung.');
+    2: label5.Caption:=_('Steuerkontrolle, aber keine Benutzer-, Geräte-, Szenen- oder Effektbearbeitung.');
     3: label5.Caption:=_('Lediglich Benutzung des Kontrollpanels');
     4: label5.Caption:=_('Keinerlei Rechte - Nur für Demozwecke geeignet');
   end;

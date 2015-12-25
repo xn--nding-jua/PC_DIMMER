@@ -31,21 +31,13 @@ object changeuserform: Tchangeuserform
     Height = 13
     Caption = 'Passwort:'
   end
-  object Edit1: TEdit
-    Left = 8
-    Top = 88
-    Width = 281
-    Height = 21
-    TabOrder = 0
-    OnKeyUp = Edit1KeyUp
-  end
   object Edit2: TEdit
     Left = 8
     Top = 128
     Width = 281
     Height = 21
     PasswordChar = '*'
-    TabOrder = 1
+    TabOrder = 0
     OnKeyUp = Edit1KeyUp
   end
   object Panel1: TPanel
@@ -56,7 +48,7 @@ object changeuserform: Tchangeuserform
     Align = alTop
     BevelOuter = bvNone
     Color = clWhite
-    TabOrder = 2
+    TabOrder = 1
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
@@ -442,6 +434,28 @@ object changeuserform: Tchangeuserform
       Caption = 'Bitte geben Sie Ihre Zugangsdaten ein...'
       Transparent = True
     end
+    object Label3: TLabel
+      Left = 80
+      Top = 48
+      Width = 75
+      Height = 13
+      Caption = 'Angemeldet als:'
+      Transparent = True
+    end
+    object currentuserlbl: TLabel
+      Left = 160
+      Top = 48
+      Width = 35
+      Height = 13
+      Caption = 'Admin'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Transparent = True
+    end
   end
   object Panel2: TPanel
     Left = 0
@@ -450,7 +464,7 @@ object changeuserform: Tchangeuserform
     Height = 43
     Align = alBottom
     BevelOuter = bvNone
-    TabOrder = 3
+    TabOrder = 2
     object Shape1: TShape
       Left = 0
       Top = 1
@@ -484,5 +498,15 @@ object changeuserform: Tchangeuserform
       ModalResult = 2
       TabOrder = 1
     end
+  end
+  object Edit1: TComboBox
+    Left = 8
+    Top = 88
+    Width = 281
+    Height = 21
+    ItemHeight = 13
+    Sorted = True
+    TabOrder = 3
+    OnKeyUp = Edit1KeyUp
   end
 end

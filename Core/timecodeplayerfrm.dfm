@@ -55,8 +55,8 @@ object timecodeplayerform: Ttimecodeplayerform
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 266
-    Width = 774
+    Top = 257
+    Width = 766
     Height = 130
     Align = alBottom
     BevelOuter = bvNone
@@ -1278,16 +1278,16 @@ object timecodeplayerform: Ttimecodeplayerform
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 774
-    Height = 266
+    Width = 766
+    Height = 257
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
     object StringGrid1: TStringGrid
       Left = 9
       Top = 9
-      Width = 756
-      Height = 257
+      Width = 748
+      Height = 248
       Align = alClient
       ColCount = 6
       DefaultRowHeight = 15
@@ -1312,7 +1312,7 @@ object timecodeplayerform: Ttimecodeplayerform
       Left = 0
       Top = 9
       Width = 9
-      Height = 257
+      Height = 248
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 1
@@ -1320,17 +1320,17 @@ object timecodeplayerform: Ttimecodeplayerform
     object Panel4: TPanel
       Left = 0
       Top = 0
-      Width = 774
+      Width = 766
       Height = 9
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 2
     end
     object Panel5: TPanel
-      Left = 765
+      Left = 757
       Top = 9
       Width = 9
-      Height = 257
+      Height = 248
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 3

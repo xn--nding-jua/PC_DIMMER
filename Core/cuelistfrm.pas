@@ -494,6 +494,8 @@ procedure Tcuelistform.addBtnClick(Sender: TObject);
 var
   SzenenData:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   setlength(szenenverwaltung_formarray,length(szenenverwaltung_formarray)+1);
   szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1]:=Tszenenverwaltungform.Create(self);
 
@@ -876,6 +878,8 @@ var
   AktuellePosition,i:integer;
   SzenenData:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   AktuellePosition:=StringGrid1.Row-1;
 
   setlength(szenenverwaltung_formarray,length(szenenverwaltung_formarray)+1);
@@ -1118,6 +1122,8 @@ end;
 
 procedure Tcuelistform.StringGrid1DblClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (BankSelect.Itemindex>-1) and ((StringGrid1.Row-1)<length(mainform.cuelistbank[BankSelect.Itemindex].cuelistbankitems)) then
     mainform.EditScene(mainform.cuelistbank[BankSelect.Itemindex].cuelistbankitems[StringGrid1.Row-1].ID);
   BankSelectChange(BankSelect);
@@ -1229,6 +1235,8 @@ end;
 procedure Tcuelistform.recordbtnMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   Popupmenu2.Popup(cuelistform.Left+Panel1.Left+RecordBtn.Left+x,cuelistform.Top+RecordBtn.Top+Panel1.Top+RecordBtn.Height+y);
 end;
 

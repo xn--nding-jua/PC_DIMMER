@@ -1479,6 +1479,8 @@ begin
 }
   end else if MouseOnLabel>-1 then
   begin
+    if not mainform.UserAccessGranted(1) then exit;
+
     paintbox1.PopupMenu:=nil;
     if Button=mbRight then
     begin
@@ -1489,6 +1491,8 @@ begin
     end;
   end else if MouseOnNumber>-1 then
   begin
+    if not mainform.UserAccessGranted(1) then exit;
+
     paintbox1.PopupMenu:=nil;
     if Button=mbRight then
     begin
@@ -1508,6 +1512,8 @@ begin
     end;
   end else if MouseOnBuehnenansichtNumber>-1 then
   begin
+    if not mainform.UserAccessGranted(1) then exit;
+
     paintbox1.PopupMenu:=nil;
     if Button=mbRight then
     begin
@@ -1825,6 +1831,8 @@ end;
 
 procedure Tgrafischebuehnenansicht.Kanalnamenndern1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (LastBuehnenansichtdevice<=length(mainform.buehnenansichtdevices)-1) then
   begin
 	  mainform.data.names[mainform.buehnenansichtdevices[LastBuehnenansichtdevice].channel]:=InputBox(_('Beschriftung für "')+mainform.data.names[mainform.buehnenansichtdevices[LastBuehnenansichtdevice].channel]+'"',_('Bitte geben Sie eine neue Bezeichnung für den aktuellen Kanal ein:'),mainform.data.names[mainform.buehnenansichtdevices[LastBuehnenansichtdevice].channel]);
@@ -1836,6 +1844,8 @@ procedure Tgrafischebuehnenansicht.Kanalnummerndern1Click(Sender: TObject);
 var
 	oldvalue,channel:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (LastBuehnenansichtdevice<=length(mainform.buehnenansichtdevices)-1) then
   begin
 		  oldvalue:=mainform.buehnenansichtdevices[LastBuehnenansichtdevice].channel;
@@ -2398,6 +2408,8 @@ end;
 
 procedure Tgrafischebuehnenansicht.Button3Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   geraetesteuerung.show;
 end;
 
@@ -2575,6 +2587,8 @@ procedure Tgrafischebuehnenansicht.NeuesGerthinzufgen2Click(
 var
   i, oldlength:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   oldlength:=length(mainform.devices);
 
   geraetesteuerung.Gerthinzufgen1Click(grafischebuehnenansicht);

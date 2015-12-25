@@ -1,9 +1,10 @@
 object skripttimer_editform: Tskripttimer_editform
   Left = 419
   Top = 307
-  Width = 465
-  Height = 417
+  BorderStyle = bsSingle
   Caption = 'Ereignis bearbeiten'
+  ClientHeight = 384
+  ClientWidth = 457
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

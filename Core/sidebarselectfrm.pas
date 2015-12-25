@@ -142,6 +142,8 @@ end;
 procedure Tsidebarselectform.FormMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   Timer1.Enabled:=not PngSpeedButton1.Down;
   timer:=0;
   sidebarselectform.ClientWidth:=HugeWidth;

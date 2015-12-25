@@ -121,6 +121,7 @@ type
     showiconsbtn: TTBItem;
     buttonstyledark: TTBItem;
     PaintBox1: TPaintBox;
+    TestAccessLevelTimer: TTimer;
     procedure FormShow(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure buttonfarbeChange(Sender: TObject);
@@ -197,6 +198,7 @@ type
     procedure PaintBox1Paint(Sender: TObject);
     procedure FormCanResize(Sender: TObject; var NewWidth,
       NewHeight: Integer; var Resize: Boolean);
+    procedure TestAccessLevelTimerTimer(Sender: TObject);
   private
     { Private-Deklarationen }
     buttonstyle:byte;
@@ -317,6 +319,9 @@ begin
 	        if not LReg.ValueExists('Show setup') then
 	          LReg.WriteBool('Show setup',true);
          	panel1.Visible:=LReg.ReadBool('Show setup');
+
+          if not mainform.UserAccessGranted(1, false) then panel1.Visible:=false;
+
          	MenanzeigenDoppelklickaufStatusleiste1.checked:=LReg.ReadBool('Show setup');
 	        if not LReg.ValueExists('Deactivate Mainprogrameffects on click') then
 	          LReg.WriteBool('Deactivate Mainprogrameffects on click',false);
@@ -382,6 +387,8 @@ begin
 
   CollectButtonInfo;
   RefreshTimer.enabled:=true;
+
+  TestAccessLevelTimer.enabled:=true;
 end;
 
 procedure Tkontrollpanel.FormResize(Sender: TObject);
@@ -1017,6 +1024,8 @@ end;
 
 procedure Tkontrollpanel.StatusBar1DblClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   if panel1.Visible then
   begin
 	  panel1.Visible:=false;
@@ -1032,6 +1041,9 @@ begin
     MenanzeigenDoppelklickaufStatusleiste1.Checked:=true;
     mainform.kontrollpanelrecord.NoOptions:=false;
   end;
+
+  _Buffer.Width:=Paintbox1.Width;
+  _Buffer.Height:=Paintbox1.Height;
 end;
 
 procedure Tkontrollpanel.CheckBox1KeyDown(Sender: TObject; var Key: Word;
@@ -1335,6 +1347,7 @@ begin
   begin
     kontrollpanel.Top:=kontrollpanel.Top-panel1.Height;
     panel1.Visible:=true;
+    if not mainform.UserAccessGranted(1, false) then panel1.visible:=false;
     kontrollpanel.Height:=kontrollpanel.Height+panel1.Height;
     MenanzeigenDoppelklickaufStatusleiste1.Checked:=true;
     mainform.kontrollpanelrecord.NoOptions:=false;
@@ -1379,6 +1392,9 @@ begin
   end;
 }
   CollectButtonInfo;
+
+  _Buffer.Width:=Paintbox1.Width;
+  _Buffer.Height:=Paintbox1.Height;
 
   RedrawPanel;
   RedrawMainformPanel;
@@ -2395,9 +2411,17 @@ begin
 
   if (SelectedBtn.X=OverBtn.X) and (SelectedBtn.Y=OverBtn.Y) then
   begin
-    Paintbox1.PopupMenu:=ButtonPopup;
-    if mainform.PageControl1.ActivePageIndex=2 then
-      mainform.Paintbox1.PopupMenu:=ButtonPopup;
+    if mainform.UserAccessGranted(1, false) then
+    begin
+      Paintbox1.PopupMenu:=ButtonPopup;
+      if mainform.PageControl1.ActivePageIndex=2 then
+        mainform.Paintbox1.PopupMenu:=ButtonPopup;
+    end else
+    begin
+      Paintbox1.PopupMenu:=nil;
+      if mainform.PageControl1.ActivePageIndex=2 then
+        mainform.Paintbox1.PopupMenu:=nil;
+    end;
   end else
   begin
     Paintbox1.PopupMenu:=nil;
@@ -2527,7 +2551,10 @@ begin
         ndern1.Enabled:=true
       else
         ndern1.Enabled:=false;
-      ButtonPopup.AutoPopup:=true;
+      if mainform.UserAccessGranted(1, false) then
+        ButtonPopup.AutoPopup:=true
+      else
+        ButtonPopup.AutoPopup:=false;
     end;
   end;
   StatusBar1.Panels.Items[0].Text:='Button '+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1);
@@ -3228,11 +3255,23 @@ begin
         //mouse_event(MOUSEEVENTF_LEFTDOWN, MyTouchPoint.x, MyTouchPoint.y-Panel1.Height-TBToolbar1.Height, 0, 0);
 
         // anhand Position aktuellen Button highlighten
-        OverBtn.Y:=trunc(((MyTouchPoint.y-Panel1.Height-TBToolbar1.Height)-yoffset)/btnheight.value);
+        if panel1.Visible then
+        begin
+          OverBtn.Y:=trunc(((MyTouchPoint.y-Panel1.Height-TBToolbar1.Height)-yoffset)/btnheight.value);
+        end else
+        begin
+          OverBtn.Y:=trunc(((MyTouchPoint.y-TBToolbar1.Height)-yoffset)/btnheight.value);
+        end;
         OverBtn.X:=trunc(((MyTouchPoint.x)-xoffset)/btnwidth.value);
 
         // MouseDown-Event ausführen
-        Paintbox1MouseDown(Paintbox1, mbLeft, [ssLeft], MyTouchPoint.x, MyTouchPoint.y-Panel1.Height-TBToolbar1.Height);
+        if panel1.Visible then
+        begin
+          Paintbox1MouseDown(Paintbox1, mbLeft, [ssLeft], MyTouchPoint.x, MyTouchPoint.y-Panel1.Height-TBToolbar1.Height);
+        end else
+        begin
+          Paintbox1MouseDown(Paintbox1, mbLeft, [ssLeft], MyTouchPoint.x, MyTouchPoint.y-TBToolbar1.Height);
+        end;
 
         // Verhindern, dass Paintbox1MouseDown ein weiteres mal ausgeführt wird, bevor nicht ein MouseUp-Event getriggert wird
         ssTouch:=true;
@@ -3429,6 +3468,24 @@ begin
       mouse_event(MOUSEEVENTF_LEFTUP, X, Y, 0, 0);
     end;
   end;
+end;
+
+procedure Tkontrollpanel.TestAccessLevelTimerTimer(Sender: TObject);
+var
+  AccessGranted:boolean;
+begin
+  TestAccessLevelTimer.Enabled:=false;
+
+  AccessGranted:=mainform.UserAccessGranted(1, false);
+  
+  if not AccessGranted then Panel1.Visible:=false;
+  _Buffer.Width:=Paintbox1.Width;
+  _Buffer.Height:=Paintbox1.Height;
+
+  If not AccessGranted then
+    Paintbox1.PopupMenu:=nil;
+
+  TBDock1.Visible:=AccessGranted;
 end;
 
 end.

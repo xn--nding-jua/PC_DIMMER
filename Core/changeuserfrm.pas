@@ -9,7 +9,6 @@ uses
 
 type
   Tchangeuserform = class(TForm)
-    Edit1: TEdit;
     Label1: TLabel;
     Label2: TLabel;
     Edit2: TEdit;
@@ -23,6 +22,9 @@ type
     Shape2: TShape;
     Button1: TButton;
     Button2: TButton;
+    Edit1: TComboBox;
+    Label3: TLabel;
+    currentuserlbl: TLabel;
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Edit1KeyUp(Sender: TObject; var Key: Word;
@@ -54,7 +56,9 @@ procedure Tchangeuserform.Edit1KeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key=vk_return then
-    ModalResult:=mrOK;
+    ModalResult:=mrOK
+  else if Key=vk_escape then
+    ModalResult:=mrCancel;
 end;
 
 end.

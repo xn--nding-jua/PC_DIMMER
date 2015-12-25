@@ -1519,6 +1519,8 @@ end;
 
 procedure Taudioeffektplayerform.EditEffektClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if _audioeffektlayer>0 then
   begin
     if mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt[effektliste.Selection.Top-1].UseIDScene then
@@ -1795,6 +1797,8 @@ procedure Taudioeffektplayerform.AddDirektSzeneClick(Sender: TObject);
 var
   j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (_audioeffektlayer>0) and (audioeffektfilenamebox.Items.Count>1) then
   begin
     j:=maxaudioeffekte[_audioeffektlayer]-1;
@@ -1824,6 +1828,8 @@ var
   position:single;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   position:=BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE));
 
   if (_audioeffektlayer>0) and (audioeffektfilenamebox.Items.Count>1) then
@@ -5810,6 +5816,8 @@ var
   position:single;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   position:=BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE));
 
   if (_audioeffektlayer>0) and (audioeffektfilenamebox.Items.Count>1) then
@@ -5877,6 +5885,8 @@ var
   position:single;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   position:=BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE));
 
   if (_audioeffektlayer>0) and (audioeffektfilenamebox.Items.Count>1) then
@@ -5924,6 +5934,8 @@ var
   position:single;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   position:=BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE));
 
   if (_audioeffektlayer>0) and (audioeffektfilenamebox.Items.Count>1) then

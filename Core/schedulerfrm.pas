@@ -110,6 +110,8 @@ end;
 
 procedure Tschedulerform.skripttimer_addClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   with mainform do
   begin
     AktuellerTimer.Aktiviert:=true;
@@ -198,6 +200,8 @@ var
   aktuelleposition:integer;
   TypeOfTimer:byte;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   with mainform do
   begin
     if skripttimer_listbox.ItemIndex>-1 then
@@ -318,6 +322,8 @@ procedure Tschedulerform.skripttimer_deleteClick(Sender: TObject);
 var
   i,aktuelleposition:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   with mainform do
   begin
   aktuelleposition:=skripttimer_listbox.ItemIndex;

@@ -516,6 +516,8 @@ procedure Ttimecodeplayerform.addBtnClick(Sender: TObject);
 var
   SzenenData:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   setlength(szenenverwaltung_formarray,length(szenenverwaltung_formarray)+1);
   szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1]:=Tszenenverwaltungform.Create(self);
 
@@ -793,6 +795,8 @@ end;
 
 procedure Ttimecodeplayerform.StringGrid1DblClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (BankSelect.Itemindex>-1) and ((StringGrid1.Row-1)<length(mainform.timecodeplayerbank[BankSelect.Itemindex].timecodeplayerbankitems)) then
     mainform.EditScene(mainform.timecodeplayerbank[BankSelect.Itemindex].timecodeplayerbankitems[StringGrid1.Row-1]);
   BankSelectChange(BankSelect);

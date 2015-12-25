@@ -1213,7 +1213,8 @@ type
     procedure SavePng(Bitmap: TBitmap; Destination:string);
     procedure SaveJpg(Bitmap: TBitmap; Destination:string);
     procedure PluginRibbonBtnClick(Sender: TObject);
-    function UserAccessGranted(Level: integer):boolean;
+    function UserAccessGranted(Level: integer; ShowLoginWindow: boolean=true):boolean;
+    function RequestAccess:boolean;
   end;
 
 // Callbackfunktionen der Plugin-Dlls
@@ -11484,6 +11485,8 @@ var
   FuncCall,FuncCall2 : function : PChar;stdcall;
   LReg:TPCDRegistry;
 begin
+  if not UserAccessGranted(2) then exit; 
+
   inprogress.label8.Caption:=_(' Plugin-Reset... ');
   inprogress.ProgressBar1.Max:=100;
   application.processmessages;
@@ -12109,7 +12112,7 @@ end;
 
 procedure TMainform.MIDIEinstellungen1Click(Sender: TObject);
 begin
-  if not UserAccessGranted(2) then exit;
+  if not UserAccessGranted(1) then exit;
 
   refreshmidi;
   midieventfrm.Show;
@@ -18862,7 +18865,7 @@ end;
 
 procedure TMainform.GlobaleTastenabfrage1Click(Sender: TObject);
 begin
-  if not UserAccessGranted(2) then exit;
+  if not UserAccessGranted(1) then exit;
 
   with Tastenabfrage do
   begin
@@ -18986,7 +18989,7 @@ end;
 
 procedure TMainform.Gertesteuerung2Click(Sender: TObject);
 begin
-  if not UserAccessGranted(2) then exit;
+  if not UserAccessGranted(1) then exit;
 
   geraetesteuerung.show;
 end;
@@ -19158,7 +19161,7 @@ end;
 
 procedure TMainform.Joysticksteuerung1Click(Sender: TObject);
 begin
-  if not UserAccessGranted(2) then exit;
+  if not UserAccessGranted(1) then exit;
 
   joystickform.CheckBox1.Checked:=enablejoystick;
   joystickform.show;
@@ -19166,7 +19169,7 @@ end;
 
 procedure TMainform.DataInEinstellungenClick(Sender: TObject);
 begin
-  if not UserAccessGranted(2) then exit;
+  if not UserAccessGranted(1) then exit;
 
   refreshdatain;
   dataineventfrm.show;
@@ -21712,7 +21715,7 @@ end;
 
 procedure TMainform.TBItem48Click(Sender: TObject);
 begin
-  if not UserAccessGranted(2) then exit;
+  if not UserAccessGranted(1) then exit;
 
   groupeditorform.show;
 end;
@@ -21909,7 +21912,7 @@ end;
 
 procedure TMainform.TBItem56Click(Sender: TObject);
 begin
-  if not UserAccessGranted(2) then exit;
+  if not UserAccessGranted(1) then exit;
 
   winlircform.show;
 end;
@@ -22152,7 +22155,7 @@ procedure TMainform.TBItem59Click(Sender: TObject);
 var
   LReg:TPCDRegistry;
 begin
-  if not UserAccessGranted(2) then exit;
+  if not UserAccessGranted(1) then exit;
 
   if MCTRibbonBox.Down then
   begin
@@ -22418,7 +22421,7 @@ procedure TMainform.CommandservericonClick(Sender: TObject);
 var
   LReg:TPCDRegistry;
 begin
-  if not UserAccessGranted(2) then exit;
+  if not UserAccessGranted(1) then exit;
 
   Commandserver.DefaultPort:=terminalport;
   Commandserver.Active:=ActivateCommandReceiverRibbonBox.Down;
@@ -24506,6 +24509,8 @@ end;
 
 procedure TMainform.buttonnameEnter(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
 	if buttonname.Text='Button '+inttostr(kontrollpanel.SelectedBtn.Y+1)+'x'+inttostr(kontrollpanel.SelectedBtn.X+1) then
   	buttonname.Text:='';
 end;
@@ -24513,6 +24518,8 @@ end;
 procedure TMainform.buttonnameKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  if not UserAccessGranted(1) then exit;
+
 	if not shutdown then
 	begin
   	mainform.kontrollpanelbuttons[kontrollpanel.SelectedBtn.Y][kontrollpanel.SelectedBtn.X].Name:=buttonname.Text;
@@ -24529,12 +24536,16 @@ end;
 
 procedure TMainform.ComboBox1Select(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   kontrollpanel.ComboBox1.ItemIndex:=Combobox1.ItemIndex;
   kontrollpanel.ComboBox1Select(nil);
 end;
 
 procedure TMainform.buttonglyphbtnClick(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   picturechangeform.aktuellebilddatei:=mainform.kontrollpanelbuttons[kontrollpanel.SelectedBtn.Y][kontrollpanel.SelectedBtn.X].Picture;
   picturechangeform.Showmodal;
   if (picturechangeform.ModalResult=mrOK) and FileExists(picturechangeform.aktuellebilddatei) then
@@ -24562,6 +24573,8 @@ end;
 
 procedure TMainform.btnwidthChange(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   kontrollpanel.btnwidth.Value:=btnwidth.value;
   kontrollpanel.btnheight.Value:=btnheight.value;
   kontrollpanel.btnwidthChange(nil);
@@ -24569,11 +24582,15 @@ end;
 
 procedure TMainform.buttonfarbeChange(Sender: TObject);
 begin
+  if not UserAccessGranted(1, false) then exit;
+
 	mainform.kontrollpanelbuttons[kontrollpanel.SelectedBtn.Y][kontrollpanel.SelectedBtn.X].Color:=buttonfarbe.Color;
 end;
 
 procedure TMainform.szenebearbeitenClick(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   kontrollpanel.szenebearbeitenClick(nil);
 end;
 
@@ -26202,30 +26219,33 @@ var
   i:integer;
   ProcCall:procedure;
 begin
-  for i := 0 to length(ProgramPlugins)-1 do
+  if UserAccessGranted(2) then
   begin
-    if TdxBarButton(Sender).Name='PluginShowRibbonBtn'+inttostr(i)then
+    for i := 0 to length(ProgramPlugins)-1 do
     begin
-      if ProgramPlugins[i].Handle<>0 then
+      if TdxBarButton(Sender).Name='PluginShowRibbonBtn'+inttostr(i)then
       begin
-        try
-          @ProcCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLShow');
-          if Assigned(ProcCall) then
-            Proccall;
-        except
+        if ProgramPlugins[i].Handle<>0 then
+        begin
+          try
+            @ProcCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLShow');
+            if Assigned(ProcCall) then
+              Proccall;
+          except
+          end;
         end;
+        break;
       end;
-      break;
-    end;
-    if TdxBarButton(Sender).Name='PluginAboutRibbonBtn'+inttostr(i)then
-    begin
-        try
-          @ProcCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLAbout');
-          if Assigned(ProcCall) then
-            Proccall;
-        except
-        end;
-      break;
+      if TdxBarButton(Sender).Name='PluginAboutRibbonBtn'+inttostr(i)then
+      begin
+          try
+            @ProcCall := GetProcAddress(ProgramPlugins[i].Handle,'DLLAbout');
+            if Assigned(ProcCall) then
+              Proccall;
+          except
+          end;
+        break;
+      end;
     end;
   end;
 end;
@@ -26238,18 +26258,42 @@ begin
 end;
 
 procedure TMainform.dxBarLargeButton7Click(Sender: TObject);
+begin
+  RequestAccess;
+end;
+
+function Tmainform.UserAccessGranted(Level: integer; ShowLoginWindow: boolean):boolean;
+begin
+  if UserAccounts[CurrentUser].AccessLevel<=Level then
+  begin
+    result:=true;
+  end else
+  begin
+    result:=false;
+    if ShowLoginWindow then
+    begin
+      result:=RequestAccess;
+      //ShowMessage(UserAccounts[CurrentUser].Name+' '+_('besitzt keine ausreichenden Rechte für diese Operation!'));
+    end;
+  end;
+end;
+
+function Tmainform.RequestAccess:boolean;
 var
   i:integer;
-  Denied:boolean;
+  AccessGranted:boolean;
 begin
   changeuserform:=Tchangeuserform.Create(Application);
 
-  changeuserform.edit1.text:='';
+  changeuserform.edit1.Items.clear;
+  for i:=0 to length(UserAccounts)-1 do
+    changeuserform.Edit1.Items.Add(UserAccounts[i].Name);
   changeuserform.edit2.text:='';
+  changeuserform.currentuserlbl.Caption:=UserAccounts[CurrentUser].Name;
 
   changeuserform.showmodal;
 
-  Denied:=true;
+  AccessGranted:=false;
   if changeuserform.modalresult=mrOK then
   begin
     for i:=0 to length(UserAccounts)-1 do
@@ -26260,29 +26304,24 @@ begin
         begin
           // Change user
           CurrentUser:=i;
-          Denied:=false;
+          AccessGranted:=true;
         end;
         break;
       end;
     end;
 
-    if Denied then
-      ShowMessage(_('Zugang verweigert!'));
-  end;
-
-  changeuserform.Release;
-end;
-
-function Tmainform.UserAccessGranted(Level: integer):boolean;
-begin
-  if UserAccounts[CurrentUser].AccessLevel<=Level then
-  begin
-    result:=true;
+    result:=AccessGranted;
   end else
   begin
     result:=false;
-    ShowMessage(UserAccounts[CurrentUser].Name+' '+_('besitzt keine ausreichenden Rechte für diese Operation!'));
   end;
+
+  if (not AccessGranted) then
+    ShowMessage(_('Zugang verweigert!'));
+
+  changeuserform.Release;
+
+  kontrollpanel.TestAccessLevelTimer.Enabled:=true;
 end;
 
 end.

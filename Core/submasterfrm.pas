@@ -491,6 +491,8 @@ var
   i,k,m:integer;
   SzenenData:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (length(mainform.Submasterbank)<=0) or (BankSelect.ItemIndex>=length(mainform.Submasterbank)) then
   begin
     ShowMessage(_('Bitte fügen Sie zunächst eine Submasterbank über das grüne Plus hinzu...'));

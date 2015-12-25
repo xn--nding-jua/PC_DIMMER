@@ -1435,4 +1435,11 @@ object kontrollpanel: Tkontrollpanel
     Left = 376
     Top = 112
   end
+  object TestAccessLevelTimer: TTimer
+    Enabled = False
+    Interval = 10
+    OnTimer = TestAccessLevelTimerTimer
+    Left = 408
+    Top = 112
+  end
 end

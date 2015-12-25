@@ -282,6 +282,8 @@ var
   szenenguid:tguid;
   SzenenData:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   setlength(szenenverwaltung_formarray,length(szenenverwaltung_formarray)+1);
   szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1]:=Tszenenverwaltungform.Create(self);
 
