@@ -8,13 +8,22 @@ uses
   jpeg, ExtCtrls, Registry;
 
 const
+	{
 	// Enttec Pro MK2 definitions
 	SET_PORT_ASSIGNMENT_LABEL = 193;
 	SEND_DMX_PORT2 = 138;
 	RECEIVE_DMX_PORT2 = 238;
 	SEND_MIDI_PORT = 193;
 	RECEIVE_MIDI_PORT = 169;
+	}
 
+	// Enttec Pro MK2 definitions
+	SET_PORT_ASSIGNMENT_LABEL = 209;
+	SEND_DMX_PORT2 = 150;
+	RECEIVE_DMX_PORT2 = 194;
+	SEND_MIDI_PORT = 228;
+	RECEIVE_MIDI_PORT = 214;
+	
 	// Enttec Pro definitions
 	GET_WIDGET_PARAMS = 3;
 	GET_WIDGET_PARAMS_REPLY = 3;
