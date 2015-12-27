@@ -425,6 +425,8 @@ procedure Tsubmasterform.Button1MouseDown(Sender: TObject; Button: TMouseButton;
 var
   i,value:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   for i:=1 to 16 do
   begin
     if Sender=FindComponent('Button'+inttostr(i)) then
@@ -444,6 +446,8 @@ procedure Tsubmasterform.Button1MouseUp(Sender: TObject; Button: TMouseButton;
 var
   i,value:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   for i:=1 to 16 do
     if Sender=FindComponent('Button'+inttostr(i)) then
     begin
@@ -473,6 +477,8 @@ end;
 
 procedure Tsubmasterform.FlashMasterScrollbarChange(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   masterform.FlashMaster.Position:=FlashmasterScrollbar.Position;
   FlashmasterProgressBar.Position:=255-masterform.FlashMaster.Position;
   FlashmasterProgressBar.Position:=255-masterform.FlashMaster.Position-1;
@@ -943,6 +949,8 @@ end;
 procedure Tsubmasterform.PaintBox1MouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   mousex:=x;
   mousey:=y;
   mouseoverfader:=trunc((x/(maxfaders*abstand))*maxfaders)+1;
@@ -958,6 +966,8 @@ procedure Tsubmasterform.PaintBox1MouseMove(Sender: TObject;
 var
   value:integer;
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   if (Shift=[ssLeft]) then
   begin
     if (BankSelect.ItemIndex>=length(mainform.Submasterbank)) or (BankSelect.ItemIndex<0) then exit;

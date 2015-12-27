@@ -419,6 +419,7 @@
     hasCMY:boolean;
     hasAmber:boolean;
     hasWhite:boolean;
+    hasUV:boolean;
     hasPANTILT:boolean;
     hasColor:boolean;
     hasColor2:boolean;
@@ -867,11 +868,11 @@
     MaxFadetime:Word;
     MaxPanTiltTime:Word;
     MaxDelayTime:Word;
-    UseRed, UseGreen, UseBlue:boolean;
-    MaxRed, MaxGreen, MaxBlue:Byte;
+    UseRed, UseGreen, UseBlue, UseAmber, UseWhite:boolean;
+    MaxRed, MaxGreen, MaxBlue, MaxAmber, MaxWhite:Byte;
     AllowMixing:boolean;
     NoBlackDevices:boolean;
-    UseRGB, UseDimmer, UseColor12:boolean;
+    UseRGB, UseAW, UseUV, UseDimmer, UseColor12:boolean;
     MaxLuminance:Word;
     MinLuminance:Word;
   end;

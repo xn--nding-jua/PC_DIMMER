@@ -1024,7 +1024,7 @@ end;
 
 procedure Tkontrollpanel.StatusBar1DblClick(Sender: TObject);
 begin
-  if not mainform.UserAccessGranted(1, false) then exit;
+  if not mainform.UserAccessGranted(1) then exit;
 
   if panel1.Visible then
   begin
@@ -2371,6 +2371,8 @@ end;
 procedure Tkontrollpanel.PaintBox1MouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   if (Shift=[]) and not MouseIsDown then
   begin
     OverBtn.Y:=trunc((Y-yoffset)/btnheight.value);
@@ -2392,6 +2394,8 @@ end;
 procedure Tkontrollpanel.PaintBox1MouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   if ssTouch then
     exit;
 
@@ -2580,6 +2584,8 @@ var
 	k:integer;
   isaudioscene:boolean;
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   MouseIsDown:=false;
   ssTouch:=false;
   BtnDown.Y:=-1;

@@ -1,6 +1,6 @@
 object groupeditorform: Tgroupeditorform
-  Left = 219
-  Top = 130
+  Left = 440
+  Top = 186
   Width = 689
   Height = 454
   Caption = 'Gruppeneditor'
@@ -56,16 +56,16 @@ object groupeditorform: Tgroupeditorform
   object GroupBox1: TGroupBox
     Left = 8
     Top = 113
-    Width = 665
-    Height = 199
+    Width = 657
+    Height = 189
     Align = alClient
     Caption = ' Gruppenger'#228'te '
     TabOrder = 0
     object StringGrid1: TStringGrid
       Left = 10
       Top = 15
-      Width = 645
-      Height = 174
+      Width = 637
+      Height = 164
       Align = alClient
       ColCount = 6
       DefaultRowHeight = 15
@@ -89,24 +89,24 @@ object groupeditorform: Tgroupeditorform
       Left = 2
       Top = 15
       Width = 8
-      Height = 174
+      Height = 164
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 1
     end
     object Panel6: TPanel
-      Left = 655
+      Left = 647
       Top = 15
       Width = 8
-      Height = 174
+      Height = 164
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 2
     end
     object Panel7: TPanel
       Left = 2
-      Top = 189
-      Width = 661
+      Top = 179
+      Width = 653
       Height = 8
       Align = alBottom
       BevelOuter = bvNone
@@ -116,7 +116,7 @@ object groupeditorform: Tgroupeditorform
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 681
+    Width = 673
     Height = 113
     Align = alTop
     BevelOuter = bvNone
@@ -129,17 +129,17 @@ object groupeditorform: Tgroupeditorform
       Caption = ' Gruppen '
       TabOrder = 0
       object Label1: TLabel
-        Left = 383
+        Left = 387
         Top = 20
-        Width = 74
+        Width = 70
         Height = 13
         Alignment = taRightJustify
         Caption = 'Gruppenname:'
       end
       object Label2: TLabel
-        Left = 385
+        Left = 389
         Top = 44
-        Width = 72
+        Width = 68
         Height = 13
         Alignment = taRightJustify
         Caption = 'Beschreibung:'
@@ -1061,8 +1061,8 @@ object groupeditorform: Tgroupeditorform
   end
   object Panel2: TPanel
     Left = 0
-    Top = 312
-    Width = 681
+    Top = 302
+    Width = 673
     Height = 113
     Align = alBottom
     BevelOuter = bvNone
@@ -1449,25 +1449,25 @@ object groupeditorform: Tgroupeditorform
       Caption = ' Fanning-Setup '
       TabOrder = 4
       object MasterLbl: TLabel
-        Left = 8
+        Left = 14
         Top = 45
-        Width = 65
+        Width = 59
         Height = 13
         Alignment = taRightJustify
         Caption = 'Masterger'#228't:'
       end
       object FanModeLbl: TLabel
-        Left = 8
+        Left = 16
         Top = 68
-        Width = 65
+        Width = 57
         Height = 13
         Alignment = taRightJustify
         Caption = 'Fanning-Art:'
       end
       object DelayLbl: TLabel
-        Left = 8
+        Left = 21
         Top = 23
-        Width = 65
+        Width = 52
         Height = 13
         Alignment = taRightJustify
         Caption = 'Delay [ms]:'
@@ -1787,16 +1787,16 @@ object groupeditorform: Tgroupeditorform
     Left = 0
     Top = 113
     Width = 8
-    Height = 199
+    Height = 189
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 3
   end
   object Panel4: TPanel
-    Left = 673
+    Left = 665
     Top = 113
     Width = 8
-    Height = 199
+    Height = 189
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4

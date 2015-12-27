@@ -12,7 +12,7 @@
   <function channel="2" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
   <function channel="3" minvalue="0" maxvalue="255" name="Weiß" fade="yes" type="w"/>
   <function channel="4" minvalue="0" maxvalue="255" name="Amber" fade="yes" type="a"/>
-  <function channel="5" minvalue="0" maxvalue="255" name="UV" fade="yes" type="special1"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="UV" fade="yes" type="UV"/>
   <function channel="6" minvalue="0" maxvalue="255" name="Helligkeit/Strobo" fade="yes" type="dimmer"/>
   <function channel="7" minvalue="0" maxvalue="255" name="SHUTTER" fade="yes" type="shutter"/>
   <function channel="8" minvalue="0" maxvalue="255" name="Makros" fade="no" type="special2"/>
@@ -132,7 +132,7 @@
       5:
       begin
 				if not dontrefresh then
-	        uvslider.position:=get_channel('special1');      
+	        uvslider.position:=get_channel('UV');      
       end;
       6:
       begin
@@ -205,7 +205,7 @@
   procedure uvsliderchange;
   begin
     dontrefresh:=true;
-    set_channel('special1',-1,uvslider.position,0,0);
+    set_channel('UV',-1,uvslider.position,0,0);
   end;
   procedure macrosliderchange;
   begin

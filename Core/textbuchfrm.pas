@@ -222,21 +222,29 @@ end;
 
 procedure Ttextbuchform.btnUnlinkClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   HTMLDocument2Ifc.execCommand('Unlink', False, 0);
 end;
 
 procedure Ttextbuchform.btnLinkClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   HTMLDocument2Ifc.execCommand('HyperLink', True, 'file:///c/test.html');
 end;
 
 procedure Ttextbuchform.ColorBox1Select(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   HTMLDocument2Ifc.execCommand('ForeColor', False, ColorToHTML(colorbox1.Selected));
 end;
 
 procedure Ttextbuchform.ColorBox2Select(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   HTMLDocument2Ifc.execCommand('BackColor', False, ColorToHTML(colorbox2.Selected));
 end;
 
@@ -374,6 +382,8 @@ end;
 
 procedure Ttextbuchform.btnOpenReadClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if OpenDialog1.Execute then
   begin
     TextbuchFile:=OpenDialog1.FileName;

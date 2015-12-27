@@ -926,6 +926,8 @@ end;
 procedure Tcuelistform.StringGrid1KeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   GoTimer.enabled:=false;
   GoTimerLbl.caption:=mainform.MillisecondsToTime(0);
 
@@ -954,6 +956,8 @@ end;
 procedure Tcuelistform.StringGrid1MouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if Shift=[ssctrl] then
     strgpressed:=true;
   StringGrid1.Refresh;
@@ -962,6 +966,8 @@ end;
 procedure Tcuelistform.StringGrid1MouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   GoTimer.enabled:=false;
   GoTimerLbl.caption:=mainform.MillisecondsToTime(0);
 
@@ -1178,6 +1184,8 @@ procedure Tcuelistform.AlleKanleaufnehmen1Click(Sender: TObject);
 var
   ID:TGUID;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   ID:=mainform.RecordScene(0);
 
   setlength(mainform.Cuelistbank[BankSelect.Itemindex].cuelistbankitems,length(mainform.Cuelistbank[BankSelect.Itemindex].cuelistbankitems)+1);
@@ -1192,6 +1200,8 @@ procedure Tcuelistform.NurselektierteGerteaufnehmen1Click(Sender: TObject);
 var
   ID:TGUID;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   ID:=mainform.RecordScene(1);
 
   setlength(mainform.Cuelistbank[BankSelect.Itemindex].cuelistbankitems,length(mainform.Cuelistbank[BankSelect.Itemindex].cuelistbankitems)+1);
@@ -1207,6 +1217,8 @@ procedure Tcuelistform.NurseitletzterSzenegenderteKanleaufnehmen1Click(
 var
   ID:TGUID;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   ID:=mainform.RecordScene(2);
 
   setlength(mainform.Cuelistbank[BankSelect.Itemindex].cuelistbankitems,length(mainform.Cuelistbank[BankSelect.Itemindex].cuelistbankitems)+1);
@@ -1222,6 +1234,8 @@ procedure Tcuelistform.SelektierteGerteUNDgenderteKanleaufnehmen1Click(
 var
   ID:TGUID;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   ID:=mainform.RecordScene(3);
 
   setlength(mainform.Cuelistbank[BankSelect.Itemindex].cuelistbankitems,length(mainform.Cuelistbank[BankSelect.Itemindex].cuelistbankitems)+1);
@@ -1244,6 +1258,8 @@ procedure Tcuelistform.Szenemanuelleinstellen1Click(Sender: TObject);
 var
   ID:TGUID;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   ID:=mainform.RecordScene(4);
 
   if GUIDtoString(ID)<>'{00000000-0000-0000-0000-000000000000}' then

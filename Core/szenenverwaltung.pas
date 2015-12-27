@@ -175,6 +175,8 @@ uses PCDIMMER, bewegungsszeneneditor, insscene, audioszeneeditorform,
 procedure Tszenenverwaltungform.AddBtnMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   Popupmenu1.Popup(szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].Left+Panel1.Left+AddBtn.Left+x,szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].Top+AddBtn.Top+Panel1.Top+AddBtn.Height+y);
 end;
 
@@ -184,6 +186,8 @@ var
   Data: PTreeData;
   TempNode:PVirtualNode;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
 //  insscenedlg:=Tinsscenedlg.Create(self);
 
   insscenedlg.Szenenname.Text:=_('Neue Szene');
@@ -260,6 +264,8 @@ var
   Data: PTreeData;
   TempNode:PVirtualNode;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
 //  audioszeneneditor:=Taudioszeneneditor.Create(self);
 
   audioszeneneditor.Edit1.Text:='';
@@ -379,6 +385,8 @@ var
   Data: PTreeData;
   TempNode:PVirtualNode;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
 //  bewegungsszeneneditorform:=Tbewegungsszeneneditorform.Create(self);
 
   setlength(mainform.Bewegungsszenen,length(mainform.Bewegungsszenen)+1);
@@ -484,6 +492,8 @@ var
   Data: PTreeData;
   TempNode:PVirtualNode;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   setlength(befehlseditor_array2,length(befehlseditor_array2)+1);
   befehlseditor_array2[length(befehlseditor_array2)-1]:=Tbefehlseditor2.Create(self);
   befehlseditor_array2[length(befehlseditor_array2)-1].CheckBox1.Visible:=true;
@@ -547,6 +557,8 @@ procedure Tszenenverwaltungform.EditBtnClick(Sender: TObject);
 var
   Data: PTreeData;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -1365,6 +1377,8 @@ var
   TempNode: PVirtualNode;
   DeleteTreeNode:boolean;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   position:=0;
   DeleteTreeNode:=false;
 
@@ -2660,6 +2674,8 @@ var
   Data: PTreeData;
   TempNode:PVirtualNode;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   setlength(kompositionsszeneeditor_array,length(kompositionsszeneeditor_array)+1);
   kompositionsszeneeditor_array[length(kompositionsszeneeditor_array)-1]:=Tkompositionsszeneeditor.Create(self);
 //  setlength(AktuelleKompositionsszene,length(AktuelleKompositionsszene)+1);
@@ -2754,6 +2770,8 @@ var
   Data: PTreeData;
   TempNode:PVirtualNode;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   position:=-1;
 
   if VST.SelectedCount=0 then exit;
@@ -3433,6 +3451,8 @@ procedure Tszenenverwaltungform.SpeedButton4Click(Sender: TObject);
 var
   Data: PTreeData;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -3445,6 +3465,8 @@ procedure Tszenenverwaltungform.SpeedButton5Click(Sender: TObject);
 var
   Data: PTreeData;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -3459,6 +3481,8 @@ var
   Data: PTreeData;
   TempNode:PVirtualNode;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   for i:=0 to preseteditor.CheckListBox1.Items.Count-1 do
     preseteditor.CheckListBox1.Checked[i]:=false;
 
@@ -3655,6 +3679,8 @@ end;
 procedure Tszenenverwaltungform.RefreshSzenenverwaltungBtnClick(
   Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   FormShow(nil);
 end;
 
@@ -3664,6 +3690,8 @@ var
   Data: PTreeData;
   TempNode:PVirtualNode;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   devicesceneform.Szenenname.Text:=_('Neue Geräteszene');
   devicesceneform.Szenenbeschreibung.Text:='';
   devicesceneform.scenefade_time.text:='5';
@@ -4159,6 +4187,8 @@ var
   Data: PTreeData;
   TempNode:PVirtualNode;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   // Automatikszene erstellen
   setlength(mainform.autoszenen,length(mainform.autoszenen)+1);
 
@@ -4267,6 +4297,8 @@ var
   Data: PTreeData;
   TempNode:PVirtualNode;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   // Automatikszene erstellen
   setlength(mainform.mediacenterszenen,length(mainform.mediacenterszenen)+1);
 
@@ -4726,6 +4758,8 @@ var
   TempNode:PVirtualNode;
   CatName:string;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   CatName:=InputBox(_('Kategorie ändern'),_('Bitte geben Sie eine neue Kategorie für die selektierten Elemente ein, oder lassen Sie die Eingabe frei:'),CatName);
@@ -4790,6 +4824,8 @@ end;
 procedure Tszenenverwaltungform.recordbtnMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   Popupmenu2.Popup(szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].Left+Panel1.Left+RecordBtn.Left+x,szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].Top+AddBtn.Top+Panel1.Top+RecordBtn.Height+y);
 end;
 
@@ -5038,6 +5074,8 @@ var
   Data: PTreeData;
   TempNode:PVirtualNode;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   PresetSceneEditor.Edit1.Text:=_('Neue Presetszene');
   PresetSceneEditor.Edit2.Text:='';
 

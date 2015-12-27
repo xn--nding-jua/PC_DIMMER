@@ -640,6 +640,7 @@ begin
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('Y') then geraetesteuerung.DevicePrototyp[i].hasCMY:=true;
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('A') then geraetesteuerung.DevicePrototyp[i].hasAmber:=true;
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('W') then geraetesteuerung.DevicePrototyp[i].hasWhite:=true;
+          if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('UV') then geraetesteuerung.DevicePrototyp[i].hasUV:=true;
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('PAN') then geraetesteuerung.DevicePrototyp[i].hasPANTILT:=true;
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('TILT') then geraetesteuerung.DevicePrototyp[i].hasPANTILT:=true;
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('COLOR1') then geraetesteuerung.DevicePrototyp[i].hasColor:=true;

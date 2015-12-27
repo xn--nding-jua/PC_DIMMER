@@ -191,6 +191,8 @@ procedure Tbeatform.TemposourceboxChange(Sender: TObject);
 var
 	LReg:TRegistry;
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   mainform.lastbeatsource:=Temposourcebox.ItemIndex;
 
   BASS_RecordFree;
@@ -443,6 +445,8 @@ var
   dName:PChar;
   RecordDeviceInfo:BASS_DEVICEINFO;
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   // Aufnahmegeräte für Beat-Detection initialisieren
   soundcardselect.Hint:=_('Soundkarte: ')+soundcardselect.Items.Strings[soundcardselect.ItemIndex];
 	BASS_RecordInit(soundcardselect.ItemIndex);
@@ -487,6 +491,8 @@ var
   r: Boolean;
   RecordDeviceVolume:single;
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   mainform.debuglistbox.ItemIndex:=mainform.debuglistbox.Items.Add('['+inttostr(mainform.debuglistbox.Items.Count)+'] ['+Timetostr(now)+'] ['+Datetostr(now)+_('] AUDIO: Setting up Audio-Input...'));
   mainform.debuglistbox.Items.SaveToFile(mainform.userdirectory+'\PC_DIMMER.log');
 
@@ -1049,6 +1055,8 @@ end;
 
 procedure Tbeatform.TemposourceboxDropDown(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   BASS_RecordFree;
   BeatTimer.Enabled:=false;
   mainform.AudioIn.StopAtOnce;

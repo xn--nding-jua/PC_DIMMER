@@ -845,8 +845,8 @@ begin
   Application.ProcessMessages;
   sleep(50);
 
-  setlength(mainform.TastencodeArray,16);
-  setlength(mainform.TastencodePressedArray,16);
+  setlength(mainform.TastencodeArray,17);
+  setlength(mainform.TastencodePressedArray,17);
 
   for i:=0 to 8 do
   begin
@@ -974,6 +974,18 @@ begin
   mainform.TastencodeArray[15].Befehl.ArgInteger[1]:=0;
   mainform.TastencodeArray[15].Befehl.ArgInteger[2]:=0;
   mainform.TastencodeArray[15].Hotkey:=TextToShortCut('F1'); // PC_DIMMER sperren
+
+  CreateGUID(mainform.TastencodeArray[16].ID);
+  mainform.TastencodeArray[16].active:=true;
+  mainform.TastencodeArray[16].Global:=true;
+  mainform.TastencodeArray[16].Repeated:=false;
+  mainform.TastencodeArray[16].KeyDownValue:=255;
+  mainform.TastencodeArray[16].KeyUpValue:=0;
+  mainform.TastencodeArray[16].Befehl.Typ:=StringToGuid('{4EEBAE5E-1A64-4679-86BA-B288AA7B7CB7}');
+  mainform.TastencodeArray[16].Hotkey:=TextToShortCut('STRG+U'); // Benutzer wechseln
+  mainform.TastencodeArray[16].Befehl.OnValue:=255;
+  mainform.TastencodeArray[16].Befehl.OffValue:=0;
+  setlength(mainform.TastencodeArray[16].Befehl.ArgInteger, 0);
 
   mainform.EnableHotKeys:=EnableHotKeysTemp;
   mainform.ShortCutChecker.Enabled:=EnableHotKeysTemp;

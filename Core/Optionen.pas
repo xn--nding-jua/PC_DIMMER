@@ -833,6 +833,8 @@ var
 begin
   for i:=0 to length(mainform.Outputplugins)-1 do
     mainform.OutputPlugins[i].IsBlacklisted:=false;
+  mainform.plugin_blacklist:='';
+  mainform.plugin_blacklist_new:='';
   Showmessage(_('Nach einem Neustart stehen wieder alle Plugins zur Verfügung.'));
 end;
 

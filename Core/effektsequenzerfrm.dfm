@@ -1,6 +1,6 @@
 object effektsequenzer: Teffektsequenzer
-  Left = 596
-  Top = 39
+  Left = 622
+  Top = 124
   Width = 690
   Height = 591
   Caption = 'Effektsequenzer'

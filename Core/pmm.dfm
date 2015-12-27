@@ -5905,14 +5905,14 @@ object pmmform: Tpmmform
     TabOrder = 4
     object Label5: TLabel
       Left = 8
-      Top = 152
-      Width = 93
+      Top = 168
+      Width = 104
       Height = 13
-      Caption = 'Maximale Helligkeit:'
+      Caption = 'Maximale Leuchtkraft:'
     end
     object luminancelbl: TLabel
       Left = 201
-      Top = 152
+      Top = 168
       Width = 32
       Height = 13
       Alignment = taRightJustify
@@ -5921,7 +5921,7 @@ object pmmform: Tpmmform
     end
     object bluelbl: TLabel
       Left = 201
-      Top = 56
+      Top = 48
       Width = 32
       Height = 13
       Alignment = taRightJustify
@@ -5930,7 +5930,7 @@ object pmmform: Tpmmform
     end
     object greenlbl: TLabel
       Left = 201
-      Top = 40
+      Top = 32
       Width = 32
       Height = 13
       Alignment = taRightJustify
@@ -5939,7 +5939,7 @@ object pmmform: Tpmmform
     end
     object redlbl: TLabel
       Left = 201
-      Top = 24
+      Top = 16
       Width = 32
       Height = 13
       Alignment = taRightJustify
@@ -5948,23 +5948,57 @@ object pmmform: Tpmmform
     end
     object Label6: TLabel
       Left = 8
-      Top = 192
-      Width = 90
+      Top = 200
+      Width = 101
       Height = 13
-      Caption = 'Minimale Helligkeit:'
+      Caption = 'Minimale Leuchtkraft:'
     end
     object minluminancelbl: TLabel
       Left = 201
-      Top = 192
+      Top = 200
       Width = 32
       Height = 13
       Alignment = taRightJustify
       AutoSize = False
       Caption = '0%'
     end
+    object whitelbl: TLabel
+      Left = 201
+      Top = 80
+      Width = 32
+      Height = 13
+      Alignment = taRightJustify
+      AutoSize = False
+      Caption = '100%'
+    end
+    object amberlbl: TLabel
+      Left = 201
+      Top = 64
+      Width = 32
+      Height = 13
+      Alignment = taRightJustify
+      AutoSize = False
+      Caption = '100%'
+    end
+    object uvlbl: TLabel
+      Left = 201
+      Top = 96
+      Width = 32
+      Height = 13
+      Alignment = taRightJustify
+      AutoSize = False
+      Caption = '100%'
+    end
+    object Label11: TLabel
+      Left = 26
+      Top = 96
+      Width = 15
+      Height = 13
+      Caption = 'UV'
+    end
     object redcheck: TCheckBox
       Left = 8
-      Top = 24
+      Top = 16
       Width = 49
       Height = 17
       Caption = 'Rot'
@@ -5974,7 +6008,7 @@ object pmmform: Tpmmform
     end
     object greencheck: TCheckBox
       Left = 8
-      Top = 40
+      Top = 32
       Width = 49
       Height = 17
       Caption = 'Gr'#252'n'
@@ -5982,7 +6016,7 @@ object pmmform: Tpmmform
     end
     object bluecheck: TCheckBox
       Left = 8
-      Top = 56
+      Top = 48
       Width = 49
       Height = 17
       Caption = 'Blau'
@@ -5992,7 +6026,7 @@ object pmmform: Tpmmform
     end
     object redslider: TTrackBar
       Left = 64
-      Top = 24
+      Top = 16
       Width = 140
       Height = 17
       Max = 255
@@ -6005,7 +6039,7 @@ object pmmform: Tpmmform
     end
     object greenslider: TTrackBar
       Left = 64
-      Top = 40
+      Top = 32
       Width = 140
       Height = 17
       Max = 255
@@ -6018,7 +6052,7 @@ object pmmform: Tpmmform
     end
     object blueslider: TTrackBar
       Left = 64
-      Top = 56
+      Top = 48
       Width = 140
       Height = 17
       Max = 255
@@ -6031,19 +6065,20 @@ object pmmform: Tpmmform
     end
     object luminanceslider: TTrackBar
       Left = 8
-      Top = 168
+      Top = 184
       Width = 225
-      Height = 25
+      Height = 17
       Max = 255
       Position = 127
       TabOrder = 6
+      ThumbLength = 15
       TickMarks = tmBoth
       TickStyle = tsNone
       OnChange = luminancesliderChange
     end
     object allowmixing: TCheckBox
       Left = 8
-      Top = 72
+      Top = 112
       Width = 129
       Height = 17
       Caption = 'Mischfarben zulassen'
@@ -6051,27 +6086,29 @@ object pmmform: Tpmmform
     end
     object minluminanceslider: TTrackBar
       Left = 8
-      Top = 208
+      Top = 216
       Width = 225
-      Height = 25
+      Height = 17
       Max = 127
+      Position = 4
       TabOrder = 8
+      ThumbLength = 15
       TickMarks = tmBoth
       TickStyle = tsNone
       OnChange = minluminancesliderChange
     end
     object noblackouts: TCheckBox
       Left = 8
-      Top = 88
-      Width = 209
+      Top = 128
+      Width = 161
       Height = 17
-      Caption = 'Keine dunklen Scheinwerfer erlauben'
+      Caption = 'Keine dunklen Scheinwerfer'
       TabOrder = 9
     end
     object usergbcheck: TCheckBox
       Left = 8
-      Top = 120
-      Width = 49
+      Top = 144
+      Width = 44
       Height = 17
       Caption = 'RGB'
       Checked = True
@@ -6079,20 +6116,93 @@ object pmmform: Tpmmform
       TabOrder = 10
     end
     object usedimmercheck: TCheckBox
-      Left = 56
-      Top = 120
-      Width = 65
+      Left = 125
+      Top = 144
+      Width = 57
       Height = 17
       Caption = 'Dimmer'
       TabOrder = 11
     end
     object usecolor12check: TCheckBox
-      Left = 120
-      Top = 120
-      Width = 113
+      Left = 181
+      Top = 144
+      Width = 57
       Height = 17
-      Caption = 'COLOR1/COLOR2'
+      Caption = 'Farbrad'
       TabOrder = 12
+    end
+    object ambercheck: TCheckBox
+      Left = 8
+      Top = 64
+      Width = 49
+      Height = 17
+      Caption = 'Amber'
+      TabOrder = 13
+    end
+    object whitecheck: TCheckBox
+      Left = 8
+      Top = 80
+      Width = 49
+      Height = 17
+      Caption = 'Wei'#223
+      TabOrder = 14
+    end
+    object amberslider: TTrackBar
+      Left = 64
+      Top = 64
+      Width = 140
+      Height = 17
+      Max = 255
+      Position = 255
+      TabOrder = 15
+      ThumbLength = 10
+      TickMarks = tmBoth
+      TickStyle = tsNone
+      OnChange = ambersliderChange
+    end
+    object whiteslider: TTrackBar
+      Left = 64
+      Top = 80
+      Width = 140
+      Height = 17
+      Max = 255
+      Position = 255
+      TabOrder = 16
+      ThumbLength = 10
+      TickMarks = tmBoth
+      TickStyle = tsNone
+      OnChange = whitesliderChange
+    end
+    object useawcheck: TCheckBox
+      Left = 50
+      Top = 144
+      Width = 40
+      Height = 17
+      Caption = 'AW'
+      Checked = True
+      State = cbChecked
+      TabOrder = 17
+    end
+    object uvslider: TTrackBar
+      Left = 64
+      Top = 96
+      Width = 140
+      Height = 17
+      Max = 255
+      Position = 255
+      TabOrder = 18
+      ThumbLength = 10
+      TickMarks = tmBoth
+      TickStyle = tsNone
+      OnChange = uvsliderChange
+    end
+    object useuvcheck: TCheckBox
+      Left = 89
+      Top = 144
+      Width = 36
+      Height = 17
+      Caption = 'UV'
+      TabOrder = 19
     end
   end
   object GroupBox4: TGroupBox

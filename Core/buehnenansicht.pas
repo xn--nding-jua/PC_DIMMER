@@ -883,6 +883,8 @@ procedure Tgrafischebuehnenansicht.StageMouseDown(Sender: TObject;
 var
 	i,j:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   MouseDownPoint.X:=X;
   MouseDownPoint.Y:=Y;
 
@@ -987,6 +989,8 @@ var
   value:integer;
   dobreak:boolean;
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   doimmediaterefresh:=(Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]);
 
 /////////// DeviceHoverEffect
@@ -1273,6 +1277,8 @@ var
   ddfwindowposition:integer;
   toppos, leftpos:single;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   MouseUpPoint.X:=X;
   MouseUpPoint.Y:=Y;
 
@@ -3065,7 +3071,7 @@ var
 	R,G,B,R2,G2,B2,R3,G3,B3:byte;
   RGB, RGB3, shuttervalue:integer;
   //RGB2:integer;
-  AmberR,AmberG,AmberB,Amber,White:byte;
+  AmberR,AmberG,AmberB,Amber,White,UV:byte;
 
 //  AmberRs,AmberGs,AmberBs,Ambers:double;
 //  AmberRGratio:single;
@@ -3191,10 +3197,11 @@ begin
           AmberB:=geraetesteuerung.get_channel(mainform.devices[i].ID,'B');
           Amber:=geraetesteuerung.get_channel(mainform.devices[i].ID,'A');
           White:=geraetesteuerung.get_channel(mainform.devices[i].ID,'W');
+          UV:=geraetesteuerung.get_channel(mainform.devices[i].ID,'UV');
 
           if mainform.devices[i].hasAmber then
           begin
-            geraetesteuerung.ConvertRGBAWtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, R, G, B);
+            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, UV, R, G, B);
             _Buffer.Brush.Color:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
           end else
           begin
@@ -3208,10 +3215,11 @@ begin
           AmberB:=geraetesteuerung.get_channel(mainform.devices[i].ID,'B');
           Amber:=geraetesteuerung.get_channel(mainform.devices[i].ID,'A');
           White:=geraetesteuerung.get_channel(mainform.devices[i].ID,'W');
+          UV:=geraetesteuerung.get_channel(mainform.devices[i].ID,'UV');
 
           if mainform.devices[i].hasAmber then
           begin
-            geraetesteuerung.ConvertRGBAWtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, R, G, B);
+            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, UV, R, G, B);
             _Buffer.Brush.Color:=RGB2TColor(R, G, B);
           end else
           begin
@@ -3229,10 +3237,11 @@ begin
           AmberB:=255-geraetesteuerung.get_channel(mainform.devices[i].ID,'Y');
           Amber:=geraetesteuerung.get_channel(mainform.devices[i].ID,'A');
           White:=geraetesteuerung.get_channel(mainform.devices[i].ID,'W');
+          UV:=geraetesteuerung.get_channel(mainform.devices[i].ID,'UV');
 
           if mainform.devices[i].hasAmber then
           begin
-            geraetesteuerung.ConvertRGBAWtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, R, G, B);
+            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, UV, R, G, B);
             _Buffer.Brush.Color:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
           end else
           begin
@@ -3246,10 +3255,11 @@ begin
           AmberB:=255-geraetesteuerung.get_channel(mainform.devices[i].ID,'Y');
           Amber:=geraetesteuerung.get_channel(mainform.devices[i].ID,'A');
           White:=geraetesteuerung.get_channel(mainform.devices[i].ID,'W');
+          UV:=geraetesteuerung.get_channel(mainform.devices[i].ID,'UV');
 
           if mainform.devices[i].hasAmber then
           begin
-            geraetesteuerung.ConvertRGBAWtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, R, G, B);
+            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, UV, R, G, B);
             _Buffer.Brush.Color:=RGB2TColor(R, G, B);
           end else
           begin

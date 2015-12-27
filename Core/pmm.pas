@@ -73,6 +73,17 @@ type
     SpeedButton1: TSpeedButton;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
+    whitelbl: TLabel;
+    amberlbl: TLabel;
+    ambercheck: TCheckBox;
+    whitecheck: TCheckBox;
+    amberslider: TTrackBar;
+    whiteslider: TTrackBar;
+    useawcheck: TCheckBox;
+    uvslider: TTrackBar;
+    uvlbl: TLabel;
+    useuvcheck: TCheckBox;
+    Label11: TLabel;
     procedure add0Click(Sender: TObject);
     procedure rem0Click(Sender: TObject);
     procedure pmmtimerTimer(Sender: TObject);
@@ -110,11 +121,14 @@ type
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure FormHide(Sender: TObject);
+    procedure ambersliderChange(Sender: TObject);
+    procedure whitesliderChange(Sender: TObject);
+    procedure uvsliderChange(Sender: TObject);
   private
     { Private-Deklarationen }
     beat_starttime,beat_endtime:TTimeStamp;
     beat_syncFirstclick:boolean;
-    procedure CalculateColors(var R,G,B:byte);
+    procedure CalculateColors(var R,G,B,A,W:byte);
   public
     { Public-Deklarationen }
     selected:array of boolean;
@@ -255,84 +269,170 @@ begin
   label4.caption:=mainform.MillisecondsToTimeShort(delayzeitbar.position);
 end;
 
-procedure Tpmmform.CalculateColors(var R,G,B:byte);
+procedure Tpmmform.CalculateColors(var R,G,B,A,W:byte);
+var
+  value:integer;
+  ColorFound:boolean;
+  Counts:integer;
 begin
   if allowmixing.checked then
   begin
     if redcheck.Checked then
-      R:=Random(redslider.position)
+      R:=Random(256)
     else
       R:=0;
+
     if greencheck.Checked then
-      G:=Random(greenslider.position)
+      G:=Random(256)
     else
       G:=0;
+
     if bluecheck.Checked then
-      B:=Random(blueslider.position)
+      B:=Random(256)
     else
       B:=0;
+
+    if ambercheck.Checked then
+      A:=Random(amberslider.position)
+    else
+      A:=0;
+
+    if whitecheck.Checked then
+      W:=Random(whiteslider.position)
+    else
+      W:=0;
   end else
   begin
-    case Random(3) of
-      0:
-      begin
-        if redcheck.Checked then
-          R:=Random(redslider.position)
-        else
-          R:=0;
-        G:=0;
-        B:=0;
-      end;
-      1:
-      begin
-        if greencheck.Checked then
-          G:=Random(greenslider.position)
-        else
+    if (redcheck.Checked or greencheck.Checked or bluecheck.Checked or
+      ambercheck.Checked or whitecheck.Checked) then
+    begin
+      ColorFound:=false;
+      Counts:=0;
+      repeat
+        value:=Random(5);
+        case value of
+          0: if redcheck.Checked then ColorFound:=true;
+          1: if greencheck.Checked then ColorFound:=true;
+          2: if bluecheck.Checked then ColorFound:=true;
+          3: if ambercheck.Checked then ColorFound:=true;
+          4: if whitecheck.Checked then ColorFound:=true;
+        end;
+      until ColorFound or (Counts>50);
+
+      case value of
+        0:
+        begin
+          if redcheck.Checked then
+            R:=Random(256)
+          else
+            R:=0;
           G:=0;
-        R:=0;
-        B:=0;
-      end;
-      2:
-      begin
-        if bluecheck.Checked then
-          B:=Random(blueslider.position)
-        else
           B:=0;
-        R:=0;
-        G:=0;
+          A:=0;
+          W:=0;
+        end;
+        1:
+        begin
+          if greencheck.Checked then
+            G:=Random(256)
+          else
+            G:=0;
+          R:=0;
+          B:=0;
+          A:=0;
+          W:=0;
+        end;
+        2:
+        begin
+          if bluecheck.Checked then
+            B:=Random(256)
+          else
+            B:=0;
+          R:=0;
+          G:=0;
+          A:=0;
+          W:=0;
+        end;
+        3:
+        begin
+          if ambercheck.Checked then
+            A:=Random(amberslider.position)
+          else
+            A:=0;
+          R:=0;
+          G:=0;
+          B:=0;
+          W:=0;
+        end;
+        4:
+        begin
+          if whitecheck.Checked then
+            W:=Random(whiteslider.position)
+          else
+            W:=0;
+          R:=0;
+          G:=0;
+          B:=0;
+          A:=0;
+        end;
       end;
+    end else
+    begin
+      R:=0;
+      G:=0;
+      B:=0;
+      A:=0;
+      W:=0;
     end;
   end;
 
-  SetLuminance(R, G, B, minluminanceslider.Position+Random(luminanceslider.position-minluminanceslider.Position));
-  if (R=G) and (R=B) then
+  if (R>0) or (G>0) or (B>0) or (A>0) or (W>0) then
   begin
-    R:=0;
-    G:=0;
-    B:=0;
-  end else
-    MaximizeSaturation(R, G, B);
+    SetLuminance(R, G, B, minluminanceslider.Position+Random(luminanceslider.position-minluminanceslider.Position));
+    if (R=G) and (R=B) then
+    begin
+      R:=0;
+      G:=0;
+      B:=0;
+    end else
+      MaximizeSaturation(R, G, B);
+  end;
+
+  R:=round(R*(redslider.position/255));
+  G:=round(G*(greenslider.position/255));
+  B:=round(B*(blueslider.position/255));
 end;
 
 procedure Tpmmform.pmmstep;
 var
   i,Counter:integer;
-  R,G,B,Mode:byte;
+  R,G,B,A,W,UV,Mode:byte;
 begin
   for i:=0 to length(mainform.pmmlights)-1 do
   begin
     if (selected[i] and (not randomcheck.Checked)) or (randomcheck.Checked and (frac(Random(256)/2)=0)) then
     begin
-      // Farbe berechnen
-      CalculateColors(R,G,B);
-
-      if noblackouts.Checked and ((R<=5) or (G<=5) or (B<=5)) then
+      if (redcheck.Checked or greencheck.Checked or bluecheck.Checked or
+        ambercheck.Checked or whitecheck.Checked) then
       begin
-        Counter:=0;
-        repeat
-          CalculateColors(R,G,B);
-          inc(Counter);
-        until (R>5) or (G>5) or (B>5) or (Counter>50);
+        // Farbe berechnen
+        CalculateColors(R,G,B,A,W);
+
+        if noblackouts.Checked and ((R<=5) or (G<=5) or (B<=5) or (A<=5) or (W<=5)) then
+        begin
+          Counter:=0;
+          repeat
+            CalculateColors(R,G,B,A,W);
+            inc(Counter);
+          until (R>5) or (G>5) or (B>5) or (A>5) or (W>5) or (Counter>50);
+        end;
+      end else
+      begin
+        R:=0;
+        G:=0;
+        B:=0;
+        A:=0;
+        W:=0;
       end;
 
       Mode:=0;
@@ -341,8 +441,21 @@ begin
       if usedimmercheck.checked then Mode:=Mode+4;
 
       geraetesteuerung.set_color(mainform.pmmlights[i], R, G, B, Random(fadezeitbar.position), Random(delayzeitbar.position), Mode);
+
+      if useawcheck.Checked then
+      begin
+        geraetesteuerung.set_channel(mainform.pmmlights[i], 'A', -1, A, Random(fadezeitbar.position), Random(delayzeitbar.position));
+        geraetesteuerung.set_channel(mainform.pmmlights[i], 'W', -1, W, Random(fadezeitbar.position), Random(delayzeitbar.position));
+      end;
+
       if usepantiltcheck.Checked then
         geraetesteuerung.set_pantilt(mainform.pmmlights[i], -1, Random(256), -1, Random(256), Random(fadezeitpantiltbar.position));
+
+      if useuvcheck.Checked then
+      begin
+        UV:=Random(uvslider.position);
+        geraetesteuerung.set_channel(mainform.pmmlights[i], 'UV', -1, UV, Random(fadezeitbar.position), Random(delayzeitbar.position));
+      end;
     end;
   end;
 end;
@@ -412,12 +525,18 @@ begin
   mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].UseRed:=redcheck.checked;
   mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].UseGreen:=greencheck.checked;
   mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].UseBlue:=bluecheck.checked;
+  mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].UseAmber:=ambercheck.checked;
+  mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].UseWhite:=whitecheck.checked;
   mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].MaxRed:=redslider.position;
   mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].MaxGreen:=greenslider.position;
   mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].MaxBlue:=blueslider.position;
+  mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].MaxAmber:=amberslider.position;
+  mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].MaxWhite:=whiteslider.position;
   mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].AllowMixing:=allowmixing.checked;
   mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].NoBlackDevices:=noblackouts.checked;
   mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].UseRGB:=usergbcheck.checked;
+  mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].UseAW:=useawcheck.checked;
+  mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].UseUV:=useuvcheck.checked;
   mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].UseDimmer:=usedimmercheck.checked;
   mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].UseColor12:=usecolor12check.checked;
   mainform.PartyMuckenModul[length(mainform.PartyMuckenModul)-1].MaxLuminance:=luminanceslider.position;
@@ -437,9 +556,6 @@ end;
 
 procedure Tpmmform.presetboxClick(Sender: TObject);
 begin
-  if (presetbox.itemindex<0) and (presetbox.items.count>0) then
-    presetbox.itemindex:=0;
-
   if (presetbox.itemindex>-1) and (presetbox.itemindex<length(mainform.PartyMuckenModul)) then
   begin
     check1.Checked:=mainform.PartyMuckenModul[presetbox.itemindex].ControlMode=0;
@@ -454,12 +570,18 @@ begin
     redcheck.checked:=mainform.PartyMuckenModul[presetbox.itemindex].UseRed;
     greencheck.checked:=mainform.PartyMuckenModul[presetbox.itemindex].UseGreen;
     bluecheck.checked:=mainform.PartyMuckenModul[presetbox.itemindex].UseBlue;
+    ambercheck.checked:=mainform.PartyMuckenModul[presetbox.itemindex].UseAmber;
+    whitecheck.checked:=mainform.PartyMuckenModul[presetbox.itemindex].UseWhite;
     redslider.position:=mainform.PartyMuckenModul[presetbox.itemindex].MaxRed;
     greenslider.position:=mainform.PartyMuckenModul[presetbox.itemindex].MaxGreen;
     blueslider.position:=mainform.PartyMuckenModul[presetbox.itemindex].MaxBlue;
+    amberslider.position:=mainform.PartyMuckenModul[presetbox.itemindex].MaxAmber;
+    whiteslider.position:=mainform.PartyMuckenModul[presetbox.itemindex].MaxWhite;
     allowmixing.checked:=mainform.PartyMuckenModul[presetbox.itemindex].AllowMixing;
     noblackouts.checked:=mainform.PartyMuckenModul[presetbox.itemindex].NoBlackDevices;
     usergbcheck.checked:=mainform.PartyMuckenModul[presetbox.itemindex].UseRGB;
+    useawcheck.checked:=mainform.PartyMuckenModul[presetbox.itemindex].UseAW;
+    useuvcheck.checked:=mainform.PartyMuckenModul[presetbox.itemindex].UseUV;
     usedimmercheck.checked:=mainform.PartyMuckenModul[presetbox.itemindex].UseDimmer;
     usecolor12check.checked:=mainform.PartyMuckenModul[presetbox.itemindex].UseColor12;
     luminanceslider.position:=mainform.PartyMuckenModul[presetbox.itemindex].MaxLuminance;
@@ -600,6 +722,7 @@ begin
     begin
       Filestream:=TFileStream.Create(SaveDialog1.FileName, fmCreate);
 
+      Filestream.WriteBuffer(mainform.currentprojectversion,sizeof(mainform.currentprojectversion));
       Count:=length(PartyMuckenModul);
       Filestream.WriteBuffer(Count,sizeof(Count));
       for i:=0 to Count-1 do
@@ -614,12 +737,18 @@ begin
         Filestream.WriteBuffer(PartyMuckenModul[i].UseRed,sizeof(PartyMuckenModul[i].UseRed));
         Filestream.WriteBuffer(PartyMuckenModul[i].UseGreen,sizeof(PartyMuckenModul[i].UseGreen));
         Filestream.WriteBuffer(PartyMuckenModul[i].UseBlue,sizeof(PartyMuckenModul[i].UseBlue));
+        Filestream.WriteBuffer(PartyMuckenModul[i].UseAmber,sizeof(PartyMuckenModul[i].UseAmber));
+        Filestream.WriteBuffer(PartyMuckenModul[i].UseWhite,sizeof(PartyMuckenModul[i].UseWhite));
         Filestream.WriteBuffer(PartyMuckenModul[i].MaxRed,sizeof(PartyMuckenModul[i].MaxRed));
         Filestream.WriteBuffer(PartyMuckenModul[i].MaxGreen,sizeof(PartyMuckenModul[i].MaxGreen));
         Filestream.WriteBuffer(PartyMuckenModul[i].MaxBlue,sizeof(PartyMuckenModul[i].MaxBlue));
+        Filestream.WriteBuffer(PartyMuckenModul[i].MaxAmber,sizeof(PartyMuckenModul[i].MaxAmber));
+        Filestream.WriteBuffer(PartyMuckenModul[i].MaxWhite,sizeof(PartyMuckenModul[i].MaxWhite));
         Filestream.WriteBuffer(PartyMuckenModul[i].AllowMixing,sizeof(PartyMuckenModul[i].AllowMixing));
         Filestream.WriteBuffer(PartyMuckenModul[i].NoBlackDevices,sizeof(PartyMuckenModul[i].NoBlackDevices));
         Filestream.WriteBuffer(PartyMuckenModul[i].UseRGB,sizeof(PartyMuckenModul[i].UseRGB));
+        Filestream.WriteBuffer(PartyMuckenModul[i].UseAW,sizeof(PartyMuckenModul[i].UseAW));
+        Filestream.WriteBuffer(PartyMuckenModul[i].UseUV,sizeof(PartyMuckenModul[i].UseUV));
         Filestream.WriteBuffer(PartyMuckenModul[i].UseDimmer,sizeof(PartyMuckenModul[i].UseDimmer));
         Filestream.WriteBuffer(PartyMuckenModul[i].UseColor12,sizeof(PartyMuckenModul[i].UseColor12));
         Filestream.WriteBuffer(PartyMuckenModul[i].MaxLuminance,sizeof(PartyMuckenModul[i].MaxLuminance));
@@ -634,6 +763,7 @@ end;
 procedure Tpmmform.Openfile(Filename:string);
 var
   i,count:integer;
+  Version:integer;
 begin
   if FileExists(Filename) then
   begin
@@ -641,7 +771,17 @@ begin
     begin
       Filestream:=TFileStream.Create(Filename, fmOpenRead);
 
-      Filestream.ReadBuffer(Count,sizeof(Count));
+      Filestream.ReadBuffer(Version, sizeof(Version));
+
+      if Version>=476 then
+      begin
+        Filestream.ReadBuffer(Count,sizeof(Count));
+      end else
+      begin
+        // Workaround for old presets
+        Count:=Version;
+      end;
+
       setlength(PartyMuckenModul, Count);
       for i:=0 to Count-1 do
       begin
@@ -655,12 +795,27 @@ begin
         Filestream.ReadBuffer(PartyMuckenModul[i].UseRed,sizeof(PartyMuckenModul[i].UseRed));
         Filestream.ReadBuffer(PartyMuckenModul[i].UseGreen,sizeof(PartyMuckenModul[i].UseGreen));
         Filestream.ReadBuffer(PartyMuckenModul[i].UseBlue,sizeof(PartyMuckenModul[i].UseBlue));
+        if Version>=476 then
+        begin
+          Filestream.ReadBuffer(PartyMuckenModul[i].UseAmber,sizeof(PartyMuckenModul[i].UseAmber));
+          Filestream.ReadBuffer(PartyMuckenModul[i].UseWhite,sizeof(PartyMuckenModul[i].UseWhite));
+        end;
         Filestream.ReadBuffer(PartyMuckenModul[i].MaxRed,sizeof(PartyMuckenModul[i].MaxRed));
         Filestream.ReadBuffer(PartyMuckenModul[i].MaxGreen,sizeof(PartyMuckenModul[i].MaxGreen));
         Filestream.ReadBuffer(PartyMuckenModul[i].MaxBlue,sizeof(PartyMuckenModul[i].MaxBlue));
+        if Version>=476 then
+        begin
+          Filestream.ReadBuffer(PartyMuckenModul[i].MaxAmber,sizeof(PartyMuckenModul[i].MaxAmber));
+          Filestream.ReadBuffer(PartyMuckenModul[i].MaxWhite,sizeof(PartyMuckenModul[i].MaxWhite));
+        end;
         Filestream.ReadBuffer(PartyMuckenModul[i].AllowMixing,sizeof(PartyMuckenModul[i].AllowMixing));
         Filestream.ReadBuffer(PartyMuckenModul[i].NoBlackDevices,sizeof(PartyMuckenModul[i].NoBlackDevices));
         Filestream.ReadBuffer(PartyMuckenModul[i].UseRGB,sizeof(PartyMuckenModul[i].UseRGB));
+        if Version>=476 then
+        begin
+          Filestream.ReadBuffer(PartyMuckenModul[i].UseAW,sizeof(PartyMuckenModul[i].UseAW));
+          Filestream.ReadBuffer(PartyMuckenModul[i].UseUV,sizeof(PartyMuckenModul[i].UseUV));
+        end;
         Filestream.ReadBuffer(PartyMuckenModul[i].UseDimmer,sizeof(PartyMuckenModul[i].UseDimmer));
         Filestream.ReadBuffer(PartyMuckenModul[i].UseColor12,sizeof(PartyMuckenModul[i].UseColor12));
         Filestream.ReadBuffer(PartyMuckenModul[i].MaxLuminance,sizeof(PartyMuckenModul[i].MaxLuminance));
@@ -706,6 +861,21 @@ begin
       end;
     end;
 	end;
+end;
+
+procedure Tpmmform.ambersliderChange(Sender: TObject);
+begin
+  amberlbl.caption:=inttostr(round(amberslider.position/2.55))+'%';
+end;
+
+procedure Tpmmform.whitesliderChange(Sender: TObject);
+begin
+  whitelbl.caption:=inttostr(round(whiteslider.position/2.55))+'%';
+end;
+
+procedure Tpmmform.uvsliderChange(Sender: TObject);
+begin
+  uvlbl.caption:=inttostr(round(uvslider.position/2.55))+'%';
 end;
 
 end.

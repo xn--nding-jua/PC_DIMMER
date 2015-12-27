@@ -63,6 +63,8 @@ procedure Tmasterform.dimmermasterChange(Sender: TObject);
 var
 	i:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
 	for i:=0 to length(mainform.devices)-1 do
   begin
   	geraetesteuerung.set_channel(mainform.devices[i].ID,'dimmer',geraetesteuerung.get_channel(mainform.devices[i].ID,'dimmer'),geraetesteuerung.get_channel(mainform.devices[i].ID,'dimmer'),0);
@@ -76,6 +78,8 @@ end;
 
 procedure Tmasterform.flashmasterChange(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   mainform.SendMSG(MSG_Flashmaster,255-Flashmaster.Position,0);
   Timer1Timer(Sender);
   mainform.SendMSG(MSG_FLASHMASTER, 255-Flashmaster.Position, 0);
@@ -83,6 +87,8 @@ end;
 
 procedure Tmasterform.speedmasterChange(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   mainform.SendMSG(MSG_Speedmaster,512-Speedmaster.Position,0);
   Timer1Timer(Sender);
   mainform.SendMSG(MSG_SPEEDMASTER, 512-Speedmaster.Position, 0);
@@ -203,27 +209,37 @@ end;
 
 procedure Tmasterform.Button1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   dimmermaster.position:=0;
 end;
 
 procedure Tmasterform.Button2Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   flashmaster.position:=0;
 end;
 
 procedure Tmasterform.Button3Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   speedmaster.position:=256;
 end;
 
 procedure Tmasterform.VolumesliderChange(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   Bass_SetVolume(1-volumeslider.position/100);
   mainform.SendMSG(MSG_SYSTEMVOLUME, 100-volumeslider.Position, 0);
 end;
 
 procedure Tmasterform.Button4Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   volumeslider.position:=0;
 end;
 

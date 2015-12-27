@@ -88,6 +88,7 @@ type
     hasCMY:boolean;
     hasAmber:boolean;
     hasWhite:boolean;
+    hasUV:boolean;
     hasPANTILT:boolean;
     hasColor:boolean;
     hasColor2:boolean;
@@ -252,7 +253,6 @@ type
     Kanalnamesenden1: TTBItem;
     Dimmerkurveneinstellen1: TTBItem;
     Scannersynchronisation1: TTBItem;
-    IDdesaktuellenGertesanzeigen1: TTBItem;
     N2: TTBSeparatorItem;
     Gerteadressenexportieren1: TTBItem;
     Adressenimportieren1: TTBItem;
@@ -453,7 +453,7 @@ type
     procedure LoadDDFfiles;
     procedure AddGobo(filename: string);
     procedure ConvertRGBtoRGBA(Rin, Gin, Bin: byte; AmberColorR, AmberColorG:byte; CompRG, CompBlue:boolean; var Rout, Gout, Bout, Aout: byte);
-    procedure ConvertRGBAWtoRGB(Rin, Gin, Bin, Ain: byte; AmberColorR, AmberColorG:byte; CompRG, CompBlue: boolean; Win:byte; var Rout, Gout, Bout: byte);
+    procedure ConvertRGBAWUVtoRGB(Rin, Gin, Bin, Ain: byte; AmberColorR, AmberColorG:byte; CompRG, CompBlue: boolean; Win, UVin:byte; var Rout, Gout, Bout: byte);
   end;
 
 var
@@ -626,12 +626,16 @@ end;
 
 procedure Tgeraetesteuerung.SpeedButton3Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if messagedlg(_('Möchten Sie wirklich alle Geräte und Presets löschen?'),mtWarning,[mbYes,mbNo],0)=mrYes then
     NewFile;
 end;
 
 procedure Tgeraetesteuerung.SpeedButton2Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   SaveDialog1.Filter:=_('PC_DIMMER Gerätedatei (*.pcddevs)|*.pcddevs|Alle Dateien|*.*');
   SaveDialog1.DefaultExt:='*.pcddevs';
   SaveDialog1.Title:=_('PC_DIMMER Gerätedatei speichern');
@@ -643,6 +647,8 @@ end;
 
 procedure Tgeraetesteuerung.SpeedButton1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   OpenDialog1.Filter:=_('PC_DIMMER Gerätedatei (*.pcddevs)|*.pcddevs|Alle Dateien|*.*');
   OpenDialog1.DefaultExt:='*.pcddevs';
   OpenDialog1.Title:=_('PC_DIMMER Gerätedatei öffnen');
@@ -731,6 +737,8 @@ begin
       begin
      	  Filestream.ReadBuffer(mainform.Devices[i].hasAmber,sizeof(mainform.Devices[i].hasAmber));
      	  Filestream.ReadBuffer(mainform.Devices[i].hasWhite,sizeof(mainform.Devices[i].hasWhite));
+        if Version>=476 then
+       	  Filestream.ReadBuffer(mainform.Devices[i].hasUV,sizeof(mainform.Devices[i].hasUV));
      	  Filestream.ReadBuffer(mainform.Devices[i].UseAmberMixing,sizeof(mainform.Devices[i].UseAmberMixing));
      	  Filestream.ReadBuffer(mainform.Devices[i].AmberMixingCompensateRG,sizeof(mainform.Devices[i].AmberMixingCompensateRG));
      	  Filestream.ReadBuffer(mainform.Devices[i].AmberMixingCompensateBlue,sizeof(mainform.Devices[i].AmberMixingCompensateBlue));
@@ -1021,6 +1029,7 @@ begin
     Filestream.WriteBuffer(mainform.Devices[i].hasCMY,sizeof(mainform.Devices[i].hasCMY));
     Filestream.WriteBuffer(mainform.Devices[i].hasAmber,sizeof(mainform.Devices[i].hasAmber));
     Filestream.WriteBuffer(mainform.Devices[i].hasWhite,sizeof(mainform.Devices[i].hasWhite));
+    Filestream.WriteBuffer(mainform.Devices[i].hasUV,sizeof(mainform.Devices[i].hasUV));
  	  Filestream.WriteBuffer(mainform.Devices[i].UseAmberMixing,sizeof(mainform.Devices[i].UseAmberMixing));
  	  Filestream.WriteBuffer(mainform.Devices[i].AmberMixingCompensateRG,sizeof(mainform.Devices[i].AmberMixingCompensateRG));
  	  Filestream.WriteBuffer(mainform.Devices[i].AmberMixingCompensateBlue,sizeof(mainform.Devices[i].AmberMixingCompensateBlue));
@@ -1180,6 +1189,8 @@ var
   temp:byte;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   s:=DevStartaddressEdit.text;
   i:=DevStartaddressEdit.selstart;
   mainform.input_number(i,s);
@@ -1277,6 +1288,8 @@ var
 
   PicturesInCols, CurrentRow:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if adddevice=nil then
     adddevice:=Tadddevice.Create(adddevice);
 
@@ -1344,6 +1357,7 @@ begin
         mainform.Devices[length(mainform.Devices)-1].hasCMY:=deviceprototyp[devposition].hasCMY;
         mainform.Devices[length(mainform.Devices)-1].hasAmber:=deviceprototyp[devposition].hasAmber;
         mainform.Devices[length(mainform.Devices)-1].hasWhite:=deviceprototyp[devposition].hasWhite;
+        mainform.Devices[length(mainform.Devices)-1].hasUV:=deviceprototyp[devposition].hasUV;
         mainform.Devices[length(mainform.Devices)-1].UseAmberMixing:=deviceprototyp[devposition].UseAmberMixing;
         mainform.Devices[length(mainform.Devices)-1].AmberMixingCompensateRG:=deviceprototyp[devposition].AmberMixingCompensateRG;
         mainform.Devices[length(mainform.Devices)-1].AmberMixingCompensateBlue:=deviceprototyp[devposition].AmberMixingCompensateBlue;
@@ -1583,6 +1597,8 @@ var
   deviceinuse,channelstillinuse:boolean;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   setlength(IDsfordelete,0);
 
   // IDs zum Löschen sammeln
@@ -1945,6 +1961,8 @@ var
   i,j,k:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   for i:=0 to length(VSTDeviceNodes)-1 do
   for j:=0 to length(VSTDeviceNodes[i])-1 do
   for k:=0 to length(VSTDeviceNodes[i][j])-1 do
@@ -1976,6 +1994,8 @@ procedure Tgeraetesteuerung.AddGroupBtnClick(Sender: TObject);
 var
   i:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   setlength(mainform.DeviceGroups,length(mainform.DeviceGroups)+1);
   mainform.DeviceGroups[length(mainform.DeviceGroups)-1].Active:=true;
   CreateGUID(mainform.DeviceGroups[length(mainform.DeviceGroups)-1].ID);
@@ -2040,6 +2060,8 @@ var
   i,k:integer;
   groupinuse:boolean;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if messagedlg(_('Möchten Sie diese Gruppe wirklich löschen?'),mtWarning,
     [mbYes,mbNo],0)=mrYes then
   begin
@@ -2098,6 +2120,8 @@ end;
 procedure Tgeraetesteuerung.GrouplistKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if ((GroupList.Row-1)<length(mainform.devicegroups)) then
   begin
     if Grouplist.Col=1 then
@@ -2127,6 +2151,8 @@ var
   i:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if adddevice=nil then
     adddevice:=Tadddevice.Create(adddevice);
 
@@ -2171,6 +2197,7 @@ begin
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasCMY:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasCMY;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasAmber:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasAmber;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasWhite:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasWhite;
+        mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasUV:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasUV;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].UseAmberMixing:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].UseAmberMixing;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].AmberMixingCompensateRG:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].AmberMixingCompensateRG;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].AmberMixingCompensateBlue:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].AmberMixingCompensateBlue;
@@ -2260,6 +2287,8 @@ procedure Tgeraetesteuerung.RefreshGroupBtnClick(Sender: TObject);
 var
   i:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if length(mainform.DeviceGroups)>=Grouplist.row then
   begin
     setlength(mainform.DeviceGroups[Grouplist.row-1].IDs,0);
@@ -2329,6 +2358,8 @@ var
   i,j,k:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   for i:=0 to length(VSTDeviceNodes)-1 do
   for j:=0 to length(VSTDeviceNodes[i])-1 do
   for k:=0 to length(VSTDeviceNodes[i][j])-1 do
@@ -2641,6 +2672,8 @@ var
   i,j,k,position:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   for i:=0 to length(VSTDeviceNodes)-1 do
   for j:=0 to length(VSTDeviceNodes[i])-1 do
   for k:=0 to length(VSTDeviceNodes[i][j])-1 do
@@ -2681,6 +2714,8 @@ var
   newpicturefile:string;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   mainform.LoadDDFPictures;
 
   if VST.SelectedCount=0 then exit;
@@ -2725,6 +2760,8 @@ var
   i,j,k:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   for i:=0 to length(VSTDeviceNodes)-1 do
   for j:=0 to length(VSTDeviceNodes[i])-1 do
   for k:=0 to length(VSTDeviceNodes[i][j])-1 do
@@ -3173,6 +3210,8 @@ procedure Tgeraetesteuerung.PngBitBtn2Click(Sender: TObject);
 var
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -3194,6 +3233,8 @@ end;
 
 procedure Tgeraetesteuerung.ActivateGroupBtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if length(mainform.DeviceGroups)>=Grouplist.row then
   begin
     mainform.SelectDeviceGroup(mainform.DeviceGroups[Grouplist.row-1].ID, false);
@@ -3205,6 +3246,8 @@ procedure Tgeraetesteuerung.Gerteadressenexportieren1Click(
 var
   i,Count1:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   SaveDialog1.Filter:=_('PC_DIMMER Geräteadressendatei (*.pcddeva)|*.pcddeva|Alle Dateien|*.*');
   SaveDialog1.DefaultExt:='*.pcddeva';
   SaveDialog1.Title:=_('PC_DIMMER Geräteadressendatei speichern');
@@ -3228,6 +3271,8 @@ var
   IDs:array of TGUID;
   Adressen:array of Word;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   OpenDialog1.Filter:=_('PC_DIMMER Geräteadressendatei (*.pcddeva)|*.pcddeva|Alle Dateien|*.*');
   OpenDialog1.DefaultExt:='*.pcddeva';
   OpenDialog1.Title:=_('PC_DIMMER Geräteadressendatei öffnen');
@@ -3264,6 +3309,8 @@ var
   i,j,k:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   for i:=0 to length(VSTDeviceNodes)-1 do
   for j:=0 to length(VSTDeviceNodes[i])-1 do
   for k:=0 to length(VSTDeviceNodes[i][j])-1 do
@@ -3334,6 +3381,8 @@ var
   i,j,k:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if key=vk_return then
   begin
     if TEdit(Sender).text='0' then TEdit(Sender).text:='1';
@@ -3368,6 +3417,8 @@ procedure Tgeraetesteuerung.PngBitBtn4Click(Sender: TObject);
 var
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -3386,6 +3437,8 @@ var
   LSB,MSB:byte;
   temp:integer;
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   if (button=mbLeft) then
   begin
     for i:=1 to 10 do
@@ -3490,6 +3543,8 @@ var
   i:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -3646,6 +3701,7 @@ begin
           mainform.devices[i].hasCMY:=DevicePrototyp[j].hasCMY;
           mainform.devices[i].hasAmber:=DevicePrototyp[j].hasAmber;
           mainform.devices[i].hasWhite:=DevicePrototyp[j].hasWhite;
+          mainform.devices[i].hasUV:=DevicePrototyp[j].hasUV;
           mainform.devices[i].UseAmberMixing:=DevicePrototyp[j].UseAmberMixing;
           mainform.devices[i].AmberMixingCompensateRG:=DevicePrototyp[j].AmberMixingCompensateRG;
           mainform.devices[i].AmberMixingCompensateBlue:=DevicePrototyp[j].AmberMixingCompensateBlue;
@@ -3683,6 +3739,8 @@ end;
 procedure Tgeraetesteuerung.AddDeviceGroupWithoutDeselectBtnClick(
   Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if length(mainform.DeviceGroups)>=Grouplist.row then
   begin
     mainform.SelectDeviceGroup(mainform.DeviceGroups[Grouplist.row-1].ID, true);
@@ -3692,6 +3750,8 @@ end;
 procedure Tgeraetesteuerung.GrouplistMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (GroupList.Col=0) and (GroupList.Row>0) and ((GroupList.Row-1)<length(mainform.devicegroups)) then
   begin
     mainform.devicegroups[GroupList.Row-1].Active:=not mainform.devicegroups[GroupList.Row-1].Active;
@@ -3701,6 +3761,8 @@ end;
 
 procedure Tgeraetesteuerung.ShowGroupIDbtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if length(mainform.DeviceGroups)>=Grouplist.row then
   begin
     InputBox(_('Gruppen-ID'),_('Die ID der aktuellen Gruppe lautet wie folgt:'),GUIDtoString(mainform.DeviceGroups[Grouplist.row-1].ID));
@@ -3712,6 +3774,8 @@ var
   i,j,k:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   for i:=0 to length(VSTDeviceNodes)-1 do
   for j:=0 to length(VSTDeviceNodes[i])-1 do
   for k:=0 to length(VSTDeviceNodes[i][j])-1 do
@@ -3779,6 +3843,8 @@ end;
 
 procedure Tgeraetesteuerung.ReorderGroupBtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (Grouplist.row-1)<length(mainform.devicegroups) then
     groupeditorform.Grouplistbox.itemindex:=Grouplist.row-1;
   groupeditorform.show;
@@ -3794,6 +3860,8 @@ var
   ActualPosition:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -3820,6 +3888,8 @@ var
   ActualPosition:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -3912,6 +3982,7 @@ begin
   mainform.devices[Destination].hasCMY:=mainform.devices[Source].hasCMY;
   mainform.devices[Destination].hasAmber:=mainform.devices[Source].hasAmber;
   mainform.devices[Destination].hasWhite:=mainform.devices[Source].hasWhite;
+  mainform.devices[Destination].hasUV:=mainform.devices[Source].hasUV;
   mainform.devices[Destination].UseAmberMixing:=mainform.devices[Source].UseAmberMixing;
   mainform.devices[Destination].AmberMixingCompensateRG:=mainform.devices[Source].AmberMixingCompensateRG;
   mainform.devices[Destination].AmberMixingCompensateBlue:=mainform.devices[Source].AmberMixingCompensateBlue;
@@ -4098,6 +4169,8 @@ var
   ChannelForPower, Power, Phase:integer;
   AlwaysOn:boolean;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -4231,6 +4304,8 @@ var
   j:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   EditingTreeNode:=false;
 
   if not VST.HasChildren[Node] then
@@ -4258,6 +4333,8 @@ var
   i,j,k,l:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if not EditingTreeNode then
   begin
     for i:=0 to length(VSTDeviceNodes)-1 do
@@ -4329,6 +4406,8 @@ var
   i,j,k,l:integer;
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   for i:=0 to length(VSTDeviceNodes)-1 do
   for j:=0 to length(VSTDeviceNodes[i])-1 do
   for k:=0 to length(VSTDeviceNodes[i][j])-1 do
@@ -4379,6 +4458,8 @@ procedure Tgeraetesteuerung.renameBtnClick(Sender: TObject);
 var
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -4390,6 +4471,8 @@ end;
 
 procedure Tgeraetesteuerung.sortbtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   adddevicetogroupform.button2.visible:=false;
   adddevicetogroupform.ListBox1.MultiSelect:=false;
   adddevicetogroupform.geraetegruppenlbl.caption:=_('Geräte sortieren:');
@@ -4570,6 +4653,8 @@ begin
             geraetesteuerung.DevicePrototyp[i].hasAmber:=true;
           if lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('W') then
             geraetesteuerung.DevicePrototyp[i].hasWhite:=true;
+          if lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('UV') then
+            geraetesteuerung.DevicePrototyp[i].hasUV:=true;
           if lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('COLOR1') then
             geraetesteuerung.DevicePrototyp[i].hasColor:=true;
           if lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('COLOR2') then
@@ -5108,7 +5193,7 @@ begin
   aout:=round(ys*255);
 end;
 
-procedure Tgeraetesteuerung.ConvertRGBAWtoRGB(Rin, Gin, Bin, Ain: byte; AmberColorR, AmberColorG:byte; CompRG, CompBlue: boolean; Win:byte; var Rout, Gout, Bout: byte);
+procedure Tgeraetesteuerung.ConvertRGBAWUVtoRGB(Rin, Gin, Bin, Ain: byte; AmberColorR, AmberColorG:byte; CompRG, CompBlue: boolean; Win, UVin:byte; var Rout, Gout, Bout: byte);
 var
   AmberRs,AmberGs:double;
   AmberRGratio:double;
@@ -5198,9 +5283,9 @@ begin
   AmberGs:=AmberGs+(1-AmberGs)*(Ain/255)*AmberRGratio;
   if AmberGs>1 then AmberGs:=1;
 
-  Rint:=round(AmberRs*255)+Win;
+  Rint:=round(AmberRs*255)+Win+(UVin div 2);
   Gint:=round(AmberGs*255)+Win;
-  Bint:=Bin+Win;
+  Bint:=Bin+Win+(UVin div 2);
   
   if Rint>255 then Rint:=255;
   if Gint>255 then Gint:=255;
@@ -6746,6 +6831,8 @@ procedure Tgeraetesteuerung.idbtnMouseUp(Sender: TObject;
 var
   Data:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   if Shift=[] then

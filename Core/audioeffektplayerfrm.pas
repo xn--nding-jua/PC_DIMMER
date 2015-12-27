@@ -940,6 +940,8 @@ end;
 procedure Taudioeffektplayerform.audioeffectplayer_volumeChange(
   Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   if Sender=audioeffectplayer_volume then
   begin
 //    Bass_SetVolume(1-audioeffectplayer_volume.Position/100);
@@ -956,6 +958,8 @@ procedure Taudioeffektplayerform.waveform_zoominClick(Sender: TObject);
 var
   position:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if _scaling<maxzoom then
   begin
   	waveform_scrollbar.Enabled:=true;
@@ -985,6 +989,8 @@ procedure Taudioeffektplayerform.waveform_zoomoutClick(Sender: TObject);
 var
   position:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if _scaling>1 then
   begin
     _bpp:=_bpp * 2;
@@ -1027,6 +1033,8 @@ var
 //  data : array[0..2000] of SmallInt;
   effektevorhanden:boolean;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   OpenDialog.Filter:='Audiodateien|*.wav;*.mp3|*.*|*.*';
   OpenDialog.Title:='Audiodatei öffnen';
   opendialog.FileName:='';
@@ -1168,6 +1176,8 @@ var
   index,i:integer;
   effektevorhanden:boolean;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   effektevorhanden:=false;
   for i:=1 to maxaudioeffektlayers do
   	if maxaudioeffekte[i]>0 then effektevorhanden:=true;
@@ -1234,6 +1244,8 @@ end;
 
 procedure Taudioeffektplayerform.OpenEffektaudioClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   opendialog.Title:=_('PC_DIMMER Effektaudio öffnen...');
   opendialog.Filter:=_('PC_DIMMER Effektaudio (*.pcdeaud)|*.pcdeaud|*.*|*.*');
   opendialog.FileName:='';
@@ -1250,6 +1262,8 @@ var
   filename,filepath:string;
  	laenge,Count,Count2,effektanzahl,i,j,k,l,m:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   savedialog.Title:=_('PC_DIMMER Effektaudio speichern...');
   savedialog.Filter:=_('PC_DIMMER Effektaudio (*.pcdeaud)|*.pcdeaud|*.*|*.*');
   savedialog.FileName:='';
@@ -1340,6 +1354,8 @@ end;
 
 procedure Taudioeffektplayerform.PlayEffektaudioClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
 {
   if RunAllPreviousEffectsBtn.visible and effectsenabled then
   begin
@@ -1389,6 +1405,8 @@ procedure Taudioeffektplayerform.PauseEffektaudioClick(Sender: TObject);
 var
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   for j:=1 to maxaudioeffektlayers do
 	begin
     for i:=0 to maxaudioeffekte[j]-1 do
@@ -1438,6 +1456,8 @@ procedure Taudioeffektplayerform.StopEffektaudioClick(Sender: TObject);
 var
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   for j:=1 to maxaudioeffektlayers do
 	begin
     for i:=0 to maxaudioeffekte[j]-1 do
@@ -1509,6 +1529,8 @@ end;
 
 procedure Taudioeffektplayerform.recordbtn_offClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
 	// Record ausschalten
 	recordbtn_on.Visible:=true;
   recordbtn_off.Visible:=false;
@@ -1724,6 +1746,8 @@ procedure Taudioeffektplayerform.DeleteEffektClick(Sender: TObject);
 var
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if _audioeffektlayer>0 then
   begin
     if messagedlg(_('Alle markierten Effekte löschen?'),mtConfirmation,[mbYes,mbNo],0) = mrYes then
@@ -1759,6 +1783,8 @@ procedure Taudioeffektplayerform.RefreshEffectClick(Sender: TObject);
 var
   i,j,PositionInDevicearray:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   PositionInDevicearray:=0;
 
 if (_audioeffektlayer>0) and (effektliste.rowCount>1) then
@@ -2280,6 +2306,8 @@ end;
 
 procedure Taudioeffektplayerform.CheckBox9Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   _stereowaveform:=checkbox9.Checked;
 //  audioeffekttimerTimer(Sender);
 end;
@@ -2287,12 +2315,16 @@ end;
 procedure Taudioeffektplayerform.effekteeinMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   effectsenabled:=effekteein.Checked;
 end;
 
 procedure Taudioeffektplayerform.RepeataktiviertMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   dorepeating:=repeataktiviert.Checked;
   mainform.Effektaudiodatei_record.repeatactive:=Repeataktiviert.Checked;
 end;
@@ -2305,6 +2337,8 @@ var
   data : array[0..2000] of SmallInt;
   tempstring:string;
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   dontscanforeffects:=true;
   if (length(audioeffektfilenamebox.Items.Strings[audioeffektfilenamebox.ItemIndex])>4) and
     not (audioeffektfilenamebox.ItemIndex=audioeffektfilenamebox.Items.Count-1) then
@@ -2633,6 +2667,8 @@ end;
 procedure Taudioeffektplayerform.audioeffektfilenameboxClick(
   Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
 	if not audioeffektfilenamebox.Enabled then exit;
 
   // Neue Audiodatei hinzufügen (Klick auf letztes Element)
@@ -2647,6 +2683,8 @@ procedure Taudioeffektplayerform.audioeffektfilenameboxDropDown(
 var
 	j,k,l,m,effektanzahl:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   NoAudiofile:=(audioeffektfilenamebox.Items.Count=1);
 
   audioeffektplaytimer.enabled:=false;
@@ -2794,6 +2832,8 @@ var
   i,position:integer;
 //  effektnummer_str:string;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if not timerenabled then exit;
 
   if (Mausklickssperren1.Checked=false) then
@@ -2905,6 +2945,8 @@ procedure Taudioeffektplayerform.waveformMouseMove(Sender: TObject;
 var
   i,position:integer;
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   if not timerenabled then exit;
 
   if mainform.shutdown then exit;
@@ -3090,6 +3132,8 @@ procedure Taudioeffektplayerform.waveformMouseUp(Sender: TObject;
 var
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if not timerenabled then exit;
 
   x1:=X;
@@ -3163,6 +3207,8 @@ procedure Taudioeffektplayerform.MarkiertenEffektausfhren1Click(
 var
   i:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if _audioeffektlayer>0 then
   begin
   	for i:=0 to effektliste.RowCount-1 do
@@ -3180,6 +3226,8 @@ procedure Taudioeffektplayerform.MarkiertenEffektstoppen1Click(
 var
   i,k,l,PositionInDeviceArray:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   PositionInDeviceArray:=0;
 
   if _audioeffektlayer>0 then
@@ -3222,6 +3270,8 @@ procedure Taudioeffektplayerform.MarkierteEffekteverschieben1Click(
 var
 	i,move:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if _audioeffektlayer>0 then
   begin
   	move:=strtoint(InputBox(_('Verschieben von Effekt'),_('Um wie viele Millisekunden sollen die markierten Effekte verschoben werden:'),'0'));
@@ -3240,6 +3290,8 @@ end;
 procedure Taudioeffektplayerform.MarkiertenEffektaufPositionXsetzen1Click(
   Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if _audioeffektlayer>0 then
   begin
     mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt[Effektliste.Row-1].audioeffektposition:=BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE));
@@ -3255,48 +3307,50 @@ var
   openfile,effectfilepath,effectfilename:string;
   k,effektanzahl:integer;
 begin
-if _audioeffektlayer>0 then
-begin
-  opendialog.Title:=_('PC_DIMMER Effekt-Layer öffnen...');
-  opendialog.Filter:=_('PC_DIMMER Effekt-Layer (*.pcdelyr)|*.pcdelyr|*.*|*.*');
-  opendialog.FileName:='';
-  opendialog.DefaultExt:='*.pcdelyr';
-//  if mainform.project_folder<>'' then opendialog.InitialDir:=mainform.project_folder;
-  if opendialog.execute then
+  if not mainform.UserAccessGranted(1) then exit;
+
+  if _audioeffektlayer>0 then
   begin
-    openfile:=opendialog.filename;
+    opendialog.Title:=_('PC_DIMMER Effekt-Layer öffnen...');
+    opendialog.Filter:=_('PC_DIMMER Effekt-Layer (*.pcdelyr)|*.pcdelyr|*.*|*.*');
+    opendialog.FileName:='';
+    opendialog.DefaultExt:='*.pcdelyr';
+  //  if mainform.project_folder<>'' then opendialog.InitialDir:=mainform.project_folder;
+    if opendialog.execute then
+    begin
+      openfile:=opendialog.filename;
 
-    effectfilepath:=ExtractFilepath(openfile);
-    effectfilename:=ExtractFileName(openfile);
+      effectfilepath:=ExtractFilepath(openfile);
+      effectfilename:=ExtractFileName(openfile);
 
-    DeleteFile(mainform.userdirectory+'Temp\*.*');
-    mainform.Compress.DecompressFile(effectfilepath+effectfilename,mainform.userdirectory+'Temp\',true,false);
-    if not mainform.startingup then
-      inprogress.Hide;
+      DeleteFile(mainform.userdirectory+'Temp\*.*');
+      mainform.Compress.DecompressFile(effectfilepath+effectfilename,mainform.userdirectory+'Temp\',true,false);
+      if not mainform.startingup then
+        inprogress.Hide;
 
-		    if fileexists(mainform.userdirectory+'Temp\Effektlayer') then
-					FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektlayer',fmOpenRead)
-        else
-	        FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\'+effectfilename,fmOpenRead);
-        // Effektanzahl herausfinden
-        FileStream.ReadBuffer(effektanzahl,sizeof(effektanzahl));
-        maxaudioeffekte[_audioeffektlayer]:=effektanzahl;
-        // Effektarraygrößen festlegen
-        setlength(_effektaudioeffektpassed[_audioeffektlayer],effektanzahl);
-        setlength(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt,effektanzahl);
-        // Effektarray laden
-        for k:=0 to effektanzahl-1 do
-        begin
-	        Filestream.ReadBuffer(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt[k],sizeof(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt[k]));
-        end;
- 		FileStream.Free;
-    DeleteFile(mainform.userdirectory+'Temp\*.*');
+          if fileexists(mainform.userdirectory+'Temp\Effektlayer') then
+            FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektlayer',fmOpenRead)
+          else
+            FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\'+effectfilename,fmOpenRead);
+          // Effektanzahl herausfinden
+          FileStream.ReadBuffer(effektanzahl,sizeof(effektanzahl));
+          maxaudioeffekte[_audioeffektlayer]:=effektanzahl;
+          // Effektarraygrößen festlegen
+          setlength(_effektaudioeffektpassed[_audioeffektlayer],effektanzahl);
+          setlength(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt,effektanzahl);
+          // Effektarray laden
+          for k:=0 to effektanzahl-1 do
+          begin
+            Filestream.ReadBuffer(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt[k],sizeof(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt[k]));
+          end;
+      FileStream.Free;
+      DeleteFile(mainform.userdirectory+'Temp\*.*');
 
-			layerboxChange(nil);
-    end;
+        layerboxChange(nil);
+      end;
 
-    Check_audioeffektbuttons()
-end;
+      Check_audioeffektbuttons()
+  end;
 end;
 
 procedure Taudioeffektplayerform.Layerspeichern1Click(Sender: TObject);
@@ -3304,41 +3358,45 @@ var
   savefile,effectfilepath,effectfilename:string;
   k,effektanzahl:integer;
 begin
-if _audioeffektlayer>0 then
-begin
-  savedialog.Title:=_('PC_DIMMER Effekt-Layer speichern...');
-  savedialog.Filter:=_('PC_DIMMER Effektliste (*.pcdelyr)|*.pcdelyr|*.*|*.*');
-  savedialog.FileName:='';
-  savedialog.DefaultExt:='*.pcdelyr';
-  if savedialog.execute then
-    begin
-      savefile:=savedialog.filename;
+  if not mainform.UserAccessGranted(1) then exit;
 
-      effectfilepath:=ExtractFilepath(savefile);
-      effectfilename:=ExtractFileName(savefile);
+  if _audioeffektlayer>0 then
+  begin
+    savedialog.Title:=_('PC_DIMMER Effekt-Layer speichern...');
+    savedialog.Filter:=_('PC_DIMMER Effektliste (*.pcdelyr)|*.pcdelyr|*.*|*.*');
+    savedialog.FileName:='';
+    savedialog.DefaultExt:='*.pcdelyr';
+    if savedialog.execute then
+      begin
+        savefile:=savedialog.filename;
 
-	    DeleteFile(mainform.userdirectory+'Temp\*.*');
-			FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektlayer',fmCreate);
-        // Effektanzahl herausfinden
-	      effektanzahl:=length(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt);
-				// Effektanzahl abspeichern
-        FileStream.WriteBuffer(effektanzahl,sizeof(effektanzahl));
-        // Effektarray abspeichern
-        for k:=0 to effektanzahl-1 do
-        begin
-	        Filestream.WriteBuffer(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt[k],sizeof(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt[k]));
-        end;
-			FileStream.Free;
+        effectfilepath:=ExtractFilepath(savefile);
+        effectfilename:=ExtractFileName(savefile);
 
-      mainform.Compress.CompressDirectory(mainform.userdirectory+'Temp\',false,effectfilepath+effectfilename);
-	    DeleteFile(mainform.userdirectory+'Temp\*.*');
-      inprogress.Hide;
-    end;
-end;
+        DeleteFile(mainform.userdirectory+'Temp\*.*');
+        FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektlayer',fmCreate);
+          // Effektanzahl herausfinden
+          effektanzahl:=length(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt);
+          // Effektanzahl abspeichern
+          FileStream.WriteBuffer(effektanzahl,sizeof(effektanzahl));
+          // Effektarray abspeichern
+          for k:=0 to effektanzahl-1 do
+          begin
+            Filestream.WriteBuffer(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt[k],sizeof(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt[k]));
+          end;
+        FileStream.Free;
+
+        mainform.Compress.CompressDirectory(mainform.userdirectory+'Temp\',false,effectfilepath+effectfilename);
+        DeleteFile(mainform.userdirectory+'Temp\*.*');
+        inprogress.Hide;
+      end;
+  end;
 end;
 
 procedure Taudioeffektplayerform.Layerlschen1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
 if messagedlg(_('Aktuellen Layer löschen?'),mtWarning,
   [mbYes,mbNo],0)=mrYes then
   begin
@@ -3353,6 +3411,8 @@ procedure Taudioeffektplayerform.LayerkopierenzuLayer1Click(
 var
 	i,j,k,ziellayer:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
 	try
   	ziellayer:=strtoint(InputBox(_('Layer kopieren'),_('Bitte geben Sie das Ziellayer ein (1 bis ')+inttostr(maxaudioeffektlayers)+')',inttostr(_audioeffektlayer)));
   except
@@ -3409,6 +3469,8 @@ var
   j,k,effektanzahl:integer;
   openfile,effectfilepath,effectfilename:string;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   opendialog.Title:=_('PC_DIMMER Effektliste öffnen...');
   opendialog.Filter:=_('PC_DIMMER Effektliste (*.pcdelst)|*.pcdelst|*.*|*.*');
   opendialog.FileName:='';
@@ -3475,6 +3537,8 @@ var
   j,k,effektanzahl:integer;
   savefile,effectfilepath,effectfilename:string;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   savedialog.Title:=('PC_DIMMER Effektliste speichern...');
   savedialog.Filter:=('PC_DIMMER Effektliste (*.pcdelst)|*.pcdelst|*.*|*.*');
   savedialog.FileName:='';
@@ -3522,8 +3586,10 @@ procedure Taudioeffektplayerform.Effektlistelschen1Click(Sender: TObject);
 var
   j:integer;
 begin
-if messagedlg(_('Gesamte Effektliste löschen?'),mtWarning,
-  [mbYes,mbNo],0)=mrYes then
+  if not mainform.UserAccessGranted(1) then exit;
+
+  if messagedlg(_('Gesamte Effektliste löschen?'),mtWarning,
+    [mbYes,mbNo],0)=mrYes then
   begin
     for j:=1 to maxaudioeffektlayers do
 		begin
@@ -3537,6 +3603,8 @@ end;
 
 procedure Taudioeffektplayerform.RecordModus1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if RecordModus1.Checked then
 	begin
 		recordbtn_on.Visible:=false;
@@ -3551,6 +3619,8 @@ end;
 procedure Taudioeffektplayerform.Wavedarstellungzweifarbig1Click(
   Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   Wavedarstellungzweifarbig1.Checked:=not Wavedarstellungzweifarbig1.Checked;
   Wavezweifarbig.Checked:=Wavedarstellungzweifarbig1.Checked;
 //	audioeffekttimerTimer(Sender);
@@ -3558,6 +3628,8 @@ end;
 
 procedure Taudioeffektplayerform.Repeataktiviert1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   Repeataktiviert1.Checked:=not Repeataktiviert1.Checked;
   Repeataktiviert.Checked:=Repeataktiviert1.Checked;
   mainform.Effektaudiodatei_record.repeatactive:=Repeataktiviert.Checked;
@@ -3567,6 +3639,8 @@ end;
 procedure Taudioeffektplayerform.SprungmarkeanaktuellePosition1Click(
   Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   mainform.Effektaudiodatei_record.repeatjump:=BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE);
 //	audioeffekttimerTimer(Sender);
 end;
@@ -3576,6 +3650,8 @@ procedure Taudioeffektplayerform.Sprungmarkeverschieben1Click(
 var
 	i:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   i:=(strtoint(InputBox(_('Repeat-Sprungmarke'),_('Bitte geben Sie eine Differenz zur neuen Position in ms ein:'),inttostr(0))));
   mainform.Effektaudiodatei_record.repeatjump:=BASS_ChannelSeconds2Bytes(_chan[0],BASS_ChannelBytes2Seconds(_chan[0],mainform.Effektaudiodatei_record.repeatjump)+i/1000);
 //	audioeffekttimerTimer(Sender);
@@ -3584,6 +3660,8 @@ end;
 procedure Taudioeffektplayerform.ZielmarkeanaktuellePosition1Click(
   Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   mainform.Effektaudiodatei_record.repeatdestination:=BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE);
 //	audioeffekttimerTimer(Sender);
 end;
@@ -3593,6 +3671,8 @@ procedure Taudioeffektplayerform.Zielmarkeverschieben1Click(
 var
 	i:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   i:=(strtoint(InputBox(_('Repeat-Zielmarke'),_('Bitte geben Sie eine Differenz zur neuen Position in ms ein:'),inttostr(0))));
   mainform.Effektaudiodatei_record.repeatdestination:=BASS_ChannelSeconds2Bytes(_chan[0],BASS_ChannelBytes2Seconds(_chan[0],mainform.Effektaudiodatei_record.repeatdestination)+i/1000);
 //	audioeffekttimerTimer(Sender);
@@ -3600,6 +3680,8 @@ end;
 
 procedure Taudioeffektplayerform.Importieren1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   opendialog.Title:=_('PC_DIMMER Repeatmarken öffnen...');
   opendialog.Filter:=_('PC_DIMMER Repeatmarken (*.pcderpt)|*.pcderpt|*.*|*.*');
   opendialog.FileName:='';
@@ -3620,6 +3702,8 @@ end;
 
 procedure Taudioeffektplayerform.Exportieren1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   savedialog.Title:=_('PC_DIMMER Repeatmarken speichern...');
   savedialog.Filter:=_('PC_DIMMER Repeatmarken (*.pcderpt)|*.pcderpt|*.*|*.*');
   savedialog.FileName:='';
@@ -3842,6 +3926,8 @@ var
   j,k,m,n,effektanzahl:integer;
   openfile,effectfilepath,effectfilename:string;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   opendialog.Title:=_('PC_DIMMER Effektliste öffnen...');
   opendialog.Filter:=_('PC_DIMMER Effektliste (*.pcdelst)|*.pcdelst|*.*|*.*');
   opendialog.FileName:='';
@@ -3991,6 +4077,8 @@ var
   j,k,m,n,effektanzahl:integer;
   savefile,effectfilepath,effectfilename:string;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   savedialog.Title:=_('PC_DIMMER Effektliste speichern...');
   savedialog.Filter:=_('PC_DIMMER Effektliste (*.pcdelst)|*.pcdelst|*.*|*.*');
   savedialog.FileName:='';
@@ -4112,6 +4200,8 @@ end;
 
 procedure Taudioeffektplayerform.Button1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if panelLighteffects.visible then
   begin
     panelLighteffects.visible:=false;
@@ -4956,6 +5046,8 @@ procedure Taudioeffektplayerform.EffektnachlinksMouseUp(Sender: TObject;
 var
   i:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if _audioeffektlayer>0 then
   begin
     for i:=0 to length(active)-1 do
@@ -4978,6 +5070,8 @@ procedure Taudioeffektplayerform.EffektnachrechtsMouseUp(Sender: TObject;
 var
   i:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if _audioeffektlayer>0 then
   begin
     for i:=0 to length(active)-1 do
@@ -5201,6 +5295,8 @@ procedure Taudioeffektplayerform.EffektlisteDblClick(Sender: TObject);
 var
   position:single;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if  _audioeffektlayer>0 then
   begin
     if length(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt)>0 then
@@ -5227,6 +5323,8 @@ procedure Taudioeffektplayerform.EffektlisteKeyUp(Sender: TObject;
 var
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if Mausklickssperren1.Checked then exit;
 
   case Key of
@@ -5343,6 +5441,8 @@ end;
 procedure Taudioeffektplayerform.EffektlisteMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if X<=15 then
   begin
     active[Effektliste.Row]:=not active[Effektliste.Row];
@@ -5467,6 +5567,8 @@ var
   i,effecttomove:integer;
   foundnexteffect:boolean;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   effecttomove:=-1;
   foundnexteffect:=false;
   for i:=0 to length(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt)-1 do
@@ -5491,45 +5593,49 @@ procedure Taudioeffektplayerform.Neu1Click(Sender: TObject);
 var
   j:integer;
 begin
-	// Audioeffektplayer zurücksetzen
-    timerenabled:=false;
-    BASS_ChannelStop(_chan[0]);
-    BASS_ChannelStop(_chan[1]);
-    BASS_ChannelStop(_chan[2]);
-    BASS_ChannelStop(_chan[3]);
-    BASS_StreamFree(_chan[0]);
-    BASS_StreamFree(_chan[1]);
-    BASS_StreamFree(_chan[2]);
-    BASS_StreamFree(_chan[3]);
-    _chan[0]:=0;
-    _chan[1]:=0;
-    _chan[2]:=0;
-    _chan[3]:=0;
-    BASS_Free;
+  if not mainform.UserAccessGranted(1) then exit;
 
-    // Effektliste löschen
-    for j:=1 to maxaudioeffektlayers do
-	  begin
-      layercombobox.Checked[j-1]:=true;
-			activelayer[j-1]:=true;
-    end;
+// Audioeffektplayer zurücksetzen
+  timerenabled:=false;
+  BASS_ChannelStop(_chan[0]);
+  BASS_ChannelStop(_chan[1]);
+  BASS_ChannelStop(_chan[2]);
+  BASS_ChannelStop(_chan[3]);
+  BASS_StreamFree(_chan[0]);
+  BASS_StreamFree(_chan[1]);
+  BASS_StreamFree(_chan[2]);
+  BASS_StreamFree(_chan[3]);
+  _chan[0]:=0;
+  _chan[1]:=0;
+  _chan[2]:=0;
+  _chan[3]:=0;
+  BASS_Free;
 
-    // gesamte Arrays auf Null setzen
-    setlength(mainform.effektaudio_record,0);
-    // 'Audiodatei hinzufügen...' setzen
-    audioeffektfilenamebox.Clear;
-		audioeffektfilenamebox.ItemIndex:=audioeffektplayerform.audioeffektfilenamebox.Items.Add(_('Audiodatei hinzufügen...'));
-  	Button18.Enabled:=false;
+  // Effektliste löschen
+  for j:=1 to maxaudioeffektlayers do
+  begin
+    layercombobox.Checked[j-1]:=true;
+    activelayer[j-1]:=true;
+  end;
+
+  // gesamte Arrays auf Null setzen
+  setlength(mainform.effektaudio_record,0);
+  // 'Audiodatei hinzufügen...' setzen
+  audioeffektfilenamebox.Clear;
+  audioeffektfilenamebox.ItemIndex:=audioeffektplayerform.audioeffektfilenamebox.Items.Add(_('Audiodatei hinzufügen...'));
+  Button18.Enabled:=false;
 //  	button20.Enabled:=false;
-    button21.Enabled:=false;
-    layerbox.ItemIndex:=0;
-		layerboxChange(nil);
-    Check_audioeffektbuttons();
+  button21.Enabled:=false;
+  layerbox.ItemIndex:=0;
+  layerboxChange(nil);
+  Check_audioeffektbuttons();
 end;
 
 procedure Taudioeffektplayerform.WavezweifarbigMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   Wavedarstellungzweifarbig1.Checked:=not Wavedarstellungzweifarbig1.Checked;
   Wavezweifarbig.Checked:=Wavedarstellungzweifarbig1.Checked;
 //	audioeffekttimerTimer(Sender);
@@ -5539,6 +5645,8 @@ procedure Taudioeffektplayerform.LayerComboboxChange(Sender: TObject);
 var
 	i:integer;
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   for i:=1 to maxaudioeffektlayers do
   begin
   	activelayer[i-1]:=layercombobox.Checked[i-1];
@@ -5592,6 +5700,8 @@ end;
 
 procedure Taudioeffektplayerform.waveformDblClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if not timerenabled then exit;
 
   if (mouseoverlayer>0) and (layerbox.ItemIndex=0) then
@@ -5613,12 +5723,16 @@ end;
 
 procedure Taudioeffektplayerform.Mausklickssperren1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   lockmouse.checked:=Mausklickssperren1.Checked;
 end;
 
 procedure Taudioeffektplayerform.lockmouseMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   Mausklickssperren1.Checked:=lockmouse.checked;
   nomouseimage.visible:=Mausklickssperren1.Checked;
 end;
@@ -5767,6 +5881,8 @@ end;
 
 procedure Taudioeffektplayerform.CopyEffektBtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   setlength(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt,length(mainform.Effektaudiodatei_record.layer[_audioeffektlayer].effekt)+1);
   setlength(_effektaudioeffektpassed[_audioeffektlayer],length(_effektaudioeffektpassed[_audioeffektlayer])+1);
   maxaudioeffekte[_audioeffektlayer]:=maxaudioeffekte[_audioeffektlayer]+1;
@@ -5794,6 +5910,8 @@ end;
 
 procedure Taudioeffektplayerform.VideoscreenbtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if videoscreenform=nil then
     videoscreenform:=Tvideoscreenform.Create(videoscreenform);
   videoscreenform.show;
@@ -5802,6 +5920,8 @@ end;
 procedure Taudioeffektplayerform.Videoseekingeinrichten1Click(
   Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   videoscreensynchronisierenform.show;
 end;
 
@@ -5864,6 +5984,8 @@ procedure Taudioeffektplayerform.Layernamenbearbeiten1Click(
 var
   i:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if layerbezeichnungenform.ShowModal=mrOK then
   begin
     mainform.Effektaudiodatei_record.layername[1]:=layerbezeichnungenform.LabeledEdit1.Text;
@@ -5981,6 +6103,8 @@ end;
 procedure Taudioeffektplayerform.Button18MouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   AddSzenePopup.Popup(audioeffektplayerform.Left+Panel2.Left+Button18.Left+x,audioeffektplayerform.Top+panelLighteffects.Top+Panel2.Top+Button18.Top+Button18.Height+15+y);
 end;
 
@@ -6017,6 +6141,8 @@ procedure Taudioeffektplayerform.nachlaufzeit1Click(
 var
   LReg:TRegistry;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   effektnachlaufzeit:=strtoint(InputBox(_('Nachlaufzeit bei Effekterkennung'),_('Bitte geben Sie eine Zeit in Millisekunden an, in der hinter der Positionsmarke nach nicht abgespielten Effekten gesucht werden soll (Standard: 100ms):'),inttostr(effektnachlaufzeit)));
 
   if effektnachlaufzeit<0 then
@@ -6054,6 +6180,8 @@ procedure Taudioeffektplayerform.vorlaufzeit1Click(
 var
   LReg:TRegistry;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   effektvorlaufzeit:=strtoint(InputBox(_('Vorlaufzeit bei Effekterkennung'),_('Bitte geben Sie eine Zeit in Millisekunden an, in der vor der Positionsmarke nach nicht abgespielten Effekten gesucht werden soll (Standard: 10ms):'),inttostr(effektvorlaufzeit)));
 
   if effektvorlaufzeit<0 then
@@ -6502,6 +6630,8 @@ procedure Taudioeffektplayerform.EinblendzeitbeiEffektsynchronisation1Click(
 var
   LReg:TRegistry;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   effektsynchrozeit:=strtoint(InputBox(_('Einblendzeit bei Effektsynchronisation'),_('Bitte geben Sie eine Zeit für das Einblenden beim Effektsynchronisieren in Millisekunden an (Standard: 1000ms):'),inttostr(effektsynchrozeit)));
 
   if effektsynchrozeit<0 then
@@ -6644,6 +6774,8 @@ end;
 
 procedure Taudioeffektplayerform.movefileupClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if audioeffektfilenamebox.itemindex>0 then
   begin
     audioeffektfilenameboxDropDown(nil);
@@ -6668,6 +6800,8 @@ end;
 
 procedure Taudioeffektplayerform.movefiledownClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if audioeffektfilenamebox.itemindex<(audioeffektfilenamebox.Items.Count-1) then
   begin
     setlength(mainform.effektaudio_record,length(mainform.effektaudio_record)+1);
@@ -6704,6 +6838,8 @@ end;
 
 procedure Taudioeffektplayerform.RunAllPreviousEffectsBtnOffClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
 	RunAllPreviousEffectsBtn.Visible:=true;
   RunAllPreviousEffectsBtnOff.Visible:=false;
 
@@ -6774,6 +6910,8 @@ procedure Taudioeffektplayerform.BPMScanlnge1Click(Sender: TObject);
 var
   LReg:TRegistry;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   bpmscanlength:=strtoint(InputBox(_('BPM-Scanlänge'),_('Bitte geben Sie eine Zeit in Sekunden an, in der vor der Positionsmarke der BPM-Wert ermittelt werden soll (Standard: 30s):'),inttostr(bpmscanlength)));
 
   if bpmscanlength<0 then
@@ -6883,6 +7021,8 @@ procedure Taudioeffektplayerform.KompletteShowstreckenstauchen1Click(
 var
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   audioeffektplayerstretchform.OldLength:=trunc(BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetLength(_chan[0], BASS_POS_BYTE))*1000);
 
   if (audioeffektplayerstretchform.showmodal=mrOK) then
@@ -6967,6 +7107,8 @@ procedure Taudioeffektplayerform.sendtimecodetodllClick(Sender: TObject);
 var
   LReg:TRegistry;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   LReg := TRegistry.Create;
   LReg.RootKey:=HKEY_CURRENT_USER;
 
@@ -6996,6 +7138,8 @@ end;
 
 procedure Taudioeffektplayerform.TrackBar2Change(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   if _audioeffektlayer>0 then
     waveformscaling:=TrackBar2.Position/100
   else
@@ -7006,6 +7150,8 @@ end;
 procedure Taudioeffektplayerform.ScrolltimelineCheckboxKeyUp(
   Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   ScrollbarRefreshTimer.Enabled:=ScrolltimelineCheckbox.Checked;
 end;
 
@@ -7013,6 +7159,8 @@ procedure Taudioeffektplayerform.ScrolltimelineCheckboxMouseUp(
   Sender: TObject; Button: TMouseButton; Shift: TShiftState; X,
   Y: Integer);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   ScrollbarRefreshTimer.Enabled:=ScrolltimelineCheckbox.Checked;
 end;
 

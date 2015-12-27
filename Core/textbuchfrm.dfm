@@ -123,7 +123,7 @@ object textbuchform: Ttextbuchform
         TabOrder = 0
         OnNavigateComplete2 = WebBrowser1NavigateComplete2
         ControlData = {
-          4C000000572C0000E62400000000000000000000000000000000000000000000
+          4C000000832B00002C2400000000000000000000000000000000000000000000
           000000004C000000000000000000000001000000E0D057007335CF11AE690800
           2B2E126208000000000000004C0000000114020000000000C000000000000046
           8000000000000000000000000000000000000000000000000000000000000000
@@ -139,7 +139,7 @@ object textbuchform: Ttextbuchform
         TabOrder = 1
         object Splitter2: TSplitter
           Left = 1
-          Top = 180
+          Top = 173
           Width = 383
           Height = 3
           Cursor = crVSplit
@@ -149,7 +149,7 @@ object textbuchform: Ttextbuchform
           Left = 1
           Top = 1
           Width = 383
-          Height = 179
+          Height = 172
           OnHotSpotClick = htmlLite1HotSpotClick
           TabOrder = 0
           Align = alClient
@@ -164,7 +164,7 @@ object textbuchform: Ttextbuchform
         end
         object Memo1: TMemo
           Left = 1
-          Top = 183
+          Top = 176
           Width = 383
           Height = 173
           Align = alBottom

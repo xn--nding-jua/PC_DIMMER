@@ -278,6 +278,8 @@ procedure Teffektsequenzer.Button3Click(Sender: TObject);
 var
   Data: PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   setlength(mainform.effektsequenzereffekte,length(mainform.effektsequenzereffekte)+1);
   setlength(mainform.effektsequenzereffekte[length(mainform.effektsequenzereffekte)-1].Effektschritte,0);
   setlength(mainform.AktuellerEffekt,length(mainform.AktuellerEffekt)+1);
@@ -392,6 +394,8 @@ var
   Data: PTreeData;
   DataNew:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
 
@@ -431,6 +435,8 @@ var
   aktuellereffekt,aktuellereffektschritt:integer;
   Old, New:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -485,6 +491,8 @@ var
   aktuellereffekt,aktuellereffektschritt:integer;
   Old, New:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -540,6 +548,8 @@ var
   TempNode:PVirtualNode;
   SomethingDeleted:boolean;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   SomethingDeleted:=false;
@@ -610,6 +620,8 @@ var
   TempNode:PVirtualNode;
   NodeToDelete:array of PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
 
   TempNode:=VST.GetFirst;
@@ -794,6 +806,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   for i:=0 to length(VSTEffektNodes)-1 do
   for j:=0 to length(VSTEffektNodes[i])-1 do
   if VST.Selected[VSTEffektNodes[i][j]] or VST.Selected[VSTEffektNodes[i][j].Parent] then
@@ -809,6 +823,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   for i:=0 to length(VSTEffektNodes)-1 do
   for j:=0 to length(VSTEffektNodes[i])-1 do
   if VST.Selected[VSTEffektNodes[i][j]] or VST.Selected[VSTEffektNodes[i][j].Parent] then
@@ -825,6 +841,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=1 then
   begin
     Data:=VST.GetNodeData(VST.FocusedNode);
@@ -850,6 +868,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   for i:=0 to length(VSTEffektNodes)-1 do
   for j:=0 to length(VSTEffektNodes[i])-1 do
   if VST.Selected[VSTEffektNodes[i][j]] or VST.Selected[VSTEffektNodes[i][j].Parent] then
@@ -865,6 +885,8 @@ procedure Teffektsequenzer.Edit1KeyUp(Sender: TObject; var Key: Word;
 var
   Data: PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
 
@@ -887,6 +909,8 @@ procedure Teffektsequenzer.Edit2KeyUp(Sender: TObject; var Key: Word;
 var
   Data: PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
 
@@ -909,6 +933,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
 //  if VST.SelectedCount=0 then exit;
 
   if Sender=Edit7 then
@@ -939,6 +965,8 @@ var
   s:string;
   i:integer;
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   s:=TEdit(Sender).text;
   i:=TEdit(Sender).selstart;
   mainform.input_number_minus(i,s);
@@ -951,6 +979,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   for i:=0 to length(VSTEffektNodes)-1 do
   for j:=0 to length(VSTEffektNodes[i])-1 do
   if VST.Selected[VSTEffektNodes[i][j]] or VST.Selected[VSTEffektNodes[i][j].Parent] then
@@ -1083,6 +1113,8 @@ var
   i,j,k,t,h,min,s,ms:integer;
   TempNode:PVirtualNode;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
 
@@ -1366,6 +1398,8 @@ var
   s:string;
   i:integer;
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   s:=TEdit(Sender).text;
   i:=TEdit(Sender).selstart;
   mainform.input_number(i,s);
@@ -1379,6 +1413,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
 {
   if VST.SelectedCount=0 then exit;
 
@@ -1406,6 +1442,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   if Sender=intensity then
   begin
     for i:=0 to length(VSTEffektNodes)-1 do
@@ -1424,6 +1462,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   if Sender=speed then
   begin
     for i:=0 to length(VSTEffektNodes)-1 do
@@ -1442,6 +1482,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if messagedlg(_('Die aktuelle Einblendzeit des aktuellen Schrittes wird auf alle anderen markierten Schritte angewendet. Fortfahren?'),mtConfirmation,
   [mbYes,mbNo],0)=mrYes then
   begin
@@ -1461,6 +1503,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if messagedlg(_('Die aktuelle Wartezeit des aktuellen Schrittes wird auf alle anderen markierten Schritte angewendet. Fortfahren?'),mtConfirmation,
   [mbYes,mbNo],0)=mrYes then
   begin
@@ -1495,6 +1539,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if speed.Enabled then
   begin
     speed.Position:=128;
@@ -1514,6 +1560,8 @@ var
   Data: PTreeData;
   i,j,k:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   for i:=0 to length(VSTEffektNodes)-1 do
   for j:=0 to length(VSTEffektNodes[i])-1 do
   if VST.Selected[VSTEffektNodes[i][j]] or VST.Selected[VSTEffektNodes[i][j].Parent] then
@@ -1986,6 +2034,8 @@ var
   s:string;
   i:integer;
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   s:=TEdit(Sender).text;
   i:=TEdit(Sender).selstart;
   mainform.input_number(i,s);
@@ -1999,6 +2049,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   for i:=0 to length(VSTEffektNodes)-1 do
   for j:=0 to length(VSTEffektNodes[i])-1 do
   if VST.Selected[VSTEffektNodes[i][j]] or VST.Selected[VSTEffektNodes[i][j].Parent] then
@@ -2017,6 +2069,8 @@ procedure Teffektsequenzer.ComboBox2Select(Sender: TObject);
 var
   Data: PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -2047,6 +2101,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   for i:=0 to length(VSTEffektNodes)-1 do
   for j:=0 to length(VSTEffektNodes[i])-1 do
   if VST.Selected[VSTEffektNodes[i][j]] or VST.Selected[VSTEffektNodes[i][j].Parent] then
@@ -2062,6 +2118,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=1 then
   begin
     Data:=VST.GetNodeData(VST.FocusedNode);
@@ -2100,6 +2158,8 @@ var
 //  j:integer;
 //  NewNode:PVirtualNode;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -2251,6 +2311,8 @@ procedure Teffektsequenzer.copybtnClick(Sender: TObject);
 var
   Data{, DataNew}: PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
   
@@ -2289,6 +2351,8 @@ var
   s:string;
   i:integer;
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   s:=TEdit(Sender).text;
   i:=TEdit(Sender).selstart;
   mainform.input_number(i,s);
@@ -2302,6 +2366,10 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
+  if not mainform.UserAccessGranted(1) then exit;
+
   for i:=0 to length(VSTEffektNodes)-1 do
   for j:=0 to length(VSTEffektNodes[i])-1 do
   if VST.Selected[VSTEffektNodes[i][j]] or VST.Selected[VSTEffektNodes[i][j].Parent] then
@@ -2318,6 +2386,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   for i:=0 to length(VSTEffektNodes)-1 do
   for j:=0 to length(VSTEffektNodes[i])-1 do
   if VST.Selected[VSTEffektNodes[i][j]] or VST.Selected[VSTEffektNodes[i][j].Parent] then
@@ -2336,6 +2406,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   for i:=0 to length(VSTEffektNodes)-1 do
   for j:=0 to length(VSTEffektNodes[i])-1 do
   if VST.Selected[VSTEffektNodes[i][j]] or VST.Selected[VSTEffektNodes[i][j].Parent] then
@@ -2492,6 +2564,8 @@ procedure Teffektsequenzer.Button7Click(Sender: TObject);
 var
   Data: PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -2652,6 +2726,8 @@ var
   effectnodeindex:integer;
   DataNew:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -2829,7 +2905,7 @@ procedure Teffektsequenzer.Eigenschaftenausblenden1Click(Sender: TObject);
 begin
   panel1.Visible:=not Eigenschaftenausblenden1.Checked;
   if panel2.height=0 then
-    panel2.Height:=153
+    panel2.Height:=241
   else
     panel2.Height:=0;
 
@@ -3145,6 +3221,8 @@ end;
 
 procedure Teffektsequenzer.NeuesTabhinzufgen1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   setlength(mainform.EffektsequenzerTabs, length(mainform.EffektsequenzerTabs)+1);
   mainform.EffektsequenzerTabs[length(mainform.EffektsequenzerTabs)-1]:=InputBox(_('Tab bezeichnen...'),_('Bitte geben Sie eine Bezeichnung für das neue Tab ein:'),_('Neuer Tab'));
   TabControl1.Tabs.Add(mainform.EffektsequenzerTabs[length(mainform.EffektsequenzerTabs)-1]);
@@ -3153,6 +3231,8 @@ end;
 
 procedure Teffektsequenzer.abumbennen1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if TabControl1.Tabindex=0 then exit;
 
   mainform.EffektsequenzerTabs[TabControl1.TabIndex]:=InputBox(_('Tab bezeichnen...'),_('Bitte geben Sie eine Bezeichnung für das gewählte Tab ein:'),mainform.EffektsequenzerTabs[TabControl1.TabIndex]);
@@ -3167,6 +3247,8 @@ procedure Teffektsequenzer.ablschen1Click(Sender: TObject);
 var
   i:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if TabControl1.Tabindex=0 then exit;
   
   for i:=TabControl1.Tabindex to length(mainform.EffektsequenzerTabs)-2 do
@@ -3211,6 +3293,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=1 then
   begin
     Data:=VST.GetNodeData(VST.FocusedNode);
@@ -3234,6 +3318,8 @@ var
   effectnodeindex:integer;
   DataNew:PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
   Data:=VST.GetNodeData(VST.FocusedNode);
@@ -3413,6 +3499,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if Sender=effekttotab then
   begin
     if VST.SelectedCount=1 then
@@ -3442,6 +3530,8 @@ var
   Data: PTreeData;
   i,j:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if Sender=Combobox1 then
   begin
     if VST.SelectedCount=1 then
@@ -3472,6 +3562,8 @@ var
   Data: PTreeData;
   SzenenData:PTreeData2;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
 
@@ -3505,6 +3597,8 @@ procedure Teffektsequenzer.removestopscenebtnClick(Sender: TObject);
 var
   Data: PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
 
@@ -3522,6 +3616,8 @@ var
   Data: PTreeData;
   SzenenData:PTreeData2;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
 
@@ -3555,6 +3651,8 @@ procedure Teffektsequenzer.removestartscenebtnClick(Sender: TObject);
 var
   Data: PTreeData;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if VST.SelectedCount=0 then exit;
   if not Assigned(VST.FocusedNode) then exit;
 
@@ -3573,6 +3671,8 @@ var
   DataNew:PTreeData;
   i,k,m, myPosition, OriginalDevice:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   // Wizard-Fenster erstellen und anzeigen
 //  Application.CreateForm(Taddcolorandgobotoeffectform, addcolorandgobotoeffectform);
   addcolorandgobotoeffectform:=Taddcolorandgobotoeffectform.Create(self);

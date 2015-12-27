@@ -428,6 +428,8 @@ procedure Tkanaluebersichtform.TrackBar1Change(Sender: TObject);
 var
   i:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if (Sender=TrackBar1) and (TrackBarSelected) and (Trackbar1.Focused) then
     for i:=1 to mainform.lastchan do
       if SelektierteKanaele[i] then
@@ -487,6 +489,8 @@ var
   i,j:integer;
   ddfwindowposition:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if Shift=[ssCtrl] then
   begin
     SelektierteKanaele[AktuellerKanal]:=not SelektierteKanaele[AktuellerKanal];
@@ -599,6 +603,8 @@ procedure Tkanaluebersichtform.PaintBoxMouseMove(Sender: TObject;
 var
   i,row,col,channelperrow:integer;
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   if (Shift=[ssLeft]) then
   begin
     ScrollBar1.Position:=round((mousey-y)/ChannelHeight+scrollbarpositiononmousedown);
@@ -649,6 +655,8 @@ procedure Tkanaluebersichtform.PaintBoxMouseDown(Sender: TObject;
 var
   row,col,channelperrow:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   mousey:=y;
   scrollbarpositiononmousedown:=ScrollBar1.Position;
 
@@ -704,6 +712,8 @@ end;
 
 procedure Tkanaluebersichtform.MinWertndern1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   mainform.channel_minvalue[MouseOverKanal]:=round(strtoint(InputBox(_('Minimum des Kanalwertes'),_('Bitte geben Sie den Minimumwert dieses Kanals an (Geräteunabhängig!) (0..100):'),inttostr(round(mainform.channel_minvalue[MouseOverKanal]/255*100))))/100*255);
 
 //  if mainform.channel_minvalue[MouseOverKanal]<0 then
@@ -714,6 +724,8 @@ end;
 
 procedure Tkanaluebersichtform.MaxWertndern1Click(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   mainform.channel_maxvalue[MouseOverKanal]:=round(strtoint(InputBox(_('Maximum des Kanalwertes'),_('Bitte geben Sie den Maximumwert dieses Kanals an (Geräteunabhängig!) (0..100):'),inttostr(round(mainform.channel_maxvalue[MouseOverKanal]/255*100))))/100*255);
 
 //  if mainform.channel_maxvalue[MouseOverKanal]<0 then
@@ -727,53 +739,57 @@ var
   i,j:integer;
   ddfwindowposition:integer;
 begin
-    for i:=0 to length(mainform.devices)-1 do
+  if not mainform.UserAccessGranted(2) then exit;
+
+  for i:=0 to length(mainform.devices)-1 do
+  begin
+    if (AktuellerKanal>=mainform.devices[i].Startaddress) and (AktuellerKanal<mainform.devices[i].Startaddress+mainform.devices[i].MaxChan) then
     begin
-      if (AktuellerKanal>=mainform.devices[i].Startaddress) and (AktuellerKanal<mainform.devices[i].Startaddress+mainform.devices[i].MaxChan) then
+      ddfwindowposition:=-1;
+
+      for j:=0 to length(ddfwindows)-1 do
       begin
-        ddfwindowposition:=-1;
-
-        for j:=0 to length(ddfwindows)-1 do
-        begin
-          if IsEqualGUID(ddfwindows[j].thisddfwindowDeviceID,mainform.Devices[i].ID) then
-            ddfwindowposition:=j;
-        end;
-
-        if ddfwindowposition=-1 then
-        for j:=0 to length(ddfwindows)-1 do
-        begin
-          if ddfwindows[j].readyfordelete then
-            ddfwindowposition:=j;
-        end;
-
-        if ddfwindowposition=-1 then
-        begin
-          setlength(ddfwindows,length(ddfwindows)+1);
-          ddfwindows[length(ddfwindows)-1]:=TDDFWindow.Create(self);
-          ddfwindowposition:=length(ddfwindows)-1;
-        end;
-        ddfwindows[ddfwindowposition].readyfordelete:=false;
-        ddfwindows[ddfwindowposition].thisddfwindowDeviceID:=mainform.Devices[i].ID;
-        ddfwindows[ddfwindowposition].Top:=kanaluebersichtform.Top+paintbox.Top+lasty+(kanaluebersichtform.height-kanaluebersichtform.ClientHeight);
-        ddfwindows[ddfwindowposition].Left:=kanaluebersichtform.Left+paintbox.Left+lastx+(kanaluebersichtform.Width-kanaluebersichtform.ClientWidth);
-        ddfwindows[ddfwindowposition].loadDDF(mainform.Devices[i].ID);
-
-        break;
+        if IsEqualGUID(ddfwindows[j].thisddfwindowDeviceID,mainform.Devices[i].ID) then
+          ddfwindowposition:=j;
       end;
+
+      if ddfwindowposition=-1 then
+      for j:=0 to length(ddfwindows)-1 do
+      begin
+        if ddfwindows[j].readyfordelete then
+          ddfwindowposition:=j;
+      end;
+
+      if ddfwindowposition=-1 then
+      begin
+        setlength(ddfwindows,length(ddfwindows)+1);
+        ddfwindows[length(ddfwindows)-1]:=TDDFWindow.Create(self);
+        ddfwindowposition:=length(ddfwindows)-1;
+      end;
+      ddfwindows[ddfwindowposition].readyfordelete:=false;
+      ddfwindows[ddfwindowposition].thisddfwindowDeviceID:=mainform.Devices[i].ID;
+      ddfwindows[ddfwindowposition].Top:=kanaluebersichtform.Top+paintbox.Top+lasty+(kanaluebersichtform.height-kanaluebersichtform.ClientHeight);
+      ddfwindows[ddfwindowposition].Left:=kanaluebersichtform.Left+paintbox.Left+lastx+(kanaluebersichtform.Width-kanaluebersichtform.ClientWidth);
+      ddfwindows[ddfwindowposition].loadDDF(mainform.Devices[i].ID);
+
+      break;
     end;
+  end;
 end;
 
 procedure Tkanaluebersichtform.Kanalselektioneinaus1Click(Sender: TObject);
 var
   i:integer;
 begin
-    for i:=0 to length(mainform.devices)-1 do
+  if not mainform.UserAccessGranted(2) then exit;
+
+  for i:=0 to length(mainform.devices)-1 do
+  begin
+    if (AktuellerKanal>=mainform.devices[i].Startaddress) and (AktuellerKanal<mainform.devices[i].Startaddress+mainform.devices[i].MaxChan) then
     begin
-      if (AktuellerKanal>=mainform.devices[i].Startaddress) and (AktuellerKanal<mainform.devices[i].Startaddress+mainform.devices[i].MaxChan) then
-      begin
-        mainform.DeviceSelected[i]:=not mainform.DeviceSelected[i];
-      end;
+      mainform.DeviceSelected[i]:=not mainform.DeviceSelected[i];
     end;
+  end;
 end;
 
 procedure Tkanaluebersichtform.PaintBoxPaint(Sender: TObject);

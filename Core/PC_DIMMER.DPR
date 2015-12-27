@@ -322,6 +322,7 @@ begin
     Application.CreateForm(Topensourceform, opensourceform);
     if showtext then mainform.SplashAddText(_('Erstelle Benutzerverwaltung-Form')); mainform.RefreshSplashText;
     Application.CreateForm(Tusermgmtform, usermgmtform);
+    Application.CreateForm(Tchangeuserform, changeuserform);
 
     // bitte neue Fenster im "OnClose"-Event des Hauptfensters zunächst schließen (wenn nötig) und dann "free"en!
 

@@ -880,18 +880,24 @@ begin
     connectedlbl.Visible:=device_connected<>0;
     disconnectedlbl.Visible:=(device_connected=0);
 
-    init_promk2; // send the API-Key to activate the MK2 and set both DMX-Outputs
+    if device_connected=1 then
+    begin
+      init_promk2; // send the API-Key to activate the MK2 and set both DMX-Outputs
 
-		// If you want to open all; use for loop ; uncomment the folllowing
-		{
-		 for (i=0;i<Num_Devices;i++)
-		 begin
-			if (device_connected)
-				break;
-			device_num = i;
-			device_connected = FTDI_OpenDevice(device_num);
-		 end;
-		}
+      // If you want to open all; use for loop ; uncomment the folllowing
+      {
+       for (i=0;i<Num_Devices;i++)
+       begin
+        if (device_connected)
+          break;
+        device_num = i;
+        device_connected = FTDI_OpenDevice(device_num);
+       end;
+      }
+    end else
+    begin
+      memo1.lines.add('There was a problem connecting to the interface.');
+    end;
   end;
   DMXTimer.Enabled:=true;
   DMXInput.Enabled:=true;

@@ -63,8 +63,8 @@ object kanaluebersichtform: Tkanaluebersichtform
   object PaintBox: TPaintBox
     Left = 41
     Top = 0
-    Width = 543
-    Height = 331
+    Width = 535
+    Height = 324
     Hint = 'Scrollen mit STRG+Mausrad'
     Align = alClient
     Color = clGray
@@ -82,7 +82,7 @@ object kanaluebersichtform: Tkanaluebersichtform
     Left = 0
     Top = 0
     Width = 41
-    Height = 331
+    Height = 324
     Align = alLeft
     Max = 255
     Orientation = trVertical
@@ -95,10 +95,10 @@ object kanaluebersichtform: Tkanaluebersichtform
     OnExit = TrackBar1Exit
   end
   object ScrollBar1: TScrollBar
-    Left = 584
+    Left = 576
     Top = 0
     Width = 16
-    Height = 331
+    Height = 324
     Align = alRight
     Kind = sbVertical
     LargeChange = 10
@@ -110,8 +110,8 @@ object kanaluebersichtform: Tkanaluebersichtform
   end
   object Panel1: TPanel
     Left = 0
-    Top = 331
-    Width = 600
+    Top = 324
+    Width = 592
     Height = 34
     Align = alBottom
     BevelOuter = bvNone
@@ -135,7 +135,7 @@ object kanaluebersichtform: Tkanaluebersichtform
     object Shape1: TShape
       Left = 0
       Top = 0
-      Width = 600
+      Width = 592
       Height = 1
       Align = alTop
     end
@@ -156,7 +156,7 @@ object kanaluebersichtform: Tkanaluebersichtform
       Caption = 'Label7'
     end
     object Panel2: TPanel
-      Left = 392
+      Left = 384
       Top = 1
       Width = 208
       Height = 33

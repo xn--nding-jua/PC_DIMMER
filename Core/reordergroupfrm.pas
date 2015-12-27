@@ -257,6 +257,8 @@ var
   IDActive:boolean;
   AktuellePosition:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   AktuellePosition:=stringgrid1.row;
   // Aktuelle ID kopieren
   ID:=mainform.devicegroups[Grouplistbox.itemindex].IDs[stringgrid1.row-1];
@@ -279,6 +281,8 @@ var
   IDActive:boolean;
   AktuellePosition:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   AktuellePosition:=stringgrid1.row;
   // Aktuelle ID kopieren
   ID:=mainform.devicegroups[Grouplistbox.itemindex].IDs[stringgrid1.row-1];
@@ -300,6 +304,8 @@ var
   i:integer;
   AktuellePosition:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   AktuellePosition:=stringgrid1.row;
   for i:=AktuellePosition-1 to length(mainform.devicegroups[Grouplistbox.itemindex].IDs)-2 do
   begin
@@ -338,6 +344,8 @@ end;
 procedure Tgroupeditorform.DelayEditKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if length(mainform.DeviceGroups)>Grouplistbox.itemindex then
   begin
     mainform.devicegroups[Grouplistbox.itemindex].Delay:=strtoint(DelayEdit.text);
@@ -346,6 +354,8 @@ end;
 
 procedure Tgroupeditorform.MorphEditChange(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   if (length(mainform.DeviceGroups)>Grouplistbox.itemindex) and (Grouplistbox.itemindex>-1) then
   begin
     mainform.devicegroups[Grouplistbox.itemindex].FanMorph:=round(MorphEdit.value);
@@ -355,6 +365,8 @@ end;
 procedure Tgroupeditorform.UseGroupMasterBoxMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (length(mainform.DeviceGroups)>Grouplistbox.itemindex) and (Grouplistbox.itemindex>-1) then
   begin
     mainform.devicegroups[Grouplistbox.itemindex].UseMaster:=UseGroupMasterBox.Checked;
@@ -363,6 +375,8 @@ end;
 
 procedure Tgroupeditorform.GroupMasterBoxSelect(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if length(mainform.DeviceGroups)>Grouplistbox.itemindex then
   begin
     mainform.devicegroups[Grouplistbox.itemindex].MasterDevice:=mainform.devicegroups[Grouplistbox.itemindex].IDs[GroupMasterBox.itemindex];
@@ -373,6 +387,8 @@ end;
 
 procedure Tgroupeditorform.FanningModeBoxChange(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   case FanningModeBox.ItemIndex of
     0: MorphEdit.Enabled:=false;
     1: MorphEdit.Enabled:=false;
@@ -387,6 +403,8 @@ end;
 
 procedure Tgroupeditorform.FanningModeBoxSelect(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (length(mainform.DeviceGroups)>Grouplistbox.itemindex) and (Grouplistbox.itemindex>-1) then
   begin
     mainform.devicegroups[Grouplistbox.itemindex].FanMode:=FanningModeBox.itemindex;
@@ -408,6 +426,8 @@ procedure Tgroupeditorform.RefreshGroupBtnClick(Sender: TObject);
 var
   i:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   setlength(mainform.DeviceGroups[Grouplistbox.itemindex].IDs,0);
   setlength(mainform.DeviceGroups[Grouplistbox.itemindex].IDActive,0);
   for i:=0 to length(mainform.devices)-1 do
@@ -453,6 +473,8 @@ procedure Tgroupeditorform.AddGroupBtnClick(Sender: TObject);
 var
   i,lastindex:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   setlength(mainform.DeviceGroups,length(mainform.DeviceGroups)+1);
   mainform.DeviceGroups[length(mainform.DeviceGroups)-1].Active:=true;
   CreateGUID(mainform.DeviceGroups[length(mainform.DeviceGroups)-1].ID);
@@ -497,6 +519,8 @@ var
   i,k:integer;
   groupinuse:boolean;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if messagedlg(_('Möchten Sie diese Gruppe wirklich löschen?'),mtWarning,
     [mbYes,mbNo],0)=mrYes then
   begin
@@ -556,6 +580,8 @@ end;
 
 procedure Tgroupeditorform.ActivateGroupBtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if length(mainform.DeviceGroups)>Grouplistbox.itemindex then
   begin
     mainform.SelectDeviceGroup(mainform.DeviceGroups[Grouplistbox.itemindex].ID, false);
@@ -565,6 +591,8 @@ end;
 procedure Tgroupeditorform.AddDeviceGroupWithoutDeselectBtnClick(
   Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if length(mainform.DeviceGroups)>Grouplistbox.itemindex then
   begin
     mainform.SelectDeviceGroup(mainform.DeviceGroups[Grouplistbox.itemindex].ID, true);
@@ -573,6 +601,8 @@ end;
 
 procedure Tgroupeditorform.ShowGroupIDbtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (length(mainform.DeviceGroups)>Grouplistbox.itemindex) and (grouplistbox.itemindex>-1) then
   begin
     InputBox(_('Gruppen-ID'),_('Die ID der aktuellen Gruppe lautet wie folgt:'),GUIDtoString(mainform.DeviceGroups[Grouplistbox.itemindex].ID));
@@ -586,6 +616,8 @@ end;
 
 procedure Tgroupeditorform.GroupListBoxChange(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1, false) then exit;
+
   if (grouplistbox.itemindex>-1) and (grouplistbox.itemindex<length(mainform.devicegroups)) then
   begin
     GroupNameEdit.text:=mainform.devicegroups[grouplistbox.itemindex].Name;
@@ -600,6 +632,8 @@ procedure Tgroupeditorform.GroupNameEditKeyUp(Sender: TObject;
 var
   lastindex:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (key=vk_return) and (Grouplistbox.itemindex>-1) and (grouplistbox.itemindex<length(mainform.devicegroups)) then
   begin
     lastindex:=GroupListbox.itemindex;
@@ -616,6 +650,8 @@ end;
 procedure Tgroupeditorform.GroupDescEditKeyUp(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (key=vk_return) and (Grouplistbox.itemindex>-1) and (grouplistbox.itemindex<length(mainform.devicegroups)) then
   begin
     mainform.DeviceGroups[grouplistbox.itemindex].Beschreibung:=groupdescedit.text;
@@ -628,6 +664,8 @@ var
   i,j:integer;
   vorhanden:boolean;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (Grouplistbox.itemindex>-1) and (grouplistbox.itemindex<length(mainform.devicegroups)) then
   begin
     adddevicetogroupform.showmodal;
@@ -792,6 +830,8 @@ procedure Tgroupeditorform.GroupNameEditExit(Sender: TObject);
 var
   lastindex:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (Grouplistbox.itemindex>-1) and (grouplistbox.itemindex<length(mainform.devicegroups)) then
   begin
     lastindex:=GroupListbox.itemindex;
@@ -807,6 +847,8 @@ end;
 
 procedure Tgroupeditorform.GroupDescEditExit(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (Grouplistbox.itemindex>-1) and (grouplistbox.itemindex<length(mainform.devicegroups)) then
   begin
     mainform.DeviceGroups[grouplistbox.itemindex].Beschreibung:=groupdescedit.text;
@@ -819,6 +861,8 @@ var
   source, destination:integer;
   k:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if Grouplistbox.ItemIndex=0 then exit;
 
   // Am Ende neue Gruppe einfügen
@@ -904,6 +948,8 @@ var
   source, destination:integer;
   k:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if Grouplistbox.ItemIndex=(length(mainform.DeviceGroups)-1) then exit;
 
   // Am Ende neue Gruppe einfügen
@@ -988,6 +1034,8 @@ procedure Tgroupeditorform.copybtnClick(Sender: TObject);
 var
   k, source, destination:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   // Am Ende neue Gruppe einfügen
   setlength(mainform.DeviceGroups, length(mainform.DeviceGroups)+1);
 

@@ -54,7 +54,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=475;
+  actualprojectversion=476;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -867,7 +867,7 @@ type
     scrollbarpositiononmousedown:integer;
 
     mainpriority:integer;
-    channelvalue_blackout,channelvalue_blackoutR,channelvalue_blackoutG,channelvalue_blackoutB,channelvalue_blackoutC,channelvalue_blackoutM,channelvalue_blackoutY,channelvalue_blackoutA,channelvalue_blackoutW:array of integer;
+    channelvalue_blackout,channelvalue_blackoutR,channelvalue_blackoutG,channelvalue_blackoutB,channelvalue_blackoutC,channelvalue_blackoutM,channelvalue_blackoutY,channelvalue_blackoutA,channelvalue_blackoutW,channelvalue_blackoutUV:array of integer;
     dontstartaccu:boolean;
     LastSessionWasCorrupt:boolean;
     RestoreLastValues:boolean;
@@ -1106,7 +1106,7 @@ type
     PresetScenes: array of TPresetScene;
     NodeControlSets: array of TNodeControlSet;
     UserAccounts: array of TUserAccount;
-    CurrentUser: integer;
+    CurrentUser: String;
 
 //    DeviceForms:array of Tdeviceformprototyp;
     Desktopproperties : array[1..9] of TDesktopproperties;
@@ -1214,7 +1214,7 @@ type
     procedure SaveJpg(Bitmap: TBitmap; Destination:string);
     procedure PluginRibbonBtnClick(Sender: TObject);
     function UserAccessGranted(Level: integer; ShowLoginWindow: boolean=true):boolean;
-    function RequestAccess:boolean;
+    function ChangeUser(ShowWarning:boolean=true):boolean;
   end;
 
 // Callbackfunktionen der Plugin-Dlls
@@ -1672,6 +1672,7 @@ begin
   splashscreenvalue:=-1;
   StartupFinished:=false;
   BeginValueBackups:=false;
+  CurrentUser:='Admin';
 
   for i:=1 to paramcount do
   begin
@@ -4557,6 +4558,7 @@ begin
    	  Filestream.WriteBuffer(mainform.Devices[i].hasCMY,sizeof(mainform.Devices[i].hasCMY));
    	  Filestream.WriteBuffer(mainform.Devices[i].hasAmber,sizeof(mainform.Devices[i].hasAmber));
    	  Filestream.WriteBuffer(mainform.Devices[i].hasWhite,sizeof(mainform.Devices[i].hasWhite));
+   	  Filestream.WriteBuffer(mainform.Devices[i].hasUV,sizeof(mainform.Devices[i].hasUV));
    	  Filestream.WriteBuffer(mainform.Devices[i].UseAmberMixing,sizeof(mainform.Devices[i].UseAmberMixing));
    	  Filestream.WriteBuffer(mainform.Devices[i].AmberMixingCompensateRG,sizeof(mainform.Devices[i].AmberMixingCompensateRG));
    	  Filestream.WriteBuffer(mainform.Devices[i].AmberMixingCompensateBlue,sizeof(mainform.Devices[i].AmberMixingCompensateBlue));
@@ -5411,12 +5413,18 @@ begin
     Filestream.WriteBuffer(PartyMuckenModul[i].UseRed,sizeof(PartyMuckenModul[i].UseRed));
     Filestream.WriteBuffer(PartyMuckenModul[i].UseGreen,sizeof(PartyMuckenModul[i].UseGreen));
     Filestream.WriteBuffer(PartyMuckenModul[i].UseBlue,sizeof(PartyMuckenModul[i].UseBlue));
+    Filestream.WriteBuffer(PartyMuckenModul[i].UseAmber,sizeof(PartyMuckenModul[i].UseAmber));
+    Filestream.WriteBuffer(PartyMuckenModul[i].UseWhite,sizeof(PartyMuckenModul[i].UseWhite));
     Filestream.WriteBuffer(PartyMuckenModul[i].MaxRed,sizeof(PartyMuckenModul[i].MaxRed));
     Filestream.WriteBuffer(PartyMuckenModul[i].MaxGreen,sizeof(PartyMuckenModul[i].MaxGreen));
     Filestream.WriteBuffer(PartyMuckenModul[i].MaxBlue,sizeof(PartyMuckenModul[i].MaxBlue));
+    Filestream.WriteBuffer(PartyMuckenModul[i].MaxAmber,sizeof(PartyMuckenModul[i].MaxAmber));
+    Filestream.WriteBuffer(PartyMuckenModul[i].MaxWhite,sizeof(PartyMuckenModul[i].MaxWhite));
     Filestream.WriteBuffer(PartyMuckenModul[i].AllowMixing,sizeof(PartyMuckenModul[i].AllowMixing));
     Filestream.WriteBuffer(PartyMuckenModul[i].NoBlackDevices,sizeof(PartyMuckenModul[i].NoBlackDevices));
     Filestream.WriteBuffer(PartyMuckenModul[i].UseRGB,sizeof(PartyMuckenModul[i].UseRGB));
+    Filestream.WriteBuffer(PartyMuckenModul[i].UseAW,sizeof(PartyMuckenModul[i].UseAW));
+    Filestream.WriteBuffer(PartyMuckenModul[i].UseUV,sizeof(PartyMuckenModul[i].UseUV));
     Filestream.WriteBuffer(PartyMuckenModul[i].UseDimmer,sizeof(PartyMuckenModul[i].UseDimmer));
     Filestream.WriteBuffer(PartyMuckenModul[i].UseColor12,sizeof(PartyMuckenModul[i].UseColor12));
     Filestream.WriteBuffer(PartyMuckenModul[i].MaxLuminance,sizeof(PartyMuckenModul[i].MaxLuminance));
@@ -6001,19 +6009,19 @@ begin
           begin
           for l:=0 to length(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices)-1 do
           begin
-              if geraetesteuerung.GetGroupPositionInGroupArray(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ID)>-1 then
-              begin
-                setlength(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActive, length(mainform.DeviceChannelNames));
-                setlength(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActiveRandom, length(mainform.DeviceChannelNames));
-                setlength(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValue, length(mainform.DeviceChannelNames));
-                setlength(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValueRandom, length(mainform.DeviceChannelNames));
-                setlength(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanDelay, length(mainform.DeviceChannelNames));
-                setlength(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanFadetime, length(mainform.DeviceChannelNames));
-              end;
+            if geraetesteuerung.GetGroupPositionInGroupArray(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ID)>-1 then
+            begin
+              setlength(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActive, length(mainform.DeviceChannelNames));
+              setlength(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanActiveRandom, length(mainform.DeviceChannelNames));
+              setlength(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValue, length(mainform.DeviceChannelNames));
+              setlength(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanValueRandom, length(mainform.DeviceChannelNames));
+              setlength(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanDelay, length(mainform.DeviceChannelNames));
+              setlength(Effektaudio_record[i].effektaudiodatei.layer[j].effekt[k].Devices[l].ChanFadetime, length(mainform.DeviceChannelNames));
             end;
           end;
         end;
       end;
+    end;
   // Effektaudio fertig
   // Lese Projekteinstellungen
 	if not startingup then
@@ -6643,6 +6651,8 @@ begin
      	begin
         Filestream.ReadBuffer(mainform.Devices[i].hasAmber,sizeof(mainform.Devices[i].hasAmber));
         Filestream.ReadBuffer(mainform.Devices[i].hasWhite,sizeof(mainform.Devices[i].hasWhite));
+        if projektprogrammversionint>=476 then
+          Filestream.ReadBuffer(mainform.Devices[i].hasUV,sizeof(mainform.Devices[i].hasUV));
      	  Filestream.ReadBuffer(mainform.Devices[i].UseAmberMixing,sizeof(mainform.Devices[i].UseAmberMixing));
      	  Filestream.ReadBuffer(mainform.Devices[i].AmberMixingCompensateRG,sizeof(mainform.Devices[i].AmberMixingCompensateRG));
      	  Filestream.ReadBuffer(mainform.Devices[i].AmberMixingCompensateBlue,sizeof(mainform.Devices[i].AmberMixingCompensateBlue));
@@ -8280,12 +8290,27 @@ begin
       Filestream.ReadBuffer(PartyMuckenModul[i].UseRed,sizeof(PartyMuckenModul[i].UseRed));
       Filestream.ReadBuffer(PartyMuckenModul[i].UseGreen,sizeof(PartyMuckenModul[i].UseGreen));
       Filestream.ReadBuffer(PartyMuckenModul[i].UseBlue,sizeof(PartyMuckenModul[i].UseBlue));
+      if projektprogrammversionint>=476 then
+      begin
+        Filestream.ReadBuffer(PartyMuckenModul[i].UseAmber,sizeof(PartyMuckenModul[i].UseAmber));
+        Filestream.ReadBuffer(PartyMuckenModul[i].UseWhite,sizeof(PartyMuckenModul[i].UseWhite));
+      end;
       Filestream.ReadBuffer(PartyMuckenModul[i].MaxRed,sizeof(PartyMuckenModul[i].MaxRed));
       Filestream.ReadBuffer(PartyMuckenModul[i].MaxGreen,sizeof(PartyMuckenModul[i].MaxGreen));
       Filestream.ReadBuffer(PartyMuckenModul[i].MaxBlue,sizeof(PartyMuckenModul[i].MaxBlue));
+      if projektprogrammversionint>=476 then
+      begin
+        Filestream.ReadBuffer(PartyMuckenModul[i].MaxAmber,sizeof(PartyMuckenModul[i].MaxAmber));
+        Filestream.ReadBuffer(PartyMuckenModul[i].MaxWhite,sizeof(PartyMuckenModul[i].MaxWhite));
+      end;
       Filestream.ReadBuffer(PartyMuckenModul[i].AllowMixing,sizeof(PartyMuckenModul[i].AllowMixing));
       Filestream.ReadBuffer(PartyMuckenModul[i].NoBlackDevices,sizeof(PartyMuckenModul[i].NoBlackDevices));
       Filestream.ReadBuffer(PartyMuckenModul[i].UseRGB,sizeof(PartyMuckenModul[i].UseRGB));
+      if projektprogrammversionint>=476 then
+      begin
+        Filestream.ReadBuffer(PartyMuckenModul[i].UseAW,sizeof(PartyMuckenModul[i].UseAW));
+        Filestream.ReadBuffer(PartyMuckenModul[i].UseUV,sizeof(PartyMuckenModul[i].UseUV));
+      end;
       Filestream.ReadBuffer(PartyMuckenModul[i].UseDimmer,sizeof(PartyMuckenModul[i].UseDimmer));
       Filestream.ReadBuffer(PartyMuckenModul[i].UseColor12,sizeof(PartyMuckenModul[i].UseColor12));
       Filestream.ReadBuffer(PartyMuckenModul[i].MaxLuminance,sizeof(PartyMuckenModul[i].MaxLuminance));
@@ -9635,6 +9660,8 @@ begin
           geraetesteuerung.set_channel(devices[i].ID,'A',geraetesteuerung.get_channel(devices[i].ID,'A'),channelvalue_blackoutA[i],2500);
         if devices[i].hasWhite then
           geraetesteuerung.set_channel(devices[i].ID,'W',geraetesteuerung.get_channel(devices[i].ID,'W'),channelvalue_blackoutW[i],2500);
+        if devices[i].hasUV then
+          geraetesteuerung.set_channel(devices[i].ID,'UV',geraetesteuerung.get_channel(devices[i].ID,'UV'),channelvalue_blackoutUV[i],2500);
       end else
       begin
         // letzte Möglichkeit: Shutter
@@ -9654,6 +9681,7 @@ begin
     setlength(channelvalue_blackoutY,length(devices));
     setlength(channelvalue_blackoutA,length(devices));
     setlength(channelvalue_blackoutW,length(devices));
+    setlength(channelvalue_blackoutUV,length(devices));
     for i:=0 to length(devices)-1 do
     begin
       if devices[i].hasDimmer then
@@ -9680,6 +9708,8 @@ begin
         geraetesteuerung.set_channel(devices[i].ID,'A',0,0,0);
         channelvalue_blackoutW[i]:=geraetesteuerung.get_channel(devices[i].ID,'W');
         geraetesteuerung.set_channel(devices[i].ID,'W',0,0,0);
+        channelvalue_blackoutUV[i]:=geraetesteuerung.get_channel(devices[i].ID,'UV');
+        geraetesteuerung.set_channel(devices[i].ID,'UV',0,0,0);
       end else
       begin
         // letzte Möglichkeit: Shutter
@@ -14439,7 +14469,12 @@ begin
     end;
     if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[28].GUID) and EventFired then
     begin // Datei öffnen
-        OpenPCDIMMERFile(AktuellerBefehl.ArgString[0]);
+      OpenPCDIMMERFile(AktuellerBefehl.ArgString[0]);
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[29].GUID) and EventFired then
+    begin // Benutzer wechseln
+      ChangeUser(false);
       exit;
     end;
 
@@ -16251,6 +16286,8 @@ begin
               geraetesteuerung.set_channel(devices[j].ID,'A',geraetesteuerung.get_channel(devices[j].ID,'A'),geraetesteuerung.get_channel(devices[j].ID,'A'),0);
             if devices[j].hasWhite then
               geraetesteuerung.set_channel(devices[j].ID,'W',geraetesteuerung.get_channel(devices[j].ID,'W'),geraetesteuerung.get_channel(devices[j].ID,'W'),0);
+            if devices[j].hasUV then
+              geraetesteuerung.set_channel(devices[j].ID,'UV',geraetesteuerung.get_channel(devices[j].ID,'UV'),geraetesteuerung.get_channel(devices[j].ID,'UV'),0);
           end else
           if devices[j].hasColor then
           begin
@@ -22223,6 +22260,8 @@ procedure TMainform.TBItem64Click(Sender: TObject);
 var
   name, code:PChar;
 begin
+  if not UserAccessGranted(2) then exit;
+
   // WORKAROUND FOR MEVP
   if fileexists(mevp.MEVPDLLPath) then
   begin
@@ -24742,13 +24781,27 @@ begin
             g:=round((mainform.devices[j].AmberRatioG/mainform.devices[j].AmberRatioR)*255);
             b:=0;
           end;
-        end else if (mainform.Devices[j].hasRGB or mainform.Devices[j].hasCMY) and (mainform.Devices[j].hasWhite) and (lowercase(kanaltyp)='w') then
+        end else if ((not mainform.Devices[j].hasRGB) and (not mainform.Devices[j].hasCMY)) and (mainform.Devices[j].hasAmber) and (lowercase(kanaltyp)='a') then
+        begin
+          rectangleheight:=geraetesteuerung.get_channel(mainform.Devices[j].ID,'w');
+          device_color:=RGB2TColor(0,0,rectangleheight);
+          r:=255;
+          g:=191;
+          b:=0;
+        end else if (mainform.Devices[j].hasWhite) and (lowercase(kanaltyp)='w') then
         begin
           rectangleheight:=geraetesteuerung.get_channel(mainform.Devices[j].ID,'w');
           device_color:=RGB2TColor(0,0,rectangleheight);
           r:=255;
           g:=255;
           b:=255;
+        end else if (mainform.Devices[j].hasUV) and (lowercase(kanaltyp)='uv') then
+        begin
+          rectangleheight:=geraetesteuerung.get_channel(mainform.Devices[j].ID,'uv');
+          device_color:=RGB2TColor(0,0,rectangleheight);
+          r:=128;
+          g:=0;
+          b:=128;
         end else if mainform.Devices[j].hasColor and (lowercase(kanaltyp)='color1') then
         begin
           rectangleheight:=255;
@@ -26259,12 +26312,25 @@ end;
 
 procedure TMainform.dxBarLargeButton7Click(Sender: TObject);
 begin
-  RequestAccess;
+  ChangeUser;
 end;
 
 function Tmainform.UserAccessGranted(Level: integer; ShowLoginWindow: boolean):boolean;
+var
+  i:integer;
+  CurrentUserNr:integer;
 begin
-  if UserAccounts[CurrentUser].AccessLevel<=Level then
+  CurrentUserNr:=-1;
+  for i:=0 to length(UserAccounts)-1 do
+  begin
+    if UserAccounts[i].Name=CurrentUser then
+    begin
+      CurrentUserNr:=i;
+      break;
+    end;
+  end;
+
+  if (CurrentUserNr>-1) and (UserAccounts[CurrentUserNr].AccessLevel<=Level) then
   begin
     result:=true;
   end else
@@ -26272,24 +26338,45 @@ begin
     result:=false;
     if ShowLoginWindow then
     begin
-      result:=RequestAccess;
-      //ShowMessage(UserAccounts[CurrentUser].Name+' '+_('besitzt keine ausreichenden Rechte für diese Operation!'));
+      if ChangeUser then
+      begin
+        CurrentUserNr:=-1;
+        for i:=0 to length(UserAccounts)-1 do
+        begin
+          if UserAccounts[i].Name=CurrentUser then
+          begin
+            CurrentUserNr:=i;
+            break;
+          end;
+        end;
+
+        if (CurrentUserNr>-1) and (UserAccounts[CurrentUserNr].AccessLevel<=Level) then
+        begin
+          result:=true;
+        end else
+        begin
+          result:=false;
+        end;
+      end else
+      begin
+        result:=false;
+      end;
+
+      //ShowMessage(UserAccounts[CurrentUserNr].Name+' '+_('besitzt keine ausreichenden Rechte für diese Operation!'));
     end;
   end;
 end;
 
-function Tmainform.RequestAccess:boolean;
+function Tmainform.ChangeUser(ShowWarning:boolean):boolean;
 var
   i:integer;
   AccessGranted:boolean;
 begin
-  changeuserform:=Tchangeuserform.Create(Application);
-
   changeuserform.edit1.Items.clear;
   for i:=0 to length(UserAccounts)-1 do
     changeuserform.Edit1.Items.Add(UserAccounts[i].Name);
   changeuserform.edit2.text:='';
-  changeuserform.currentuserlbl.Caption:=UserAccounts[CurrentUser].Name;
+  changeuserform.currentuserlbl.Caption:=CurrentUser;
 
   changeuserform.showmodal;
 
@@ -26303,7 +26390,7 @@ begin
         if changeuserform.edit2.text=UserAccounts[i].Password then
         begin
           // Change user
-          CurrentUser:=i;
+          CurrentUser:=UserAccounts[i].Name;
           AccessGranted:=true;
         end;
         break;
@@ -26316,10 +26403,10 @@ begin
     result:=false;
   end;
 
-  if (not AccessGranted) then
+  if (not AccessGranted) and ShowWarning then
     ShowMessage(_('Zugang verweigert!'));
 
-  changeuserform.Release;
+  dxRibbonStatusBar1.Panels[8].Text:=_('Benutzer:')+' '+CurrentUser;
 
   kontrollpanel.TestAccessLevelTimer.Enabled:=true;
 end;

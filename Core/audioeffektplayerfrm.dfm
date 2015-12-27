@@ -72,6 +72,698 @@ object audioeffektplayerform: Taudioeffektplayerform
     Beveled = True
     ResizeStyle = rsLine
   end
+  object PanelAudioeffects: TPanel
+    Left = 0
+    Top = 370
+    Width = 1008
+    Height = 205
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 3
+    Visible = False
+    object Bevel2: TBevel
+      Left = 8
+      Top = 16
+      Width = 2000
+      Height = 2
+      Shape = bsTopLine
+    end
+    object Shape2: TShape
+      Left = 8
+      Top = 0
+      Width = 2000
+      Height = 17
+      Brush.Color = clGradientActiveCaption
+      Pen.Style = psClear
+    end
+    object Label15: TLabel
+      Left = 40
+      Top = 2
+      Width = 73
+      Height = 13
+      Caption = 'Audioeffekte'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Transparent = True
+    end
+    object save_eq: TLabel
+      Left = 200
+      Top = 2
+      Width = 90
+      Height = 13
+      Caption = '>Werte speichern<'
+      Transparent = True
+      OnClick = save_eqClick
+      OnMouseDown = save_eqMouseDown
+      OnMouseMove = save_eqMouseMove
+      OnMouseLeave = save_eqMouseLeave
+    end
+    object reset_eq: TLabel
+      Left = 328
+      Top = 2
+      Width = 40
+      Height = 13
+      Alignment = taCenter
+      Caption = '>Reset<'
+      Transparent = True
+      OnClick = reset_eqClick
+      OnMouseDown = reset_eqMouseDown
+      OnMouseMove = reset_eqMouseMove
+      OnMouseLeave = reset_eqMouseLeave
+    end
+    object Button1: TButton
+      Left = 7
+      Top = 1
+      Width = 26
+      Height = 16
+      Hint = 'Blendet den Equalizer ein oder aus'
+      Caption = '6'
+      Font.Charset = SYMBOL_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Webdings'
+      Font.Style = []
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+      OnClick = Button1Click
+    end
+    object GroupBox3: TGroupBox
+      Left = 408
+      Top = 24
+      Width = 193
+      Height = 177
+      Caption = ' Multiband-Equalizer '
+      TabOrder = 1
+      object Shape5: TShape
+        Left = -616
+        Top = -16
+        Width = 817
+        Height = 17
+        Brush.Color = clGradientActiveCaption
+        Pen.Style = psClear
+      end
+      object JvLabel1: TJvLabel
+        Left = 8
+        Top = 120
+        Width = 16
+        Height = 29
+        Caption = '80 Hz'
+        Angle = 90
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -11
+        HotTrackFont.Name = 'MS Sans Serif'
+        HotTrackFont.Style = []
+      end
+      object JvLabel2: TJvLabel
+        Left = 24
+        Top = 120
+        Width = 16
+        Height = 35
+        Caption = '125 Hz'
+        Angle = 90
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -11
+        HotTrackFont.Name = 'MS Sans Serif'
+        HotTrackFont.Style = []
+      end
+      object JvLabel3: TJvLabel
+        Left = 40
+        Top = 120
+        Width = 16
+        Height = 35
+        Caption = '180 Hz'
+        Angle = 90
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -11
+        HotTrackFont.Name = 'MS Sans Serif'
+        HotTrackFont.Style = []
+      end
+      object JvLabel4: TJvLabel
+        Left = 56
+        Top = 120
+        Width = 16
+        Height = 35
+        Caption = '300 Hz'
+        Angle = 90
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -11
+        HotTrackFont.Name = 'MS Sans Serif'
+        HotTrackFont.Style = []
+      end
+      object JvLabel5: TJvLabel
+        Left = 120
+        Top = 120
+        Width = 16
+        Height = 41
+        Caption = '3000 Hz'
+        Angle = 90
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -11
+        HotTrackFont.Name = 'MS Sans Serif'
+        HotTrackFont.Style = []
+      end
+      object JvLabel6: TJvLabel
+        Left = 72
+        Top = 120
+        Width = 16
+        Height = 35
+        Caption = '600 Hz'
+        Angle = 90
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -11
+        HotTrackFont.Name = 'MS Sans Serif'
+        HotTrackFont.Style = []
+      end
+      object JvLabel7: TJvLabel
+        Left = 88
+        Top = 120
+        Width = 16
+        Height = 41
+        Caption = '1000 Hz'
+        Angle = 90
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -11
+        HotTrackFont.Name = 'MS Sans Serif'
+        HotTrackFont.Style = []
+      end
+      object JvLabel8: TJvLabel
+        Left = 104
+        Top = 120
+        Width = 16
+        Height = 41
+        Caption = '2000 Hz'
+        Angle = 90
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -11
+        HotTrackFont.Name = 'MS Sans Serif'
+        HotTrackFont.Style = []
+      end
+      object JvLabel10: TJvLabel
+        Left = 136
+        Top = 120
+        Width = 16
+        Height = 41
+        Caption = '5000 Hz'
+        Angle = 90
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -11
+        HotTrackFont.Name = 'MS Sans Serif'
+        HotTrackFont.Style = []
+      end
+      object JvLabel11: TJvLabel
+        Left = 152
+        Top = 120
+        Width = 16
+        Height = 41
+        Caption = '8000 Hz'
+        Angle = 90
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -11
+        HotTrackFont.Name = 'MS Sans Serif'
+        HotTrackFont.Style = []
+      end
+      object JvLabel12: TJvLabel
+        Left = 168
+        Top = 120
+        Width = 16
+        Height = 47
+        Caption = '16000 Hz'
+        Angle = 90
+        HotTrackFont.Charset = DEFAULT_CHARSET
+        HotTrackFont.Color = clWindowText
+        HotTrackFont.Height = -11
+        HotTrackFont.Name = 'MS Sans Serif'
+        HotTrackFont.Style = []
+      end
+      object equalizer_progressbar0: TProgressBar
+        Left = 8
+        Top = 18
+        Width = 17
+        Height = 100
+        Hint = '80 Hz'
+        Max = 30
+        Orientation = pbVertical
+        ParentShowHint = False
+        Position = 15
+        Smooth = True
+        Step = 1
+        ShowHint = True
+        TabOrder = 0
+        OnMouseDown = equalizer_progressbar0MouseDown
+        OnMouseMove = equalizer_progressbar0MouseMove
+      end
+      object equalizer_progressbar1: TProgressBar
+        Left = 24
+        Top = 18
+        Width = 17
+        Height = 100
+        Hint = '125 Hz'
+        Max = 30
+        Orientation = pbVertical
+        ParentShowHint = False
+        Position = 15
+        Smooth = True
+        Step = 1
+        ShowHint = True
+        TabOrder = 1
+        OnMouseDown = equalizer_progressbar0MouseDown
+        OnMouseMove = equalizer_progressbar0MouseMove
+      end
+      object equalizer_progressbar2: TProgressBar
+        Left = 40
+        Top = 18
+        Width = 17
+        Height = 100
+        Hint = '180 Hz'
+        Max = 30
+        Orientation = pbVertical
+        ParentShowHint = False
+        Position = 15
+        Smooth = True
+        Step = 1
+        ShowHint = True
+        TabOrder = 2
+        OnMouseDown = equalizer_progressbar0MouseDown
+        OnMouseMove = equalizer_progressbar0MouseMove
+      end
+      object equalizer_progressbar5: TProgressBar
+        Left = 88
+        Top = 18
+        Width = 17
+        Height = 100
+        Hint = '1000 Hz'
+        Max = 30
+        Orientation = pbVertical
+        ParentShowHint = False
+        Position = 15
+        Smooth = True
+        Step = 1
+        ShowHint = True
+        TabOrder = 3
+        OnMouseDown = equalizer_progressbar0MouseDown
+        OnMouseMove = equalizer_progressbar0MouseMove
+      end
+      object equalizer_progressbar4: TProgressBar
+        Left = 72
+        Top = 18
+        Width = 17
+        Height = 100
+        Hint = '600 Hz'
+        Max = 30
+        Orientation = pbVertical
+        ParentShowHint = False
+        Position = 15
+        Smooth = True
+        Step = 1
+        ShowHint = True
+        TabOrder = 4
+        OnMouseDown = equalizer_progressbar0MouseDown
+        OnMouseMove = equalizer_progressbar0MouseMove
+      end
+      object equalizer_progressbar3: TProgressBar
+        Left = 56
+        Top = 18
+        Width = 17
+        Height = 100
+        Hint = '300 Hz'
+        Max = 30
+        Orientation = pbVertical
+        ParentShowHint = False
+        Position = 15
+        Smooth = True
+        Step = 1
+        ShowHint = True
+        TabOrder = 5
+        OnMouseDown = equalizer_progressbar0MouseDown
+        OnMouseMove = equalizer_progressbar0MouseMove
+      end
+      object equalizer_progressbar8: TProgressBar
+        Left = 136
+        Top = 18
+        Width = 17
+        Height = 100
+        Hint = '5000 Hz'
+        Max = 30
+        Orientation = pbVertical
+        ParentShowHint = False
+        Position = 15
+        Smooth = True
+        Step = 1
+        ShowHint = True
+        TabOrder = 6
+        OnMouseDown = equalizer_progressbar0MouseDown
+        OnMouseMove = equalizer_progressbar0MouseMove
+      end
+      object equalizer_progressbar7: TProgressBar
+        Left = 120
+        Top = 18
+        Width = 17
+        Height = 100
+        Hint = '3000 Hz'
+        Max = 30
+        Orientation = pbVertical
+        ParentShowHint = False
+        Position = 15
+        Smooth = True
+        Step = 1
+        ShowHint = True
+        TabOrder = 7
+        OnMouseDown = equalizer_progressbar0MouseDown
+        OnMouseMove = equalizer_progressbar0MouseMove
+      end
+      object equalizer_progressbar6: TProgressBar
+        Left = 104
+        Top = 18
+        Width = 17
+        Height = 100
+        Hint = '2000 Hz'
+        Max = 30
+        Orientation = pbVertical
+        ParentShowHint = False
+        Position = 15
+        Smooth = True
+        Step = 1
+        ShowHint = True
+        TabOrder = 8
+        OnMouseDown = equalizer_progressbar0MouseDown
+        OnMouseMove = equalizer_progressbar0MouseMove
+      end
+      object equalizer_progressbar10: TProgressBar
+        Left = 168
+        Top = 18
+        Width = 17
+        Height = 100
+        Hint = '16000 Hz'
+        Max = 30
+        Orientation = pbVertical
+        ParentShowHint = False
+        Position = 15
+        Smooth = True
+        Step = 1
+        ShowHint = True
+        TabOrder = 9
+        OnMouseDown = equalizer_progressbar0MouseDown
+        OnMouseMove = equalizer_progressbar0MouseMove
+      end
+      object equalizer_progressbar9: TProgressBar
+        Left = 152
+        Top = 18
+        Width = 17
+        Height = 100
+        Hint = '8000 Hz'
+        Max = 30
+        Orientation = pbVertical
+        ParentShowHint = False
+        Position = 15
+        Smooth = True
+        Step = 1
+        ShowHint = True
+        TabOrder = 10
+        OnMouseDown = equalizer_progressbar0MouseDown
+        OnMouseMove = equalizer_progressbar0MouseMove
+      end
+    end
+    object GroupBox4: TGroupBox
+      Left = 8
+      Top = 24
+      Width = 393
+      Height = 121
+      Caption = ' Effekteinstellungen '
+      TabOrder = 2
+      object Label21: TLabel
+        Left = 218
+        Top = 96
+        Width = 35
+        Height = 13
+        Caption = 'Reverb'
+      end
+      object eq_label8: TLabel
+        Left = 372
+        Top = 96
+        Width = 6
+        Height = 13
+        Caption = '0'
+      end
+      object eq_label1: TLabel
+        Left = 180
+        Top = 24
+        Width = 6
+        Height = 13
+        Caption = '0'
+      end
+      object Label13: TLabel
+        Left = 24
+        Top = 24
+        Width = 33
+        Height = 13
+        Caption = 'Chorus'
+      end
+      object eq_label2: TLabel
+        Left = 180
+        Top = 48
+        Width = 6
+        Height = 13
+        Caption = '0'
+      end
+      object Label23: TLabel
+        Left = 24
+        Top = 48
+        Width = 30
+        Height = 13
+        Caption = 'Comp.'
+      end
+      object eq_label3: TLabel
+        Left = 180
+        Top = 72
+        Width = 6
+        Height = 13
+        Caption = '0'
+      end
+      object Label25: TLabel
+        Left = 24
+        Top = 72
+        Width = 30
+        Height = 13
+        Caption = 'Disort.'
+      end
+      object eq_label5: TLabel
+        Left = 372
+        Top = 24
+        Width = 6
+        Height = 13
+        Caption = '0'
+      end
+      object Label27: TLabel
+        Left = 218
+        Top = 24
+        Width = 35
+        Height = 13
+        Caption = 'Flanger'
+      end
+      object eq_label6: TLabel
+        Left = 372
+        Top = 48
+        Width = 6
+        Height = 13
+        Caption = '0'
+      end
+      object Label29: TLabel
+        Left = 218
+        Top = 48
+        Width = 31
+        Height = 13
+        Caption = 'Gargle'
+      end
+      object eq_label7: TLabel
+        Left = 372
+        Top = 72
+        Width = 6
+        Height = 13
+        Caption = '0'
+      end
+      object Label31: TLabel
+        Left = 218
+        Top = 72
+        Width = 35
+        Height = 13
+        Caption = 'Reverb'
+      end
+      object eq_label4: TLabel
+        Left = 180
+        Top = 96
+        Width = 6
+        Height = 13
+        Caption = '0'
+      end
+      object Label33: TLabel
+        Left = 24
+        Top = 96
+        Width = 25
+        Height = 13
+        Caption = 'Echo'
+      end
+      object eq_scrollbar8: TScrollBar
+        Left = 258
+        Top = 94
+        Width = 110
+        Height = 17
+        Max = 20
+        PageSize = 0
+        TabOrder = 0
+        OnChange = eq_scrollbar8Change
+      end
+      object eq_scrollbar1: TScrollBar
+        Left = 64
+        Top = 22
+        Width = 110
+        Height = 17
+        Max = 255
+        PageSize = 0
+        TabOrder = 1
+        OnChange = eq_scrollbar8Change
+      end
+      object eq_scrollbar2: TScrollBar
+        Left = 64
+        Top = 46
+        Width = 110
+        Height = 17
+        Max = 10
+        PageSize = 0
+        TabOrder = 2
+        OnChange = eq_scrollbar8Change
+      end
+      object eq_scrollbar3: TScrollBar
+        Left = 64
+        Top = 70
+        Width = 110
+        Height = 17
+        Max = 30
+        PageSize = 0
+        TabOrder = 3
+        OnChange = eq_scrollbar8Change
+      end
+      object eq_scrollbar5: TScrollBar
+        Left = 258
+        Top = 22
+        Width = 110
+        Height = 17
+        Max = 255
+        PageSize = 0
+        TabOrder = 4
+        OnChange = eq_scrollbar8Change
+      end
+      object eq_scrollbar6: TScrollBar
+        Left = 258
+        Top = 46
+        Width = 110
+        Height = 17
+        Max = 255
+        PageSize = 0
+        TabOrder = 5
+        OnChange = eq_scrollbar8Change
+      end
+      object eq_scrollbar7: TScrollBar
+        Left = 258
+        Top = 70
+        Width = 110
+        Height = 17
+        Max = 255
+        PageSize = 0
+        TabOrder = 6
+        OnChange = eq_scrollbar8Change
+      end
+      object eq_scrollbar4: TScrollBar
+        Left = 64
+        Top = 94
+        Width = 110
+        Height = 17
+        Max = 127
+        PageSize = 0
+        TabOrder = 7
+        OnChange = eq_scrollbar8Change
+      end
+      object eq_check1: TCheckBox
+        Left = 8
+        Top = 22
+        Width = 15
+        Height = 17
+        TabOrder = 8
+        OnMouseUp = eq_check1MouseUp
+      end
+      object eq_check2: TCheckBox
+        Left = 8
+        Top = 46
+        Width = 15
+        Height = 17
+        TabOrder = 9
+        OnMouseUp = eq_check1MouseUp
+      end
+      object eq_check3: TCheckBox
+        Left = 8
+        Top = 70
+        Width = 15
+        Height = 17
+        TabOrder = 10
+        OnMouseUp = eq_check1MouseUp
+      end
+      object eq_check4: TCheckBox
+        Left = 8
+        Top = 94
+        Width = 15
+        Height = 17
+        TabOrder = 11
+        OnMouseUp = eq_check1MouseUp
+      end
+      object eq_check5: TCheckBox
+        Left = 202
+        Top = 22
+        Width = 15
+        Height = 17
+        TabOrder = 12
+        OnMouseUp = eq_check1MouseUp
+      end
+      object eq_check6: TCheckBox
+        Left = 202
+        Top = 46
+        Width = 15
+        Height = 17
+        TabOrder = 13
+        OnMouseUp = eq_check1MouseUp
+      end
+      object eq_check7: TCheckBox
+        Left = 202
+        Top = 70
+        Width = 15
+        Height = 17
+        TabOrder = 14
+        OnMouseUp = eq_check1MouseUp
+      end
+      object eq_check8: TCheckBox
+        Left = 202
+        Top = 94
+        Width = 15
+        Height = 17
+        TabOrder = 15
+        OnMouseUp = eq_check1MouseUp
+      end
+    end
+  end
   object PanelLighteffects: TPanel
     Left = 0
     Top = 370
@@ -1103,698 +1795,6 @@ object audioeffektplayerform: Taudioeffektplayerform
         224
         99
         283)
-    end
-  end
-  object PanelAudioeffects: TPanel
-    Left = 0
-    Top = 370
-    Width = 1008
-    Height = 205
-    Align = alClient
-    BevelOuter = bvNone
-    TabOrder = 3
-    Visible = False
-    object Bevel2: TBevel
-      Left = 8
-      Top = 16
-      Width = 2000
-      Height = 2
-      Shape = bsTopLine
-    end
-    object Shape2: TShape
-      Left = 8
-      Top = 0
-      Width = 2000
-      Height = 17
-      Brush.Color = clGradientActiveCaption
-      Pen.Style = psClear
-    end
-    object Label15: TLabel
-      Left = 40
-      Top = 2
-      Width = 73
-      Height = 13
-      Caption = 'Audioeffekte'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-      Transparent = True
-    end
-    object save_eq: TLabel
-      Left = 200
-      Top = 2
-      Width = 90
-      Height = 13
-      Caption = '>Werte speichern<'
-      Transparent = True
-      OnClick = save_eqClick
-      OnMouseDown = save_eqMouseDown
-      OnMouseMove = save_eqMouseMove
-      OnMouseLeave = save_eqMouseLeave
-    end
-    object reset_eq: TLabel
-      Left = 328
-      Top = 2
-      Width = 40
-      Height = 13
-      Alignment = taCenter
-      Caption = '>Reset<'
-      Transparent = True
-      OnClick = reset_eqClick
-      OnMouseDown = reset_eqMouseDown
-      OnMouseMove = reset_eqMouseMove
-      OnMouseLeave = reset_eqMouseLeave
-    end
-    object Button1: TButton
-      Left = 7
-      Top = 1
-      Width = 26
-      Height = 16
-      Hint = 'Blendet den Equalizer ein oder aus'
-      Caption = '6'
-      Font.Charset = SYMBOL_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -19
-      Font.Name = 'Webdings'
-      Font.Style = []
-      ParentFont = False
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 0
-      OnClick = Button1Click
-    end
-    object GroupBox3: TGroupBox
-      Left = 408
-      Top = 24
-      Width = 193
-      Height = 177
-      Caption = ' Multiband-Equalizer '
-      TabOrder = 1
-      object Shape5: TShape
-        Left = -616
-        Top = -16
-        Width = 817
-        Height = 17
-        Brush.Color = clGradientActiveCaption
-        Pen.Style = psClear
-      end
-      object JvLabel1: TJvLabel
-        Left = 8
-        Top = 120
-        Width = 16
-        Height = 29
-        Caption = '80 Hz'
-        Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
-      end
-      object JvLabel2: TJvLabel
-        Left = 24
-        Top = 120
-        Width = 16
-        Height = 35
-        Caption = '125 Hz'
-        Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
-      end
-      object JvLabel3: TJvLabel
-        Left = 40
-        Top = 120
-        Width = 16
-        Height = 35
-        Caption = '180 Hz'
-        Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
-      end
-      object JvLabel4: TJvLabel
-        Left = 56
-        Top = 120
-        Width = 16
-        Height = 35
-        Caption = '300 Hz'
-        Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
-      end
-      object JvLabel5: TJvLabel
-        Left = 120
-        Top = 120
-        Width = 16
-        Height = 41
-        Caption = '3000 Hz'
-        Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
-      end
-      object JvLabel6: TJvLabel
-        Left = 72
-        Top = 120
-        Width = 16
-        Height = 35
-        Caption = '600 Hz'
-        Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
-      end
-      object JvLabel7: TJvLabel
-        Left = 88
-        Top = 120
-        Width = 16
-        Height = 41
-        Caption = '1000 Hz'
-        Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
-      end
-      object JvLabel8: TJvLabel
-        Left = 104
-        Top = 120
-        Width = 16
-        Height = 41
-        Caption = '2000 Hz'
-        Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
-      end
-      object JvLabel10: TJvLabel
-        Left = 136
-        Top = 120
-        Width = 16
-        Height = 41
-        Caption = '5000 Hz'
-        Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
-      end
-      object JvLabel11: TJvLabel
-        Left = 152
-        Top = 120
-        Width = 16
-        Height = 41
-        Caption = '8000 Hz'
-        Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
-      end
-      object JvLabel12: TJvLabel
-        Left = 168
-        Top = 120
-        Width = 16
-        Height = 47
-        Caption = '16000 Hz'
-        Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
-      end
-      object equalizer_progressbar0: TProgressBar
-        Left = 8
-        Top = 18
-        Width = 17
-        Height = 100
-        Hint = '80 Hz'
-        Max = 30
-        Orientation = pbVertical
-        ParentShowHint = False
-        Position = 15
-        Smooth = True
-        Step = 1
-        ShowHint = True
-        TabOrder = 0
-        OnMouseDown = equalizer_progressbar0MouseDown
-        OnMouseMove = equalizer_progressbar0MouseMove
-      end
-      object equalizer_progressbar1: TProgressBar
-        Left = 24
-        Top = 18
-        Width = 17
-        Height = 100
-        Hint = '125 Hz'
-        Max = 30
-        Orientation = pbVertical
-        ParentShowHint = False
-        Position = 15
-        Smooth = True
-        Step = 1
-        ShowHint = True
-        TabOrder = 1
-        OnMouseDown = equalizer_progressbar0MouseDown
-        OnMouseMove = equalizer_progressbar0MouseMove
-      end
-      object equalizer_progressbar2: TProgressBar
-        Left = 40
-        Top = 18
-        Width = 17
-        Height = 100
-        Hint = '180 Hz'
-        Max = 30
-        Orientation = pbVertical
-        ParentShowHint = False
-        Position = 15
-        Smooth = True
-        Step = 1
-        ShowHint = True
-        TabOrder = 2
-        OnMouseDown = equalizer_progressbar0MouseDown
-        OnMouseMove = equalizer_progressbar0MouseMove
-      end
-      object equalizer_progressbar5: TProgressBar
-        Left = 88
-        Top = 18
-        Width = 17
-        Height = 100
-        Hint = '1000 Hz'
-        Max = 30
-        Orientation = pbVertical
-        ParentShowHint = False
-        Position = 15
-        Smooth = True
-        Step = 1
-        ShowHint = True
-        TabOrder = 3
-        OnMouseDown = equalizer_progressbar0MouseDown
-        OnMouseMove = equalizer_progressbar0MouseMove
-      end
-      object equalizer_progressbar4: TProgressBar
-        Left = 72
-        Top = 18
-        Width = 17
-        Height = 100
-        Hint = '600 Hz'
-        Max = 30
-        Orientation = pbVertical
-        ParentShowHint = False
-        Position = 15
-        Smooth = True
-        Step = 1
-        ShowHint = True
-        TabOrder = 4
-        OnMouseDown = equalizer_progressbar0MouseDown
-        OnMouseMove = equalizer_progressbar0MouseMove
-      end
-      object equalizer_progressbar3: TProgressBar
-        Left = 56
-        Top = 18
-        Width = 17
-        Height = 100
-        Hint = '300 Hz'
-        Max = 30
-        Orientation = pbVertical
-        ParentShowHint = False
-        Position = 15
-        Smooth = True
-        Step = 1
-        ShowHint = True
-        TabOrder = 5
-        OnMouseDown = equalizer_progressbar0MouseDown
-        OnMouseMove = equalizer_progressbar0MouseMove
-      end
-      object equalizer_progressbar8: TProgressBar
-        Left = 136
-        Top = 18
-        Width = 17
-        Height = 100
-        Hint = '5000 Hz'
-        Max = 30
-        Orientation = pbVertical
-        ParentShowHint = False
-        Position = 15
-        Smooth = True
-        Step = 1
-        ShowHint = True
-        TabOrder = 6
-        OnMouseDown = equalizer_progressbar0MouseDown
-        OnMouseMove = equalizer_progressbar0MouseMove
-      end
-      object equalizer_progressbar7: TProgressBar
-        Left = 120
-        Top = 18
-        Width = 17
-        Height = 100
-        Hint = '3000 Hz'
-        Max = 30
-        Orientation = pbVertical
-        ParentShowHint = False
-        Position = 15
-        Smooth = True
-        Step = 1
-        ShowHint = True
-        TabOrder = 7
-        OnMouseDown = equalizer_progressbar0MouseDown
-        OnMouseMove = equalizer_progressbar0MouseMove
-      end
-      object equalizer_progressbar6: TProgressBar
-        Left = 104
-        Top = 18
-        Width = 17
-        Height = 100
-        Hint = '2000 Hz'
-        Max = 30
-        Orientation = pbVertical
-        ParentShowHint = False
-        Position = 15
-        Smooth = True
-        Step = 1
-        ShowHint = True
-        TabOrder = 8
-        OnMouseDown = equalizer_progressbar0MouseDown
-        OnMouseMove = equalizer_progressbar0MouseMove
-      end
-      object equalizer_progressbar10: TProgressBar
-        Left = 168
-        Top = 18
-        Width = 17
-        Height = 100
-        Hint = '16000 Hz'
-        Max = 30
-        Orientation = pbVertical
-        ParentShowHint = False
-        Position = 15
-        Smooth = True
-        Step = 1
-        ShowHint = True
-        TabOrder = 9
-        OnMouseDown = equalizer_progressbar0MouseDown
-        OnMouseMove = equalizer_progressbar0MouseMove
-      end
-      object equalizer_progressbar9: TProgressBar
-        Left = 152
-        Top = 18
-        Width = 17
-        Height = 100
-        Hint = '8000 Hz'
-        Max = 30
-        Orientation = pbVertical
-        ParentShowHint = False
-        Position = 15
-        Smooth = True
-        Step = 1
-        ShowHint = True
-        TabOrder = 10
-        OnMouseDown = equalizer_progressbar0MouseDown
-        OnMouseMove = equalizer_progressbar0MouseMove
-      end
-    end
-    object GroupBox4: TGroupBox
-      Left = 8
-      Top = 24
-      Width = 393
-      Height = 121
-      Caption = ' Effekteinstellungen '
-      TabOrder = 2
-      object Label21: TLabel
-        Left = 218
-        Top = 96
-        Width = 35
-        Height = 13
-        Caption = 'Reverb'
-      end
-      object eq_label8: TLabel
-        Left = 372
-        Top = 96
-        Width = 6
-        Height = 13
-        Caption = '0'
-      end
-      object eq_label1: TLabel
-        Left = 180
-        Top = 24
-        Width = 6
-        Height = 13
-        Caption = '0'
-      end
-      object Label13: TLabel
-        Left = 24
-        Top = 24
-        Width = 33
-        Height = 13
-        Caption = 'Chorus'
-      end
-      object eq_label2: TLabel
-        Left = 180
-        Top = 48
-        Width = 6
-        Height = 13
-        Caption = '0'
-      end
-      object Label23: TLabel
-        Left = 24
-        Top = 48
-        Width = 30
-        Height = 13
-        Caption = 'Comp.'
-      end
-      object eq_label3: TLabel
-        Left = 180
-        Top = 72
-        Width = 6
-        Height = 13
-        Caption = '0'
-      end
-      object Label25: TLabel
-        Left = 24
-        Top = 72
-        Width = 30
-        Height = 13
-        Caption = 'Disort.'
-      end
-      object eq_label5: TLabel
-        Left = 372
-        Top = 24
-        Width = 6
-        Height = 13
-        Caption = '0'
-      end
-      object Label27: TLabel
-        Left = 218
-        Top = 24
-        Width = 35
-        Height = 13
-        Caption = 'Flanger'
-      end
-      object eq_label6: TLabel
-        Left = 372
-        Top = 48
-        Width = 6
-        Height = 13
-        Caption = '0'
-      end
-      object Label29: TLabel
-        Left = 218
-        Top = 48
-        Width = 31
-        Height = 13
-        Caption = 'Gargle'
-      end
-      object eq_label7: TLabel
-        Left = 372
-        Top = 72
-        Width = 6
-        Height = 13
-        Caption = '0'
-      end
-      object Label31: TLabel
-        Left = 218
-        Top = 72
-        Width = 35
-        Height = 13
-        Caption = 'Reverb'
-      end
-      object eq_label4: TLabel
-        Left = 180
-        Top = 96
-        Width = 6
-        Height = 13
-        Caption = '0'
-      end
-      object Label33: TLabel
-        Left = 24
-        Top = 96
-        Width = 25
-        Height = 13
-        Caption = 'Echo'
-      end
-      object eq_scrollbar8: TScrollBar
-        Left = 258
-        Top = 94
-        Width = 110
-        Height = 17
-        Max = 20
-        PageSize = 0
-        TabOrder = 0
-        OnChange = eq_scrollbar8Change
-      end
-      object eq_scrollbar1: TScrollBar
-        Left = 64
-        Top = 22
-        Width = 110
-        Height = 17
-        Max = 255
-        PageSize = 0
-        TabOrder = 1
-        OnChange = eq_scrollbar8Change
-      end
-      object eq_scrollbar2: TScrollBar
-        Left = 64
-        Top = 46
-        Width = 110
-        Height = 17
-        Max = 10
-        PageSize = 0
-        TabOrder = 2
-        OnChange = eq_scrollbar8Change
-      end
-      object eq_scrollbar3: TScrollBar
-        Left = 64
-        Top = 70
-        Width = 110
-        Height = 17
-        Max = 30
-        PageSize = 0
-        TabOrder = 3
-        OnChange = eq_scrollbar8Change
-      end
-      object eq_scrollbar5: TScrollBar
-        Left = 258
-        Top = 22
-        Width = 110
-        Height = 17
-        Max = 255
-        PageSize = 0
-        TabOrder = 4
-        OnChange = eq_scrollbar8Change
-      end
-      object eq_scrollbar6: TScrollBar
-        Left = 258
-        Top = 46
-        Width = 110
-        Height = 17
-        Max = 255
-        PageSize = 0
-        TabOrder = 5
-        OnChange = eq_scrollbar8Change
-      end
-      object eq_scrollbar7: TScrollBar
-        Left = 258
-        Top = 70
-        Width = 110
-        Height = 17
-        Max = 255
-        PageSize = 0
-        TabOrder = 6
-        OnChange = eq_scrollbar8Change
-      end
-      object eq_scrollbar4: TScrollBar
-        Left = 64
-        Top = 94
-        Width = 110
-        Height = 17
-        Max = 127
-        PageSize = 0
-        TabOrder = 7
-        OnChange = eq_scrollbar8Change
-      end
-      object eq_check1: TCheckBox
-        Left = 8
-        Top = 22
-        Width = 15
-        Height = 17
-        TabOrder = 8
-        OnMouseUp = eq_check1MouseUp
-      end
-      object eq_check2: TCheckBox
-        Left = 8
-        Top = 46
-        Width = 15
-        Height = 17
-        TabOrder = 9
-        OnMouseUp = eq_check1MouseUp
-      end
-      object eq_check3: TCheckBox
-        Left = 8
-        Top = 70
-        Width = 15
-        Height = 17
-        TabOrder = 10
-        OnMouseUp = eq_check1MouseUp
-      end
-      object eq_check4: TCheckBox
-        Left = 8
-        Top = 94
-        Width = 15
-        Height = 17
-        TabOrder = 11
-        OnMouseUp = eq_check1MouseUp
-      end
-      object eq_check5: TCheckBox
-        Left = 202
-        Top = 22
-        Width = 15
-        Height = 17
-        TabOrder = 12
-        OnMouseUp = eq_check1MouseUp
-      end
-      object eq_check6: TCheckBox
-        Left = 202
-        Top = 46
-        Width = 15
-        Height = 17
-        TabOrder = 13
-        OnMouseUp = eq_check1MouseUp
-      end
-      object eq_check7: TCheckBox
-        Left = 202
-        Top = 70
-        Width = 15
-        Height = 17
-        TabOrder = 14
-        OnMouseUp = eq_check1MouseUp
-      end
-      object eq_check8: TCheckBox
-        Left = 202
-        Top = 94
-        Width = 15
-        Height = 17
-        TabOrder = 15
-        OnMouseUp = eq_check1MouseUp
-      end
     end
   end
   object PanelTop: TPanel

@@ -343,13 +343,27 @@ begin
             r:=mainform.Devices[j].AmberRatioR;
             g:=mainform.Devices[j].AmberRatioG;
             b:=0;
-          end else if (mainform.Devices[j].hasRGB) and (mainform.devices[j].hasWhite) and (lowercase(kanaltyp)='w') then
+          end else if (not mainform.Devices[j].hasRGB) and (mainform.devices[j].hasAmber) and (lowercase(kanaltyp)='a') then
+          begin
+            rectangleheight:=geraetesteuerung.get_channel(mainform.Devices[j].ID,'a');
+            device_color:=RGB2TColor(round(mainform.Devices[j].AmberRatioR*rectangleheight/255),round(mainform.Devices[j].AmberRatioG*rectangleheight/255),0);
+            r:=255;
+            g:=191;
+            b:=0;
+          end else if (mainform.devices[j].hasWhite) and (lowercase(kanaltyp)='w') then
           begin
             rectangleheight:=geraetesteuerung.get_channel(mainform.Devices[j].ID,'w');
             device_color:=RGB2TColor(rectangleheight,rectangleheight,rectangleheight);
             r:=255;
             g:=255;
             b:=255;
+          end else if (mainform.devices[j].hasUV) and (lowercase(kanaltyp)='uv') then
+          begin
+            rectangleheight:=geraetesteuerung.get_channel(mainform.Devices[j].ID,'uv');
+            device_color:=RGB2TColor(rectangleheight div 2,0,rectangleheight div 2);
+            r:=128;
+            g:=0;
+            b:=128;
           end else if mainform.Devices[j].hasColor and (lowercase(kanaltyp)='color1') then
           begin
             rectangleheight:=255;
@@ -596,6 +610,8 @@ end;
 procedure Tfaderpanelform.PaintBox1MouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   mousex:=x;
   mousey:=y;
   mouseoverfader:=trunc((x/(maxfaders*40))*maxfaders);
@@ -608,6 +624,8 @@ procedure Tfaderpanelform.PaintBox1MouseMove(Sender: TObject;
 var
   value,i,fadergroup:integer;
 begin
+  if not mainform.UserAccessGranted(2, false) then exit;
+
   lastmousex:=x;
   lastmousey:=y;
 
@@ -687,6 +705,8 @@ procedure Tfaderpanelform.PaintBox1MouseUp(Sender: TObject;
 var
   i, ddfwindowposition, j:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if Shift=[ssCtrl] then faderselected[faderchannel[mouseoverfader]-1]:=not faderselected[faderchannel[mouseoverfader]-1];
   if Shift=[ssAlt] then faderselectedalt[faderchannel[mouseoverfader]-1]:=not faderselectedalt[faderchannel[mouseoverfader]-1];
   if Shift=[ssShift] then faderselectedshift[faderchannel[mouseoverfader]-1]:=not faderselectedshift[faderchannel[mouseoverfader]-1];
@@ -907,6 +927,8 @@ procedure Tfaderpanelform.Gertefensteranzeigen1Click(Sender: TObject);
 var
   i,j,ddfwindowposition:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   for i:=0 to length(mainform.devices)-1 do
   begin
     if (faderchannel[mouseoverfader]>=mainform.devices[i].Startaddress) and (faderchannel[mouseoverfader]<mainform.devices[i].Startaddress+mainform.devices[i].MaxChan) then

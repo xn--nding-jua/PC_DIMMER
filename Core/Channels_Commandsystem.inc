@@ -1,4 +1,4 @@
-  setlength(DeviceChannelNames,45);
+  setlength(DeviceChannelNames,46);
   DeviceChannelNames[0]:='PAN';
   DeviceChannelNames[1]:='TILT';
   DeviceChannelNames[2]:='PANFINE';
@@ -44,6 +44,7 @@
   DeviceChannelNames[42]:='CYAN';
   DeviceChannelNames[43]:='MAGENTA';
   DeviceChannelNames[44]:='YELLOW';
+  DeviceChannelNames[45]:='UV';
   // VIRTUALRGBADIMMER ist virtueller Dimmerkanal für RGB(A)-Geräte
 
   // Befehlssystem klarmachen
@@ -208,7 +209,7 @@
   Befehlssystem[2].Steuerung[i].StringArgCount:=0;
   Befehlssystem[2].Steuerung[i].GUIDArgCount:=0;
 
-  setlength(Befehlssystem[3].Steuerung, 29);
+  setlength(Befehlssystem[3].Steuerung, 30);
   Befehlssystem[3].Programmteil:=_('Master / MIDI / Programm');
   Befehlssystem[3].ProgrammteilGUID:=StringToGuid('{43D6EC65-DED7-40FB-AC0A-1DC3D4250BAE}');
   i:=0;
@@ -413,6 +414,13 @@
   Befehlssystem[3].Steuerung[i].InputValueOnly:=false;
   Befehlssystem[3].Steuerung[i].IntegerArgCount:=0;
   Befehlssystem[3].Steuerung[i].StringArgCount:=1;
+  Befehlssystem[3].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[3].Steuerung[i].Bezeichnung:=_('Benutzer wechseln');
+  Befehlssystem[3].Steuerung[i].GUID:=StringToGuid('{4EEBAE5E-1A64-4679-86BA-B288AA7B7CB7}');
+  Befehlssystem[3].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[3].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[3].Steuerung[i].StringArgCount:=0;
   Befehlssystem[3].Steuerung[i].GUIDArgCount:=0;
 
   setlength(Befehlssystem[4].Steuerung, 12);

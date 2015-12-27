@@ -353,6 +353,8 @@ end;
 
 procedure Ttimecodeplayerform.addBankBtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   setlength(mainform.timecodeplayerbank,length(mainform.timecodeplayerbank)+1);
   mainform.timecodeplayerbank[length(mainform.timecodeplayerbank)-1].BankName:=_('Neue Timecode-Liste');
   BankSelect.ItemIndex:=BankSelect.Items.Add(_('Neue Timecode-Liste'));
@@ -371,6 +373,8 @@ procedure Ttimecodeplayerform.deleteBankBtnClick(Sender: TObject);
 var
   BankToDelete,i:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (length(mainform.timecodeplayerbank)<=0) or (BankSelect.ItemIndex>=length(mainform.timecodeplayerbank)) then
     exit;
 
@@ -453,6 +457,8 @@ procedure Ttimecodeplayerform.editBankBtnClick(Sender: TObject);
 var
   Index:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (length(mainform.timecodeplayerbank)<=0) or (BankSelect.ItemIndex>=length(mainform.timecodeplayerbank)) then
     exit;
 
@@ -464,12 +470,16 @@ end;
 
 procedure Ttimecodeplayerform.playBtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if (StringGrid1.Row-1)<length(mainform.timecodeplayerbank[BankSelect.Itemindex].timecodeplayerbankitems) then
     mainform.StartScene(mainform.timecodeplayerbank[BankSelect.Itemindex].timecodeplayerbankitems[StringGrid1.Row-1],false,false,-1);
 end;
 
 procedure Ttimecodeplayerform.stopBtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if (StringGrid1.Row-1)<length(mainform.timecodeplayerbank[BankSelect.Itemindex].timecodeplayerbankitems) then
     mainform.StopScene(mainform.timecodeplayerbank[BankSelect.Itemindex].timecodeplayerbankitems[StringGrid1.Row-1]);
 end;
@@ -478,6 +488,8 @@ procedure Ttimecodeplayerform.deleteBtnClick(Sender: TObject);
 var
   EntryToDelete,i:integer;
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   EntryToDelete:=StringGrid1.Row-1;
   if EntryToDelete=length(mainform.timecodeplayerbank[BankSelect.ItemIndex].timecodeplayerbankitems)-1 then
   begin
@@ -504,6 +516,8 @@ end;
 
 procedure Ttimecodeplayerform.editBtnClick(Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
 //  if (StringGrid1.Row-1)<length(mainform.timecodeplayerbank[BankSelect.Itemindex].timecodeplayerbankitems) then
 //    mainform.EditScene(mainform.timecodeplayerbank[BankSelect.Itemindex].timecodeplayerbankitems[StringGrid1.Row-1]);
   if (StringGrid1.Row-1)<length(mainform.timecodeplayerbank[BankSelect.Itemindex].timecodeplayerbankitems) then
@@ -547,6 +561,8 @@ end;
 procedure Ttimecodeplayerform.seteffecttoactualpositionbtnClick(
   Sender: TObject);
 begin
+  if not mainform.UserAccessGranted(1) then exit;
+
   if (StringGrid1.Row-1)<length(mainform.timecodeplayerbank[BankSelect.Itemindex].timecodeplayerbankitems) then
   begin
     mainform.timecodeplayerbank[BankSelect.Itemindex].time[StringGrid1.Row-1]:=mainform.MidiInTimecode[Combobox1.Itemindex].s+mainform.MidiInTimecode[Combobox1.Itemindex].min*60+mainform.MidiInTimecode[Combobox1.Itemindex].h*3600;
