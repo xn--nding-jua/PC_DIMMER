@@ -2371,7 +2371,7 @@ end;
 procedure Tkontrollpanel.PaintBox1MouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
-  if not mainform.UserAccessGranted(1, false) then exit;
+  if not mainform.UserAccessGranted(3, false) then exit;
 
   if (Shift=[]) and not MouseIsDown then
   begin
@@ -2394,7 +2394,7 @@ end;
 procedure Tkontrollpanel.PaintBox1MouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  if not mainform.UserAccessGranted(1, false) then exit;
+  if not mainform.UserAccessGranted(3, false) then exit;
 
   if ssTouch then
     exit;
@@ -2438,17 +2438,23 @@ begin
 
   if Shift=[ssLeft,ssCtrl] then
   begin
+    if not mainform.UserAccessGranted(2) then exit;
+
     // Markieren zum Kopieren
    	SourceBtn.Y:=SelectedBtn.Y;
     SourceBtn.X:=SelectedBtn.X;
   end else if Shift=[ssLeft,ssShift] then
   begin
+    if not mainform.UserAccessGranted(2) then exit;
+
     // Markieren zum Verschieben
    	SourceBtn.Y:=SelectedBtn.Y;
     SourceBtn.X:=SelectedBtn.X;
     cut:=true;
   end else if Shift=[ssLeft,ssAlt] then
   begin
+    if not mainform.UserAccessGranted(2) then exit;
+
     // Einfügen
     einfgen1click(nil);
   end else
@@ -2584,7 +2590,7 @@ var
 	k:integer;
   isaudioscene:boolean;
 begin
-  if not mainform.UserAccessGranted(1, false) then exit;
+  if not mainform.UserAccessGranted(3, false) then exit;
 
   MouseIsDown:=false;
   ssTouch:=false;

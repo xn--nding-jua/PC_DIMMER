@@ -1,6 +1,6 @@
 object dynguiform: Tdynguiform
-  Left = 5
-  Top = 519
+  Left = 538
+  Top = 499
   HorzScrollBar.Increment = 99
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
@@ -950,16 +950,16 @@ object dynguiform: Tdynguiform
     end
     object Label11: TLabel
       Left = 166
-      Top = 118
+      Top = 206
       Width = 11
       Height = 13
       Caption = 'W'
     end
     object whiteslider: TTrackBar
       Left = 160
-      Top = 128
+      Top = 112
       Width = 25
-      Height = 88
+      Height = 89
       Hint = 'White-Slider'
       Max = 255
       Orientation = trVertical
@@ -1144,7 +1144,7 @@ object dynguiform: Tdynguiform
     object Label8: TLabel
       Left = 80
       Top = 232
-      Width = 59
+      Width = 57
       Height = 16
       Alignment = taCenter
       Caption = 'PAN/TILT'

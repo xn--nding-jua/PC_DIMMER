@@ -655,7 +655,7 @@ procedure Tkanaluebersichtform.PaintBoxMouseDown(Sender: TObject;
 var
   row,col,channelperrow:integer;
 begin
-  if not mainform.UserAccessGranted(2) then exit;
+  if not mainform.UserAccessGranted(2, false) then exit;
 
   mousey:=y;
   scrollbarpositiononmousedown:=ScrollBar1.Position;

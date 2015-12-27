@@ -883,7 +883,7 @@ procedure Tgrafischebuehnenansicht.StageMouseDown(Sender: TObject;
 var
 	i,j:integer;
 begin
-  if not mainform.UserAccessGranted(2) then exit;
+  if not mainform.UserAccessGranted(2, false) then exit;
 
   MouseDownPoint.X:=X;
   MouseDownPoint.Y:=Y;

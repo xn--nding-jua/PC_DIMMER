@@ -1107,6 +1107,7 @@ type
     NodeControlSets: array of TNodeControlSet;
     UserAccounts: array of TUserAccount;
     CurrentUser: String;
+    CurrentUserAccessLevel: Integer;
 
 //    DeviceForms:array of Tdeviceformprototyp;
     Desktopproperties : array[1..9] of TDesktopproperties;
@@ -1673,6 +1674,7 @@ begin
   StartupFinished:=false;
   BeginValueBackups:=false;
   CurrentUser:='Admin';
+  CurrentUserAccessLevel:=0;
 
   for i:=1 to paramcount do
   begin
@@ -19222,6 +19224,8 @@ end;
 
 procedure TMainform.ResetWindowPositionsClick(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   kontrollpanel.Left:=0;
   kontrollpanel.Top:=0;
   kontrollpanel.ClientWidth:=767;
@@ -20261,6 +20265,8 @@ end;
 
 procedure TMainform.TBItem34Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   SaveWindowPositions('all');
 end;
 
@@ -21759,11 +21765,15 @@ end;
 
 procedure TMainform.TBItem50Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   SendMessage(mainform.Handle, 274, 61808, 1); // StandBy
 end;
 
 procedure TMainform.TBItem51Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   SendMessage(mainform.Handle, 274, 61808, 2); // aus
 end;
 
@@ -22994,6 +23004,32 @@ begin
 
     geraetesteuerung.set_dimmer(stringtoguid(value[0]), strtoint(value[1]), strtoint(value[2]), strtoint(value[3]));
   end;
+  if (pos('set_highlight',cmd)>0) then  // set_highlight GUID VALUE FADETIME
+  begin
+    temp:=cmd;
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[0]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[1]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    // Leerzeichen entfernen, sofern vorhanden
+    if pos(' ', temp)>0 then
+      temp:=copy(temp, 0, pos(' ', temp)-1);
+    value[2]:=temp;
+
+    if strtoint(value[1])>0 then
+      geraetesteuerung.set_shutter(stringtoguid(value[0]), 255)
+    else
+      geraetesteuerung.set_shutter(stringtoguid(value[0]), 0);
+
+    geraetesteuerung.set_color(stringtoguid(value[0]), strtoint(value[1]), strtoint(value[1]), strtoint(value[1]), strtoint(value[2]), 0);
+    geraetesteuerung.set_dimmer(stringtoguid(value[0]), strtoint(value[1]), strtoint(value[2]), 0);
+    geraetesteuerung.set_channel(stringtoguid(value[0]), 'a', strtoint(value[1]), strtoint(value[2]), 0);
+    geraetesteuerung.set_channel(stringtoguid(value[0]), 'w', strtoint(value[1]), strtoint(value[2]), 0);
+  end;
   if (pos('set_gobo1rot',cmd)>0) then  // set_gobo1rot GUID VALUE
   begin
     temp:=cmd;
@@ -23484,6 +23520,8 @@ var
 begin
   if (faderpanelup and (y>Paintbox1.Height-258)) or (Y>(Paintbox1.Height-48)) then
   begin
+    if not UserAccessGranted(2, false) then exit;
+
     if faderpanelup then
       offset:=258
     else
@@ -23498,6 +23536,8 @@ begin
     case pagecontrol1.ActivePageIndex of
       0:  // Bühne
       begin
+        if not UserAccessGranted(2, false) then exit;
+
         grafischebuehnenansicht.MouseDownPoint.X:=X;
         grafischebuehnenansicht.MouseDownPoint.Y:=Y;
 
@@ -23593,6 +23633,8 @@ begin
       end;
       1:  // Kanäle
       begin
+        if not UserAccessGranted(2, false) then exit;
+
         mouseychannel:=y;
         scrollbarpositiononmousedown:=ScrollBar1.Position;
 
@@ -23609,6 +23651,8 @@ begin
       end;
       2:  // Panel
       begin
+        if not UserAccessGranted(3, false) then exit;
+
         kontrollpanel.PaintBox1MouseDown(nil, Button, Shift, X, Y);
       end;
     end;
@@ -23623,6 +23667,8 @@ var
 begin
   if (faderpanelup and (Y>Paintbox1.Height-258)) or (Y>(Paintbox1.Height-48)) then
   begin
+    if not UserAccessGranted(2, false) then exit;
+
     if not faderpanelup then
     begin
       faderpanelup:=true;
@@ -23693,6 +23739,8 @@ begin
     case pagecontrol1.ActivePageIndex of
       0:  // Bühne
       begin
+        if not UserAccessGranted(2, false) then exit;
+
         grafischebuehnenansicht.doimmediaterefresh:=(Shift=[ssLeft]);
 
 /////////// DeviceHoverEffect
@@ -23958,6 +24006,8 @@ begin
       end;
       1:  // Kanäle
       begin
+        if not UserAccessGranted(2, false) then exit;
+
         if (Shift=[ssLeft]) then
         begin
           ScrollBar1.Position:=round((mouseychannel-y)/ChannelHeight+scrollbarpositiononmousedown);
@@ -24004,6 +24054,8 @@ begin
       end;
       2:  // Panel
       begin
+        if not UserAccessGranted(3, false) then exit;
+
         kontrollpanel.PaintBox1MouseMove(nil, Shift, X, Y);
       end;
     end;
@@ -24019,6 +24071,8 @@ var
 begin
   if (faderpanelup and (Y>Paintbox1.Height-258)) or (Y>(Paintbox1.Height-48)) then
   begin
+    if not UserAccessGranted(2) then exit;
+
     if faderpanelup then
       offset:=258
     else
@@ -24033,6 +24087,8 @@ begin
     case pagecontrol1.ActivePageIndex of
       0:  // Bühne
       begin
+        if not UserAccessGranted(2) then exit;
+
         grafischebuehnenansicht.MouseUpPoint.X:=X;
         grafischebuehnenansicht.MouseUpPoint.Y:=Y;
 
@@ -24256,6 +24312,8 @@ begin
       end;
       1:  // Kanäle
       begin
+        if not UserAccessGranted(2) then exit;
+
         if Shift=[ssCtrl] then
         begin
           SelektierteKanaele[AktuellerKanal]:=not SelektierteKanaele[AktuellerKanal];
@@ -24332,6 +24390,8 @@ begin
       end;
       2:  // Panel
       begin
+        if not UserAccessGranted(3) then exit;
+
         kontrollpanel.PaintBox1MouseUp(nil, Button, Shift, X, Y);
       end;
     end;
@@ -24367,11 +24427,15 @@ end;
 
 procedure TMainform.Button2Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   grafischebuehnenansicht.Button2Click(nil);
 end;
 
 procedure TMainform.Button1Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   grafischebuehnenansicht.Button1Click(nil);
 end;
 
@@ -24382,21 +24446,29 @@ end;
 
 procedure TMainform.AddBtnClick(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   grafischebuehnenansicht.AddBtnClick(nil);
 end;
 
 procedure TMainform.ChangeBtnClick(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   grafischebuehnenansicht.ChangeBtnClick(nil);
 end;
 
 procedure TMainform.DeleteBtnClick(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   grafischebuehnenansicht.DeleteBtnClick(nil);
 end;
 
 procedure TMainform.BankCopySelect(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   grafischebuehnenansicht.BankCopySelect(nil);
 end;
 
@@ -24451,9 +24523,12 @@ begin
   case Pagecontrol1.ActivePageIndex of
     0:
     begin
+      if not UserAccessGranted(2) then exit;
     end;
     1:
     begin
+      if not UserAccessGranted(2) then exit;
+
       AlterWert:=255-mainform.data.ch[AktuellerKanal];
       AlterWert:=round(AlterWert/255*100);
       NeuerWert:=StrToInt(InputBox(_('Kanalwert ändern'),_('Bitte geben Sie einen neuen Endwert an:'),inttostr(AlterWert)));
@@ -24464,6 +24539,7 @@ begin
     end;
     2:
     begin
+      if not UserAccessGranted(3) then exit;
     end;
   end;
 end;
@@ -25918,22 +25994,30 @@ end;
 procedure TMainform.CheckBox4MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
+  if not UserAccessGranted(2) then exit;
+
   grafischebuehnenansicht.CheckBox4.Checked:=checkbox4.Checked;
 end;
 
 procedure TMainform.CheckBox4KeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  if not UserAccessGranted(2) then exit;
+
   grafischebuehnenansicht.CheckBox4.Checked:=checkbox4.Checked;
 end;
 
 procedure TMainform.Button4Click(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   grafischebuehnenansicht.Button4Click(nil);
 end;
 
 procedure TMainform.ComboBox2Select(Sender: TObject);
 begin
+  if not UserAccessGranted(2) then exit;
+
   grafischebuehnenansicht.ComboBox1.Itemindex:=Combobox2.ItemIndex;
 end;
 
@@ -26316,21 +26400,8 @@ begin
 end;
 
 function Tmainform.UserAccessGranted(Level: integer; ShowLoginWindow: boolean):boolean;
-var
-  i:integer;
-  CurrentUserNr:integer;
 begin
-  CurrentUserNr:=-1;
-  for i:=0 to length(UserAccounts)-1 do
-  begin
-    if UserAccounts[i].Name=CurrentUser then
-    begin
-      CurrentUserNr:=i;
-      break;
-    end;
-  end;
-
-  if (CurrentUserNr>-1) and (UserAccounts[CurrentUserNr].AccessLevel<=Level) then
+  if (CurrentUserAccessLevel<=Level) then
   begin
     result:=true;
   end else
@@ -26340,29 +26411,19 @@ begin
     begin
       if ChangeUser then
       begin
-        CurrentUserNr:=-1;
-        for i:=0 to length(UserAccounts)-1 do
-        begin
-          if UserAccounts[i].Name=CurrentUser then
-          begin
-            CurrentUserNr:=i;
-            break;
-          end;
-        end;
-
-        if (CurrentUserNr>-1) and (UserAccounts[CurrentUserNr].AccessLevel<=Level) then
+        if (CurrentUserAccessLevel<=Level) then
         begin
           result:=true;
         end else
         begin
+          ShowMessage('"'+CurrentUser+'" '+_('besitzt keine ausreichenden Rechte für diese Operation!'));
           result:=false;
         end;
       end else
       begin
+        ShowMessage('"'+CurrentUser+'" '+_('besitzt keine ausreichenden Rechte für diese Operation!'));
         result:=false;
       end;
-
-      //ShowMessage(UserAccounts[CurrentUserNr].Name+' '+_('besitzt keine ausreichenden Rechte für diese Operation!'));
     end;
   end;
 end;
@@ -26391,11 +26452,15 @@ begin
         begin
           // Change user
           CurrentUser:=UserAccounts[i].Name;
+          CurrentUserAccessLevel:=UserAccounts[i].AccessLevel;
           AccessGranted:=true;
         end;
         break;
       end;
     end;
+
+    if (not AccessGranted) and ShowWarning then
+      ShowMessage(_('Zugang verweigert!'));
 
     result:=AccessGranted;
   end else
@@ -26403,10 +26468,31 @@ begin
     result:=false;
   end;
 
-  if (not AccessGranted) and ShowWarning then
-    ShowMessage(_('Zugang verweigert!'));
-
   dxRibbonStatusBar1.Panels[8].Text:=_('Benutzer:')+' '+CurrentUser;
+
+  // Close Windows, for that the new user have no access:
+  if CurrentUserAccessLevel>2 then
+  begin
+    if ambilightform.Showing then
+      ambilightform.Close;
+    if pmmform.Showing then
+      pmmform.Close;
+    if nodecontrolform.Showing then
+      nodecontrolform.Close;
+    if touchscreenform.Showing then
+      touchscreenform.Close;
+    if dynguiform.Showing then
+      dynguiform.Close;
+    if joystickform.Showing then
+      joystickform.Close;
+    if dataineventfrm.showing then
+      dataineventfrm.Close;
+    if midieventfrm.showing then
+      midieventfrm.close;
+    if winlircform.showing then
+      winlircform.close;
+  end;
+
 
   kontrollpanel.TestAccessLevelTimer.Enabled:=true;
 end;

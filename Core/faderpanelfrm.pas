@@ -610,7 +610,7 @@ end;
 procedure Tfaderpanelform.PaintBox1MouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  if not mainform.UserAccessGranted(2) then exit;
+  if not mainform.UserAccessGranted(2, false) then exit;
 
   mousex:=x;
   mousey:=y;
