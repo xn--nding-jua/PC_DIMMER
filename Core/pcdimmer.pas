@@ -22545,7 +22545,7 @@ begin
     begin
       deviceid:=copy(cmd, Pos('{', cmd), length(cmd));
 
-      temp:='deviceinfo ';
+      temp:='deviceinfo2 ';
       DEVGUID:=StringToGUID(deviceid);
       devpos:=geraetesteuerung.GetDevicePositionInDeviceArray(@DEVGUID);
 
@@ -23029,6 +23029,57 @@ begin
     geraetesteuerung.set_dimmer(stringtoguid(value[0]), strtoint(value[1]), strtoint(value[2]), 0);
     geraetesteuerung.set_channel(stringtoguid(value[0]), 'a', strtoint(value[1]), strtoint(value[2]), 0);
     geraetesteuerung.set_channel(stringtoguid(value[0]), 'w', strtoint(value[1]), strtoint(value[2]), 0);
+  end;
+  if (pos('set_devaddress',cmd)>0) then  // set_devaddress GUID NEWADDRESS
+  begin
+    temp:=cmd;
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[0]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    // Leerzeichen entfernen, sofern vorhanden
+    if pos(' ', temp)>0 then
+      temp:=copy(temp, 0, pos(' ', temp)-1);
+    value[1]:=temp;
+
+    for i:=0 to length(devices)-1 do
+    begin
+      if IsEqualGUID(StringToGUID(value[0]), devices[i].ID) then
+      begin
+        if (strtoint(value[1])>=1) and (strtoint(value[1])<=8192) then
+          devices[i].Startaddress:=strtoint(value[1]);
+        break;
+      end;
+    end;
+  end;
+  if (pos('set_devcolor',cmd)>0) then  // set_devcolor GUID R G B
+  begin
+    temp:=cmd;
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[0]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[1]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[2]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    // Leerzeichen entfernen, sofern vorhanden
+    if pos(' ', temp)>0 then
+      temp:=copy(temp, 0, pos(' ', temp)-1);
+    value[3]:=temp;
+
+    for i:=0 to length(devices)-1 do
+    begin
+      if IsEqualGUID(StringToGUID(value[0]), devices[i].ID) then
+      begin
+        devices[i].color:=RGB2TColor(strtoint(value[1]), strtoint(value[2]), strtoint(value[3]));
+        break;
+      end;
+    end;
   end;
   if (pos('set_gobo1rot',cmd)>0) then  // set_gobo1rot GUID VALUE
   begin
