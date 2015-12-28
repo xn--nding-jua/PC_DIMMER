@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-12-27 21:41\n"
-"PO-Revision-Date: 2015-12-27 21:41\n"
+"POT-Creation-Date: 2015-12-28 02:40\n"
+"PO-Revision-Date: 2015-12-28 02:40\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4168,7 +4168,7 @@ msgstr ""
 #: kontrollpanelform.pas:566
 #. Standard-Autoszenen erstellen
 #: pcdimmer.pas:3858
-#: pcdimmer.pas:24641
+#: pcdimmer.pas:24692
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1027
 msgid "Rot"
 msgstr ""
@@ -4181,7 +4181,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:585
 #: kontrollpanelform.pas:568
 #: pcdimmer.pas:3868
-#: pcdimmer.pas:24643
+#: pcdimmer.pas:24694
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1029
 msgid "Grün"
 msgstr ""
@@ -4194,7 +4194,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:587
 #: kontrollpanelform.pas:573
 #: pcdimmer.pas:3878
-#: pcdimmer.pas:24648
+#: pcdimmer.pas:24699
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1034
 msgid "Blau"
 msgstr ""
@@ -11170,9 +11170,9 @@ msgstr ""
 #: geraetesteuerungfrm.pas:2979
 #. Name
 #: pcdimmer.pas:20915
-#: pcdimmer.pas:25424
+#: pcdimmer.pas:25475
 #. Werte einfügen
-#: pcdimmer.pas:25521
+#: pcdimmer.pas:25572
 #: szenenverwaltung.pas:1453
 #. Geräteszene
 #: szenenverwaltung.pas:4115
@@ -17013,7 +17013,7 @@ msgstr ""
 #: pcdimmer.dfm:1667
 #. mainform..Panel1..ComboBox1....Items.Strings
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:472
-#: pcdimmer.pas:26100
+#: pcdimmer.pas:26151
 msgid "<Leer>"
 msgstr ""
 
@@ -17564,7 +17564,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:581
 #: kontrollpanelform.pas:570
 #: nodecontrolfrm.pas:169
-#: pcdimmer.pas:24645
+#: pcdimmer.pas:24696
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1031
 msgid "Weiß"
 msgstr ""
@@ -19523,27 +19523,27 @@ msgid "Black"
 msgstr ""
 
 #. MainForm..dxRibbon1..HomeRibbonTab..Caption
-#: pcdimmer.dfm:194
+#: pcdimmer.dfm:193
 msgid "Home"
 msgstr ""
 
 #. MainForm..dxRibbon1..HomeRibbonTab......ToolbarName
-#: pcdimmer.dfm:197
+#: pcdimmer.dfm:196
 msgid "DateiRibbonGroup"
 msgstr ""
 
 #. MainForm..dxRibbon1..HomeRibbonTab......ToolbarName
-#: pcdimmer.dfm:200
+#: pcdimmer.dfm:199
 msgid "VerwaltungRibbonGroup"
 msgstr ""
 
 #. MainForm..dxRibbon1..HomeRibbonTab......ToolbarName
-#: pcdimmer.dfm:203
+#: pcdimmer.dfm:202
 msgid "ZugriffRibbonGroup"
 msgstr ""
 
 #. MainForm..dxRibbon1..HomeRibbonTab......ToolbarName
-#: pcdimmer.dfm:206
+#: pcdimmer.dfm:205
 msgid "dxBarManager1Bar6"
 msgstr ""
 
@@ -31169,7 +31169,7 @@ msgstr ""
 #: lauflichtassistentfrm.pas:923
 #: lauflichtassistentownpatternfrm.pas:264
 #: matrixeditorfrm.pas:236
-#: pcdimmer.pas:24979
+#: pcdimmer.pas:25030
 msgid "n/a"
 msgstr ""
 
@@ -31251,7 +31251,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:583
 #: kontrollpanelform.pas:567
 #: pcdimmer.pas:3888
-#: pcdimmer.pas:24642
+#: pcdimmer.pas:24693
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1028
 msgid "Gelb"
 msgstr ""
@@ -34817,14 +34817,14 @@ msgstr ""
 #: buehnenansicht.pas:1529
 #: buehnenansicht.pas:1859
 #. Kanalnummer ändern
-#: pcdimmer.pas:24276
+#: pcdimmer.pas:24327
 msgid "Kanaleinstellung"
 msgstr ""
 
 #: buehnenansicht.pas:1508
 #: buehnenansicht.pas:1529
 #: buehnenansicht.pas:1859
-#: pcdimmer.pas:24276
+#: pcdimmer.pas:24327
 msgid "Welcher Kanal soll für dieses Gerät "
 "gelten:"
 msgstr ""
@@ -36211,12 +36211,12 @@ msgid "PC_DIMMER Joystick-Einstellungen öffnen"
 msgstr ""
 
 #: kanaluebersichtfrm.pas:479
-#: pcdimmer.pas:24534
+#: pcdimmer.pas:24585
 msgid "Kanalwert ändern"
 msgstr ""
 
 #: kanaluebersichtfrm.pas:479
-#: pcdimmer.pas:24534
+#: pcdimmer.pas:24585
 msgid "Bitte geben Sie einen neuen Endwert "
 "an:"
 msgstr ""
@@ -36287,19 +36287,19 @@ msgid "Fehler beim Zugriff auf die Datei \""
 msgstr ""
 
 #: kontrollpanelform.pas:569
-#: pcdimmer.pas:24644
+#: pcdimmer.pas:24695
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1030
 msgid "Schwarz"
 msgstr ""
 
 #: kontrollpanelform.pas:571
-#: pcdimmer.pas:24646
+#: pcdimmer.pas:24697
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1032
 msgid "Grau"
 msgstr ""
 
 #: kontrollpanelform.pas:572
-#: pcdimmer.pas:24647
+#: pcdimmer.pas:24698
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1033
 msgid "Rosa"
 msgstr ""
@@ -38382,55 +38382,55 @@ msgid "DIP-Startadresse"
 msgstr ""
 
 #. Installierte Geräte
-#: pcdimmer.pas:25124
+#: pcdimmer.pas:25175
 msgid "Installierte Geräte:"
 msgstr ""
 
 #. Anzahl der Szenen
-#: pcdimmer.pas:25128
+#: pcdimmer.pas:25179
 msgid "Erstellte Szenen:"
 msgstr ""
 
 #. Dimmerkernelzeit
-#: pcdimmer.pas:25132
-#: pcdimmer.pas:25134
+#: pcdimmer.pas:25183
+#: pcdimmer.pas:25185
 msgid "Dimmerkernel:"
 msgstr ""
 
-#: pcdimmer.pas:25132
+#: pcdimmer.pas:25183
 msgid "Job"
 msgstr ""
 
-#: pcdimmer.pas:25134
+#: pcdimmer.pas:25185
 msgid "Jobs"
 msgstr ""
 
 #. Kanaländerungen pro Sekunde
-#: pcdimmer.pas:25143
+#: pcdimmer.pas:25194
 msgid "Kanaländerung/s:"
 msgstr ""
 
-#: pcdimmer.pas:25427
-#: pcdimmer.pas:25524
+#: pcdimmer.pas:25478
+#: pcdimmer.pas:25575
 msgid "Aufgenommen"
 msgstr ""
 
-#: pcdimmer.pas:25745
+#: pcdimmer.pas:25796
 msgid "Möchten Sie wirklich alle laufenden Audiowiedergaben "
 "beenden?"
 msgstr ""
 
-#: pcdimmer.pas:26419
-#: pcdimmer.pas:26424
+#: pcdimmer.pas:26470
+#: pcdimmer.pas:26475
 msgid "besitzt keine ausreichenden Rechte für diese "
 "Operation!"
 msgstr ""
 
-#: pcdimmer.pas:26463
+#: pcdimmer.pas:26514
 msgid "Zugang verweigert!"
 msgstr ""
 
-#: pcdimmer.pas:26471
+#: pcdimmer.pas:26522
 msgid "Benutzer:"
 msgstr ""
 

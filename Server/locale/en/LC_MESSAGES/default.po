@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PC_DIMMER2008\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-27 21:41\n"
-"PO-Revision-Date: 2015-12-27 21:56+0100\n"
+"POT-Creation-Date: 2015-12-28 02:40\n"
+"PO-Revision-Date: 2015-12-28 02:50+0100\n"
 "Last-Translator: Christian Nöding <christian@noeding-online.de>\n"
 "Language-Team: Chris Noeding <christian.noeding@arcor.de>\n"
 "MIME-Version: 1.0\n"
@@ -3518,7 +3518,7 @@ msgstr "Colorcorrection"
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #. Standard-Autoszenen erstellen
 #: ambilight.dfm:520 plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:582
-#: kontrollpanelform.pas:566 pcdimmer.pas:3858 pcdimmer.pas:24641
+#: kontrollpanelform.pas:566 pcdimmer.pas:3858 pcdimmer.pas:24692
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1027
 msgid "Rot"
 msgstr "Red"
@@ -3527,7 +3527,7 @@ msgstr "Red"
 #. pmmform..GroupBox3..greencheck..Caption
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #: ambilight.dfm:529 plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:585
-#: kontrollpanelform.pas:568 pcdimmer.pas:3868 pcdimmer.pas:24643
+#: kontrollpanelform.pas:568 pcdimmer.pas:3868 pcdimmer.pas:24694
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1029
 msgid "Grün"
 msgstr "Green"
@@ -3536,7 +3536,7 @@ msgstr "Green"
 #. pmmform..GroupBox3..bluecheck..Caption
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #: ambilight.dfm:538 plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:587
-#: kontrollpanelform.pas:573 pcdimmer.pas:3878 pcdimmer.pas:24648
+#: kontrollpanelform.pas:573 pcdimmer.pas:3878 pcdimmer.pas:24699
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1034
 msgid "Blau"
 msgstr "Blue"
@@ -9704,8 +9704,8 @@ msgstr "Device uses 100% of set power if channelvalue is reached"
 #. Geräteszene
 #. Submaster
 #: devicescenefrm.dfm:6 geraetesteuerungfrm.pas:2964
-#: geraetesteuerungfrm.pas:2979 pcdimmer.pas:20915 pcdimmer.pas:25424
-#: pcdimmer.pas:25521 szenenverwaltung.pas:1453 szenenverwaltung.pas:4115
+#: geraetesteuerungfrm.pas:2979 pcdimmer.pas:20915 pcdimmer.pas:25475
+#: pcdimmer.pas:25572 szenenverwaltung.pas:1453 szenenverwaltung.pas:4115
 #: szenenverwaltung.pas:4134
 msgid "Geräteszene"
 msgstr "Devicescene"
@@ -15107,7 +15107,7 @@ msgstr "Choose between scene, script and audiofile"
 #. mainform..Panel1..ComboBox1....Items.Strings
 #: kontrollpanelform.dfm:443
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:472
-#: pcdimmer.pas:26100
+#: pcdimmer.pas:26151
 msgid "<Leer>"
 msgstr "<Empty>"
 
@@ -15616,7 +15616,7 @@ msgstr "Amber:"
 #: lauflichtassistentownpatternfrm.dfm:142 pmm.dfm:6147
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:578
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:581
-#: kontrollpanelform.pas:570 nodecontrolfrm.pas:169 pcdimmer.pas:24645
+#: kontrollpanelform.pas:570 nodecontrolfrm.pas:169 pcdimmer.pas:24696
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1031
 msgid "Weiß"
 msgstr "White"
@@ -17481,27 +17481,27 @@ msgid "Black"
 msgstr "Black"
 
 #. MainForm..dxRibbon1..HomeRibbonTab..Caption
-#: pcdimmer.dfm:194
+#: pcdimmer.dfm:193
 msgid "Home"
 msgstr "Home"
 
 #. MainForm..dxRibbon1..HomeRibbonTab......ToolbarName
-#: pcdimmer.dfm:197
+#: pcdimmer.dfm:196
 msgid "DateiRibbonGroup"
 msgstr "DateiRibbonGroup"
 
 #. MainForm..dxRibbon1..HomeRibbonTab......ToolbarName
-#: pcdimmer.dfm:200
+#: pcdimmer.dfm:199
 msgid "VerwaltungRibbonGroup"
 msgstr "VerwaltungRibbonGroup"
 
 #. MainForm..dxRibbon1..HomeRibbonTab......ToolbarName
-#: pcdimmer.dfm:203
+#: pcdimmer.dfm:202
 msgid "ZugriffRibbonGroup"
 msgstr "ZugriffRibbonGroup"
 
 #. MainForm..dxRibbon1..HomeRibbonTab......ToolbarName
-#: pcdimmer.dfm:206
+#: pcdimmer.dfm:205
 msgid "dxBarManager1Bar6"
 msgstr "dxBarManager1Bar6"
 
@@ -28794,7 +28794,7 @@ msgstr " Devicefunction "
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:466
 #: faderpanelfrm.pas:479 lauflichtassistentfrm.pas:923
 #: lauflichtassistentownpatternfrm.pas:264 matrixeditorfrm.pas:236
-#: pcdimmer.pas:24979
+#: pcdimmer.pas:25030
 msgid "n/a"
 msgstr "n/a"
 
@@ -28874,7 +28874,7 @@ msgstr "Gobo 7"
 
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:583
-#: kontrollpanelform.pas:567 pcdimmer.pas:3888 pcdimmer.pas:24642
+#: kontrollpanelform.pas:567 pcdimmer.pas:3888 pcdimmer.pas:24693
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1028
 msgid "Gelb"
 msgstr "Yellow"
@@ -32206,11 +32206,11 @@ msgstr "Please enter a new description for the current device:"
 #. Kanalnummer ändern
 #. Kanalnummer ändern
 #. Kanalnummer ändern
-#: buehnenansicht.pas:1508 pcdimmer.pas:24276
+#: buehnenansicht.pas:1508 pcdimmer.pas:24327
 msgid "Kanaleinstellung"
 msgstr "Channelsettings"
 
-#: buehnenansicht.pas:1508 pcdimmer.pas:24276
+#: buehnenansicht.pas:1508 pcdimmer.pas:24327
 msgid "Welcher Kanal soll für dieses Gerät gelten:"
 msgstr "Which channel should apply for this device:"
 
@@ -35742,50 +35742,50 @@ msgid "DIP-Startadresse"
 msgstr "DIP-Startaddress"
 
 #. Installierte Geräte
-#: pcdimmer.pas:25124
+#: pcdimmer.pas:25175
 msgid "Installierte Geräte:"
 msgstr "Installed devices:"
 
 #. Anzahl der Szenen
-#: pcdimmer.pas:25128
+#: pcdimmer.pas:25179
 msgid "Erstellte Szenen:"
 msgstr " Created scenes:"
 
 #. Dimmerkernelzeit
-#: pcdimmer.pas:25132
+#: pcdimmer.pas:25183
 msgid "Dimmerkernel:"
 msgstr "Dimmerkernel:"
 
-#: pcdimmer.pas:25132
+#: pcdimmer.pas:25183
 msgid "Job"
 msgstr "Job"
 
-#: pcdimmer.pas:25134
+#: pcdimmer.pas:25185
 msgid "Jobs"
 msgstr "Jobs"
 
 #. Kanaländerungen pro Sekunde
-#: pcdimmer.pas:25143
+#: pcdimmer.pas:25194
 msgid "Kanaländerung/s:"
 msgstr "Channelchanges/s:"
 
-#: pcdimmer.pas:25427
+#: pcdimmer.pas:25478
 msgid "Aufgenommen"
 msgstr "Recorded"
 
-#: pcdimmer.pas:25745
+#: pcdimmer.pas:25796
 msgid "Möchten Sie wirklich alle laufenden Audiowiedergaben beenden?"
 msgstr "Do you really want to stop all running audiofiles?"
 
-#: pcdimmer.pas:26419
+#: pcdimmer.pas:26470
 msgid "besitzt keine ausreichenden Rechte für diese Operation!"
 msgstr "has no sufficient accessrights for this operation!"
 
-#: pcdimmer.pas:26463
+#: pcdimmer.pas:26514
 msgid "Zugang verweigert!"
 msgstr "Access denied!"
 
-#: pcdimmer.pas:26471
+#: pcdimmer.pas:26522
 msgid "Benutzer:"
 msgstr "User:"
 
