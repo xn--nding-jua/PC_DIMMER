@@ -45,6 +45,8 @@ type
     Image1: TImage;
     Label34: TLabel;
     Label35: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
     procedure SzenennameChange(Sender: TObject);
     procedure input_number(var pos:integer; var s:string);
     procedure SzenennameKeyDown(Sender: TObject; var Key: Word;

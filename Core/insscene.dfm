@@ -1,9 +1,9 @@
 object insscenedlg: Tinsscenedlg
-  Left = 473
-  Top = 84
+  Left = 510
+  Top = 107
   BorderStyle = bsSingle
   Caption = 'Szene bearbeiten'
-  ClientHeight = 593
+  ClientHeight = 649
   ClientWidth = 745
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -266,6 +266,33 @@ object insscenedlg: Tinsscenedlg
       B0B0F0A8B0F0A0A0E098A0E09090E09090E08890E08080D07880D07870D07070
       0000}
     OnClick = SpeedButton3Click
+  end
+  object Label2: TLabel
+    Left = 8
+    Top = 608
+    Width = 729
+    Height = 33
+    AutoSize = False
+    Caption = 
+      '"Einfache Szenen" verwenden nicht das Ger'#228'temanagement des PC_DI' +
+      'MMERs und sind nur aus Kompatibilit'#228'tsgr'#252'nden noch im Programm e' +
+      'nthalten. Bitte programmieren Sie ihre Szenen als "Ger'#228'teszene",' +
+      ' da hierbei der volle Funktionsumfang des PC_DIMMERs genutzt wer' +
+      'den kann.'
+    WordWrap = True
+  end
+  object Label3: TLabel
+    Left = 8
+    Top = 592
+    Width = 107
+    Height = 13
+    Caption = 'Wichtiger Hinweis:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
   end
   object OKBtn: TButton
     Left = 8

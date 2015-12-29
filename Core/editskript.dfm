@@ -2,7 +2,7 @@ object editskriptfrm: Teditskriptfrm
   Left = 827
   Top = 116
   Width = 417
-  Height = 337
+  Height = 344
   Caption = 'Skript bearbeiten'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
