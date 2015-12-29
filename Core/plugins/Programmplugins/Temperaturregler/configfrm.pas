@@ -841,16 +841,25 @@ begin
             setupform.Checkbox2.Checked:=LReg.ReadBool('Vertausche L und H');
 	        if LReg.ValueExists('Regler ein') then
             tempon.StateOn:=LReg.ReadBool('Regler ein');
+            if LReg.ValueExists('Verwende Mittelwert als Referenz') then
+              Checkbox1.Checked:=LReg.ReadBool('Verwende Mittelwert als Referenz');
 
-          // Temperatureinstellungen
-	        if LReg.ValueExists('Temperatursollwert') then
-            tempsoll.Value:=LReg.ReadFloat('Temperatursollwert');
-	        if LReg.ValueExists('Verwende Mittelwert als Referenz') then
-            Checkbox1.Checked:=LReg.ReadBool('Verwende Mittelwert als Referenz');
-	        if LReg.ValueExists('Einschaltschwelle') then
-            tempmin.Value:=LReg.ReadFloat('Einschaltschwelle');
-	        if LReg.ValueExists('Ausschaltschwelle') then
-            tempmax.Value:=LReg.ReadFloat('Ausschaltschwelle');
+          try
+            // Temperatureinstellungen
+            if LReg.ValueExists('Temperatursollwert') then
+              tempsoll.Value:=LReg.ReadFloat('Temperatursollwert');
+            if LReg.ValueExists('Einschaltschwelle') then
+              tempmin.Value:=LReg.ReadFloat('Einschaltschwelle');
+            if LReg.ValueExists('Ausschaltschwelle') then
+              tempmax.Value:=LReg.ReadFloat('Ausschaltschwelle');
+  	        if LReg.ValueExists('Skalierungsfaktor') then
+              setupform.TempFaktor.Value:=LReg.ReadFloat('Skalierungsfaktor');
+          except
+            tempsoll.Value:=19.0;
+            tempmin.Value:=-1.0;
+            tempmax.Value:=1.0;
+            setupform.TempFaktor.Value:=10.0;
+          end;
 
           // Nachtabsenkung
 	        if LReg.ValueExists('Verwende Nachtabsenkung') then
@@ -865,7 +874,7 @@ begin
             absenkung_h_stopedit.value:=LReg.ReadInteger('Absenkung bis h');
 	        if LReg.ValueExists('Absenkung bis min') then
             absenkung_min_stopedit.value:=LReg.ReadInteger('Absenkung bis min');
-            
+
           // Erweiterte Einstellungen
 	        if LReg.ValueExists('ChTemp') then
             setupform.datainchtemp.value:=LReg.ReadInteger('ChTemp');
@@ -877,8 +886,6 @@ begin
             setupform.datainchmax.value:=LReg.ReadInteger('ChMax');
 	        if LReg.ValueExists('ChHeizungEin') then
             setupform.datainchon.value:=LReg.ReadInteger('ChHeizungEin');
-	        if LReg.ValueExists('Skalierungsfaktor') then
-            setupform.TempFaktor.Value:=LReg.ReadFloat('Skalierungsfaktor');
 	        if LReg.ValueExists('Temp2LSB') then
             setupform.temp2_lsb.value:=LReg.ReadInteger('Temp2LSB');
 	        if LReg.ValueExists('Temp2MSB') then
@@ -895,10 +902,15 @@ begin
           // Sonstige Einstellungen
 	        if LReg.ValueExists('Installierte elektrische Leistung') then
             setupform.MaxInstalledPowerEdit.value:=LReg.ReadInteger('Installierte elektrische Leistung');
-	        if LReg.ValueExists('Preis pro kWh') then
-            setupform.PricePerkWhEdit.Value:=LReg.ReadFloat('Preis pro kWh');
-	        if LReg.ValueExists('Zeit für Delta T') then
-            setupform.TimeForDeltaTEdit.Value:=LReg.ReadFloat('Zeit für Delta T');
+          try
+            if LReg.ValueExists('Preis pro kWh') then
+              setupform.PricePerkWhEdit.Value:=LReg.ReadFloat('Preis pro kWh');
+            if LReg.ValueExists('Zeit für Delta T') then
+              setupform.TimeForDeltaTEdit.Value:=LReg.ReadFloat('Zeit für Delta T');
+          except
+            setupform.PricePerkWhEdit.Value:=28.0;
+            setupform.TimeForDeltaTEdit.Value:=15;
+          end;
 
           // Verzeichnis für Dateien
           if LReg.ValueExists('Datafolder') then
