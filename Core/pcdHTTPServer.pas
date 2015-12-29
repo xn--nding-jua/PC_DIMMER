@@ -118,8 +118,8 @@ begin
     // Passwortabfrage
     LHTMLCode.Add('<font face="Arial" size="2"><font style="font-size: 12pt">');
     LHTMLCode.Add('<p><b>PC_DIMMER Webserver :: Login</b></p><font style="font-size: 8pt">');
-    LHTMLCode.Add('<font style="font-size: 10pt"><br><br><b>'+_('Welcome to the PC_DIMMER web server')+
-                  '</b><br><br>'+_('Please enter the password to login to the server:')+'<br><br><form method="POST">'+
+    LHTMLCode.Add('<font style="font-size: 10pt"><br><br><b>'+_('Willkommen zum PC_DIMMER Webserver')+
+                  '</b><br><br>'+_('Bitte Passwort eingeben:')+'<br><br><form method="POST">'+
                   '<p><input type="password" name="password" size="20"><input type="submit" value="Login" name="okbtn"></form>');
     LHTMLCode.Add('</font>');
     //////////////////////////
@@ -137,13 +137,13 @@ begin
   LParamValue := ARequestInfo.Params.Values['goto'];
   if not (LParamValue = '') then begin
     LHistoryBack := false;
-    if lowercase(LParamValue) = 'mainpage' then FServerActivePage:=0;
-    if lowercase(LParamValue) = 'channeloverview' then FServerActivePage:=1;
-    if lowercase(LParamValue) = 'deviceoverview' then FServerActivePage:=2;
-    if lowercase(LParamValue) = 'timer' then FServerActivePage:=3;
-    if lowercase(LParamValue) = 'controlpanel' then FServerActivePage:=4;
-    if lowercase(LParamValue) = 'scenes' then FServerActivePage:=5;
-    if lowercase(LParamValue) = 'stageview' then FServerActivePage:=6;
+    if lowercase(LParamValue) = _('hauptseite') then FServerActivePage:=0;
+    if lowercase(LParamValue) = _('kanalübersicht') then FServerActivePage:=1;
+    if lowercase(LParamValue) = _('geräteübersicht') then FServerActivePage:=2;
+    if lowercase(LParamValue) = _('timer') then FServerActivePage:=3;
+    if lowercase(LParamValue) = _('kontrollpanel') then FServerActivePage:=4;
+    if lowercase(LParamValue) = _('szenen') then FServerActivePage:=5;
+    if lowercase(LParamValue) = _('bühnenansicht') then FServerActivePage:=6;
   end;
 
   FServerLastActivePage := FServerActivePage;
@@ -282,13 +282,13 @@ var
   LHeader,LFooter:string;
 begin
   LHeader := '<form method="POST"><p>'+
-               '<input type="submit" value="Mainpage" name="goto">&nbsp;'+
-               '<input type="submit" value="Channeloverview" name="goto">&nbsp;'+
-               '<input type="submit" value="Deviceoverview" name="goto">&nbsp;'+
-               '<input type="submit" value="Controlpanel" name="goto">&nbsp;'+
-               '<input type="submit" value="Scenes" name="goto">&nbsp;'+
-               '<input type="submit" value="Timer" name="goto">&nbsp;'+
-               '<input type="submit" value="Stageview" name="goto"></p></form>';
+               '<input type="submit" value="'+_('Hauptseite')+'" name="goto">&nbsp;'+
+               '<input type="submit" value="'+_('Kanalübersicht')+'" name="goto">&nbsp;'+
+               '<input type="submit" value="'+_('Geräteübersicht')+'" name="goto">&nbsp;'+
+               '<input type="submit" value="'+_('Kontrollpanel')+'" name="goto">&nbsp;'+
+               '<input type="submit" value="'+_('Szenen')+'" name="goto">&nbsp;'+
+               '<input type="submit" value="'+_('Timer')+'" name="goto">&nbsp;'+
+               '<input type="submit" value="'+_('Bühnenansicht')+'" name="goto"></p></form>';
   LFooter := '<br><br><br><hr><br><font face="Arial" size="2"><font style="font-size: 10pt">'+
              '<center><img border="0" src="HTML/pcdimmerlogo.jpg"><br>'+
              'PC_DIMMER (c) 2004-2015 by Dipl.-Ing. Christian Nöding</center></font>';
@@ -320,15 +320,15 @@ end;
 procedure TPCDHTTPServer.DrawMainPage(AHTMLCode: TStringList);
 begin
   // Hauptseite erstellen
-  AHTMLCode.Add('<font style="font-size: 10pt"><br><br><b>'+_('Welcome to the PC_DIMMER web server')+
-                '</b><br><br>'+_('On the above buttons, individual functions of PC_DIMMERs can be accessed online.'));
-  AHTMLCode.Add('<br><br><br><br><br><b>'+_('Direct channel value change')+'</b><br><br>');
+  AHTMLCode.Add('<font style="font-size: 10pt"><br><br><b>'+_('Willkommen zum PC_DIMMER Webserver')+
+                '</b><br><br>'+_('Mit den obigen Tabs k&oumlnnen Sie einzelne Funktionen des PC_DIMMERs fernsteuern...'));
+  AHTMLCode.Add('<br><br><br><br><br><b>'+_('Direkte Kanalwert&aumlnderung')+'</b><br><br>');
   AHTMLCode.Add('<form method="POST" action="SendChannelValue">');
   AHTMLCode.Add('	<table border="0" width="100%" id="table1" cellspacing="0" cellpadding="0">');
   AHTMLCode.Add('		<tr>');
-  AHTMLCode.Add('			<td width="69"><font face="Arial" size="2">'+_('Channel:')+'</font></td>');
-  AHTMLCode.Add('			<td width="69"><font face="Arial" size="2">'+_('Fadetime [s]:')+'</font></td>');
-  AHTMLCode.Add('			<td><font face="Arial" size="2">'+_('Command:')+'</font></td>');
+  AHTMLCode.Add('			<td width="69"><font face="Arial" size="2">'+_('Kanal:')+'</font></td>');
+  AHTMLCode.Add('			<td width="69"><font face="Arial" size="2">'+_('Fadezeit [s]:')+'</font></td>');
+  AHTMLCode.Add('			<td><font face="Arial" size="2">'+_('Wert:')+'</font></td>');
   AHTMLCode.Add('		</tr>');
   AHTMLCode.Add('		<tr>');
   AHTMLCode.Add('			<td width="69"><font face="Arial">');
@@ -350,7 +350,7 @@ begin
   AHTMLCode.Add('<tr>');
   for i:=1 to mainForm.lastchan do
   begin
-    AHTMLCode.Add('<td><font style="font-size: 8pt"><b>'+_('Channel ')+inttostr(i)+'</b><br>'+mainForm.data.names[i]+'<br>'+
+    AHTMLCode.Add('<td><font style="font-size: 8pt"><b>'+_('Kanal ')+inttostr(i)+'</b><br>'+mainForm.data.names[i]+'<br>'+
                   inttostr(mainForm.channel_value[i])+' ('+inttostr(trunc(mainForm.channel_value[i]/255 * 100))+'%) </td></font>');
     if i mod 8 = 0 then
       AHTMLCode.Add('</tr><tr>');
@@ -371,7 +371,7 @@ begin
     LImagePath := 'Devicepictures\'+mainForm.devices[i].Bildadresse;
     AHTMLCode.Add('<td width="48"><center><img border="0" src="'+LImagePath+'" width="32" height="32"></center></td>');
     AHTMLCode.Add('<td><font style="font-size: 8pt"><b>'+mainForm.devices[i].Name+
-                  ' ('+_('Startaddress: ')+inttostr(mainForm.devices[i].Startaddress)+') '+
+                  ' ('+_('Startadresse: ')+inttostr(mainForm.devices[i].Startaddress)+') '+
                   '</b><br>'+mainForm.devices[i].Beschreibung+'<br>');
     for j:=0 to mainForm.devices[i].MaxChan-1 do
       AHTMLCode.Add('&nbsp;&nbsp;&nbsp;'+mainForm.devices[i].kanalname[j]+' @ '+
@@ -391,7 +391,7 @@ var
 begin
   if length(mainForm.AblaufTimer)=0 then
   begin
-    AHTMLCode.Add('<font style="font-size: 10pt"><br><br><b>'+_('There are no scheduled events.')+'</font>');
+    AHTMLCode.Add('<font style="font-size: 10pt"><br><br><b>'+_('Keine geplanten Ereignisse.')+'</font>');
   end;
 
   AHTMLCode.Add('<table border="1" width="100%" id="table1" cellspacing="0" cellpadding="0" bordercolorlight="#808080" bordercolordark="#808080" style="border-collapse: collapse" bgcolor="#CCCCCC">');
@@ -428,8 +428,8 @@ begin
     end;
 
     AHTMLCode.Add('<td><font style="font-size: 8pt">'+_('Event: ')+
-                  '<b>'+mainForm.AblaufTimer[i].Name+'</b><br>'+_('Active: ')+LTemp1_s+
-                  '<br>'+_('Startdate: ')+mainForm.AblaufTimer[i].Datum+'<br>'+_('Starttime: ')+
+                  '<b>'+mainForm.AblaufTimer[i].Name+'</b><br>'+_('Aktiv: ')+LTemp1_s+
+                  '<br>'+_('Startdatum: ')+mainForm.AblaufTimer[i].Datum+'<br>'+_('Startzeit: ')+
                   mainForm.AblaufTimer[i].Uhrzeit+'<br>'+_('Timerart: ')+LTemp2_s+' ('+LTemp3_s+')<br>');
     AHTMLCode.Add('</font></td>');
     AHTMLCode.Add('</tr>');
@@ -467,7 +467,7 @@ begin
     LNames.Add(mainForm.EinfacheSzenen[i].Name);
     LDescs.Add(mainform.EinfacheSzenen[i].Beschreibung);
   end;
-  DrawScene(AHTMLCode, LNames, LDescs, _('Simplescene'), 'simplescene');
+  DrawScene(AHTMLCode, LNames, LDescs, _('Einfache Szenen'), 'simplescene');
 
   LNames.Clear; LDescs.Clear;
   for i:=0 to length(mainform.DeviceScenes)-1 do
@@ -475,7 +475,7 @@ begin
     LNames.Add(mainForm.DeviceScenes[i].Name);
     LDescs.Add(mainform.DeviceScenes[i].Beschreibung);
   end;
-  DrawScene(AHTMLCode, LNames, LDescs, _('Devicescenes'), 'devicescene');
+  DrawScene(AHTMLCode, LNames, LDescs, _('Ger&aumlteszenen'), 'devicescene');
 
   LNames.Clear; LDescs.Clear;
   for i:=0 to length(mainform.Audioszenen)-1 do
@@ -483,7 +483,7 @@ begin
     LNames.Add(mainForm.Audioszenen[i].Name);
     LDescs.Add(mainform.Audioszenen[i].Beschreibung);
   end;
-  DrawScene(AHTMLCode, LNames, LDescs, _('Audioscenes'), 'audioscene');
+  DrawScene(AHTMLCode, LNames, LDescs, _('Audioszenen'), 'audioscene');
 
   LNames.Clear; LDescs.Clear;
   for i:=0 to length(mainform.Bewegungsszenen)-1 do
@@ -491,7 +491,7 @@ begin
     LNames.Add(mainForm.Bewegungsszenen[i].Name);
     LDescs.Add(mainform.Bewegungsszenen[i].Beschreibung);
   end;
-  DrawScene(AHTMLCode, LNames, LDescs, _('Movingscenes'), 'movingscene');
+  DrawScene(AHTMLCode, LNames, LDescs, _('Bewegungsszenen'), 'movingscene');
 
   LNames.Clear; LDescs.Clear;
   for i:=0 to length(mainform.Befehle2)-1 do
@@ -499,7 +499,7 @@ begin
     LNames.Add(mainForm.Befehle2[i].Name);
     LDescs.Add(mainform.Befehle2[i].Beschreibung);
   end;
-  DrawScene(AHTMLCode, LNames, LDescs, _('Commands'), 'command');
+  DrawScene(AHTMLCode, LNames, LDescs, _('Befehle'), 'command');
 
   LNames.Clear; LDescs.Clear;
   for i:=0 to length(mainform.Kompositionsszenen)-1 do
@@ -507,7 +507,7 @@ begin
     LNames.Add(mainForm.Kompositionsszenen[i].Name);
     LDescs.Add(mainform.Kompositionsszenen[i].Beschreibung);
   end;
-  DrawScene(AHTMLCode, LNames, LDescs, _('Combinationscenes'), 'combinationscene');
+  DrawScene(AHTMLCode, LNames, LDescs, _('Kombinationsszenen'), 'combinationscene');
 
   LNames.Clear; LDescs.Clear;
   for i:=0 to length(mainform.DevicePresets)-1 do
@@ -515,7 +515,7 @@ begin
     LNames.Add(mainForm.DevicePresets[i].Name);
     LDescs.Add(mainform.DevicePresets[i].Beschreibung);
   end;
-  DrawScene(AHTMLCode, LNames, LDescs, _('Devicepresets'), 'preset');
+  DrawScene(AHTMLCode, LNames, LDescs, _('Ger&aumlteszenen'), 'preset');
 
   LNames.Clear; LDescs.Clear;
   for i:=0 to length(mainform.Autoszenen)-1 do
@@ -523,7 +523,7 @@ begin
     LNames.Add(mainForm.Autoszenen[i].Name);
     LDescs.Add(mainform.Autoszenen[i].Beschreibung);
   end;
-  DrawScene(AHTMLCode, LNames, LDescs, _('Autoscenes'), 'autoscene');
+  DrawScene(AHTMLCode, LNames, LDescs, _('Autoszenen'), 'autoscene');
 
   LNames.Clear; LDescs.Clear;
   for i:=0 to length(mainform.Effektsequenzereffekte)-1 do
@@ -531,7 +531,7 @@ begin
     LNames.Add(mainForm.Effektsequenzereffekte[i].Name);
     LDescs.Add(mainform.Effektsequenzereffekte[i].Beschreibung);
   end;
-  DrawScene(AHTMLCode, LNames, LDescs, _('Effekts'), 'effect');
+  DrawScene(AHTMLCode, LNames, LDescs, _('Effekte'), 'effect');
 
   LNames.Clear; LDescs.Clear;
   for i:=0 to length(mainform.mediacenterszenen)-1 do
@@ -539,7 +539,7 @@ begin
     LNames.Add(mainForm.mediacenterszenen[i].Name);
     LDescs.Add(mainform.mediacenterszenen[i].Beschreibung);
   end;
-  DrawScene(AHTMLCode, LNames, LDescs, _('MediaCenterscenes'), 'mediascene');
+  DrawScene(AHTMLCode, LNames, LDescs, _('MediaCenterSzenen'), 'mediascene');
 
   LNames.Clear; LDescs.Clear;
   for i:=0 to length(mainform.presetscenes)-1 do
@@ -547,7 +547,7 @@ begin
     LNames.Add(mainForm.presetscenes[i].Name);
     LDescs.Add(mainform.presetscenes[i].Beschreibung);
   end;
-  DrawScene(AHTMLCode, LNames, LDescs, _('Presetscenes'), 'presetscene');
+  DrawScene(AHTMLCode, LNames, LDescs, _('Presetszenen'), 'presetscene');
 
   LNames.Clear; LDescs.Clear;
   for i:=0 to length(mainform.pluginszenen)-1 do
@@ -555,7 +555,7 @@ begin
     LNames.Add(mainForm.pluginszenen[i].Name);
     LDescs.Add('');
   end;
-  DrawScene(AHTMLCode, LNames, LDescs, _('Pluginscenes'), 'pluginscene');
+  DrawScene(AHTMLCode, LNames, LDescs, _('Pluginszenen'), 'pluginscene');
 
   LNames.Free; LDescs.Free;
 end;

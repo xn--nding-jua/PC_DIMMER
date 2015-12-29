@@ -564,6 +564,7 @@ type
     PluginDemoRibbonBtn: TdxBarLargeButton;
     dxBarLargeButton6: TdxBarLargeButton;
     dxBarLargeButton7: TdxBarLargeButton;
+    HTTPServerActivateRibbonBox: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -837,6 +838,7 @@ type
     procedure FormDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure dxBarLargeButton6Click(Sender: TObject);
     procedure dxBarLargeButton7Click(Sender: TObject);
+    procedure HTTPServerActivateRibbonBoxClick(Sender: TObject);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -3488,6 +3490,7 @@ begin
     LReg.WriteInteger('Refresh_Kontrollpanel',Rfr_Kontrollpanel);
     LReg.WriteInteger('Refresh_KontrollpanelCheckForActive',Rfr_KontrollpanelCheckForActive);
     LReg.WriteInteger('Refresh_Submaster',Rfr_Submaster);
+    LReg.WriteBool('Start HTTP-Server',FHTTPServer.Active);
     LReg.WriteInteger('Beatsource',lastbeatsource);
     LReg.WriteString('Last Midi Inputdevices',lastmidiinputdevices);
     LReg.WriteString('Last Midi Outputdevices',lastmidioutputdevices);
@@ -9299,7 +9302,6 @@ begin
   Optionenbox.Autosavetrackbar.Position:=autobackupcountermax;
   Optionenbox.AutosavetrackbarChange(nil);
   Optionenbox.maxautobackupfilesedit.Value:=maxautobackupfiles;
-  Optionenbox.HTTPServerActiveCheckbox.Checked:=FHTTPServer.Active;
   Optionenbox.HTTPServerPortEdit.text:=inttostr(FHTTPServer.DefaultPort);
   Optionenbox.HTTPServerPasswordCheckbox.Checked:=FHTTPServer.UsePassword;
   Optionenbox.HTTPServerPassword.Text:= FHTTPServer.Password;
@@ -9445,8 +9447,19 @@ begin
   DimmerkernelResolutionAutoset:=Optionenbox.dimmerkernelresolutioncheck.Checked;
   AutoFader.Interval:=DimmerkernelResolution;
   QuitWithoutConfirmation:=Optionenbox.QuitWithoutConfirmation.Checked;
+  if FHTTPServer.DefaultPort<>strtoint(Optionenbox.HTTPServerPortEdit.Text) then
+  begin
+    if FHTTPServer.Active then
+    begin
+      FHTTPServer.Active:=false;
+      FHTTPServer.DefaultPort:=strtoint(Optionenbox.HTTPServerPortEdit.Text);
+      FHTTPServer.Active:=true;
+    end else
+    begin
+      FHTTPServer.DefaultPort:=strtoint(Optionenbox.HTTPServerPortEdit.Text);
+    end;
+  end;
 
-  
   rfr_main:=round(Optionenbox.rfr_main.Value);
   rfr_aep:=round(Optionenbox.rfr_aep.Value);
   rfr_buehnenansicht:=round(Optionenbox.rfr_buehnenansicht.Value);
@@ -12582,7 +12595,7 @@ begin
   SplashCaptioninfo(_('Letzte Einstellungen laden...'));
   RefreshSplashText;
 
-  FHTTPServer := TPCDHTTPServer.Create(Self);
+  FHTTPServer := TPCDHTTPServer.Create(Application);
   // Einstellungen aus Registry lesen
   LReg := TPCDRegistry.Create;
   if LReg.OpenRegKey('') then
@@ -12596,11 +12609,13 @@ begin
         if not FHTTPServer.Active then
         begin
           DebugAdd('Init: Cannot start webserver.');
-          ShowMessage('Cannot start webserver.');
+          ShowMessage(_('Webserver kann nicht gestartet werden!'));
         end;
       end;
     if LReg.ValueExists('Use HTTP Password') then
       FHTTPServer.UsePassword := LReg.ReadBool('Use HTTP Password');
+    HTTPServerActivateRibbonBox.Down:=FHTTPServer.Active;
+
     if LReg.ValueExists('HTTP Password') then
     begin
       LReg.ReadBinaryData('HTTP Password',httppasswordscrambled,sizeof(httppasswordscrambled));
@@ -21907,7 +21922,6 @@ begin
     LReg.WriteInteger('Autobackup',Autobackupcountermax);
     LReg.WriteInteger('Autobackup Files',maxautobackupfiles);
     LReg.WriteInteger('Timer',animationtimer);
-    LReg.WriteBool('Start HTTP-Server',Optionenbox.HTTPServerActiveCheckbox.Checked);
     LReg.WriteInteger('HTTP-Server Port',strtoint(Optionenbox.HTTPServerPortEdit.text));
     LReg.WriteBool('Use HTTP Password',OptionenBox.HTTPServerPasswordCheckbox.Checked);
     LReg.WriteBool('MidiBeatSignal On',MBS_Online);
@@ -26619,6 +26633,13 @@ begin
 
 
   kontrollpanel.TestAccessLevelTimer.Enabled:=true;
+end;
+
+procedure TMainform.HTTPServerActivateRibbonBoxClick(Sender: TObject);
+begin
+  if not UserAccessGranted(1) then exit;
+
+  FHTTPServer.Active:=HTTPServerActivateRibbonBox.Down;
 end;
 
 end.

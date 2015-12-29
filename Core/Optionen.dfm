@@ -74,6 +74,7 @@ object OptionenBox: TOptionenBox
     Width = 576
     Height = 350
     Align = alClient
+    PageIndex = 7
     TabOrder = 0
     object TPage
       Left = 0
@@ -1010,7 +1011,7 @@ object OptionenBox: TOptionenBox
         Height = 21
         Hint = 'Soundkarte: '
         Style = csDropDownList
-        ItemHeight = 0
+        ItemHeight = 13
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
@@ -1604,50 +1605,41 @@ object OptionenBox: TOptionenBox
         TabOrder = 0
         object Label36: TLabel
           Left = 8
-          Top = 48
+          Top = 24
           Width = 46
           Height = 13
           Caption = 'TCP-Port:'
         end
         object Label37: TLabel
           Left = 8
-          Top = 128
-          Width = 99
+          Top = 88
+          Width = 96
           Height = 13
-          Caption = 'Webserverkennwort:'
-        end
-        object HTTPServerActiveCheckbox: TCheckBox
-          Left = 8
-          Top = 24
-          Width = 145
-          Height = 17
-          Caption = 'HTTP-Server aktivieren'
-          TabOrder = 0
-          OnMouseUp = HTTPServerActiveCheckboxMouseUp
+          Caption = 'Kennwort f'#252'r Zugriff:'
         end
         object HTTPServerPortEdit: TEdit
           Left = 8
-          Top = 64
+          Top = 40
           Width = 65
           Height = 21
-          TabOrder = 1
+          TabOrder = 0
           Text = '80'
         end
         object HTTPServerPasswordCheckbox: TCheckBox
           Left = 8
-          Top = 104
+          Top = 64
           Width = 153
           Height = 17
           Caption = 'Kennwortabfrage aktiviert'
-          TabOrder = 2
+          TabOrder = 1
         end
         object HTTPServerPassword: TEdit
           Left = 8
-          Top = 144
-          Width = 121
+          Top = 104
+          Width = 161
           Height = 21
           PasswordChar = '*'
-          TabOrder = 3
+          TabOrder = 2
         end
       end
       object GroupBox10: TGroupBox

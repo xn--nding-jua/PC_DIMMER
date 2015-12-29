@@ -118,7 +118,6 @@ type
     Label50: TLabel;
     autolockcode: TEdit;
     GroupBox9: TGroupBox;
-    HTTPServerActiveCheckbox: TCheckBox;
     Label36: TLabel;
     HTTPServerPortEdit: TEdit;
     HTTPServerPasswordCheckbox: TCheckBox;
@@ -248,8 +247,6 @@ type
       var Value: String);
     procedure PlugingridKeyPress(Sender: TObject; var Key: Char);
     procedure Button1Click(Sender: TObject);
-    procedure HTTPServerActiveCheckboxMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
     procedure OnlyNumbersInTEdit(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -783,22 +780,6 @@ begin
   else
     accumessageform.percent.Caption:='- kein Akku gefunden -';
   accumessageform.show;
-end;
-
-procedure TOptionenBox.HTTPServerActiveCheckboxMouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
-  if HTTPServerActiveCheckbox.Checked then
-  begin
-    // Server aktivieren
-    mainform.FHTTPServer.Active:=false;
-    mainform.FHTTPServer.DefaultPort:=strtoint(HTTPServerPortEdit.text);
-    mainform.FHTTPServer.Active:=true;
-  end else
-  begin
-    // Server deaktivieren
-    mainform.FHTTPServer.Active:=false;
-  end;
 end;
 
 procedure TOptionenBox.OnlyNumbersInTEdit(Sender: TObject; var Key: Word;
