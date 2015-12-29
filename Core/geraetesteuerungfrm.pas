@@ -443,6 +443,7 @@ type
     procedure set_gobo2rot(DeviceID: TGUID; Value:integer; Fadetime:integer=0; Delaytime:integer=0);
     procedure set_gobo(DeviceID: TGUID; GoboName:string);
     function get_dimmer(DeviceID: TGUID):integer;
+    function get_strobe(DeviceID: TGUID):integer;
     function get_shutter(DeviceID: TGUID):integer;
 
     function FindDeviceConnections(ID:TGUID; var TreeView:TTreeView):boolean;
@@ -6797,10 +6798,33 @@ begin
 
   if value>mainform.devices[DevPosition].DimmerMaxValue then
     result:=255
-  else if value<mainform.devices[DevPosition].DimmerOffValue then
+  else if value<=mainform.devices[DevPosition].DimmerOffValue then
     result:=0
   else
     result:=round(((value-mainform.devices[DevPosition].DimmerOffValue)/(mainform.devices[DevPosition].DimmerMaxValue-mainform.devices[DevPosition].DimmerOffValue))*255);
+end;
+
+function Tgeraetesteuerung.get_strobe(DeviceID: TGUID):integer;
+var
+  DevPosition:integer;
+  value:integer;
+begin
+  DevPosition:=GetDevicePositionInDeviceArray(@DeviceID);
+
+  if DevPosition<0 then
+  begin
+    result:=-1;
+    exit;
+  end;
+
+  value:=geraetesteuerung.get_channel(mainform.devices[DevPosition].ID, mainform.devices[DevPosition].StrobeChannel);
+
+  if value>mainform.devices[DevPosition].StrobeMaxValue then
+    result:=255
+  else if value<=mainform.devices[DevPosition].StrobeOffValue then
+    result:=0
+  else
+    result:=round(((value-mainform.devices[DevPosition].StrobeMinValue)/(mainform.devices[DevPosition].StrobeMaxValue-mainform.devices[DevPosition].StrobeMinValue))*255);
 end;
 
 function Tgeraetesteuerung.get_shutter(DeviceID: TGUID):integer;

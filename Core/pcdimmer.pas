@@ -22821,6 +22821,18 @@ begin
 
       temp:='DDV '+inttostr(geraetesteuerung.get_dimmer(stringtoguid(value[0])));
       AContext.Connection.Socket.WriteLn(temp);
+    end else if (pos('get_strobe',cmd)>0) then // get_strobe GUID
+    begin
+      temp:=cmd;
+      temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+      // Leerzeichen entfernen, sofern vorhanden
+      if pos(' ', temp)>0 then
+        temp:=copy(temp, 0, pos(' ', temp)-1);
+      value[0]:=temp;
+
+      temp:='DSV '+inttostr(geraetesteuerung.get_strobe(stringtoguid(value[0])));
+      AContext.Connection.Socket.WriteLn(temp);
     end else if (pos('get_scenes',cmd)>0) then // get_scenes NUMMER
     begin
       temp:=cmd;
@@ -23011,6 +23023,7 @@ procedure TMainform.ExecuteCommandServerCmd(cmd: string);
 var
   temp:string;
   value:array[0..8] of string;
+  intvalue:integer;
   i, j:integer;
   Pos1, Pos2:integer;
 begin
@@ -23278,6 +23291,162 @@ begin
     value[3]:=temp;
 
     geraetesteuerung.set_gobo2rot(stringtoguid(value[0]), strtoint(value[1]), strtoint(value[2]), strtoint(value[3]));
+  end;
+  if (pos('set_gobo1+',cmd)>0) then  // set_gobo1+ GUID
+  begin
+    temp:=cmd;
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    // Leerzeichen entfernen, sofern vorhanden
+    if pos(' ', temp)>0 then
+      temp:=copy(temp, 0, pos(' ', temp)-1);
+    value[0]:=temp;
+
+    for i:=0 to length(Devices)-1 do
+    begin
+      if IsEqualGUID(Devices[i].ID, StringToGUID(value[0])) then
+      begin
+        if length(devices[i].gobos)>0 then
+        begin
+          intvalue:=geraetesteuerung.get_channel(devices[i].ID, 'GOBO1');
+
+          for j:=0 to length(devices[i].gobos)-1 do
+          begin
+            if (intvalue>=devices[i].gobolevels[j]) and (intvalue<=Devices[i].goboendlevels[j]) then
+            begin
+              if j<length(devices[i].gobos) then
+                intvalue:=j+1
+              else
+                intvalue:=j;
+              break;
+            end;
+          end;
+
+          geraetesteuerung.set_channel(devices[i].ID, 'GOBO1', -1, devices[i].gobolevels[intvalue], 0, 0);
+
+          grafischebuehnenansicht.doimmediaterefresh:=true;
+        end;
+        
+        break;
+      end;
+    end;
+  end;
+  if (pos('set_gobo1-',cmd)>0) then  // set_gobo1- GUID
+  begin
+    temp:=cmd;
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    // Leerzeichen entfernen, sofern vorhanden
+    if pos(' ', temp)>0 then
+      temp:=copy(temp, 0, pos(' ', temp)-1);
+    value[0]:=temp;
+
+    for i:=0 to length(Devices)-1 do
+    begin
+      if IsEqualGUID(Devices[i].ID, StringToGUID(value[0])) then
+      begin
+        if length(devices[i].gobos)>0 then
+        begin
+          intvalue:=geraetesteuerung.get_channel(devices[i].ID, 'GOBO1');
+
+          for j:=0 to length(devices[i].gobos)-1 do
+          begin
+            if (intvalue>=devices[i].gobolevels[j]) and (intvalue<=Devices[i].goboendlevels[j]) then
+            begin
+              if j>0 then
+                intvalue:=j-1
+              else
+                intvalue:=j;
+              break;
+            end;
+          end;
+
+          geraetesteuerung.set_channel(devices[i].ID, 'GOBO1', -1, devices[i].gobolevels[intvalue], 0, 0);
+
+          grafischebuehnenansicht.doimmediaterefresh:=true;
+        end;
+        
+        break;
+      end;
+    end;
+  end;
+  if (pos('set_gobo2+',cmd)>0) then  // set_gobo2+ GUID
+  begin
+    temp:=cmd;
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    // Leerzeichen entfernen, sofern vorhanden
+    if pos(' ', temp)>0 then
+      temp:=copy(temp, 0, pos(' ', temp)-1);
+    value[0]:=temp;
+
+    for i:=0 to length(Devices)-1 do
+    begin
+      if IsEqualGUID(Devices[i].ID, StringToGUID(value[0])) then
+      begin
+        if length(devices[i].gobos2)>0 then
+        begin
+          intvalue:=geraetesteuerung.get_channel(devices[i].ID, 'GOBO2');
+
+          for j:=0 to length(devices[i].gobos2)-1 do
+          begin
+            if (intvalue>=devices[i].gobolevels2[j]) and (intvalue<=Devices[i].goboendlevels2[j]) then
+            begin
+              if j<length(devices[i].gobos2) then
+                intvalue:=j+1
+              else
+                intvalue:=j;
+              break;
+            end;
+          end;
+
+          geraetesteuerung.set_channel(devices[i].ID, 'GOBO2', -1, devices[i].gobolevels2[intvalue], 0, 0);
+
+          grafischebuehnenansicht.doimmediaterefresh:=true;
+        end;
+        
+        break;
+      end;
+    end;
+  end;
+  if (pos('set_gobo2-',cmd)>0) then  // set_gobo2- GUID
+  begin
+    temp:=cmd;
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    // Leerzeichen entfernen, sofern vorhanden
+    if pos(' ', temp)>0 then
+      temp:=copy(temp, 0, pos(' ', temp)-1);
+    value[0]:=temp;
+
+    for i:=0 to length(Devices)-1 do
+    begin
+      if IsEqualGUID(Devices[i].ID, StringToGUID(value[0])) then
+      begin
+        if length(devices[i].gobos2)>0 then
+        begin
+          intvalue:=geraetesteuerung.get_channel(devices[i].ID, 'GOBO2');
+
+          for j:=0 to length(devices[i].gobos2)-1 do
+          begin
+            if (intvalue>=devices[i].gobolevels2[j]) and (intvalue<=Devices[i].goboendlevels2[j]) then
+            begin
+              if j>0 then
+                intvalue:=j-1
+              else
+                intvalue:=j;
+              break;
+            end;
+          end;
+
+          geraetesteuerung.set_channel(devices[i].ID, 'GOBO2', -1, devices[i].gobolevels2[intvalue], 0, 0);
+
+          grafischebuehnenansicht.doimmediaterefresh:=true;
+        end;
+        
+        break;
+      end;
+    end;
   end;
   if (pos('set_prisma',cmd)>0) then  // set_prisma GUID SINGLEorTRIPLE DELAYTIME
   begin
