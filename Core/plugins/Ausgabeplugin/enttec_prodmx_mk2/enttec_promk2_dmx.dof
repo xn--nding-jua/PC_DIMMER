@@ -113,7 +113,7 @@ RootDir=
 IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=1
-MinorVer=2
+MinorVer=3
 Release=0
 Build=0
 Debug=0
@@ -126,13 +126,13 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=Enttec Pro MK2 DMX Interfaces-Plugin
-FileVersion=1.2.0.0
+FileVersion=1.3.0.0
 InternalName=
 LegalCopyright=(c) 2015 by Dipl.-Ing. Christian Nöding
 LegalTrademarks=
 OriginalFilename=
 ProductName=
-ProductVersion=1.2.0.0
+ProductVersion=1.3.0.0
 Comments=http://www.pcdimmer.de
 [HistoryLists\hlUnitAliases]
 Count=1

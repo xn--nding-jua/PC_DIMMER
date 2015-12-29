@@ -26,9 +26,13 @@ end;
 function DLLDestroy:boolean;stdcall;
 begin
   try
-    mainform.FTDI_ClosePort;
+    mainform.Button4Click(nil);
+
+    mainform.ReceiveMIDITimer.Enabled:=false;
+    mainform.SlowTimer.Enabled:=false;
+
     Application.ProcessMessages;
-    sleep(500);
+    sleep(150);
 
 	  @mainform.RefreshDLLValues:=nil;
     @mainform.RefreshDLLEvent:=nil;
@@ -52,7 +56,7 @@ end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v1.2');
+  Result := PChar('v1.3');
 end;
 
 procedure DLLConfigure;stdcall;

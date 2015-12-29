@@ -158,10 +158,10 @@ type
     procedure Button6Click(Sender: TObject);
   private
     { Private-Deklarationen }
+    AutoConnectRetrys:byte;
     num_devices:byte;
     device_connected:Word;
     device_num:integer;
-    AutoConnectRetrys:byte;
     DMXinOK, DMXin2OK, DMXoutOK, DMXout2OK:boolean;
   public
     { Public-Deklarationen }
