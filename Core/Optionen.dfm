@@ -1,6 +1,6 @@
 object OptionenBox: TOptionenBox
-  Left = 790
-  Top = 21
+  Left = 788
+  Top = 140
   BorderStyle = bsSingle
   Caption = 'Erweiterte Einstellungen'
   ClientHeight = 457
@@ -274,6 +274,13 @@ object OptionenBox: TOptionenBox
         Font.Style = [fsBold]
         ParentFont = False
       end
+      object Label87: TLabel
+        Left = 16
+        Top = 104
+        Width = 193
+        Height = 13
+        Caption = 'Folgenden Nutzer beim Start verwenden:'
+      end
       object startupwitholdscene_checkbox: TCheckBox
         Left = 16
         Top = 52
@@ -305,14 +312,26 @@ object OptionenBox: TOptionenBox
         TabOrder = 2
       end
       object CheckUpdatesOnStartup: TCheckBox
-        Left = 16
-        Top = 92
+        Left = 256
+        Top = 28
         Width = 233
         Height = 17
         Caption = 'Online nach Updates suchen'
         Checked = True
         State = cbChecked
         TabOrder = 3
+        Visible = False
+      end
+      object startupuseredit: TComboBox
+        Left = 16
+        Top = 124
+        Width = 209
+        Height = 21
+        ItemHeight = 13
+        TabOrder = 4
+        Text = 'Admin'
+        Items.Strings = (
+          'Admin')
       end
     end
     object TPage
@@ -1010,7 +1029,7 @@ object OptionenBox: TOptionenBox
         Height = 21
         Hint = 'Soundkarte: '
         Style = csDropDownList
-        ItemHeight = 0
+        ItemHeight = 13
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
@@ -1492,35 +1511,35 @@ object OptionenBox: TOptionenBox
       object GroupBox8: TGroupBox
         Left = 16
         Top = 248
-        Width = 529
+        Width = 385
         Height = 89
         Caption = ' Auto-Lock '
         TabOrder = 2
         object Label49: TLabel
           Left = 8
           Top = 24
-          Width = 157
+          Width = 88
           Height = 13
-          Caption = 'Zeit bis zur automatischen Sperre'
+          Caption = 'Zeit bis zur Sperre:'
         end
         object Label50: TLabel
-          Left = 240
+          Left = 120
           Top = 24
-          Width = 139
+          Width = 55
           Height = 13
-          Caption = 'Kennwort f'#252'r Reaktivierung *:'
+          Caption = 'Kennwort *:'
         end
         object Label64: TLabel
-          Left = 240
+          Left = 120
           Top = 64
-          Width = 249
+          Width = 201
           Height = 13
-          Caption = '* Kennwort wird auch f'#252'r manuelles Lock verwendet!'
+          Caption = '* wird auch f'#252'r manuelles Lock verwendet!'
         end
         object autolocktime: TComboBox
           Left = 8
           Top = 40
-          Width = 225
+          Width = 105
           Height = 21
           Style = csDropDownList
           ItemHeight = 13
@@ -1538,12 +1557,47 @@ object OptionenBox: TOptionenBox
             '60min')
         end
         object autolockcode: TEdit
-          Left = 240
+          Left = 120
           Top = 40
-          Width = 281
+          Width = 105
           Height = 21
           PasswordChar = '*'
           TabOrder = 1
+        end
+      end
+      object GroupBox1: TGroupBox
+        Left = 408
+        Top = 248
+        Width = 137
+        Height = 89
+        Caption = ' Auto-Logout '
+        TabOrder = 3
+        object Label36: TLabel
+          Left = 8
+          Top = 24
+          Width = 95
+          Height = 13
+          Caption = 'Zeit bis zum Logout:'
+        end
+        object autologouttime: TComboBox
+          Left = 8
+          Top = 40
+          Width = 121
+          Height = 21
+          Style = csDropDownList
+          ItemHeight = 13
+          ItemIndex = 0
+          TabOrder = 0
+          Text = 'Deaktiviert'
+          Items.Strings = (
+            'Deaktiviert'
+            '1min'
+            '2min'
+            '5min'
+            '10min'
+            '15min'
+            '30min'
+            '60min')
         end
       end
     end

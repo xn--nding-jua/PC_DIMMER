@@ -727,7 +727,7 @@ end;
 
 procedure Ttimecodeplayerform.Openfile(Filename: string);
 var
-  j,startindex,count2:integer;
+  j,count2:integer;
 begin
   FileStream:=TFileStream.Create(Opendialog1.FileName,fmOpenRead);
 

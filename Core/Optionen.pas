@@ -219,6 +219,11 @@ type
     Label64: TLabel;
     QuitWithoutConfirmation: TCheckBox;
     Label86: TLabel;
+    GroupBox1: TGroupBox;
+    Label36: TLabel;
+    autologouttime: TComboBox;
+    startupuseredit: TComboBox;
+    Label87: TLabel;
     procedure input_number(var pos:integer; var s:string);
     procedure FormShow(Sender: TObject);
     procedure prioritaetChange(Sender: TObject);

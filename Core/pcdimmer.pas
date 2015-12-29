@@ -1056,6 +1056,8 @@ type
     autolocktimecounter:integer;
     autolockcode:string[255];
     autolockcodescrambled:string[255];
+    autologouttime:byte;
+    autologouttimecounter:integer;
     httppasswordscrambled:string[255];
     dontloadproject,gotosystray:boolean;
     askforsaveproject:boolean;
@@ -1108,7 +1110,7 @@ type
     PresetScenes: array of TPresetScene;
     NodeControlSets: array of TNodeControlSet;
     UserAccounts: array of TUserAccount;
-    CurrentUser: String;
+    CurrentUser, StartupUser: String;
     CurrentUserAccessLevel: Integer;
 
 //    DeviceForms:array of Tdeviceformprototyp;
@@ -1218,7 +1220,7 @@ type
     procedure SaveJpg(Bitmap: TBitmap; Destination:string);
     procedure PluginRibbonBtnClick(Sender: TObject);
     function UserAccessGranted(Level: integer; ShowLoginWindow: boolean=true):boolean;
-    function ChangeUser(ShowWarning:boolean=true):boolean;
+    function ChangeUser(ShowWarning:boolean=true; ChangeToUser: String=''; ChangeToAccessLevel: integer=4):boolean;
   end;
 
 // Callbackfunktionen der Plugin-Dlls
@@ -1677,6 +1679,7 @@ begin
   StartupFinished:=false;
   BeginValueBackups:=false;
   CurrentUser:='Admin';
+  StartupUser:=CurrentUser;
   CurrentUserAccessLevel:=0;
 
   for i:=1 to paramcount do
@@ -3717,6 +3720,7 @@ begin
   Autobackuptimer.Enabled:=Autobackupcountermax>0;
   autolocktime:=0;
   autolockcode:='';
+  autologouttime:=0;
   MBS_Online:=false;
   MBS_MSGon:=144;
   MBS_MSGoff:=144;
@@ -8932,7 +8936,7 @@ end;
 
 procedure TMainform.Uhrzeit_TimerTimer(Sender: TObject);
 var
-  autolockrealtime:integer;
+  autolockrealtime, autologoutrealtime:integer;
 begin
   if smallwindowstyle and (not mainpanel.Visible) then
     SmallWindowRibbonBtnClick(nil);
@@ -9016,7 +9020,7 @@ begin
       else
         autolockrealtime:=120;
     end;
-    
+
     if ((autolocktimecounter/59.4)>autolockrealtime) then
     begin
       autolocktimecounter:=0;
@@ -9025,6 +9029,31 @@ begin
     end;
 
     autolocktimecounter:=autolocktimecounter+1;
+  end;
+
+  if (autologouttime>0) then
+  begin
+    case autologouttime of
+      1: autologoutrealtime:=1;
+      2: autologoutrealtime:=2;
+      3: autologoutrealtime:=5;
+      4: autologoutrealtime:=10;
+      5: autologoutrealtime:=15;
+      6: autologoutrealtime:=30;
+      7: autologoutrealtime:=60;
+      else
+        autologoutrealtime:=120;
+    end;
+
+    if ((autologouttimecounter/59.4)>autologoutrealtime) then
+    begin
+      autologouttimecounter:=0;
+
+      // switch to Visitor-Access-Level
+      ChangeUser(false, _('Besucher'), 4);
+    end;
+
+    autologouttimecounter:=autologouttimecounter+1;
   end;
 end;
 
@@ -9324,6 +9353,13 @@ begin
   Optionenbox.dimmerkernelresolutionedit.Value:=MinDimmerkernelResolution;
   Optionenbox.dimmerkernelresolutioncheck.Checked:=DimmerkernelResolutionAutoset;
   Optionenbox.QuitWithoutConfirmation.Checked:=QuitWithoutConfirmation;
+  Optionenbox.autologouttime.ItemIndex:=autologouttime;
+  Optionenbox.startupuseredit.Items.Clear;
+  for i:=0 to length(UserAccounts)-1 do
+  begin
+    Optionenbox.startupuseredit.Items.Add(UserAccounts[i].Name);
+  end;
+  Optionenbox.startupuseredit.text:=StartupUser;
 
   Optionenbox.rfr_main.Value:=rfr_main;
   Optionenbox.rfr_aep.Value:=rfr_aep;
@@ -9446,6 +9482,8 @@ begin
   DimmerkernelResolutionAutoset:=Optionenbox.dimmerkernelresolutioncheck.Checked;
   AutoFader.Interval:=DimmerkernelResolution;
   QuitWithoutConfirmation:=Optionenbox.QuitWithoutConfirmation.Checked;
+  autologouttime:=Optionenbox.autologouttime.ItemIndex;
+  StartupUser:=Optionenbox.startupuseredit.text;
 
   rfr_main:=round(Optionenbox.rfr_main.Value);
   rfr_aep:=round(Optionenbox.rfr_aep.Value);
@@ -12635,6 +12673,10 @@ begin
         Free;
       end;
     end;
+    if LReg.ValueExists('Autologouttime') then
+      autologouttime:=LReg.ReadInteger('Autologouttime');
+    if LReg.ValueExists('StartupUser') then
+      StartupUser:=LReg.ReadString('StartupUser');
 
     if LReg.ValueExists('Show text') then
     begin
@@ -13083,6 +13125,19 @@ begin
   end;
   LReg.CloseKey;
   LReg.Free;
+
+  // Login as set StartupUser
+  if StartupUser<>'' then
+  begin
+    for i:=0 to length(UserAccounts)-1 do
+    begin
+      if UserAccounts[i].Name=StartupUser then
+      begin
+        ChangeUser(false, UserAccounts[i].Name, UserAccounts[i].AccessLevel);
+        break;
+      end;
+    end;
+  end;
 
   StartupFinished:=true;
 end;
@@ -21947,6 +22002,8 @@ begin
     LReg.WriteInteger('MediaCenter IP Port',mediacenterport);
     LReg.WriteBool('Check updates on Startup', CheckUpdatesOnStartup);
     LReg.WriteBool('Do not ask for exit', QuitWithoutConfirmation);
+    LReg.WriteInteger('Autologouttime',autologouttime);
+    LReg.WriteString('StartupUser',StartupUser);
 
     with TCipher_Blowfish.Create do
     try
@@ -22120,6 +22177,8 @@ var
   changevalue:boolean;
   ispercent:boolean;
 begin
+  if not UserAccessGranted(2) then exit;
+
   if Key=vk_return then
   begin
     if commandedit.text=_('Kommando hier eingeben...') then
@@ -22335,18 +22394,24 @@ end;
 
 procedure TMainform.TBItem63Click(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   RetranslateProgram('de');
   SendMSG(MSG_SETLANGUAGE, integer(3), 0);
 end;
 
 procedure TMainform.TBItem62Click(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   RetranslateProgram('en');
   SendMSG(MSG_SETLANGUAGE, integer(0), 0);
 end;
 
 procedure TMainform.TBItem70Click(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   RetranslateProgram('fr');
   SendMSG(MSG_SETLANGUAGE, integer(1), 0);
 end;
@@ -23598,6 +23663,7 @@ procedure TMainform.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 begin
   autolocktimecounter:=0;
+  autologouttimecounter:=0;
 end;
 
 procedure TMainform.TBItem68Click(Sender: TObject);
@@ -24690,6 +24756,8 @@ procedure TMainform.TrackBar2Change(Sender: TObject);
 var
   i:integer;
 begin
+  if not mainform.UserAccessGranted(2) then exit;
+
   if (Sender=TrackBar2) and (TrackBarSelected) and (Trackbar2.Focused) then
   begin
     for i:=1 to mainform.lastchan do
@@ -25541,6 +25609,8 @@ end;
 
 procedure TMainform.NetherlandsRibbonBtnClick(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   RetranslateProgram('nl');
   SendMSG(MSG_SETLANGUAGE, integer(13), 0);
 end;
@@ -26034,6 +26104,8 @@ end;
 
 procedure Tmainform.RetranslateProgram(language: string);
 begin
+  if not UserAccessGranted(1) then exit;
+
   UseLanguage(language);
   mainform.ActualLanguage:=uppercase(language);
 
@@ -26315,7 +26387,7 @@ end;
 
 procedure TMainform.dxBarButton24Click(Sender: TObject);
 begin
-  ShellExecute(Handle, 'open', PChar('http://www.pcdimmer.de/bugtracker'), nil, nil, SW_SHOW);
+  ShellExecute(Handle, 'open', PChar('http://www.github.com/xn--nding-jua/PC_DIMMER/issues'), nil, nil, SW_SHOW);
 end;
 
 procedure TMainform.dxBarButton25Click(Sender: TObject);
@@ -26362,12 +26434,16 @@ end;
 
 procedure TMainform.dxBarButton2Click(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   RetranslateProgram('es');
   SendMSG(MSG_SETLANGUAGE, integer(4), 0);
 end;
 
 procedure TMainform.dxBarButton6Click(Sender: TObject);
 begin
+  if not UserAccessGranted(1) then exit;
+
   RetranslateProgram('it');
 //  SendMSG(MSG_SETLANGUAGE, integer(0), 0);
 end;
@@ -26570,7 +26646,7 @@ begin
   end;
 end;
 
-function Tmainform.ChangeUser(ShowWarning:boolean):boolean;
+function Tmainform.ChangeUser(ShowWarning:boolean; ChangeToUser: String; ChangeToAccessLevel: integer):boolean;
 var
   i:integer;
   AccessGranted:boolean;
@@ -26581,32 +26657,40 @@ begin
   changeuserform.edit2.text:='';
   changeuserform.currentuserlbl.Caption:=CurrentUser;
 
-  changeuserform.showmodal;
-
-  AccessGranted:=false;
-  if changeuserform.modalresult=mrOK then
+  if ChangeToUser='' then
   begin
-    for i:=0 to length(UserAccounts)-1 do
+    changeuserform.showmodal;
+
+    AccessGranted:=false;
+    if changeuserform.modalresult=mrOK then
     begin
-      if changeuserform.edit1.text=UserAccounts[i].Name then
+      for i:=0 to length(UserAccounts)-1 do
       begin
-        if changeuserform.edit2.text=UserAccounts[i].Password then
+        if changeuserform.edit1.text=UserAccounts[i].Name then
         begin
-          // Change user
-          CurrentUser:=UserAccounts[i].Name;
-          CurrentUserAccessLevel:=UserAccounts[i].AccessLevel;
-          AccessGranted:=true;
+          if changeuserform.edit2.text=UserAccounts[i].Password then
+          begin
+            // Change user
+            CurrentUser:=UserAccounts[i].Name;
+            CurrentUserAccessLevel:=UserAccounts[i].AccessLevel;
+            AccessGranted:=true;
+          end;
+          break;
         end;
-        break;
       end;
+
+      if (not AccessGranted) and ShowWarning then
+        ShowMessage(_('Zugang verweigert!'));
+
+      result:=AccessGranted;
+    end else
+    begin
+      result:=false;
     end;
-
-    if (not AccessGranted) and ShowWarning then
-      ShowMessage(_('Zugang verweigert!'));
-
-    result:=AccessGranted;
   end else
   begin
+    CurrentUser:=ChangeToUser;
+    CurrentUserAccessLevel:=ChangeToAccessLevel;
     result:=false;
   end;
 

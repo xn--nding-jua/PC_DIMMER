@@ -193,8 +193,8 @@ begin
     passwordedit.text:=mainform.UserAccounts[userbox.itemindex].Password;
     accesslevelbox.ItemIndex:=mainform.UserAccounts[userbox.itemindex].AccessLevel;
 
-    nameedit.Enabled:=mainform.UserAccounts[userbox.itemindex].Name='Admin';
-    accesslevelbox.Enabled:=mainform.UserAccounts[userbox.itemindex].Name='Admin';
+    nameedit.Enabled:=mainform.UserAccounts[userbox.itemindex].Name<>'Admin';
+    accesslevelbox.Enabled:=mainform.UserAccounts[userbox.itemindex].Name<>'Admin';
   end;
 
   DeleteUserBtn.Enabled:=(userbox.itemindex>-1) and (userbox.itemindex<length(mainform.UserAccounts));
