@@ -21,8 +21,8 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
   object PaintBox1: TPaintBox
     Left = 0
     Top = 0
-    Width = 560
-    Height = 547
+    Width = 552
+    Height = 538
     Hint = 'Rechte Maustaste f'#252'r Men'#252
     Align = alClient
     ParentShowHint = False
@@ -32,10 +32,10 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
     OnMouseMove = PaintBox1MouseMove
   end
   object Panel1: TPanel
-    Left = 560
+    Left = 552
     Top = 0
     Width = 186
-    Height = 547
+    Height = 538
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 0
@@ -314,6 +314,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         HotTrackFont.Name = 'MS Sans Serif'
         HotTrackFont.Style = []
         TabOrder = 8
+        OnMouseUp = ColorPicker2MouseUp
         Properties.ShowDefaultColor = False
         Properties.NoneColorCaption = 'No Color'
         Properties.DefaultColorCaption = 'Automatic'
@@ -336,7 +337,6 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         Properties.CustomColorFont.Height = -11
         Properties.CustomColorFont.Name = 'MS Sans Serif'
         Properties.CustomColorFont.Style = []
-        OnColorChange = ColorPicker2ColorChange
       end
       object Button2: TButton
         Left = 104
@@ -377,8 +377,8 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
   end
   object Panel2: TPanel
     Left = 0
-    Top = 547
-    Width = 746
+    Top = 538
+    Width = 738
     Height = 89
     Align = alBottom
     BevelOuter = bvNone
@@ -415,7 +415,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
     object Panel4: TPanel
       Left = 169
       Top = 0
-      Width = 577
+      Width = 569
       Height = 89
       Align = alClient
       BevelOuter = bvNone
@@ -423,14 +423,14 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
       object PaintBox2: TPaintBox
         Left = 0
         Top = 33
-        Width = 577
+        Width = 569
         Height = 56
         Align = alClient
       end
       object Panel5: TPanel
         Left = 0
         Top = 0
-        Width = 577
+        Width = 569
         Height = 33
         Align = alTop
         BevelOuter = bvNone

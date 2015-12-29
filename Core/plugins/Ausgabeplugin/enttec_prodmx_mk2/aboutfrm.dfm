@@ -4,7 +4,7 @@ object About: TAbout
   BorderStyle = bsToolWindow
   Caption = 'Info...'
   ClientHeight = 153
-  ClientWidth = 233
+  ClientWidth = 257
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -26,23 +26,23 @@ object About: TAbout
   object Bevel1: TBevel
     Left = 0
     Top = 112
-    Width = 233
+    Width = 257
     Height = 9
     Shape = bsTopLine
   end
   object Label5: TLabel
     Left = 8
     Top = 88
-    Width = 130
+    Width = 134
     Height = 13
-    Caption = 'christian.noeding@arcor.de'
+    Caption = 'christian@noeding-online.de'
   end
   object Label1: TLabel
     Left = 8
     Top = 8
-    Width = 205
+    Width = 234
     Height = 13
-    Caption = 'Plugin f'#252'r Enttec Pro DMX Interface'
+    Caption = 'Plugin f'#252'r Enttec Pro MK2 DMX Interface'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -55,7 +55,7 @@ object About: TAbout
     Top = 24
     Width = 133
     Height = 13
-    Caption = 'Version 1.8 vom 30.01.2013'
+    Caption = 'Version 1.2 vom 29.12.2015'
   end
   object Button1: TButton
     Left = 8

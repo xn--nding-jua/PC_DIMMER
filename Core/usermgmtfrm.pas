@@ -164,7 +164,8 @@ begin
     begin
       mainform.UserAccounts[userbox.itemindex].Name:=nameedit.Text;
       mainform.UserAccounts[userbox.itemindex].Password:=passwordedit.Text;
-      mainform.UserAccounts[userbox.itemindex].AccessLevel:=accesslevelbox.ItemIndex;
+      if mainform.UserAccounts[userbox.itemindex].Name='Admin' then
+        mainform.UserAccounts[userbox.itemindex].AccessLevel:=0;
     end else
     begin
       ShowMessage(_('Sie können den Benutzer "Admin" nicht umbenennen.'));
@@ -191,6 +192,9 @@ begin
     nameedit.text:=mainform.UserAccounts[userbox.itemindex].Name;
     passwordedit.text:=mainform.UserAccounts[userbox.itemindex].Password;
     accesslevelbox.ItemIndex:=mainform.UserAccounts[userbox.itemindex].AccessLevel;
+
+    nameedit.Enabled:=mainform.UserAccounts[userbox.itemindex].Name='Admin';
+    accesslevelbox.Enabled:=mainform.UserAccounts[userbox.itemindex].Name='Admin';
   end;
 
   DeleteUserBtn.Enabled:=(userbox.itemindex>-1) and (userbox.itemindex<length(mainform.UserAccounts));

@@ -2688,9 +2688,10 @@ begin
                   (devices[k].kanaltyp[address-devices[k].Startaddress]='g') or
                   (devices[k].kanaltyp[address-devices[k].Startaddress]='b') or
                   (devices[k].kanaltyp[address-devices[k].Startaddress]='a') or
-                  (devices[k].kanaltyp[address-devices[k].Startaddress]='w')) then
+                  (devices[k].kanaltyp[address-devices[k].Startaddress]='w') or
+                  (devices[k].kanaltyp[address-devices[k].Startaddress]='uv')) then
                 begin
-                  // falls aktueller Kanal R,G,B,A oder W
+                  // falls aktueller Kanal R,G,B,A,W oder UV
                   virtualdimmerfaktor:=(geraetesteuerung.get_channel(devices[k].ID, 'DIMMER')/maxres);
                   startvalue_Calibrated:=round(maxres-(virtualdimmerfaktor*(maxres-startvalue)));
                   endvalue_Calibrated:=round(maxres-(virtualdimmerfaktor*(maxres-endvalue)));
@@ -2698,12 +2699,13 @@ begin
                 end;
                 if (devices[k].kanaltyp[address-devices[k].Startaddress]='dimmer') then
                 begin
-                  // R,G,B,A,W aktualisieren
+                  // R,G,B,A,W,UV aktualisieren
                   geraetesteuerung.set_channel(devices[k].ID, 'r', -1, geraetesteuerung.get_channel(devices[k].ID, 'r'), 0);
                   geraetesteuerung.set_channel(devices[k].ID, 'g', -1, geraetesteuerung.get_channel(devices[k].ID, 'g'), 0);
                   geraetesteuerung.set_channel(devices[k].ID, 'b', -1, geraetesteuerung.get_channel(devices[k].ID, 'b'), 0);
                   geraetesteuerung.set_channel(devices[k].ID, 'a', -1, geraetesteuerung.get_channel(devices[k].ID, 'a'), 0);
                   geraetesteuerung.set_channel(devices[k].ID, 'w', -1, geraetesteuerung.get_channel(devices[k].ID, 'w'), 0);
+                  geraetesteuerung.set_channel(devices[k].ID, 'uv', -1, geraetesteuerung.get_channel(devices[k].ID, 'uv'), 0);
                 end;
               end;
             end;
@@ -2848,20 +2850,22 @@ begin
                 (devices[k].kanaltyp[tempvalue]='g') or
                 (devices[k].kanaltyp[tempvalue]='b') or
                 (devices[k].kanaltyp[tempvalue]='a') or
-                (devices[k].kanaltyp[tempvalue]='w')) then
+                (devices[k].kanaltyp[tempvalue]='w') or
+                (devices[k].kanaltyp[tempvalue]='uv')) then
               begin
-                // falls aktueller Kanal R,G,B,A oder W und aktivierter VirtualDimmer, dann diesen berechnen
+                // falls aktueller Kanal R,G,B,A,W oder UV und aktivierter VirtualDimmer, dann diesen berechnen
                 virtualdimmerfaktor:=(geraetesteuerung.get_channel(devices[k].ID, 'DIMMER')/255);
                 Value:=round(virtualdimmerfaktor*Integer(Data2));
               end;
               if (devices[k].kanaltyp[tempvalue]='dimmer') then
               begin
-                // R,G,B,A aktualisieren
+                // R,G,B,A,W,UV aktualisieren
                 geraetesteuerung.set_channel(devices[k].ID, 'r', -1, geraetesteuerung.get_channel(devices[k].ID, 'r'), 0);
                 geraetesteuerung.set_channel(devices[k].ID, 'g', -1, geraetesteuerung.get_channel(devices[k].ID, 'g'), 0);
                 geraetesteuerung.set_channel(devices[k].ID, 'b', -1, geraetesteuerung.get_channel(devices[k].ID, 'b'), 0);
                 geraetesteuerung.set_channel(devices[k].ID, 'a', -1, geraetesteuerung.get_channel(devices[k].ID, 'a'), 0);
                 geraetesteuerung.set_channel(devices[k].ID, 'w', -1, geraetesteuerung.get_channel(devices[k].ID, 'w'), 0);
+                geraetesteuerung.set_channel(devices[k].ID, 'uv', -1, geraetesteuerung.get_channel(devices[k].ID, 'uv'), 0);
               end;
             end;
           end else if ((devices[k].kanaltyp[tempvalue]='pan') or (devices[k].kanaltyp[tempvalue]='tilt')) then

@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, HSLColorPicker, ExtCtrls, Buttons, PngSpeedButton,
   pngimage, gnugettext, TiledImage, Math, ComCtrls,
-  dxGDIPlusClasses, Mask, JvExMask, JvSpin;
+  dxGDIPlusClasses, Mask, JvExMask, JvSpin, HSLRingPicker;
 
 const
   SmallWidth=15;
@@ -67,6 +67,9 @@ type
     goborot2: TScrollBar;
     W: TScrollBar;
     Label11: TLabel;
+    Label13: TLabel;
+    A: TScrollBar;
+    colorpicker: THSLRingPicker;
     procedure FormCreate(Sender: TObject);
     procedure FormClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -106,6 +109,9 @@ type
     procedure ColorPicker2Change(Sender: TObject);
     procedure REnter(Sender: TObject);
     procedure RExit(Sender: TObject);
+    procedure colorpickerChange(Sender: TObject);
+    procedure colorpickerMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
   private
     { Private-Deklarationen }
     timer:byte;
@@ -433,6 +439,9 @@ begin
       begin
         geraetesteuerung.set_color(mainform.devices[i].ID, 255-r.Position,255-g.Position,255-b.Position,0,0);
       end;
+
+      if Sender=a then
+        geraetesteuerung.set_channel(mainform.devices[i].ID, 'A', 255-a.position, 255-a.position, 0, 0);
 
       if Sender=w then
         geraetesteuerung.set_channel(mainform.devices[i].ID, 'W', 255-w.position, 255-w.position, 0, 0);
@@ -1249,6 +1258,32 @@ end;
 procedure Tsidebarform.RExit(Sender: TObject);
 begin
   dontchangesliders:=false;
+end;
+
+procedure Tsidebarform.colorpickerChange(Sender: TObject);
+var
+  Red,Green,Blue:byte;
+begin
+  if not usersetting then exit;
+
+  timer:=0;
+
+  TColor2RGB(colorpicker.SelectedColor,Red,Green,Blue);
+
+  if not dontchangesliders then
+  begin
+    R.Position:=255-Red;
+    G.Position:=255-Green;
+    B.position:=255-Blue;
+  end;
+end;
+
+procedure Tsidebarform.colorpickerMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  usersetting:=true;
+  timer:=0;
+  dontchangecolorfield:=true;
 end;
 
 end.

@@ -176,7 +176,6 @@ type
     procedure fokussliderChange(Sender: TObject);
     procedure fokusplusClick(Sender: TObject);
     procedure fokusminusClick(Sender: TObject);
-    procedure colorpicker2ColorChange(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure zoomplusClick(Sender: TObject);
     procedure zoomminusClick(Sender: TObject);
@@ -193,6 +192,8 @@ type
     procedure Button4Click(Sender: TObject);
     procedure whitesliderChange(Sender: TObject);
     procedure ambersliderChange(Sender: TObject);
+    procedure colorpicker2MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private-Deklarationen }
     LastPosX, LastPosY:integer;
@@ -1350,21 +1351,6 @@ begin
   fokusslider.position:=fokusslider.position+25
 end;
 
-procedure Tdynguiform.colorpicker2ColorChange(Sender: TObject);
-var
-  i:integer;
-  R,G,B:byte;
-begin
-  for i:=0 to length(mainform.Devices)-1 do
-  begin
-    if mainform.DeviceSelected[i] then
-    begin
-      TColor2RGB(colorpicker2.SelectedColor, R, G, B);
-      geraetesteuerung.set_color(mainform.devices[i].ID, R, G, B, 500, 0);
-    end;
-  end;
-end;
-
 procedure Tdynguiform.Button3Click(Sender: TObject);
 begin
   if colorpicker.Visible then
@@ -1521,6 +1507,22 @@ begin
     if mainform.DeviceSelected[i] then
     begin
       geraetesteuerung.set_channel(mainform.Devices[i].ID, 'A', -1, 255-amberslider.position, 500);
+    end;
+  end;
+end;
+
+procedure Tdynguiform.colorpicker2MouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  i:integer;
+  R,G,B:byte;
+begin
+  for i:=0 to length(mainform.Devices)-1 do
+  begin
+    if mainform.DeviceSelected[i] then
+    begin
+      TColor2RGB(colorpicker2.SelectedColor, R, G, B);
+      geraetesteuerung.set_color(mainform.devices[i].ID, R, G, B, 500, 0);
     end;
   end;
 end;

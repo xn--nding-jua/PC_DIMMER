@@ -112,11 +112,12 @@ type
     procedure Button1Click(Sender: TObject);
     procedure showanimationMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure ColorPicker2ColorChange(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure ambersliderChange(Sender: TObject);
     procedure whitesliderChange(Sender: TObject);
     procedure Diagonalselektieren1Click(Sender: TObject);
+    procedure ColorPicker2MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private-Deklarationen }
     selectedrow:integer;
@@ -292,11 +293,11 @@ begin
       hasrgb.Caption:=_('Ja')
     else
       hasrgb.Caption:=_('Nein');
-    if mainform.devicegroups[devicepos].HasChanType[41] then
+    if mainform.devices[devicepos].hasAmber then
       hasamber.Caption:=_('Ja')
     else
       hasamber.Caption:=_('Nein');
-    if mainform.devicegroups[devicepos].HasChanType[40] then
+    if mainform.devices[devicepos].hasWhite then
       haswhite.Caption:=_('Ja')
     else
       haswhite.Caption:=_('Nein');
@@ -787,24 +788,6 @@ begin
   drawtimer.Enabled:=showanimation.Checked;
 end;
 
-procedure Tlauflichtassistentownpatternform.ColorPicker2ColorChange(
-  Sender: TObject);
-var
-  r,g,b:byte;
-  i,j:integer;
-begin
-  TColor2Rgb(colorpicker2.SelectedColor, r,g,b);
-
-  for j:=0 to devicecount-1 do
-    for i:=0 to round(rowcount.value)-1 do
-      if selected[i][j] then
-      begin
-        lauflichtassistentform.lauflichtarray[i][j].r:=max(r,255);
-        lauflichtassistentform.lauflichtarray[i][j].g:=max(g,255);
-        lauflichtassistentform.lauflichtarray[i][j].b:=max(b,255);
-      end;
-end;
-
 procedure Tlauflichtassistentownpatternform.Button2Click(Sender: TObject);
 begin
   if colorpicker.Visible then
@@ -867,6 +850,25 @@ begin
         break;
       end;
     end;
+end;
+
+procedure Tlauflichtassistentownpatternform.ColorPicker2MouseUp(
+  Sender: TObject; Button: TMouseButton; Shift: TShiftState; X,
+  Y: Integer);
+var
+  r,g,b:byte;
+  i,j:integer;
+begin
+  TColor2Rgb(colorpicker2.SelectedColor, r,g,b);
+
+  for j:=0 to devicecount-1 do
+    for i:=0 to round(rowcount.value)-1 do
+      if selected[i][j] then
+      begin
+        lauflichtassistentform.lauflichtarray[i][j].r:=max(r,255);
+        lauflichtassistentform.lauflichtarray[i][j].g:=max(g,255);
+        lauflichtassistentform.lauflichtarray[i][j].b:=max(b,255);
+      end;
 end;
 
 end.

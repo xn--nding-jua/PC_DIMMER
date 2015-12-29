@@ -996,6 +996,7 @@ object dynguiform: Tdynguiform
       HotTrackFont.Name = 'MS Sans Serif'
       HotTrackFont.Style = []
       TabOrder = 6
+      OnMouseUp = colorpicker2MouseUp
       Properties.ShowDefaultColor = False
       Properties.NoneColorCaption = 'No Color'
       Properties.DefaultColorCaption = 'Automatic'
@@ -1018,7 +1019,6 @@ object dynguiform: Tdynguiform
       Properties.CustomColorFont.Height = -11
       Properties.CustomColorFont.Name = 'MS Sans Serif'
       Properties.CustomColorFont.Style = []
-      OnColorChange = colorpicker2ColorChange
     end
     object colorpicker3: THSLColorPicker
       Left = 11

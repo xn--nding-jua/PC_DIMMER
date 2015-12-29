@@ -759,7 +759,7 @@ object sidebarform: Tsidebarform
     Transparent = True
   end
   object Label6: TLabel
-    Left = 165
+    Left = 145
     Top = 520
     Width = 8
     Height = 13
@@ -767,7 +767,7 @@ object sidebarform: Tsidebarform
     Transparent = True
   end
   object Label7: TLabel
-    Left = 186
+    Left = 166
     Top = 520
     Width = 8
     Height = 13
@@ -775,7 +775,7 @@ object sidebarform: Tsidebarform
     Transparent = True
   end
   object Label8: TLabel
-    Left = 207
+    Left = 187
     Top = 520
     Width = 7
     Height = 13
@@ -1179,11 +1179,19 @@ object sidebarform: Tsidebarform
     Transparent = True
   end
   object Label11: TLabel
-    Left = 228
+    Left = 227
     Top = 520
     Width = 11
     Height = 13
     Caption = 'W'
+    Transparent = True
+  end
+  object Label13: TLabel
+    Left = 208
+    Top = 520
+    Width = 7
+    Height = 13
+    Caption = 'A'
     Transparent = True
   end
   object fadenkreuz: TPanel
@@ -1785,20 +1793,21 @@ object sidebarform: Tsidebarform
   object ColorPicker2: THSLColorPicker
     Left = 16
     Top = 528
-    Width = 142
+    Width = 121
     Height = 137
-    SelectedColor = 212
+    SelectedColor = 214
     HSPickerHintFormat = 'R: %r G: %g B: %b, Hex: %hex'
     LPickerHintFormat = 'Luminance: %l'
     HSPickerCursor = crCross
     LPickerCursor = crCross
     ShowHint = False
     ParentShowHint = False
+    Visible = False
     TabOrder = 1
     OnChange = ColorPicker2Change
     OnMouseMove = ColorPicker2MouseMove
     DesignSize = (
-      142
+      121
       137)
   end
   object dimmer: TScrollBar
@@ -1812,9 +1821,9 @@ object sidebarform: Tsidebarform
     OnChange = change
   end
   object R: TScrollBar
-    Left = 161
+    Left = 141
     Top = 536
-    Width = 17
+    Width = 16
     Height = 121
     Kind = sbVertical
     Max = 255
@@ -1825,7 +1834,7 @@ object sidebarform: Tsidebarform
     OnExit = RExit
   end
   object G: TScrollBar
-    Left = 182
+    Left = 161
     Top = 536
     Width = 17
     Height = 122
@@ -1839,7 +1848,7 @@ object sidebarform: Tsidebarform
     OnExit = RExit
   end
   object B: TScrollBar
-    Left = 203
+    Left = 182
     Top = 536
     Width = 17
     Height = 123
@@ -1974,6 +1983,31 @@ object sidebarform: Tsidebarform
     Position = 255
     TabOrder = 16
     OnChange = change
+  end
+  object A: TScrollBar
+    Left = 203
+    Top = 536
+    Width = 17
+    Height = 123
+    Kind = sbVertical
+    Max = 255
+    PageSize = 0
+    Position = 255
+    TabOrder = 17
+    OnChange = change
+  end
+  object colorpicker: THSLRingPicker
+    Left = 16
+    Top = 536
+    Width = 121
+    Height = 121
+    RingPickerHintFormat = 'Hue: %h'
+    SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
+    TabOrder = 18
+    Color = clBtnFace
+    ParentColor = False
+    OnChange = colorpickerChange
+    OnMouseMove = colorpickerMouseMove
   end
   object Timer1: TTimer
     Enabled = False

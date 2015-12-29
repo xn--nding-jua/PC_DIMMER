@@ -503,6 +503,9 @@ end;
 
 procedure Tgeraetesteuerung.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+  if DDFWindowDeviceScene.Showing then
+    DDFWindowDeviceScene.close;
+
   MSGSave;
 end;
 
@@ -1344,7 +1347,7 @@ begin
 
         mainform.Devices[length(mainform.Devices)-1].startaddress:=1+(offset+space*k+k*deviceprototyp[devposition].MaxChan);
 
-        mainform.Devices[length(mainform.Devices)-1].Name:=_('Neuer ')+deviceprototyp[devposition].Name;
+        mainform.Devices[length(mainform.Devices)-1].Name:=deviceprototyp[devposition].Name;
         mainform.Devices[length(mainform.Devices)-1].DeviceName:=deviceprototyp[devposition].DeviceName;
         mainform.Devices[length(mainform.Devices)-1].Vendor:=deviceprototyp[devposition].Vendor;
         mainform.Devices[length(mainform.Devices)-1].Beschreibung:=deviceprototyp[devposition].Beschreibung;
@@ -1442,7 +1445,7 @@ begin
           mainform.Devices[length(mainform.Devices)-1].kanalname[i]:=deviceprototyp[devposition].kanalname[i];
           mainform.Devices[length(mainform.Devices)-1].kanalfade[i]:=deviceprototyp[devposition].kanalfade[i];
 
-          mainform.data.Names[mainform.Devices[length(mainform.Devices)-1].Startaddress+i]:=_('Neuer ')+deviceprototyp[devposition].Name+': '+deviceprototyp[devposition].kanalname[i];
+          mainform.data.Names[mainform.Devices[length(mainform.Devices)-1].Startaddress+i]:=deviceprototyp[devposition].Name+': '+deviceprototyp[devposition].kanalname[i];
         end;
 
         setlength(mainform.Devices[length(mainform.Devices)-1].colors,length(deviceprototyp[devposition].colors));
@@ -2184,7 +2187,7 @@ begin
     begin
       if (adddevice.VST.SelectedCount=1) and (adddevice.DeviceSelectionOK) then
       begin
-        mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].Name:=_('Neuer ')+deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].Name;
+        mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].Name:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].Name;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].DeviceName:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].DeviceName;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].Vendor:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].Vendor;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].Beschreibung:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].Beschreibung;
@@ -2727,8 +2730,6 @@ begin
   if devicepicturechangeform.ModalResult=mrOK then
   begin
     newpicturefile:=devicepicturechangeform.aktuellebilddatei;
-    if pos(mainform.pcdimmerdirectory+'Devicepictures\',newpicturefile)>-1 then
-      newpicturefile:=copy(newpicturefile,length(mainform.pcdimmerdirectory+'Devicepictures\')+1,length(newpicturefile));
 
     for i:=0 to length(VSTDeviceNodes)-1 do
     for j:=0 to length(VSTDeviceNodes[i])-1 do
@@ -4312,6 +4313,7 @@ begin
   begin
     Data:=VST.GetNodeData(Node);
     mainform.devices[GetDevicePositionInDeviceArray(@Data^.ID)].Name:=NewText;
+    Data^.Caption:=NewText;
 
     for j:=0 to mainform.devices[GetDevicePositionInDeviceArray(@Data^.ID)].MaxChan-1 do
     begin

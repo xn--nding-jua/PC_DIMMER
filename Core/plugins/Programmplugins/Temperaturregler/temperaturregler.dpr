@@ -18,9 +18,6 @@ uses
   Classes,
   Windows,
   Graphics,
-  ExtCtrls,
-  GR32,
-  PNGImage,
   Registry,
   configfrm in 'configfrm.pas' {Config},
   setup in 'setup.pas' {setupform},
@@ -45,61 +42,11 @@ begin
   result:=LBuffer;
 end;
 
-function PNGToBitmap32(DstBitmap: TBitmap32; Png: TPngObject): Boolean;
-var
-  TransparentColor: TColor32;
-  PixelPtr: PColor32;
-  AlphaPtr: PByte;
-  X, Y: Integer;
-begin
-  Result := False;
-
-  DstBitmap.Assign(PNG);
-  DstBitmap.ResetAlpha;
-
-  case PNG.TransparencyMode of
-    ptmPartial:
-      begin
-        if (PNG.Header.ColorType = COLOR_GRAYSCALEALPHA) or
-           (PNG.Header.ColorType = COLOR_RGBALPHA) then
-        begin
-          PixelPtr := PColor32(@DstBitmap.Bits[0]);
-          for Y := 0 to DstBitmap.Height - 1 do
-          begin
-            AlphaPtr := PByte(PNG.AlphaScanline[Y]);
-            for X := 0 to DstBitmap.Width - 1 do
-            begin
-              PixelPtr^ := (PixelPtr^ and $00FFFFFF) or (TColor32(AlphaPtr^) shl 24);
-              Inc(PixelPtr);
-              Inc(AlphaPtr);
-            end;
-          end;
-        end;
-        Result := True;
-      end;
-    ptmBit:
-      begin
-        TransparentColor := Color32(PNG.TransparentColor);
-        PixelPtr := PColor32(@DstBitmap.Bits[0]);
-        for X := 0 to (DstBitmap.Height - 1) * (DstBitmap.Width - 1) do
-        begin
-          if PixelPtr^ = TransparentColor then
-            PixelPtr^ := PixelPtr^ and $00FFFFFF;
-          Inc(PixelPtr);
-        end;
-        Result := True;
-      end;
-    ptmNone: Result := False;
-  end;
-end;
-
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
-  SetProcessAffinityMask(GetCurrentProcess, 1); // 1=CPU0 , 2=CPU1
-
   ShuttingDown:=false;
   config:=Tconfig.Create(Application);
-  setupform:=tsetupform.create(config);
+  setupform:=tsetupform.create(Application);
   @Config.SetDLLEvent:=CallbackSetDLLValueEvent;
   @Config.SendMSG:=CallbackSendMessage;
 end;
@@ -114,6 +61,7 @@ function DLLDestroy:boolean;stdcall;
 var
   CurrYear, CurrMonth, CurrDay: Word;
   LReg:TRegistry;
+  Month, Day:string;
 begin
   ShuttingDown:=true;
 
@@ -125,25 +73,32 @@ begin
     floattostrf((Config.CurrentTemp-Config.TempVor15Minuten), ffFixed, 5, 1)+';'+
     floattostrf(Config.Kilowattstunden+(7.5*(1/3600)), ffFixed, 5, 6)+';'+
     floattostrf(Config.Kilowattstunden+(7.5*(1/3600))*0.24, ffFixed, 5, 6));
+
+  config.chart.Options.AutoUpdateGraph:=false;
+  if config.comport.Connected then
+		Config.comport.Disconnect;
+  Config.SekundenTimer.Enabled:=false;
+
   // Datei abspeichern
   if setupform.savefilestoedit.Text<>'' then
   begin
     if not DirectoryExists(setupform.savefilestoedit.Text) then
       CreateDir(setupform.savefilestoedit.Text);
     DecodeDate(Date(), CurrYear, CurrMonth, CurrDay);
-    Config.Memo1.Lines.SaveToFile(setupform.savefilestoedit.Text+'\'+inttostr(CurrYear)+inttostr(CurrMonth)+inttostr(CurrDay)+'_'+
+    Month:=inttostr(CurrMonth);
+    Day:=inttostr(CurrDay);
+    if length(Month)<2 then
+      Month:='0'+Month;
+    if length(Day)<2 then
+      Day:='0'+Day;
+    Config.Memo1.Lines.SaveToFile(setupform.savefilestoedit.Text+'\'+inttostr(CurrYear)+Month+Day+'_'+
       stringreplace(TimeToStr(now), ':', '', [rfReplaceAll, rfIgnoreCase])+'_Temperatur.csv');
   end;
-
-  config.chart.Options.AutoUpdateGraph:=false;
 
   Application.ProcessMessages;
   sleep(150);
 
   Config.Shutdown:=true;
-  if config.comport.Connected then
-		Config.comport.Disconnect;
-  Config.SekundenTimer.Enabled:=false;
 
   LReg:=TRegistry.Create;
   LReg.RootKey:=HKEY_CURRENT_USER;
@@ -180,7 +135,7 @@ end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v1.7');
+  Result := PChar('v1.8');
 end;
 
 function DLLGetResourceData(const ResName: PChar; Buffer: Pointer; var Length: Integer):boolean;stdcall;

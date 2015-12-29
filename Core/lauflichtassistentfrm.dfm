@@ -293,7 +293,7 @@ object lauflichtassistentform: Tlauflichtassistentform
       object Panel3: TPanel
         Left = 0
         Top = 0
-        Width = 507
+        Width = 499
         Height = 41
         Align = alTop
         BevelOuter = bvNone
@@ -314,8 +314,8 @@ object lauflichtassistentform: Tlauflichtassistentform
       object ListBox1: TListBox
         Left = 0
         Top = 41
-        Width = 507
-        Height = 377
+        Width = 499
+        Height = 368
         Align = alClient
         ItemHeight = 13
         MultiSelect = True
@@ -329,10 +329,10 @@ object lauflichtassistentform: Tlauflichtassistentform
       Top = 0
       Caption = 'order'
       object Panel4: TPanel
-        Left = 378
+        Left = 370
         Top = 0
         Width = 129
-        Height = 418
+        Height = 409
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
@@ -582,8 +582,8 @@ object lauflichtassistentform: Tlauflichtassistentform
       object ListBox2: TListBox
         Left = 0
         Top = 0
-        Width = 378
-        Height = 418
+        Width = 370
+        Height = 409
         Align = alClient
         ItemHeight = 13
         TabOrder = 1
@@ -1728,7 +1728,7 @@ object lauflichtassistentform: Tlauflichtassistentform
       Pen.Style = psClear
     end
     object Label5: TLabel
-      Left = 168
+      Left = 160
       Top = 3
       Width = 81
       Height = 13
@@ -1744,7 +1744,7 @@ object lauflichtassistentform: Tlauflichtassistentform
       Height = 1
     end
     object gobtn: TButton
-      Left = 424
+      Left = 416
       Top = 8
       Width = 75
       Height = 25
@@ -1754,7 +1754,7 @@ object lauflichtassistentform: Tlauflichtassistentform
       OnClick = gobtnClick
     end
     object cancelbtn: TButton
-      Left = 264
+      Left = 256
       Top = 8
       Width = 75
       Height = 25
@@ -1763,7 +1763,7 @@ object lauflichtassistentform: Tlauflichtassistentform
       OnClick = cancelbtnClick
     end
     object backbtn: TButton
-      Left = 344
+      Left = 336
       Top = 8
       Width = 75
       Height = 25
@@ -1773,7 +1773,7 @@ object lauflichtassistentform: Tlauflichtassistentform
       OnClick = backbtnClick
     end
     object TrackBar2: TTrackBar
-      Left = 160
+      Left = 152
       Top = 16
       Width = 105
       Height = 25
@@ -1789,7 +1789,7 @@ object lauflichtassistentform: Tlauflichtassistentform
     object previewtodevices: TCheckBox
       Left = 8
       Top = 16
-      Width = 153
+      Width = 137
       Height = 17
       Caption = 'Anzeige auf Ger'#228'ten'
       Checked = True

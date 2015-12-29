@@ -143,8 +143,6 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure CheckBox3MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure VSTMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
     procedure beinhaltetalleKanle1Click(Sender: TObject);
     procedure Button9MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -174,6 +172,7 @@ type
     procedure cancelmatrixbtnClick(Sender: TObject);
     procedure Edit1KeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure VSTClick(Sender: TObject);
   private
     { Private-Deklarationen }
     VSTCurrentNode: PVirtualNode;
@@ -2159,6 +2158,9 @@ begin
     Checkbox1Mouseup(nil,mbLeft,[],0,0);
   end;
   CheckButtons;
+
+  if (Key=vk_space) and Edit2.Enabled then
+    Edit2.SetFocus;
 end;
 
 procedure Tdevicesceneform.VSTDblClick(Sender: TObject);
@@ -2166,6 +2168,9 @@ begin
   Checkbox1.Checked:=not checkbox1.Checked;
   Checkbox1Mouseup(nil,mbLeft,[],0,0);
   CheckButtons;
+
+  if Edit2.Enabled then
+    Edit2.SetFocus;
 end;
 
 procedure Tdevicesceneform.CheckBox2MouseUp(Sender: TObject;
@@ -2276,12 +2281,6 @@ begin
     end;
   end;
   VST.Refresh;
-  CheckButtons;
-end;
-
-procedure Tdevicesceneform.VSTMouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
   CheckButtons;
 end;
 
@@ -3031,6 +3030,11 @@ begin
     end;
   end;
   end;
+end;
+
+procedure Tdevicesceneform.VSTClick(Sender: TObject);
+begin
+  CheckButtons;
 end;
 
 end.

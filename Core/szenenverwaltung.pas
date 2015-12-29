@@ -3951,17 +3951,23 @@ begin
 // Ende Effekte
 //  Kontrollpanel
   if not sceneinuse then
-  for i:=0 to 24 do
-  for j:=0 to 24 do
-    if IsEqualGUID(mainform.kontrollpanelrecord.ID[i][j],ID) then
+  begin
+    for i:=0 to length(mainform.kontrollpanelbuttons)-1 do
     begin
-      if mKontrollpanel=nil then
-        mKontrollpanel:=Treeview.Items.Add(nil, _('Kontrollpanelbuttons'));
-      mKontrollpanel.ImageIndex:=21;
-      mKontrollpanel.SelectedIndex:=21;
-      Treeview.Items.AddChild(mKontrollpanel,_('Button ')+inttostr(i+1)+'x'+inttostr(j+1)+': '+mainform.kontrollpanelrecord.buttonname[i][j]);
-      sceneinuse:=true;
+      for j:=0 to length(mainform.kontrollpanelbuttons[i])-1 do
+      begin
+        if IsEqualGUID(mainform.kontrollpanelbuttons[i][j].ID, ID) then
+        begin
+          if mKontrollpanel=nil then
+            mKontrollpanel:=Treeview.Items.Add(nil, _('Kontrollpanelbuttons'));
+          mKontrollpanel.ImageIndex:=21;
+          mKontrollpanel.SelectedIndex:=21;
+          Treeview.Items.AddChild(mKontrollpanel,_('Button ')+inttostr(i+1)+'x'+inttostr(j+1)+': '+mainform.kontrollpanelbuttons[i][j].Name);
+          sceneinuse:=true;
+        end;
+      end;
     end;
+  end;
 // Ende Kontrollpanel
 //  MIDI-Events
   if not sceneinuse then

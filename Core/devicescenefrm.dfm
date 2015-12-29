@@ -26,6 +26,97 @@ object devicesceneform: Tdevicesceneform
     Height = 13
     Caption = 'Ger'#228'teliste wird aktualisiert...'
   end
+  object matrixpanel: TPanel
+    Left = 8
+    Top = 57
+    Width = 664
+    Height = 412
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 4
+    Visible = False
+    object StringGrid1: TStringGrid
+      Left = 0
+      Top = 0
+      Width = 664
+      Height = 379
+      Hint = 'STRG+Klick f'#252'r ganze Zeile'
+      Align = alClient
+      ColCount = 2
+      DefaultColWidth = 15
+      DefaultRowHeight = 15
+      RowCount = 2
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goDrawFocusSelected, goThumbTracking]
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+      OnDrawCell = StringGrid1DrawCell
+      OnMouseUp = StringGrid1MouseUp
+    end
+    object Panel6: TPanel
+      Left = 0
+      Top = 379
+      Width = 664
+      Height = 33
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 0
+      object SetAllChansBtn: TButton
+        Left = 0
+        Top = 8
+        Width = 105
+        Height = 25
+        Caption = 'Alle Kan'#228'le ein'
+        TabOrder = 0
+        OnClick = SetAllChansBtnClick
+      end
+      object ResetAllChansBtn: TButton
+        Left = 112
+        Top = 8
+        Width = 105
+        Height = 25
+        Caption = 'Alle Kan'#228'le aus'
+        TabOrder = 1
+        OnClick = ResetAllChansBtnClick
+      end
+      object OnlyChangedChansBtn: TButton
+        Left = 224
+        Top = 8
+        Width = 89
+        Height = 25
+        Caption = 'Nur ge'#228'nderte'
+        TabOrder = 2
+        OnClick = OnlyChangedChansBtnClick
+      end
+      object Panel3: TPanel
+        Left = 444
+        Top = 0
+        Width = 220
+        Height = 33
+        Align = alRight
+        BevelOuter = bvNone
+        TabOrder = 3
+        object cancelmatrixbtn: TButton
+          Left = 136
+          Top = 8
+          Width = 73
+          Height = 25
+          Caption = 'Abbrechen'
+          TabOrder = 0
+          OnClick = cancelmatrixbtnClick
+        end
+        object usematrixchannels: TButton
+          Left = 11
+          Top = 8
+          Width = 121
+          Height = 25
+          Caption = 'Kan'#228'le '#252'bernehmen'
+          TabOrder = 1
+          OnClick = usematrixchannelsClick
+        end
+      end
+    end
+  end
   object ProgressBar1: TProgressBar
     Left = 88
     Top = 248
@@ -37,8 +128,8 @@ object devicesceneform: Tdevicesceneform
   end
   object Panel1: TPanel
     Left = 0
-    Top = 478
-    Width = 852
+    Top = 469
+    Width = 844
     Height = 126
     Align = alBottom
     BevelOuter = bvNone
@@ -144,7 +235,7 @@ object devicesceneform: Tdevicesceneform
     Left = 0
     Top = 57
     Width = 8
-    Height = 421
+    Height = 412
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
@@ -152,7 +243,7 @@ object devicesceneform: Tdevicesceneform
   object Panel5: TPanel
     Left = 0
     Top = 0
-    Width = 852
+    Width = 844
     Height = 57
     Align = alTop
     BevelOuter = bvNone
@@ -161,7 +252,7 @@ object devicesceneform: Tdevicesceneform
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 852
+      Width = 844
       Height = 57
       Style = grVertical
       StartColor = clWhite
@@ -457,10 +548,10 @@ object devicesceneform: Tdevicesceneform
     end
   end
   object Panel8: TPanel
-    Left = 680
+    Left = 672
     Top = 57
     Width = 172
-    Height = 421
+    Height = 412
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 6
@@ -494,16 +585,16 @@ object devicesceneform: Tdevicesceneform
   object Treeviewpanel: TPanel
     Left = 8
     Top = 57
-    Width = 672
-    Height = 421
+    Width = 664
+    Height = 412
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 5
     object VST: TVirtualStringTree
       Left = 0
       Top = 33
-      Width = 506
-      Height = 388
+      Width = 498
+      Height = 379
       Align = alClient
       Colors.UnfocusedSelectionColor = clInactiveBorder
       Colors.UnfocusedSelectionBorderColor = clInactiveBorder
@@ -515,19 +606,20 @@ object devicesceneform: Tdevicesceneform
       Header.Font.Height = -11
       Header.Font.Name = 'MS Sans Serif'
       Header.Font.Style = []
-      Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+      Header.Height = 17
+      Header.Options = [hoColumnResize, hoDrag, hoShowImages, hoShowSortGlyphs, hoVisible]
       Images = MainForm.PngImageList1
       TabOrder = 0
       TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScroll, toAutoScrollOnExpand, toAutoTristateTracking, toAutoDeleteMovedNodes]
       TreeOptions.MiscOptions = [toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toVariableNodeHeight, toEditOnClick]
       TreeOptions.PaintOptions = [toShowBackground, toShowButtons, toShowDropmark, toShowRoot, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toUseBlendedSelection]
       TreeOptions.SelectionOptions = [toExtendedFocus, toFullRowSelect, toMultiSelect, toSimpleDrawSelection]
+      OnClick = VSTClick
       OnDblClick = VSTDblClick
       OnGetText = VSTGetText
       OnPaintText = VSTPaintText
       OnGetImageIndex = VSTGetImageIndex
       OnKeyUp = VSTKeyUp
-      OnMouseUp = VSTMouseUp
       Columns = <
         item
           CheckType = ctTriStateCheckBox
@@ -555,7 +647,7 @@ object devicesceneform: Tdevicesceneform
     object Panel7: TPanel
       Left = 0
       Top = 0
-      Width = 672
+      Width = 664
       Height = 33
       Align = alTop
       BevelOuter = bvNone
@@ -633,10 +725,10 @@ object devicesceneform: Tdevicesceneform
       end
     end
     object Panel2: TPanel
-      Left = 506
+      Left = 498
       Top = 33
       Width = 166
-      Height = 388
+      Height = 379
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 2
@@ -1223,97 +1315,6 @@ object devicesceneform: Tdevicesceneform
           PngOptions = [pngBlendOnDisabled, pngGrayscaleOnDisabled]
         end
       end
-    end
-  end
-  object matrixpanel: TPanel
-    Left = 8
-    Top = 57
-    Width = 672
-    Height = 421
-    Align = alClient
-    BevelOuter = bvNone
-    TabOrder = 4
-    Visible = False
-    object Panel6: TPanel
-      Left = 0
-      Top = 388
-      Width = 672
-      Height = 33
-      Align = alBottom
-      BevelOuter = bvNone
-      TabOrder = 0
-      object SetAllChansBtn: TButton
-        Left = 0
-        Top = 8
-        Width = 105
-        Height = 25
-        Caption = 'Alle Kan'#228'le ein'
-        TabOrder = 0
-        OnClick = SetAllChansBtnClick
-      end
-      object ResetAllChansBtn: TButton
-        Left = 112
-        Top = 8
-        Width = 105
-        Height = 25
-        Caption = 'Alle Kan'#228'le aus'
-        TabOrder = 1
-        OnClick = ResetAllChansBtnClick
-      end
-      object OnlyChangedChansBtn: TButton
-        Left = 224
-        Top = 8
-        Width = 89
-        Height = 25
-        Caption = 'Nur ge'#228'nderte'
-        TabOrder = 2
-        OnClick = OnlyChangedChansBtnClick
-      end
-      object Panel3: TPanel
-        Left = 452
-        Top = 0
-        Width = 220
-        Height = 33
-        Align = alRight
-        BevelOuter = bvNone
-        TabOrder = 3
-        object cancelmatrixbtn: TButton
-          Left = 136
-          Top = 8
-          Width = 73
-          Height = 25
-          Caption = 'Abbrechen'
-          TabOrder = 0
-          OnClick = cancelmatrixbtnClick
-        end
-        object usematrixchannels: TButton
-          Left = 11
-          Top = 8
-          Width = 121
-          Height = 25
-          Caption = 'Kan'#228'le '#252'bernehmen'
-          TabOrder = 1
-          OnClick = usematrixchannelsClick
-        end
-      end
-    end
-    object StringGrid1: TStringGrid
-      Left = 0
-      Top = 0
-      Width = 672
-      Height = 388
-      Hint = 'STRG+Klick f'#252'r ganze Zeile'
-      Align = alClient
-      ColCount = 2
-      DefaultColWidth = 15
-      DefaultRowHeight = 15
-      RowCount = 2
-      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goDrawFocusSelected, goThumbTracking]
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 1
-      OnDrawCell = StringGrid1DrawCell
-      OnMouseUp = StringGrid1MouseUp
     end
   end
   object selectedmenu: TPopupMenu

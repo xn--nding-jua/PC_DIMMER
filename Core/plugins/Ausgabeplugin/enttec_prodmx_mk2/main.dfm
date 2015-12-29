@@ -2,7 +2,7 @@ object mainform: Tmainform
   Left = 726
   Top = 146
   Width = 361
-  Height = 464
+  Height = 488
   Caption = 'Main'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -659,56 +659,56 @@ object mainform: Tmainform
     Left = 8
     Top = 216
     Width = 329
-    Height = 169
+    Height = 193
     Caption = ' Gefundenes Interface '
     TabOrder = 0
     object Label4: TLabel
       Left = 8
-      Top = 67
+      Top = 91
       Width = 69
       Height = 13
       Caption = 'Serial-Number:'
     end
     object Label5: TLabel
       Left = 80
-      Top = 67
+      Top = 91
       Width = 9
       Height = 13
       Caption = '...'
     end
     object Label6: TLabel
       Left = 8
-      Top = 83
+      Top = 107
       Width = 45
       Height = 13
       Caption = 'Firmware:'
     end
     object Label7: TLabel
       Left = 56
-      Top = 83
+      Top = 107
       Width = 9
       Height = 13
       Caption = '...'
     end
     object Label8: TLabel
-      Left = 191
-      Top = 14
+      Left = 151
+      Top = 38
       Width = 50
       Height = 13
       Alignment = taRightJustify
       Caption = 'Breaktime:'
     end
     object Label9: TLabel
-      Left = 190
-      Top = 37
+      Left = 150
+      Top = 61
       Width = 51
       Height = 13
       Alignment = taRightJustify
       Caption = 'MaB-Time:'
     end
     object Label10: TLabel
-      Left = 176
-      Top = 59
+      Left = 136
+      Top = 83
       Width = 66
       Height = 13
       Alignment = taRightJustify
@@ -736,7 +736,7 @@ object mainform: Tmainform
       ParentFont = False
     end
     object connectedlbl: TLabel
-      Left = 64
+      Left = 56
       Top = 21
       Width = 81
       Height = 16
@@ -752,28 +752,28 @@ object mainform: Tmainform
     end
     object Label11: TLabel
       Left = 305
-      Top = 14
+      Top = 38
       Width = 11
       Height = 13
       Caption = #181's'
     end
     object Label12: TLabel
       Left = 305
-      Top = 37
+      Top = 61
       Width = 11
       Height = 13
       Caption = #181's'
     end
     object Label13: TLabel
       Left = 305
-      Top = 59
+      Top = 83
       Width = 13
       Height = 13
       Caption = 'Hz'
     end
     object LastErrorLbl: TLabel
       Left = 8
-      Top = 104
+      Top = 128
       Width = 313
       Height = 25
       AutoSize = False
@@ -783,22 +783,50 @@ object mainform: Tmainform
     end
     object Label16: TLabel
       Left = 8
-      Top = 39
-      Width = 54
+      Top = 47
+      Width = 63
       Height = 13
-      Caption = 'DMX-Input:'
+      Caption = 'DMX-Input 1:'
     end
     object Label17: TLabel
-      Left = 66
-      Top = 39
+      Left = 74
+      Top = 47
       Width = 9
       Height = 13
       Caption = '...'
     end
+    object Label19: TLabel
+      Left = 74
+      Top = 63
+      Width = 9
+      Height = 13
+      Caption = '...'
+    end
+    object Label20: TLabel
+      Left = 8
+      Top = 63
+      Width = 63
+      Height = 13
+      Caption = 'DMX-Input 2:'
+    end
+    object Label21: TLabel
+      Left = 208
+      Top = 16
+      Width = 29
+      Height = 13
+      Caption = 'Out 1:'
+    end
+    object Label22: TLabel
+      Left = 256
+      Top = 16
+      Width = 29
+      Height = 13
+      Caption = 'Out 2:'
+    end
     object breaktimeedit: TJvSpinEdit
-      Left = 248
-      Top = 10
-      Width = 57
+      Left = 208
+      Top = 34
+      Width = 49
       Height = 21
       MaxValue = 127.000000000000000000
       MinValue = 9.000000000000000000
@@ -806,9 +834,9 @@ object mainform: Tmainform
       TabOrder = 0
     end
     object mabtimeedit: TJvSpinEdit
-      Left = 248
-      Top = 32
-      Width = 57
+      Left = 208
+      Top = 56
+      Width = 49
       Height = 21
       MaxValue = 127.000000000000000000
       MinValue = 1.000000000000000000
@@ -816,18 +844,18 @@ object mainform: Tmainform
       TabOrder = 1
     end
     object refreshrateedit: TJvSpinEdit
-      Left = 248
-      Top = 55
-      Width = 57
+      Left = 208
+      Top = 79
+      Width = 49
       Height = 21
       MaxValue = 40.000000000000000000
       Value = 40.000000000000000000
       TabOrder = 2
     end
     object Button5: TButton
-      Left = 248
-      Top = 80
-      Width = 73
+      Left = 216
+      Top = 104
+      Width = 33
       Height = 17
       Caption = 'Set'
       TabOrder = 3
@@ -835,7 +863,7 @@ object mainform: Tmainform
     end
     object Button3: TButton
       Left = 8
-      Top = 136
+      Top = 160
       Width = 145
       Height = 25
       Caption = 'Neu verbinden'
@@ -844,12 +872,50 @@ object mainform: Tmainform
     end
     object Button4: TButton
       Left = 160
-      Top = 136
+      Top = 160
       Width = 161
       Height = 25
       Caption = 'Trennen'
       TabOrder = 5
       OnClick = Button4Click
+    end
+    object breaktimeedit2: TJvSpinEdit
+      Left = 256
+      Top = 34
+      Width = 49
+      Height = 21
+      MaxValue = 127.000000000000000000
+      MinValue = 9.000000000000000000
+      Value = 96.000000000000000000
+      TabOrder = 6
+    end
+    object mabtimeedit2: TJvSpinEdit
+      Left = 256
+      Top = 56
+      Width = 49
+      Height = 21
+      MaxValue = 127.000000000000000000
+      MinValue = 1.000000000000000000
+      Value = 10.000000000000000000
+      TabOrder = 7
+    end
+    object refreshrateedit2: TJvSpinEdit
+      Left = 256
+      Top = 79
+      Width = 49
+      Height = 21
+      MaxValue = 40.000000000000000000
+      Value = 40.000000000000000000
+      TabOrder = 8
+    end
+    object Button6: TButton
+      Left = 264
+      Top = 104
+      Width = 33
+      Height = 17
+      Caption = 'Set'
+      TabOrder = 9
+      OnClick = Button6Click
     end
   end
   object GroupBox2: TGroupBox
@@ -959,7 +1025,7 @@ object mainform: Tmainform
     Left = 352
     Top = 8
     Width = 361
-    Height = 409
+    Height = 433
     Caption = ' Log-Fenster '
     TabOrder = 2
     Visible = False
@@ -967,16 +1033,16 @@ object mainform: Tmainform
       Left = 8
       Top = 16
       Width = 345
-      Height = 385
+      Height = 409
       Lines.Strings = (
         'Enttec USB DMX Pro MK2 Driver'
-        'v1.0, 18.10.2015')
+        'v1.2, 29.12.2015')
       TabOrder = 0
     end
   end
   object Button1: TButton
     Left = 16
-    Top = 392
+    Top = 416
     Width = 75
     Height = 25
     Caption = 'OK'
@@ -985,7 +1051,7 @@ object mainform: Tmainform
   end
   object Button2: TButton
     Left = 256
-    Top = 392
+    Top = 416
     Width = 75
     Height = 25
     Caption = 'Debuginfos'

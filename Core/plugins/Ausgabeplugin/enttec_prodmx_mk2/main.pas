@@ -8,23 +8,24 @@ uses
   jpeg, ExtCtrls, Registry;
 
 const
-	{
 	// Enttec Pro MK2 definitions
-	SET_PORT_ASSIGNMENT_LABEL = 193;
-	SEND_DMX_PORT2 = 138;
-	RECEIVE_DMX_PORT2 = 238;
-	SEND_MIDI_PORT = 193;
-	RECEIVE_MIDI_PORT = 169;
-	}
+	SET_PORT_ASSIGNMENT_LABEL = 151;
+	SEND_MIDI_PORT = 152;
+	RECEIVE_MIDI_PORT = 164;
 
-	// Enttec Pro MK2 definitions
-	SET_PORT_ASSIGNMENT_LABEL = 209;
-	SEND_DMX_PORT2 = 150;
-	RECEIVE_DMX_PORT2 = 194;
-	SEND_MIDI_PORT = 228;
-	RECEIVE_MIDI_PORT = 214;
-	
-	// Enttec Pro definitions
+	// Enttec Pro MK2 definitions for Port2
+	GET_WIDGET_PARAMS2 = 189;
+	GET_WIDGET_PARAMS_REPLY2 = 189;
+	SET_WIDGET_PARAMS2 = 195;
+	RECEIVE_DMX_PORT2 = 141;
+	SEND_DMX_PORT2 = 203;
+	SEND_DMX_RDM_TX2 = 139;
+	RECEIVE_DMX_ON_CHANGE2	= 143;
+	RECEIVED_DMX_COS_TYPE2	= 132;
+  SEND_RDM_DISCOVERY_REQUEST2 = 167;
+  RDM_CONTROLLER_RECEIVE_TIMEOUT2 = 138;
+
+	// Enttec Pro definitions for Port 1
 	GET_WIDGET_PARAMS = 3;
 	GET_WIDGET_PARAMS_REPLY = 3;
 	SET_WIDGET_PARAMS = 4;
@@ -33,6 +34,10 @@ const
 	SEND_DMX_RDM_TX = 7;
 	RECEIVE_DMX_ON_CHANGE	= 8;
 	RECEIVED_DMX_COS_TYPE	= 9;
+  SEND_RDM_DISCOVERY_REQUEST = 11;
+  RDM_CONTROLLER_RECEIVE_TIMEOUT = 12;
+
+
 	GET_WIDGET_SN = 10;
 	SET_API_KEY_LABEL = 13;
 	HARDWARE_VERSION_LABEL = 14;
@@ -129,6 +134,14 @@ type
     usedmxout2checkbox: TCheckBox;
     dmxin2enabled: TCheckBox;
     ReceiveMIDITimer: TTimer;
+    breaktimeedit2: TJvSpinEdit;
+    mabtimeedit2: TJvSpinEdit;
+    refreshrateedit2: TJvSpinEdit;
+    Button6: TButton;
+    Label19: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    Label22: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure DMXTimerTimer(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -142,6 +155,7 @@ type
     procedure DMXInputTimer(Sender: TObject);
     procedure JvSpinEdit2Change(Sender: TObject);
     procedure ReceiveMIDITimerTimer(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
   private
     { Private-Deklarationen }
     num_devices:byte;
@@ -151,7 +165,7 @@ type
     DMXinOK, DMXin2OK, DMXoutOK, DMXout2OK:boolean;
   public
     { Public-Deklarationen }
-	  PRO_Params: DMXUSBPROParamsType;
+	  PRO_Params, PRO_Params2: DMXUSBPROParamsType;
   	device_handle:THANDLE;//DWORD;
     issending:boolean;
     NewDataForOutput, NewDataForOutput2:boolean;
@@ -178,6 +192,7 @@ type
 	procedure FTDI_Reload;
 
     procedure ReadAdvancedInfos;
+    procedure ReadAdvancedInfos2;
     procedure ConnectToInterface;
     procedure ReconnectInterface;
     procedure DisconnectInterface;
@@ -483,6 +498,7 @@ begin
 
     // Erweiterte Infos abrufen
     ReadAdvancedInfos;
+    ReadAdvancedInfos2;
 
 		// Clear (purges) the buffer again
 		FT_Purge(device_handle,FT_PURGE_RX);
@@ -1012,6 +1028,17 @@ begin
     label17.Caption:='Offline'
   end;
 
+  if dmxin2enabled.Checked then
+  begin
+    if DMXInMessage2='' then
+      label19.Caption:='...'
+    else
+      label19.Caption:=DMXInMessage2;
+  end else
+  begin
+    label19.Caption:='Offline'
+  end;
+
   if DMXInOK and DMXOutOK then
     LastErrorString:='';
 end;
@@ -1082,10 +1109,6 @@ begin
   VersionMSB := PRO_Params.FirmwareMSB;
   VersionLSB := PRO_Params.FirmwareLSB;
 
-  // GET PRO's serial number
-  FTDI_SendData(GET_WIDGET_SN,@size,2);
-  FTDI_ReceiveData(GET_WIDGET_SN,@temp,4);
-
   // Display All PRO Parametrs & Info avialable
   memo1.lines.add('Interface information');
   memo1.lines.add('=====================');
@@ -1094,15 +1117,74 @@ begin
   MABTime := trunc(PRO_Params.MaBTime*10.67);
   memo1.lines.add('MAB TIME: '+inttostr(MABTime)+'탎');
   memo1.lines.add('SEND REFRESH RATE: '+inttostr(PRO_Params.RefreshRate)+'packets/sec');
+  // Erweiterte DMX512-Daten in GUI eintragen
+  breaktimeedit.value:=BreakTime;
+  mabtimeedit.value:=MABTime;
+  refreshrateedit.value:=PRO_Params.RefreshRate;
+
+  // GET PRO's serial number
+  FTDI_SendData(GET_WIDGET_SN,@size,2);
+  FTDI_ReceiveData(GET_WIDGET_SN,@temp,4);
 
   // Firmwareversion und Seriennummer abrufen
   label5.caption:=IntToHex(temp[3],2)+IntToHex(temp[2],2)+IntToHex(temp[1],2)+IntToHex(temp[0],2);
   label7.caption:='v'+inttostr(VersionMSB)+'.'+inttostr(VersionLSB);
+end;
 
-  // Erweiterte DMX512-Daten abrufen
-  breaktimeedit.value:=BreakTime;
-  mabtimeedit.value:=MABTime;
-  refreshrateedit.value:=PRO_Params.RefreshRate;
+procedure Tmainform.ReadAdvancedInfos2;
+var
+	res:integer;
+  size:integer;
+	BreakTime:integer;
+	MABTime:integer;
+begin
+	size := 0;
+
+  // Send Get Widget Parameters to get Device Info
+  memo1.lines.add('Sending GET_WIDGET_PARAMS2 packet... ');
+  res := FTDI_SendData(GET_WIDGET_PARAMS2,@size,2);
+  // Check Response
+  if (res = NO_RESPONSE) then
+  begin
+    FT_Purge(device_handle,FT_PURGE_TX);
+    res := FTDI_SendData(GET_WIDGET_PARAMS2,@size,2);
+    if (res = NO_RESPONSE) then
+    begin
+      memo1.lines.add('Error: no response from interface');
+      FTDI_ClosePort;
+      exit;
+    end;
+  end;
+  // Receive Widget Response
+  memo1.lines.add('Waiting for GET_WIDGET_PARAMS_REPLY2 packet... ');
+  res:=FTDI_ReceiveData(GET_WIDGET_PARAMS_REPLY2, @Pro_Params2, sizeof(Pro_Params2));
+  // Check Response
+  if (res = NO_RESPONSE) then
+  begin
+    // Receive Widget Response packet
+    res:=FTDI_ReceiveData(GET_WIDGET_PARAMS_REPLY2, @Pro_Params2, sizeof(Pro_Params2));
+    if (res = NO_RESPONSE) then
+    begin
+      memo1.lines.add('Error: no response from interface');
+      exit;
+    end;
+  end	else
+  begin
+    memo1.lines.add(' GET WIDGET REPLY2 Received ... ');
+  end;
+
+  // Display All PRO Parametrs & Info avialable
+  memo1.lines.add('Interface2 information');
+  memo1.lines.add('======================');
+  BreakTime := trunc(PRO_Params2.BreakTime*10.67);
+  memo1.lines.add('BREAK TIME2: '+inttostr(BreakTime)+'탎');
+  MABTime := trunc(PRO_Params2.MaBTime*10.67);
+  memo1.lines.add('MAB TIME2: '+inttostr(MABTime)+'탎');
+  memo1.lines.add('SEND REFRESH RATE2: '+inttostr(PRO_Params2.RefreshRate)+'packets/sec');
+  // Erweiterte DMX512-Daten in GUI eintragen
+  breaktimeedit2.value:=BreakTime;
+  mabtimeedit2.value:=MABTime;
+  refreshrateedit2.value:=PRO_Params.RefreshRate;
 end;
 
 procedure Tmainform.JvSpinEdit2Change(Sender: TObject);
@@ -1124,6 +1206,24 @@ begin
       // TODO: Do something with the received MIDI-Data
     end;
   end;
+end;
+
+procedure Tmainform.Button6Click(Sender: TObject);
+var
+	res:integer;
+  data:array[0..4] of byte;
+begin
+  data[0]:=0; // LSB of UserData-Length
+  data[1]:=0; // MSB of UserData-Length
+  data[2]:=round(breaktimeedit2.value/10.67); // Breaktime (9..127) - each digit is a 10.67탎
+  data[3]:=round(mabtimeedit2.Value/10.67); // Mark after Break Time (1..127) - each digit is a 10.67탎
+  data[4]:=round(refreshrateedit2.Value); // DMX Output Rate (0..40)
+	res := FTDI_SendData(SET_WIDGET_PARAMS2, @data, sizeof(data));
+
+  if res=NO_RESPONSE then
+    exit;
+
+  ReadAdvancedInfos2;
 end;
 
 end.

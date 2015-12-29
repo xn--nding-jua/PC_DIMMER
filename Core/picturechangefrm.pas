@@ -4,11 +4,12 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, pngimage, JvExControls, JvGradient, gnugettext;
+  Dialogs, ExtCtrls, StdCtrls, pngimage, JvExControls, JvGradient, gnugettext,
+  ComCtrls, ShlObj, cxShellCommon, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxContainer, cxEdit, cxListView, cxShellListView;
 
 type
   Tpicturechangeform = class(TForm)
-    ListBox1: TListBox;
     Panel1: TPanel;
     JvGradient1: TJvGradient;
     Image2: TImage;
@@ -19,27 +20,27 @@ type
     Shape2: TShape;
     Button1: TButton;
     Button2: TButton;
-    Panel3: TPanel;
-    Label2: TLabel;
-    Image1: TImage;
-    Button3: TButton;
     OpenDialog1: TOpenDialog;
     Panel4: TPanel;
     Label1: TLabel;
+    cxShellListView1: TcxShellListView;
+    cxShellListView2: TcxShellListView;
+    Button3: TButton;
+    Image1: TImage;
     procedure FormShow(Sender: TObject);
-    procedure ListBox1Click(Sender: TObject);
-    procedure ListBox1KeyUp(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure FormKeyUp(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button3Click(Sender: TObject);
     procedure CreateParams(var Params:TCreateParams);override;
+    procedure cxShellListView1KeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure cxShellListView2KeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure cxShellListView1SelectItem(Sender: TObject; Item: TListItem;
+      Selected: Boolean);
+    procedure cxShellListView2SelectItem(Sender: TObject; Item: TListItem;
+      Selected: Boolean);
   private
     { Private-Deklarationen }
-    Dateien:array of string;
-    procedure ListboxChanged;
   public
     { Public-Deklarationen }
     aktuellebilddatei:string;
@@ -55,94 +56,14 @@ uses PCDIMMER;
 {$R *.dfm}
 
 procedure Tpicturechangeform.FormShow(Sender: TObject);
-var
-  SR: TSearchRec;
-  searchdirectory:string;
-  i:integer;
 begin
-  Listbox1.Items.Clear;
-  setlength(Dateien,0);
-
-  searchdirectory:=mainform.pcdimmerdirectory+'\DevicePictures\32 x 32';
-  if (FindFirst(searchdirectory+'\*.png',faAnyFile-faDirectory,SR)=0) then
-  begin
-    repeat
-      if (SR.Name<>'.') and (SR.Name<>'..') and (SR.Attr<>faDirectory) then
-      begin
-        setlength(Dateien, length(Dateien)+1);
-        Dateien[length(Dateien)-1]:=mainform.pcdimmerdirectory+'\DevicePictures\32 x 32\'+SR.Name;
-        Listbox1.Items.Add(SR.Name);
-      end;
-    until FindNext(SR)<>0;
-    FindClose(SR);
-  end;
-  searchdirectory:=mainform.pcdimmerdirectory+'\DevicePictures\Gobos';
-  if (FindFirst(searchdirectory+'\*.png',faAnyFile-faDirectory,SR)=0) then
-  begin
-    repeat
-      if (SR.Name<>'.') and (SR.Name<>'..') and (SR.Attr<>faDirectory) then
-      begin
-        setlength(Dateien, length(Dateien)+1);
-        Dateien[length(Dateien)-1]:=mainform.pcdimmerdirectory+'\DevicePictures\Gobos\'+SR.Name;
-        Listbox1.Items.Add(SR.Name);
-      end;
-    until FindNext(SR)<>0;
-    FindClose(SR);
-  end;
-
-  Listbox1.ItemIndex:=0;
-  if Listbox1.items.count>0 then
-  begin
-    for i:=0 to Listbox1.Items.count-1 do
-    begin
-      if lowercase(Listbox1.items[i])=lowercase(ExtractFileName(aktuellebilddatei)) then
-        Listbox1.ItemIndex:=i;
-    end;
-    ListboxChanged;
-  end;
-end;
-
-procedure Tpicturechangeform.ListboxChanged;
-begin
-  if (Listbox1.items.count>0) and (Listbox1.itemindex>-1) then
-  begin
-    Image1.Picture.LoadFromFile(Dateien[Listbox1.ItemIndex]);
-    aktuellebilddatei:=Dateien[Listbox1.ItemIndex];
-  end;
-end;
-
-procedure Tpicturechangeform.ListBox1Click(Sender: TObject);
-begin
-  ListboxChanged;
-end;
-
-procedure Tpicturechangeform.ListBox1KeyUp(Sender: TObject;
-  var Key: Word; Shift: TShiftState);
-begin
-  ListboxChanged;
-
-  if Key=vk_return then
-    modalresult:=mrOK;
-  if Key=vk_escape then
-    modalresult:=mrCancel;
-end;
-
-procedure Tpicturechangeform.FormKeyUp(Sender: TObject;
-  var Key: Word; Shift: TShiftState);
-begin
-  if Key=vk_escape then
-    modalresult:=mrCancel;
+  cxShellListView1.Root.CustomPath:=ExtractFilepath(paramstr(0))+'Devicepictures\32 x 32\';
+  cxShellListView2.Root.CustomPath:=ExtractFilepath(paramstr(0))+'Devicepictures\Gobos\';
 end;
 
 procedure Tpicturechangeform.FormCreate(Sender: TObject);
 begin
   TranslateComponent(self);
-end;
-
-procedure Tpicturechangeform.FormClose(Sender: TObject;
-  var Action: TCloseAction);
-begin
-  setlength(Dateien, 0);
 end;
 
 procedure Tpicturechangeform.Button3Click(Sender: TObject);
@@ -166,6 +87,42 @@ begin
       Params.WndParent:=GetDesktopWindow;
       self.ParentWindow := GetDesktopWindow;
     end;
+  end;
+end;
+
+procedure Tpicturechangeform.cxShellListView1KeyUp(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if Key=vk_return then
+    modalresult:=mrOK
+  else if Key=vk_escape then
+    modalresult:=mrCancel;
+end;
+
+procedure Tpicturechangeform.cxShellListView2KeyUp(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if Key=vk_return then
+    modalresult:=mrOK
+  else if Key=vk_escape then
+    modalresult:=mrCancel;
+end;
+
+procedure Tpicturechangeform.cxShellListView1SelectItem(Sender: TObject;
+  Item: TListItem; Selected: Boolean);
+begin
+  if (Item<>nil) and (Item.Caption<>'') then
+  begin
+    aktuellebilddatei:=ExtractFilepath(paramstr(0))+'Devicepictures\32 x 32\'+Item.Caption;
+  end;
+end;
+
+procedure Tpicturechangeform.cxShellListView2SelectItem(Sender: TObject;
+  Item: TListItem; Selected: Boolean);
+begin
+  if (Item<>nil) and (Item.Caption<>'') then
+  begin
+    aktuellebilddatei:=ExtractFilepath(paramstr(0))+'Devicepictures\Gobos\'+Item.Caption;
   end;
 end;
 
