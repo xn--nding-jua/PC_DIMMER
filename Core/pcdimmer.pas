@@ -1162,6 +1162,7 @@ type
     procedure StartSceneWithoutRecord(ID:TGUID; NoFadetime, NoDelay:boolean; Intensity:Byte; Fadetime:integer);overload;
     procedure StopScene(ID:TGUID);overload;
     procedure StopSceneWithoutRecord(ID:TGUID);overload;
+    procedure BlackoutDeviceScene(ID:TGUID; Fadetime:integer);
     function DoesSceneExists(ID:TGUID):boolean;
     procedure StopAllEffects;
 
@@ -16868,7 +16869,7 @@ begin
                     if effektsequenzereffekte[i].Effektschritte[j].Devices[k].ChanActive[l] then
                     begin
                       channeltype:=mainform.devices[deviceposition].kanaltyp[l];
-                      if (lowercase(channeltype)='dimmer') or (lowercase(channeltype)='r') or (lowercase(channeltype)='g') or (lowercase(channeltype)='b') or (lowercase(channeltype)='a') or (lowercase(channeltype)='w') then
+                      if (lowercase(channeltype)='dimmer') or (lowercase(channeltype)='r') or (lowercase(channeltype)='g') or (lowercase(channeltype)='b') or (lowercase(channeltype)='a') or (lowercase(channeltype)='w') or (lowercase(channeltype)='uv') then
                         geraetesteuerung.set_channel(effektsequenzereffekte[i].Effektschritte[j].Devices[k].ID, channeltype, -1, 0, 200);
                       if (lowercase(channeltype)='shutter') then
                         geraetesteuerung.set_shutter(effektsequenzereffekte[i].Effektschritte[j].Devices[k].ID, 0);
@@ -16882,7 +16883,8 @@ begin
               for k:=0 to length(effektsequenzereffekte[i].Effektschritte[j].IDs)-1 do
               begin
                 StopScene(effektsequenzereffekte[i].Effektschritte[j].IDs[k]);
-                //StartScene(effektsequenzereffekte[i].Effektschritte[j].IDs[k], false, false, 0, 200);
+                BlackoutDeviceScene(effektsequenzereffekte[i].Effektschritte[j].IDs[k], 200);
+                //StartScene(effektsequenzereffekte[i].Effektschritte[j].IDs[k], false, false, 0, 200); // will change all channeltypes to 0
               end;
             end;
           end;
@@ -18635,6 +18637,73 @@ begin
   begin
     scenenotfoundform.guidlbl.Caption:=GUIDtoString(ID);
     scenenotfoundform.show;
+  end;
+end;
+
+procedure Tmainform.BlackoutDeviceScene(ID:TGUID; Fadetime:integer);
+var
+  i,j,k,m:integer;
+  PositionInDeviceArray,PositionInGroupArray:integer;
+  channeltype:string;
+begin
+  for i:=0 to length(devicescenes)-1 do
+  begin
+    if IsEqualGUID(devicescenes[i].ID, ID) then
+    begin
+      for j:=0 to length(devicescenes[i].Devices)-1 do
+      begin
+        PositionInDeviceArray:=-1;
+        PositionInGroupArray:=-1;
+
+        for m:=0 to length(devices)-1 do
+        begin
+          if IsEqualGUID(devices[m].ID,devicescenes[i].Devices[j].ID) then
+          begin
+            PositionInDeviceArray:=m;
+            break;
+          end;
+        end;
+
+        for m:=0 to length(devicegroups)-1 do
+        begin
+          if IsEqualGUID(devicegroups[m].ID,devicescenes[i].Devices[j].ID) then
+          begin
+            PositionInGroupArray:=m;
+            break;
+          end;
+        end;
+
+        if PositionInDeviceArray>-1 then
+        begin
+          for k:=0 to length(devicescenes[i].Devices[j].ChanActive)-1 do
+          begin
+            if devicescenes[i].Devices[j].ChanActive[k] or devicescenes[i].Devices[j].ChanActiveRandom[k] then
+            begin
+              channeltype:=mainform.devices[PositionInDeviceArray].kanaltyp[k];
+              if (lowercase(channeltype)='dimmer') or (lowercase(channeltype)='r') or (lowercase(channeltype)='g') or (lowercase(channeltype)='b') or (lowercase(channeltype)='a') or (lowercase(channeltype)='w') or (lowercase(channeltype)='uv') then
+                geraetesteuerung.set_channel(devicescenes[i].Devices[j].ID, channeltype, -1, 0, Fadetime);
+              if (lowercase(channeltype)='shutter') then
+                geraetesteuerung.set_shutter(devicescenes[i].Devices[j].ID, 0);
+            end;
+          end;
+        end else if PositionInGroupArray>-1 then
+        begin
+          for k:=0 to length(devicescenes[i].Devices[j].ChanActive)-1 do
+          begin
+            if devicescenes[i].Devices[j].ChanActive[k] or devicescenes[i].Devices[j].ChanActiveRandom[k] then
+            begin
+              channeltype:=DeviceChannelNames[k];
+              if (lowercase(channeltype)='dimmer') or (lowercase(channeltype)='r') or (lowercase(channeltype)='g') or (lowercase(channeltype)='b') or (lowercase(channeltype)='a') or (lowercase(channeltype)='w') or (lowercase(channeltype)='uv') then
+                geraetesteuerung.set_channel(devicescenes[i].Devices[j].ID, channeltype, -1, 0, Fadetime);
+              if (lowercase(channeltype)='shutter') then
+                geraetesteuerung.set_shutter(devicescenes[i].Devices[j].ID, 0);
+            end;
+          end;
+        end;
+      end;
+
+      break;
+    end;
   end;
 end;
 
