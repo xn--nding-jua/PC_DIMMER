@@ -21751,6 +21751,12 @@ begin
     begin
       joystickform.Openfile(filetoopen);
     end;
+    
+    // Falls Timecodeplayerdatei
+    if copy(filetoopen,length(filetoopen)-6,7)='pcdtmcl' then
+    begin
+      timecodeplayerform.Openfile(filetoopen);
+    end;
   end else
   begin
     DebugAdd('ERROR: '+_('Die zu öffnende Datei konnte nicht gefunden werden')+': '+filetoopen);

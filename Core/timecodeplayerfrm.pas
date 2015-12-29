@@ -101,6 +101,7 @@ type
     MidiTime:Cardinal;
     procedure NewFile;
     procedure MSGOpen;
+    procedure Openfile(Filename: string);
   end;
 
 var
@@ -724,6 +725,29 @@ begin
   end;
 end;
 
+procedure Ttimecodeplayerform.Openfile(Filename: string);
+var
+  j,startindex,count2:integer;
+begin
+  FileStream:=TFileStream.Create(Opendialog1.FileName,fmOpenRead);
+
+  FileStream.ReadBuffer(mainform.Timecodeplayerbank[BankSelect.Itemindex].BankName,sizeof(mainform.Timecodeplayerbank[BankSelect.Itemindex].BankName));
+  FileStream.ReadBuffer(count2,sizeof(count2));
+  setlength(mainform.Timecodeplayerbank[BankSelect.Itemindex].Timecodeplayerbankitems,count2);
+  setlength(mainform.Timecodeplayerbank[BankSelect.Itemindex].Time,count2);
+  setlength(mainform.Timecodeplayerbank[BankSelect.Itemindex].Frame,count2);
+  for j:=0 to count2-1 do
+  begin
+    FileStream.ReadBuffer(mainform.Timecodeplayerbank[BankSelect.Itemindex].Timecodeplayerbankitems[j],sizeof(mainform.Timecodeplayerbank[BankSelect.Itemindex].Timecodeplayerbankitems[j]));
+    FileStream.ReadBuffer(mainform.Timecodeplayerbank[BankSelect.Itemindex].Time[j],sizeof(mainform.Timecodeplayerbank[BankSelect.Itemindex].Time[j]));
+    FileStream.ReadBuffer(mainform.Timecodeplayerbank[BankSelect.Itemindex].Frame[j],sizeof(mainform.Timecodeplayerbank[BankSelect.Itemindex].Frame[j]));
+  end;
+
+  FileStream.Free;
+
+  BankSelectChange(BankSelect);
+end;
+
 procedure Ttimecodeplayerform.SpeedButton2Click(Sender: TObject);
 var
   j,startindex,count2:integer;
@@ -763,21 +787,7 @@ begin
       FileStream.Free;
     end else
     begin
-      FileStream:=TFileStream.Create(Opendialog1.FileName,fmOpenRead);
-
-      FileStream.ReadBuffer(mainform.Timecodeplayerbank[BankSelect.Itemindex].BankName,sizeof(mainform.Timecodeplayerbank[BankSelect.Itemindex].BankName));
-      FileStream.ReadBuffer(count2,sizeof(count2));
-      setlength(mainform.Timecodeplayerbank[BankSelect.Itemindex].Timecodeplayerbankitems,count2);
-      setlength(mainform.Timecodeplayerbank[BankSelect.Itemindex].Time,count2);
-      setlength(mainform.Timecodeplayerbank[BankSelect.Itemindex].Frame,count2);
-      for j:=0 to count2-1 do
-      begin
-        FileStream.ReadBuffer(mainform.Timecodeplayerbank[BankSelect.Itemindex].Timecodeplayerbankitems[j],sizeof(mainform.Timecodeplayerbank[BankSelect.Itemindex].Timecodeplayerbankitems[j]));
-        FileStream.ReadBuffer(mainform.Timecodeplayerbank[BankSelect.Itemindex].Time[j],sizeof(mainform.Timecodeplayerbank[BankSelect.Itemindex].Time[j]));
-        FileStream.ReadBuffer(mainform.Timecodeplayerbank[BankSelect.Itemindex].Frame[j],sizeof(mainform.Timecodeplayerbank[BankSelect.Itemindex].Frame[j]));
-      end;
-
-      FileStream.Free;
+      Openfile(Opendialog1.FileName);
     end;
 
     BankSelectChange(BankSelect);
