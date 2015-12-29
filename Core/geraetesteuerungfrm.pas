@@ -442,6 +442,10 @@ type
     procedure set_gobo1rot(DeviceID: TGUID; Value:integer; Fadetime:integer=0; Delaytime:integer=0);
     procedure set_gobo2rot(DeviceID: TGUID; Value:integer; Fadetime:integer=0; Delaytime:integer=0);
     procedure set_gobo(DeviceID: TGUID; GoboName:string);
+    procedure set_gobo1plus(DeviceID: TGUID);
+    procedure set_gobo1minus(DeviceID: TGUID);
+    procedure set_gobo2plus(DeviceID: TGUID);
+    procedure set_gobo2minus(DeviceID: TGUID);
     function get_dimmer(DeviceID: TGUID):integer;
     function get_strobe(DeviceID: TGUID):integer;
     function get_shutter(DeviceID: TGUID):integer;
@@ -6779,6 +6783,142 @@ begin
   end;
 
   grafischebuehnenansicht.doimmediaterefresh:=true;
+end;
+
+procedure Tgeraetesteuerung.set_gobo1plus(DeviceID: TGUID);
+var
+  i, j, intvalue:integer;
+begin
+  for i:=0 to length(mainform.Devices)-1 do
+  begin
+    if IsEqualGUID(mainform.Devices[i].ID, DeviceID) then
+    begin
+      if length(mainform.devices[i].gobos)>0 then
+      begin
+        intvalue:=geraetesteuerung.get_channel(mainform.devices[i].ID, 'GOBO1');
+
+        for j:=0 to length(mainform.devices[i].gobos)-1 do
+        begin
+          if (intvalue>=mainform.devices[i].gobolevels[j]) and (intvalue<=mainform.Devices[i].goboendlevels[j]) then
+          begin
+            if j<length(mainform.devices[i].gobos) then
+              intvalue:=j+1
+            else
+              intvalue:=j;
+            break;
+          end;
+        end;
+
+        geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO1', -1, mainform.devices[i].gobolevels[intvalue], 0, 0);
+
+        grafischebuehnenansicht.doimmediaterefresh:=true;
+      end;
+        
+      break;
+    end;
+  end;
+end;
+
+procedure Tgeraetesteuerung.set_gobo1minus(DeviceID: TGUID);
+var
+  i, j, intvalue:integer;
+begin
+  for i:=0 to length(mainform.Devices)-1 do
+  begin
+    if IsEqualGUID(mainform.Devices[i].ID, DeviceID) then
+    begin
+      if length(mainform.devices[i].gobos)>0 then
+      begin
+        intvalue:=geraetesteuerung.get_channel(mainform.devices[i].ID, 'GOBO1');
+
+        for j:=0 to length(mainform.devices[i].gobos)-1 do
+        begin
+          if (intvalue>=mainform.devices[i].gobolevels[j]) and (intvalue<=mainform.Devices[i].goboendlevels[j]) then
+          begin
+            if j>0 then
+              intvalue:=j-1
+            else
+              intvalue:=j;
+            break;
+          end;
+        end;
+
+        geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO1', -1, mainform.devices[i].gobolevels[intvalue], 0, 0);
+
+        grafischebuehnenansicht.doimmediaterefresh:=true;
+      end;
+        
+      break;
+    end;
+  end;
+end;
+
+procedure Tgeraetesteuerung.set_gobo2plus(DeviceID: TGUID);
+var
+  i, j, intvalue:integer;
+begin
+  for i:=0 to length(mainform.Devices)-1 do
+  begin
+    if IsEqualGUID(mainform.Devices[i].ID, DeviceID) then
+    begin
+      if length(mainform.devices[i].gobos2)>0 then
+      begin
+        intvalue:=geraetesteuerung.get_channel(mainform.devices[i].ID, 'GOBO2');
+
+        for j:=0 to length(mainform.devices[i].gobos2)-1 do
+        begin
+          if (intvalue>=mainform.devices[i].gobolevels2[j]) and (intvalue<=mainform.Devices[i].goboendlevels2[j]) then
+          begin
+            if j<length(mainform.devices[i].gobos2) then
+              intvalue:=j+1
+            else
+              intvalue:=j;
+            break;
+          end;
+        end;
+
+        geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO2', -1, mainform.devices[i].gobolevels2[intvalue], 0, 0);
+
+        grafischebuehnenansicht.doimmediaterefresh:=true;
+      end;
+        
+      break;
+    end;
+  end;
+end;
+
+procedure Tgeraetesteuerung.set_gobo2minus(DeviceID: TGUID);
+var
+  i, j, intvalue:integer;
+begin
+  for i:=0 to length(mainform.Devices)-1 do
+  begin
+    if IsEqualGUID(mainform.Devices[i].ID, DeviceID) then
+    begin
+      if length(mainform.devices[i].gobos2)>0 then
+      begin
+        intvalue:=geraetesteuerung.get_channel(mainform.devices[i].ID, 'GOBO2');
+
+        for j:=0 to length(mainform.devices[i].gobos2)-1 do
+        begin
+          if (intvalue>=mainform.devices[i].gobolevels2[j]) and (intvalue<=mainform.Devices[i].goboendlevels2[j]) then
+          begin
+            if j>0 then
+              intvalue:=j-1
+            else
+              intvalue:=j;
+            break;
+          end;
+        end;
+
+        geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO2', -1, mainform.devices[i].gobolevels2[intvalue], 0, 0);
+
+        grafischebuehnenansicht.doimmediaterefresh:=true;
+      end;
+        
+      break;
+    end;
+  end;
 end;
 
 function Tgeraetesteuerung.get_dimmer(DeviceID: TGUID):integer;
