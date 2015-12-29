@@ -824,34 +824,13 @@ end;
 
 procedure Ttouchscreenform.nextgobo1btnClick(Sender: TObject);
 var
-  i, j, value:integer;
+  i:integer;
 begin
   for i:=0 to length(mainform.Devices)-1 do
   begin
     if mainform.DeviceSelected[i] then
-    begin
-      if length(mainform.devices[i].gobos)=0 then
-        continue;
-
-      value:=geraetesteuerung.get_channel(mainform.devices[i].ID, 'GOBO1');
-
-      for j:=0 to length(mainform.devices[i].gobos)-1 do
-      begin
-        if (value>=mainform.devices[i].gobolevels[j]) and (value<=mainform.Devices[i].goboendlevels[j]) then
-        begin
-          if j<length(mainform.devices[i].gobos) then
-            value:=j+1
-          else
-            value:=j;
-          break;
-        end;
-      end;
-
-      geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO1', -1, mainform.devices[i].gobolevels[value], 0, 0);
-    end;
+      geraetesteuerung.set_gobo1plus(mainform.Devices[i].ID);
   end;
-
-  grafischebuehnenansicht.doimmediaterefresh:=true;
 end;
 
 procedure Ttouchscreenform.nextcolor1btnClick(Sender: TObject);
@@ -916,34 +895,13 @@ end;
 
 procedure Ttouchscreenform.nextgobo2btnClick(Sender: TObject);
 var
-  i, j, value:integer;
+  i:integer;
 begin
   for i:=0 to length(mainform.Devices)-1 do
   begin
     if mainform.DeviceSelected[i] then
-    begin
-      if length(mainform.devices[i].gobos2)=0 then
-        continue;
-
-      value:=geraetesteuerung.get_channel(mainform.devices[i].ID, 'GOBO2');
-
-      for j:=0 to length(mainform.devices[i].gobos2)-1 do
-      begin
-        if (value>=mainform.devices[i].gobolevels2[j]) and (value<=mainform.Devices[i].goboendlevels2[j]) then
-        begin
-          if j<length(mainform.devices[i].gobos2) then
-            value:=j+1
-          else
-            value:=j;
-          break;
-        end;
-      end;
-
-      geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO2', -1, mainform.devices[i].gobolevels2[value], 0, 0);
-    end;
+      geraetesteuerung.set_gobo2plus(mainform.Devices[i].ID);
   end;
-
-  grafischebuehnenansicht.doimmediaterefresh:=true;
 end;
 
 procedure Ttouchscreenform.prevgobo1btnClick(Sender: TObject);
