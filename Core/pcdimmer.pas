@@ -9302,7 +9302,6 @@ begin
   Optionenbox.Autosavetrackbar.Position:=autobackupcountermax;
   Optionenbox.AutosavetrackbarChange(nil);
   Optionenbox.maxautobackupfilesedit.Value:=maxautobackupfiles;
-  Optionenbox.HTTPServerPortEdit.text:=inttostr(FHTTPServer.DefaultPort);
   Optionenbox.HTTPServerPasswordCheckbox.Checked:=FHTTPServer.UsePassword;
   Optionenbox.HTTPServerPassword.Text:= FHTTPServer.Password;
   Optionenbox.mbs_onlineCheckbox.Checked:=MBS_Online;
@@ -9447,18 +9446,6 @@ begin
   DimmerkernelResolutionAutoset:=Optionenbox.dimmerkernelresolutioncheck.Checked;
   AutoFader.Interval:=DimmerkernelResolution;
   QuitWithoutConfirmation:=Optionenbox.QuitWithoutConfirmation.Checked;
-  if FHTTPServer.DefaultPort<>strtoint(Optionenbox.HTTPServerPortEdit.Text) then
-  begin
-    if FHTTPServer.Active then
-    begin
-      FHTTPServer.Active:=false;
-      FHTTPServer.DefaultPort:=strtoint(Optionenbox.HTTPServerPortEdit.Text);
-      FHTTPServer.Active:=true;
-    end else
-    begin
-      FHTTPServer.DefaultPort:=strtoint(Optionenbox.HTTPServerPortEdit.Text);
-    end;
-  end;
 
   rfr_main:=round(Optionenbox.rfr_main.Value);
   rfr_aep:=round(Optionenbox.rfr_aep.Value);
@@ -12558,9 +12545,44 @@ begin
   LReg := TPCDRegistry.Create;
   if LReg.OpenRegKey('') then
   begin
+    // HTTP-Server aktivieren, sofern beim letzten mal aktiv
+    FHTTPServer := TPCDHTTPServer.Create(Application);
+    if LReg.ValueExists('Start HTTP-Server') then
+      if LReg.ReadBool('Start HTTP-Server') then
+      begin
+        FHTTPServer.Active := true;
+        if not FHTTPServer.Active then
+        begin
+          DebugAdd('Init: Cannot start webserver.');
+          ShowMessage(_('Webserver kann nicht gestartet werden!'));
+        end;
+      end;
+    if LReg.ValueExists('Use HTTP Password') then
+      FHTTPServer.UsePassword := LReg.ReadBool('Use HTTP Password');
+    HTTPServerActivateRibbonBox.Down:=FHTTPServer.Active;
+
+    if LReg.ValueExists('HTTP Password') then
+    begin
+      LReg.ReadBinaryData('HTTP Password',httppasswordscrambled,sizeof(httppasswordscrambled));
+
+      with TCipher_Blowfish.Create do
+      try
+        Init(blowfishscramblekey);
+        FHTTPServer.Password := DecodeBinary(httppasswordscrambled, TFormat_Copy);
+      finally
+        Free;
+      end;
+    end;
+
     // Terminalschnittstelle aktivieren, sofern beim letzten mal aktiv
     if LReg.ReadWriteBool('Terminalserver active', false) then
     begin
+      if not FHTTPServer.Active then
+      begin
+        HTTPServerActivateRibbonBox.Down:=true;
+        FHTTPServer.Active:=true;
+      end;
+
       ActivateCommandReceiverRibbonBox.Down:=true;
       Commandserver.DefaultPort:=terminalport;
       Commandserver.Active:=ActivateCommandReceiverRibbonBox.Down;
@@ -12595,39 +12617,10 @@ begin
   SplashCaptioninfo(_('Letzte Einstellungen laden...'));
   RefreshSplashText;
 
-  FHTTPServer := TPCDHTTPServer.Create(Application);
   // Einstellungen aus Registry lesen
   LReg := TPCDRegistry.Create;
   if LReg.OpenRegKey('') then
   begin
-    if LReg.ValueExists('HTTP-Server Port') then
-      FHTTPServer.DefaultPort := LReg.ReadInteger('HTTP-Server Port');
-    if LReg.ValueExists('Start HTTP-Server') then
-      if LReg.ReadBool('Start HTTP-Server') then
-      begin
-        FHTTPServer.Active := true;
-        if not FHTTPServer.Active then
-        begin
-          DebugAdd('Init: Cannot start webserver.');
-          ShowMessage(_('Webserver kann nicht gestartet werden!'));
-        end;
-      end;
-    if LReg.ValueExists('Use HTTP Password') then
-      FHTTPServer.UsePassword := LReg.ReadBool('Use HTTP Password');
-    HTTPServerActivateRibbonBox.Down:=FHTTPServer.Active;
-
-    if LReg.ValueExists('HTTP Password') then
-    begin
-      LReg.ReadBinaryData('HTTP Password',httppasswordscrambled,sizeof(httppasswordscrambled));
-
-      with TCipher_Blowfish.Create do
-      try
-        Init(blowfishscramblekey);
-        FHTTPServer.Password := DecodeBinary(httppasswordscrambled, TFormat_Copy);
-      finally
-        Free;
-      end;
-    end;
     if LReg.ValueExists('Autolocktime') then
       autolocktime:=LReg.ReadInteger('Autolocktime');
     if LReg.ValueExists('Autolockcode') then
@@ -21922,7 +21915,6 @@ begin
     LReg.WriteInteger('Autobackup',Autobackupcountermax);
     LReg.WriteInteger('Autobackup Files',maxautobackupfiles);
     LReg.WriteInteger('Timer',animationtimer);
-    LReg.WriteInteger('HTTP-Server Port',strtoint(Optionenbox.HTTPServerPortEdit.text));
     LReg.WriteBool('Use HTTP Password',OptionenBox.HTTPServerPasswordCheckbox.Checked);
     LReg.WriteBool('MidiBeatSignal On',MBS_Online);
     LReg.WriteInteger('MidiBeatSignal MSG On',MBS_MSGon);
@@ -22558,6 +22550,12 @@ var
   LReg:TPCDRegistry;
 begin
   if not UserAccessGranted(1) then exit;
+
+  if not FHTTPServer.Active then
+  begin
+    HTTPServerActivateRibbonBox.Down:=true;
+    FHTTPServer.Active:=true;
+  end;
 
   Commandserver.DefaultPort:=terminalport;
   Commandserver.Active:=ActivateCommandReceiverRibbonBox.Down;

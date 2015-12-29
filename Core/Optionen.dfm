@@ -74,7 +74,6 @@ object OptionenBox: TOptionenBox
     Width = 576
     Height = 350
     Align = alClient
-    PageIndex = 7
     TabOrder = 0
     object TPage
       Left = 0
@@ -1011,7 +1010,7 @@ object OptionenBox: TOptionenBox
         Height = 21
         Hint = 'Soundkarte: '
         Style = csDropDownList
-        ItemHeight = 13
+        ItemHeight = 0
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
@@ -1600,30 +1599,15 @@ object OptionenBox: TOptionenBox
         Left = 16
         Top = 32
         Width = 177
-        Height = 177
+        Height = 89
         Caption = ' HTTP-Server '
         TabOrder = 0
-        object Label36: TLabel
-          Left = 8
-          Top = 24
-          Width = 46
-          Height = 13
-          Caption = 'TCP-Port:'
-        end
         object Label37: TLabel
           Left = 8
-          Top = 88
+          Top = 24
           Width = 96
           Height = 13
           Caption = 'Kennwort f'#252'r Zugriff:'
-        end
-        object HTTPServerPortEdit: TEdit
-          Left = 8
-          Top = 40
-          Width = 65
-          Height = 21
-          TabOrder = 0
-          Text = '80'
         end
         object HTTPServerPasswordCheckbox: TCheckBox
           Left = 8
@@ -1631,22 +1615,22 @@ object OptionenBox: TOptionenBox
           Width = 153
           Height = 17
           Caption = 'Kennwortabfrage aktiviert'
-          TabOrder = 1
+          TabOrder = 0
         end
         object HTTPServerPassword: TEdit
           Left = 8
-          Top = 104
+          Top = 40
           Width = 161
           Height = 21
           PasswordChar = '*'
-          TabOrder = 2
+          TabOrder = 1
         end
       end
       object GroupBox10: TGroupBox
         Left = 200
         Top = 32
         Width = 137
-        Height = 81
+        Height = 89
         Caption = ' Terminalschnittstelle '
         TabOrder = 1
         object Label51: TLabel
@@ -1666,10 +1650,10 @@ object OptionenBox: TOptionenBox
         end
       end
       object GroupBox11: TGroupBox
-        Left = 200
-        Top = 128
+        Left = 344
+        Top = 32
         Width = 137
-        Height = 81
+        Height = 89
         Caption = ' MediaCenter Timecode '
         TabOrder = 2
         object Label52: TLabel

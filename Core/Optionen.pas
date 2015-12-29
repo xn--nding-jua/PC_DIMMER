@@ -118,8 +118,6 @@ type
     Label50: TLabel;
     autolockcode: TEdit;
     GroupBox9: TGroupBox;
-    Label36: TLabel;
-    HTTPServerPortEdit: TEdit;
     HTTPServerPasswordCheckbox: TCheckBox;
     HTTPServerPassword: TEdit;
     Label37: TLabel;
