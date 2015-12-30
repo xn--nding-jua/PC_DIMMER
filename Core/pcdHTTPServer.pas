@@ -137,13 +137,13 @@ begin
   LParamValue := ARequestInfo.Params.Values['goto'];
   if not (LParamValue = '') then begin
     LHistoryBack := false;
-    if lowercase(LParamValue) = _('hauptseite') then FServerActivePage:=0;
-    if lowercase(LParamValue) = _('kanalübersicht') then FServerActivePage:=1;
-    if lowercase(LParamValue) = _('geräteübersicht') then FServerActivePage:=2;
-    if lowercase(LParamValue) = _('timer') then FServerActivePage:=3;
-    if lowercase(LParamValue) = _('kontrollpanel') then FServerActivePage:=4;
-    if lowercase(LParamValue) = _('szenen') then FServerActivePage:=5;
-    if lowercase(LParamValue) = _('bühnenansicht') then FServerActivePage:=6;
+    if lowercase(LParamValue) = 'main' then FServerActivePage:=0;
+    if lowercase(LParamValue) = 'channels' then FServerActivePage:=1;
+    if lowercase(LParamValue) = 'devices' then FServerActivePage:=2;
+    if lowercase(LParamValue) = 'timer' then FServerActivePage:=3;
+    if lowercase(LParamValue) = 'controlpanel' then FServerActivePage:=4;
+    if lowercase(LParamValue) = 'scenes' then FServerActivePage:=5;
+    if lowercase(LParamValue) = 'stageview' then FServerActivePage:=6;
   end;
 
   FServerLastActivePage := FServerActivePage;
@@ -282,13 +282,13 @@ var
   LHeader,LFooter:string;
 begin
   LHeader := '<form method="POST"><p>'+
-               '<input type="submit" value="'+_('Hauptseite')+'" name="goto">&nbsp;'+
-               '<input type="submit" value="'+_('Kanalübersicht')+'" name="goto">&nbsp;'+
-               '<input type="submit" value="'+_('Geräteübersicht')+'" name="goto">&nbsp;'+
-               '<input type="submit" value="'+_('Kontrollpanel')+'" name="goto">&nbsp;'+
-               '<input type="submit" value="'+_('Szenen')+'" name="goto">&nbsp;'+
-               '<input type="submit" value="'+_('Timer')+'" name="goto">&nbsp;'+
-               '<input type="submit" value="'+_('Bühnenansicht')+'" name="goto"></p></form>';
+               '<input type="submit" value="Main" name="goto">&nbsp;'+
+               '<input type="submit" value="Channels" name="goto">&nbsp;'+
+               '<input type="submit" value="Devices" name="goto">&nbsp;'+
+               '<input type="submit" value="Controlpanel" name="goto">&nbsp;'+
+               '<input type="submit" value="Scenes" name="goto">&nbsp;'+
+               '<input type="submit" value="Timer" name="goto">&nbsp;'+
+               '<input type="submit" value="Stageview" name="goto"></p></form>';
   LFooter := '<br><br><br><hr><br><font face="Arial" size="2"><font style="font-size: 10pt">'+
              '<center><img border="0" src="HTML/pcdimmerlogo.jpg"><br>'+
              'PC_DIMMER (c) 2004-2015 by Dipl.-Ing. Christian Nöding</center></font>';
