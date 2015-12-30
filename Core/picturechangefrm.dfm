@@ -454,10 +454,6 @@ object picturechangeform: Tpicturechangeform
     Options.ContextMenus = False
     Options.AutoExecute = False
     ReadOnly = True
-    Root.BrowseFolder = bfCustomPath
-    Root.CustomPath = 
-      'C:\Cloud\Programmieren\Delphi\PC_DIMMER\Core\Devicepictures\32 x' +
-      ' 32\'
     Sorting = True
     TabOrder = 3
     ThumbnailOptions.Height = 32
@@ -477,10 +473,6 @@ object picturechangeform: Tpicturechangeform
     Options.ContextMenus = False
     Options.AutoExecute = False
     ReadOnly = True
-    Root.BrowseFolder = bfCustomPath
-    Root.CustomPath = 
-      'C:\Cloud\Programmieren\Delphi\PC_DIMMER\Core\Devicepictures\Gobo' +
-      's\'
     Sorting = True
     TabOrder = 4
     ThumbnailOptions.Height = 32

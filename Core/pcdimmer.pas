@@ -3564,7 +3564,7 @@ begin
   inprogress.Refresh;
 
   // Wait for accu thread to stop
-  inprogress.filename.Caption:=_('Stopping accu thread...');
+  inprogress.filename.Caption:=_('Stoppe Akku-Thread...');
   inprogress.ProgressBar1.Position:=97;
   inprogress.Refresh;
   WaitForSingleObject(accuThread.Handle, 4000);
@@ -23616,15 +23616,15 @@ begin
 
         if i<0 then
           NodeControlSets[Pos1].NodeControlNodes[Pos2].X:=0
-        else if i>(Paintbox1.Width) then
-          NodeControlSets[Pos1].NodeControlNodes[Pos2].X:=Paintbox1.Width
+        else if i>(nodecontrolform.Paintbox1.Width) then
+          NodeControlSets[Pos1].NodeControlNodes[Pos2].X:=nodecontrolform.Paintbox1.Width
         else
           NodeControlSets[Pos1].NodeControlNodes[Pos2].X:=i;
 
         if j<0 then
           NodeControlSets[Pos1].NodeControlNodes[Pos2].Y:=0
-        else if j>(Paintbox1.Height) then
-          NodeControlSets[Pos1].NodeControlNodes[Pos2].Y:=Paintbox1.Height
+        else if j>(nodecontrolform.Paintbox1.Height) then
+          NodeControlSets[Pos1].NodeControlNodes[Pos2].Y:=nodecontrolform.Paintbox1.Height
         else
           NodeControlSets[Pos1].NodeControlNodes[Pos2].Y:=j;
 

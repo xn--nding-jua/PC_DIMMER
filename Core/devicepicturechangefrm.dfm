@@ -423,10 +423,6 @@ object devicepicturechangeform: Tdevicepicturechangeform
     Options.ContextMenus = False
     Options.AutoExecute = False
     ReadOnly = True
-    Root.BrowseFolder = bfCustomPath
-    Root.CustomPath = 
-      'C:\Cloud\Programmieren\Delphi\PC_DIMMER\Core\Devicepictures\64 x' +
-      ' 64\'
     Sorting = True
     TabOrder = 2
     ThumbnailOptions.Height = 64

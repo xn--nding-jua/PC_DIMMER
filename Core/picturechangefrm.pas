@@ -58,7 +58,9 @@ uses PCDIMMER;
 procedure Tpicturechangeform.FormShow(Sender: TObject);
 begin
   cxShellListView1.Root.CustomPath:=ExtractFilepath(paramstr(0))+'Devicepictures\32 x 32\';
+  cxShellListView1.Root.BrowseFolder:=bfCustomPath;
   cxShellListView2.Root.CustomPath:=ExtractFilepath(paramstr(0))+'Devicepictures\Gobos\';
+  cxShellListView2.Root.BrowseFolder:=bfCustomPath;
 end;
 
 procedure Tpicturechangeform.FormCreate(Sender: TObject);

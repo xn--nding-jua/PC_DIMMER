@@ -86,6 +86,7 @@ end;
 procedure Tdevicepicturechangeform.FormShow(Sender: TObject);
 begin
   cxShellListView1.Root.CustomPath:=ExtractFilepath(paramstr(0))+'Devicepictures\64 x 64\';
+  cxShellListView1.Root.BrowseFolder:=bfCustomPath;
 end;
 
 end.
