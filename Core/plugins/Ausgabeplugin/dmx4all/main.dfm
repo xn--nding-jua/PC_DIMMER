@@ -4133,6 +4133,14 @@ object Mainform: TMainform
       TabOrder = 5
       OnMouseUp = CheckBox1MouseUp
     end
+    object sendallchannelscheckbox: TCheckBox
+      Left = 152
+      Top = 88
+      Width = 257
+      Height = 17
+      Caption = 'Sende alle 512 Kan'#228'le einzeln (ggfs. langsamer)'
+      TabOrder = 6
+    end
   end
   object GroupBox3: TGroupBox
     Left = 8

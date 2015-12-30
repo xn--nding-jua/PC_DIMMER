@@ -565,6 +565,8 @@ type
     dxBarLargeButton6: TdxBarLargeButton;
     dxBarLargeButton7: TdxBarLargeButton;
     HTTPServerActivateRibbonBox: TdxBarButton;
+    dxBarSubItem4: TdxBarSubItem;
+    dxBarButton7: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -839,6 +841,7 @@ type
     procedure dxBarLargeButton6Click(Sender: TObject);
     procedure dxBarLargeButton7Click(Sender: TObject);
     procedure HTTPServerActivateRibbonBoxClick(Sender: TObject);
+    procedure dxBarButton7Click(Sender: TObject);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -903,11 +906,20 @@ type
 
     // WORKAROUND FOR MEVP
     // Funktionsprototypen für 3D Visualizer
-    DasMevStart : function(sController:PChar; sPassWrd:PChar):integer;cdecl;
+    DasMevAreFixturesModified : function(Reset:boolean):boolean;cdecl;
+    DasMevClose : function:boolean;cdecl;
     DasMevCommand : function(iType:integer; iParam:integer):integer;cdecl;
-    DasMevWriteDmx : function(iUniverse:integer; DmxArray:Pointer):integer;cdecl;
-    DasMevGetFixtureParam : function(iIndex:integer; iDmxAddress:Pointer; iDmxUniverse:Pointer; iNbChannels:Pointer; sName:PChar; fPosX, fPosY, fPosZ, fRotX, fRotY, fRotZ:Pointer):integer;cdecl;
+    DasMevGetFixtureParam : function(iIndex:integer; iDmxAddress:Pointer; iDmxUniverse:Pointer; iNbChannels:Pointer; sName:PChar; fPosX, fPosY, fPosZ, fRotX, fRotY, fRotZ:Pointer):boolean;cdecl;
+    DasMevGetFixturesCount : function:integer;cdecl;
+    DasMevGetLanguage : function:integer;cdecl;
+    DasMevGetSupportedDeviceTypes : function: integer;cdecl;
     DasMevGetVersion : function : integer;cdecl;
+    DasMevIsOpened : function : integer;cdecl;
+    DasMevIsUsingDasHard : function : boolean;cdecl;
+    DasMevSetLanguage : function(Language:integer) : boolean;cdecl;
+    DasMevSetSupportedDeviceTypes : function(Types:integer):boolean;cdecl;
+    DasMevStart : function(sController:PChar; sPassWrd:PChar):boolean;cdecl;
+    DasMevWriteDmx : function(iUniverse:integer; DmxArray:Pointer):integer;cdecl;
     // END OF WORKAROUND FOR MEVP
 
     procedure NewProject;
@@ -1860,11 +1872,20 @@ begin
   Application.OnRestore:=FormShow;
 
   // WORKAROUND FOR MEVP
-  DasMevStart:=nil;
+  DasMevAreFixturesModified:=nil;
+  DasMevClose:=nil;
   DasMevCommand:=nil;
-  DasMevWriteDmx:=nil;
   DasMevGetFixtureParam:=nil;
+  DasMevGetFixturesCount:=nil;
+  DasMevGetLanguage:=nil;
+  DasMevGetSupportedDeviceTypes:=nil;
   DasMevGetVersion:=nil;
+  DasMevIsOpened:=nil;
+  DasMevIsUsingDasHard:=nil;
+  DasMevSetLanguage:=nil;
+  DasMevSetSupportedDeviceTypes:=nil;
+  DasMevStart:=nil;
+  DasMevWriteDmx:=nil;
   MEVPDLL:=0;
   // END OF WORKAROUND FOR MEVP
 
@@ -2083,7 +2104,7 @@ begin
 //  ErrorHandlingMode := LReg.ReadWriteInt('Errorhandlingmode', 0);
     ErrorHandlingMode := 0;
     AutoInsertComputerUsername := LReg.ReadWriteBool('Insert Username into Project automaticly', true);
-    mevp.MEVPDLLPath := LReg.ReadWriteStr('Position of MEVP.DLL', 'C:\Programme\PHOENIXstudios\Magic 3D EasyView\MEVP.DLL');
+    mevp.MEVPDLLPath := LReg.ReadWriteStr('Position of MEVP.DLL', pcdimmerdirectory+'MEVP.DLL');
     mevp.UseThread := LReg.ReadWriteBool('Mevp Use Thread', false);
     mevp.ThreadPriority := IntToThreadPriority(LReg.ReadWriteInt('Mevp Thread Priority', 3));
     MaxAutobackupFiles := LReg.ReadWriteInt('Autobackup Files', 5);
@@ -3017,9 +3038,9 @@ begin
     end;
   end;
 
-  if (MSG=MSG_SETLANGUAGE) and (MEVPDLL<>0) and (@DasMevWriteDmx<>nil) then
+  if (MSG=MSG_SETLANGUAGE) and (MEVPDLL<>0) and (@DasMevSetLanguage<>nil) then
   begin
-    DasMevCommand(MEVP_SET_LANGUAGE, Integer(Data1));
+    DasMevSetLanguage(Integer(Data1));
   end;
 
   // END OF WORKAROUND FOR MEVP
@@ -3317,14 +3338,23 @@ begin
   // 3D Visualizer schließen und freigeben
   if (MEVPDLL<>0) then
   begin
-    if Assigned(DasMevCommand) then
-      DasMevCommand(MEVP_CLOSE_VISUALIZER, -1);
+    if Assigned(DasMevClose) then
+      DasMevClose();
 
-    DasMevStart:=nil;
+    DasMevAreFixturesModified:=nil;
+    DasMevClose:=nil;
     DasMevCommand:=nil;
-    DasMevWriteDmx:=nil;
     DasMevGetFixtureParam:=nil;
+    DasMevGetFixturesCount:=nil;
+    DasMevGetLanguage:=nil;
+    DasMevGetSupportedDeviceTypes:=nil;
     DasMevGetVersion:=nil;
+    DasMevIsOpened:=nil;
+    DasMevIsUsingDasHard:=nil;
+    DasMevSetLanguage:=nil;
+    DasMevSetSupportedDeviceTypes:=nil;
+    DasMevStart:=nil;
+    DasMevWriteDmx:=nil;
     FreeLibrary(MEVPDLL);
     MEVPDLL:=0;
   end;
@@ -16889,7 +16919,7 @@ end;
 
 procedure TMainform.StopEffekt(ID: TGUID);
 var
-  i,j,k,l,deviceposition:integer;
+  i,j,k,l,deviceposition,groupposition:integer;
   channeltype:string;
 begin
   SendMSG(MSG_STOPEFFECT, GUIDtoString(ID), 0);
@@ -16932,13 +16962,30 @@ begin
                 begin
                   for l:=0 to length(effektsequenzereffekte[i].Effektschritte[j].Devices[k].ChanActive)-1 do
                   begin
-                    if effektsequenzereffekte[i].Effektschritte[j].Devices[k].ChanActive[l] then
+                    if effektsequenzereffekte[i].Effektschritte[j].Devices[k].ChanActive[l] or effektsequenzereffekte[i].Effektschritte[j].Devices[k].ChanActiveRandom[l] then
                     begin
                       channeltype:=mainform.devices[deviceposition].kanaltyp[l];
                       if (lowercase(channeltype)='dimmer') or (lowercase(channeltype)='r') or (lowercase(channeltype)='g') or (lowercase(channeltype)='b') or (lowercase(channeltype)='a') or (lowercase(channeltype)='w') or (lowercase(channeltype)='uv') then
                         geraetesteuerung.set_channel(effektsequenzereffekte[i].Effektschritte[j].Devices[k].ID, channeltype, -1, 0, 200);
                       if (lowercase(channeltype)='shutter') then
                         geraetesteuerung.set_shutter(effektsequenzereffekte[i].Effektschritte[j].Devices[k].ID, 0);
+                    end;
+                  end;
+                end else
+                begin
+                  groupposition:=geraetesteuerung.GetGroupPositionInGroupArray(effektsequenzereffekte[i].Effektschritte[j].Devices[k].ID);
+                  if groupposition>-1 then
+                  begin
+                    for l:=0 to length(effektsequenzereffekte[i].Effektschritte[j].Devices[k].ChanActive)-1 do
+                    begin
+                      if effektsequenzereffekte[i].Effektschritte[j].Devices[k].ChanActive[l] or effektsequenzereffekte[i].Effektschritte[j].Devices[k].ChanActiveRandom[l] then
+                      begin
+                        channeltype:=DeviceChannelNames[l];
+                        if (lowercase(channeltype)='dimmer') or (lowercase(channeltype)='r') or (lowercase(channeltype)='g') or (lowercase(channeltype)='b') or (lowercase(channeltype)='a') or (lowercase(channeltype)='w') or (lowercase(channeltype)='uv') then
+                          geraetesteuerung.set_group(effektsequenzereffekte[i].Effektschritte[j].Devices[k].ID, channeltype, -1, 0, 200);
+                        if (lowercase(channeltype)='shutter') then
+                          geraetesteuerung.set_shutter(effektsequenzereffekte[i].Effektschritte[j].Devices[k].ID, 0);
+                      end;
                     end;
                   end;
                 end;
@@ -18760,14 +18807,13 @@ begin
             begin
               channeltype:=DeviceChannelNames[k];
               if (lowercase(channeltype)='dimmer') or (lowercase(channeltype)='r') or (lowercase(channeltype)='g') or (lowercase(channeltype)='b') or (lowercase(channeltype)='a') or (lowercase(channeltype)='w') or (lowercase(channeltype)='uv') then
-                geraetesteuerung.set_channel(devicescenes[i].Devices[j].ID, channeltype, -1, 0, Fadetime);
+                geraetesteuerung.set_group(devicescenes[i].Devices[j].ID, channeltype, -1, 0, Fadetime, devicescenes[i].Devices[j].ChanDelay[k]);
               if (lowercase(channeltype)='shutter') then
-                geraetesteuerung.set_shutter(devicescenes[i].Devices[j].ID, 0);
+                geraetesteuerung.set_shutter(devicescenes[i].Devices[j].ID, 0, devicescenes[i].Devices[j].ChanDelay[k]);
             end;
           end;
         end;
       end;
-
       break;
     end;
   end;
@@ -22434,29 +22480,39 @@ begin
     if MEVPDLL=0 then
     begin
       MEVPDLL:=LoadLibrary(PChar(mevp.MEVPDLLPath));
-      DasMevStart := GetProcAddress(MEVPDLL,'DasMevStart');
-      DasMevCommand := GetProcAddress(MEVPDLL,'DasMevCommand');
-      DasMevWriteDmx := GetProcAddress(MEVPDLL,'DasMevWriteDmx');
-      DasMevGetFixtureParam := GetProcAddress(MEVPDLL,'DasMevGetFixtureParam');
-      DasMevGetVersion := GetProcAddress(MEVPDLL,'DasMevGetVersion');
+
+      DasMevAreFixturesModified:=GetProcAddress(MEVPDLL,'DasMevAreFixturesModified');
+      DasMevClose:=GetProcAddress(MEVPDLL,'DasMevClose');
+      DasMevCommand:=GetProcAddress(MEVPDLL,'DasMevCommand');
+      DasMevGetFixtureParam:=GetProcAddress(MEVPDLL,'DasMevGetFixtureParam');
+      DasMevGetFixturesCount:=GetProcAddress(MEVPDLL,'DasMevGetFixturesCount');
+      DasMevGetLanguage:=GetProcAddress(MEVPDLL,'DasMevGetLanguage');
+      DasMevGetSupportedDeviceTypes:=GetProcAddress(MEVPDLL,'DasMevGetSupportedDeviceTypes');
+      DasMevGetVersion:=GetProcAddress(MEVPDLL,'DasMevGetVersion');
+      DasMevIsOpened:=GetProcAddress(MEVPDLL,'DasMevIsOpened');
+      DasMevIsUsingDasHard:=GetProcAddress(MEVPDLL,'DasMevIsUsingDasHard');
+      DasMevSetLanguage:=GetProcAddress(MEVPDLL,'DasMevSetLanguage');
+      DasMevSetSupportedDeviceTypes:=GetProcAddress(MEVPDLL,'DasMevSetSupportedDeviceTypes');
+      DasMevStart:=GetProcAddress(MEVPDLL,'DasMevStart');
+      DasMevWriteDmx:=GetProcAddress(MEVPDLL,'DasMevWriteDmx');
     end;
     // 3D Visualizer starten
     if Assigned(DasMevStart) then
     begin
-      name:=PChar('PC_DIMMER2012');
-      code:=PCHar('ArkJst');
+      name:=PChar('PC_DIMMER');
+      code:=PCHar('');
       DasMevStart(name, code);
     end;
 
     // Sprache des 3D-Visualizers setzen
-    if (MEVPDLL<>0) and Assigned(DasMevCommand) then
+    if (MEVPDLL<>0) and Assigned(DasMevSetLanguage) then
     begin
       if (gnugettext.GetCurrentLanguage='en') then
       begin
-        DasMevCommand(MEVP_SET_LANGUAGE,0);
+        DasMevSetLanguage(0);
       end else if (gnugettext.GetCurrentLanguage='de') then
       begin
-        DasMevCommand(MEVP_SET_LANGUAGE,1);
+        DasMevSetLanguage(3);
       end;
     end;
   end else
@@ -26521,7 +26577,7 @@ begin
   if not UserAccessGranted(1) then exit;
 
   RetranslateProgram('it');
-//  SendMSG(MSG_SETLANGUAGE, integer(0), 0);
+  SendMSG(MSG_SETLANGUAGE, integer(2), 0);
 end;
 
 procedure TMainform.NodeControlRibbonBtnClick(Sender: TObject);
@@ -26804,6 +26860,20 @@ begin
   if not UserAccessGranted(1) then exit;
 
   FHTTPServer.Active:=HTTPServerActivateRibbonBox.Down;
+end;
+
+procedure TMainform.dxBarButton7Click(Sender: TObject);
+begin
+  if not UserAccessGranted(2) then exit;
+
+  if (MEVPDLL<>0) and Assigned(DasMevIsOpened) then
+  begin
+    if DasMevIsOpened=1 then
+    begin
+      if Assigned(DasMevClose) then
+        DasMevClose();
+    end;
+  end;
 end;
 
 end.

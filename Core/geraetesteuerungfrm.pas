@@ -442,10 +442,10 @@ type
     procedure set_gobo1rot(DeviceID: TGUID; Value:integer; Fadetime:integer=0; Delaytime:integer=0);
     procedure set_gobo2rot(DeviceID: TGUID; Value:integer; Fadetime:integer=0; Delaytime:integer=0);
     procedure set_gobo(DeviceID: TGUID; GoboName:string);
-    procedure set_gobo1plus(DeviceID: TGUID);
-    procedure set_gobo1minus(DeviceID: TGUID);
-    procedure set_gobo2plus(DeviceID: TGUID);
-    procedure set_gobo2minus(DeviceID: TGUID);
+    procedure set_gobo1plus(DeviceID: TGUID; Delaytime:integer=0);
+    procedure set_gobo1minus(DeviceID: TGUID; Delaytime:integer=0);
+    procedure set_gobo2plus(DeviceID: TGUID; Delaytime:integer=0);
+    procedure set_gobo2minus(DeviceID: TGUID; Delaytime:integer=0);
     function get_dimmer(DeviceID: TGUID):integer;
     function get_strobe(DeviceID: TGUID):integer;
     function get_shutter(DeviceID: TGUID):integer;
@@ -2420,7 +2420,7 @@ begin
   begin
     // wenn kein Gerät, dann vielleicht Gruppe?
     set_group(DeviceID,channel,startvalue,endvalue,fadetime,delay);
-    exit; // z.B. wenn Gruppen-ID
+    exit; // exit wenn Gruppen-ID
   end;
 
   endvalue_new:=endvalue;
@@ -6785,10 +6785,164 @@ begin
   grafischebuehnenansicht.doimmediaterefresh:=true;
 end;
 
-procedure Tgeraetesteuerung.set_gobo1plus(DeviceID: TGUID);
+procedure Tgeraetesteuerung.set_gobo1plus(DeviceID: TGUID; Delaytime:integer);
 var
+  DevPosition, delay, delayfaktor:integer;
+  PositionOfMaster,countofpihalf:integer;
+  grouptemp:extended;
+
   i, j, intvalue:integer;
 begin
+  DevPosition:=GetDevicePositionInDeviceArray(@DeviceID);
+
+  if DevPosition<0 then
+  begin
+    PositionOfMaster:=0;
+    delay:=delaytime;
+
+    for i:=0 to length(mainform.DeviceGroups)-1 do
+    begin
+      if IsEqualGUID(mainform.DeviceGroups[i].ID,DeviceID) then
+      begin
+        if mainform.DeviceGroups[i].Active then
+        begin
+          if mainform.DeviceGroups[i].UseMaster then
+          begin
+            for j:=0 to length(mainform.DeviceGroups[i].IDs)-1 do
+            begin
+              if IsEqualGUID(mainform.DeviceGroups[i].MasterDevice,mainform.DeviceGroups[i].IDs[j]) then
+              begin
+                PositionOfMaster:=j;
+                break;
+              end;
+            end;
+          end;
+
+          if delay=-1 then
+            delay:=mainform.DeviceGroups[i].Delay;
+
+          for j:=0 to length(mainform.DeviceGroups[i].IDs)-1 do
+          begin
+            if mainform.DeviceGroups[i].IDActive[j] then
+            begin
+              if mainform.DeviceGroups[i].UseMaster then
+              begin
+                case mainform.DeviceGroups[i].FanMode of
+                  0: // Fanning aus
+                  begin
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], 0);
+                  end;
+                  1: // Links und Rechts ab Master
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], delay*delayfaktor);
+                  end;
+                  2: // Nach Rechts ab Master
+                  begin
+                    delayfaktor:=j-PositionOfMaster;
+                    if delayfaktor>=0 then
+                    begin
+                      set_gobo1plus(mainform.DeviceGroups[i].IDs[j], delay*delayfaktor);
+                    end;
+                  end;
+                  3: // Nach Links ab Master
+                  begin
+                    delayfaktor:=PositionOfMaster-j;
+                    if delayfaktor>=0 then
+                    begin
+                      set_gobo1plus(mainform.DeviceGroups[i].IDs[j], delay*delayfaktor);
+                    end;
+                  end;
+                  4: // Sinus nach Links und Rechts ab Master
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sin(delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI*mainform.DeviceGroups[i].FanMorph))));
+                  end;
+                  5: // Tangens
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    grouptemp:=delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    grouptemp:=grouptemp/countofpihalf;
+                    if grouptemp>=((pi/2)-0.1) then grouptemp:=(pi/2)-0.1;
+
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  6: // Tangens 2
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    grouptemp:=delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    if grouptemp>=(countofpihalf*(pi/2)-0.2) then grouptemp:=countofpihalf*(pi/2)-0.2;
+
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  7: // Halbkreis
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sqrt(power(0.5,2)-power(0.5-(delayfaktor/length(mainform.DeviceGroups[i].IDs)),2)))));
+                  end;
+                end;
+              end else
+              begin
+                case mainform.DeviceGroups[i].FanMode of
+                  0: // Fanning aus
+                  begin
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], 0);
+                  end;
+                  1: // alle Gleichmäßig
+                  begin
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], delay);
+                  end;
+                  2: // nach Links
+                  begin
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], delay*j);
+                  end;
+                  3: // nach Rechts
+                  begin
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], delay*(length(mainform.DeviceGroups[i].IDs)-j));
+                  end;
+                  4: // Sinus
+                  begin                                                                                   // mainform.DeviceGroups[i].IDs[j]
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sin(j/length(mainform.DeviceGroups[i].IDs)*PI*mainform.DeviceGroups[i].FanMorph))));
+                  end;
+                  5: // Tangens
+                  begin
+                    grouptemp:=j/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    grouptemp:=grouptemp/countofpihalf;
+                    if grouptemp>=((pi/2)-0.1) then grouptemp:=(pi/2)-0.1;
+
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  6: // Tangens 2
+                  begin
+                    grouptemp:=j/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    if grouptemp>=(countofpihalf*(pi/2)-0.2) then grouptemp:=countofpihalf*(pi/2)-0.2;
+
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  7: // Halbkreis
+                  begin
+                    set_gobo1plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sqrt(power(0.5,2)-power(0.5-(j/length(mainform.DeviceGroups[i].IDs)),2)))));
+                  end;
+                end;
+              end;
+            end;
+          end;
+        end;
+        break;
+      end;
+    end;
+    exit; // z.B. wenn Gruppen-ID
+  end;
+
+
   for i:=0 to length(mainform.Devices)-1 do
   begin
     if IsEqualGUID(mainform.Devices[i].ID, DeviceID) then
@@ -6819,10 +6973,164 @@ begin
   end;
 end;
 
-procedure Tgeraetesteuerung.set_gobo1minus(DeviceID: TGUID);
+procedure Tgeraetesteuerung.set_gobo1minus(DeviceID: TGUID; Delaytime:integer);
 var
+  DevPosition, delay, delayfaktor:integer;
+  PositionOfMaster,countofpihalf:integer;
+  grouptemp:extended;
+
   i, j, intvalue:integer;
 begin
+  DevPosition:=GetDevicePositionInDeviceArray(@DeviceID);
+
+  if DevPosition<0 then
+  begin
+    PositionOfMaster:=0;
+    delay:=delaytime;
+
+    for i:=0 to length(mainform.DeviceGroups)-1 do
+    begin
+      if IsEqualGUID(mainform.DeviceGroups[i].ID,DeviceID) then
+      begin
+        if mainform.DeviceGroups[i].Active then
+        begin
+          if mainform.DeviceGroups[i].UseMaster then
+          begin
+            for j:=0 to length(mainform.DeviceGroups[i].IDs)-1 do
+            begin
+              if IsEqualGUID(mainform.DeviceGroups[i].MasterDevice,mainform.DeviceGroups[i].IDs[j]) then
+              begin
+                PositionOfMaster:=j;
+                break;
+              end;
+            end;
+          end;
+
+          if delay=-1 then
+            delay:=mainform.DeviceGroups[i].Delay;
+
+          for j:=0 to length(mainform.DeviceGroups[i].IDs)-1 do
+          begin
+            if mainform.DeviceGroups[i].IDActive[j] then
+            begin
+              if mainform.DeviceGroups[i].UseMaster then
+              begin
+                case mainform.DeviceGroups[i].FanMode of
+                  0: // Fanning aus
+                  begin
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], 0);
+                  end;
+                  1: // Links und Rechts ab Master
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], delay*delayfaktor);
+                  end;
+                  2: // Nach Rechts ab Master
+                  begin
+                    delayfaktor:=j-PositionOfMaster;
+                    if delayfaktor>=0 then
+                    begin
+                      set_gobo1minus(mainform.DeviceGroups[i].IDs[j], delay*delayfaktor);
+                    end;
+                  end;
+                  3: // Nach Links ab Master
+                  begin
+                    delayfaktor:=PositionOfMaster-j;
+                    if delayfaktor>=0 then
+                    begin
+                      set_gobo1minus(mainform.DeviceGroups[i].IDs[j], delay*delayfaktor);
+                    end;
+                  end;
+                  4: // Sinus nach Links und Rechts ab Master
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sin(delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI*mainform.DeviceGroups[i].FanMorph))));
+                  end;
+                  5: // Tangens
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    grouptemp:=delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    grouptemp:=grouptemp/countofpihalf;
+                    if grouptemp>=((pi/2)-0.1) then grouptemp:=(pi/2)-0.1;
+
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  6: // Tangens 2
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    grouptemp:=delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    if grouptemp>=(countofpihalf*(pi/2)-0.2) then grouptemp:=countofpihalf*(pi/2)-0.2;
+
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  7: // Halbkreis
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sqrt(power(0.5,2)-power(0.5-(delayfaktor/length(mainform.DeviceGroups[i].IDs)),2)))));
+                  end;
+                end;
+              end else
+              begin
+                case mainform.DeviceGroups[i].FanMode of
+                  0: // Fanning aus
+                  begin
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], 0);
+                  end;
+                  1: // alle Gleichmäßig
+                  begin
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], delay);
+                  end;
+                  2: // nach Links
+                  begin
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], delay*j);
+                  end;
+                  3: // nach Rechts
+                  begin
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], delay*(length(mainform.DeviceGroups[i].IDs)-j));
+                  end;
+                  4: // Sinus
+                  begin                                                                                   // mainform.DeviceGroups[i].IDs[j]
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sin(j/length(mainform.DeviceGroups[i].IDs)*PI*mainform.DeviceGroups[i].FanMorph))));
+                  end;
+                  5: // Tangens
+                  begin
+                    grouptemp:=j/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    grouptemp:=grouptemp/countofpihalf;
+                    if grouptemp>=((pi/2)-0.1) then grouptemp:=(pi/2)-0.1;
+
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  6: // Tangens 2
+                  begin
+                    grouptemp:=j/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    if grouptemp>=(countofpihalf*(pi/2)-0.2) then grouptemp:=countofpihalf*(pi/2)-0.2;
+
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  7: // Halbkreis
+                  begin
+                    set_gobo1minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sqrt(power(0.5,2)-power(0.5-(j/length(mainform.DeviceGroups[i].IDs)),2)))));
+                  end;
+                end;
+              end;
+            end;
+          end;
+        end;
+        break;
+      end;
+    end;
+    exit; // z.B. wenn Gruppen-ID
+  end;
+
+
   for i:=0 to length(mainform.Devices)-1 do
   begin
     if IsEqualGUID(mainform.Devices[i].ID, DeviceID) then
@@ -6853,10 +7161,164 @@ begin
   end;
 end;
 
-procedure Tgeraetesteuerung.set_gobo2plus(DeviceID: TGUID);
+procedure Tgeraetesteuerung.set_gobo2plus(DeviceID: TGUID; Delaytime:integer);
 var
+  DevPosition, delay, delayfaktor:integer;
+  PositionOfMaster,countofpihalf:integer;
+  grouptemp:extended;
+
   i, j, intvalue:integer;
 begin
+  DevPosition:=GetDevicePositionInDeviceArray(@DeviceID);
+
+  if DevPosition<0 then
+  begin
+    PositionOfMaster:=0;
+    delay:=delaytime;
+
+    for i:=0 to length(mainform.DeviceGroups)-1 do
+    begin
+      if IsEqualGUID(mainform.DeviceGroups[i].ID,DeviceID) then
+      begin
+        if mainform.DeviceGroups[i].Active then
+        begin
+          if mainform.DeviceGroups[i].UseMaster then
+          begin
+            for j:=0 to length(mainform.DeviceGroups[i].IDs)-1 do
+            begin
+              if IsEqualGUID(mainform.DeviceGroups[i].MasterDevice,mainform.DeviceGroups[i].IDs[j]) then
+              begin
+                PositionOfMaster:=j;
+                break;
+              end;
+            end;
+          end;
+
+          if delay=-1 then
+            delay:=mainform.DeviceGroups[i].Delay;
+
+          for j:=0 to length(mainform.DeviceGroups[i].IDs)-1 do
+          begin
+            if mainform.DeviceGroups[i].IDActive[j] then
+            begin
+              if mainform.DeviceGroups[i].UseMaster then
+              begin
+                case mainform.DeviceGroups[i].FanMode of
+                  0: // Fanning aus
+                  begin
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], 0);
+                  end;
+                  1: // Links und Rechts ab Master
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], delay*delayfaktor);
+                  end;
+                  2: // Nach Rechts ab Master
+                  begin
+                    delayfaktor:=j-PositionOfMaster;
+                    if delayfaktor>=0 then
+                    begin
+                      set_gobo2plus(mainform.DeviceGroups[i].IDs[j], delay*delayfaktor);
+                    end;
+                  end;
+                  3: // Nach Links ab Master
+                  begin
+                    delayfaktor:=PositionOfMaster-j;
+                    if delayfaktor>=0 then
+                    begin
+                      set_gobo2plus(mainform.DeviceGroups[i].IDs[j], delay*delayfaktor);
+                    end;
+                  end;
+                  4: // Sinus nach Links und Rechts ab Master
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sin(delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI*mainform.DeviceGroups[i].FanMorph))));
+                  end;
+                  5: // Tangens
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    grouptemp:=delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    grouptemp:=grouptemp/countofpihalf;
+                    if grouptemp>=((pi/2)-0.1) then grouptemp:=(pi/2)-0.1;
+
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  6: // Tangens 2
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    grouptemp:=delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    if grouptemp>=(countofpihalf*(pi/2)-0.2) then grouptemp:=countofpihalf*(pi/2)-0.2;
+
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  7: // Halbkreis
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sqrt(power(0.5,2)-power(0.5-(delayfaktor/length(mainform.DeviceGroups[i].IDs)),2)))));
+                  end;
+                end;
+              end else
+              begin
+                case mainform.DeviceGroups[i].FanMode of
+                  0: // Fanning aus
+                  begin
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], 0);
+                  end;
+                  1: // alle Gleichmäßig
+                  begin
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], delay);
+                  end;
+                  2: // nach Links
+                  begin
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], delay*j);
+                  end;
+                  3: // nach Rechts
+                  begin
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], delay*(length(mainform.DeviceGroups[i].IDs)-j));
+                  end;
+                  4: // Sinus
+                  begin                                                                                   // mainform.DeviceGroups[i].IDs[j]
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sin(j/length(mainform.DeviceGroups[i].IDs)*PI*mainform.DeviceGroups[i].FanMorph))));
+                  end;
+                  5: // Tangens
+                  begin
+                    grouptemp:=j/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    grouptemp:=grouptemp/countofpihalf;
+                    if grouptemp>=((pi/2)-0.1) then grouptemp:=(pi/2)-0.1;
+
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  6: // Tangens 2
+                  begin
+                    grouptemp:=j/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    if grouptemp>=(countofpihalf*(pi/2)-0.2) then grouptemp:=countofpihalf*(pi/2)-0.2;
+
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  7: // Halbkreis
+                  begin
+                    set_gobo2plus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sqrt(power(0.5,2)-power(0.5-(j/length(mainform.DeviceGroups[i].IDs)),2)))));
+                  end;
+                end;
+              end;
+            end;
+          end;
+        end;
+        break;
+      end;
+    end;
+    exit; // z.B. wenn Gruppen-ID
+  end;
+
+
   for i:=0 to length(mainform.Devices)-1 do
   begin
     if IsEqualGUID(mainform.Devices[i].ID, DeviceID) then
@@ -6887,10 +7349,164 @@ begin
   end;
 end;
 
-procedure Tgeraetesteuerung.set_gobo2minus(DeviceID: TGUID);
+procedure Tgeraetesteuerung.set_gobo2minus(DeviceID: TGUID; Delaytime:integer);
 var
+  DevPosition, delay, delayfaktor:integer;
+  PositionOfMaster,countofpihalf:integer;
+  grouptemp:extended;
+
   i, j, intvalue:integer;
 begin
+  DevPosition:=GetDevicePositionInDeviceArray(@DeviceID);
+
+  if DevPosition<0 then
+  begin
+    PositionOfMaster:=0;
+    delay:=delaytime;
+
+    for i:=0 to length(mainform.DeviceGroups)-1 do
+    begin
+      if IsEqualGUID(mainform.DeviceGroups[i].ID,DeviceID) then
+      begin
+        if mainform.DeviceGroups[i].Active then
+        begin
+          if mainform.DeviceGroups[i].UseMaster then
+          begin
+            for j:=0 to length(mainform.DeviceGroups[i].IDs)-1 do
+            begin
+              if IsEqualGUID(mainform.DeviceGroups[i].MasterDevice,mainform.DeviceGroups[i].IDs[j]) then
+              begin
+                PositionOfMaster:=j;
+                break;
+              end;
+            end;
+          end;
+
+          if delay=-1 then
+            delay:=mainform.DeviceGroups[i].Delay;
+
+          for j:=0 to length(mainform.DeviceGroups[i].IDs)-1 do
+          begin
+            if mainform.DeviceGroups[i].IDActive[j] then
+            begin
+              if mainform.DeviceGroups[i].UseMaster then
+              begin
+                case mainform.DeviceGroups[i].FanMode of
+                  0: // Fanning aus
+                  begin
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], 0);
+                  end;
+                  1: // Links und Rechts ab Master
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], delay*delayfaktor);
+                  end;
+                  2: // Nach Rechts ab Master
+                  begin
+                    delayfaktor:=j-PositionOfMaster;
+                    if delayfaktor>=0 then
+                    begin
+                      set_gobo2minus(mainform.DeviceGroups[i].IDs[j], delay*delayfaktor);
+                    end;
+                  end;
+                  3: // Nach Links ab Master
+                  begin
+                    delayfaktor:=PositionOfMaster-j;
+                    if delayfaktor>=0 then
+                    begin
+                      set_gobo2minus(mainform.DeviceGroups[i].IDs[j], delay*delayfaktor);
+                    end;
+                  end;
+                  4: // Sinus nach Links und Rechts ab Master
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sin(delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI*mainform.DeviceGroups[i].FanMorph))));
+                  end;
+                  5: // Tangens
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    grouptemp:=delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    grouptemp:=grouptemp/countofpihalf;
+                    if grouptemp>=((pi/2)-0.1) then grouptemp:=(pi/2)-0.1;
+
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  6: // Tangens 2
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    grouptemp:=delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    if grouptemp>=(countofpihalf*(pi/2)-0.2) then grouptemp:=countofpihalf*(pi/2)-0.2;
+
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  7: // Halbkreis
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sqrt(power(0.5,2)-power(0.5-(delayfaktor/length(mainform.DeviceGroups[i].IDs)),2)))));
+                  end;
+                end;
+              end else
+              begin
+                case mainform.DeviceGroups[i].FanMode of
+                  0: // Fanning aus
+                  begin
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], 0);
+                  end;
+                  1: // alle Gleichmäßig
+                  begin
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], delay);
+                  end;
+                  2: // nach Links
+                  begin
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], delay*j);
+                  end;
+                  3: // nach Rechts
+                  begin
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], delay*(length(mainform.DeviceGroups[i].IDs)-j));
+                  end;
+                  4: // Sinus
+                  begin                                                                                   // mainform.DeviceGroups[i].IDs[j]
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sin(j/length(mainform.DeviceGroups[i].IDs)*PI*mainform.DeviceGroups[i].FanMorph))));
+                  end;
+                  5: // Tangens
+                  begin
+                    grouptemp:=j/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    grouptemp:=grouptemp/countofpihalf;
+                    if grouptemp>=((pi/2)-0.1) then grouptemp:=(pi/2)-0.1;
+
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  6: // Tangens 2
+                  begin
+                    grouptemp:=j/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    if grouptemp>=(countofpihalf*(pi/2)-0.2) then grouptemp:=countofpihalf*(pi/2)-0.2;
+
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(tan(grouptemp))));
+                  end;
+                  7: // Halbkreis
+                  begin
+                    set_gobo2minus(mainform.DeviceGroups[i].IDs[j], round(delay*abs(sqrt(power(0.5,2)-power(0.5-(j/length(mainform.DeviceGroups[i].IDs)),2)))));
+                  end;
+                end;
+              end;
+            end;
+          end;
+        end;
+        break;
+      end;
+    end;
+    exit; // z.B. wenn Gruppen-ID
+  end;
+
+
   for i:=0 to length(mainform.Devices)-1 do
   begin
     if IsEqualGUID(mainform.Devices[i].ID, DeviceID) then

@@ -51,6 +51,7 @@ type
     RadioButton2: TRadioButton;
     RadioButton3: TRadioButton;
     RadioButton4: TRadioButton;
+    sendallchannelscheckbox: TCheckBox;
     procedure Button15Click(Sender: TObject);
     procedure Button16Click(Sender: TObject);
     procedure Button17Click(Sender: TObject);
@@ -332,20 +333,31 @@ begin
     end;
   end else
   begin
-    if ChangedChannels>=maxchangedchans then
+    if sendallchannelscheckbox.Checked then
     begin
-      // Gesamtes Universe senden, da zuviele Werte in dieser Zeit verändert
-      Dmx4allSetDmx(1, maxchans, DMXOutArray);
+      for i:=0 to 511 do
+      begin
+        Dmx4allSetDmxCh(i+1,DMXOutArray[i]);
+      end;
+      setlength(ChannelvaluesChanged,0);
+      ChangedChannels:=0;
     end else
     begin
-      // Einzelne Kanäle senden, da nur wenige Kanäle geändert wurden
-      for i:=length(ChannelvaluesChanged)-1 downto 0 do
+      if ChangedChannels>=maxchangedchans then
       begin
-        Dmx4allSetDmxCh(ChannelvaluesChanged[i],DMXOutArray[ChannelvaluesChanged[i]-1]);
+        // Gesamtes Universe senden, da zuviele Werte in dieser Zeit verändert
+        Dmx4allSetDmx(1, maxchans, DMXOutArray);
+      end else
+      begin
+        // Einzelne Kanäle senden, da nur wenige Kanäle geändert wurden
+        for i:=length(ChannelvaluesChanged)-1 downto 0 do
+        begin
+          Dmx4allSetDmxCh(ChannelvaluesChanged[i],DMXOutArray[ChannelvaluesChanged[i]-1]);
+        end;
       end;
+      setlength(ChannelvaluesChanged,0);
+      ChangedChannels:=0;
     end;
-    setlength(ChannelvaluesChanged,0);
-    ChangedChannels:=0;
   end;
 end;
 
@@ -404,6 +416,7 @@ begin
           LReg.WriteInteger('MaxChans',maxchans);
           LReg.WriteInteger('LastOpenedPort',lastport);
           LReg.WriteBool('DMXInputEnabled',checkbox1.checked);
+          LReg.WriteBool('SendPerChannel', sendallchannelscheckbox.checked);
 
           if Radiobutton1.checked then
             LReg.WriteInteger('NrOfDMXINChans',128);
@@ -576,6 +589,11 @@ begin
           begin
             checkbox1.Checked:=LReg.ReadBool('DMXInputEnabled');
             CheckBox1MouseUp(checkbox1, mbLeft, [ssLeft], 0, 0);
+          end;
+
+          if LReg.ValueExists('SendPerChannel') then
+          begin
+            sendallchannelscheckbox.Checked:=LReg.ReadBool('SendPerChannel');
           end;
 
           if LReg.ValueExists('NrOfDMXINChans') then

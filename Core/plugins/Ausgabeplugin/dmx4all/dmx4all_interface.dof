@@ -112,10 +112,10 @@ RootDir=C:\Programme\Borland\Delphi7\Bin\
 [Version Info]
 IncludeVerInfo=1
 AutoIncBuild=1
-MajorVer=2
+MajorVer=5
 MinorVer=1
 Release=0
-Build=277
+Build=280
 Debug=0
 PreRelease=0
 Special=0
@@ -126,13 +126,13 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=DMX4ALL Interfaceplugin
-FileVersion=2.1.0.277
+FileVersion=5.1.0.280
 InternalName=
-LegalCopyright=(c) 2008 by Christian Nöding
+LegalCopyright=(c) 2008/2015 by Christian Nöding
 LegalTrademarks=
 OriginalFilename=
 ProductName=
-ProductVersion=4.0.0.0
+ProductVersion=5.1.0.0
 Comments=http://www.pcdimmer.de
 [HistoryLists\hlUnitAliases]
 Count=1
