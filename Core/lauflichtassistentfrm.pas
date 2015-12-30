@@ -119,6 +119,7 @@ type
     procedure ListBox1KeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure Button1Click(Sender: TObject);
+    procedure FormHide(Sender: TObject);
   private
     { Private-Deklarationen }
     GedrehteSchrift:HGDIOBJ;
@@ -182,7 +183,6 @@ end;
 
 procedure Tlauflichtassistentform.cancelbtnClick(Sender: TObject);
 begin
-  timer1.Enabled:=false;
   modalresult:=mrCancel;
 end;
 
@@ -301,7 +301,6 @@ begin
     end;
     2: // Muster
     begin
-      timer1.Enabled:=false;
       modalresult:=mrok;
       channeltype.Enabled:=false;
       trackbar1.Enabled:=false;
@@ -1253,6 +1252,11 @@ begin
       lauflichtarray[i][j].channel:=channeltype.ItemIndex;
       lauflichtarray[i][j].intensity:=trackbar1.Position
     end;
+end;
+
+procedure Tlauflichtassistentform.FormHide(Sender: TObject);
+begin
+  timer1.Enabled:=false;
 end;
 
 end.

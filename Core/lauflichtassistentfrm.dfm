@@ -13,6 +13,7 @@ object lauflichtassistentform: Tlauflichtassistentform
   OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
+  OnHide = FormHide
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13

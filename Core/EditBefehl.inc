@@ -457,6 +457,11 @@
     Arg1Edit.visible:=true;
     Arg1Edit.text:=AktuellerBefehl.ArgString[0];
     Arg1Combobox.visible:=false;
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[3].Steuerung[29].GUID) then
+  begin // Benutzer wechseln
+    nousersetting:=false;
   end;
 
   // Einzelkanaländerung
@@ -1254,6 +1259,7 @@
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[9].Steuerung[11].GUID) then
   begin // Alle Effekte stoppen
     // keine Einstellungen anzeigen
+    nousersetting:=false;
   end;
 
   // Submaster
