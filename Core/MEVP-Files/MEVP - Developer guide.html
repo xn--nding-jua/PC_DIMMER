@@ -1,0 +1,340 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Magic 3D Easy View Protocol</title>
+	<link type="text/css" rel="stylesheet" href="http://s.codeproject.com/App_Themes/Std/Css/Main.min.css?dt=2.6.120923.1">
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta name="Description" content="Developer guide for using the MEVP library; Author: Nicolaudie; Updated: 14 Jan 2014" />
+	<meta name="Author" content="Nicolaudie" />
+	<style type="text/css">
+		body {
+			margin-left : 2cm;
+		}
+		.EV {
+			color : #e80;
+			font-weight : bold;
+			text-shadow : 1px 1px white, 2px 2px #fc6;
+		}
+	</style>
+</head>
+
+<body>
+	<table class="extended" cellpadding="0" cellspacing="0">
+		<tr valign="top">
+			<td>
+				<div id="AT" class="container-article  fluid">
+					<a name="Main"></a>
+					<a name="_articleTop" id="_articleTop"></a>
+					<div class="item">
+						<h1 id="ctl00_ArticleTitle" class="fn">Magic 3D Easy View Protocol</h1>
+					</div>
+					<div class="entry">
+						By <span class="author"><a href="mailto:francois@nicolaudie.com?subject=MEVP" rel="author">Fran&ccedil;ois DAGUER</a></span>, <span class="date">14 Jan 2014</span>
+					</div>
+					<br/>
+					<h2>Introduction</h2><p>
+						This document describes the functions provided by the <b>MEVP</b> (<b>M</b>agic 3D <b>E</b>asy <b>V</b>iew <b>P</b>rotocol) library, which allows third-party applications to communicate with Nicolaudie's <a href="http://www.nicolaudie.com/easyview.htm"><span class="EV">Magic 3D Easy View</span></a>.
+					</p>
+					<h2>Functions</h2><p>
+						<ol>
+							<li><h3>DasMevAreFixturesModified</h3><p>
+								Determines if the fixtures have been modified in <span class="EV">Easy View</span> from the last time this function has been called.<br/>
+								<pre lang="C++"><span class="code-keyword">BOOL</span>&nbsp;<b>DasMevAreFixturesModified</b>(<span class="code-keyword">BOOL</span>&nbsp;pReset);</pre>
+								<h4>Parameters&nbsp;:</h4><ul>
+									<li><code>pReset</code>&nbsp;: <span class="code-keyword">TRUE</span> to indicate to set the modification flag to FALSE when exiting this function, <span class="code-keyword">FALSE</span> for not changing it (so the next call to this function should returns the same result).</li>
+								</ul>
+								<h4>Returns&nbsp;:</h4><ul>
+									<li><span class="code-keyword">TRUE</span>, if the fixtures have been modified in <span class="EV">Easy View</span>.</li>
+									<li><span class="code-keyword">FALSE</span>, otherwise.</li>
+								</ul>
+							</p></li>
+							<li><h3>DasMevClose</h3><p>
+								Requests <span class="EV">Easy View</span> to close.<br/>
+								<pre lang="C++"><span class="code-keyword">BOOL</span>&nbsp;<b>DasMevClose</b>();</pre>
+								<h4>Returns&nbsp;:</h4><ul>
+									<li><span class="code-keyword">TRUE</span>, if the function succeeds.</li>
+									<li><span class="code-keyword">FALSE</span>, if it fails.</li>
+								</ul>
+							</p></li>
+							<li><h3>DasMevCommand</h3><p>
+								Sends a command to <span class="EV">Easy View</span>.<br/>
+								<pre lang="C++"><span class="code-keyword">int</span>&nbsp;<b>DasMevCommand</b>(<span class="code-keyword">int</span>&nbsp;pCommand, <span class="code-keyword">int</span>&nbsp;pParam);</pre>
+								<h4>Parameters&nbsp;:</h4><ul>
+									<li><code>pCommand</code>&nbsp;: Command to send to <span class="EV">Easy View</span> :<ul>
+											<li><span class="code-keyword">0</span> : Close <span class="EV">Easy View</span>.</li>
+											<li><span class="code-keyword">1</span> : Set the language of the UI.</li>
+											<li><span class="code-keyword">2</span> : Get the number of patched fixtures.</li>
+										</ul></li>
+									<li><code>pParam</code>&nbsp;: if <code>pCommand</code> is <span class="code-keyword">1</span> : Identifier of the language, as in the "Language" menu of <span class="EV">Easy View</span> : <span class="code-keyword">0</span>=EN, <span class="code-keyword">1</span>=FR, <span class="code-keyword">2</span>=IT, <span class="code-keyword">3</span>=DE, <span class="code-keyword">4</span>=ES, <span class="code-keyword">5</span>=FI, <span class="code-keyword">6</span>=JP, <span class="code-keyword">7</span>=DK, <span class="code-keyword">8</span>=GR, <span class="code-keyword">9</span>=KR, <span class="code-keyword">10</span>=CN, <span class="code-keyword">11</span>=HU, <span class="code-keyword">12</span>=RU, <span class="code-keyword">13</span>=NL, <span class="code-keyword">14</span>=SE, <span class="code-keyword">15</span>=PT, <span class="code-keyword">16</span>=CNT, <span class="code-keyword">17</span>=SK, <span class="code-keyword">18</span>=PL</li>.
+								</ul>
+								<h4>Returns&nbsp;:</h4><ul>
+									<li>If <code>pCommand</code> is <span class="code-keyword">0</span> or <span class="code-keyword">1</span>, <span class="code-keyword">1</span> if the function succeeds, <span class="code-keyword">0</span> if it fails.</li>
+									<li>If <code>pCommand</code> is <span class="code-keyword">2</span>, the number of fixtures patched in <span class="EV">Easy View</span> if the function succeeds, or <span class="code-keyword">-1</span> if an error has occured.</li>
+								</ul>
+							</p></li>
+							<li><h3>DasMevGetFixtureParam</h3><p>
+								Gets the properties of a fixture.<br/>
+								<pre lang="C++"><span class="code-keyword">BOOL</span>&nbsp;<b>DasMevGetFixtureParam</b>(<span class="code-keyword">int</span>&nbsp;pIndex, <span class="code-keyword">int*</span>&nbsp;pDmxAddress, <span class="code-keyword">int*</span>&nbsp;pDmxUniverse, <span class="code-keyword">int*</span>&nbsp;pChannelsCount, <span class="code-keyword">char*</span>&nbsp;pName, <span class="code-keyword">float*</span>&nbsp;pPosX, <span class="code-keyword">float*</span>&nbsp;pPosY, <span class="code-keyword">float*</span>&nbsp;pPosZ, <span class="code-keyword">float*</span>&nbsp;pRotX, <span class="code-keyword">float*</span>&nbsp;pRotY, <span class="code-keyword">float*</span>&nbsp;pRotZ);</pre>
+								<h4>Parameters&nbsp;:</h4><ul>
+									<li><code>pIndex</code>&nbsp;: Index of the fixture to retrieve (zero-based index); must be lower than the value returned by <span class="code-keyword">DasMevCommand(2, 0)</span> or <span class="code-keyword">DasMevGetFixturesCount()</span>.</li>
+									<li><code>pDmxAddress</code>&nbsp;: Pointer to a 32-bit integer that will receive the index of the first channel assigned to the fixture (<span class="code-keyword">0..511</span>).</li>
+									<li><code>pDmxUniverse</code>&nbsp;: Pointer to a 32-bit integer that will receive the universe of the fixture (<span class="code-keyword">0..3</span>).</li>
+									<li><code>pChannelsCount</code>&nbsp;: Pointer to a 32-bit integer that will receive the number of DMX channels assigned to the fixture.</li>
+									<li><code>pName</code>&nbsp;: Buffer that will receive the name of the fixture; should be large enough to store 300 bytes.</li>
+									<li><code>pPosX</code>, <code>pPosY</code>, <code>pPosZ</code>&nbsp;: Pointers to 32-bit floating numbers that will receive the 3D coordinates of the fixture.</li>
+									<li><code>pRotX</code>, <code>pRotY</code>, <code>pRotZ</code>&nbsp;: Pointers to 32-bit floating numbers that will receive the rotation angles (in degrees) of the fixture around each axis (left-handed Cartesian system).</li>
+								</ul>
+								<h4>Returns&nbsp;:</h4><ul>
+									<li><span class="code-keyword">TRUE</span>, if the function succeeds.</li>
+									<li><span class="code-keyword">FALSE</span>, if it fails.</li>
+								</ul>
+							</p></li>
+							<li><h3>DasMevGetFixturesCount</h3><p>
+								Gets the number of fixtures.<br/>
+								<pre lang="C++"><span class="code-keyword">int</span>&nbsp;<b>DasMevGetFixturesCount</b>();</pre>
+								<h4>Returns&nbsp;:</h4><ul>
+									<li>The number of fixtures patched in <span class="EV">Easy View</span> if the function succeeds, or <span class="code-keyword">-1</span> if an error has occured.</li>
+								</ul>
+							</p></li>
+							<li><h3>DasMevGetLanguage</h3><p>
+								Gets the language currently used in the UI of <span class="EV">Easy View</span>.<br/>
+								<pre lang="C++"><span class="code-keyword">int</span>&nbsp;<b>DasMevGetLanguage</b>();</pre>
+								<h4>Returns&nbsp;:</h4><ul>
+									<li>Current UI language (<span class="code-keyword">0</span>=EN, <span class="code-keyword">1</span>=FR, <span class="code-keyword">2</span>=IT, <span class="code-keyword">3</span>=DE, <span class="code-keyword">4</span>=ES, <span class="code-keyword">5</span>=FI, <span class="code-keyword">6</span>=JP, <span class="code-keyword">7</span>=DK, <span class="code-keyword">8</span>=GR, <span class="code-keyword">9</span>=KR, <span class="code-keyword">10</span>=CN, <span class="code-keyword">11</span>=HU, <span class="code-keyword">12</span>=RU, <span class="code-keyword">13</span>=NL, <span class="code-keyword">14</span>=SE, <span class="code-keyword">15</span>=PT, <span class="code-keyword">16</span>=CNT, <span class="code-keyword">17</span>=SK, <span class="code-keyword">18</span>=PL), or <span class="code-keyword">-1</span> if an error has occured.</li>
+								</ul>
+							</p></li>
+							<li><h3>DasMevGetSupportedDeviceTypes</h3><p>
+                Gets the types of devices supported in <span class="EV">Easy View</span>.<br/>
+								<pre lang="C++"><span class="code-keyword">int</span>&nbsp;<b>DasMevGetSupportedDeviceTypes</b>();</pre>
+								<h4>Returns&nbsp;:</h4><ul>
+									<li>
+                    Types of supported devices (flags) :<ul>
+                      <li>bit 0 : Art-Net</li>
+                      <li>bit 1 : SandNet</li>
+                      <li>bit 2 : USB</li>
+                    </ul>
+                  </li>
+								</ul>
+							</p></li>
+              <li><h3>DasMevGetVersion</h3><p>
+								Gets the version of the MEVP library.<br/>
+								<pre lang="C++"><span class="code-keyword">int</span>&nbsp;<b>DasMevGetVersion</b>();</pre>
+								<h4>Returns&nbsp;:</h4><ul>
+									<li>Version of the MEVP library.</li>
+								</ul>
+							</p></li>
+							<li><h3>DasMevIsOpened</h3><p>
+								Determines if <span class="EV">Easy View</span> is running.<br/>
+								<pre lang="C++"><span class="code-keyword">int</span>&nbsp;<b>DasMevIsOpened</b>();</pre>
+								<h4>Returns&nbsp;:</h4><ul>
+									<li><span class="code-keyword">1</span>, if <span class="EV">Easy View</span> is running.</li>
+									<li><span class="code-keyword">0</span>, if <span class="EV">Easy View</span> is closed.</li>
+									<li><span class="code-keyword">-1</span>, if an error has occured.</li>
+								</ul>
+							</p></li>
+              <li><h3>DasMevIsUsingDasHard</h3><p>
+                  Determines if <span class="EV">Easy View</span> is currently using the DasHard library.<br/>
+                  <pre lang="C++"><span class="code-keyword">BOOL</span>&nbsp;<b>DasMevIsUsingDasHard</b>();</pre>
+                  <h4>Returns&nbsp;:</h4><ul>
+                    <li>
+                      <span class="code-keyword">1</span>, if <span class="EV">Easy View</span> is currently using the DasHard library.
+                    </li>
+                    <li>
+                      <span class="code-keyword">0</span>, if the DasHard library can be used by the 3<sup>rd</sup> party software.
+                    </li>
+                  </ul>
+                </p>
+              </li>
+							<li><h3>DasMevSetLanguage</h3><p>
+								Sets the language of the UI.<br/>
+								<pre lang="C++"><span class="code-keyword">BOOL</span>&nbsp;<b>DasMevSetLanguage</b>(<span class="code-keyword">int</span>&nbsp;pLanguage);</pre>
+								<h4>Parameters&nbsp;:</h4><ul>
+									<li><code>pLanguage</code>&nbsp;: Identifier of the language, as in the "Language" menu of <span class="EV">Easy View</span> : <span class="code-keyword">0</span>=EN, <span class="code-keyword">1</span>=FR, <span class="code-keyword">2</span>=IT, <span class="code-keyword">3</span>=DE, <span class="code-keyword">4</span>=ES, <span class="code-keyword">5</span>=FI, <span class="code-keyword">6</span>=JP, <span class="code-keyword">7</span>=DK, <span class="code-keyword">8</span>=GR, <span class="code-keyword">9</span>=KR, <span class="code-keyword">10</span>=CN, <span class="code-keyword">11</span>=HU, <span class="code-keyword">12</span>=RU, <span class="code-keyword">13</span>=NL, <span class="code-keyword">14</span>=SE, <span class="code-keyword">15</span>=PT, <span class="code-keyword">16</span>=CNT, <span class="code-keyword">17</span>=SK, <span class="code-keyword">18</span>=PL.</li>
+								</ul>
+								<h4>Returns&nbsp;:</h4><ul>
+									<li><span class="code-keyword">TRUE</span>, if the function succeeds.</li>
+									<li><span class="code-keyword">FALSE</span>, if it fails.</li>
+								</ul>
+							</p></li>
+							<li><h3>DasMevSetSupportedDeviceTypes</h3><p>
+                Set the types of devices supported in <span class="EV">Easy View</span>.<br/>
+								<pre lang="C++"><span class="code-keyword">BOOL</span>&nbsp;<b>DasMevSetSupportedDeviceTypes</b>(<span class="code-keyword">int</span>&nbsp;pTypes);</pre>
+								<h4>Parameters&nbsp;:</h4><ul>
+                  <li><code>pTypes</code>&nbsp;: Types of supported devices (flags) :<ul>
+                      <li>bit 0 : Art-Net</li>
+                      <li>bit 1 : SandNet</li>
+                      <li>bit 2 : USB</li>
+                    </ul>
+                  </li>
+                </ul>
+								<h4>Returns&nbsp;:</h4><ul>
+									<li><span class="code-keyword">TRUE</span>, if the function succeeds.</li>
+									<li><span class="code-keyword">FALSE</span>, if it fails.</li>
+								</ul>
+							</p></li>
+              <li><h3>DasMevStart</h3><p>
+								Starts <span class="EV">Easy View</span> if it is not already running.<br/>
+								<pre lang="C++"><span class="code-keyword">BOOL</span>&nbsp;<b>DasMevStart</b>(<span class="code-keyword">const&nbsp;char*</span>&nbsp;pControllerName, <span class="code-keyword">const&nbsp;char*</span>&nbsp;pPassword);</pre>
+								<h4>Parameters&nbsp;:</h4><ul>
+									<li><code>pControllerName</code>&nbsp;: Name of the third-party application.</li>
+									<li><code>pPassword</code>&nbsp;: Unused (leave empty).</li>
+								</ul>
+								<h4>Returns&nbsp;:</h4><ul>
+									<li><span class="code-keyword">TRUE</span>, if the function succeeds.</li>
+									<li><span class="code-keyword">FALSE</span>, if it fails.</li>
+								</ul>
+							</p></li>
+							<li><h3>DasMevWriteDmx</h3><p>
+								Sends DMX values to <span class="EV">Easy View</span>.<br/>
+								<pre lang="C++"><span class="code-keyword">BOOL</span>&nbsp;<b>DasMevWriteDmx</b>(<span class="code-keyword">int</span>&nbsp;pUniverse, <span class="code-keyword">const&nbsp;unsigned&nbsp;char*</span>&nbsp;pDmxValues);</pre>
+								<h4>Parameters&nbsp;:</h4><ul>
+									<li><code>pUniverse</code>&nbsp;: Universe (<span class="code-keyword">0..3</span>) of the DMX values.</li>
+									<li><code>pDmxValues</code>&nbsp;: An array of 512 bytes storing the values of each DMX channel, for the specified universe.</li>
+								</ul>
+								<h4>Returns&nbsp;:</h4><ul>
+									<li><span class="code-keyword">TRUE</span>, if the function succeeds.</li>
+									<li><span class="code-keyword">FALSE</span>, if it fails.</li>
+								</ul>
+							</p></li>
+						</ol>
+					</p>
+					<h2 style="page-break-before:always;">Integration</h2><p>
+						Wrappers are provided for the following programming languages :<ul>
+							<li><h3>C</h3><ol>
+									<li>Import the file <a href="MevpLibrary.h">MevpLibrary.h</a> into your project.</li>
+									<li>Call <code>DasMevInitialize()</code> to load the MEVP library and get the addresses of the functions.</li>
+									<li>Use any of the above <code>DasMev***()</code> functions.</li>
+									<li>Call <code>DasMevUninitialize()</code> to unload the MEVP library.</li>
+									<li>Example&nbsp;:<pre lang="C++"><span class="code-keyword">#include</span> <span class="code-string">"MevpLibrary.h"</span>
+
+<span class="code-keyword">unsigned&nbsp;char</span>&nbsp;dmxValues[<span class="code-digit">512</span>];
+<span class="code-keyword">int</span>&nbsp;i;
+
+<span class="code-comment">/* Load the MEVP library */</span>
+<span class="code-keyword">if</span> (<b>DasMevInitialize</b>())
+{
+	<span class="code-comment">/* Start Easy View */</span>
+	<span class="code-keyword">if</span> (DasMevStart(<span class="code-string">"MyApp"</span>, <span class="code-string">""</span>))
+	{
+		...
+		<span class="code-comment">/* Send DMX values on the first DMX universe */</span>
+		<span class="code-keyword">for</span> (i=<span class="code-digit">0</span>; i<<span class="code-digit">512</span>; ++i)
+		{
+			dmxValues[i] = ...
+		}
+		DasMevWriteDmx(<span class="code-digit">0</span>, dmxValues);
+		...
+		<span class="code-comment">/* Close Easy View */</span>
+		DasMevClose();
+	}
+	<span class="code-comment">/* Unload the MEVP library */</span>
+	<b>DasMevUninitialize</b>();
+}</pre></li>
+								</ol>
+								<a href="Sample%20C.zip">Sample program</a>.</li>
+							<li><h3>C++</h3><ol>
+									<li>Import the file <a href="MevpLibrary.hpp">MevpLibrary.hpp</a> into your project.</li>
+									<li>Create an instance of the class <code>MEVP::CMevpLibrary</code> to automatically load the MEVP library and make the functions binding.</li>
+									<li>Use any of the public methods : <code>CloseEasyView</code>, <code>StartEasyView</code>, <code>WriteDmxValues</code>.</li>
+									<li>Use any of the public accessors : <code>GetFixtures</code>, <code>GetLanguage</code>, <code>GetVersion</code>, <code>IsEasyViewOpened</code>, <code>IsValid</code>, <code>SetLanguage</code>.</li>
+									<li>When your object will be deleted, the MEVP library will be automatically unloaded.</li>
+									<li>Example :<pre lang="C++"><span class="code-keyword">#include</span> <span class="code-string">"MevpLibrary.hpp"</span>
+<span class="code-keyword">using namespace</span> MEVP;	<span class="code-comment">// import the MEVP namespace.</span>
+
+CMevpLibrary mevp;
+<span class="code-keyword">if</span> (mevp.IsValid())
+{
+	<span class="code-comment">// Start Easy View :</span>
+	<span class="code-keyword">if</span> (mevp.StartEasyView(<span class="code-string">"MyApp"</span>))
+	{
+		...
+		<span class="code-comment">// Send DMX values on the first DMX universe :</span>
+		<span class="code-keyword">unsigned&nbsp;char</span>&nbsp;dmxValues[<span class="code-digit">512</span>];
+		<span class="code-keyword">for</span> (<span class="code-keyword">int</span> i=<span class="code-digit">0</span>; i<<span class="code-digit">512</span>; ++i)
+		{
+			dmxValues[i] = ...
+		}
+		mevp.WriteDmxValues(<span class="code-digit">0</span>, dmxValues);
+		...
+		<span class="code-comment">// Close Easy View :</span>
+		mevp.CloseEasyView();
+	}
+}</pre></li>
+								</ol>
+								<a href="Sample%20Cpp.zip">Sample program</a>.</li>
+							</li>
+							<li><h3>C#</h3><ol>
+									<li>Import the file <a href="MevpLibrary.cs">MevpLibrary.cs</a> into your project.</li>
+									<li>Create an instance of the class <code>MEVP.MevpLibrary</code> to automatically load the MEVP library and make the functions binding.</li>
+									<li>Use any of the public methods : <code>CloseEasyView</code>, <code>RefreshFixtures</code>, <code>StartEasyView</code>, <code>WriteDmxValues.</code></li>
+									<li>Use any of the public properties : <code>Fixtures</code>, <code>IsEasyViewOpened</code>, <code>IsValid</code>, <code>Language</code>, <code>Version</code>.</li>
+									<li>Register to any of the public events : <code>OnEasyViewClosed</code>, <code>OnEasyViewStarted</code>, <code>OnFixturesModified</code>, <code>OnLanguageChanged</code>, <code>OnLoaded</code>.</li>
+									<li>Example :<pre lang=cs><span class="code-keyword">using</span> MEVP;	<span class="code-comment">// import the MEVP namespace.</span>
+...
+<span class="code-keyword">using</span> (MevpLibrary mevp = <span class="code-keyword">new</span> MevpLibrary())	<span class="code-comment">// as the MevpLibrary implements IDisposable, the created instance will be immediately disposed when leaving the using statement.</span>
+{
+	<span class="code-comment">// Start Easy View :</span>
+	<span class="code-keyword">if</span> (m_mevp.StartEasyView(Application.ProductName))
+	{
+		...
+		<span class="code-comment">// Send DMX values on the first DMX universe :</span>
+		<span class="code-keyword">byte</span>[] dmxValues = <span class="code-keyword">new byte</span>[<span class="code-digit">512</span>];
+		<span class="code-keyword">for</span> (<span class="code-keyword">int</span> i=<span class="code-digit">0</span>; i<<span class="code-digit">512</span>; ++i)
+		{
+			dmxValues[i] = ...
+		}
+		mevp.WriteDmxValues(<span class="code-digit">0</span>, dmxValues);
+		...
+		<span class="code-comment">// Close Easy View :</span>
+		m_mevp.CloseEasyView();
+	}
+}</pre></li>
+								</ol>
+								<a href="Sample%20CSharp.zip">Sample program</a>.</li>
+							</li>
+							<li><h3>Visual Basic&nbsp;.Net</h3><ol>
+									<li>Import the file <a href="MevpLibrary.vb">MevpLibrary.vb</a> into your project.</li>
+									<li>Create an instance of the class <code>MEVP.MevpLibrary</code> to automatically load the MEVP library and make the functions binding.</li>
+									<li>Use any of the public methods : <code>CloseEasyView</code>, <code>RefreshFixtures</code>, <code>StartEasyView</code>, <code>WriteDmxValues</code>.</li>
+									<li>Use any of the public properties : <code>Fixtures</code>, <code>IsEasyViewOpened</code>, <code>IsValid</code>, <code>Language</code>, <code>Version</code>.</li>
+									<li>Register to any of the public events : <code>OnEasyViewClosed</code>, <code>OnEasyViewStarted</code>, <code>OnFixturesModified</code>, <code>OnLanguageChanged</code>, <code>OnLoaded</code>.</li>
+									<li>Example :<pre lang=vbnet><span class="code-keyword">Imports</span> MEVP	<span class="code-comment">' import the MEVP namespace.</span>
+...
+<span class="code-keyword">Using</span> mevp <span class="code-keyword">As</span> MevpLibrary = <span class="code-keyword">New</span> MevpLibrary()	<span class="code-comment">' as the MevpLibrary implements IDisposable, the created instance will be immediately disposed when leaving the Using statement.</span>
+
+	<span class="code-comment">' Start Easy View :</span>
+	<span class="code-keyword">If</span> mevp.StartEasyView(Application.ProductName) <span class="code-keyword">Then</span>
+
+		...
+
+		<span class="code-comment">' Send DMX values on the first DMX universe :</span>
+		<span class="code-keyword">Dim</span> dmxValues() <span class="code-keyword">As Byte</span> = <span class="code-keyword">New Byte</span>(<span class="code-digit">512</span>) {}
+		<span class="code-keyword">For</span> i <span class="code-keyword">As Integer</span> = <span class="code-digit">0</span> <span class="code-keyword">To</span> <span class="code-digit">511</span>
+			dmxValues(i) = ...
+		<span class="code-keyword">Next</span>
+		mevp.WriteDmxValues(<span class="code-digit">0</span>, dmxValues)
+
+		...
+
+		<span class="code-comment">' Close Easy View :</span>
+		mevp.CloseEasyView()
+
+	<span class="code-keyword">End If</span>
+
+<span class="code-keyword">End Using</span></pre></li>
+								</ol>
+								<a href="Sample%20VB.zip">Sample program</a>.</li>
+							</li>
+						</ul>
+						<h3>Notes :</h3><ul>
+							<li>Whatever is the programming language you are using, you will have to put the <a href="MEVP.dll"><b>MEVP.dll</b></a> file alongside the executable of <span class="EV">Easy View</span> (<b>EasyView.exe</b>).</li>
+							<li>You will also have to either put the executable of your application alongside the <a href="MEVP.dll"><b>MEVP.dll</b></a>, or register the DLL (<span class="code-keyword">regsvr32.exe MEVP.dll</span>).</li>
+						</ul>
+					</p>
+				</div>
+			</td>
+		</tr>
+	</table>
+</body>
+
+</html>
