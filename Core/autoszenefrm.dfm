@@ -293,19 +293,6 @@ object autoszeneform: Tautoszeneform
       OnChange = scenefade_time_hChange
       OnKeyUp = scenefade_time_hKeyUp
     end
-    object HSLColorPicker1: THSLColorPicker
-      Left = 264
-      Top = 24
-      Width = 206
-      Height = 146
-      HSPickerHintFormat = 'H: %h S: %hslS'#13'Hex: %hex'
-      LPickerHintFormat = 'Luminance: %l'
-      TabOrder = 6
-      OnMouseMove = HSLColorPicker1MouseMove
-      DesignSize = (
-        206
-        146)
-    end
     object ComboBox1: TComboBox
       Left = 120
       Top = 28
@@ -313,7 +300,7 @@ object autoszeneform: Tautoszeneform
       Height = 21
       Style = csDropDownList
       ItemHeight = 13
-      TabOrder = 7
+      TabOrder = 6
       Visible = False
       Items.Strings = (
         'Akkurate Farb'#252'bereinstimmung'
@@ -328,7 +315,7 @@ object autoszeneform: Tautoszeneform
       Max = 255
       PageSize = 0
       Position = 255
-      TabOrder = 8
+      TabOrder = 7
       Visible = False
     end
     object buttonfarbe: TJvColorButton
@@ -341,8 +328,18 @@ object autoszeneform: Tautoszeneform
       OnChange = buttonfarbeChange
       ParentShowHint = False
       ShowHint = False
-      TabOrder = 9
+      TabOrder = 8
       TabStop = False
+    end
+    object HSLColorPicker1: THSLRingPicker
+      Left = 286
+      Top = 10
+      Width = 163
+      Height = 161
+      RingPickerHintFormat = 'Hue: %h'
+      SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
+      TabOrder = 9
+      OnMouseMove = HSLColorPicker1MouseMove
     end
   end
   object Button1: TButton

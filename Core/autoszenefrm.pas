@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, HSLColorPicker, ExtCtrls, JvExControls, JvColorBox,
-  JvColorButton, gnugettext, pngimage, JvGradient;
+  JvColorButton, gnugettext, pngimage, JvGradient, HSLRingPicker;
 
 type
   Tautoszeneform = class(TForm)
@@ -20,7 +20,6 @@ type
     scenefade_time_min: TEdit;
     scenefade_time: TEdit;
     scenefade_time_msec: TEdit;
-    HSLColorPicker1: THSLColorPicker;
     Label3: TLabel;
     Button2: TButton;
     ComboBox1: TComboBox;
@@ -37,16 +36,17 @@ type
     Label35: TLabel;
     Shape4: TShape;
     Shape2: TShape;
+    HSLColorPicker1: THSLRingPicker;
     procedure FormShow(Sender: TObject);
     procedure scenefade_time_hChange(Sender: TObject);
     procedure scenefade_time_hKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure Button1Click(Sender: TObject);
-    procedure HSLColorPicker1MouseMove(Sender: TObject; Shift: TShiftState;
-      X, Y: Integer);
     procedure buttonfarbeChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure CreateParams(var Params:TCreateParams);override;
+    procedure HSLColorPicker1MouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Integer);
   private
     { Private-Deklarationen }
   public
@@ -144,16 +144,6 @@ begin
   mainform.AktuelleAutoszene.helligkeit:=Scrollbar1.Position;
 end;
 
-procedure Tautoszeneform.HSLColorPicker1MouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  if Shift=[ssLeft] then
-  begin
-    Shape1.Brush.Color:=HSLColorPicker1.SelectedColor;
-    buttonfarbe.Color:=HSLColorPicker1.SelectedColor;
-  end;
-end;
-
 procedure Tautoszeneform.buttonfarbeChange(Sender: TObject);
 begin
   if Sender=buttonfarbe then
@@ -180,6 +170,16 @@ begin
       Params.WndParent:=GetDesktopWindow;
       self.ParentWindow := GetDesktopWindow;
     end;
+  end;
+end;
+
+procedure Tautoszeneform.HSLColorPicker1MouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if Shift=[ssLeft] then
+  begin
+    Shape1.Brush.Color:=HSLColorPicker1.SelectedColor;
+    buttonfarbe.Color:=HSLColorPicker1.SelectedColor;
   end;
 end;
 

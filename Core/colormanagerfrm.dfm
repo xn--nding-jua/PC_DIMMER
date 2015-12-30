@@ -4,7 +4,7 @@ object colormanagerform: Tcolormanagerform
   BorderStyle = bsSingle
   Caption = 'Farbmanager'
   ClientHeight = 378
-  ClientWidth = 728
+  ClientWidth = 665
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -155,7 +155,7 @@ object colormanagerform: Tcolormanagerform
   object Shape1: TShape
     Left = 0
     Top = 337
-    Width = 728
+    Width = 665
     Height = 41
     Align = alBottom
     Pen.Style = psClear
@@ -168,7 +168,7 @@ object colormanagerform: Tcolormanagerform
     Brush.Color = clBlack
   end
   object Label7: TLabel
-    Left = 368
+    Left = 304
     Top = 315
     Width = 265
     Height = 13
@@ -193,7 +193,7 @@ object colormanagerform: Tcolormanagerform
   object GroupBox1: TGroupBox
     Left = 8
     Top = 64
-    Width = 353
+    Width = 321
     Height = 241
     Caption = ' Einstellung der Farbkan'#228'le auf Kanal COLOR1 '
     TabOrder = 0
@@ -242,23 +242,9 @@ object colormanagerform: Tcolormanagerform
       OnKeyUp = ListBox1KeyUp
       OnMouseUp = ListBox1MouseUp
     end
-    object HSLColorPicker1: THSLColorPicker
-      Left = 139
-      Top = 40
-      Width = 206
-      Height = 146
-      HSPickerHintFormat = 'H: %h S: %hslS'#13'Hex: %hex'
-      LPickerHintFormat = 'Luminance: %l'
-      Enabled = False
-      TabOrder = 1
-      OnMouseMove = HSLColorPicker1MouseMove
-      DesignSize = (
-        206
-        146)
-    end
     object buttonfarbe: TJvColorButton
-      Left = 264
-      Top = 24
+      Left = 241
+      Top = 21
       Width = 73
       OtherCaption = '&Other...'
       Options = []
@@ -266,7 +252,7 @@ object colormanagerform: Tcolormanagerform
       OnChange = buttonfarbeChange
       ParentShowHint = False
       ShowHint = False
-      TabOrder = 2
+      TabOrder = 1
       TabStop = False
     end
     object PngBitBtn1: TPngBitBtn
@@ -274,7 +260,7 @@ object colormanagerform: Tcolormanagerform
       Top = 160
       Width = 57
       Height = 25
-      TabOrder = 3
+      TabOrder = 2
       OnClick = PngBitBtn1Click
       PngImage.Data = {
         89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -396,7 +382,7 @@ object colormanagerform: Tcolormanagerform
       Width = 57
       Height = 25
       Enabled = False
-      TabOrder = 4
+      TabOrder = 3
       OnClick = PngBitBtn2Click
       PngImage.Data = {
         89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -520,17 +506,17 @@ object colormanagerform: Tcolormanagerform
       Width = 57
       Height = 21
       Enabled = False
-      TabOrder = 5
+      TabOrder = 4
       Text = '0'
       OnChange = Edit1Change
     end
     object Edit2: TEdit
       Left = 136
       Top = 208
-      Width = 209
+      Width = 177
       Height = 21
       Enabled = False
-      TabOrder = 6
+      TabOrder = 5
       Text = 'Neue Farbe'
       OnChange = Edit2Change
     end
@@ -540,9 +526,19 @@ object colormanagerform: Tcolormanagerform
       Width = 57
       Height = 21
       Enabled = False
-      TabOrder = 7
+      TabOrder = 6
       Text = '0'
       OnChange = Edit3Change
+    end
+    object HSLColorPicker1: THSLRingPicker
+      Left = 136
+      Top = 48
+      Width = 145
+      Height = 137
+      RingPickerHintFormat = 'Hue: %h'
+      SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
+      TabOrder = 7
+      OnMouseMove = HSLColorPicker1MouseMove
     end
   end
   object Button1: TButton
@@ -659,7 +655,7 @@ object colormanagerform: Tcolormanagerform
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 728
+    Width = 665
     Height = 57
     Align = alTop
     BevelOuter = bvNone
@@ -668,7 +664,7 @@ object colormanagerform: Tcolormanagerform
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 728
+      Width = 665
       Height = 57
       Style = grVertical
       StartColor = clWhite
@@ -873,9 +869,9 @@ object colormanagerform: Tcolormanagerform
     end
   end
   object GroupBox2: TGroupBox
-    Left = 368
+    Left = 336
     Top = 64
-    Width = 353
+    Width = 321
     Height = 241
     Caption = ' Einstellung der Farbkan'#228'le auf Kanal COLOR2 '
     TabOrder = 7
@@ -924,23 +920,9 @@ object colormanagerform: Tcolormanagerform
       OnKeyUp = ListBox1KeyUp
       OnMouseUp = ListBox1MouseUp
     end
-    object HSLColorPicker2: THSLColorPicker
-      Left = 139
-      Top = 40
-      Width = 206
-      Height = 146
-      HSPickerHintFormat = 'H: %h S: %hslS'#13'Hex: %hex'
-      LPickerHintFormat = 'Luminance: %l'
-      Enabled = False
-      TabOrder = 1
-      OnMouseMove = HSLColorPicker2MouseMove
-      DesignSize = (
-        206
-        146)
-    end
     object buttonfarbe2: TJvColorButton
-      Left = 264
-      Top = 24
+      Left = 240
+      Top = 20
       Width = 73
       OtherCaption = '&Other...'
       Options = []
@@ -948,7 +930,7 @@ object colormanagerform: Tcolormanagerform
       OnChange = buttonfarbeChange
       ParentShowHint = False
       ShowHint = False
-      TabOrder = 2
+      TabOrder = 1
       TabStop = False
     end
     object PngBitBtn3: TPngBitBtn
@@ -956,7 +938,7 @@ object colormanagerform: Tcolormanagerform
       Top = 160
       Width = 57
       Height = 25
-      TabOrder = 3
+      TabOrder = 2
       OnClick = PngBitBtn3Click
       PngImage.Data = {
         89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -1078,7 +1060,7 @@ object colormanagerform: Tcolormanagerform
       Width = 57
       Height = 25
       Enabled = False
-      TabOrder = 4
+      TabOrder = 3
       OnClick = PngBitBtn4Click
       PngImage.Data = {
         89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -1202,17 +1184,17 @@ object colormanagerform: Tcolormanagerform
       Width = 57
       Height = 21
       Enabled = False
-      TabOrder = 5
+      TabOrder = 4
       Text = '0'
       OnChange = Edit4Change
     end
     object Edit5: TEdit
       Left = 136
       Top = 208
-      Width = 209
+      Width = 177
       Height = 21
       Enabled = False
-      TabOrder = 6
+      TabOrder = 5
       Text = 'Neue Farbe'
       OnChange = Edit5Change
     end
@@ -1222,13 +1204,23 @@ object colormanagerform: Tcolormanagerform
       Width = 57
       Height = 21
       Enabled = False
-      TabOrder = 7
+      TabOrder = 6
       Text = '0'
       OnChange = Edit6Change
     end
+    object HSLColorPicker2: THSLRingPicker
+      Left = 136
+      Top = 48
+      Width = 145
+      Height = 137
+      RingPickerHintFormat = 'Hue: %h'
+      SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
+      TabOrder = 7
+      OnMouseMove = HSLColorPicker2MouseMove
+    end
   end
   object ComboBox1: TComboBox
-    Left = 640
+    Left = 576
     Top = 312
     Width = 81
     Height = 21

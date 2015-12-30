@@ -13,11 +13,11 @@
   <function channel="3" minvalue="0" maxvalue="255" name="Weiß" fade="yes" type="w"/>
   <function channel="4" minvalue="0" maxvalue="255" name="Amber" fade="yes" type="a"/>
   <function channel="5" minvalue="0" maxvalue="255" name="UV" fade="yes" type="UV"/>
-  <function channel="6" minvalue="0" maxvalue="255" name="Helligkeit/Strobo" fade="yes" type="dimmer"/>
-  <function channel="7" minvalue="0" maxvalue="255" name="SHUTTER" fade="yes" type="shutter"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Stroboskop" fade="yes" type="shutter"/>
   <function channel="8" minvalue="0" maxvalue="255" name="Makros" fade="no" type="special2"/>
  </channels>
- <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <amber UseAmberMixing="no" AmberMixingCompensateRG="no" AmberMixingCompensateBlue="no" AmberColorR="255"AmberColorG="191" />
  <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="0" ch8="0" />
  <shutter OpenValue="255" CloseValue="0" ChannelName="dimmer"/>
  <strobe OffValue="10" MinValue="11" MaxValue="255" ChannelName="shutter"/>
@@ -37,11 +37,11 @@
   <checkbox name="usefadezeit" top="270" left="60" width="50" height="17" caption="Faden" action="" checked="false"/>
   <checkbox name="soundcontrol" top="290" left="60" width="100" height="20" caption="Soundsteuerung" action="soundcontrolchange" checked="false"/>
   <slider name="dimmerslider" top="240" left="190" width="160" height="20" action="dimmersliderchange" startvalue="0" endvalue="255" default="0"/>
-  <slider name="stroboslider" top="280" left="190" width="160" height="20" action="strobosliderchange" startvalue="11" endvalue="255" default="11"/>
+  <slider name="stroboslider" top="280" left="190" width="160" height="20" action="strobosliderchange" startvalue="0" endvalue="255" default="11"/>
   <slider name="whiteslider" top="90" left="190" width="160" height="20" action="whitesliderchange" startvalue="0" endvalue="255" default="0"/>
   <slider name="amberslider" top="140" left="190" width="160" height="20" action="ambersliderchange" startvalue="0" endvalue="255" default="0"/>
   <slider name="uvslider" top="190" left="190" width="160" height="20" action="uvsliderchange" startvalue="0" endvalue="255" default="0"/>
-  <slider name="macroslider" top="320" left="10" width="340" height="20" action="macrosliderchange" startvalue="8" endvalue="255" default="8"/>
+  <slider name="macroslider" top="320" left="10" width="340" height="20" action="macrosliderchange" startvalue="0" endvalue="255" default="0"/>
   <label name="label1" top="255" left="10" width="43" height="13" caption="Zeit [ms]:"/>
   <label name="label4" top="220" left="190" width="40" height="10" caption="Dimmer:"/>
   <label name="Label3" top="260" left="190" width="60" height="10" caption="Stroboskop:"/>

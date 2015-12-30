@@ -966,7 +966,7 @@ object dynguiform: Tdynguiform
       ParentShowHint = False
       Position = 255
       ShowHint = True
-      TabOrder = 8
+      TabOrder = 7
       TickMarks = tmBoth
       TickStyle = tsNone
       OnChange = whitesliderChange
@@ -1019,25 +1019,6 @@ object dynguiform: Tdynguiform
       Properties.CustomColorFont.Height = -11
       Properties.CustomColorFont.Name = 'MS Sans Serif'
       Properties.CustomColorFont.Style = []
-    end
-    object colorpicker3: THSLColorPicker
-      Left = 11
-      Top = 86
-      Width = 142
-      Height = 137
-      SelectedColor = 240
-      HSPickerHintFormat = 'R: %r G: %g B: %b, Hex: %hex'
-      LPickerHintFormat = 'Luminance: %l'
-      HSPickerCursor = crCross
-      LPickerCursor = crCross
-      ShowHint = False
-      ParentShowHint = False
-      Visible = False
-      TabOrder = 7
-      OnChange = colorpicker3Change
-      DesignSize = (
-        142
-        137)
     end
     object nextcolor1btn: TPngBitBtn
       Left = 94
@@ -1118,7 +1099,7 @@ object dynguiform: Tdynguiform
       ParentShowHint = False
       Position = 255
       ShowHint = True
-      TabOrder = 9
+      TabOrder = 8
       TickMarks = tmBoth
       TickStyle = tsNone
       OnChange = ambersliderChange

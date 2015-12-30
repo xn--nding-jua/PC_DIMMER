@@ -205,24 +205,16 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         Height = 13
         Caption = 'Wei'#223':'
       end
-      object ColorPicker: THSLColorPicker
-        Left = 8
-        Top = 176
-        Width = 153
-        Height = 137
-        SelectedColor = 240
-        HSPickerHintFormat = 'R: %r G: %g B: %b, Hex: %hex'
-        LPickerHintFormat = 'Luminance: %l'
-        HSPickerCursor = crCross
-        LPickerCursor = crCross
-        ShowHint = False
-        ParentShowHint = False
+      object colorpicker: THSLRingPicker
+        Left = 16
+        Top = 184
+        Width = 137
+        Height = 129
+        RingPickerHintFormat = 'Hue: %h'
+        SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
         Visible = False
-        TabOrder = 6
+        TabOrder = 11
         OnChange = ColorPickerChange
-        DesignSize = (
-          153
-          137)
       end
       object channeltype: TComboBox
         Left = 8
@@ -299,7 +291,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         Width = 95
         Height = 17
         Caption = 'Dimmer @ 100%'
-        TabOrder = 7
+        TabOrder = 6
         OnClick = Button1Click
       end
       object ColorPicker2: TJvOfficeColorPanel
@@ -313,7 +305,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         HotTrackFont.Height = -11
         HotTrackFont.Name = 'MS Sans Serif'
         HotTrackFont.Style = []
-        TabOrder = 8
+        TabOrder = 7
         OnMouseUp = ColorPicker2MouseUp
         Properties.ShowDefaultColor = False
         Properties.NoneColorCaption = 'No Color'
@@ -344,7 +336,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         Width = 57
         Height = 19
         Caption = 'Wechsel'
-        TabOrder = 9
+        TabOrder = 8
         OnClick = Button2Click
       end
       object amberslider: TTrackBar
@@ -356,7 +348,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         Max = 255
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 10
+        TabOrder = 9
         TickStyle = tsManual
         OnChange = ambersliderChange
       end
@@ -369,7 +361,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         Max = 255
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 11
+        TabOrder = 10
         TickStyle = tsManual
         OnChange = whitesliderChange
       end

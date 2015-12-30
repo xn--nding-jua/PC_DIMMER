@@ -6,7 +6,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, TiledImage, StdCtrls, Mask, JvExMask, JvSpin, GR32,
   ComCtrls, mbColorPickerControl, HSColorPicker, XPMan, GnuGetText, Menus,
-  HSLColorPicker, JvExExtCtrls, JvExtComponent, JvPanel, JvOfficeColorPanel;
+  HSLColorPicker, JvExExtCtrls, JvExtComponent, JvPanel, JvOfficeColorPanel,
+  HSLRingPicker;
 
 type
   Tlauflichtassistentownpatternform = class(TForm)
@@ -61,7 +62,6 @@ type
     msedit: TEdit;
     TrackBar2: TTrackBar;
     Label12: TLabel;
-    ColorPicker: THSLColorPicker;
     AlleKanleselektieren1: TMenuItem;
     Button1: TButton;
     showanimation: TCheckBox;
@@ -77,6 +77,7 @@ type
     amberslider: TTrackBar;
     Label16: TLabel;
     whiteslider: TTrackBar;
+    colorpicker: THSLRingPicker;
     procedure dimmersliderChange(Sender: TObject);
     procedure PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);

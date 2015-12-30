@@ -8,7 +8,7 @@ uses
   JvPanel, JvOfficeColorPanel, HSLColorPicker, JvComponentBase,
   JvAppStorage, JvAppXMLStorage, JvInterpreter, JvExStdCtrls, JvCombobox,
   JvColorCombo, mbXPImageComboBox, ImgList, PngImageList, PngImage,
-  gnugettext, TiledImage, Math, SVATimer;
+  gnugettext, TiledImage, Math, SVATimer, HSLRingPicker;
 
 const
 {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
@@ -65,7 +65,6 @@ type
     ColorPicker: TJvOfficeColorPanel;
     panmirror: TCheckBox;
     tiltmirror: TCheckBox;
-    ColorPicker2: THSLColorPicker;
     XML: TJvAppXMLFileStorage;
     ScriptInterpreter: TJvInterpreterProgram;
     ColorBox: TJvColorComboBox;
@@ -91,6 +90,7 @@ type
     VertTrack: TTrackBar;
     colorbox2: TJvColorComboBox;
     RefreshTimer: TSVATimer;
+    colorpicker2: THSLRingPicker;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BScroll(Sender: TObject; ScrollCode: TScrollCode;
       var ScrollPos: Integer);
@@ -101,7 +101,6 @@ type
     procedure PositionXYMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure ColorPickerColorChange(Sender: TObject);
-    procedure ColorPicker2Change(Sender: TObject);
     procedure ScriptInterpreterGetValue(Sender: TObject;
       Identifier: String; var Value: Variant; Args: TJvInterpreterArgs;
       var Done: Boolean);
@@ -123,6 +122,9 @@ type
     procedure VertTrackChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure colorbox2Change(Sender: TObject);
+    procedure colorpicker2MouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure colorpicker2Change(Sender: TObject);
   private
     { Private-Deklarationen }
     loadDDFWindow:boolean;
@@ -946,17 +948,6 @@ begin
   end;
 end;
 
-procedure TDDFWindow.ColorPicker2Change(Sender: TObject);
-begin
-  if ColorPicker2.visible and (Sender=ColorPicker2) then
-  begin
-    TColor2RGB(ColorPicker2.SelectedColor,Red,Green,Blue);
-    Colorpicker.selectedColor:=ColorPicker2.SelectedColor;
-
-    startscript(Colorpicker);
-  end;
-end;
-
 procedure TDDFWindow.ScriptInterpreterGetValue(Sender: TObject;
   Identifier: String; var Value: Variant; Args: TJvInterpreterArgs;
   var Done: Boolean);
@@ -1483,6 +1474,32 @@ begin
   if (Sender=ColorBox2) then
   begin
     startscript(ColorBox2);
+  end;
+end;
+
+procedure TDDFWindow.colorpicker2MouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if Shift=[ssLeft] then
+  begin
+    if ColorPicker2.visible and (Sender=ColorPicker2) then
+    begin
+      TColor2RGB(ColorPicker2.SelectedColor,Red,Green,Blue);
+      Colorpicker.selectedColor:=ColorPicker2.SelectedColor;
+
+      startscript(Colorpicker);
+    end;
+  end;
+end;
+
+procedure TDDFWindow.colorpicker2Change(Sender: TObject);
+begin
+  if ColorPicker2.visible and (Sender=ColorPicker2) then
+  begin
+    TColor2RGB(ColorPicker2.SelectedColor,Red,Green,Blue);
+    Colorpicker.selectedColor:=ColorPicker2.SelectedColor;
+
+    startscript(Colorpicker);
   end;
 end;
 

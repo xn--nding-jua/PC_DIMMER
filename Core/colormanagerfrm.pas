@@ -5,7 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, JvExControls, JvColorBox, JvColorButton,
-  HSLColorPicker, Buttons, PngBitBtn, pngimage, JvGradient, gnugettext;
+  HSLColorPicker, Buttons, PngBitBtn, pngimage, JvGradient, gnugettext,
+  HSLRingPicker;
 
 type
   Tcolormanagerform = class(TForm)
@@ -14,7 +15,6 @@ type
     ListBox1: TListBox;
     Label1: TLabel;
     Label2: TLabel;
-    HSLColorPicker1: THSLColorPicker;
     buttonfarbe: TJvColorButton;
     PngBitBtn1: TPngBitBtn;
     PngBitBtn2: TPngBitBtn;
@@ -44,7 +44,6 @@ type
     Label14: TLabel;
     Label16: TLabel;
     ListBox3: TListBox;
-    HSLColorPicker2: THSLColorPicker;
     buttonfarbe2: TJvColorButton;
     PngBitBtn3: TPngBitBtn;
     PngBitBtn4: TPngBitBtn;
@@ -55,6 +54,8 @@ type
     ComboBox1: TComboBox;
     Label3: TLabel;
     Label4: TLabel;
+    HSLColorPicker1: THSLRingPicker;
+    HSLColorPicker2: THSLRingPicker;
     procedure FormShow(Sender: TObject);
     procedure HSLColorPicker1MouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);

@@ -4804,7 +4804,7 @@ object ddfeditorform: Tddfeditorform
         Width = 226
         Height = 226
         BevelOuter = bvLowered
-        TabOrder = 1
+        TabOrder = 0
         Visible = False
         OnMouseDown = fadenkreuzMouseDown
         OnMouseMove = fadenkreuzMouseMove
@@ -4838,7 +4838,7 @@ object ddfeditorform: Tddfeditorform
         Width = 97
         Height = 17
         Caption = 'Invertiere PAN'
-        TabOrder = 2
+        TabOrder = 1
         Visible = False
       end
       object tiltmirror: TCheckBox
@@ -4847,7 +4847,7 @@ object ddfeditorform: Tddfeditorform
         Width = 97
         Height = 17
         Caption = 'Invertiere TILT'
-        TabOrder = 3
+        TabOrder = 2
         Visible = False
       end
       object ColorPicker: TJvOfficeColorPanel
@@ -4861,7 +4861,7 @@ object ddfeditorform: Tddfeditorform
         HotTrackFont.Height = -11
         HotTrackFont.Name = 'MS Sans Serif'
         HotTrackFont.Style = []
-        TabOrder = 4
+        TabOrder = 3
         Visible = False
         Properties.ShowDefaultColor = False
         Properties.NoneColorCaption = 'No Color'
@@ -4885,24 +4885,6 @@ object ddfeditorform: Tddfeditorform
         Properties.CustomColorFont.Height = -11
         Properties.CustomColorFont.Name = 'MS Sans Serif'
         Properties.CustomColorFont.Style = []
-      end
-      object ColorPicker2: THSLColorPicker
-        Left = 16
-        Top = 80
-        Width = 145
-        Height = 137
-        HSPickerHintFormat = 'R: %r G: %g B: %b, Hex: %hex'
-        LPickerHintFormat = 'Luminance: %l'
-        HSPickerCursor = crCross
-        LPickerCursor = crCross
-        ShowHint = False
-        ParentShowHint = False
-        Visible = False
-        TabOrder = 0
-        OnChange = OwnColorPickerChange
-        DesignSize = (
-          145
-          137)
       end
       object ColorBox: TJvColorComboBox
         Left = 8
@@ -4963,7 +4945,7 @@ object ddfeditorform: Tddfeditorform
         ColorDialogText = 'Custom...'
         DroppedDownWidth = 145
         NewColorText = 'Custom'
-        TabOrder = 5
+        TabOrder = 4
         Visible = False
         OnChange = ColorBoxChange
       end
@@ -5026,9 +5008,20 @@ object ddfeditorform: Tddfeditorform
         ColorDialogText = 'Custom...'
         DroppedDownWidth = 145
         NewColorText = 'Custom'
-        TabOrder = 6
+        TabOrder = 5
         Visible = False
         OnChange = ColorBox2Change
+      end
+      object ColorPicker2: THSLRingPicker
+        Left = 16
+        Top = 80
+        Width = 137
+        Height = 129
+        RingPickerHintFormat = 'Hue: %h'
+        SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
+        Visible = False
+        TabOrder = 6
+        OnChange = OwnColorPickerChange
       end
     end
   end

@@ -87,7 +87,6 @@ type
     zoomplus: TButton;
     zoomminus: TButton;
     Label10: TLabel;
-    colorpicker3: THSLColorPicker;
     Shape10: TShape;
     dim100: TPngBitBtn;
     dim75: TPngBitBtn;
@@ -185,7 +184,6 @@ type
     procedure dim50Click(Sender: TObject);
     procedure dim25Click(Sender: TObject);
     procedure dim0Click(Sender: TObject);
-    procedure colorpicker3Change(Sender: TObject);
     procedure FormClick(Sender: TObject);
     procedure Shape10MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -1357,17 +1355,10 @@ begin
   begin
     colorpicker.Visible:=false;
     colorpicker2.Visible:=true;
-    colorpicker3.Visible:=false;
   end else if colorpicker2.Visible then
-  begin
-    colorpicker.Visible:=false;
-    colorpicker2.Visible:=false;
-    colorpicker3.Visible:=true;
-  end else if colorpicker3.Visible then
   begin
     colorpicker.Visible:=true;
     colorpicker2.Visible:=false;
-    colorpicker3.Visible:=false;
   end;
 end;
 
@@ -1422,21 +1413,6 @@ procedure Tdynguiform.dim0Click(Sender: TObject);
 begin
   if dimmerslider.position=255 then dimmersliderChange(nil);
   dimmerslider.position:=255;
-end;
-
-procedure Tdynguiform.colorpicker3Change(Sender: TObject);
-var
-  i:integer;
-  R,G,B:byte;
-begin
-  for i:=0 to length(mainform.Devices)-1 do
-  begin
-    if mainform.DeviceSelected[i] then
-    begin
-      TColor2RGB(colorpicker3.SelectedColor, R, G, B);
-      geraetesteuerung.set_color(mainform.devices[i].ID, R, G, B, 500, 0);
-    end;
-  end;
 end;
 
 procedure Tdynguiform.FormClick(Sender: TObject);

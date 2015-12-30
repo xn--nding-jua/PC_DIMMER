@@ -1,6 +1,6 @@
 object DDFWindow: TDDFWindow
-  Left = 692
-  Top = 80
+  Left = 697
+  Top = 152
   BorderStyle = bsToolWindow
   Caption = 'DDFWindow'
   ClientHeight = 313
@@ -1635,25 +1635,6 @@ object DDFWindow: TDDFWindow
     Properties.CustomColorFont.Style = []
     OnColorChange = ColorPickerColorChange
   end
-  object ColorPicker2: THSLColorPicker
-    Left = 88
-    Top = 144
-    Width = 142
-    Height = 137
-    SelectedColor = 240
-    HSPickerHintFormat = 'R: %r G: %g B: %b, Hex: %hex'
-    LPickerHintFormat = 'Luminance: %l'
-    HSPickerCursor = crCross
-    LPickerCursor = crCross
-    ShowHint = False
-    ParentShowHint = False
-    Visible = False
-    TabOrder = 4
-    OnChange = ColorPicker2Change
-    DesignSize = (
-      142
-      137)
-  end
   object ColorBox: TJvColorComboBox
     Left = 8
     Top = 256
@@ -1663,7 +1644,7 @@ object DDFWindow: TDDFWindow
     DroppedDownWidth = 145
     NewColorText = 'Custom'
     Options = [coText]
-    TabOrder = 5
+    TabOrder = 4
     OnChange = ColorBoxChange
   end
   object dipswitchpanel: TPanel
@@ -1672,7 +1653,7 @@ object DDFWindow: TDDFWindow
     Width = 105
     Height = 38
     BevelOuter = bvNone
-    TabOrder = 6
+    TabOrder = 5
     Visible = False
     object Image1: TImage
       Left = 0
@@ -2316,7 +2297,7 @@ object DDFWindow: TDDFWindow
     Width = 97
     Height = 17
     Caption = 'MH Control'
-    TabOrder = 7
+    TabOrder = 6
     Visible = False
     OnMouseUp = usemhcontrolMouseUp
   end
@@ -2329,8 +2310,20 @@ object DDFWindow: TDDFWindow
     DroppedDownWidth = 145
     NewColorText = 'Custom'
     Options = [coText]
-    TabOrder = 8
+    TabOrder = 7
     OnChange = colorbox2Change
+  end
+  object colorpicker2: THSLRingPicker
+    Left = 80
+    Top = 144
+    Width = 129
+    Height = 129
+    RingPickerHintFormat = 'Hue: %h'
+    SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
+    Visible = False
+    TabOrder = 8
+    OnChange = ColorPicker2Change
+    OnMouseMove = colorpicker2MouseMove
   end
   object XML: TJvAppXMLFileStorage
     StorageOptions.BooleanStringTrueValues = 'TRUE, YES, Y'

@@ -11,7 +11,7 @@ uses
   SynCompletionProposal, JvExExtCtrls, JvExtComponent, JvPanel,
   JvOfficeColorPanel, JvExControls, JvGradient, JvColorBox, JvColorButton,
   JvExStdCtrls, JvCombobox, JvColorCombo, mbXPImageComboBox, PngImageList,
-  gnugettext, JvListComb;
+  gnugettext, JvListComb, HSLRingPicker;
 
 type
   Teditproperties = record
@@ -105,7 +105,6 @@ type
     deviceimage: TImage;
     devicename: TLabel;
     deviceadress: TLabel;
-    ColorPicker2: THSLColorPicker;
     fadenkreuz: TPanel;
     vertical_line: TBevel;
     horizontal_line: TBevel;
@@ -382,6 +381,7 @@ type
     ambergreenlbl: TLabel;
     channelfadebox: TCheckBox;
     itemvalueendedit: TJvSpinEdit;
+    ColorPicker2: THSLRingPicker;
     procedure sizecontrolcheckedClick(Sender: TObject);
     procedure TBItem8Click(Sender: TObject);
     procedure TBItem7Click(Sender: TObject);
