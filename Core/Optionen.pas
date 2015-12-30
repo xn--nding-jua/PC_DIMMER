@@ -224,6 +224,7 @@ type
     autologouttime: TComboBox;
     startupuseredit: TComboBox;
     Label87: TLabel;
+    autoambercheckbox: TCheckBox;
     procedure input_number(var pos:integer; var s:string);
     procedure FormShow(Sender: TObject);
     procedure prioritaetChange(Sender: TObject);

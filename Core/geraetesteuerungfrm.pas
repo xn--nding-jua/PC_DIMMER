@@ -5049,7 +5049,7 @@ begin
 
   if (mainform.devices[DevPosition].hasRGB or mainform.devices[DevPosition].hasCMY) and (Mode AND 1 = 1) then
   begin
-    if mainform.devices[DevPosition].UseAmberMixing and mainform.devices[DevPosition].hasAmber then
+    if mainform.UseAutoAmberCalculation and mainform.devices[DevPosition].UseAmberMixing and mainform.devices[DevPosition].hasAmber then
     begin
       ConvertRGBtoRGBA(r, g, b, mainform.devices[DevPosition].AmberRatioR, mainform.devices[DevPosition].AmberRatioG, mainform.devices[DevPosition].AmbermixingCompensateRG, mainform.devices[DevPosition].AmbermixingCompensateBlue, ra, ga, ba, aa);
 

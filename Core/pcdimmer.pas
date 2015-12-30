@@ -995,6 +995,7 @@ type
     pcdimmerresetting:boolean;
     maxautobackupfiles:integer;
     animationtimer:integer;
+    UseAutoAmberCalculation:boolean;
     ddfsource:byte; // 0: geraetesteuerung, 1: ddfwindow
     _killaccu : boolean;
     _killscan : boolean;
@@ -1070,7 +1071,6 @@ type
     filesinprojectdirectory:integer;
 		MidiEventArray : array of TMIDIEventArray;//array[1..7] of Byte;
     SendValueOfSelectedDevicesToMidi: array of TSendValueOfSelectedDevicesToMidi;
-//    UseAmberMixing, AmberMixingCompensateBlue, AmberMixingCompensateRG: boolean;
 
 		DataInEventArray : array of TDataInEventArray;//array[1..7] of Byte;
 
@@ -2097,6 +2097,7 @@ begin
     MediaCenterPort := LReg.ReadWriteInt('MediaCenter IP Port', 10153);
     CheckUpdatesOnStartup := LReg.ReadWriteBool('Check updates on Startup', true);
     QuitWithoutConfirmation := LReg.ReadWriteBool('Do not ask for exit', false);
+    UseAutoAmberCalculation := LReg.ReadWriteBool('AutoAmberCalculation', false);
 
     if LReg.ValueExists('Number of Useraccounts') then
     begin
@@ -9360,6 +9361,7 @@ begin
     Optionenbox.startupuseredit.Items.Add(UserAccounts[i].Name);
   end;
   Optionenbox.startupuseredit.text:=StartupUser;
+  Optionenbox.autoambercheckbox.checked:=UseAutoAmberCalculation;
 
   Optionenbox.rfr_main.Value:=rfr_main;
   Optionenbox.rfr_aep.Value:=rfr_aep;
@@ -9484,6 +9486,7 @@ begin
   QuitWithoutConfirmation:=Optionenbox.QuitWithoutConfirmation.Checked;
   autologouttime:=Optionenbox.autologouttime.ItemIndex;
   StartupUser:=Optionenbox.startupuseredit.text;
+  UseAutoAmberCalculation:=Optionenbox.autoambercheckbox.checked;
 
   rfr_main:=round(Optionenbox.rfr_main.Value);
   rfr_aep:=round(Optionenbox.rfr_aep.Value);
@@ -22002,6 +22005,7 @@ begin
     LReg.WriteInteger('MediaCenter IP Port',mediacenterport);
     LReg.WriteBool('Check updates on Startup', CheckUpdatesOnStartup);
     LReg.WriteBool('Do not ask for exit', QuitWithoutConfirmation);
+    LReg.WriteBool('AutoAmberCalculation', UseAutoAmberCalculation);
     LReg.WriteInteger('Autologouttime',autologouttime);
     LReg.WriteString('StartupUser',StartupUser);
 

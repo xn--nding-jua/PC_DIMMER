@@ -74,6 +74,7 @@ object OptionenBox: TOptionenBox
     Width = 576
     Height = 350
     Align = alClient
+    PageIndex = 3
     TabOrder = 0
     object TPage
       Left = 0
@@ -996,6 +997,14 @@ object OptionenBox: TOptionenBox
         Caption = 'Aktualisierungsraten auf Standardwerte'
         TabOrder = 8
         OnClick = Button3Click
+      end
+      object autoambercheckbox: TCheckBox
+        Left = 16
+        Top = 128
+        Width = 265
+        Height = 17
+        Caption = 'Amber-Kanal automatisch aus RGB berechnen'
+        TabOrder = 9
       end
     end
     object TPage
