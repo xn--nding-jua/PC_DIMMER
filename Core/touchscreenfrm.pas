@@ -112,6 +112,14 @@ type
     channelboxtimer: TTimer;
     chantypebtn: TButton;
     SumChanbtn: TButton;
+    colorsliderpanel: TPanel;
+    Panel7: TPanel;
+    amberslider: TTrackBar;
+    whiteslider: TTrackBar;
+    uvslider: TTrackBar;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
     procedure rgbbtnClick(Sender: TObject);
     procedure pantiltbtnClick(Sender: TObject);
     procedure dimmerbtnClick(Sender: TObject);
@@ -193,6 +201,9 @@ type
     procedure channelboxtimerTimer(Sender: TObject);
     procedure chantypebtnClick(Sender: TObject);
     procedure SumChanbtnClick(Sender: TObject);
+    procedure ambersliderChange(Sender: TObject);
+    procedure whitesliderChange(Sender: TObject);
+    procedure uvsliderChange(Sender: TObject);
   private
     { Private-Deklarationen }
     LastPosX, LastPosY:integer;
@@ -266,6 +277,7 @@ procedure Ttouchscreenform.rgbbtnClick(Sender: TObject);
 begin
   paintbox1.Visible:=false;
   colorpicker.visible:=true;
+  colorsliderpanel.visible:=colorpicker.visible;
   dimmerpanel.Visible:=false;
   fadenkreuz.Visible:=false;
   goborot1slider.visible:=false;
@@ -279,16 +291,19 @@ begin
   channelbox.visible:=false;
   channelboxtimer.enabled:=channelbox.visible;
 
+{
   colorpicker.Height:=panel4.Height;
   colorpicker.Width:=colorpicker.Height;
   colorpicker.Top:=0;
   colorpicker.Left:=(panel4.Width div 2)-(colorpicker.Width div 2);
+}
 end;
 
 procedure Ttouchscreenform.pantiltbtnClick(Sender: TObject);
 begin
   paintbox1.Visible:=false;
   colorpicker.visible:=false;
+  colorsliderpanel.visible:=colorpicker.visible;
   dimmerpanel.Visible:=false;
   fadenkreuz.Visible:=true;
   goborot1slider.visible:=false;
@@ -322,6 +337,7 @@ procedure Ttouchscreenform.dimmerbtnClick(Sender: TObject);
 begin
   paintbox1.Visible:=false;
   colorpicker.visible:=false;
+  colorsliderpanel.visible:=colorpicker.visible;
   dimmerpanel.Visible:=true;
   fadenkreuz.Visible:=false;
   goborot1slider.visible:=false;
@@ -343,6 +359,7 @@ begin
 
   paintbox1.Visible:=true;
   colorpicker.visible:=false;
+  colorsliderpanel.visible:=colorpicker.visible;
   dimmerpanel.Visible:=false;
   fadenkreuz.Visible:=false;
   goborot1slider.visible:=false;
@@ -367,6 +384,7 @@ begin
 
   paintbox1.Visible:=true;
   colorpicker.visible:=false;
+  colorsliderpanel.visible:=colorpicker.visible;
   dimmerpanel.Visible:=false;
   fadenkreuz.Visible:=false;
   goborot1slider.visible:=false;
@@ -476,6 +494,7 @@ procedure Ttouchscreenform.gobobtnClick(Sender: TObject);
 begin
   paintbox1.Visible:=true;
   colorpicker.visible:=false;
+  colorsliderpanel.visible:=colorpicker.visible;
   dimmerpanel.Visible:=false;
   fadenkreuz.Visible:=false;
   goborot1slider.visible:=true;
@@ -538,11 +557,11 @@ begin
           if LReg.ValueExists('Width') then
             touchscreenform.ClientWidth:=LReg.ReadInteger('Width')
           else
-            touchscreenform.ClientWidth:=793;
+            touchscreenform.ClientWidth:=785;
           if LReg.ValueExists('Height') then
             touchscreenform.ClientHeight:=LReg.ReadInteger('Height')
           else
-            touchscreenform.ClientHeight:=541;
+            touchscreenform.ClientHeight:=619;
 
           if LReg.ValueExists('PosX') then
           begin
@@ -1315,10 +1334,12 @@ begin
 
   maxbtns:=trunc(paintbox1.width/buttonwidth)-1;
 
+{
   colorpicker.Height:=panel4.Height;
   colorpicker.Width:=colorpicker.Height;
   colorpicker.Top:=0;
   colorpicker.Left:=(panel4.Width div 2)-(colorpicker.Width div 2);
+}
 
   fadenkreuz.Height:=panel4.Height-16;
   fadenkreuz.Width:=fadenkreuz.Height;
@@ -2037,6 +2058,7 @@ procedure Ttouchscreenform.chanbtnClick(Sender: TObject);
 begin
   paintbox1.Visible:=false;
   colorpicker.visible:=false;
+  colorsliderpanel.visible:=colorpicker.visible;
   dimmerpanel.Visible:=false;
   fadenkreuz.Visible:=false;
   goborot1slider.visible:=false;
@@ -2462,6 +2484,7 @@ procedure Ttouchscreenform.chantypebtnClick(Sender: TObject);
 begin
   paintbox1.Visible:=false;
   colorpicker.visible:=false;
+  colorsliderpanel.visible:=colorpicker.visible;
   dimmerpanel.Visible:=false;
   fadenkreuz.Visible:=false;
   goborot1slider.visible:=false;
@@ -2483,6 +2506,7 @@ procedure Ttouchscreenform.SumChanbtnClick(Sender: TObject);
 begin
   paintbox1.Visible:=false;
   colorpicker.visible:=false;
+  colorsliderpanel.visible:=colorpicker.visible;
   dimmerpanel.Visible:=false;
   fadenkreuz.Visible:=false;
   goborot1slider.visible:=false;
@@ -2498,6 +2522,45 @@ begin
 
   ChannelSliderMode:=2;
   RefreshChannelbox;
+end;
+
+procedure Ttouchscreenform.ambersliderChange(Sender: TObject);
+var
+  i:integer;
+begin
+  for i:=0 to length(mainform.Devices)-1 do
+  begin
+    if mainform.DeviceSelected[i] then
+    begin
+      geraetesteuerung.set_channel(mainform.Devices[i].ID,'a',255-amberslider.position,255-amberslider.position,500);
+    end;
+  end;
+end;
+
+procedure Ttouchscreenform.whitesliderChange(Sender: TObject);
+var
+  i:integer;
+begin
+  for i:=0 to length(mainform.Devices)-1 do
+  begin
+    if mainform.DeviceSelected[i] then
+    begin
+      geraetesteuerung.set_channel(mainform.Devices[i].ID,'w',255-whiteslider.position,255-whiteslider.position,500);
+    end;
+  end;
+end;
+
+procedure Ttouchscreenform.uvsliderChange(Sender: TObject);
+var
+  i:integer;
+begin
+  for i:=0 to length(mainform.Devices)-1 do
+  begin
+    if mainform.DeviceSelected[i] then
+    begin
+      geraetesteuerung.set_channel(mainform.Devices[i].ID,'uv',255-uvslider.position,255-uvslider.position,500);
+    end;
+  end;
 end;
 
 end.

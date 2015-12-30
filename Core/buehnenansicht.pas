@@ -1262,7 +1262,13 @@ begin
           or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Bottom)
           or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Bottom)
           or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Bottom) then
+          begin
             mainform.DeviceSelected[i]:=true;
+          end else
+          begin
+            if (shift=[ssLeft,ssShift]) then
+              mainform.DeviceSelected[i]:=false; // if no Ctrl pressed, remove DeviceSelection again, if not within rectangle
+          end;
         end;
       end;
     end;

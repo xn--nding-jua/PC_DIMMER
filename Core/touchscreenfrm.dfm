@@ -2,7 +2,7 @@ object touchscreenform: Ttouchscreenform
   Left = 329
   Top = 138
   Width = 801
-  Height = 636
+  Height = 658
   Caption = 'Touchscreen'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -191,7 +191,7 @@ object touchscreenform: Ttouchscreenform
   end
   object Panel2: TPanel
     Left = 0
-    Top = 532
+    Top = 554
     Width = 785
     Height = 65
     Align = alBottom
@@ -297,492 +297,44 @@ object touchscreenform: Ttouchscreenform
     Left = 73
     Top = 89
     Width = 641
-    Height = 443
+    Height = 465
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
     object PaintBox1: TPaintBox
       Left = 0
       Top = 0
-      Width = 641
-      Height = 443
+      Width = 472
+      Height = 465
       Align = alClient
       OnMouseDown = PaintBox1MouseDown
       OnMouseMove = PaintBox1MouseMove
       OnMouseUp = PaintBox1MouseUp
     end
-    object dimmerpanel: TPanel
+    object channelbox: TScrollBox
       Left = 0
       Top = 0
-      Width = 641
-      Height = 443
+      Width = 472
+      Height = 465
+      HorzScrollBar.Smooth = True
+      HorzScrollBar.ThumbSize = 10
+      HorzScrollBar.Tracking = True
+      VertScrollBar.Smooth = True
+      VertScrollBar.ThumbSize = 20
+      VertScrollBar.Tracking = True
       Align = alClient
-      BevelOuter = bvNone
-      TabOrder = 2
+      BorderStyle = bsNone
+      TabOrder = 3
       Visible = False
-      object Shape4: TShape
-        Left = 0
-        Top = 384
-        Width = 57
-        Height = 33
-        Brush.Color = clNavy
-        Pen.Style = psClear
-      end
-      object Label7: TLabel
-        Left = 0
-        Top = 392
-        Width = 57
-        Height = 17
-        Alignment = taCenter
-        AutoSize = False
-        Caption = 'Shutter'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
-        Transparent = True
-        WordWrap = True
-      end
-      object Shape5: TShape
-        Left = 456
-        Top = 384
-        Width = 193
-        Height = 33
-        Brush.Color = clNavy
-        Pen.Style = psClear
-      end
-      object Shape3: TShape
-        Left = 328
-        Top = 384
-        Width = 121
-        Height = 33
-        Brush.Color = clNavy
-        Pen.Style = psClear
-      end
-      object Shape2: TShape
-        Left = 200
-        Top = 384
-        Width = 57
-        Height = 33
-        Brush.Color = clNavy
-        Pen.Style = psClear
-      end
-      object Shape1: TShape
-        Left = 72
-        Top = 384
-        Width = 121
-        Height = 33
-        Brush.Color = clNavy
-        Pen.Style = psClear
-      end
-      object Label1: TLabel
-        Left = 72
-        Top = 392
-        Width = 121
-        Height = 17
-        Alignment = taCenter
-        AutoSize = False
-        Caption = 'Dimmer'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
-        Transparent = True
-        WordWrap = True
-      end
-      object Label2: TLabel
-        Left = 456
-        Top = 392
-        Width = 193
-        Height = 17
-        Alignment = taCenter
-        AutoSize = False
-        Caption = 'Stroboskop'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
-        Transparent = True
-        WordWrap = True
-      end
-      object Label3: TLabel
-        Left = 328
-        Top = 400
-        Width = 121
-        Height = 17
-        Alignment = taCenter
-        AutoSize = False
-        Caption = 'Prisma'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
-        Transparent = True
-        WordWrap = True
-      end
-      object Label4: TLabel
-        Left = 200
-        Top = 392
-        Width = 57
-        Height = 17
-        Alignment = taCenter
-        AutoSize = False
-        Caption = 'Iris'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
-        Transparent = True
-        WordWrap = True
-      end
-      object Label5: TLabel
-        Left = 328
-        Top = 384
-        Width = 57
-        Height = 17
-        Alignment = taCenter
-        AutoSize = False
-        Caption = 'Rotation'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
-        Transparent = True
-        WordWrap = True
-      end
-      object Label6: TLabel
-        Left = 392
-        Top = 384
-        Width = 57
-        Height = 17
-        Alignment = taCenter
-        AutoSize = False
-        Caption = 'Setup'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
-        Transparent = True
-        WordWrap = True
-      end
-      object Shape6: TShape
-        Left = 264
-        Top = 384
-        Width = 57
-        Height = 33
-        Brush.Color = clNavy
-        Pen.Style = psClear
-      end
-      object Label8: TLabel
-        Left = 264
-        Top = 392
-        Width = 57
-        Height = 17
-        Alignment = taCenter
-        AutoSize = False
-        Caption = 'Fokus'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
-        Transparent = True
-        WordWrap = True
-      end
-      object strobeslider: TTrackBar
-        Left = 592
-        Top = 56
-        Width = 57
-        Height = 265
-        Hint = 'Strobo-Slider'
-        Max = 255
-        Orientation = trVertical
-        ParentShowHint = False
-        Position = 255
-        ShowHint = True
-        TabOrder = 7
-        ThumbLength = 54
-        TickMarks = tmBoth
-        TickStyle = tsNone
-        OnChange = strobesliderChange
-      end
-      object prismaslider: TTrackBar
-        Left = 328
-        Top = 56
-        Width = 57
-        Height = 265
-        Hint = 'Strobo-Slider'
-        Max = 255
-        Orientation = trVertical
-        ParentShowHint = False
-        Position = 127
-        ShowHint = True
-        TabOrder = 11
-        ThumbLength = 54
-        TickMarks = tmBoth
-        TickStyle = tsNone
-        OnChange = prismasliderChange
-      end
-      object irisslider: TTrackBar
-        Left = 200
-        Top = 56
-        Width = 57
-        Height = 265
-        Hint = 'Strobo-Slider'
-        Max = 255
-        Orientation = trVertical
-        ParentShowHint = False
-        Position = 255
-        ShowHint = True
-        TabOrder = 14
-        ThumbLength = 54
-        TickMarks = tmBoth
-        TickStyle = tsNone
-        OnChange = irissliderChange
-      end
-      object dimmerslider: TTrackBar
-        Left = 104
-        Top = 56
-        Width = 57
-        Height = 265
-        Hint = 'Dimmerslider'
-        Max = 255
-        Orientation = trVertical
-        ParentShowHint = False
-        Position = 255
-        ShowHint = True
-        TabOrder = 6
-        ThumbLength = 54
-        TickMarks = tmBoth
-        TickStyle = tsNone
-        OnChange = dimmersliderChange
-      end
-      object shutterclosebtn: TButton
-        Left = 0
-        Top = 160
-        Width = 57
-        Height = 153
-        Caption = 'Shutter schlie'#223'en'
-        TabOrder = 20
-        WordWrap = True
-        OnClick = shutterclosebtnClick
-      end
-      object shutteropenbtn: TButton
-        Left = 0
-        Top = 0
-        Width = 57
-        Height = 153
-        Caption = 'Shutter '#246'ffnen'
-        TabOrder = 19
-        WordWrap = True
-        OnClick = shutteropenbtnClick
-      end
-      object plusbtn: TButton
-        Left = 72
-        Top = 0
-        Width = 121
-        Height = 57
-        Caption = '+'
-        TabOrder = 0
-        OnClick = plusbtnClick
-      end
-      object strobo100btn: TPngBitBtn
-        Left = 456
-        Top = 0
-        Width = 121
-        Height = 57
-        Caption = 'Strobo max'
-        TabOrder = 1
-        OnClick = strobo100btnClick
-      end
-      object strobo75btn: TPngBitBtn
-        Left = 456
-        Top = 144
-        Width = 121
-        Height = 89
-        Caption = 'Strobo mittel'
-        TabOrder = 2
-        OnClick = strobo75btnClick
-      end
-      object strobo25btn: TPngBitBtn
-        Left = 456
-        Top = 240
-        Width = 121
-        Height = 73
-        Caption = 'Strobo langsam'
-        TabOrder = 3
-        OnClick = strobo25btnClick
-      end
-      object strobo0btn: TPngBitBtn
-        Left = 456
-        Top = 320
-        Width = 121
-        Height = 57
-        Caption = 'Strobo aus'
-        TabOrder = 4
-        OnClick = strobo0btnClick
-      end
-      object minusbtn: TButton
-        Left = 72
-        Top = 320
-        Width = 121
-        Height = 57
-        Caption = '-'
-        TabOrder = 5
-        OnClick = minusbtnClick
-      end
-      object strobeminus: TButton
-        Left = 592
-        Top = 320
-        Width = 57
-        Height = 57
-        Caption = '-'
-        TabOrder = 8
-        OnClick = strobeminusClick
-      end
-      object strobeplus: TButton
-        Left = 592
-        Top = 0
-        Width = 57
-        Height = 57
-        Caption = '+'
-        TabOrder = 9
-        OnClick = strobeplusClick
-      end
-      object prismarotplus: TButton
-        Left = 328
-        Top = 0
-        Width = 57
-        Height = 57
-        Caption = '+'
-        TabOrder = 10
-        OnClick = prismarotplusClick
-      end
-      object prismarotminus: TButton
-        Left = 328
-        Top = 320
-        Width = 57
-        Height = 57
-        Caption = '-'
-        TabOrder = 12
-        OnClick = prismarotminusClick
-      end
-      object irisplus: TButton
-        Left = 200
-        Top = 0
-        Width = 57
-        Height = 57
-        Caption = '+'
-        TabOrder = 13
-        OnClick = irisplusClick
-      end
-      object irisminus: TButton
-        Left = 200
-        Top = 320
-        Width = 57
-        Height = 57
-        Caption = '-'
-        TabOrder = 15
-        OnClick = irisminusClick
-      end
-      object prismatriple: TButton
-        Left = 392
-        Top = 0
-        Width = 57
-        Height = 57
-        Caption = 'Prisma dreifach'
-        TabOrder = 16
-        WordWrap = True
-        OnClick = prismatripleClick
-      end
-      object prismasingle: TButton
-        Left = 392
-        Top = 320
-        Width = 57
-        Height = 57
-        Caption = 'Prisma einfach'
-        TabOrder = 17
-        WordWrap = True
-        OnClick = prismasingleClick
-      end
-      object prismarotstop: TButton
-        Left = 392
-        Top = 64
-        Width = 57
-        Height = 249
-        Caption = 'Prisma Rotation stoppen'
-        TabOrder = 18
-        WordWrap = True
-        OnClick = prismarotstopClick
-      end
-      object strobo85btn: TPngBitBtn
-        Left = 456
-        Top = 64
-        Width = 121
-        Height = 73
-        Caption = 'Strobo schnell'
-        TabOrder = 21
-        OnClick = strobo85btnClick
-      end
-      object fokusslider: TTrackBar
-        Left = 264
-        Top = 56
-        Width = 57
-        Height = 265
-        Hint = 'Strobo-Slider'
-        Max = 255
-        Orientation = trVertical
-        ParentShowHint = False
-        Position = 255
-        ShowHint = True
-        TabOrder = 23
-        ThumbLength = 54
-        TickMarks = tmBoth
-        TickStyle = tsNone
-        OnChange = fokussliderChange
-      end
-      object fokusplus: TButton
-        Left = 264
-        Top = 0
-        Width = 57
-        Height = 57
-        Caption = '+'
-        TabOrder = 22
-        OnClick = fokusplusClick
-      end
-      object fokusminus: TButton
-        Left = 264
-        Top = 320
-        Width = 57
-        Height = 57
-        Caption = '-'
-        TabOrder = 24
-        OnClick = fokusminusClick
-      end
     end
     object colorpicker: THSLRingPicker
       Left = 0
       Top = 0
-      Width = 257
-      Height = 257
+      Width = 472
+      Height = 465
       RingPickerHintFormat = 'Hue: %h'
       SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
-      Align = alCustom
+      Align = alClient
       Visible = False
       TabOrder = 1
       Color = clBtnFace
@@ -1384,28 +936,576 @@ object touchscreenform: Ttouchscreenform
         OnChange = HorTrackChange
       end
     end
-    object channelbox: TScrollBox
+    object colorsliderpanel: TPanel
+      Left = 472
+      Top = 0
+      Width = 169
+      Height = 465
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 4
+      Visible = False
+      object Panel7: TPanel
+        Left = 0
+        Top = 440
+        Width = 169
+        Height = 25
+        Align = alBottom
+        BevelOuter = bvNone
+        TabOrder = 0
+        object Label9: TLabel
+          Left = 0
+          Top = 0
+          Width = 49
+          Height = 13
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Amber'
+        end
+        object Label10: TLabel
+          Left = 56
+          Top = 0
+          Width = 49
+          Height = 13
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Wei'#223
+        end
+        object Label11: TLabel
+          Left = 112
+          Top = 0
+          Width = 49
+          Height = 13
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'UV'
+        end
+      end
+      object amberslider: TTrackBar
+        Left = -2
+        Top = 0
+        Width = 57
+        Height = 440
+        Hint = 'Amber-Slider'
+        Align = alRight
+        Max = 255
+        Orientation = trVertical
+        ParentShowHint = False
+        Position = 255
+        ShowHint = True
+        TabOrder = 1
+        ThumbLength = 54
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = ambersliderChange
+      end
+      object whiteslider: TTrackBar
+        Left = 55
+        Top = 0
+        Width = 57
+        Height = 440
+        Hint = 'Wei'#223'-Slider'
+        Align = alRight
+        Max = 255
+        Orientation = trVertical
+        ParentShowHint = False
+        Position = 255
+        ShowHint = True
+        TabOrder = 2
+        ThumbLength = 54
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = whitesliderChange
+      end
+      object uvslider: TTrackBar
+        Left = 112
+        Top = 0
+        Width = 57
+        Height = 440
+        Hint = 'UV-Slider'
+        Align = alRight
+        Max = 255
+        Orientation = trVertical
+        ParentShowHint = False
+        Position = 255
+        ShowHint = True
+        TabOrder = 3
+        ThumbLength = 54
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = uvsliderChange
+      end
+    end
+    object dimmerpanel: TPanel
       Left = 0
       Top = 0
-      Width = 641
-      Height = 443
-      HorzScrollBar.Smooth = True
-      HorzScrollBar.ThumbSize = 10
-      HorzScrollBar.Tracking = True
-      VertScrollBar.Smooth = True
-      VertScrollBar.ThumbSize = 20
-      VertScrollBar.Tracking = True
+      Width = 472
+      Height = 465
       Align = alClient
-      BorderStyle = bsNone
-      TabOrder = 3
+      BevelOuter = bvNone
+      TabOrder = 2
       Visible = False
+      object Shape4: TShape
+        Left = 0
+        Top = 384
+        Width = 57
+        Height = 33
+        Brush.Color = clNavy
+        Pen.Style = psClear
+      end
+      object Label7: TLabel
+        Left = 0
+        Top = 392
+        Width = 57
+        Height = 17
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Shutter'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+        WordWrap = True
+      end
+      object Shape5: TShape
+        Left = 456
+        Top = 384
+        Width = 193
+        Height = 33
+        Brush.Color = clNavy
+        Pen.Style = psClear
+      end
+      object Shape3: TShape
+        Left = 328
+        Top = 384
+        Width = 121
+        Height = 33
+        Brush.Color = clNavy
+        Pen.Style = psClear
+      end
+      object Shape2: TShape
+        Left = 200
+        Top = 384
+        Width = 57
+        Height = 33
+        Brush.Color = clNavy
+        Pen.Style = psClear
+      end
+      object Shape1: TShape
+        Left = 72
+        Top = 384
+        Width = 121
+        Height = 33
+        Brush.Color = clNavy
+        Pen.Style = psClear
+      end
+      object Label1: TLabel
+        Left = 72
+        Top = 392
+        Width = 121
+        Height = 17
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Dimmer'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+        WordWrap = True
+      end
+      object Label2: TLabel
+        Left = 456
+        Top = 392
+        Width = 193
+        Height = 17
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Stroboskop'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+        WordWrap = True
+      end
+      object Label3: TLabel
+        Left = 328
+        Top = 400
+        Width = 121
+        Height = 17
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Prisma'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+        WordWrap = True
+      end
+      object Label4: TLabel
+        Left = 200
+        Top = 392
+        Width = 57
+        Height = 17
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Iris'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+        WordWrap = True
+      end
+      object Label5: TLabel
+        Left = 328
+        Top = 384
+        Width = 57
+        Height = 17
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Rotation'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+        WordWrap = True
+      end
+      object Label6: TLabel
+        Left = 392
+        Top = 384
+        Width = 57
+        Height = 17
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Setup'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+        WordWrap = True
+      end
+      object Shape6: TShape
+        Left = 264
+        Top = 384
+        Width = 57
+        Height = 33
+        Brush.Color = clNavy
+        Pen.Style = psClear
+      end
+      object Label8: TLabel
+        Left = 264
+        Top = 392
+        Width = 57
+        Height = 17
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Fokus'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+        WordWrap = True
+      end
+      object strobeslider: TTrackBar
+        Left = 592
+        Top = 56
+        Width = 57
+        Height = 265
+        Hint = 'Strobo-Slider'
+        Max = 255
+        Orientation = trVertical
+        ParentShowHint = False
+        Position = 255
+        ShowHint = True
+        TabOrder = 7
+        ThumbLength = 54
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = strobesliderChange
+      end
+      object prismaslider: TTrackBar
+        Left = 328
+        Top = 56
+        Width = 57
+        Height = 265
+        Hint = 'Strobo-Slider'
+        Max = 255
+        Orientation = trVertical
+        ParentShowHint = False
+        Position = 127
+        ShowHint = True
+        TabOrder = 11
+        ThumbLength = 54
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = prismasliderChange
+      end
+      object irisslider: TTrackBar
+        Left = 200
+        Top = 56
+        Width = 57
+        Height = 265
+        Hint = 'Strobo-Slider'
+        Max = 255
+        Orientation = trVertical
+        ParentShowHint = False
+        Position = 255
+        ShowHint = True
+        TabOrder = 14
+        ThumbLength = 54
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = irissliderChange
+      end
+      object dimmerslider: TTrackBar
+        Left = 104
+        Top = 56
+        Width = 57
+        Height = 265
+        Hint = 'Dimmerslider'
+        Max = 255
+        Orientation = trVertical
+        ParentShowHint = False
+        Position = 255
+        ShowHint = True
+        TabOrder = 6
+        ThumbLength = 54
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = dimmersliderChange
+      end
+      object shutterclosebtn: TButton
+        Left = 0
+        Top = 160
+        Width = 57
+        Height = 153
+        Caption = 'Shutter schlie'#223'en'
+        TabOrder = 20
+        WordWrap = True
+        OnClick = shutterclosebtnClick
+      end
+      object shutteropenbtn: TButton
+        Left = 0
+        Top = 0
+        Width = 57
+        Height = 153
+        Caption = 'Shutter '#246'ffnen'
+        TabOrder = 19
+        WordWrap = True
+        OnClick = shutteropenbtnClick
+      end
+      object plusbtn: TButton
+        Left = 72
+        Top = 0
+        Width = 121
+        Height = 57
+        Caption = '+'
+        TabOrder = 0
+        OnClick = plusbtnClick
+      end
+      object strobo100btn: TPngBitBtn
+        Left = 456
+        Top = 0
+        Width = 121
+        Height = 57
+        Caption = 'Strobo max'
+        TabOrder = 1
+        OnClick = strobo100btnClick
+      end
+      object strobo75btn: TPngBitBtn
+        Left = 456
+        Top = 144
+        Width = 121
+        Height = 89
+        Caption = 'Strobo mittel'
+        TabOrder = 2
+        OnClick = strobo75btnClick
+      end
+      object strobo25btn: TPngBitBtn
+        Left = 456
+        Top = 240
+        Width = 121
+        Height = 73
+        Caption = 'Strobo langsam'
+        TabOrder = 3
+        OnClick = strobo25btnClick
+      end
+      object strobo0btn: TPngBitBtn
+        Left = 456
+        Top = 320
+        Width = 121
+        Height = 57
+        Caption = 'Strobo aus'
+        TabOrder = 4
+        OnClick = strobo0btnClick
+      end
+      object minusbtn: TButton
+        Left = 72
+        Top = 320
+        Width = 121
+        Height = 57
+        Caption = '-'
+        TabOrder = 5
+        OnClick = minusbtnClick
+      end
+      object strobeminus: TButton
+        Left = 592
+        Top = 320
+        Width = 57
+        Height = 57
+        Caption = '-'
+        TabOrder = 8
+        OnClick = strobeminusClick
+      end
+      object strobeplus: TButton
+        Left = 592
+        Top = 0
+        Width = 57
+        Height = 57
+        Caption = '+'
+        TabOrder = 9
+        OnClick = strobeplusClick
+      end
+      object prismarotplus: TButton
+        Left = 328
+        Top = 0
+        Width = 57
+        Height = 57
+        Caption = '+'
+        TabOrder = 10
+        OnClick = prismarotplusClick
+      end
+      object prismarotminus: TButton
+        Left = 328
+        Top = 320
+        Width = 57
+        Height = 57
+        Caption = '-'
+        TabOrder = 12
+        OnClick = prismarotminusClick
+      end
+      object irisplus: TButton
+        Left = 200
+        Top = 0
+        Width = 57
+        Height = 57
+        Caption = '+'
+        TabOrder = 13
+        OnClick = irisplusClick
+      end
+      object irisminus: TButton
+        Left = 200
+        Top = 320
+        Width = 57
+        Height = 57
+        Caption = '-'
+        TabOrder = 15
+        OnClick = irisminusClick
+      end
+      object prismatriple: TButton
+        Left = 392
+        Top = 0
+        Width = 57
+        Height = 57
+        Caption = 'Prisma dreifach'
+        TabOrder = 16
+        WordWrap = True
+        OnClick = prismatripleClick
+      end
+      object prismasingle: TButton
+        Left = 392
+        Top = 320
+        Width = 57
+        Height = 57
+        Caption = 'Prisma einfach'
+        TabOrder = 17
+        WordWrap = True
+        OnClick = prismasingleClick
+      end
+      object prismarotstop: TButton
+        Left = 392
+        Top = 64
+        Width = 57
+        Height = 249
+        Caption = 'Prisma Rotation stoppen'
+        TabOrder = 18
+        WordWrap = True
+        OnClick = prismarotstopClick
+      end
+      object strobo85btn: TPngBitBtn
+        Left = 456
+        Top = 64
+        Width = 121
+        Height = 73
+        Caption = 'Strobo schnell'
+        TabOrder = 21
+        OnClick = strobo85btnClick
+      end
+      object fokusslider: TTrackBar
+        Left = 264
+        Top = 56
+        Width = 57
+        Height = 265
+        Hint = 'Strobo-Slider'
+        Max = 255
+        Orientation = trVertical
+        ParentShowHint = False
+        Position = 255
+        ShowHint = True
+        TabOrder = 23
+        ThumbLength = 54
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = fokussliderChange
+      end
+      object fokusplus: TButton
+        Left = 264
+        Top = 0
+        Width = 57
+        Height = 57
+        Caption = '+'
+        TabOrder = 22
+        OnClick = fokusplusClick
+      end
+      object fokusminus: TButton
+        Left = 264
+        Top = 320
+        Width = 57
+        Height = 57
+        Caption = '-'
+        TabOrder = 24
+        OnClick = fokusminusClick
+      end
     end
   end
   object Panel3: TPanel
     Left = 0
     Top = 89
     Width = 73
-    Height = 443
+    Height = 465
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 3
@@ -1473,7 +1573,7 @@ object touchscreenform: Ttouchscreenform
     Left = 714
     Top = 89
     Width = 71
-    Height = 443
+    Height = 465
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
