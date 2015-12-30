@@ -113,8 +113,6 @@ type
     hauptprogrammeffekteaus: TTBItem;
     N3: TTBSeparatorItem;
     ooltipsanzeigen1: TTBItem;
-    N6: TTBSubmenuItem;
-    astenkrzel1: TTBItem;
     RefreshTimer: TTimer;
     ListBox: TListBox;
     PngBitBtn3: TPngBitBtn;
@@ -122,6 +120,14 @@ type
     buttonstyledark: TTBItem;
     PaintBox1: TPaintBox;
     TestAccessLevelTimer: TTimer;
+    VerschiebeReihenachoben1: TMenuItem;
+    N7: TMenuItem;
+    VerschiebeReihenachunten1: TMenuItem;
+    GanzeZeilelschen1: TMenuItem;
+    Zeileeinfgen1: TMenuItem;
+    ShiftTasteMausButtonverschieben1: TMenuItem;
+    StrgTasteMausZeileverschieben1: TMenuItem;
+    N6: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure buttonfarbeChange(Sender: TObject);
@@ -164,7 +170,6 @@ type
     procedure ooltipsanzeigen1Click(Sender: TObject);
     procedure Bearbeiten1Click(Sender: TObject);
     procedure CreateParams(var Params:TCreateParams);override;
-    procedure astenkrzel1Click(Sender: TObject);
     procedure CheckForActiveTimer(Sender: TObject);
     procedure ScriptInterpreterGetValue(Sender: TObject;
       Identifier: String; var Value: Variant; Args: TJvInterpreterArgs;
@@ -199,6 +204,10 @@ type
     procedure FormCanResize(Sender: TObject; var NewWidth,
       NewHeight: Integer; var Resize: Boolean);
     procedure TestAccessLevelTimerTimer(Sender: TObject);
+    procedure VerschiebeReihenachoben1Click(Sender: TObject);
+    procedure VerschiebeReihenachunten1Click(Sender: TObject);
+    procedure GanzeZeilelschen1Click(Sender: TObject);
+    procedure Zeileeinfgen1Click(Sender: TObject);
   private
     { Private-Deklarationen }
     buttonstyle:byte;
@@ -213,13 +222,13 @@ type
     SourceBtn:TPoint;
     MouseDown,OldOffset:TPoint;
     LastColRows:TPoint;
+    Extrahighlight:integer;
 
     //f_ptFirst:TPoint;
     //f_dwArguments:Int64;     //saved T/G dw arguments
     LastTouchEvent:integer;
     MyTouchPoint:TPoint;
     ssTouch:boolean;
-    MouseIsDown:boolean;
 
     function UseGradient(Farbe: TColor; Direction: byte):TColor;
 //    procedure DrawGradientV(Canvas: TCanvas; Color1, Color2: TColor; Rect: TRect);
@@ -227,6 +236,12 @@ type
     procedure StartTouchEvent(X, Y: integer);
     procedure UpdateTouchEvent(Event, X, Y: integer);
     procedure EndTouchEvent(X, Y: integer);
+    procedure CopyButton(SourceX, SourceY, DestinationX, DestinationY: integer);
+    procedure FlipButton(SourceX, SourceY, DestinationX, DestinationY: integer);
+    procedure FlipLine(SourceY, DestinationY: integer);
+    procedure ResetButton(X, Y:integer);
+    procedure MoveLine(Source, Destination:integer);
+    procedure DeleteLine(Y:integer);
   protected
     procedure WMTouch( var Msg: TMessage);                 message WM_TOUCH;
     procedure WMGestureNotify( var Msg: TWMGestureNotify); message WM_GESTURENOTIFY;
@@ -1482,27 +1497,7 @@ end;
 
 procedure Tkontrollpanel.Einfgen1Click(Sender: TObject);
 begin
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].ID:=mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].ID;
-	mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Name:=mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].Name;
-	mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].TypName:=mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].TypName;
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Color:=mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].Color;
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Typ:=mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].Typ;
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Time:=mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].Time;
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Shortcut:=mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].ShortCut;
-
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Picture:=mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].Picture;
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].PNG.Free;
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].PNG:=nil;
-  if FileExists(mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Picture) then
-  begin
-    mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].PNG:=TPNGObject.Create;
-    mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].PNG.LoadFromFile(mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Picture);
-  end;
-
-  if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pcdscrp') then
-    CopyFile(PChar((mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pcdscrp')),PChar((mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp')),False);
-  if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pas') then
-    CopyFile(PChar((mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pas')),PChar((mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas')),False);
+  CopyButton(SourceBtn.X, SourceBtn.Y, SelectedBtn.X, SelectedBtn.Y);
 
   StatusBar1.Panels.Items[0].Text:='Button '+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1);
 	buttonname.Text:=mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Name;
@@ -1517,20 +1512,7 @@ begin
   if cut then
   begin
     cut:=false;
-    mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].TypName:='';
-    mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].Color:=clWhite;
-    mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].Name:='';
-    mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].Shortcut:=0;
-    mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].ID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
-    mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].Typ:=0;
-    mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].Picture:='';
-    mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].PNG.Free;
-    mainform.kontrollpanelbuttons[SourceBtn.Y][SourceBtn.X].PNG:=nil;
-
-    if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pcdscrp') then
-      DeleteFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pcdscrp');
-    if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pas') then
-      DeleteFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceBtn.Y+1)+'x'+inttostr(SourceBtn.X+1)+'.pas');
+    ResetButton(SourceBtn.X, SourceBtn.Y);
   end;
   CollectButtonInfo;
 end;
@@ -1549,22 +1531,8 @@ begin
   if messagedlg(_('Durch setzen des Buttontyps auf "<Leer>" werden gespeicherte Szenen und eventuell vorhandene Skriptdateien gelöscht. Fortfahren?'),mtConfirmation,
     [mbYes,mbNo],0)=mrNo then exit;
 
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].ID:=StringToGuid('{00000000-0000-0000-0000-000000000000}');
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Name:='Button '+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1);
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].TypName:=_('Leer');
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Color:=clWhite;
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Typ:=0;
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Time:='';
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Shortcut:=0;
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Active:=false;
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Picture:='';
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].PNG.Free;
-  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].PNG:=nil;
+  ResetButton(SelectedBtn.X, SelectedBtn.Y);
 
-  if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp') then
-    DeleteFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pcdscrp');
-  if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas') then
-    DeleteFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas');
 	CheckFileExistsTimer(nil);
 
   StatusBar1.Panels.Items[0].Text:='Button '+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1);
@@ -1722,16 +1690,6 @@ begin
   end;
 
   Result:=RGB2TColor(R,G,B);
-end;
-
-procedure Tkontrollpanel.astenkrzel1Click(Sender: TObject);
-begin
-  ShowMessage(_(
-  'Buttonklicks:'+#13#10+
-  'Strg+Linksklick'+#9#9+'Kopieren'+#13#10+
-  'Shift+Linksklick'+#9#9+'Ausschneiden'+#13#10+
-  'Alt+Linksklick'+#9#9+'Einfügen'
-  ));
 end;
 
 procedure Tkontrollpanel.StopButton(Col,Row:integer);
@@ -2373,11 +2331,18 @@ procedure Tkontrollpanel.PaintBox1MouseMove(Sender: TObject;
 begin
   if not mainform.UserAccessGranted(3, false) then exit;
 
-  if (Shift=[]) and not MouseIsDown then
+
+  if (Shift=[]) or (Shift=[ssLeft, ssShift]) or (Shift=[ssLeft, ssCtrl]) then
   begin
     OverBtn.Y:=trunc((Y-yoffset)/btnheight.value);
     OverBtn.X:=trunc((X-xoffset)/btnwidth.value);
   end;
+  if (Shift=[ssLeft, ssShift]) then
+    Extrahighlight:=1 // Single button
+  else if (Shift=[ssLeft, ssCtrl]) then
+    Extrahighlight:=2 // Complete row
+  else
+    Extrahighlight:=0;
 
   if (Shift=[ssLeft]) or (Shift=[ssRight]) then
   begin
@@ -2398,12 +2363,6 @@ begin
 
   if ssTouch then
     exit;
-
-  if MouseIsDown then
-  begin
-    PaintBox1MouseUp(Paintbox1, mbLeft, [], MouseDown.X, MouseDown.Y);
-    MouseIsDown:=true;
-  end;
 
   MouseDown.X:=x;
   MouseDown.Y:=y;
@@ -2436,28 +2395,7 @@ begin
   SelectedBtn.X:=OverBtn.X;
   SelectedBtn.Y:=OverBtn.Y;
 
-  if Shift=[ssLeft,ssCtrl] then
-  begin
-    if not mainform.UserAccessGranted(2) then exit;
-
-    // Markieren zum Kopieren
-   	SourceBtn.Y:=SelectedBtn.Y;
-    SourceBtn.X:=SelectedBtn.X;
-  end else if Shift=[ssLeft,ssShift] then
-  begin
-    if not mainform.UserAccessGranted(2) then exit;
-
-    // Markieren zum Verschieben
-   	SourceBtn.Y:=SelectedBtn.Y;
-    SourceBtn.X:=SelectedBtn.X;
-    cut:=true;
-  end else if Shift=[ssLeft,ssAlt] then
-  begin
-    if not mainform.UserAccessGranted(2) then exit;
-
-    // Einfügen
-    einfgen1click(nil);
-  end else
+  if (Shift=[ssLeft]) or (Shift=[ssRight]) then // nur, wenn kein Shift, Alt oder Strg
   begin
     if Button=mbLeft then
     begin
@@ -2592,14 +2530,41 @@ var
 begin
   if not mainform.UserAccessGranted(3, false) then exit;
 
-  MouseIsDown:=false;
   ssTouch:=false;
   BtnDown.Y:=-1;
   BtnDown.X:=-1;
 
   if ((OverBtn.Y>=zeilen.value) or (OverBtn.X>=spalten.value) or (OverBtn.X<0) or (OverBtn.Y<0)) then exit;
 
-  if (Shift=[]) then
+  if (Shift=[ssShift]) then
+  begin
+    if Button=mbLeft then
+    begin
+      if not mainform.UserAccessGranted(2, false) then exit;
+
+      OverBtn.Y:=trunc((Y-yoffset)/btnheight.value);
+      OverBtn.X:=trunc((X-xoffset)/btnwidth.value);
+
+      FlipButton(SelectedBtn.X, SelectedBtn.Y, OverBtn.X, OverBtn.Y);
+
+      SelectedBtn.X:=OverBtn.X;
+      SelectedBtn.Y:=OverBtn.Y;
+    end;
+  end else if (Shift=[ssCtrl]) then
+  begin
+    if Button=mbLeft then
+    begin
+      if not mainform.UserAccessGranted(2, false) then exit;
+
+      OverBtn.Y:=trunc((Y-yoffset)/btnheight.value);
+      OverBtn.X:=trunc((X-xoffset)/btnwidth.value);
+
+      FlipLine(SelectedBtn.Y, OverBtn.Y);
+
+      SelectedBtn.X:=OverBtn.X;
+      SelectedBtn.Y:=OverBtn.Y;
+    end;
+  end else if (Shift=[]) then
   begin
     if Button=mbLeft then
     begin
@@ -2980,6 +2945,37 @@ begin
     _Buffer.Canvas.LineTo(xoffset+(j+1)*buttonwidth-2, yoffset+(i+1)*buttonheight-1);
     _Buffer.Canvas.MoveTo(xoffset+(j+1)*buttonwidth-1, yoffset+i*buttonheight);
     _Buffer.Canvas.LineTo(xoffset+(j+1)*buttonwidth-1, yoffset+(i+1)*buttonheight-1);
+  end;
+
+  if Extrahighlight>0 then
+  begin
+    for i:=0 to length(mainform.kontrollpanelbuttons)-1 do // Zeilenanzahl
+    for j:=0 to length(mainform.kontrollpanelbuttons[i])-1 do // Spaltenanzahl
+    begin
+      if (SelectedBtn.Y=i) then
+      begin
+        if ((Extrahighlight=1) and (SelectedBtn.X=j)) or (Extrahighlight=2) then
+        begin
+          rect.Top:=yoffset+i*buttonheight;
+          rect.Bottom:=yoffset+(i+1)*buttonheight-1;
+          rect.Left:=xoffset+j*buttonwidth;
+          rect.Right:=xoffset+(j+1)*buttonwidth;
+          DrawGradientH(_Buffer.Canvas,clOlive,UseGradient(clOlive,buttonstyle),rect);
+        end;
+      end;
+
+      if (OverBtn.Y=i) then
+      begin
+        if ((Extrahighlight=1) and (OverBtn.X=j)) or (Extrahighlight=2) then
+        begin
+          rect.Top:=yoffset+i*buttonheight;
+          rect.Bottom:=yoffset+(i+1)*buttonheight-1;
+          rect.Left:=xoffset+j*buttonwidth;
+          rect.Right:=xoffset+(j+1)*buttonwidth;
+          DrawGradientH(_Buffer.Canvas,clLime,UseGradient(clLime,buttonstyle),rect);
+        end;
+      end;
+    end;
   end;
 
   // Punktierten Rahmen des markierten Buttons zeichen
@@ -3498,6 +3494,231 @@ begin
     Paintbox1.PopupMenu:=nil;
 
   TBDock1.Visible:=AccessGranted;
+end;
+
+procedure Tkontrollpanel.CopyButton(SourceX, SourceY, DestinationX, DestinationY: integer);
+begin
+  if (SourceX>-1) and (SourceY>-1) and (DestinationX>-1) and (DestinationY>-1) and
+    (SourceY<length(mainform.kontrollpanelbuttons)) and (SourceX<length(mainform.kontrollpanelbuttons[SourceY])) and
+    (DestinationY<length(mainform.kontrollpanelbuttons)) and (DestinationX<length(mainform.kontrollpanelbuttons[DestinationY])) then
+  begin
+    mainform.kontrollpanelbuttons[DestinationY][DestinationX].ID:=mainform.kontrollpanelbuttons[SourceY][SourceX].ID;
+    mainform.kontrollpanelbuttons[DestinationY][DestinationX].Name:=mainform.kontrollpanelbuttons[SourceY][SourceX].Name;
+    mainform.kontrollpanelbuttons[DestinationY][DestinationX].TypName:=mainform.kontrollpanelbuttons[SourceY][SourceX].TypName;
+    mainform.kontrollpanelbuttons[DestinationY][DestinationX].Color:=mainform.kontrollpanelbuttons[SourceY][SourceX].Color;
+    mainform.kontrollpanelbuttons[DestinationY][DestinationX].Typ:=mainform.kontrollpanelbuttons[SourceY][SourceX].Typ;
+    mainform.kontrollpanelbuttons[DestinationY][DestinationX].Time:=mainform.kontrollpanelbuttons[SourceY][SourceX].Time;
+    mainform.kontrollpanelbuttons[DestinationY][DestinationX].Shortcut:=mainform.kontrollpanelbuttons[SourceY][SourceX].ShortCut;
+
+    mainform.kontrollpanelbuttons[DestinationY][DestinationX].Picture:=mainform.kontrollpanelbuttons[SourceY][SourceX].Picture;
+    mainform.kontrollpanelbuttons[DestinationY][DestinationX].PNG.Free;
+    mainform.kontrollpanelbuttons[DestinationY][DestinationX].PNG:=nil;
+    if FileExists(mainform.kontrollpanelbuttons[DestinationY][DestinationX].Picture) then
+    begin
+      mainform.kontrollpanelbuttons[DestinationY][DestinationX].PNG:=TPNGObject.Create;
+      mainform.kontrollpanelbuttons[DestinationY][DestinationX].PNG.LoadFromFile(mainform.kontrollpanelbuttons[DestinationY][DestinationX].Picture);
+    end;
+
+    if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceY+1)+'x'+inttostr(SourceX+1)+'.pcdscrp') then
+      CopyFile(PChar((mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceY+1)+'x'+inttostr(SourceX+1)+'.pcdscrp')),PChar((mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(DestinationY+1)+'x'+inttostr(DestinationX+1)+'.pcdscrp')),False);
+    if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceY+1)+'x'+inttostr(SourceX+1)+'.pas') then
+      CopyFile(PChar((mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SourceY+1)+'x'+inttostr(SourceX+1)+'.pas')),PChar((mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(DestinationY+1)+'x'+inttostr(DestinationX+1)+'.pas')),False);
+  end;
+end;
+
+procedure Tkontrollpanel.FlipButton(SourceX, SourceY, DestinationX, DestinationY: integer);
+var
+  i, EndLine:integer;
+begin
+  if (SourceX>-1) and (SourceY>-1) and (DestinationX>-1) and (DestinationY>-1) and
+    (SourceY<length(mainform.kontrollpanelbuttons)) and (SourceX<length(mainform.kontrollpanelbuttons[SourceY])) and
+    (DestinationY<length(mainform.kontrollpanelbuttons)) and (DestinationX<length(mainform.kontrollpanelbuttons[DestinationY])) then
+  begin
+    // add new row at the end
+    setlength(mainform.kontrollpanelbuttons, length(mainform.kontrollpanelbuttons)+1);
+    // give it the same number of cols as the one before
+    EndLine:=length(mainform.kontrollpanelbuttons)-1;
+    setlength(mainform.kontrollpanelbuttons[EndLine], length(mainform.kontrollpanelbuttons[EndLine-1]));
+
+
+    CopyButton(SourceX, SourceY, SourceX, EndLine);
+    CopyButton(DestinationX, DestinationY, SourceX, SourceY);
+    CopyButton(SourceX, EndLine, DestinationX, DestinationY);
+
+    // delete last buttons
+    for i:=0 to length(mainform.kontrollpanelbuttons[EndLine])-1 do
+    begin
+      ResetButton(i, EndLine);
+    end;
+
+    // remove last array-index
+    setlength(mainform.kontrollpanelbuttons, length(mainform.kontrollpanelbuttons)-1);
+  end;
+end;
+
+procedure Tkontrollpanel.ResetButton(X, Y:integer);
+begin
+  if (X>-1) and (Y>-1) and
+    (Y<length(mainform.kontrollpanelbuttons)) and (X<length(mainform.kontrollpanelbuttons[Y])) then
+  begin
+    mainform.kontrollpanelbuttons[Y][X].ID:=StringToGuid('{00000000-0000-0000-0000-000000000000}');
+    mainform.kontrollpanelbuttons[Y][X].Name:='Button '+inttostr(Y+1)+'x'+inttostr(X+1);
+    mainform.kontrollpanelbuttons[Y][X].TypName:=_('Leer');
+    mainform.kontrollpanelbuttons[Y][X].Color:=clWhite;
+    mainform.kontrollpanelbuttons[Y][X].Typ:=0;
+    mainform.kontrollpanelbuttons[Y][X].Time:='';
+    mainform.kontrollpanelbuttons[Y][X].Shortcut:=0;
+    mainform.kontrollpanelbuttons[Y][X].Active:=false;
+    mainform.kontrollpanelbuttons[Y][X].Picture:='';
+    mainform.kontrollpanelbuttons[Y][X].PNG.Free;
+    mainform.kontrollpanelbuttons[Y][X].PNG:=nil;
+
+    if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(Y+1)+'x'+inttostr(X+1)+'.pcdscrp') then
+      DeleteFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(Y+1)+'x'+inttostr(X+1)+'.pcdscrp');
+    if FileExists(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(Y+1)+'x'+inttostr(X+1)+'.pas') then
+      DeleteFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(Y+1)+'x'+inttostr(X+1)+'.pas');
+  end;
+end;
+
+procedure Tkontrollpanel.FlipLine(SourceY, DestinationY: integer);
+var
+  i, EndLine:integer;
+begin
+  if (SourceY>-1) and (DestinationY>-1) and
+    (SourceY<length(mainform.kontrollpanelbuttons)) and (DestinationY<length(mainform.kontrollpanelbuttons)) then
+  begin
+    // add new row at the end
+    setlength(mainform.kontrollpanelbuttons, length(mainform.kontrollpanelbuttons)+1);
+    // give it the same number of cols as the one before
+    EndLine:=length(mainform.kontrollpanelbuttons)-1;
+    setlength(mainform.kontrollpanelbuttons[EndLine], length(mainform.kontrollpanelbuttons[EndLine-1]));
+
+    for i:=0 to length(mainform.kontrollpanelbuttons[EndLine])-1 do
+    begin
+      CopyButton(i, SourceY, i, EndLine);
+      CopyButton(i, DestinationY, i, SourceY);
+      CopyButton(i, EndLine, i, DestinationY);
+    end;
+
+    // delete last buttons
+    for i:=0 to length(mainform.kontrollpanelbuttons[EndLine])-1 do
+    begin
+      ResetButton(i, EndLine);
+    end;
+
+    // remove last array-index
+    setlength(mainform.kontrollpanelbuttons, length(mainform.kontrollpanelbuttons)-1);
+  end;
+end;
+
+procedure Tkontrollpanel.MoveLine(Source, Destination:integer);
+var
+  i:integer;
+  EndLine:integer;
+begin
+  if (Source>-1) and (Destination>-1) and
+    (Source<length(mainform.kontrollpanelbuttons)) and (Destination<length(mainform.kontrollpanelbuttons)) then
+  begin
+    // add new row at the end
+    setlength(mainform.kontrollpanelbuttons, length(mainform.kontrollpanelbuttons)+1);
+    // give it the same number of cols as the one before
+    EndLine:=length(mainform.kontrollpanelbuttons)-1;
+    setlength(mainform.kontrollpanelbuttons[EndLine], length(mainform.kontrollpanelbuttons[EndLine-1]));
+
+    // 1. copy the Destination-row to the end
+    for i:=0 to length(mainform.kontrollpanelbuttons[EndLine])-1 do
+    begin
+      CopyButton(i, Destination, i, EndLine);
+    end;
+
+    // 2. copy the Source-row to the destination
+    for i:=0 to length(mainform.kontrollpanelbuttons[EndLine])-1 do
+    begin
+      CopyButton(i, Source, i, Destination);
+    end;
+
+    // 3. copy the EndLine-row to the Source
+    for i:=0 to length(mainform.kontrollpanelbuttons[EndLine])-1 do
+    begin
+      CopyButton(i, EndLine, i, Source);
+    end;
+
+    // delete last buttons
+    for i:=0 to length(mainform.kontrollpanelbuttons[EndLine])-1 do
+    begin
+      ResetButton(i, EndLine);
+    end;
+
+    // remove last array-index
+    setlength(mainform.kontrollpanelbuttons, length(mainform.kontrollpanelbuttons)-1);
+  end;
+end;
+
+procedure Tkontrollpanel.DeleteLine(Y:integer);
+var
+  i:integer;
+begin
+  if (Y>-1) and (Y<length(mainform.kontrollpanelbuttons)) then
+  begin
+    for i:=Y to length(mainform.kontrollpanelbuttons)-2 do
+    begin
+      MoveLine(i+1, i);
+    end;
+    zeilen.Value:=zeilen.Value-1;
+    zeilenChange(nil);
+  end;
+end;
+
+procedure Tkontrollpanel.VerschiebeReihenachoben1Click(Sender: TObject);
+begin
+  if (SelectedBtn.Y>-1) and (SelectedBtn.Y<length(mainform.kontrollpanelbuttons)) then
+  begin
+    if SelectedBtn.Y>0 then
+    begin
+      MoveLine(SelectedBtn.Y, SelectedBtn.Y-1);
+      SelectedBtn.Y:=SelectedBtn.Y-1;
+    end;
+  end;
+end;
+
+procedure Tkontrollpanel.VerschiebeReihenachunten1Click(Sender: TObject);
+begin
+  if (SelectedBtn.Y>-1) and (SelectedBtn.Y<length(mainform.kontrollpanelbuttons)) then
+  begin
+    if SelectedBtn.Y<length(mainform.kontrollpanelbuttons) then
+    begin
+      MoveLine(SelectedBtn.Y, SelectedBtn.Y+1);
+      SelectedBtn.Y:=SelectedBtn.Y+1;
+    end;
+  end;
+end;
+
+procedure Tkontrollpanel.GanzeZeilelschen1Click(Sender: TObject);
+begin
+  if (SelectedBtn.Y>-1) and (SelectedBtn.Y<length(mainform.kontrollpanelbuttons)) then
+  begin
+    if messagedlg(_('Die gesamte Zeile des markierten Buttons wird gelöscht! Fortfahren?'),mtConfirmation,
+      [mbYes,mbNo],0)=mrNo then exit;
+
+    DeleteLine(SelectedBtn.Y);
+  end;
+end;
+
+procedure Tkontrollpanel.Zeileeinfgen1Click(Sender: TObject);
+var
+  i:integer;
+begin
+  // insgesamt eine neue Zeile einfügen
+  zeilen.Value:=zeilen.Value+1;
+  zeilenChange(nil);
+
+  // nun alle Zeilen eine position nach unten schieben
+  for i:=length(mainform.kontrollpanelbuttons)-2 downto SelectedBtn.Y do
+  begin
+    MoveLine(i, i+1);
+  end;
+  for i:=0 to length(mainform.kontrollpanelbuttons[SelectedBtn.Y])-1 do
+    ResetButton(i, SelectedBtn.Y);
 end;
 
 end.

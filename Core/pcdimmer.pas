@@ -22833,6 +22833,18 @@ begin
 
       temp:='DSV '+inttostr(geraetesteuerung.get_strobe(stringtoguid(value[0])));
       AContext.Connection.Socket.WriteLn(temp);
+    end else if (pos('get_shutter',cmd)>0) then // get_shutter GUID
+    begin
+      temp:=cmd;
+      temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+      // Leerzeichen entfernen, sofern vorhanden
+      if pos(' ', temp)>0 then
+        temp:=copy(temp, 0, pos(' ', temp)-1);
+      value[0]:=temp;
+
+      temp:='DShV '+inttostr(geraetesteuerung.get_shutter(stringtoguid(value[0])));
+      AContext.Connection.Socket.WriteLn(temp);
     end else if (pos('get_scenes',cmd)>0) then // get_scenes NUMMER
     begin
       temp:=cmd;

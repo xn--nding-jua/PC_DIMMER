@@ -1305,13 +1305,6 @@ object kontrollpanel: Tkontrollpanel
           OnClick = ooltipsanzeigen1Click
         end
       end
-      object N6: TTBSubmenuItem
-        Caption = '?'
-        object astenkrzel1: TTBItem
-          Caption = 'Tastenk'#252'rzel'
-          OnClick = astenkrzel1Click
-        end
-      end
     end
   end
   object OpenDialog1: TOpenDialog
@@ -1402,6 +1395,42 @@ object kontrollpanel: Tkontrollpanel
       Caption = 'L'#246'schen'
       ImageIndex = 86
       OnClick = Lschen1Click
+    end
+    object N6: TMenuItem
+      Caption = '-'
+    end
+    object ShiftTasteMausButtonverschieben1: TMenuItem
+      Caption = 'Shift-Taste + Maus = Button verschieben'
+      Enabled = False
+      ImageIndex = 15
+    end
+    object StrgTasteMausZeileverschieben1: TMenuItem
+      Caption = 'Strg-Taste + Maus = Zeile verschieben'
+      Enabled = False
+      ImageIndex = 15
+    end
+    object N7: TMenuItem
+      Caption = '-'
+    end
+    object Zeileeinfgen1: TMenuItem
+      Caption = 'Neue Zeile einf'#252'gen'
+      ImageIndex = 84
+      OnClick = Zeileeinfgen1Click
+    end
+    object VerschiebeReihenachoben1: TMenuItem
+      Caption = 'Ganze Zeile nach oben verschieben'
+      ImageIndex = 45
+      OnClick = VerschiebeReihenachoben1Click
+    end
+    object VerschiebeReihenachunten1: TMenuItem
+      Caption = 'Ganze Zeile nach unten verschieben'
+      ImageIndex = 47
+      OnClick = VerschiebeReihenachunten1Click
+    end
+    object GanzeZeilelschen1: TMenuItem
+      Caption = 'Ganze Zeile l'#246'schen'
+      ImageIndex = 86
+      OnClick = GanzeZeilelschen1Click
     end
     object N5: TMenuItem
       Caption = '-'

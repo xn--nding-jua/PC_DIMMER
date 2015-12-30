@@ -520,6 +520,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
     Top = 8
   end
   object PopupMenu1: TPopupMenu
+    Images = MainForm.PngImageList1
     Left = 40
     Top = 8
     object AlleKanleaktivieren1: TMenuItem
@@ -542,6 +543,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
     end
     object Diagonalselektieren1: TMenuItem
       Caption = 'Diagonal selektieren'
+      ImageIndex = 75
       OnClick = Diagonalselektieren1Click
     end
     object N1: TMenuItem
