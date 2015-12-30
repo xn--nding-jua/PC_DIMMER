@@ -24,7 +24,6 @@ type
     Bevel1: TBevel;
     Bevel2: TBevel;
     PositionXY: TShape;
-    ColorPicker2: THSLColorPicker;
     dimmer: TScrollBar;
     Label1: TLabel;
     Label2: TLabel;
@@ -80,8 +79,6 @@ type
     procedure PositionXYMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure change(Sender: TObject);
-    procedure ColorPicker2MouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
     procedure Button1Click(Sender: TObject);
     procedure grouplistboxSelect(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -106,7 +103,6 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
-    procedure ColorPicker2Change(Sender: TObject);
     procedure REnter(Sender: TObject);
     procedure RExit(Sender: TObject);
     procedure colorpickerChange(Sender: TObject);
@@ -658,14 +654,6 @@ begin
       end;
     end;
   end;
-end;
-
-procedure Tsidebarform.ColorPicker2MouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  usersetting:=true;
-  timer:=0;
-  dontchangecolorfield:=true;
 end;
 
 procedure Tsidebarform.Button1Click(Sender: TObject);
@@ -1229,24 +1217,6 @@ begin
   if GoboOffset>=1 then
     GoboOffset:=GoboOffset-1;
   RefreshGoboList;
-end;
-
-procedure Tsidebarform.ColorPicker2Change(Sender: TObject);
-var
-  Red,Green,Blue:byte;
-begin
-  if not usersetting then exit;
-
-  timer:=0;
-
-  TColor2RGB(colorpicker2.SelectedColor,Red,Green,Blue);
-
-  if not dontchangesliders then
-  begin
-    R.Position:=255-Red;
-    G.Position:=255-Green;
-    B.position:=255-Blue;
-  end;
 end;
 
 procedure Tsidebarform.REnter(Sender: TObject);

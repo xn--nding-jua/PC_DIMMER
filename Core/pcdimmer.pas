@@ -23491,7 +23491,7 @@ begin
     value[1]:=temp;
 
     kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(strtoint(value[0])-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(strtoint(value[1])-1)+(kontrollpanel.btnheight.Value / 2)));
-    kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(strtoint(value[0])-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(strtoint(value[1])-1)+(kontrollpanel.btnheight.Value / 2)));
+    kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssLeft], trunc(kontrollpanel.btnwidth.Value*(strtoint(value[0])-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(strtoint(value[1])-1)+(kontrollpanel.btnheight.Value / 2)));
     kontrollpanel.PaintBox1MouseUp(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(strtoint(value[0])-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(strtoint(value[1])-1)+(kontrollpanel.btnheight.Value / 2)));
   end;
   if (pos('save_stageview',cmd)>0) then // save stageview as image

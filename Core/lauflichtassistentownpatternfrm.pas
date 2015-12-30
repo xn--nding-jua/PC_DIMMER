@@ -117,6 +117,7 @@ type
     procedure ambersliderChange(Sender: TObject);
     procedure whitesliderChange(Sender: TObject);
     procedure Diagonalselektieren1Click(Sender: TObject);
+    procedure ColorPicker2ColorChange(Sender: TObject);
     procedure ColorPicker2MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
   private
@@ -853,9 +854,8 @@ begin
     end;
 end;
 
-procedure Tlauflichtassistentownpatternform.ColorPicker2MouseUp(
-  Sender: TObject; Button: TMouseButton; Shift: TShiftState; X,
-  Y: Integer);
+procedure Tlauflichtassistentownpatternform.ColorPicker2ColorChange(
+  Sender: TObject);
 var
   r,g,b:byte;
   i,j:integer;
@@ -870,6 +870,13 @@ begin
         lauflichtassistentform.lauflichtarray[i][j].g:=max(g,255);
         lauflichtassistentform.lauflichtarray[i][j].b:=max(b,255);
       end;
+end;
+
+procedure Tlauflichtassistentownpatternform.ColorPicker2MouseUp(
+  Sender: TObject; Button: TMouseButton; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  ColorPicker2ColorChange(ColorPicker2);
 end;
 
 end.

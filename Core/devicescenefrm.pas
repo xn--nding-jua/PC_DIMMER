@@ -2159,8 +2159,10 @@ begin
   end;
   CheckButtons;
 
+{
   if (Key=vk_space) and Edit2.Enabled then
     Edit2.SetFocus;
+}
 end;
 
 procedure Tdevicesceneform.VSTDblClick(Sender: TObject);

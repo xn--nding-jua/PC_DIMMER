@@ -1790,26 +1790,6 @@ object sidebarform: Tsidebarform
       OnChange = HorTrackChange
     end
   end
-  object ColorPicker2: THSLColorPicker
-    Left = 16
-    Top = 528
-    Width = 121
-    Height = 137
-    SelectedColor = 214
-    HSPickerHintFormat = 'R: %r G: %g B: %b, Hex: %hex'
-    LPickerHintFormat = 'Luminance: %l'
-    HSPickerCursor = crCross
-    LPickerCursor = crCross
-    ShowHint = False
-    ParentShowHint = False
-    Visible = False
-    TabOrder = 1
-    OnChange = ColorPicker2Change
-    OnMouseMove = ColorPicker2MouseMove
-    DesignSize = (
-      121
-      137)
-  end
   object dimmer: TScrollBar
     Left = 16
     Top = 80
@@ -1817,7 +1797,7 @@ object sidebarform: Tsidebarform
     Height = 17
     Max = 255
     PageSize = 0
-    TabOrder = 2
+    TabOrder = 1
     OnChange = change
   end
   object R: TScrollBar
@@ -1828,7 +1808,7 @@ object sidebarform: Tsidebarform
     Kind = sbVertical
     Max = 255
     PageSize = 0
-    TabOrder = 3
+    TabOrder = 2
     OnChange = change
     OnEnter = REnter
     OnExit = RExit
@@ -1842,7 +1822,7 @@ object sidebarform: Tsidebarform
     Max = 255
     PageSize = 0
     Position = 255
-    TabOrder = 4
+    TabOrder = 3
     OnChange = change
     OnEnter = REnter
     OnExit = RExit
@@ -1856,7 +1836,7 @@ object sidebarform: Tsidebarform
     Max = 255
     PageSize = 0
     Position = 255
-    TabOrder = 5
+    TabOrder = 4
     OnChange = change
     OnEnter = REnter
     OnExit = RExit
@@ -1869,7 +1849,7 @@ object sidebarform: Tsidebarform
     Style = csDropDownList
     DropDownCount = 24
     ItemHeight = 13
-    TabOrder = 6
+    TabOrder = 5
     OnSelect = grouplistboxSelect
   end
   object Button1: TButton
@@ -1878,7 +1858,7 @@ object sidebarform: Tsidebarform
     Width = 83
     Height = 21
     Caption = 'Selektion aus'
-    TabOrder = 7
+    TabOrder = 6
     OnClick = Button1Click
     OnMouseMove = FormMouseMove
   end
@@ -1888,7 +1868,7 @@ object sidebarform: Tsidebarform
     Width = 105
     Height = 17
     Caption = 'Selektiert lassen'
-    TabOrder = 8
+    TabOrder = 7
     OnMouseMove = FormMouseMove
   end
   object Button2: TButton
@@ -1903,7 +1883,7 @@ object sidebarform: Tsidebarform
     Font.Name = 'Wingdings'
     Font.Style = []
     ParentFont = False
-    TabOrder = 9
+    TabOrder = 8
     OnClick = Button2Click
   end
   object Button3: TButton
@@ -1912,7 +1892,7 @@ object sidebarform: Tsidebarform
     Width = 25
     Height = 17
     Caption = '>'
-    TabOrder = 10
+    TabOrder = 9
     OnClick = Button3Click
   end
   object Button4: TButton
@@ -1921,7 +1901,7 @@ object sidebarform: Tsidebarform
     Width = 25
     Height = 17
     Caption = '<'
-    TabOrder = 11
+    TabOrder = 10
     OnClick = Button4Click
   end
   object zoomvalue: TJvSpinEdit
@@ -1932,7 +1912,7 @@ object sidebarform: Tsidebarform
     MaxValue = 127.000000000000000000
     MinValue = 1.000000000000000000
     Value = 32.000000000000000000
-    TabOrder = 12
+    TabOrder = 11
   end
   object strobebar: TScrollBar
     Left = 16
@@ -1941,7 +1921,7 @@ object sidebarform: Tsidebarform
     Height = 17
     Max = 255
     PageSize = 0
-    TabOrder = 13
+    TabOrder = 12
     OnChange = change
   end
   object goborot1: TScrollBar
@@ -1955,7 +1935,7 @@ object sidebarform: Tsidebarform
     ParentShowHint = False
     Position = 128
     ShowHint = True
-    TabOrder = 14
+    TabOrder = 13
     OnChange = change
   end
   object goborot2: TScrollBar
@@ -1969,7 +1949,7 @@ object sidebarform: Tsidebarform
     ParentShowHint = False
     Position = 128
     ShowHint = True
-    TabOrder = 15
+    TabOrder = 14
     OnChange = change
   end
   object W: TScrollBar
@@ -1981,7 +1961,7 @@ object sidebarform: Tsidebarform
     Max = 255
     PageSize = 0
     Position = 255
-    TabOrder = 16
+    TabOrder = 15
     OnChange = change
   end
   object A: TScrollBar
@@ -1993,7 +1973,7 @@ object sidebarform: Tsidebarform
     Max = 255
     PageSize = 0
     Position = 255
-    TabOrder = 17
+    TabOrder = 16
     OnChange = change
   end
   object colorpicker: THSLRingPicker
@@ -2003,7 +1983,7 @@ object sidebarform: Tsidebarform
     Height = 121
     RingPickerHintFormat = 'Hue: %h'
     SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
-    TabOrder = 18
+    TabOrder = 17
     Color = clBtnFace
     ParentColor = False
     OnChange = colorpickerChange

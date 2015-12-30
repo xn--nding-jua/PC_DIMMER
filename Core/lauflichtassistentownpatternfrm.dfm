@@ -329,6 +329,7 @@ object lauflichtassistentownpatternform: Tlauflichtassistentownpatternform
         Properties.CustomColorFont.Height = -11
         Properties.CustomColorFont.Name = 'MS Sans Serif'
         Properties.CustomColorFont.Style = []
+        OnColorChange = ColorPicker2ColorChange
       end
       object Button2: TButton
         Left = 104
