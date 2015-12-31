@@ -382,6 +382,11 @@ type
     channelfadebox: TCheckBox;
     itemvalueendedit: TJvSpinEdit;
     ColorPicker2: THSLRingPicker;
+    GroupBox1: TGroupBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    fogmaxvalueedit: TJvSpinEdit;
+    fogoffvalueedit: TJvSpinEdit;
     procedure sizecontrolcheckedClick(Sender: TObject);
     procedure TBItem8Click(Sender: TObject);
     procedure TBItem7Click(Sender: TObject);
@@ -1112,6 +1117,7 @@ begin
   memo1.Lines.Add(' <shutter OpenValue="'+inttostr(round(shutteropenvalueedit.value))+'" CloseValue="'+inttostr(round(shutterclosevalueedit.value))+'" ChannelName="'+lowercase(shutterchannellist.Text)+'"/>');
   memo1.Lines.Add(' <strobe OffValue="'+inttostr(round(strobeoffvalueedit.value))+'" MinValue="'+inttostr(round(strobeminvalueedit.value))+'" MaxValue="'+inttostr(round(strobemaxvalueedit.value))+'" ChannelName="'+lowercase(strobochannellist.Text)+'"/>');
   memo1.Lines.Add(' <dimmer OffValue="'+inttostr(round(dimmeroffvalueedit.value))+'" MaxValue="'+inttostr(round(dimmermaxvalueedit.value))+'"/>');
+  memo1.Lines.Add(' <fog OffValue="'+inttostr(round(fogoffvalueedit.value))+'" MaxValue="'+inttostr(round(fogmaxvalueedit.value))+'"/>');
   memo1.Lines.Add(' <gobo1rot LeftMinValue="'+inttostr(round(goborotleftminvalueedit.value))+'" LeftMaxValue="'+inttostr(round(goborotleftvalueedit.value))+'" OffValue="'+inttostr(round(goborotoffvalueedit.value))+'" RightMinValue="'+inttostr(round(goborotrightminvalueedit.value))+'" RightMaxValue="'+inttostr(round(goborotrightvalueedit.value))+'" ChannelName="'+lowercase(gobo1rotchlbox.Text)+'"/>');
   memo1.Lines.Add(' <gobo2rot LeftMinValue="'+inttostr(round(gobo2rotleftminvalueedit.value))+'" LeftMaxValue="'+inttostr(round(gobo2rotleftvalueedit.value))+'" OffValue="'+inttostr(round(gobo2rotoffvalueedit.value))+'" RightMinValue="'+inttostr(round(gobo2rotrightminvalueedit.value))+'" RightMaxValue="'+inttostr(round(gobo2rotrightvalueedit.value))+'" ChannelName="'+lowercase(gobo2rotchlbox.Text)+'"/>');
   memo1.Lines.Add(' <prismarot LeftMinValue="'+inttostr(round(prismarotleftminedit.value))+'" LeftMaxValue="'+inttostr(round(prismarotleftmaxedit.value))+'" OffValue="'+inttostr(round(prismarotstopedit.value))+'" RightMinValue="'+inttostr(round(prismarotrightminedit.value))+'" RightMaxValue="'+inttostr(round(prismarotrightmaxedit.value))+'" ChannelName="'+lowercase(prismarotchanneledit.Text)+'"/>');
@@ -2119,6 +2125,12 @@ begin
       begin
         dimmeroffvalueedit.Value:=strtoint(XML.XML.Root.Items[j].Properties.Value('OffValue'));
         dimmermaxvalueedit.Value:=strtoint(XML.XML.Root.Items[j].Properties.Value('MaxValue'));
+      end;
+
+      if (lowercase(XML.XML.Root.Items[j].Name)='fog') then
+      begin
+        fogoffvalueedit.Value:=strtoint(XML.XML.Root.Items[j].Properties.Value('OffValue'));
+        fogmaxvalueedit.Value:=strtoint(XML.XML.Root.Items[j].Properties.Value('MaxValue'));
       end;
 
       if lowercase(XML.XML.Root.Items[j].Name)='gobo1rot' then

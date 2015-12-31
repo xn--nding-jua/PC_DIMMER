@@ -7,12 +7,12 @@
  <description>Nebelmaschine mit 1200W Heizelement</description>
  </information>
  <channels>
-  <function channel="0" minvalue="0" maxvalue="255" name="Nebelausstoß" fade="yes" type="dimmer"/>
+  <function channel="0" minvalue="0" maxvalue="255" name="Nebelausstoß" fade="yes" type="fog"/>
  </channels>
  <initvalues ch0="-1" />
  <shutter OpenValue="20" CloseValue="0" ChannelName="shutter"/>
  <strobe OffValue="20" MinValue="50" MaxValue="72" ChannelName="shutter"/>
- <dimmer OffValue="0" MaxValue="255"/>
+ <fog OffValue="0" MaxValue="255"/>
  <gobo1rot LeftMinValue="0" LeftMaxValue="255" OffValue="0" RightMinValue="0" RightMaxValue="255" ChannelName="gobo1rot"/>
  <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
  <form width="233" height="172">
@@ -64,7 +64,7 @@ var
 		case channel of
     	0:
     	begin
-    		wert:=get_channel('dimmer');
+    		wert:=get_channel('fog');
 
 		    if not dontsetslider then
 					volumeslider.position:=wert;
@@ -109,37 +109,37 @@ var
   procedure volumechange;
   begin
     dontsetslider:=true;
-		set_channel('dimmer',volumeslider.position,volumeslider.position,0);
+		set_channel('fog',volumeslider.position,volumeslider.position,0);
   end;
   procedure volumeboxchange;
   begin
     dontsetbox:=true;
     case volumebox.itemindex of
-    	0: set_channel('dimmer',0,0,0);
-    	1: set_channel('dimmer',0,10,0);
-    	2: set_channel('dimmer',0,20,0);
-    	3: set_channel('dimmer',0,30,0);
-    	4: set_channel('dimmer',0,40,0);
-    	5: set_channel('dimmer',0,50,0);
-    	6: set_channel('dimmer',0,60,0);
-    	7: set_channel('dimmer',0,70,0);
-    	8: set_channel('dimmer',0,80,0);
-    	9: set_channel('dimmer',0,90,0);
-    	10: set_channel('dimmer',0,100,0);
-    	11: set_channel('dimmer',0,110,0);
-    	12: set_channel('dimmer',0,120,0);
-    	13: set_channel('dimmer',0,130,0);
-    	14: set_channel('dimmer',0,140,0);
-    	15: set_channel('dimmer',0,150,0);
-    	16: set_channel('dimmer',0,160,0);
-    	17: set_channel('dimmer',0,170,0);
-    	18: set_channel('dimmer',0,180,0);
-    	19: set_channel('dimmer',0,190,0);
-    	20: set_channel('dimmer',0,200,0);
-    	21: set_channel('dimmer',0,210,0);
-    	22: set_channel('dimmer',0,220,0);
-    	23: set_channel('dimmer',0,230,0);
-    	24: set_channel('dimmer',0,240,0);
+    	0: set_channel('fog',0,0,0);
+    	1: set_channel('fog',0,10,0);
+    	2: set_channel('fog',0,20,0);
+    	3: set_channel('fog',0,30,0);
+    	4: set_channel('fog',0,40,0);
+    	5: set_channel('fog',0,50,0);
+    	6: set_channel('fog',0,60,0);
+    	7: set_channel('fog',0,70,0);
+    	8: set_channel('fog',0,80,0);
+    	9: set_channel('fog',0,90,0);
+    	10: set_channel('fog',0,100,0);
+    	11: set_channel('fog',0,110,0);
+    	12: set_channel('fog',0,120,0);
+    	13: set_channel('fog',0,130,0);
+    	14: set_channel('fog',0,140,0);
+    	15: set_channel('fog',0,150,0);
+    	16: set_channel('fog',0,160,0);
+    	17: set_channel('fog',0,170,0);
+    	18: set_channel('fog',0,180,0);
+    	19: set_channel('fog',0,190,0);
+    	20: set_channel('fog',0,200,0);
+    	21: set_channel('fog',0,210,0);
+    	22: set_channel('fog',0,220,0);
+    	23: set_channel('fog',0,230,0);
+    	24: set_channel('fog',0,240,0);
     end;
   end;
   end.

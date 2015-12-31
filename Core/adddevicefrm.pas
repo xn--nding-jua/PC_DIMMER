@@ -584,6 +584,8 @@ begin
     // nur zur Sicherheit
     geraetesteuerung.DevicePrototyp[i].DimmerOffValue:=0;
     geraetesteuerung.DevicePrototyp[i].DimmerMaxValue:=255;
+    geraetesteuerung.DevicePrototyp[i].FogOffValue:=0;
+    geraetesteuerung.DevicePrototyp[i].FogMaxValue:=255;
 
     for j:=0 to XML.Xml.Root.Items.Count-1 do
     begin // <device>
@@ -641,6 +643,7 @@ begin
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('A') then geraetesteuerung.DevicePrototyp[i].hasAmber:=true;
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('W') then geraetesteuerung.DevicePrototyp[i].hasWhite:=true;
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('UV') then geraetesteuerung.DevicePrototyp[i].hasUV:=true;
+          if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('FOG') then geraetesteuerung.DevicePrototyp[i].hasFog:=true;
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('PAN') then geraetesteuerung.DevicePrototyp[i].hasPANTILT:=true;
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('TILT') then geraetesteuerung.DevicePrototyp[i].hasPANTILT:=true;
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('COLOR1') then geraetesteuerung.DevicePrototyp[i].hasColor:=true;
@@ -704,6 +707,11 @@ begin
       begin // <dimmer>
         geraetesteuerung.DevicePrototyp[i].DimmerOffValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('OffValue'));
         geraetesteuerung.DevicePrototyp[i].DimmerMaxValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('MaxValue'));
+      end;
+      if (XML.XML.Root.Items[j].Name='fog') then
+      begin // <fog>
+        geraetesteuerung.DevicePrototyp[i].FogOffValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('OffValue'));
+        geraetesteuerung.DevicePrototyp[i].FogMaxValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('MaxValue'));
       end;
       if XML.XML.Root.Items[j].Name='gobo1rot' then
       begin // <gobo1rot>

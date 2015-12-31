@@ -1,4 +1,4 @@
-  setlength(DeviceChannelNames,46);
+  setlength(DeviceChannelNames,47);
   DeviceChannelNames[0]:='PAN';
   DeviceChannelNames[1]:='TILT';
   DeviceChannelNames[2]:='PANFINE';
@@ -45,6 +45,7 @@
   DeviceChannelNames[43]:='MAGENTA';
   DeviceChannelNames[44]:='YELLOW';
   DeviceChannelNames[45]:='UV';
+  DeviceChannelNames[46]:='FOG';
   // VIRTUALRGBADIMMER ist virtueller Dimmerkanal für RGB(A)-Geräte
 
   // Befehlssystem klarmachen

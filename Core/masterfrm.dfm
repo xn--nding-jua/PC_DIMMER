@@ -5,7 +5,7 @@ object masterform: Tmasterform
   BorderStyle = bsSingle
   Caption = 'Master'
   ClientHeight = 241
-  ClientWidth = 201
+  ClientWidth = 249
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -186,36 +186,40 @@ object masterform: Tmasterform
   object Label4: TLabel
     Left = 8
     Top = 200
-    Width = 26
+    Width = 41
     Height = 13
     Alignment = taCenter
+    AutoSize = False
     Caption = '100%'
     OnClick = Label4Click
   end
   object Label5: TLabel
     Left = 56
     Top = 200
-    Width = 26
+    Width = 41
     Height = 13
     Alignment = taCenter
+    AutoSize = False
     Caption = '100%'
     OnClick = Label5Click
   end
   object Label6: TLabel
     Left = 104
     Top = 200
-    Width = 12
+    Width = 41
     Height = 13
     Alignment = taCenter
+    AutoSize = False
     Caption = #177'0'
     OnClick = Label6Click
   end
   object Label7: TLabel
-    Left = 160
+    Left = 152
     Top = 200
-    Width = 26
+    Width = 41
     Height = 13
     Alignment = taCenter
+    AutoSize = False
     Caption = '100%'
     OnClick = Label5Click
   end
@@ -226,6 +230,25 @@ object masterform: Tmasterform
     Height = 26
     Alignment = taCenter
     Caption = 'Volume Master'
+    WordWrap = True
+  end
+  object Label9: TLabel
+    Left = 200
+    Top = 200
+    Width = 41
+    Height = 13
+    Alignment = taCenter
+    AutoSize = False
+    Caption = '0%'
+    OnClick = Label5Click
+  end
+  object Label10: TLabel
+    Left = 200
+    Top = 8
+    Width = 40
+    Height = 26
+    Alignment = taCenter
+    Caption = 'Nebel Master'
     WordWrap = True
   end
   object dimmermaster: TTrackBar
@@ -329,11 +352,37 @@ object masterform: Tmasterform
     TabOrder = 7
     OnClick = Button4Click
   end
+  object FogSlider: TTrackBar
+    Left = 200
+    Top = 40
+    Width = 41
+    Height = 161
+    Hint = 'Lautst'#228'rkemaster'
+    Max = 255
+    Orientation = trVertical
+    ParentShowHint = False
+    Position = 255
+    ShowHint = True
+    TabOrder = 8
+    ThumbLength = 25
+    TickMarks = tmBoth
+    TickStyle = tsManual
+    OnChange = FogSliderChange
+  end
+  object Button5: TButton
+    Left = 200
+    Top = 216
+    Width = 41
+    Height = 17
+    Caption = 'Reset'
+    TabOrder = 9
+    OnClick = Button5Click
+  end
   object Timer1: TTimer
     Enabled = False
     Interval = 150
     OnTimer = Timer1Timer
     Left = 8
-    Top = 8
+    Top = 32
   end
 end

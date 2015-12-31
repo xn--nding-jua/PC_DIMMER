@@ -89,6 +89,7 @@ type
     hasAmber:boolean;
     hasWhite:boolean;
     hasUV:boolean;
+    hasFog:boolean;
     hasPANTILT:boolean;
     hasColor:boolean;
     hasColor2:boolean;
@@ -127,6 +128,8 @@ type
     StrobeChannel:string[255];
     DimmerOffValue:byte;
     DimmerMaxValue:byte;
+    FogOffValue:byte;
+    FogMaxValue:byte;
     Gobo1RotLeftminValue:byte;
     Gobo1RotLeftValue:byte;
     Gobo1RotOffValue:byte;
@@ -747,6 +750,8 @@ begin
      	  Filestream.ReadBuffer(mainform.Devices[i].hasWhite,sizeof(mainform.Devices[i].hasWhite));
         if Version>=476 then
        	  Filestream.ReadBuffer(mainform.Devices[i].hasUV,sizeof(mainform.Devices[i].hasUV));
+        if Version>=477 then
+       	  Filestream.ReadBuffer(mainform.Devices[i].hasFog,sizeof(mainform.Devices[i].hasFog));
      	  Filestream.ReadBuffer(mainform.Devices[i].UseAmberMixing,sizeof(mainform.Devices[i].UseAmberMixing));
      	  Filestream.ReadBuffer(mainform.Devices[i].AmberMixingCompensateRG,sizeof(mainform.Devices[i].AmberMixingCompensateRG));
      	  Filestream.ReadBuffer(mainform.Devices[i].AmberMixingCompensateBlue,sizeof(mainform.Devices[i].AmberMixingCompensateBlue));
@@ -854,6 +859,11 @@ begin
         Filestream.ReadBuffer(mainform.Devices[i].StrobeChannel,sizeof(mainform.Devices[i].StrobeChannel));
         Filestream.ReadBuffer(mainform.Devices[i].DimmerOffValue,sizeof(mainform.Devices[i].DimmerOffValue));
         Filestream.ReadBuffer(mainform.Devices[i].DimmerMaxValue,sizeof(mainform.Devices[i].DimmerMaxValue));
+        if Version>=477 then
+        begin
+          Filestream.ReadBuffer(mainform.Devices[i].FogOffValue,sizeof(mainform.Devices[i].FogOffValue));
+          Filestream.ReadBuffer(mainform.Devices[i].FogMaxValue,sizeof(mainform.Devices[i].FogMaxValue));
+        end;
         Filestream.ReadBuffer(mainform.Devices[i].Gobo1RotLeftminValue,sizeof(mainform.Devices[i].Gobo1RotLeftminValue));
         Filestream.ReadBuffer(mainform.Devices[i].Gobo1RotLeftValue,sizeof(mainform.Devices[i].Gobo1RotLeftValue));
         Filestream.ReadBuffer(mainform.Devices[i].Gobo1RotOffValue,sizeof(mainform.Devices[i].Gobo1RotOffValue));
@@ -893,6 +903,8 @@ begin
         mainform.Devices[i].StrobeChannel:='NOTDEFINED';
         mainform.Devices[i].DimmerOffValue:=0;
         mainform.Devices[i].DimmerMaxValue:=255;
+        mainform.Devices[i].FogOffValue:=0;
+        mainform.Devices[i].FogMaxValue:=255;
         mainform.Devices[i].Gobo1RotLeftminValue:=0;
         mainform.Devices[i].Gobo1RotLeftValue:=0;
         mainform.Devices[i].Gobo1RotOffValue:=127;
@@ -1038,6 +1050,7 @@ begin
     Filestream.WriteBuffer(mainform.Devices[i].hasAmber,sizeof(mainform.Devices[i].hasAmber));
     Filestream.WriteBuffer(mainform.Devices[i].hasWhite,sizeof(mainform.Devices[i].hasWhite));
     Filestream.WriteBuffer(mainform.Devices[i].hasUV,sizeof(mainform.Devices[i].hasUV));
+    Filestream.WriteBuffer(mainform.Devices[i].hasFog,sizeof(mainform.Devices[i].hasFog));
  	  Filestream.WriteBuffer(mainform.Devices[i].UseAmberMixing,sizeof(mainform.Devices[i].UseAmberMixing));
  	  Filestream.WriteBuffer(mainform.Devices[i].AmberMixingCompensateRG,sizeof(mainform.Devices[i].AmberMixingCompensateRG));
  	  Filestream.WriteBuffer(mainform.Devices[i].AmberMixingCompensateBlue,sizeof(mainform.Devices[i].AmberMixingCompensateBlue));
@@ -1112,6 +1125,8 @@ begin
     Filestream.WriteBuffer(mainform.Devices[i].StrobeChannel,sizeof(mainform.Devices[i].StrobeChannel));
     Filestream.WriteBuffer(mainform.Devices[i].DimmerOffValue,sizeof(mainform.Devices[i].DimmerOffValue));
     Filestream.WriteBuffer(mainform.Devices[i].DimmerMaxValue,sizeof(mainform.Devices[i].DimmerMaxValue));
+    Filestream.WriteBuffer(mainform.Devices[i].FogOffValue,sizeof(mainform.Devices[i].FogOffValue));
+    Filestream.WriteBuffer(mainform.Devices[i].FogMaxValue,sizeof(mainform.Devices[i].FogMaxValue));
     Filestream.WriteBuffer(mainform.Devices[i].Gobo1RotLeftminValue,sizeof(mainform.Devices[i].Gobo1RotLeftminValue));
     Filestream.WriteBuffer(mainform.Devices[i].Gobo1RotLeftValue,sizeof(mainform.Devices[i].Gobo1RotLeftValue));
     Filestream.WriteBuffer(mainform.Devices[i].Gobo1RotOffValue,sizeof(mainform.Devices[i].Gobo1RotOffValue));
@@ -1366,6 +1381,7 @@ begin
         mainform.Devices[length(mainform.Devices)-1].hasAmber:=deviceprototyp[devposition].hasAmber;
         mainform.Devices[length(mainform.Devices)-1].hasWhite:=deviceprototyp[devposition].hasWhite;
         mainform.Devices[length(mainform.Devices)-1].hasUV:=deviceprototyp[devposition].hasUV;
+        mainform.Devices[length(mainform.Devices)-1].hasFog:=deviceprototyp[devposition].hasFog;
         mainform.Devices[length(mainform.Devices)-1].UseAmberMixing:=deviceprototyp[devposition].UseAmberMixing;
         mainform.Devices[length(mainform.Devices)-1].AmberMixingCompensateRG:=deviceprototyp[devposition].AmberMixingCompensateRG;
         mainform.Devices[length(mainform.Devices)-1].AmberMixingCompensateBlue:=deviceprototyp[devposition].AmberMixingCompensateBlue;
@@ -1392,6 +1408,8 @@ begin
         mainform.devices[length(mainform.Devices)-1].StrobeChannel:=DevicePrototyp[devposition].StrobeChannel;
         mainform.devices[length(mainform.Devices)-1].DimmerOffValue:=DevicePrototyp[devposition].DimmerOffValue;
         mainform.devices[length(mainform.Devices)-1].DimmerMaxValue:=DevicePrototyp[devposition].DimmerMaxValue;
+        mainform.devices[length(mainform.Devices)-1].FogOffValue:=DevicePrototyp[devposition].FogOffValue;
+        mainform.devices[length(mainform.Devices)-1].FogMaxValue:=DevicePrototyp[devposition].FogMaxValue;
         mainform.devices[length(mainform.Devices)-1].Gobo1RotLeftminValue:=DevicePrototyp[devposition].Gobo1RotLeftminValue;
         mainform.devices[length(mainform.Devices)-1].Gobo1RotLeftValue:=DevicePrototyp[devposition].Gobo1RotLeftValue;
         mainform.devices[length(mainform.Devices)-1].Gobo1RotOffValue:=DevicePrototyp[devposition].Gobo1RotOffValue;
@@ -2206,6 +2224,7 @@ begin
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasAmber:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasAmber;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasWhite:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasWhite;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasUV:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasUV;
+        mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasFog:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasFog;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].UseAmberMixing:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].UseAmberMixing;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].AmberMixingCompensateRG:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].AmberMixingCompensateRG;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].AmberMixingCompensateBlue:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].AmberMixingCompensateBlue;
@@ -3675,6 +3694,8 @@ begin
           mainform.devices[i].StrobeChannel:=DevicePrototyp[j].StrobeChannel;
           mainform.devices[i].DimmerOffValue:=DevicePrototyp[j].DimmerOffValue;
           mainform.devices[i].DimmerMaxValue:=DevicePrototyp[j].DimmerMaxValue;
+          mainform.devices[i].FogOffValue:=DevicePrototyp[j].FogOffValue;
+          mainform.devices[i].FogMaxValue:=DevicePrototyp[j].FogMaxValue;
           mainform.devices[i].Gobo1RotLeftminValue:=DevicePrototyp[j].Gobo1RotLeftminValue;
           mainform.devices[i].Gobo1RotLeftValue:=DevicePrototyp[j].Gobo1RotLeftValue;
           mainform.devices[i].Gobo1RotOffValue:=DevicePrototyp[j].Gobo1RotOffValue;
@@ -3708,6 +3729,7 @@ begin
           mainform.devices[i].hasAmber:=DevicePrototyp[j].hasAmber;
           mainform.devices[i].hasWhite:=DevicePrototyp[j].hasWhite;
           mainform.devices[i].hasUV:=DevicePrototyp[j].hasUV;
+          mainform.devices[i].hasFog:=DevicePrototyp[j].hasFog;
           mainform.devices[i].UseAmberMixing:=DevicePrototyp[j].UseAmberMixing;
           mainform.devices[i].AmberMixingCompensateRG:=DevicePrototyp[j].AmberMixingCompensateRG;
           mainform.devices[i].AmberMixingCompensateBlue:=DevicePrototyp[j].AmberMixingCompensateBlue;
@@ -3989,6 +4011,7 @@ begin
   mainform.devices[Destination].hasAmber:=mainform.devices[Source].hasAmber;
   mainform.devices[Destination].hasWhite:=mainform.devices[Source].hasWhite;
   mainform.devices[Destination].hasUV:=mainform.devices[Source].hasUV;
+  mainform.devices[Destination].hasFog:=mainform.devices[Source].hasFog;
   mainform.devices[Destination].UseAmberMixing:=mainform.devices[Source].UseAmberMixing;
   mainform.devices[Destination].AmberMixingCompensateRG:=mainform.devices[Source].AmberMixingCompensateRG;
   mainform.devices[Destination].AmberMixingCompensateBlue:=mainform.devices[Source].AmberMixingCompensateBlue;
@@ -4596,6 +4619,8 @@ begin
     // nur zur Sicherheit
     geraetesteuerung.DevicePrototyp[i].DimmerOffValue:=0;
     geraetesteuerung.DevicePrototyp[i].DimmerMaxValue:=255;
+    geraetesteuerung.DevicePrototyp[i].FogOffValue:=0;
+    geraetesteuerung.DevicePrototyp[i].FogMaxValue:=255;
 
     for j:=0 to XML.Xml.Root.Items.Count-1 do
     begin // <device>
@@ -4662,6 +4687,8 @@ begin
             geraetesteuerung.DevicePrototyp[i].hasWhite:=true;
           if lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('UV') then
             geraetesteuerung.DevicePrototyp[i].hasUV:=true;
+          if lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('FOG') then
+            geraetesteuerung.DevicePrototyp[i].hasFog:=true;
           if lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('COLOR1') then
             geraetesteuerung.DevicePrototyp[i].hasColor:=true;
           if lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('COLOR2') then
@@ -4724,12 +4751,17 @@ begin
         geraetesteuerung.DevicePrototyp[i].StrobeChannel:=XML.XML.Root.Items[j].Properties.Value('ChannelName');
       end;
       if (XML.XML.Root.Items[j].Name='dimmer') or (XML.XML.Root.Items[j].Name='virtualrgbadimmer') then
-      begin // <strobe>
+      begin // <dimmer>
         geraetesteuerung.DevicePrototyp[i].DimmerOffValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('OffValue'));
         geraetesteuerung.DevicePrototyp[i].DimmerMaxValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('MaxValue'));
       end;
+      if (XML.XML.Root.Items[j].Name='fog') then
+      begin // <fog>
+        geraetesteuerung.DevicePrototyp[i].FogOffValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('OffValue'));
+        geraetesteuerung.DevicePrototyp[i].FogMaxValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('MaxValue'));
+      end;
       if XML.XML.Root.Items[j].Name='gobo1rot' then
-      begin // <strobe>
+      begin // <gobo1rot>
         geraetesteuerung.DevicePrototyp[i].Gobo1RotLeftminValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('LeftMinValue'));
         geraetesteuerung.DevicePrototyp[i].Gobo1RotLeftValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('LeftMaxValue'));
         geraetesteuerung.DevicePrototyp[i].Gobo1RotOffValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('OffValue'));
@@ -4738,7 +4770,7 @@ begin
         geraetesteuerung.DevicePrototyp[i].Gobo1RotChannel:=XML.XML.Root.Items[j].Properties.Value('ChannelName');
       end;
       if XML.XML.Root.Items[j].Name='gobo2rot' then
-      begin // <strobe>
+      begin // <gobo2rot>
         geraetesteuerung.DevicePrototyp[i].Gobo2RotLeftminValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('LeftMinValue'));
         geraetesteuerung.DevicePrototyp[i].Gobo2RotLeftValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('LeftMaxValue'));
         geraetesteuerung.DevicePrototyp[i].Gobo2RotOffValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('OffValue'));

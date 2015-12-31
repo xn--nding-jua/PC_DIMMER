@@ -26,6 +26,10 @@ type
     Label7: TLabel;
     Button4: TButton;
     Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    FogSlider: TTrackBar;
+    Button5: TButton;
     procedure dimmermasterChange(Sender: TObject);
     procedure flashmasterChange(Sender: TObject);
     procedure speedmasterChange(Sender: TObject);
@@ -44,6 +48,8 @@ type
     procedure FormActivate(Sender: TObject);
     procedure FormDeactivate(Sender: TObject);
     procedure CreateParams(var Params:TCreateParams);override;
+    procedure Button5Click(Sender: TObject);
+    procedure FogSliderChange(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -103,10 +109,7 @@ begin
   else
     label6.caption:=inttostr(256-speedmaster.Position);
   label7.caption:=inttostr(round(BASS_GetVolume()*100))+'%';
-  label4.Alignment:=taCenter;
-  label5.Alignment:=taCenter;
-  label6.Alignment:=taCenter;
-  label7.Alignment:=taCenter;
+  label9.caption:=inttostr(round((255-fogslider.position)/2.55))+'%';
 
   volumeslider.position:=100-round(BASS_GetVolume()*100);
 end;
@@ -273,6 +276,28 @@ begin
     begin
       Params.WndParent:=GetDesktopWindow;
       self.ParentWindow := GetDesktopWindow;
+    end;
+  end;
+end;
+
+procedure Tmasterform.Button5Click(Sender: TObject);
+begin
+  if not mainform.UserAccessGranted(2) then exit;
+
+  fogslider.position:=255;
+end;
+
+procedure Tmasterform.FogSliderChange(Sender: TObject);
+var
+  i:integer;
+begin
+  if not mainform.UserAccessGranted(2) then exit;
+
+  for i:=0 to length(mainform.devices)-1 do
+  begin
+    if mainform.devices[i].hasFog then
+    begin
+      geraetesteuerung.set_channel(mainform.devices[i].ID, 'FOG', 255-fogslider.position, 255-fogslider.position, 0, 0);
     end;
   end;
 end;

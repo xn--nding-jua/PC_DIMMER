@@ -114,8 +114,8 @@ IncludeVerInfo=1
 AutoIncBuild=1
 MajorVer=5
 MinorVer=4
-Release=3
-Build=4685
+Release=4
+Build=4690
 Debug=0
 PreRelease=0
 Special=0
@@ -126,13 +126,13 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=PC_DIMMER
-FileVersion=5.4.3.4685
+FileVersion=5.4.4.4690
 InternalName=PC_DIMMER
-LegalCopyright=(c) 2004-2015 Dipl.-Ing. Christian Nöding
+LegalCopyright=(c) 2004-2016 Dipl.-Ing. Christian Nöding
 LegalTrademarks=
 OriginalFilename=PC_DIMMER.exe
 ProductName=PC_DIMMER
-ProductVersion=2015 v5.4
+ProductVersion=2016 v5.4
 Comments=Infos und Updates unter http://www.pcdimmer.de
 [Excluded Packages]
 c:\program files (x86)\borland\delphi7\Projects\Bpl\DSPackDesign_D7.bpl=DSPack 2.3: Multimedia Package for Delphi

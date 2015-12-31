@@ -1190,7 +1190,10 @@ begin
       if value<0 then value:=0;
       if value>255 then value:=255;
 //      geraetesteuerung.set_channel(mainform.devices[MouseOnProgress].ID,'DIMMER',value,value,0);
-      geraetesteuerung.set_dimmer(mainform.devices[MouseOnProgress].ID,value);
+      if mainform.devices[MouseOnProgress].hasDimmer then
+        geraetesteuerung.set_dimmer(mainform.devices[MouseOnProgress].ID,value)
+      else if mainform.devices[MouseOnProgress].hasFog then
+        geraetesteuerung.set_channel(mainform.devices[MouseOnProgress].ID,'FOG',value,value,0);
     end;
   end else if MouseOnBuehnenansichtProgress>-1 then
   begin
@@ -3186,6 +3189,61 @@ begin
         _Buffer.Pen.Style:=psClear;
         _Buffer.Font.Color:=clBlack;
         _Buffer.TextOut(mainform.devices[i].left[j]+mainform.devices[i].picturesize+3, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset ,inttostr(round(Dimmerwert/2.55))+'%');
+      end else if mainform.Devices[i].hasFog then
+      begin
+        // Nebelbar anzeigen
+        Dimmerwert:=geraetesteuerung.get_channel(mainform.devices[i].ID, 'fog');
+        if checkbox1.checked then
+          offset:=11
+        else
+          offset:=2;
+
+        // Umrandung zeichnen
+        _Buffer.Brush.Color:=ClMedGray;
+        _Buffer.Pen.Style:=psSolid;
+        _Buffer.Rectangle(mainform.devices[i].left[j], mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+2,mainform.devices[i].left[j]+mainform.devices[i].picturesize,mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+9);
+
+        // Hintergrund zeichnen
+        _Buffer.Pen.Color:=clSilver;
+        _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+3);
+        _Buffer.LineTo(round(mainform.devices[i].left[j]+mainform.devices[i].picturesize-1), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+3);
+        _Buffer.Pen.Color:=clMedGray;
+        _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+4);
+        _Buffer.LineTo(round(mainform.devices[i].left[j]+mainform.devices[i].picturesize-1), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+4);
+        _Buffer.Pen.Color:=clGray;
+        _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+5);
+        _Buffer.LineTo(round(mainform.devices[i].left[j]+mainform.devices[i].picturesize-1), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+5);
+        _Buffer.Pen.Color:=clGray;
+        _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+6);
+        _Buffer.LineTo(round(mainform.devices[i].left[j]+mainform.devices[i].picturesize-1), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+6);
+        _Buffer.Pen.Color:=clMedGray;
+        _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+7);
+        _Buffer.LineTo(round(mainform.devices[i].left[j]+mainform.devices[i].picturesize-1), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+7);
+
+        // Füllung zeichnen
+        _Buffer.Pen.Color:=$00FFFFFF;
+        _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+3);
+        _Buffer.LineTo(round(mainform.devices[i].left[j]+1+((mainform.devices[i].picturesize-2)*(Dimmerwert/255))), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+3);
+        _Buffer.Pen.Color:=$00E0E0E0;
+        _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+4);
+        _Buffer.LineTo(round(mainform.devices[i].left[j]+1+((mainform.devices[i].picturesize-2)*(Dimmerwert/255))), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+4);
+        _Buffer.Pen.Color:=$00FFFFFF;
+        _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+5);
+        _Buffer.LineTo(round(mainform.devices[i].left[j]+1+((mainform.devices[i].picturesize-2)*(Dimmerwert/255))), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+5);
+        _Buffer.Pen.Color:=$00B0B0B0;
+        _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+6);
+        _Buffer.LineTo(round(mainform.devices[i].left[j]+1+((mainform.devices[i].picturesize-2)*(Dimmerwert/255))), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+6);
+        _Buffer.Pen.Color:=$00808080;
+        _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+7);
+        _Buffer.LineTo(round(mainform.devices[i].left[j]+1+((mainform.devices[i].picturesize-2)*(Dimmerwert/255))), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+7);
+
+        // Wert in Prozent anzeigen
+        _Buffer.Font.Size:=7;
+        _Buffer.Font.Name:='Arial';
+        _Buffer.Brush.Style:=bsClear;
+        _Buffer.Pen.Style:=psClear;
+        _Buffer.Font.Color:=clBlack;
+        _Buffer.TextOut(mainform.devices[i].left[j]+mainform.devices[i].picturesize+3, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset ,inttostr(round(Dimmerwert/2.55))+'%');
       end;
 
       // Farbball anzeigen
@@ -3380,6 +3438,13 @@ begin
           R:=round(GetRValue(RGB)*Dimmerwert / 255);
           G:=round(GetGValue(RGB)*Dimmerwert / 255);
           B:=round(GetBValue(RGB)*Dimmerwert / 255);
+          _Buffer.Brush.Color:=RGB2TColor(R,G,B);
+        end else if mainform.Devices[i].hasFog then
+        begin
+          Dimmerwert:=geraetesteuerung.get_channel(mainform.devices[i].ID, 'FOG');
+          R:=Dimmerwert;
+          G:=Dimmerwert;
+          B:=Dimmerwert;
           _Buffer.Brush.Color:=RGB2TColor(R,G,B);
         end else
         begin

@@ -396,6 +396,12 @@ begin
             device_value:=geraetesteuerung.get_channel(mainform.devices[j].ID,'dimmer');
             rectangleheight:=device_value;
             device_color:=RGB2TColor(round(r*device_value/255),round(g*device_value/255),round(b*device_value/255));
+          end else if mainform.Devices[j].hasFog and (lowercase(kanaltyp)='fog') then
+          begin
+            TColor2RGB(clWhite,r,g,b);
+            device_value:=geraetesteuerung.get_channel(mainform.devices[j].ID,'fog');
+            rectangleheight:=device_value;
+            device_color:=RGB2TColor(device_value,device_value,device_value);
           end else
           begin
             rectangleheight:=mainform.channel_value[(scrollbar1.position+i-1+offset)];

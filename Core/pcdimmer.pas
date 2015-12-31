@@ -1,7 +1,7 @@
 {*********************************************************************************}
 {**                                                                             **}
 {**  PHOENIXstudios PC_DIMMER                                                   **}
-{**  Copyrights (c) 2004-2015 by PHOENIXstudios Remsfeld                        **}
+{**  Copyrights (c) 2004-2016 by PHOENIXstudios Remsfeld                        **}
 {**                                                                             **}
 {**  Author: Dipl.-Ing. Christian Nöding, info@pcdimmer.de                      **}
 {**  Co-Author: Martin Mikula (2012-2013)                                       **}
@@ -54,7 +54,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=476;
+  actualprojectversion=477;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -4604,6 +4604,7 @@ begin
    	  Filestream.WriteBuffer(mainform.Devices[i].hasAmber,sizeof(mainform.Devices[i].hasAmber));
    	  Filestream.WriteBuffer(mainform.Devices[i].hasWhite,sizeof(mainform.Devices[i].hasWhite));
    	  Filestream.WriteBuffer(mainform.Devices[i].hasUV,sizeof(mainform.Devices[i].hasUV));
+   	  Filestream.WriteBuffer(mainform.Devices[i].hasFog,sizeof(mainform.Devices[i].hasFog));
    	  Filestream.WriteBuffer(mainform.Devices[i].UseAmberMixing,sizeof(mainform.Devices[i].UseAmberMixing));
    	  Filestream.WriteBuffer(mainform.Devices[i].AmberMixingCompensateRG,sizeof(mainform.Devices[i].AmberMixingCompensateRG));
    	  Filestream.WriteBuffer(mainform.Devices[i].AmberMixingCompensateBlue,sizeof(mainform.Devices[i].AmberMixingCompensateBlue));
@@ -4678,6 +4679,8 @@ begin
       Filestream.WriteBuffer(mainform.Devices[i].StrobeChannel,sizeof(mainform.Devices[i].StrobeChannel));
       Filestream.WriteBuffer(mainform.Devices[i].DimmerOffValue,sizeof(mainform.Devices[i].DimmerOffValue));
       Filestream.WriteBuffer(mainform.Devices[i].DimmerMaxValue,sizeof(mainform.Devices[i].DimmerMaxValue));
+      Filestream.WriteBuffer(mainform.Devices[i].FogOffValue,sizeof(mainform.Devices[i].FogOffValue));
+      Filestream.WriteBuffer(mainform.Devices[i].FogMaxValue,sizeof(mainform.Devices[i].FogMaxValue));
       Filestream.WriteBuffer(mainform.Devices[i].Gobo1RotLeftminValue,sizeof(mainform.Devices[i].Gobo1RotLeftminValue));
       Filestream.WriteBuffer(mainform.Devices[i].Gobo1RotLeftValue,sizeof(mainform.Devices[i].Gobo1RotLeftValue));
       Filestream.WriteBuffer(mainform.Devices[i].Gobo1RotOffValue,sizeof(mainform.Devices[i].Gobo1RotOffValue));
@@ -6698,6 +6701,8 @@ begin
         Filestream.ReadBuffer(mainform.Devices[i].hasWhite,sizeof(mainform.Devices[i].hasWhite));
         if projektprogrammversionint>=476 then
           Filestream.ReadBuffer(mainform.Devices[i].hasUV,sizeof(mainform.Devices[i].hasUV));
+        if projektprogrammversionint>=477 then
+          Filestream.ReadBuffer(mainform.Devices[i].hasFog,sizeof(mainform.Devices[i].hasFog));
      	  Filestream.ReadBuffer(mainform.Devices[i].UseAmberMixing,sizeof(mainform.Devices[i].UseAmberMixing));
      	  Filestream.ReadBuffer(mainform.Devices[i].AmberMixingCompensateRG,sizeof(mainform.Devices[i].AmberMixingCompensateRG));
      	  Filestream.ReadBuffer(mainform.Devices[i].AmberMixingCompensateBlue,sizeof(mainform.Devices[i].AmberMixingCompensateBlue));
@@ -6810,6 +6815,11 @@ begin
         Filestream.ReadBuffer(mainform.Devices[i].StrobeChannel,sizeof(mainform.Devices[i].StrobeChannel));
         Filestream.ReadBuffer(mainform.Devices[i].DimmerOffValue,sizeof(mainform.Devices[i].DimmerOffValue));
         Filestream.ReadBuffer(mainform.Devices[i].DimmerMaxValue,sizeof(mainform.Devices[i].DimmerMaxValue));
+        if projektprogrammversionint>=477 then
+        begin
+          Filestream.ReadBuffer(mainform.Devices[i].FogOffValue,sizeof(mainform.Devices[i].FogOffValue));
+          Filestream.ReadBuffer(mainform.Devices[i].FogMaxValue,sizeof(mainform.Devices[i].FogMaxValue));
+        end;
         Filestream.ReadBuffer(mainform.Devices[i].Gobo1RotLeftminValue,sizeof(mainform.Devices[i].Gobo1RotLeftminValue));
         Filestream.ReadBuffer(mainform.Devices[i].Gobo1RotLeftValue,sizeof(mainform.Devices[i].Gobo1RotLeftValue));
         Filestream.ReadBuffer(mainform.Devices[i].Gobo1RotOffValue,sizeof(mainform.Devices[i].Gobo1RotOffValue));
@@ -6849,6 +6859,8 @@ begin
         mainform.Devices[i].StrobeChannel:='NOTDEFINED';
         mainform.Devices[i].DimmerOffValue:=0;
         mainform.Devices[i].DimmerMaxValue:=255;
+        mainform.Devices[i].FogOffValue:=0;
+        mainform.Devices[i].FogMaxValue:=255;
         mainform.Devices[i].Gobo1RotLeftminValue:=0;
         mainform.Devices[i].Gobo1RotLeftValue:=0;
         mainform.Devices[i].Gobo1RotOffValue:=127;
@@ -8842,9 +8854,20 @@ begin
     result:=false;
   end;
 
-  // mit DDFs der neuen Generation abgleichen
-  if projektprogrammversionint<462 then
+  // Projektgeräte mit Dateien abgleichen
+  if projektprogrammversionint<477 then
   begin
+    if not startingup then
+    begin
+      inprogress.filename.Caption:=_('Synchronisiere Gerätedateien...');
+      inprogress.Refresh;
+    end else
+    begin
+      SplashCaptioninfo(_('Synchronisiere Gerätedateien...'));
+      RefreshSplashText;
+    end;
+
+    DebugAdd('DDF: Synchronizing project-ddfs with file-ddfs...');
     if length(geraetesteuerung.DevicePrototyp)<=0 then
       geraetesteuerung.LoadDDFfiles;
 
@@ -8854,6 +8877,7 @@ begin
     geraetesteuerung.GertemitGertedateiabgleichen1Click(nil);
     for i:=0 to length(devices)-1 do
       DeviceSelected[i]:=false;
+    DebugAdd('DDF: Synchronizing ddfs completed.');
   end;
 
   // Initialisierungsfunktion ausführen
@@ -24265,7 +24289,10 @@ begin
             value:=round(((X-mainform.devices[grafischebuehnenansicht.MouseOnProgress].left[grafischebuehnenansicht.MouseOnDeviceCopy])/mainform.devices[grafischebuehnenansicht.MouseOnProgress].picturesize)*255);
             if value<0 then value:=0;
             if value>255 then value:=255;
-              geraetesteuerung.set_channel(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,'DIMMER',value,value,0);
+            if mainform.devices[grafischebuehnenansicht.MouseOnProgress].hasDimmer then
+              geraetesteuerung.set_channel(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,'DIMMER',value,value,0)
+            else if mainform.devices[grafischebuehnenansicht.MouseOnProgress].hasFog then
+              geraetesteuerung.set_channel(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,'FOG',value,value,0);
           end;
         end else if grafischebuehnenansicht.MouseOnBuehnenansichtProgress>-1 then
         begin

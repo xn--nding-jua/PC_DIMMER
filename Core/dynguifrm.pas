@@ -604,7 +604,7 @@ end;
 
 procedure Tdynguiform.nextgobo1btnClick(Sender: TObject);
 var
-  i, j, value:integer;
+  i:integer;
 begin
   for i:=0 to length(mainform.Devices)-1 do
   begin
@@ -677,7 +677,7 @@ end;
 
 procedure Tdynguiform.nextgobo2btnClick(Sender: TObject);
 var
-  i, j, value:integer;
+  i:integer;
 begin
   for i:=0 to length(mainform.Devices)-1 do
   begin
@@ -690,7 +690,7 @@ end;
 
 procedure Tdynguiform.prevgobo1btnClick(Sender: TObject);
 var
-  i, j, value:integer;
+  i:integer;
 begin
   for i:=0 to length(mainform.Devices)-1 do
   begin

@@ -707,7 +707,7 @@ object ddfeditorform: Tddfeditorform
         Top = 80
         Width = 105
         Height = 21
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 1
         Text = 'DIMMER'
         OnSelect = typlisteSelect
@@ -2171,7 +2171,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 137
               Height = 21
-              ItemHeight = 0
+              ItemHeight = 13
               TabOrder = 3
               Text = 'GOBO1ROT'
               OnSelect = typlisteSelect
@@ -2279,7 +2279,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 137
               Height = 21
-              ItemHeight = 0
+              ItemHeight = 13
               TabOrder = 3
               Text = 'GOBO2ROT'
               OnSelect = typlisteSelect
@@ -2431,7 +2431,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 137
               Height = 21
-              ItemHeight = 0
+              ItemHeight = 13
               TabOrder = 3
               Text = 'PRISMAROT'
               OnSelect = typlisteSelect
@@ -2532,7 +2532,7 @@ object ddfeditorform: Tddfeditorform
           end
         end
         object TabSheet8: TTabSheet
-          Caption = 'Dimmer/Shutter/Strobo'
+          Caption = 'Dimmer/Shutter/Strobo/Nebel'
           ImageIndex = 2
           object shuttergroupbox: TGroupBox
             Left = 8
@@ -2567,7 +2567,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 89
               Height = 21
-              ItemHeight = 0
+              ItemHeight = 13
               TabOrder = 0
               Text = 'SHUTTER'
               OnSelect = typlisteSelect
@@ -2632,7 +2632,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 89
               Height = 21
-              ItemHeight = 0
+              ItemHeight = 13
               TabOrder = 0
               Text = 'SHUTTER'
               OnSelect = typlisteSelect
@@ -2697,6 +2697,47 @@ object ddfeditorform: Tddfeditorform
               OnChange = maxvalueeditChange
             end
             object dimmeroffvalueedit: TJvSpinEdit
+              Left = 8
+              Top = 40
+              Width = 49
+              Height = 21
+              MaxValue = 255.000000000000000000
+              TabOrder = 1
+              OnChange = maxvalueeditChange
+            end
+          end
+          object GroupBox1: TGroupBox
+            Left = 192
+            Top = 8
+            Width = 177
+            Height = 73
+            Caption = ' Nebel-Einstellungen '
+            TabOrder = 3
+            object Label1: TLabel
+              Left = 8
+              Top = 24
+              Width = 21
+              Height = 13
+              Caption = 'Aus:'
+            end
+            object Label2: TLabel
+              Left = 64
+              Top = 24
+              Width = 23
+              Height = 13
+              Caption = 'Max:'
+            end
+            object fogmaxvalueedit: TJvSpinEdit
+              Left = 64
+              Top = 40
+              Width = 49
+              Height = 21
+              MaxValue = 255.000000000000000000
+              Value = 255.000000000000000000
+              TabOrder = 0
+              OnChange = maxvalueeditChange
+            end
+            object fogoffvalueedit: TJvSpinEdit
               Left = 8
               Top = 40
               Width = 49
@@ -2832,7 +2873,7 @@ object ddfeditorform: Tddfeditorform
         Height = 21
         Style = csDropDownList
         DropDownCount = 16
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 2
         OnSelect = funktionsliste2Select
       end
@@ -3624,7 +3665,7 @@ object ddfeditorform: Tddfeditorform
           Height = 21
           Style = csDropDownList
           DropDownCount = 16
-          ItemHeight = 0
+          ItemHeight = 13
           TabOrder = 1
           OnSelect = funktionsliste1Select
         end
@@ -3877,8 +3918,8 @@ object ddfeditorform: Tddfeditorform
       object Memo1: TMemo
         Left = 0
         Top = 0
-        Width = 646
-        Height = 414
+        Width = 638
+        Height = 405
         Align = alClient
         BevelInner = bvNone
         BorderStyle = bsNone

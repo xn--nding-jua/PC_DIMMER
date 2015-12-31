@@ -420,6 +420,7 @@
     hasAmber:boolean;
     hasWhite:boolean;
     hasUV:boolean;
+    hasFog:boolean;
     hasPANTILT:boolean;
     hasColor:boolean;
     hasColor2:boolean;
@@ -463,6 +464,8 @@
     StrobeChannel:string[255];
     DimmerOffValue:byte;
     DimmerMaxValue:byte;
+    FogOffValue:byte;
+    FogMaxValue:byte;
     Gobo1RotLeftminValue:byte;
     Gobo1RotLeftValue:byte;
     Gobo1RotOffValue:byte;
