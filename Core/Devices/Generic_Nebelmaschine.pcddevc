@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\nebelmaschine.png">
+ <information id="PC_DIMMER">
+ <name>Nebelmaschine</name>
+ <vendor>Generic</vendor>
+ <author>Generic</author>
+ <description>Einfache 1-Kanal-Nebelmaschine</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Nebelmenge" fade="yes" type="fog"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="0" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <fog OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="195" height="272">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="16" left="80"/>
+  <deviceadress top="32" left="80"/>
+  <devicedipswitch top="50" left="80"/>
+  <slider name="slider1" top="110" left="10" width="170" height="20" action="sliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="label1" top="90" left="10" width="63" height="13" caption="Nebelmenge:"/>
+  <label name="percent" top="90" left="150" width="14" height="13" caption="0%"/>
+  <button name="off" top="140" left="10" width="50" height="40" action="offclick" caption="0%"/>
+  <button name="half" top="140" left="70" width="50" height="40" action="halfclick" caption="50%"/>
+  <button name="on" top="140" left="130" width="50" height="40" action="onclick" caption="100%"/>
+ </form>
+ <code>
+  unit GenericDimmer;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure sliderchange;
+  procedure onclick;
+  procedure halfclick;
+  procedure offclick;
+
+  implementation
+
+	var
+		dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+    // bitte hier die eigene Funktion eintragen
+  end;
+  procedure FormShow;
+    begin
+    end;
+  procedure FormRefresh(channel:Integer);
+    begin
+      if not dontrefresh then
+        slider1.position:=get_channel('FOG');
+      percent.caption:=levelstr(slider1.position);
+      dontrefresh:=false;
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure sliderchange;
+    begin
+      dontrefresh:=true;
+      set_channel('FOG',slider1.position,slider1.position,0);  
+      percent.caption:=levelstr(slider1.position);
+    end;
+  procedure onclick;
+    begin
+      set_channel('FOG',get_channel('FOG'),255,0);
+    end;
+  procedure halfclick;
+    begin
+      set_channel('FOG',get_channel('FOG'),127,0);
+    end;
+  procedure offclick;
+    begin
+      set_channel('FOG',get_channel('FOG'),0,0);
+    end;
+  end.
+ </code>
+</device>

@@ -441,6 +441,7 @@ type
     procedure set_prismarot(DeviceID: TGUID; Value:integer; Fadetime:integer=0; Delaytime:integer=0);
     procedure set_strobe(DeviceID: TGUID; Speed:integer; Fadetime:integer=0; Delaytime:integer=0);
     procedure set_dimmer(DeviceID: TGUID; Value:integer; Fadetime:integer=0; Delaytime:integer=0);
+    procedure set_fog(DeviceID: TGUID; Value:integer; Fadetime:integer=0; Delaytime:integer=0);
     procedure set_iris(DeviceID: TGUID; Value:integer; Fadetime:integer=0; Delaytime:integer=0);
     procedure set_gobo1rot(DeviceID: TGUID; Value:integer; Fadetime:integer=0; Delaytime:integer=0);
     procedure set_gobo2rot(DeviceID: TGUID; Value:integer; Fadetime:integer=0; Delaytime:integer=0);
@@ -6186,6 +6187,177 @@ begin
       set_channel(DeviceID, 'DIMMER', -1, dimmervalue, Fadetime, Delaytime);
     end;
     255: set_channel(DeviceID, 'DIMMER', -1, mainform.devices[DevPosition].DimmerMaxValue, Fadetime, Delaytime);
+  end;
+end;
+
+procedure Tgeraetesteuerung.set_fog(DeviceID: TGUID; Value:integer; Fadetime:integer=0; Delaytime:integer=0);
+var
+  DevPosition, fogvalue:integer;
+
+  i,j:integer;
+  delayfaktor,delay:integer;
+  PositionOfMaster,countofpihalf:integer;
+  grouptemp:extended;
+begin
+  DevPosition:=GetDevicePositionInDeviceArray(@DeviceID);
+
+  if DevPosition<0 then
+  begin
+    PositionOfMaster:=0;
+    delay:=delaytime;
+
+    for i:=0 to length(mainform.DeviceGroups)-1 do
+    begin
+      if IsEqualGUID(mainform.DeviceGroups[i].ID,DeviceID) then
+      begin
+        if mainform.DeviceGroups[i].Active then
+        begin
+          if mainform.DeviceGroups[i].UseMaster then
+          begin
+            for j:=0 to length(mainform.DeviceGroups[i].IDs)-1 do
+            begin
+              if IsEqualGUID(mainform.DeviceGroups[i].MasterDevice,mainform.DeviceGroups[i].IDs[j]) then
+              begin
+                PositionOfMaster:=j;
+                break;
+              end;
+            end;
+          end;
+
+          if delay=-1 then
+            delay:=mainform.DeviceGroups[i].Delay;
+
+          for j:=0 to length(mainform.DeviceGroups[i].IDs)-1 do
+          begin
+            if mainform.DeviceGroups[i].IDActive[j] then
+            begin
+              if mainform.DeviceGroups[i].UseMaster then
+              begin
+                case mainform.DeviceGroups[i].FanMode of
+                  0: // Fanning aus
+                  begin
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, 0);
+                  end;
+                  1: // Links und Rechts ab Master
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, delay*delayfaktor);
+                  end;
+                  2: // Nach Rechts ab Master
+                  begin
+                    delayfaktor:=j-PositionOfMaster;
+                    if delayfaktor>=0 then
+                    begin
+                      set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, delay*delayfaktor);
+                    end;
+                  end;
+                  3: // Nach Links ab Master
+                  begin
+                    delayfaktor:=PositionOfMaster-j;
+                    if delayfaktor>=0 then
+                    begin
+                      set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, delay*delayfaktor);
+                    end;
+                  end;
+                  4: // Sinus nach Links und Rechts ab Master
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, round(delay*abs(sin(delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI*mainform.DeviceGroups[i].FanMorph))));
+                  end;
+                  5: // Tangens
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    grouptemp:=delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    grouptemp:=grouptemp/countofpihalf;
+                    if grouptemp>=((pi/2)-0.1) then grouptemp:=(pi/2)-0.1;
+
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, round(delay*abs(tan(grouptemp))));
+                  end;
+                  6: // Tangens 2
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    grouptemp:=delayfaktor/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    if grouptemp>=(countofpihalf*(pi/2)-0.2) then grouptemp:=countofpihalf*(pi/2)-0.2;
+
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, round(delay*abs(tan(grouptemp))));
+                  end;
+                  7: // Halbkreis
+                  begin
+                    delayfaktor:=abs(j-PositionOfMaster);
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, round(delay*abs(sqrt(power(0.5,2)-power(0.5-(delayfaktor/length(mainform.DeviceGroups[i].IDs)),2)))));
+                  end;
+                end;
+              end else
+              begin
+                case mainform.DeviceGroups[i].FanMode of
+                  0: // Fanning aus
+                  begin
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, 0);
+                  end;
+                  1: // alle Gleichmäßig
+                  begin
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, delay);
+                  end;
+                  2: // nach Links
+                  begin
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, delay*j);
+                  end;
+                  3: // nach Rechts
+                  begin
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, delay*(length(mainform.DeviceGroups[i].IDs)-j));
+                  end;
+                  4: // Sinus
+                  begin                                                                                   // mainform.DeviceGroups[i].IDs[j]
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, round(delay*abs(sin(j/length(mainform.DeviceGroups[i].IDs)*PI*mainform.DeviceGroups[i].FanMorph))));
+                  end;
+                  5: // Tangens
+                  begin
+                    grouptemp:=j/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    grouptemp:=grouptemp/countofpihalf;
+                    if grouptemp>=((pi/2)-0.1) then grouptemp:=(pi/2)-0.1;
+
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, round(delay*abs(tan(grouptemp))));
+                  end;
+                  6: // Tangens 2
+                  begin
+                    grouptemp:=j/length(mainform.DeviceGroups[i].IDs)*PI/2*mainform.DeviceGroups[i].FanMorph;
+                    countofpihalf:=floor(grouptemp/(pi/2))+1;
+
+                    if grouptemp>=(countofpihalf*(pi/2)-0.2) then grouptemp:=countofpihalf*(pi/2)-0.2;
+
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, round(delay*abs(tan(grouptemp))));
+                  end;
+                  7: // Halbkreis
+                  begin
+                    set_fog(mainform.DeviceGroups[i].IDs[j], Value, Fadetime, round(delay*abs(sqrt(power(0.5,2)-power(0.5-(j/length(mainform.DeviceGroups[i].IDs)),2)))));
+                  end;
+                end;
+              end;
+            end;
+          end;
+        end;
+        break;
+      end;
+    end;
+    exit; // z.B. wenn Gruppen-ID
+  end;
+
+  Case Value of
+    0: set_channel(DeviceID, 'FOG', -1, mainform.devices[DevPosition].FogOffValue, Fadetime, Delaytime);
+    1..254:
+    begin
+      fogvalue:=mainform.devices[DevPosition].FogMaxValue-mainform.devices[DevPosition].FogOffValue;
+      fogvalue:=round(fogvalue*(value/255));
+      fogvalue:=fogvalue+mainform.devices[DevPosition].FogOffValue;
+      set_channel(DeviceID, 'FOG', -1, fogvalue, Fadetime, Delaytime);
+    end;
+    255: set_channel(DeviceID, 'FOG', -1, mainform.devices[DevPosition].FogMaxValue, Fadetime, Delaytime);
   end;
 end;
 

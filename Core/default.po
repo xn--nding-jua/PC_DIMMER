@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-12-31 00:07\n"
-"PO-Revision-Date: 2015-12-31 00:07\n"
+"POT-Creation-Date: 2015-12-31 02:45\n"
+"PO-Revision-Date: 2015-12-31 02:45\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -269,17 +269,17 @@ msgstr ""
 #. ddfeditorform..PageControl1..TabSheet2..PageControl2..TabSheet6..ambersettingslbl..Font.Name
 #: ddfeditorfrm.dfm:821
 #. ddfeditorform..PageControl1..TabSheet5..komponentenlbl..Font.Name
-#: ddfeditorfrm.dfm:2740
+#: ddfeditorfrm.dfm:2781
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..funktionentoplbl..Font.Name
-#: ddfeditorfrm.dfm:3332
+#: ddfeditorfrm.dfm:3373
 #. ddfeditorform..Panel4..Panel1..ColorPicker..HotTrackFont.Name
-#: ddfeditorfrm.dfm:4862
+#: ddfeditorfrm.dfm:4903
 #. ddfeditorform..Panel4..Panel1..ColorPicker..Properties.NoneColorFont.Name
-#: ddfeditorfrm.dfm:4876
+#: ddfeditorfrm.dfm:4917
 #. ddfeditorform..Panel4..Panel1..ColorPicker..Properties.DefaultColorFont.Name
-#: ddfeditorfrm.dfm:4881
+#: ddfeditorfrm.dfm:4922
 #. ddfeditorform..Panel4..Panel1..ColorPicker..Properties.CustomColorFont.Name
-#: ddfeditorfrm.dfm:4886
+#: ddfeditorfrm.dfm:4927
 #. DDFWindow..Font.Name
 #: ddfwindowfrm.dfm:12
 #. DDFWindow..ColorPicker..HotTrackFont.Name
@@ -2611,11 +2611,11 @@ msgstr ""
 #. effektsequenzer..Panel3..Panel2..GroupBox1..Label13..Caption
 #: effektsequenzerfrm.dfm:211
 #. masterform..Label4..Caption
-#: masterfrm.dfm:192
+#: masterfrm.dfm:193
 #. masterform..Label5..Caption
-#: masterfrm.dfm:201
+#: masterfrm.dfm:203
 #. masterform..Label7..Caption
-#: masterfrm.dfm:219
+#: masterfrm.dfm:223
 #. pmmform..GroupBox3..bluelbl..Caption
 #: pmm.dfm:5929
 #. pmmform..GroupBox3..greenlbl..Caption
@@ -3158,7 +3158,7 @@ msgstr ""
 #. ddfeditorform..PageControl1..TabSheet1..openpicturebtn..Caption
 #: ddfeditorfrm.dfm:335
 #. ddfeditorform..PageControl1..TabSheet5..bildchange..Caption
-#: ddfeditorfrm.dfm:3283
+#: ddfeditorfrm.dfm:3324
 #. devicechannelselectionform..Panel2..GroupBox1..Label3..Caption
 #: devicechannelselectionfrm.dfm:83
 #. devicechannelselectionform..Panel2..GroupBox1..Label5..Caption
@@ -3318,9 +3318,9 @@ msgstr ""
 #. Config..Panel2..GroupBox7..TimeToSollwertLbl..Caption
 #: plugins/Programmplugins/Temperaturregler/configfrm.dfm:513
 #. GUIDtoString(ID); // Name
-#: pcdimmer.pas:21276
-#: pcdimmer.pas:21277
-#: pcdimmer.pas:21279
+#: pcdimmer.pas:21300
+#: pcdimmer.pas:21301
+#: pcdimmer.pas:21303
 msgid "..."
 msgstr ""
 
@@ -3378,7 +3378,7 @@ msgstr ""
 #. ddfeditorform..PageControl1..TabSheet1..namelbl..Caption
 #: ddfeditorfrm.dfm:233
 #. ddfeditorform..PageControl1..TabSheet5..name2lbl..Caption
-#: ddfeditorfrm.dfm:2757
+#: ddfeditorfrm.dfm:2798
 #. editdataineventfrm..GroupBox2..Label7..Caption
 #: editdatainevent.dfm:189
 #. editmidieventfrm..GroupBox2..Label7..Caption
@@ -3654,7 +3654,7 @@ msgstr ""
 #: reordergroupfrm.dfm:145
 #. Tastenabfrage..Panel1..GroupBox2..Label4..Caption
 #: Tastenabfragefrm.dfm:1015
-#: geraetesteuerungfrm.pas:2084
+#: geraetesteuerungfrm.pas:2102
 #: reordergroupfrm.pas:535
 #: szenenverwaltung.pas:1408
 #: szenenverwaltung.pas:1450
@@ -3748,12 +3748,12 @@ msgstr ""
 #: devicechannelselectionfrm.pas:174
 #: devicescenefrm.pas:359
 #: devicescenefrm.pas:370
-#: geraetesteuerungfrm.pas:2655
-#: geraetesteuerungfrm.pas:2666
-#: geraetesteuerungfrm.pas:3207
-#: geraetesteuerungfrm.pas:3208
-#: geraetesteuerungfrm.pas:3499
-#: geraetesteuerungfrm.pas:3506
+#: geraetesteuerungfrm.pas:2674
+#: geraetesteuerungfrm.pas:2685
+#: geraetesteuerungfrm.pas:3226
+#: geraetesteuerungfrm.pas:3227
+#: geraetesteuerungfrm.pas:3518
+#: geraetesteuerungfrm.pas:3525
 #: preseteditorform.pas:614
 #: preseteditorform.pas:625
 #: presetsceneeditorform.pas:787
@@ -3848,7 +3848,7 @@ msgstr ""
 #: pcdimmer.dfm:228
 #. touchscreenform..Panel1..devicebtn..Caption
 #: touchscreenfrm.dfm:100
-#: geraetesteuerungfrm.pas:1530
+#: geraetesteuerungfrm.pas:1548
 msgid "Geräte"
 msgstr ""
 
@@ -3878,7 +3878,7 @@ msgstr ""
 #: audioeffektplayerfrm.pas:726
 #: audioeffektplayerfrm.pas:1932
 #: cuelistfrm.pas:278
-#: geraetesteuerungfrm.pas:613
+#: geraetesteuerungfrm.pas:616
 #: timecodeplayerfrm.pas:135
 #: winlircfrm.pas:88
 msgid "Beschreibung"
@@ -3901,7 +3901,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Kontrollpanel/midievent.dfm:272
 #. midieventfrm..GroupBox1..addmidievent..Caption
 #: plugins/Programmplugins/Alt/Submaster/midievent.dfm:272
-#: geraetesteuerungfrm.pas:2183
+#: geraetesteuerungfrm.pas:2201
 msgid "Hinzufügen"
 msgstr ""
 
@@ -3928,7 +3928,7 @@ msgstr ""
 #. adddevice..XML..StorageOptions.BooleanStringTrueValues
 #: adddevicefrm.dfm:2223
 #. ddfeditorform..XML..StorageOptions.BooleanStringTrueValues
-#: ddfeditorfrm.dfm:5726
+#: ddfeditorfrm.dfm:5767
 #. DDFWindow..XML..StorageOptions.BooleanStringTrueValues
 #: ddfwindowfrm.dfm:2329
 #. geraetesteuerung..XML..StorageOptions.BooleanStringTrueValues
@@ -3941,7 +3941,7 @@ msgstr ""
 #. adddevice..XML..StorageOptions.BooleanStringFalseValues
 #: adddevicefrm.dfm:2224
 #. ddfeditorform..XML..StorageOptions.BooleanStringFalseValues
-#: ddfeditorfrm.dfm:5727
+#: ddfeditorfrm.dfm:5768
 #. DDFWindow..XML..StorageOptions.BooleanStringFalseValues
 #: ddfwindowfrm.dfm:2330
 #. geraetesteuerung..XML..StorageOptions.BooleanStringFalseValues
@@ -3954,7 +3954,7 @@ msgstr ""
 #. adddevice..XML..StorageOptions.InvalidCharReplacement
 #: adddevicefrm.dfm:2227
 #. ddfeditorform..XML..StorageOptions.InvalidCharReplacement
-#: ddfeditorfrm.dfm:5730
+#: ddfeditorfrm.dfm:5771
 #. DDFWindow..XML..StorageOptions.InvalidCharReplacement
 #: ddfwindowfrm.dfm:2333
 #. geraetesteuerung..XML..StorageOptions.InvalidCharReplacement
@@ -3967,7 +3967,7 @@ msgstr ""
 #. adddevice..XML..RootNodeName
 #: adddevicefrm.dfm:2229
 #. ddfeditorform..XML..RootNodeName
-#: ddfeditorfrm.dfm:5732
+#: ddfeditorfrm.dfm:5773
 #. DDFWindow..XML..RootNodeName
 #: ddfwindowfrm.dfm:2335
 #. geraetesteuerung..XML..RootNodeName
@@ -3979,7 +3979,7 @@ msgstr ""
 
 #. adddevicetogroupform..Panel4..geraetegruppenlbl..Caption
 #: adddevicetogroupfrm.dfm:106
-#: geraetesteuerungfrm.pas:4490
+#: geraetesteuerungfrm.pas:4513
 msgid "Geräte auswählen:"
 msgstr ""
 
@@ -4168,7 +4168,7 @@ msgstr ""
 #: kontrollpanelform.pas:581
 #. Standard-Autoszenen erstellen
 #: pcdimmer.pas:3901
-#: pcdimmer.pas:24983
+#: pcdimmer.pas:25010
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1027
 msgid "Rot"
 msgstr ""
@@ -4181,7 +4181,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:585
 #: kontrollpanelform.pas:583
 #: pcdimmer.pas:3911
-#: pcdimmer.pas:24985
+#: pcdimmer.pas:25012
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1029
 msgid "Grün"
 msgstr ""
@@ -4194,7 +4194,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:587
 #: kontrollpanelform.pas:588
 #: pcdimmer.pas:3921
-#: pcdimmer.pas:24990
+#: pcdimmer.pas:25017
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1034
 msgid "Blau"
 msgstr ""
@@ -4343,7 +4343,7 @@ msgstr ""
 #: ambilight.dfm:3780
 #: ambilight.pas:1061
 #. Ambilight aus
-#: pcdimmer.pas:14551
+#: pcdimmer.pas:14575
 msgid "Ambilight einschalten"
 msgstr ""
 
@@ -4489,10 +4489,10 @@ msgstr ""
 #: befehleditorform.dfm:295
 #. befehlseditor..GroupBox1..ComboBox1....Items.Strings
 #: befehleditorform.dfm:298
-#: Channels_Commandsystem.inc:54
+#: Channels_Commandsystem.inc:55
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:3015
-#: geraetesteuerungfrm.pas:3041
+#: geraetesteuerungfrm.pas:3034
+#: geraetesteuerungfrm.pas:3060
 #. Audioeffektplayer
 #: szenenverwaltung.pas:4047
 #: szenenverwaltung.pas:4071
@@ -4888,7 +4888,7 @@ msgstr ""
 #: audioeffektplayerfrm.dfm:2770
 #. MainForm..dxBarManager1..VideoscreenRibbonBtn..Caption
 #: pcdimmer.dfm:23038
-#: Channels_Commandsystem.inc:926
+#: Channels_Commandsystem.inc:927
 msgid "Videoscreen"
 msgstr ""
 
@@ -4922,7 +4922,7 @@ msgstr ""
 #: videoscreenfrm.dfm:935
 #. videoscreenform..PopupMenu4..Pause5..Caption
 #: videoscreenfrm.dfm:1010
-#: Channels_Commandsystem.inc:943
+#: Channels_Commandsystem.inc:944
 msgid "Pause"
 msgstr ""
 
@@ -4970,10 +4970,10 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:509
 #. mainform..Button3..Caption
 #: plugins/Programmplugins/DMXRecorder/main.dfm:217
-#: Channels_Commandsystem.inc:71
-#: Channels_Commandsystem.inc:862
-#: Channels_Commandsystem.inc:950
-#: Channels_Commandsystem.inc:982
+#: Channels_Commandsystem.inc:72
+#: Channels_Commandsystem.inc:863
+#: Channels_Commandsystem.inc:951
+#: Channels_Commandsystem.inc:983
 #: audioeffektplayerfrm.pas:5826
 #: beatfrm.pas:529
 #: befehleditorform.pas:815
@@ -5134,7 +5134,7 @@ msgstr ""
 #. audioeffektplayerform..TBDock1..TBToolbar1..Datei1..Caption
 #: audioeffektplayerfrm.dfm:4216
 #. ddfeditorform..Mainmenu..TBToolbar3..Datei1..Caption
-#: ddfeditorfrm.dfm:3904
+#: ddfeditorfrm.dfm:3945
 #. geraetesteuerung..TBDock1..TBToolbar1..Datei1..Caption
 #: geraetesteuerungfrm.dfm:3429
 #. kontrollpanel..TBDock1..TBToolbar1..Datei1..Caption
@@ -5270,7 +5270,7 @@ msgstr ""
 #. dataineventfrm..Panel3..GroupBox3..Panel20..Button3..Caption
 #: datainevent.dfm:1305
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..PngBitBtn10..Caption
-#: ddfeditorfrm.dfm:3815
+#: ddfeditorfrm.dfm:3856
 #. videoscreenform..TBDock1..TBToolbar1..N3..Caption
 #: videoscreenfrm.dfm:711
 #. mainform..PageControl1..TabSheet1..GroupBox1..Button2..Caption
@@ -5610,9 +5610,9 @@ msgstr ""
 #. bewegungsszeneneditorform..Panel3..Panel4..GroupBox1..Label13..Caption
 #: bewegungsszeneneditor.dfm:1130
 #. ddfeditorform..PageControl1..TabSheet5..textlbl..Caption
-#: ddfeditorfrm.dfm:2773
+#: ddfeditorfrm.dfm:2814
 #. ddfeditorform..PageControl1..TabSheet5..itemtextlbl..Caption
-#: ddfeditorfrm.dfm:2790
+#: ddfeditorfrm.dfm:2831
 #. kompositionsszeneeditor..GroupBox1..Panel3..Label4..Caption
 #: kompositionsszeneeditorform.dfm:90
 msgid "Text:"
@@ -5808,7 +5808,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Audioszene1..Caption
 #: szenenverwaltung.dfm:1445
 #. Name
-#: pcdimmer.pas:21115
+#: pcdimmer.pas:21139
 #: szenenverwaltung.pas:1566
 msgid "Audioszene"
 msgstr ""
@@ -5924,7 +5924,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Automatikszene1..Caption
 #: szenenverwaltung.dfm:1470
 #. Name
-#: pcdimmer.pas:21196
+#: pcdimmer.pas:21220
 #: szenenverwaltung.pas:1858
 msgid "Automatikszene"
 msgstr ""
@@ -5954,7 +5954,7 @@ msgstr ""
 #: audioeffektplayerfrm.pas:724
 #: audioeffektplayerfrm.pas:1930
 #: cuelistfrm.pas:278
-#: geraetesteuerungfrm.pas:612
+#: geraetesteuerungfrm.pas:615
 #: timecodeplayerfrm.pas:134
 #: winlircfrm.pas:87
 msgid "Name"
@@ -6032,7 +6032,7 @@ msgstr ""
 #. colormanagerform..GroupBox2..HSLColorPicker2..RingPickerHintFormat
 #: colormanagerfrm.dfm:1216
 #. ddfeditorform..Panel4..Panel1..ColorPicker2..RingPickerHintFormat
-#: ddfeditorfrm.dfm:5020
+#: ddfeditorfrm.dfm:5061
 #. DDFWindow..colorpicker2..RingPickerHintFormat
 #: ddfwindowfrm.dfm:2321
 #. dynguiform..colorpanel..colorpicker..RingPickerHintFormat
@@ -6059,7 +6059,7 @@ msgstr ""
 #. colormanagerform..GroupBox2..HSLColorPicker2..SLPickerHintFormat
 #: colormanagerfrm.dfm:1217
 #. ddfeditorform..Panel4..Panel1..ColorPicker2..SLPickerHintFormat
-#: ddfeditorfrm.dfm:5021
+#: ddfeditorfrm.dfm:5062
 #. DDFWindow..colorpicker2..SLPickerHintFormat
 #: ddfwindowfrm.dfm:2322
 #. dynguiform..colorpanel..colorpicker..SLPickerHintFormat
@@ -6118,9 +6118,9 @@ msgstr ""
 #: VisPluginCtrl.dfm:98
 #. Config..GroupBox3..Label9..Caption
 #: plugins/Ausgabeplugin/pc_dimmer_lan/configfrm.dfm:2559
-#: Channels_Commandsystem.inc:64
-#: Channels_Commandsystem.inc:855
-#: Channels_Commandsystem.inc:975
+#: Channels_Commandsystem.inc:65
+#: Channels_Commandsystem.inc:856
+#: Channels_Commandsystem.inc:976
 #: befehleditorform.pas:814
 #: befehleditorform.pas:874
 #: bewegungsszeneneditor.pas:496
@@ -6443,7 +6443,7 @@ msgstr ""
 
 #. befehlseditor..GroupBox1..ComboBox1....Items.Strings
 #: befehleditorform.dfm:299
-#: Channels_Commandsystem.inc:135
+#: Channels_Commandsystem.inc:136
 msgid "Szenen"
 msgstr ""
 
@@ -6459,7 +6459,7 @@ msgstr ""
 
 #. befehlseditor..GroupBox1..ComboBox1....Items.Strings
 #: befehleditorform.dfm:302
-#: Channels_Commandsystem.inc:427
+#: Channels_Commandsystem.inc:428
 msgid "Einzelkanaländerung"
 msgstr ""
 
@@ -6467,10 +6467,10 @@ msgstr ""
 #: befehleditorform.dfm:303
 #. FrameChannel..GbChannel..PageControl1..TsEffekte..Caption
 #: FrameChannelU.dfm:283
-#: Channels_Commandsystem.inc:965
+#: Channels_Commandsystem.inc:966
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:3081
-#: geraetesteuerungfrm.pas:3096
+#: geraetesteuerungfrm.pas:3100
+#: geraetesteuerungfrm.pas:3115
 #: pcdHTTPServer.pas:534
 #: szenenverwaltung.pas:767
 #. noch schnell die Einträge alphabetisch sortieren
@@ -6492,9 +6492,9 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Submaster/editmidievent.dfm:371
 #. mainform..Caption
 #: plugins/Programmplugins/Alt/Submaster/main.dfm:9
-#: Channels_Commandsystem.inc:1053
+#: Channels_Commandsystem.inc:1054
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:3144
+#: geraetesteuerungfrm.pas:3163
 #: plugins/Programmplugins/Alt/Submaster/midievent.pas:82
 msgid "Submaster"
 msgstr ""
@@ -6511,7 +6511,7 @@ msgstr ""
 #: plugins/Programmplugins/_PluginSDK_Programmplugin_Delphi7/main.dfm:9
 #. mainform..Caption
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:10
-#: Channels_Commandsystem.inc:1120
+#: Channels_Commandsystem.inc:1121
 msgid "Kontrollpanel"
 msgstr ""
 
@@ -6534,29 +6534,29 @@ msgstr ""
 
 #. befehlseditor..GroupBox1..ComboBox2....Items.Strings
 #: befehleditorform.dfm:325
-#: Channels_Commandsystem.inc:78
-#: Channels_Commandsystem.inc:957
+#: Channels_Commandsystem.inc:79
+#: Channels_Commandsystem.inc:958
 #: befehleditorform.pas:816
 msgid "Springe zu Position"
 msgstr ""
 
 #. befehlseditor..GroupBox1..ComboBox2....Items.Strings
 #: befehleditorform.dfm:326
-#: Channels_Commandsystem.inc:85
+#: Channels_Commandsystem.inc:86
 #: befehleditorform.pas:817
 msgid "Repeat ein/aus"
 msgstr ""
 
 #. befehlseditor..GroupBox1..ComboBox2....Items.Strings
 #: befehleditorform.dfm:327
-#: Channels_Commandsystem.inc:92
+#: Channels_Commandsystem.inc:93
 #: befehleditorform.pas:818
 msgid "Aufnahme ein/aus"
 msgstr ""
 
 #. befehlseditor..GroupBox1..ComboBox2....Items.Strings
 #: befehleditorform.dfm:328
-#: Channels_Commandsystem.inc:99
+#: Channels_Commandsystem.inc:100
 #: befehleditorform.pas:819
 msgid "Effekte ein/aus"
 msgstr ""
@@ -6757,7 +6757,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Befehle1..Caption
 #: szenenverwaltung.dfm:1455
 #. Name
-#: pcdimmer.pas:21152
+#: pcdimmer.pas:21176
 #: szenenverwaltung.pas:1679
 msgid "Befehl"
 msgstr ""
@@ -7366,7 +7366,7 @@ msgstr ""
 #. compileerrorform..Panel1..Button1..Caption
 #: compileerrorfrm.dfm:50
 #. ddfeditorform..Mainmenu..TBToolbar3..Datei1..TBItem16..Caption
-#: ddfeditorfrm.dfm:3927
+#: ddfeditorfrm.dfm:3968
 #. effektsequenzer..Panel3..Panel2..Button1..Caption
 #: effektsequenzerfrm.dfm:181
 #. effekttimelineform..Button1..Caption
@@ -7485,8 +7485,8 @@ msgstr ""
 #: pcdimmer.dfm:970
 #. MainForm..Panel1..PageControl1..TabSheet1..BankCopy....Items.Strings
 #: pcdimmer.dfm:973
-#: buehnenansicht.pas:1939
-#: buehnenansicht.pas:1940
+#: buehnenansicht.pas:1942
+#: buehnenansicht.pas:1943
 msgid "Bühne 1"
 msgstr ""
 
@@ -7759,9 +7759,9 @@ msgstr ""
 #. grafischebuehnenansicht..Panel2..colorbox1..Properties.DefaultColorCaption
 #: buehnenansicht.dfm:2834
 #. ddfeditorform..Panel4..Panel1..ColorPicker..Properties.DefaultColorCaption
-#: ddfeditorfrm.dfm:4868
+#: ddfeditorfrm.dfm:4909
 #. ddfeditorform..Panel4..Panel1..ColorPicker..Properties.DefaultColorHint
-#: ddfeditorfrm.dfm:4871
+#: ddfeditorfrm.dfm:4912
 #. DDFWindow..ColorPicker..Properties.DefaultColorCaption
 #: ddfwindowfrm.dfm:1616
 #. DDFWindow..ColorPicker..Properties.DefaultColorHint
@@ -7798,7 +7798,7 @@ msgstr ""
 #. grafischebuehnenansicht..Panel2..colorbox1..Properties.CustomColorCaption
 #: buehnenansicht.dfm:2835
 #. ddfeditorform..Panel4..Panel1..ColorPicker..Properties.CustomColorCaption
-#: ddfeditorfrm.dfm:4869
+#: ddfeditorfrm.dfm:4910
 #. DDFWindow..ColorPicker..Properties.CustomColorCaption
 #: ddfwindowfrm.dfm:1617
 #. dynguiform..colorpanel..colorpicker2..Properties.CustomColorCaption
@@ -7999,7 +7999,7 @@ msgstr ""
 #: pcdimmer.dfm:32454
 #. MainForm..dxBarManager1..dxBarLargeButton7..Hint
 #: pcdimmer.dfm:32456
-#: Channels_Commandsystem.inc:419
+#: Channels_Commandsystem.inc:420
 msgid "Benutzer wechseln"
 msgstr ""
 
@@ -8106,9 +8106,9 @@ msgstr ""
 #. codeeditorform..Memo1..Gutter.Font.Name
 #: codeeditorfrm.dfm:43
 #. ddfeditorform..PageControl1..TabSheet3..Memo2..Font.Name
-#: ddfeditorfrm.dfm:3854
+#: ddfeditorfrm.dfm:3895
 #. ddfeditorform..PageControl1..TabSheet3..Memo2..Gutter.Font.Name
-#: ddfeditorfrm.dfm:3864
+#: ddfeditorfrm.dfm:3905
 #. FrameChannel..GbChannel..PageControl1..TsSteuerung..LaUp..Font.Name
 #: FrameChannelU.dfm:63
 #. FrameChannel..GbChannel..PageControl1..TsSteuerung..LaDown..Font.Name
@@ -8125,7 +8125,7 @@ msgstr ""
 #. codeeditorform..Panel1..MouseUp..Hint
 #: codeeditorfrm.dfm:203
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..PngBitBtn8..Hint
-#: ddfeditorfrm.dfm:3695
+#: ddfeditorfrm.dfm:3736
 msgid "Lässt die aktuelle Funktion ablaufen"
 msgstr ""
 
@@ -8519,10 +8519,10 @@ msgstr ""
 #: commandfrm.pas:276
 #: commandfrm.pas:286
 #: commandfrm.pas:296
-#: pcdimmer.pas:22206
-#: pcdimmer.pas:22217
-#: pcdimmer.pas:22234
-#: pcdimmer.pas:22251
+#: pcdimmer.pas:22230
+#: pcdimmer.pas:22241
+#: pcdimmer.pas:22258
+#: pcdimmer.pas:22275
 msgid "Kommando hier eingeben..."
 msgstr ""
 
@@ -9411,7 +9411,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar2..TBItem14..Caption
 #: ddfeditorfrm.dfm:61
 #. ddfeditorform..Mainmenu..TBToolbar3..Datei1..NeuesDDF1..Caption
-#: ddfeditorfrm.dfm:3906
+#: ddfeditorfrm.dfm:3947
 msgid "Neues DDF"
 msgstr ""
 
@@ -9423,7 +9423,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar2..TBItem13..Caption
 #: ddfeditorfrm.dfm:68
 #. ddfeditorform..Mainmenu..TBToolbar3..Datei1..DDFffnen1..Caption
-#: ddfeditorfrm.dfm:3911
+#: ddfeditorfrm.dfm:3952
 msgid "DDF öffnen..."
 msgstr ""
 
@@ -9445,7 +9445,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar1..Caption
 #: ddfeditorfrm.dfm:86
 #. ddfeditorform..PageControl1..TabSheet5..Caption
-#: ddfeditorfrm.dfm:2729
+#: ddfeditorfrm.dfm:2770
 msgid "Komponenten"
 msgstr ""
 
@@ -9454,7 +9454,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar1..TBItem11..Hint
 #: ddfeditorfrm.dfm:93
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..Gertebildundname1..Caption
-#: ddfeditorfrm.dfm:3934
+#: ddfeditorfrm.dfm:3975
 msgid "Gerätebild und -name"
 msgstr ""
 
@@ -9463,7 +9463,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar1..TBItem8..Hint
 #: ddfeditorfrm.dfm:100
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..menuitemlabel..Caption
-#: ddfeditorfrm.dfm:3939
+#: ddfeditorfrm.dfm:3980
 #: plugins/Programmplugins/Alt/Submaster/main.pas:211
 msgid "Label"
 msgstr ""
@@ -9473,7 +9473,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar1..TBItem7..Hint
 #: ddfeditorfrm.dfm:107
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..menuitemedit..Caption
-#: ddfeditorfrm.dfm:3944
+#: ddfeditorfrm.dfm:3985
 msgid "Editbox"
 msgstr ""
 
@@ -9482,7 +9482,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar1..TBItem6..Hint
 #: ddfeditorfrm.dfm:113
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..menuitembutton..Caption
-#: ddfeditorfrm.dfm:3949
+#: ddfeditorfrm.dfm:3990
 #. editmidieventfrm..GroupBox2..typ..Text
 #: plugins/Programmplugins/Alt/Kontrollpanel/editmidievent.dfm:366
 #. editmidieventfrm..GroupBox2..typ....Items.Strings
@@ -9506,7 +9506,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar1..TBItem5..Hint
 #: ddfeditorfrm.dfm:127
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..menuitemcheckbox1..Caption
-#: ddfeditorfrm.dfm:3954
+#: ddfeditorfrm.dfm:3995
 msgid "Checkbox"
 msgstr ""
 
@@ -9515,7 +9515,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar1..TBItem9..Hint
 #: ddfeditorfrm.dfm:134
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..menuitemRadiobutton1..Caption
-#: ddfeditorfrm.dfm:3959
+#: ddfeditorfrm.dfm:4000
 msgid "Radiobutton"
 msgstr ""
 
@@ -9524,7 +9524,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar1..TBItem4..Hint
 #: ddfeditorfrm.dfm:141
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..menuitemDropdown1..Caption
-#: ddfeditorfrm.dfm:3964
+#: ddfeditorfrm.dfm:4005
 msgid "Combobox"
 msgstr ""
 
@@ -9533,7 +9533,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar1..TBItem3..Hint
 #: ddfeditorfrm.dfm:148
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..menuitemslider..Caption
-#: ddfeditorfrm.dfm:3969
+#: ddfeditorfrm.dfm:4010
 msgid "Slider"
 msgstr ""
 
@@ -9542,7 +9542,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar1..TBItem2..Hint
 #: ddfeditorfrm.dfm:155
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..menuitemColorpicker1..Caption
-#: ddfeditorfrm.dfm:3974
+#: ddfeditorfrm.dfm:4015
 msgid "Colorpicker"
 msgstr ""
 
@@ -9551,7 +9551,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar1..TBItem10..Hint
 #: ddfeditorfrm.dfm:162
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..menuitemShape1..Caption
-#: ddfeditorfrm.dfm:3979
+#: ddfeditorfrm.dfm:4020
 msgid "Linie"
 msgstr ""
 
@@ -9560,7 +9560,7 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar1..TBItem1..Hint
 #: ddfeditorfrm.dfm:169
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..menuitemPositionierung1..Caption
-#: ddfeditorfrm.dfm:3984
+#: ddfeditorfrm.dfm:4025
 msgid "Positionierung"
 msgstr ""
 
@@ -9571,21 +9571,21 @@ msgstr ""
 #. ddfeditorform..Symbols..TBToolbar1..TBItem21..Hint
 #: ddfeditorfrm.dfm:182
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..TBItem17..Caption
-#: ddfeditorfrm.dfm:3989
+#: ddfeditorfrm.dfm:4030
 msgid "Farbauswahl (COLOR1-Kanal)"
 msgstr ""
 
 #. ddfeditorform..Symbols..TBToolbar1..TBItem21..Caption
 #: ddfeditorfrm.dfm:181
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..TBItem22..Caption
-#: ddfeditorfrm.dfm:3994
+#: ddfeditorfrm.dfm:4035
 msgid "Farbauswahl (COLOR2-Kanal)"
 msgstr ""
 
 #. ddfeditorform..Symbols..TBToolbar1..TBItem20..Caption
 #: ddfeditorfrm.dfm:187
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..TBItem19..Caption
-#: ddfeditorfrm.dfm:3999
+#: ddfeditorfrm.dfm:4040
 msgid "DIP-Anzeige"
 msgstr ""
 
@@ -9975,12 +9975,14 @@ msgstr ""
 #: ddfeditorfrm.dfm:2621
 #. ddfeditorform..PageControl1..TabSheet2..PageControl2..TabSheet8..dimmergroupbox..dimmermaxlbl..Caption
 #: ddfeditorfrm.dfm:2687
+#. ddfeditorform..PageControl1..TabSheet2..PageControl2..TabSheet8..foggroupbox..fogmaxlbl..Caption
+#: ddfeditorfrm.dfm:2728
 msgid "Max:"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet2..PageControl2..TabSheet8..Caption
 #: ddfeditorfrm.dfm:2535
-msgid "Dimmer/Shutter/Strobo"
+msgid "Dimmer/Shutter/Strobo/Nebel"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet2..PageControl2..TabSheet8..shuttergroupbox..Caption
@@ -10026,6 +10028,8 @@ msgstr ""
 #: ddfeditorfrm.dfm:2614
 #. ddfeditorform..PageControl1..TabSheet2..PageControl2..TabSheet8..dimmergroupbox..dimmerofflbl..Caption
 #: ddfeditorfrm.dfm:2680
+#. ddfeditorform..PageControl1..TabSheet2..PageControl2..TabSheet8..foggroupbox..fogofflbl..Caption
+#: ddfeditorfrm.dfm:2721
 msgid "Aus:"
 msgstr ""
 
@@ -10034,34 +10038,39 @@ msgstr ""
 msgid " Dimmer-Einstellungen "
 msgstr ""
 
+#. ddfeditorform..PageControl1..TabSheet2..PageControl2..TabSheet8..foggroupbox..Caption
+#: ddfeditorfrm.dfm:2714
+msgid " Nebel-Einstellungen "
+msgstr ""
+
 #. ddfeditorform..PageControl1..TabSheet2..channelfadebox....Hint
-#: ddfeditorfrm.dfm:2718
+#: ddfeditorfrm.dfm:2759
 msgid "Für Farbräder ausschalten, für Dimmer, PAN/TILT oder RGB "
 "einschalten"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet2..channelfadebox..Caption
-#: ddfeditorfrm.dfm:2719
+#: ddfeditorfrm.dfm:2760
 msgid "Kanal unterstützt Fadings"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet5..komponentenlbl..Caption
-#: ddfeditorfrm.dfm:2736
+#: ddfeditorfrm.dfm:2777
 msgid "Komponenteneinstellung"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet5..funktionlbl..Caption
-#: ddfeditorfrm.dfm:2765
+#: ddfeditorfrm.dfm:2806
 msgid "Funktion:"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet5..itemslbl..Caption
-#: ddfeditorfrm.dfm:2781
+#: ddfeditorfrm.dfm:2822
 msgid "Items:"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet5..itemvaluelbl..Caption
-#: ddfeditorfrm.dfm:2799
+#: ddfeditorfrm.dfm:2840
 #. lauflichtassistentownpatternform..Panel1..GroupBox2..Label2..Caption
 #: lauflichtassistentownpatternfrm.dfm:178
 #. matrixeditorform..Panel1..GroupBox2..Label2..Caption
@@ -10070,223 +10079,223 @@ msgid "Kanalwert:"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet5..bildlbl..Caption
-#: ddfeditorfrm.dfm:2808
+#: ddfeditorfrm.dfm:2849
 msgid "Item-Bild:"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet5..PngBitBtn3..Caption
-#: ddfeditorfrm.dfm:2852
+#: ddfeditorfrm.dfm:2893
 msgid "Komponente entfernen"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet5..PngBitBtn6..Hint
-#: ddfeditorfrm.dfm:2975
+#: ddfeditorfrm.dfm:3016
 msgid "Fügt ein neues Item hinzu"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet5..PngBitBtn7..Hint
-#: ddfeditorfrm.dfm:3100
+#: ddfeditorfrm.dfm:3141
 msgid "Löscht das letzte Item"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Caption
-#: ddfeditorfrm.dfm:3313
+#: ddfeditorfrm.dfm:3354
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..funktionentoplbl..Caption
-#: ddfeditorfrm.dfm:3328
+#: ddfeditorfrm.dfm:3369
 msgid "Funktionen"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..unitnamelbl..Caption
-#: ddfeditorfrm.dfm:3349
+#: ddfeditorfrm.dfm:3390
 msgid "Unitname:"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..funktionsnamelbl..Caption
-#: ddfeditorfrm.dfm:3357
+#: ddfeditorfrm.dfm:3398
 msgid "Funktionsname:"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..funktionenlbl..Caption
-#: ddfeditorfrm.dfm:3365
+#: ddfeditorfrm.dfm:3406
 msgid "Funktionen:"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfktlbl..Caption
-#: ddfeditorfrm.dfm:3373
+#: ddfeditorfrm.dfm:3414
 msgid "Standard-Fkt.:"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..specialfunctionlbl..Caption
-#: ddfeditorfrm.dfm:3387
+#: ddfeditorfrm.dfm:3428
 msgid "Spezial-Fkt.:"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..PngBitBtn4..Hint
-#: ddfeditorfrm.dfm:3394
+#: ddfeditorfrm.dfm:3435
 msgid "Neue Funktion hinzufügen"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..PngBitBtn5..Hint
-#: ddfeditorfrm.dfm:3518
+#: ddfeditorfrm.dfm:3559
 msgid "Aktuelle Funktion löschen"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..unitnameedit..Text
-#: ddfeditorfrm.dfm:3645
+#: ddfeditorfrm.dfm:3686
 msgid "NewDeviceUnit"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3660
+#: ddfeditorfrm.dfm:3701
 msgid "{#VARIABLE#}:=get_channel('#KANALTYP#');"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3661
+#: ddfeditorfrm.dfm:3702
 msgid "set_channel('',-1,{#ENDWERT#},0,0);"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen......Items.Strings
-#: ddfeditorfrm.dfm:3664
+#: ddfeditorfrm.dfm:3705
 msgid "set_channel('#KANALTYP#',{#STARTWERT#},{#ENDWERT#},{#ZEITINMS#},{#DELA"
 "YINMS#});"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen......Items.Strings
-#: ddfeditorfrm.dfm:3667
+#: ddfeditorfrm.dfm:3708
 msgid "set_channel('#KANALTYP#',{#STARTWERT#},{#ENDWERT#},{#ZEITINMS#});"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen......Items.Strings
-#: ddfeditorfrm.dfm:3670
+#: ddfeditorfrm.dfm:3711
 msgid "set_channel('#KANALTYP#',-1,{#ENDWERT#},{#ZEITINMS#},{#DELAYINMS#});"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3671
+#: ddfeditorfrm.dfm:3712
 msgid "set_channel('#KANALTYP#',-1,{#ENDWERT#},{#ZEITINMS#});"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3672
+#: ddfeditorfrm.dfm:3713
 msgid "get_channel('#KANALTYP#');"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen......Items.Strings
-#: ddfeditorfrm.dfm:3675
+#: ddfeditorfrm.dfm:3716
 msgid "set_color('#ROT#',{#GRUEN#},{#BLAU#},{#ZEITINMS#},{#DELAYINMS#});"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3676
+#: ddfeditorfrm.dfm:3717
 msgid "case {#VARIABLE#} of 0:; 1:; end;"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3677
+#: ddfeditorfrm.dfm:3718
 msgid "strtoint('#TEXT#');"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3678
+#: ddfeditorfrm.dfm:3719
 msgid "inttostr({#ZAHL#});"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen......Items.Strings
-#: ddfeditorfrm.dfm:3681
+#: ddfeditorfrm.dfm:3722
 msgid "if {#BEDINGUNG#}>={#WERT#} then {#AUSFÜHRUNG#} else "
 "{#AUSFÜHRUNG#};"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3682
+#: ddfeditorfrm.dfm:3723
 msgid "ShowMessage('Dies ist eine Nachricht');"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen......Items.Strings
-#: ddfeditorfrm.dfm:3685
+#: ddfeditorfrm.dfm:3726
 msgid "if messagedlg('Dies ist ein Abfragefenster',mtWarning,[mbYes,mbNo],0)="
 "mrYes then ;"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen......Items.Strings
-#: ddfeditorfrm.dfm:3688
+#: ddfeditorfrm.dfm:3729
 msgid "if messagedlg('Dies ist ein Abfragefenster',mtConfirmation,[mbYes,mbNo"
 "],0)=mrYes then ;"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..PngBitBtn8..Caption
-#: ddfeditorfrm.dfm:3696
+#: ddfeditorfrm.dfm:3737
 msgid "Funktion testen"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..spezialfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3830
+#: ddfeditorfrm.dfm:3871
 msgid "COLORBOX1-Select"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..spezialfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3831
+#: ddfeditorfrm.dfm:3872
 msgid "COLORBOX2-Select"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..spezialfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3832
+#: ddfeditorfrm.dfm:3873
 msgid "GOBOBOX1-Select"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..spezialfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3833
+#: ddfeditorfrm.dfm:3874
 msgid "GOBOBOX2-Select"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..spezialfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3834
+#: ddfeditorfrm.dfm:3875
 msgid "DIMMER-Change"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..spezialfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3835
+#: ddfeditorfrm.dfm:3876
 msgid "COMBOBOX-Select"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..spezialfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3836
+#: ddfeditorfrm.dfm:3877
 msgid "--------------------------------"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..spezialfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3837
+#: ddfeditorfrm.dfm:3878
 msgid "COLOR1-Refresh"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..spezialfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3838
+#: ddfeditorfrm.dfm:3879
 msgid "COLOR2-Refresh"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..spezialfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3839
+#: ddfeditorfrm.dfm:3880
 msgid "GOBO1-Refresh"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..spezialfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3840
+#: ddfeditorfrm.dfm:3881
 msgid "GOBO2-Refresh"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..spezialfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3841
+#: ddfeditorfrm.dfm:3882
 msgid "DIMMER-Refresh"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..spezialfunktionen....Items.Strings
-#: ddfeditorfrm.dfm:3842
+#: ddfeditorfrm.dfm:3883
 msgid "COMBOBOX-Refresh"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet4..Caption
-#: ddfeditorfrm.dfm:3875
+#: ddfeditorfrm.dfm:3916
 #. matrixeditorform..Panel2..Panel4..CheckBox1..Caption
 #: matrixeditorfrm.dfm:573
 #. scannersynchronisationform..PreviewCheckbox..Caption
@@ -10295,42 +10304,42 @@ msgid "Vorschau"
 msgstr ""
 
 #. ddfeditorform..Mainmenu..TBToolbar3..Caption
-#: ddfeditorfrm.dfm:3900
+#: ddfeditorfrm.dfm:3941
 msgid "Hauptmenü"
 msgstr ""
 
 #. ddfeditorform..Mainmenu..TBToolbar3..Datei1..TBItem23..Caption
-#: ddfeditorfrm.dfm:3916
+#: ddfeditorfrm.dfm:3957
 msgid "DDF speichern"
 msgstr ""
 
 #. ddfeditorform..Mainmenu..TBToolbar3..Datei1..GerteeinstellungenalsXMLspeichern1..Caption
-#: ddfeditorfrm.dfm:3920
+#: ddfeditorfrm.dfm:3961
 msgid "DDF speichern unter..."
 msgstr ""
 
 #. ddfeditorform..Mainmenu..TBToolbar3..Komponenten1..Caption
-#: ddfeditorfrm.dfm:3932
+#: ddfeditorfrm.dfm:3973
 msgid "Neue Komponente"
 msgstr ""
 
 #. ddfeditorform..Mainmenu..sizecontrolchecked..Caption
-#: ddfeditorfrm.dfm:4010
+#: ddfeditorfrm.dfm:4051
 msgid "Komponenten bewegen"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..devicename..Caption
-#: ddfeditorfrm.dfm:4423
+#: ddfeditorfrm.dfm:4464
 #. DDFWindow..devicename..Caption
 #: ddfwindowfrm.dfm:553
 #. askforremovingform..Label4..Caption
 #: geraeteremovedfrm.dfm:25
-#: geraetesteuerungfrm.pas:1639
+#: geraetesteuerungfrm.pas:1657
 msgid "Gerätename:"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..deviceadress..Caption
-#: ddfeditorfrm.dfm:4432
+#: ddfeditorfrm.dfm:4473
 #. DDFWindow..deviceadress..Caption
 #: ddfwindowfrm.dfm:561
 #. firststepsform..Notebook1....GroupBox5..Label12..Caption
@@ -10343,23 +10352,23 @@ msgid "Startadresse:"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..panmirror..Caption
-#: ddfeditorfrm.dfm:4840
+#: ddfeditorfrm.dfm:4881
 #. DDFWindow..panmirror..Caption
 #: ddfwindowfrm.dfm:1000
 msgid "Invertiere PAN"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..tiltmirror..Caption
-#: ddfeditorfrm.dfm:4849
+#: ddfeditorfrm.dfm:4890
 #. DDFWindow..tiltmirror..Caption
 #: ddfwindowfrm.dfm:991
 msgid "Invertiere TILT"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..ColorPicker..Properties.NoneColorCaption
-#: ddfeditorfrm.dfm:4867
+#: ddfeditorfrm.dfm:4908
 #. ddfeditorform..Panel4..Panel1..ColorPicker..Properties.NoneColorHint
-#: ddfeditorfrm.dfm:4870
+#: ddfeditorfrm.dfm:4911
 #. DDFWindow..ColorPicker..Properties.NoneColorCaption
 #: ddfwindowfrm.dfm:1615
 #. DDFWindow..ColorPicker..Properties.NoneColorHint
@@ -10388,7 +10397,7 @@ msgid "No Color"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..ColorPicker..Properties.CustomColorHint
-#: ddfeditorfrm.dfm:4872
+#: ddfeditorfrm.dfm:4913
 #. DDFWindow..ColorPicker..Properties.CustomColorHint
 #: ddfwindowfrm.dfm:1620
 #. deviceformprototyp..Colorpicker..Properties.OtherCaption
@@ -10411,365 +10420,365 @@ msgid "Other Colors..."
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4895
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4958
-msgid "clBlack=Black"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4896
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4959
-msgid "clMaroon=Maroon"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4897
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4960
-msgid "clGreen=Green"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4898
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4961
-msgid "clOlive=Olive green"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4899
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4962
-msgid "clNavy=Navy blue"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4900
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4963
-msgid "clPurple=Purple"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4901
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4964
-msgid "clTeal=Teal"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4902
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4965
-msgid "clGray=Gray"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4903
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4966
-msgid "clSilver=Silver"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4904
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4967
-msgid "clRed=Red"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4905
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4968
-msgid "clLime=Lime"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4906
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4969
-msgid "clYellow=Yellow"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4907
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4970
-msgid "clBlue=Blue"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4908
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4971
-msgid "clFuchsia=Fuchsia"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4909
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4972
-msgid "clAqua=Aqua"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4910
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4973
-msgid "clWhite=White"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4911
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4974
-msgid "clMoneyGreen=Money green"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4912
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4975
-msgid "clSkyBlue=Sky blue"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4913
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4976
-msgid "clCream=Cream"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4914
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4977
-msgid "clMedGray=Medium gray"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4915
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4978
-msgid "clScrollBar=Scrollbar"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4916
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4979
-msgid "clBackground=Desktop background"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4917
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4980
-msgid "clActiveCaption=Active window title "
-"bar"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4918
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4981
-msgid "clInactiveCaption=Inactive window title "
-"bar"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4919
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4982
-msgid "clMenu=Menu background"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4920
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4983
-msgid "clWindow=Window background"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4921
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4984
-msgid "clWindowFrame=Window frame"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4922
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4985
-msgid "clMenuText=Menu text"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4923
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4986
-msgid "clWindowText=Window text"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4924
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4987
-msgid "clCaptionText=Active window title bar "
-"text"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4925
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4988
-msgid "clActiveBorder=Active window border"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4926
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4989
-msgid "clInactiveBorder=Inactive window border"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4927
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4990
-msgid "clAppWorkSpace=Application workspace"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4928
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4991
-msgid "clHighlight=Selection background"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4929
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4992
-msgid "clHighlightText=Selection text"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4930
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4993
-msgid "clBtnFace=Button face"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4931
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4994
-msgid "clBtnShadow=Button shadow"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4932
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4995
-msgid "clGrayText=Dimmed text"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4933
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4996
-msgid "clBtnText=Button text"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4934
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4997
-msgid "clInactiveCaptionText=Inactive window title bar "
-"text"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4935
-#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
-#: ddfeditorfrm.dfm:4998
-msgid "clBtnHighlight=Button highlight"
-msgstr ""
-
-#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:4936
 #. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:4999
-msgid "cl3DDkShadow=Dark shadow 3D elements"
+msgid "clBlack=Black"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:4937
 #. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:5000
-msgid "cl3DLight=Highlight 3D elements"
+msgid "clMaroon=Maroon"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:4938
 #. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:5001
-msgid "clInfoText=Tooltip text"
+msgid "clGreen=Green"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:4939
 #. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:5002
-msgid "clInfoBk=Tooltip background"
+msgid "clOlive=Olive green"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:4940
 #. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:5003
-msgid "clGradientActiveCaption=Gradient Active "
-"Caption"
+msgid "clNavy=Navy blue"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:4941
 #. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:5004
-msgid "clGradientInactiveCaption=Gradient Inactive "
-"Caption"
+msgid "clPurple=Purple"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:4942
 #. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:5005
-msgid "clHotLight=Hot Light"
+msgid "clTeal=Teal"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:4943
 #. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:5006
-msgid "clMenuBar=Menu Bar"
+msgid "clGray=Gray"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:4944
 #. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
 #: ddfeditorfrm.dfm:5007
+msgid "clSilver=Silver"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4945
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5008
+msgid "clRed=Red"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4946
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5009
+msgid "clLime=Lime"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4947
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5010
+msgid "clYellow=Yellow"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4948
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5011
+msgid "clBlue=Blue"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4949
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5012
+msgid "clFuchsia=Fuchsia"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4950
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5013
+msgid "clAqua=Aqua"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4951
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5014
+msgid "clWhite=White"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4952
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5015
+msgid "clMoneyGreen=Money green"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4953
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5016
+msgid "clSkyBlue=Sky blue"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4954
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5017
+msgid "clCream=Cream"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4955
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5018
+msgid "clMedGray=Medium gray"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4956
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5019
+msgid "clScrollBar=Scrollbar"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4957
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5020
+msgid "clBackground=Desktop background"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4958
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5021
+msgid "clActiveCaption=Active window title "
+"bar"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4959
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5022
+msgid "clInactiveCaption=Inactive window title "
+"bar"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4960
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5023
+msgid "clMenu=Menu background"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4961
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5024
+msgid "clWindow=Window background"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4962
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5025
+msgid "clWindowFrame=Window frame"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4963
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5026
+msgid "clMenuText=Menu text"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4964
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5027
+msgid "clWindowText=Window text"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4965
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5028
+msgid "clCaptionText=Active window title bar "
+"text"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4966
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5029
+msgid "clActiveBorder=Active window border"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4967
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5030
+msgid "clInactiveBorder=Inactive window border"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4968
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5031
+msgid "clAppWorkSpace=Application workspace"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4969
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5032
+msgid "clHighlight=Selection background"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4970
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5033
+msgid "clHighlightText=Selection text"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4971
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5034
+msgid "clBtnFace=Button face"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4972
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5035
+msgid "clBtnShadow=Button shadow"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4973
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5036
+msgid "clGrayText=Dimmed text"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4974
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5037
+msgid "clBtnText=Button text"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4975
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5038
+msgid "clInactiveCaptionText=Inactive window title bar "
+"text"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4976
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5039
+msgid "clBtnHighlight=Button highlight"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4977
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5040
+msgid "cl3DDkShadow=Dark shadow 3D elements"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4978
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5041
+msgid "cl3DLight=Highlight 3D elements"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4979
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5042
+msgid "clInfoText=Tooltip text"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4980
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5043
+msgid "clInfoBk=Tooltip background"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4981
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5044
+msgid "clGradientActiveCaption=Gradient Active "
+"Caption"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4982
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5045
+msgid "clGradientInactiveCaption=Gradient Inactive "
+"Caption"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4983
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5046
+msgid "clHotLight=Hot Light"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4984
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5047
+msgid "clMenuBar=Menu Bar"
+msgstr ""
+
+#. ddfeditorform..Panel4..Panel1..ColorBox....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:4985
+#. ddfeditorform..Panel4..Panel1..ColorBox2....ColorNameMap.Strings
+#: ddfeditorfrm.dfm:5048
 msgid "clMenuHighlight=Menu Highlight"
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..ColorBox..ColorDialogText
-#: ddfeditorfrm.dfm:4945
+#: ddfeditorfrm.dfm:4986
 #. ddfeditorform..Panel4..Panel1..ColorBox2..ColorDialogText
-#: ddfeditorfrm.dfm:5008
+#: ddfeditorfrm.dfm:5049
 #. DDFWindow..ColorBox..ColorDialogText
 #: ddfwindowfrm.dfm:1643
 #. DDFWindow..colorbox2..ColorDialogText
@@ -10778,9 +10787,9 @@ msgid "Custom..."
 msgstr ""
 
 #. ddfeditorform..Panel4..Panel1..ColorBox..NewColorText
-#: ddfeditorfrm.dfm:4947
+#: ddfeditorfrm.dfm:4988
 #. ddfeditorform..Panel4..Panel1..ColorBox2..NewColorText
-#: ddfeditorfrm.dfm:5010
+#: ddfeditorfrm.dfm:5051
 #. DDFWindow..ColorBox..NewColorText
 #: ddfwindowfrm.dfm:1645
 #. DDFWindow..colorbox2..NewColorText
@@ -10789,16 +10798,16 @@ msgid "Custom"
 msgstr ""
 
 #. ddfeditorform..SaveDialog1..DefaultExt
-#: ddfeditorfrm.dfm:5712
+#: ddfeditorfrm.dfm:5753
 #. ddfeditorform..OpenDialog1..DefaultExt
-#: ddfeditorfrm.dfm:5719
+#: ddfeditorfrm.dfm:5760
 msgid "*.pcddevc"
 msgstr ""
 
 #. ddfeditorform..SaveDialog1..Filter
-#: ddfeditorfrm.dfm:5713
+#: ddfeditorfrm.dfm:5754
 #. ddfeditorform..OpenDialog1..Filter
-#: ddfeditorfrm.dfm:5720
+#: ddfeditorfrm.dfm:5761
 msgid "DDF-Datei (*.pcddevc)|*.pcddevc|Alle Dateien "
 "(*.*)|*.*"
 msgstr ""
@@ -11139,13 +11148,13 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Gerteszene1..Caption
 #: szenenverwaltung.dfm:1440
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2970
-#: geraetesteuerungfrm.pas:2985
+#: geraetesteuerungfrm.pas:2989
+#: geraetesteuerungfrm.pas:3004
 #. Name
-#: pcdimmer.pas:21100
-#: pcdimmer.pas:25768
+#: pcdimmer.pas:21124
+#: pcdimmer.pas:25795
 #. Werte einfügen
-#: pcdimmer.pas:25865
+#: pcdimmer.pas:25892
 #: szenenverwaltung.pas:1453
 #. Geräteszene
 #: szenenverwaltung.pas:4121
@@ -11748,7 +11757,7 @@ msgstr ""
 #: touchscreenfrm.dfm:1112
 #: devicelistfrm.pas:120
 #: nodecontrolfrm.pas:174
-#: pcdimmer.pas:22628
+#: pcdimmer.pas:22652
 #: preseteditorform.pas:857
 #: preseteditorform.pas:859
 #: presetsceneeditorform.pas:583
@@ -11981,8 +11990,8 @@ msgstr ""
 #: devicechannelselectionfrm.pas:1943
 #: devicescenefrm.pas:2435
 #: insscene.pas:291
-#: pcdimmer.pas:11524
-#: pcdimmer.pas:11526
+#: pcdimmer.pas:11548
+#: pcdimmer.pas:11550
 #: SetNames.pas:83
 #: plugins/Programmplugins/Alt/Kontrollpanel/insscene.pas:242
 #: plugins/Programmplugins/Alt/Leistungsplugin/settingfrm.pas:351
@@ -12402,7 +12411,7 @@ msgstr ""
 #. alle Effekte bis zur aktuellen Position abspielen
 #: audioeffektplayerfrm.pas:6277
 #: audioeffektplayerfrm.pas:6300
-#: pcdimmer.pas:21226
+#: pcdimmer.pas:21250
 #: szenenverwaltung.pas:2102
 msgid "Effekt"
 msgstr ""
@@ -13459,7 +13468,7 @@ msgstr ""
 
 #. firststepsform..Notebook1....JvXPButton10..Caption
 #: firststepsfrm.dfm:7768
-#: geraetesteuerungfrm.pas:1317
+#: geraetesteuerungfrm.pas:1332
 msgid "Geräte hinzufügen..."
 msgstr ""
 
@@ -13505,7 +13514,7 @@ msgstr ""
 #: firststepsfrm.dfm:8593
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..Button6..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1180
-#: geraetesteuerungfrm.pas:2173
+#: geraetesteuerungfrm.pas:2191
 msgid "Ändern"
 msgstr ""
 
@@ -13560,7 +13569,7 @@ msgstr ""
 #. pmmform..GroupBox3..usecolor12check..Caption
 #: pmm.dfm:6131
 #: devicelistfrm.pas:117
-#: pcdimmer.pas:22624
+#: pcdimmer.pas:22648
 msgid "Farbrad"
 msgstr ""
 
@@ -13697,7 +13706,7 @@ msgstr ""
 #: videoscreenfrm.dfm:407
 #. videoscreenform..Videopanel4..Panel9..Button16..Hint
 #: videoscreenfrm.dfm:563
-#: Channels_Commandsystem.inc:929
+#: Channels_Commandsystem.inc:930
 msgid "Play"
 msgstr ""
 
@@ -13901,7 +13910,7 @@ msgstr ""
 
 #. askforremovingform..Label6..Caption
 #: geraeteremovedfrm.dfm:41
-#: geraetesteuerungfrm.pas:1643
+#: geraetesteuerungfrm.pas:1661
 msgid "Adressbereich:"
 msgstr ""
 
@@ -13917,7 +13926,7 @@ msgstr ""
 
 #. askforremovingform..Label2..Caption
 #: geraeteremovedfrm.dfm:63
-#: geraetesteuerungfrm.pas:1641
+#: geraetesteuerungfrm.pas:1659
 msgid "Gerätetyp:"
 msgstr ""
 
@@ -13932,7 +13941,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2692
 #. mainform..PopupMenu1..Gertlschen1..Caption
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:793
-#: geraetesteuerungfrm.pas:1650
+#: geraetesteuerungfrm.pas:1668
 msgid "Gerät löschen"
 msgstr ""
 
@@ -14385,21 +14394,21 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:772
 #. mainform..SaveDialog1..Filter
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:778
-#: geraetesteuerungfrm.pas:647
-#: geraetesteuerungfrm.pas:660
+#: geraetesteuerungfrm.pas:650
+#: geraetesteuerungfrm.pas:663
 msgid "PC_DIMMER Gerätedatei (*.pcddevs)|*.pcddevs|Alle "
 "Dateien|*.*"
 msgstr ""
 
 #. geraetesteuerung..OpenDialog1..Title
 #: geraetesteuerungfrm.dfm:3575
-#: geraetesteuerungfrm.pas:662
+#: geraetesteuerungfrm.pas:665
 msgid "PC_DIMMER Gerätedatei öffnen"
 msgstr ""
 
 #. geraetesteuerung..SaveDialog1..Title
 #: geraetesteuerungfrm.dfm:3583
-#: geraetesteuerungfrm.pas:649
+#: geraetesteuerungfrm.pas:652
 msgid "PC_DIMMER Gerätedatei speichern"
 msgstr ""
 
@@ -16159,7 +16168,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..EinfacheSzene1..Caption
 #: szenenverwaltung.dfm:1435
 #. Name
-#: pcdimmer.pas:21085
+#: pcdimmer.pas:21109
 #: szenenverwaltung.pas:1411
 msgid "Einfache Szene"
 msgstr ""
@@ -16752,7 +16761,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Kompositionsszene1..Caption
 #: szenenverwaltung.dfm:1460
 #. Name
-#: pcdimmer.pas:21166
+#: pcdimmer.pas:21190
 #: szenenverwaltung.pas:1737
 msgid "Kombinationsszene"
 msgstr ""
@@ -16800,13 +16809,15 @@ msgstr ""
 #. konsolensteuerung..GroupBox2..Button4..Caption
 #: konsolensteuerungfrm.dfm:97
 #. masterform..Button1..Caption
-#: masterfrm.dfm:285
+#: masterfrm.dfm:308
 #. masterform..Button2..Caption
-#: masterfrm.dfm:294
+#: masterfrm.dfm:317
 #. masterform..Button3..Caption
-#: masterfrm.dfm:303
+#: masterfrm.dfm:326
 #. masterform..Button4..Caption
-#: masterfrm.dfm:328
+#: masterfrm.dfm:351
+#. masterform..Button5..Caption
+#: masterfrm.dfm:377
 #. patcontrol..resetbtn..Caption
 #: Pat.dfm:149
 #. scannersynchronisationform..ResetPositions..Caption
@@ -16980,7 +16991,7 @@ msgstr ""
 #: pcdimmer.dfm:1667
 #. mainform..Panel1..ComboBox1....Items.Strings
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:472
-#: pcdimmer.pas:26446
+#: pcdimmer.pas:26473
 msgid "<Leer>"
 msgstr ""
 
@@ -17563,7 +17574,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:581
 #: kontrollpanelform.pas:585
 #: nodecontrolfrm.pas:169
-#: pcdimmer.pas:24987
+#: pcdimmer.pas:25014
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1031
 msgid "Weiß"
 msgstr ""
@@ -17962,22 +17973,96 @@ msgid "Dimmer Master"
 msgstr ""
 
 #. masterform..Label6..Caption
-#: masterfrm.dfm:210
+#: masterfrm.dfm:213
 msgid "±0"
 msgstr ""
 
 #. masterform..Label8..Caption
-#: masterfrm.dfm:228
+#: masterfrm.dfm:232
 msgid "Volume Master"
 msgstr ""
 
+#. masterform..Label9..Caption
+#: masterfrm.dfm:242
+#. pmmform..GroupBox3..minluminancelbl..Caption
+#: pmm.dfm:5963
+#. preseteditor..Panel3..GroupBox5..Label25..Caption
+#: preseteditorform.dfm:1568
+#. preseteditor..Panel3..GroupBox5..Label28..Caption
+#: preseteditorform.dfm:1591
+#. preseteditor..Panel3..GroupBox6..Label31..Caption
+#: preseteditorform.dfm:1662
+#. preseteditor..Panel3..GroupBox6..Label36..Caption
+#: preseteditorform.dfm:1685
+#. presetsceneeditor..Panel3..GroupBox5..Label25..Caption
+#: presetsceneeditorform.dfm:681
+#. presetsceneeditor..Panel3..GroupBox5..Label28..Caption
+#: presetsceneeditorform.dfm:704
+#. presetsceneeditor..Panel3..GroupBox6..Label31..Caption
+#: presetsceneeditorform.dfm:775
+#. presetsceneeditor..Panel3..GroupBox6..Label36..Caption
+#: presetsceneeditorform.dfm:798
+#. Settings..Panel1..Label1..Caption
+#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:73
+#. Settings..Panel2..Label2..Caption
+#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:164
+#. Settings..Panel3..Label3..Caption
+#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:255
+#. Settings..Panel4..Label4..Caption
+#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:346
+#. Settings..Panel5..Label5..Caption
+#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:437
+#. Settings..Panel6..Label6..Caption
+#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:528
+#. Settings..Panel7..Label7..Caption
+#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:619
+#. Settings..Panel8..Label8..Caption
+#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:710
+#. mainform..GroupBox1..Label1..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:273
+#. mainform..GroupBox1..Label2..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:282
+#. mainform..GroupBox1..Label3..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:291
+#. mainform..GroupBox1..Label4..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:300
+#. mainform..GroupBox1..Label5..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:309
+#. mainform..GroupBox1..Label11..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:318
+#. mainform..GroupBox1..Label12..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:327
+#. mainform..GroupBox1..Label13..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:336
+#. mainform..GroupBox1..Label14..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:345
+#. mainform..GroupBox1..Label15..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:354
+#. mainform..GroupBox1..Label6..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:363
+#. mainform..GroupBox1..Label7..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:372
+#. mainform..GroupBox1..Label8..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:381
+#. mainform..GroupBox1..Label9..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:390
+#. mainform..GroupBox1..Label10..Caption
+#: plugins/Programmplugins/Alt/Submaster/main.dfm:399
+msgid "0%"
+msgstr ""
+
+#. masterform..Label10..Caption
+#: masterfrm.dfm:251
+msgid "Nebel Master"
+msgstr ""
+
 #. masterform..dimmermaster..Hint
-#: masterfrm.dfm:236
+#: masterfrm.dfm:259
 msgid "Dimmermaster"
 msgstr ""
 
 #. masterform..flashmaster..Hint
-#: masterfrm.dfm:252
+#: masterfrm.dfm:275
 #. editmidieventfrm..GroupBox2..typ....Items.Strings
 #: plugins/Programmplugins/Alt/Kontrollpanel/editmidievent.dfm:376
 #: plugins/Programmplugins/Alt/Kontrollpanel/midievent.pas:88
@@ -17985,12 +18070,14 @@ msgid "Flashmaster"
 msgstr ""
 
 #. masterform..speedmaster..Hint
-#: masterfrm.dfm:268
+#: masterfrm.dfm:291
 msgid "Speedmaster"
 msgstr ""
 
 #. masterform..Volumeslider..Hint
-#: masterfrm.dfm:312
+#: masterfrm.dfm:335
+#. masterform..FogSlider..Hint
+#: masterfrm.dfm:360
 msgid "Lautstärkemaster"
 msgstr ""
 
@@ -18082,7 +18169,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..MediaCenterSzene1..Caption
 #: szenenverwaltung.dfm:1475
 #. Name
-#: pcdimmer.pas:21240
+#: pcdimmer.pas:21264
 #: szenenverwaltung.pas:1948
 msgid "MediaCenter Szene"
 msgstr ""
@@ -18494,7 +18581,7 @@ msgstr ""
 #. pmmform..GroupBox3..usergbcheck..Caption
 #: pmm.dfm:6113
 #: devicelistfrm.pas:119
-#: pcdimmer.pas:22626
+#: pcdimmer.pas:22650
 msgid "RGB"
 msgstr ""
 
@@ -19726,7 +19813,7 @@ msgstr ""
 
 #. MainForm..dxRibbonStatusBar1......Text
 #: pcdimmer.dfm:319
-#: pcdimmer.pas:14442
+#: pcdimmer.pas:14466
 msgid "1 Einschalten"
 msgstr ""
 
@@ -19940,7 +20027,7 @@ msgstr ""
 #: plugins/Programmplugins/SoftScanner/aboutfrm.dfm:5
 #. About..Caption
 #: plugins/Programmplugins/Temperaturregler/aboutfrm.dfm:5
-#: pcdimmer.pas:12426
+#: pcdimmer.pas:12450
 msgid "Info..."
 msgstr ""
 
@@ -19951,7 +20038,7 @@ msgstr ""
 
 #. MainForm..systraypopup..Beenden1..Caption
 #: pcdimmer.dfm:5627
-#: Channels_Commandsystem.inc:1254
+#: Channels_Commandsystem.inc:1255
 msgid "PC_DIMMER beenden"
 msgstr ""
 
@@ -20532,7 +20619,7 @@ msgstr ""
 #: projektverwaltungfrm.dfm:5
 #. projektverwaltung..Panel1..Label34..Caption
 #: projektverwaltungfrm.dfm:474
-#: Channels_Commandsystem.inc:1252
+#: Channels_Commandsystem.inc:1253
 msgid "Projektverwaltung"
 msgstr ""
 
@@ -20988,7 +21075,7 @@ msgstr ""
 #: pcdimmer.dfm:18782
 #. MainForm..dxBarManager1..SaveRibbonBtn..Caption
 #: pcdimmer.dfm:18995
-#: Channels_Commandsystem.inc:1251
+#: Channels_Commandsystem.inc:1252
 msgid "Projekt speichern"
 msgstr ""
 
@@ -21025,7 +21112,7 @@ msgstr ""
 
 #. MainForm..dxBarManager1..PrintChannelNamesRibbonBtn..Caption
 #: pcdimmer.dfm:19566
-#: Channels_Commandsystem.inc:1253
+#: Channels_Commandsystem.inc:1254
 msgid "Kanalnamen drucken"
 msgstr ""
 
@@ -21179,7 +21266,7 @@ msgstr ""
 #: pcdimmer.dfm:21610
 #. mainform..GroupBox2..Button2..Caption
 #: plugins/Programmplugins/_PluginSDK_Programmplugin_Delphi7/main.dfm:301
-#: Channels_Commandsystem.inc:138
+#: Channels_Commandsystem.inc:139
 #. Szenen
 #: befehleditorform.pas:828
 msgid "Starten"
@@ -21309,7 +21396,7 @@ msgstr ""
 
 #. MainForm..dxBarManager1..BeattoolRibbonBtn..Caption
 #: pcdimmer.dfm:24059
-#: Channels_Commandsystem.inc:174
+#: Channels_Commandsystem.inc:175
 msgid "Beattool"
 msgstr ""
 
@@ -21617,7 +21704,7 @@ msgstr ""
 
 #. MainForm..dxBarManager1..LockPCdimmerRibbonBtn..Caption
 #: pcdimmer.dfm:27371
-#: Channels_Commandsystem.inc:1255
+#: Channels_Commandsystem.inc:1256
 msgid "PC_DIMMER sperren"
 msgstr ""
 
@@ -22158,73 +22245,6 @@ msgstr ""
 #. pmmform..GroupBox3..Label6..Caption
 #: pmm.dfm:5954
 msgid "Minimale Leuchtkraft:"
-msgstr ""
-
-#. pmmform..GroupBox3..minluminancelbl..Caption
-#: pmm.dfm:5963
-#. preseteditor..Panel3..GroupBox5..Label25..Caption
-#: preseteditorform.dfm:1568
-#. preseteditor..Panel3..GroupBox5..Label28..Caption
-#: preseteditorform.dfm:1591
-#. preseteditor..Panel3..GroupBox6..Label31..Caption
-#: preseteditorform.dfm:1662
-#. preseteditor..Panel3..GroupBox6..Label36..Caption
-#: preseteditorform.dfm:1685
-#. presetsceneeditor..Panel3..GroupBox5..Label25..Caption
-#: presetsceneeditorform.dfm:681
-#. presetsceneeditor..Panel3..GroupBox5..Label28..Caption
-#: presetsceneeditorform.dfm:704
-#. presetsceneeditor..Panel3..GroupBox6..Label31..Caption
-#: presetsceneeditorform.dfm:775
-#. presetsceneeditor..Panel3..GroupBox6..Label36..Caption
-#: presetsceneeditorform.dfm:798
-#. Settings..Panel1..Label1..Caption
-#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:73
-#. Settings..Panel2..Label2..Caption
-#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:164
-#. Settings..Panel3..Label3..Caption
-#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:255
-#. Settings..Panel4..Label4..Caption
-#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:346
-#. Settings..Panel5..Label5..Caption
-#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:437
-#. Settings..Panel6..Label6..Caption
-#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:528
-#. Settings..Panel7..Label7..Caption
-#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:619
-#. Settings..Panel8..Label8..Caption
-#: plugins/Programmplugins/Alt/Faderpanel/settingfrm.dfm:710
-#. mainform..GroupBox1..Label1..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:273
-#. mainform..GroupBox1..Label2..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:282
-#. mainform..GroupBox1..Label3..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:291
-#. mainform..GroupBox1..Label4..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:300
-#. mainform..GroupBox1..Label5..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:309
-#. mainform..GroupBox1..Label11..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:318
-#. mainform..GroupBox1..Label12..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:327
-#. mainform..GroupBox1..Label13..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:336
-#. mainform..GroupBox1..Label14..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:345
-#. mainform..GroupBox1..Label15..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:354
-#. mainform..GroupBox1..Label6..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:363
-#. mainform..GroupBox1..Label7..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:372
-#. mainform..GroupBox1..Label8..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:381
-#. mainform..GroupBox1..Label9..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:390
-#. mainform..GroupBox1..Label10..Caption
-#: plugins/Programmplugins/Alt/Submaster/main.dfm:399
-msgid "0%"
 msgstr ""
 
 #. pmmform..GroupBox3..Label11..Caption
@@ -22963,7 +22983,7 @@ msgstr ""
 #. groupeditorform..Panel1..GroupBox2..Label1..Caption
 #: reordergroupfrm.dfm:137
 #. Objektekopieren nur starten, wenn nicht letztes Element (Row=RowCount-1) selektiert
-#: geraetesteuerungfrm.pas:2082
+#: geraetesteuerungfrm.pas:2100
 #. Objektekopieren nur starten, wenn nicht letztes Element selektiert
 #: reordergroupfrm.pas:533
 msgid "Gruppenname:"
@@ -22971,7 +22991,7 @@ msgstr ""
 
 #. groupeditorform..Panel1..GroupBox2..GroupActive..Caption
 #: reordergroupfrm.dfm:694
-#: Channels_Commandsystem.inc:837
+#: Channels_Commandsystem.inc:838
 msgid "Gruppe aktiviert"
 msgstr ""
 
@@ -23827,7 +23847,7 @@ msgstr ""
 
 #. szenenverwaltungform..PopupMenu1..Bewegungsszene1..Caption
 #: szenenverwaltung.dfm:1450
-#: pcdimmer.pas:21138
+#: pcdimmer.pas:21162
 #: szenenverwaltung.pas:1608
 msgid "Bewegungsszene"
 msgstr ""
@@ -23835,7 +23855,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Preset1..Caption
 #: szenenverwaltung.dfm:1465
 #. Name
-#: pcdimmer.pas:21181
+#: pcdimmer.pas:21205
 msgid "Preset"
 msgstr ""
 
@@ -24386,15 +24406,15 @@ msgstr ""
 
 #. frmInternetUpdateFound..Panel2..Button1..Caption
 #: UpdateFoundFormD4.dfm:169
-#: pcdimmer.pas:9247
-#: pcdimmer.pas:9268
+#: pcdimmer.pas:9271
+#: pcdimmer.pas:9292
 msgid "&Ja"
 msgstr ""
 
 #. frmInternetUpdateFound..Panel2..Button2..Caption
 #: UpdateFoundFormD4.dfm:187
-#: pcdimmer.pas:9247
-#: pcdimmer.pas:9268
+#: pcdimmer.pas:9271
+#: pcdimmer.pas:9292
 msgid "&Nein"
 msgstr ""
 
@@ -24473,7 +24493,7 @@ msgstr ""
 #. usermgmtform..GroupBox1..accesslevelbox....Items.Strings
 #: usermgmtfrm.dfm:674
 #. switch to Visitor-Access-Level
-#: pcdimmer.pas:9084
+#: pcdimmer.pas:9108
 msgid "Besucher"
 msgstr ""
 
@@ -27627,7 +27647,7 @@ msgstr ""
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/main.dfm:1905
 #. mainform..GroupBox2..Button3..Caption
 #: plugins/Programmplugins/_PluginSDK_Programmplugin_Delphi7/main.dfm:318
-#: Channels_Commandsystem.inc:145
+#: Channels_Commandsystem.inc:146
 #: befehleditorform.pas:829
 #: befehleditorform.pas:972
 msgid "Stoppen"
@@ -30729,8 +30749,8 @@ msgstr ""
 
 #. mainform..GroupBox3..Label10..Caption
 #: plugins/Programmplugins/_PluginSDK_Programmplugin_Delphi7/main.dfm:342
-#: Channels_Commandsystem.inc:159
-#: Channels_Commandsystem.inc:989
+#: Channels_Commandsystem.inc:160
+#: Channels_Commandsystem.inc:990
 msgid "Flash"
 msgstr ""
 
@@ -31211,11 +31231,11 @@ msgstr ""
 
 #. mainform..GroupBox3..DevSettings....Caption
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:466
-#: faderpanelfrm.pas:479
+#: faderpanelfrm.pas:485
 #: lauflichtassistentfrm.pas:922
 #: lauflichtassistentownpatternfrm.pas:267
 #: matrixeditorfrm.pas:236
-#: pcdimmer.pas:25321
+#: pcdimmer.pas:25348
 msgid "n/a"
 msgstr ""
 
@@ -31297,7 +31317,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:583
 #: kontrollpanelform.pas:582
 #: pcdimmer.pas:3931
-#: pcdimmer.pas:24984
+#: pcdimmer.pas:25011
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1028
 msgid "Gelb"
 msgstr ""
@@ -32744,205 +32764,205 @@ msgstr ""
 msgid "Erstelle Benutzerverwaltung-Form"
 msgstr ""
 
-#: Channels_Commandsystem.inc:57
-#: Channels_Commandsystem.inc:152
-#: Channels_Commandsystem.inc:968
+#: Channels_Commandsystem.inc:58
+#: Channels_Commandsystem.inc:153
+#: Channels_Commandsystem.inc:969
 #: befehleditorform.pas:830
 msgid "Start/Stop"
 msgstr ""
 
-#: Channels_Commandsystem.inc:106
+#: Channels_Commandsystem.inc:107
 msgid "Vorherige Audiodatei"
 msgstr ""
 
-#: Channels_Commandsystem.inc:113
+#: Channels_Commandsystem.inc:114
 #: befehleditorform.pas:821
 msgid "Nächste Audiodatei"
 msgstr ""
 
-#: Channels_Commandsystem.inc:120
+#: Channels_Commandsystem.inc:121
 #: befehleditorform.pas:822
 msgid "Springe zu Audiodatei"
 msgstr ""
 
-#: Channels_Commandsystem.inc:127
+#: Channels_Commandsystem.inc:128
 msgid "Springe zu Audiodatei und spiele sie "
 "ab"
 msgstr ""
 
-#: Channels_Commandsystem.inc:166
+#: Channels_Commandsystem.inc:167
 #: befehleditorform.pas:831
 msgid "Szenenzeit festlegen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:177
+#: Channels_Commandsystem.inc:178
 #. Beat-Tool
 #: befehleditorform.pas:836
 msgid "Sync-Button"
 msgstr ""
 
-#: Channels_Commandsystem.inc:184
+#: Channels_Commandsystem.inc:185
 #: befehleditorform.pas:837
 msgid "BPM-Wert setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:191
+#: Channels_Commandsystem.inc:192
 #: befehleditorform.pas:838
 msgid "BPM-Wert abfragen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:198
+#: Channels_Commandsystem.inc:199
 #: befehleditorform.pas:839
 msgid "Beat auslösen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:205
+#: Channels_Commandsystem.inc:206
 #: befehleditorform.pas:840
 msgid "Beatquelle setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:213
+#: Channels_Commandsystem.inc:214
 msgid "Master / MIDI / Programm"
 msgstr ""
 
-#: Channels_Commandsystem.inc:216
+#: Channels_Commandsystem.inc:217
 msgid "Grandmaster auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:223
+#: Channels_Commandsystem.inc:224
 #. Master
 #: befehleditorform.pas:846
 #. Grandmaster abfragen
-#: pcdimmer.pas:14353
+#: pcdimmer.pas:14377
 msgid "Grandmaster setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:230
+#: Channels_Commandsystem.inc:231
 #: befehleditorform.pas:847
 msgid "Grandmaster abfragen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:237
+#: Channels_Commandsystem.inc:238
 msgid "Flashmaster auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:244
+#: Channels_Commandsystem.inc:245
 #: befehleditorform.pas:848
 #. Flashmaster auf abfragen
-#: pcdimmer.pas:14368
+#: pcdimmer.pas:14392
 msgid "Flashmaster setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:251
+#: Channels_Commandsystem.inc:252
 #: befehleditorform.pas:849
 msgid "Flashmaster abfragen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:258
+#: Channels_Commandsystem.inc:259
 msgid "Speedmaster auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:265
+#: Channels_Commandsystem.inc:266
 #. Speedmaster abfragen
-#: pcdimmer.pas:14383
+#: pcdimmer.pas:14407
 msgid "Speedmaster setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:272
+#: Channels_Commandsystem.inc:273
 msgid "Speedmaster abfragen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:279
+#: Channels_Commandsystem.inc:280
 msgid "Audiomaster auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:286
+#: Channels_Commandsystem.inc:287
 #. Audiomaster abfragen
-#: pcdimmer.pas:14398
+#: pcdimmer.pas:14422
 msgid "Audiomaster setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:293
+#: Channels_Commandsystem.inc:294
 msgid "Audiomaster abfragen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:300
+#: Channels_Commandsystem.inc:301
 #: befehleditorform.pas:850
 msgid "Audio-Mute ein/aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:307
+#: Channels_Commandsystem.inc:308
 #: befehleditorform.pas:851
 msgid "MIDI-Befehl senden"
 msgstr ""
 
-#: Channels_Commandsystem.inc:314
+#: Channels_Commandsystem.inc:315
 msgid "Eingangswert als MIDI-Wert senden"
 msgstr ""
 
-#: Channels_Commandsystem.inc:321
+#: Channels_Commandsystem.inc:322
 msgid "Kanalsetzmodus wechseln"
 msgstr ""
 
-#: Channels_Commandsystem.inc:328
+#: Channels_Commandsystem.inc:329
 msgid "PC_DIMMER Programmfunktion"
 msgstr ""
 
-#: Channels_Commandsystem.inc:335
+#: Channels_Commandsystem.inc:336
 msgid "Externes Programm starten"
 msgstr ""
 
-#: Channels_Commandsystem.inc:342
+#: Channels_Commandsystem.inc:343
 msgid "Freeze-Modus ein/aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:349
+#: Channels_Commandsystem.inc:350
 msgid "Alle Effekte anhalten"
 msgstr ""
 
-#: Channels_Commandsystem.inc:356
+#: Channels_Commandsystem.inc:357
 msgid "Partymodul-Preset wählen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:363
+#: Channels_Commandsystem.inc:364
 msgid "Partymodul-Preset Zufallsmodus ein/aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:370
+#: Channels_Commandsystem.inc:371
 msgid "Blackout-Button ein/aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:377
+#: Channels_Commandsystem.inc:378
 msgid "Ambilight ein"
 msgstr ""
 
-#: Channels_Commandsystem.inc:384
+#: Channels_Commandsystem.inc:385
 msgid "Ambilight aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:391
+#: Channels_Commandsystem.inc:392
 msgid "Zeitsteuerung ein"
 msgstr ""
 
-#: Channels_Commandsystem.inc:398
+#: Channels_Commandsystem.inc:399
 msgid "Zeitsteuerung aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:405
+#: Channels_Commandsystem.inc:406
 msgid "Alle Audioeffekte stoppen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:412
+#: Channels_Commandsystem.inc:413
 msgid "Datei öffnen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:430
-#: Channels_Commandsystem.inc:1056
+#: Channels_Commandsystem.inc:431
+#: Channels_Commandsystem.inc:1057
 msgid "Auf Eingangswert schalten"
 msgstr ""
 
-#: Channels_Commandsystem.inc:437
-#: Channels_Commandsystem.inc:1063
+#: Channels_Commandsystem.inc:438
+#: Channels_Commandsystem.inc:1064
 #. Kanal
 #: befehleditorform.pas:862
 #. Submaster
@@ -32950,195 +32970,195 @@ msgstr ""
 msgid "Auf festen Wert schalten"
 msgstr ""
 
-#: Channels_Commandsystem.inc:444
-#: Channels_Commandsystem.inc:1077
+#: Channels_Commandsystem.inc:445
+#: Channels_Commandsystem.inc:1078
 #: befehleditorform.pas:863
 #: befehleditorform.pas:897
 msgid "Auf abgefragten Wert schalten"
 msgstr ""
 
-#: Channels_Commandsystem.inc:451
+#: Channels_Commandsystem.inc:452
 #: befehleditorform.pas:864
 msgid "Auf festen Wert dimmen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:458
+#: Channels_Commandsystem.inc:459
 #: befehleditorform.pas:865
 msgid "Auf abgefragten Wert dimmen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:465
+#: Channels_Commandsystem.inc:466
 msgid "Kanalwert +"
 msgstr ""
 
-#: Channels_Commandsystem.inc:472
+#: Channels_Commandsystem.inc:473
 msgid "Kanalwert -"
 msgstr ""
 
-#: Channels_Commandsystem.inc:479
+#: Channels_Commandsystem.inc:480
 msgid "Kanalminimum auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:486
+#: Channels_Commandsystem.inc:487
 msgid "Kanalmaximum auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:493
+#: Channels_Commandsystem.inc:494
 #: befehleditorform.pas:866
 msgid "Kanalminimum setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:500
+#: Channels_Commandsystem.inc:501
 #: befehleditorform.pas:867
 msgid "Kanalmaximum setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:507
+#: Channels_Commandsystem.inc:508
 msgid "Kanalwert setzen (Modusabhängig)"
 msgstr ""
 
-#: Channels_Commandsystem.inc:515
+#: Channels_Commandsystem.inc:516
 msgid "Geräte / Gruppen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:518
+#: Channels_Commandsystem.inc:519
 msgid "Aktuell selektierte Geräte auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:525
+#: Channels_Commandsystem.inc:526
 msgid "Aktuell selektierte Geräte auf Wert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:532
+#: Channels_Commandsystem.inc:533
 msgid "Bühnenansichtgerät auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:539
+#: Channels_Commandsystem.inc:540
 msgid "Bühnenansichtgerät auf Wert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:546
+#: Channels_Commandsystem.inc:547
 msgid "Bestimmtes Gerät auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:553
+#: Channels_Commandsystem.inc:554
 msgid "Bestimmte Gruppe auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:560
+#: Channels_Commandsystem.inc:561
 msgid "Bestimmtes Gerät auf Wert schalten"
 msgstr ""
 
-#: Channels_Commandsystem.inc:567
+#: Channels_Commandsystem.inc:568
 msgid "Bestimmte Gruppe auf Wert schalten"
 msgstr ""
 
-#: Channels_Commandsystem.inc:574
+#: Channels_Commandsystem.inc:575
 msgid "Bestimmtes Gerät auf Wert dimmen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:581
+#: Channels_Commandsystem.inc:582
 msgid "Bestimmte Gruppe auf Wert dimmen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:588
+#: Channels_Commandsystem.inc:589
 msgid "Selektierte Geräte +"
 msgstr ""
 
-#: Channels_Commandsystem.inc:595
+#: Channels_Commandsystem.inc:596
 msgid "Selektierte Geräte -"
 msgstr ""
 
-#: Channels_Commandsystem.inc:602
+#: Channels_Commandsystem.inc:603
 msgid "Bühnenansichtgerät +"
 msgstr ""
 
-#: Channels_Commandsystem.inc:609
+#: Channels_Commandsystem.inc:610
 msgid "Bühnenansichtgerät -"
 msgstr ""
 
-#: Channels_Commandsystem.inc:616
+#: Channels_Commandsystem.inc:617
 msgid "Bestimmtes Gerät +"
 msgstr ""
 
-#: Channels_Commandsystem.inc:623
+#: Channels_Commandsystem.inc:624
 msgid "Bestimmtes Gerät -"
 msgstr ""
 
-#: Channels_Commandsystem.inc:630
+#: Channels_Commandsystem.inc:631
 msgid "Selektierte Geräte setzen (Modusabhängig)"
 msgstr ""
 
-#: Channels_Commandsystem.inc:637
+#: Channels_Commandsystem.inc:638
 msgid "Bühnenansichtgerät setzen (Modusabhängig)"
 msgstr ""
 
-#: Channels_Commandsystem.inc:644
+#: Channels_Commandsystem.inc:645
 msgid "Bestimmte Geräte setzen (Modusabhängig)"
 msgstr ""
 
-#: Channels_Commandsystem.inc:651
+#: Channels_Commandsystem.inc:652
 msgid "Bestimmte Gruppe setzen (Modusabhängig)"
 msgstr ""
 
-#: Channels_Commandsystem.inc:658
+#: Channels_Commandsystem.inc:659
 msgid "Kanal aller Geräte auf Null (Teil-Blackout)"
 msgstr ""
 
-#: Channels_Commandsystem.inc:665
+#: Channels_Commandsystem.inc:666
 msgid "Aktuell selektierte Geräte (16-Bit-)Kanal "
 "ändern"
 msgstr ""
 
-#: Channels_Commandsystem.inc:672
+#: Channels_Commandsystem.inc:673
 msgid "Bühnenansichtgerät (16-Bit-)Kanal ändern"
 msgstr ""
 
-#: Channels_Commandsystem.inc:679
+#: Channels_Commandsystem.inc:680
 msgid "Bestimmtes Gerät (16-Bit-)Kanal ändern"
 msgstr ""
 
-#: Channels_Commandsystem.inc:687
+#: Channels_Commandsystem.inc:688
 msgid "Geräte-/Gruppensetup"
 msgstr ""
 
-#: Channels_Commandsystem.inc:690
+#: Channels_Commandsystem.inc:691
 msgid "Selektiere nur dieses Gerät"
 msgstr ""
 
-#: Channels_Commandsystem.inc:697
+#: Channels_Commandsystem.inc:698
 msgid "Geräteselektion ein/aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:704
+#: Channels_Commandsystem.inc:705
 msgid "Geräteselektion ein"
 msgstr ""
 
-#: Channels_Commandsystem.inc:711
+#: Channels_Commandsystem.inc:712
 msgid "Geräteselektion aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:718
+#: Channels_Commandsystem.inc:719
 msgid "Selektiere nur diese Gruppe"
 msgstr ""
 
-#: Channels_Commandsystem.inc:725
+#: Channels_Commandsystem.inc:726
 msgid "Gruppenselektion ein/aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:732
+#: Channels_Commandsystem.inc:733
 msgid "Gruppenselektion ein"
 msgstr ""
 
-#: Channels_Commandsystem.inc:739
+#: Channels_Commandsystem.inc:740
 msgid "Gruppenselektion aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:746
+#: Channels_Commandsystem.inc:747
 msgid "Kein Gerät selektieren"
 msgstr ""
 
-#: Channels_Commandsystem.inc:753
+#: Channels_Commandsystem.inc:754
 #. Gerätesetup
 #: befehleditorform.pas:911
 #. Gerätegruppensetup
@@ -33146,180 +33166,180 @@ msgstr ""
 msgid "Kalibrierung setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:760
+#: Channels_Commandsystem.inc:761
 msgid "Kalibrierung setzen (Gruppe)"
 msgstr ""
 
-#: Channels_Commandsystem.inc:767
+#: Channels_Commandsystem.inc:768
 #: befehleditorform.pas:915
 #: befehleditorform.pas:945
 msgid "Invert PAN ein/aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:774
+#: Channels_Commandsystem.inc:775
 #: befehleditorform.pas:916
 #: befehleditorform.pas:946
 msgid "Invert PAN ein"
 msgstr ""
 
-#: Channels_Commandsystem.inc:781
+#: Channels_Commandsystem.inc:782
 #: befehleditorform.pas:917
 #: befehleditorform.pas:947
 msgid "Invert PAN aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:788
+#: Channels_Commandsystem.inc:789
 #: befehleditorform.pas:918
 #: befehleditorform.pas:948
 msgid "Invert TILT ein/aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:795
+#: Channels_Commandsystem.inc:796
 #: befehleditorform.pas:919
 #: befehleditorform.pas:949
 msgid "Invert TILT ein"
 msgstr ""
 
-#: Channels_Commandsystem.inc:802
+#: Channels_Commandsystem.inc:803
 #: befehleditorform.pas:920
 #: befehleditorform.pas:950
 msgid "Invert TILT aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:809
+#: Channels_Commandsystem.inc:810
 #: befehleditorform.pas:921
 #: befehleditorform.pas:951
 msgid "Autoszenen ein/aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:816
+#: Channels_Commandsystem.inc:817
 #: befehleditorform.pas:922
 #: befehleditorform.pas:952
 msgid "Autoszenen ein"
 msgstr ""
 
-#: Channels_Commandsystem.inc:823
+#: Channels_Commandsystem.inc:824
 #: befehleditorform.pas:923
 #: befehleditorform.pas:953
 msgid "Autoszenen aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:830
+#: Channels_Commandsystem.inc:831
 msgid "Gruppe aktiviert/deaktiviert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:844
+#: Channels_Commandsystem.inc:845
 msgid "Gruppe deaktiviert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:852
+#: Channels_Commandsystem.inc:853
 msgid "Cueliste"
 msgstr ""
 
-#: Channels_Commandsystem.inc:869
+#: Channels_Commandsystem.inc:870
 msgid "Abspielen und nächstes selektieren"
 msgstr ""
 
-#: Channels_Commandsystem.inc:876
+#: Channels_Commandsystem.inc:877
 msgid "Vorheriges Objekt abspielen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:883
+#: Channels_Commandsystem.inc:884
 msgid "Nächstes Objekt abspielen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:890
-#: Channels_Commandsystem.inc:1098
+#: Channels_Commandsystem.inc:891
+#: Channels_Commandsystem.inc:1099
 msgid "Vorherige Bank"
 msgstr ""
 
-#: Channels_Commandsystem.inc:897
-#: Channels_Commandsystem.inc:1105
+#: Channels_Commandsystem.inc:898
+#: Channels_Commandsystem.inc:1106
 #: befehleditorform.pas:899
 #: befehleditorform.pas:976
 msgid "Nächste Bank"
 msgstr ""
 
-#: Channels_Commandsystem.inc:904
+#: Channels_Commandsystem.inc:905
 msgid "Szene aufnehmen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:911
+#: Channels_Commandsystem.inc:912
 msgid "Crossfader"
 msgstr ""
 
-#: Channels_Commandsystem.inc:918
+#: Channels_Commandsystem.inc:919
 msgid "An den Anfang springen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:936
+#: Channels_Commandsystem.inc:937
 msgid "Play von Beginn"
 msgstr ""
 
-#: Channels_Commandsystem.inc:996
+#: Channels_Commandsystem.inc:997
 #: befehleditorform.pas:876
 msgid "Nächster Schritt"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1003
+#: Channels_Commandsystem.inc:1004
 msgid "Bestimmten Schritt starten"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1010
+#: Channels_Commandsystem.inc:1011
 #: befehleditorform.pas:877
 msgid "Intensität setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1017
+#: Channels_Commandsystem.inc:1018
 msgid "Intensität auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1024
+#: Channels_Commandsystem.inc:1025
 #: befehleditorform.pas:878
 msgid "Beschleunigung setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1031
+#: Channels_Commandsystem.inc:1032
 #: befehleditorform.pas:879
 msgid "Wiederholung ein/aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1038
+#: Channels_Commandsystem.inc:1039
 #: befehleditorform.pas:880
 msgid "Modus setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1045
+#: Channels_Commandsystem.inc:1046
 msgid "Alle Effekte stoppen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1070
+#: Channels_Commandsystem.inc:1071
 msgid "Auf festen Wert flashen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1084
+#: Channels_Commandsystem.inc:1085
 msgid "Faderwert +"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1091
+#: Channels_Commandsystem.inc:1092
 msgid "Faderwert -"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1112
+#: Channels_Commandsystem.inc:1113
 msgid "Bestimmte Bank"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1123
+#: Channels_Commandsystem.inc:1124
 #. Kontrollpanel
 #: befehleditorform.pas:905
 msgid "Button schalten"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1130
+#: Channels_Commandsystem.inc:1131
 msgid "Button ein/aus"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1138
+#: Channels_Commandsystem.inc:1139
 #: joystickfrm.pas:155
 #: joystickfrm.pas:1022
 #. Joysticksteuerung
@@ -33327,91 +33347,91 @@ msgstr ""
 msgid "Joysticksteuerung"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1141
+#: Channels_Commandsystem.inc:1142
 msgid "Positionierung absolut/relativ"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1148
+#: Channels_Commandsystem.inc:1149
 msgid "Positionierung absolut"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1155
+#: Channels_Commandsystem.inc:1156
 msgid "Positionierung relativ"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1162
+#: Channels_Commandsystem.inc:1163
 msgid "Position zentrieren"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1170
+#: Channels_Commandsystem.inc:1171
 msgid "Knotensteuerung"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1173
+#: Channels_Commandsystem.inc:1174
 msgid "Knotenset abrufen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1180
+#: Channels_Commandsystem.inc:1181
 msgid "Knotenposition X auf Wert setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1187
+#: Channels_Commandsystem.inc:1188
 msgid "Knotenposition Y auf Wert setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1194
+#: Channels_Commandsystem.inc:1195
 msgid "Knotenausdehnung auf Wert setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1201
+#: Channels_Commandsystem.inc:1202
 msgid "Knotenkontrast auf Wert setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1208
+#: Channels_Commandsystem.inc:1209
 msgid "Knoteneinblendzeit auf Wert setzen"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1215
+#: Channels_Commandsystem.inc:1216
 msgid "Knotenposition X auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1222
+#: Channels_Commandsystem.inc:1223
 msgid "Knotenposition Y auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1229
+#: Channels_Commandsystem.inc:1230
 msgid "Knotenausdehnung auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1236
+#: Channels_Commandsystem.inc:1237
 msgid "Knotenkontrast auf Eingangswert"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1243
+#: Channels_Commandsystem.inc:1244
 msgid "Plugin-Befehle"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1247
+#: Channels_Commandsystem.inc:1248
 msgid "Neues Projekt..."
 msgstr ""
 
-#: Channels_Commandsystem.inc:1248
+#: Channels_Commandsystem.inc:1249
 msgid "Projekt öffnen..."
 msgstr ""
 
-#: Channels_Commandsystem.inc:1249
+#: Channels_Commandsystem.inc:1250
 msgid "Projekt speichern unter..."
 msgstr ""
 
-#: Channels_Commandsystem.inc:1250
+#: Channels_Commandsystem.inc:1251
 msgid "Projekt schnellspeichern"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1256
+#: Channels_Commandsystem.inc:1257
 msgid "Fokus auf Kommandozeile"
 msgstr ""
 
-#: Channels_Commandsystem.inc:1257
+#: Channels_Commandsystem.inc:1258
 msgid "PC_DIMMER entsperren"
 msgstr ""
 
@@ -33613,7 +33633,7 @@ msgstr ""
 #: EditBefehl.inc:1018
 #: EditBefehl.inc:1034
 #: befehleditorform.pas:787
-#: geraetesteuerungfrm.pas:1867
+#: geraetesteuerungfrm.pas:1885
 #: scannersynchronisationfrm.pas:583
 msgid "Kalibrierung "
 msgstr ""
@@ -33821,42 +33841,42 @@ msgid "Fertig"
 msgstr ""
 
 #: adddevicefrm.pas:514
-#: geraetesteuerungfrm.pas:4521
+#: geraetesteuerungfrm.pas:4544
 msgid "Suche DDFs..."
 msgstr ""
 
 #: adddevicefrm.pas:565
-#: geraetesteuerungfrm.pas:4577
+#: geraetesteuerungfrm.pas:4600
 msgid "Verarbeite DDFs..."
 msgstr ""
 
 #. <information>
-#: adddevicefrm.pas:594
+#: adddevicefrm.pas:596
 #. <information>
-#: geraetesteuerungfrm.pas:4606
+#: geraetesteuerungfrm.pas:4631
 msgid "Die DDF-Datei \""
 msgstr ""
 
-#: adddevicefrm.pas:594
-#: geraetesteuerungfrm.pas:4606
+#: adddevicefrm.pas:596
+#: geraetesteuerungfrm.pas:4631
 msgid "\" ist nicht zu dieser Version von PC_DIMMER "
 "kompatibel."
 msgstr ""
 
-#: adddevicefrm.pas:594
-#: geraetesteuerungfrm.pas:4606
+#: adddevicefrm.pas:596
+#: geraetesteuerungfrm.pas:4631
 msgid "DMXControl-DDFs können aufgrund konzeptioneller Unterschiede nicht "
 "verwendet werden."
 msgstr ""
 
-#: adddevicefrm.pas:804
-#: geraetesteuerungfrm.pas:1593
-#: geraetesteuerungfrm.pas:4801
-#: pcdimmer.pas:13083
+#: adddevicefrm.pas:812
+#: geraetesteuerungfrm.pas:1611
+#: geraetesteuerungfrm.pas:4833
+#: pcdimmer.pas:13107
 msgid "Fertig."
 msgstr ""
 
-#: adddevicefrm.pas:805
+#: adddevicefrm.pas:813
 msgid "DDFs geladen und ausgewertet."
 msgstr ""
 
@@ -34068,9 +34088,9 @@ msgid "Möchten Sie das Ambilight einschalten?"
 msgstr ""
 
 #: ambilight.pas:1065
-#: pcdimmer.pas:12681
+#: pcdimmer.pas:12705
 #. Ambilight ein
-#: pcdimmer.pas:14545
+#: pcdimmer.pas:14569
 msgid "Ambilight ausschalten"
 msgstr ""
 
@@ -34168,7 +34188,7 @@ msgid "Bewegungsszene starten"
 msgstr ""
 
 #: audioeffektplayerfrm.pas:2105
-#: pcdimmer.pas:21136
+#: pcdimmer.pas:21160
 msgid "Unbegrenzt"
 msgstr ""
 
@@ -34203,7 +34223,7 @@ msgid "Automatikszene starten"
 msgstr ""
 
 #: audioeffektplayerfrm.pas:2218
-#: pcdimmer.pas:21223
+#: pcdimmer.pas:21247
 msgid "Unendlich"
 msgstr ""
 
@@ -34229,13 +34249,13 @@ msgstr ""
 
 #: audioeffektplayerfrm.pas:2360
 #: audioeffektplayerfrm.pas:5016
-#: pcdimmer.pas:8764
+#: pcdimmer.pas:8776
 msgid "Die Audiodatei \""
 msgstr ""
 
 #: audioeffektplayerfrm.pas:2360
 #: audioeffektplayerfrm.pas:5016
-#: pcdimmer.pas:8764
+#: pcdimmer.pas:8776
 msgid "\" wurde nicht gefunden. Möchten Sie jetzt danach "
 "suchen?"
 msgstr ""
@@ -34247,7 +34267,7 @@ msgstr ""
 
 #: audioeffektplayerfrm.pas:2364
 #: audioeffektplayerfrm.pas:5020
-#: pcdimmer.pas:8768
+#: pcdimmer.pas:8780
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:915
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1000
 msgid "Audiodatei öffnen"
@@ -34781,9 +34801,9 @@ msgstr ""
 
 #: buehnenansicht.pas:575
 #: buehnenansicht.pas:853
-#: buehnenansicht.pas:1710
-#: buehnenansicht.pas:2117
-#: buehnenansicht.pas:2172
+#: buehnenansicht.pas:1713
+#: buehnenansicht.pas:2120
+#: buehnenansicht.pas:2175
 msgid "Bilddateien (*.bmp;*.jpg;*.gif;*.ico;*.png)|*.bmp;*.jpg;*.gif;*.ico;*."
 "png|Alle Dateien (*.*)|*.*"
 msgstr ""
@@ -34798,31 +34818,31 @@ msgid "PC_DIMMER Bühnenansicht (*.pcdstge)|*.pcdstge|*.*|*.*"
 msgstr ""
 
 #: buehnenansicht.pas:603
-#: buehnenansicht.pas:1580
+#: buehnenansicht.pas:1583
 msgid "PC_DIMMER Bühnenansicht speichern..."
 msgstr ""
 
 #: buehnenansicht.pas:849
 #. {
-#: buehnenansicht.pas:1706
-#: buehnenansicht.pas:2113
+#: buehnenansicht.pas:1709
+#: buehnenansicht.pas:2116
 #. {
-#: buehnenansicht.pas:2168
+#: buehnenansicht.pas:2171
 msgid "Das Hintergrundbild \""
 msgstr ""
 
 #: buehnenansicht.pas:849
-#: buehnenansicht.pas:1706
-#: buehnenansicht.pas:2113
-#: buehnenansicht.pas:2168
+#: buehnenansicht.pas:1709
+#: buehnenansicht.pas:2116
+#: buehnenansicht.pas:2171
 msgid "\" für die Bühnenansicht wurde nicht gefunden. Möchten Sie jetzt "
 "danach suchen?"
 msgstr ""
 
 #: buehnenansicht.pas:852
-#: buehnenansicht.pas:1709
-#: buehnenansicht.pas:2116
-#: buehnenansicht.pas:2171
+#: buehnenansicht.pas:1712
+#: buehnenansicht.pas:2119
+#: buehnenansicht.pas:2174
 msgid "Bilddatei öffnen..."
 msgstr ""
 
@@ -34838,72 +34858,72 @@ msgstr ""
 msgid "Kanalicon, Kanal: "
 msgstr ""
 
-#: buehnenansicht.pas:1499
-#: buehnenansicht.pas:1850
+#: buehnenansicht.pas:1502
+#: buehnenansicht.pas:1853
 msgid "Beschriftung für \""
 msgstr ""
 
-#: buehnenansicht.pas:1499
+#: buehnenansicht.pas:1502
 msgid "Bitte geben Sie eine neue Bezeichnung für das aktuelle Gerät "
 "ein:"
 msgstr ""
 
 #. Kanalnummer ändern
-#: buehnenansicht.pas:1514
+#: buehnenansicht.pas:1517
 #. Kanalnummer ändern
-#: buehnenansicht.pas:1535
-#: buehnenansicht.pas:1865
+#: buehnenansicht.pas:1538
+#: buehnenansicht.pas:1868
 #. Kanalnummer ändern
-#: pcdimmer.pas:24616
+#: pcdimmer.pas:24643
 msgid "Kanaleinstellung"
 msgstr ""
 
-#: buehnenansicht.pas:1514
-#: buehnenansicht.pas:1535
-#: buehnenansicht.pas:1865
-#: pcdimmer.pas:24616
+#: buehnenansicht.pas:1517
+#: buehnenansicht.pas:1538
+#: buehnenansicht.pas:1868
+#: pcdimmer.pas:24643
 msgid "Welcher Kanal soll für dieses Gerät "
 "gelten:"
 msgstr ""
 
-#: buehnenansicht.pas:1581
+#: buehnenansicht.pas:1584
 msgid "Windows-Bitmap (*.bmp)|*.bmp|*.*|*.*"
 msgstr ""
 
-#: buehnenansicht.pas:1600
+#: buehnenansicht.pas:1603
 msgid "Die gesamte Bühnenansicht mit dem Standarddrucker "
 "\""
 msgstr ""
 
-#: buehnenansicht.pas:1600
+#: buehnenansicht.pas:1603
 msgid "\" ausdrucken?"
 msgstr ""
 
 #. Temp-Verzeichnis reinigen
-#: buehnenansicht.pas:1791
+#: buehnenansicht.pas:1794
 msgid "Bühnenansicht: Es ist ein Fehler beim Speichern der Szene "
 "aufgetreten."
 msgstr ""
 
-#: buehnenansicht.pas:1824
+#: buehnenansicht.pas:1827
 msgid "PNG-Datei (*.png)|*.png"
 msgstr ""
 
-#: buehnenansicht.pas:1850
+#: buehnenansicht.pas:1853
 msgid "Bitte geben Sie eine neue Bezeichnung für den aktuellen Kanal "
 "ein:"
 msgstr ""
 
-#: buehnenansicht.pas:2430
-#: buehnenansicht.pas:2431
+#: buehnenansicht.pas:2433
+#: buehnenansicht.pas:2434
 msgid "Bühne "
 msgstr ""
 
-#: buehnenansicht.pas:2448
+#: buehnenansicht.pas:2451
 msgid "Neue Bühnenbezeichnung"
 msgstr ""
 
-#: buehnenansicht.pas:2448
+#: buehnenansicht.pas:2451
 msgid "Bitte geben Sie eine neue Bezeichnung für diese "
 "Bühne:"
 msgstr ""
@@ -34948,7 +34968,7 @@ msgid "aber entriegelt"
 msgstr ""
 
 #: codeeditorfrm.pas:203
-#: pcdimmer.pas:9698
+#: pcdimmer.pas:9722
 #. mainform.DeleteDir(mainform.userdirectory+''+NodePath(TreeView1.Selected));
 #: projektverwaltungfrm.pas:342
 msgid "Die Datei \""
@@ -35170,26 +35190,26 @@ msgid "Bitte geben Sie den letzten Kanal des 1:1-Patchings "
 "an..."
 msgstr ""
 
-#: ddfeditorfrm.pas:843
+#: ddfeditorfrm.pas:848
 msgid "Letztes Objekt: "
 msgstr ""
 
-#: ddfeditorfrm.pas:1389
+#: ddfeditorfrm.pas:1395
 msgid "Es muss mindestens ein Kanal in der Gerätedefinition vorhanden "
 "sein."
 msgstr ""
 
-#: ddfeditorfrm.pas:2590
+#: ddfeditorfrm.pas:2600
 msgid "Soll die Gerätedatei vor dem Beenden gespeichert "
 "werden?"
 msgstr ""
 
-#: ddfeditorfrm.pas:2826
+#: ddfeditorfrm.pas:2836
 msgid "Globale Variablen können nicht gesondert ausgeführt und getestet "
 "werden..."
 msgstr ""
 
-#: ddfeditorfrm.pas:3334
+#: ddfeditorfrm.pas:3344
 msgid "Standardfunktionen:\n"
 "InitDevice(Device: String)\n"
 "FormShow\n"
@@ -35203,7 +35223,7 @@ msgid "Standardfunktionen:\n"
 "oder \"Edit1.Text:='Hello World'\""
 msgstr ""
 
-#: ddfeditorfrm.pas:3349
+#: ddfeditorfrm.pas:3359
 msgid "Das aktuell bearbeitete Gerät besitzt keinen Farbkanal (Farbrad, oder "
 "ähnliches).\n"
 "Das Definieren von Farben wird ohne einen Farbkanal (\"COLOR1\" oder "
@@ -35215,24 +35235,24 @@ msgid "Das aktuell bearbeitete Gerät besitzt keinen Farbkanal (Farbrad, oder "
 "können."
 msgstr ""
 
-#: ddfeditorfrm.pas:3752
+#: ddfeditorfrm.pas:3762
 msgid "Das aktuell bearbeitete Gerät besitzt keinen Farbkanal (Farbrad, oder "
 "ähnliches)."
 msgstr ""
 
-#: ddfeditorfrm.pas:3752
+#: ddfeditorfrm.pas:3762
 msgid "Das Definieren von Farben wird ohne einen Farbkanal (\"COLOR2\") keine "
 "Auwirkungen haben. Die Funktion \"Autofarbe\" wird ebenfalls nicht zur "
 "Verfügung stehen."
 msgstr ""
 
-#: ddfeditorfrm.pas:3752
+#: ddfeditorfrm.pas:3762
 msgid "Fügen Sie einen neuen Kanal mit dem Typ \"COLOR2\" hinzu, um die "
 "Farbfunktionen im PC_DIMMER nutzen zu "
 "können."
 msgstr ""
 
-#: ddfeditorfrm.pas:3842
+#: ddfeditorfrm.pas:3852
 msgid "Das aktuell bearbeitete Gerät besitzt keinen Gobokanal.\n"
 "Das Definieren von Gobos wird ohne einen Gobokanal (\"Gobo1\") keine "
 "Auwirkungen haben.\n"
@@ -35242,23 +35262,23 @@ msgid "Das aktuell bearbeitete Gerät besitzt keinen Gobokanal.\n"
 "können."
 msgstr ""
 
-#: ddfeditorfrm.pas:3964
+#: ddfeditorfrm.pas:3974
 msgid "Das aktuell bearbeitete Gerät besitzt keinen "
 "Gobokanal."
 msgstr ""
 
-#: ddfeditorfrm.pas:3964
+#: ddfeditorfrm.pas:3974
 msgid "Das Definieren von Gobos wird ohne einen Gobokanal (\"Gobo2\") keine "
 "Auwirkungen haben."
 msgstr ""
 
-#: ddfeditorfrm.pas:3964
+#: ddfeditorfrm.pas:3974
 msgid "Fügen Sie einen neuen Kanal mit dem Typ \"Gobo2\" hinzu, um die "
 "Gobofunktionen im PC_DIMMER nutzen zu "
 "können."
 msgstr ""
 
-#: ddfeditorfrm.pas:4199
+#: ddfeditorfrm.pas:4209
 msgid "Andere Farbauswahl"
 msgstr ""
 
@@ -35312,15 +35332,15 @@ msgid "Es werden alle Kanäle der Szene hinzugefügt. "
 msgstr ""
 
 #: devicelistfrm.pas:111
-#: geraetesteuerungfrm.pas:4473
+#: geraetesteuerungfrm.pas:4496
 #. HEADER
-#: pcdimmer.pas:22618
+#: pcdimmer.pas:22642
 #: reordergroupfrm.pas:138
 msgid "Gerätename"
 msgstr ""
 
 #: devicelistfrm.pas:112
-#: pcdimmer.pas:22619
+#: pcdimmer.pas:22643
 #: reordergroupfrm.pas:141
 msgid "Hersteller"
 msgstr ""
@@ -35330,18 +35350,18 @@ msgid "P [W]"
 msgstr ""
 
 #: devicelistfrm.pas:116
-#: pcdimmer.pas:22623
+#: pcdimmer.pas:22647
 #: plugins/Programmplugins/Alt/Leistungsplugin/settingfrm.pas:352
 msgid "Phase"
 msgstr ""
 
 #: devicelistfrm.pas:118
-#: pcdimmer.pas:22625
+#: pcdimmer.pas:22649
 msgid "Pan/Tilt"
 msgstr ""
 
 #: devicelistfrm.pas:121
-#: pcdimmer.pas:22629
+#: pcdimmer.pas:22653
 msgid "Autoscening"
 msgstr ""
 
@@ -35372,26 +35392,26 @@ msgstr ""
 #: dimmcurvefrm.pas:275
 #: dimmcurvefrm.pas:316
 #. Falls andere Gerätekanäle mit diesem konkurrieren, dann Meldung
-#: geraetesteuerungfrm.pas:1256
+#: geraetesteuerungfrm.pas:1271
 msgid "Ein anderer Gerätekanal ("
 msgstr ""
 
 #: dimmcurvefrm.pas:275
 #: dimmcurvefrm.pas:316
-#: geraetesteuerungfrm.pas:1256
+#: geraetesteuerungfrm.pas:1271
 msgid "Es kann allerdings nur eine Kurve pro Kanal genutzt "
 "werden."
 msgstr ""
 
 #: dimmcurvefrm.pas:275
 #: dimmcurvefrm.pas:316
-#: geraetesteuerungfrm.pas:1256
+#: geraetesteuerungfrm.pas:1271
 msgid "Soll die Kurvenform des anderen Gerätekanals nun automatisch "
 "angepasst werden?"
 msgstr ""
 
 #: dimmcurvefrm.pas:316
-#: geraetesteuerungfrm.pas:1256
+#: geraetesteuerungfrm.pas:1271
 msgid ") belegt die gleiche Adresse wie der ausgewählte "
 "Kanal."
 msgstr ""
@@ -35849,139 +35869,139 @@ msgstr ""
 msgid "Startadresse: "
 msgstr ""
 
-#: geraetesteuerungfrm.pas:639
+#: geraetesteuerungfrm.pas:642
 msgid "Möchten Sie wirklich alle Geräte und Presets "
 "löschen?"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1221
+#: geraetesteuerungfrm.pas:1236
 msgid "In den Optionen ist die Kanalzahl auf "
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1221
+#: geraetesteuerungfrm.pas:1236
 msgid " begrenzt. Diese Grenze kann in den erweiterten Einstellungen auf bis "
 "zu 8192 erhöht werden."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1318
-#: geraetesteuerungfrm.pas:1519
-#: geraetesteuerungfrm.pas:1565
+#: geraetesteuerungfrm.pas:1333
+#: geraetesteuerungfrm.pas:1537
+#: geraetesteuerungfrm.pas:1583
 #: sidebarfrm.pas:1086
 msgid "Es werden "
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1318
-#: geraetesteuerungfrm.pas:1519
-#: geraetesteuerungfrm.pas:1565
-#: geraetesteuerungfrm.pas:1594
+#: geraetesteuerungfrm.pas:1333
+#: geraetesteuerungfrm.pas:1537
+#: geraetesteuerungfrm.pas:1583
+#: geraetesteuerungfrm.pas:1612
 msgid " Geräte hinzugefügt."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1332
-#: geraetesteuerungfrm.pas:1334
+#: geraetesteuerungfrm.pas:1347
+#: geraetesteuerungfrm.pas:1349
 msgid "Das zu erstellende Gerät liegt außerhalb der möglichen Kanäle "
 "("
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1332
+#: geraetesteuerungfrm.pas:1347
 msgid "). In den erweiterten Optionen kann die maximale Kanalzahl auf "
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1332
+#: geraetesteuerungfrm.pas:1347
 msgid " erhöht werden."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1332
-#: geraetesteuerungfrm.pas:1334
+#: geraetesteuerungfrm.pas:1347
+#: geraetesteuerungfrm.pas:1349
 msgid "Das Hinzufügen neuer Geräte wird nun "
 "abgebrochen."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1334
+#: geraetesteuerungfrm.pas:1349
 msgid "). Diese Software unterstützt maximal "
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1334
+#: geraetesteuerungfrm.pas:1349
 msgid " Kanäle. Sollten mehr als diese Kanäle benötigt werden, wenden Sie "
 "sich bitte an christian@noeding-online.de, bzw. auf der Website "
 "http://www.pcdimmer.de, um die Software entsprechend anpassen zu "
 "lassen."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1518
+#: geraetesteuerungfrm.pas:1536
 msgid "Gerätegruppen erstellen..."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1530
+#: geraetesteuerungfrm.pas:1548
 msgid "Gruppierte"
 msgstr ""
 
 #. Gruppeneditor aktualisieren
-#: geraetesteuerungfrm.pas:1550
+#: geraetesteuerungfrm.pas:1568
 #: reordergroupfrm.pas:506
 msgid "Neue Gerätegruppe"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1564
+#: geraetesteuerungfrm.pas:1582
 msgid "Initialisierungsfunktion ausführen..."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1594
+#: geraetesteuerungfrm.pas:1612
 msgid "Es wurden "
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1644
-#: geraetesteuerungfrm.pas:3190
+#: geraetesteuerungfrm.pas:1662
+#: geraetesteuerungfrm.pas:3209
 #: insscene.pas:494
 #: konsolensteuerungfrm.pas:391
 #: pcdHTTPServer.pas:353
 #: pcdimmer.pas:2191
 #: pcdimmer.pas:3839
 #. Ungerade Kanäle
-#: pcdimmer.pas:11534
+#: pcdimmer.pas:11558
 #. Gerade Kanäle
-#: pcdimmer.pas:11537
+#: pcdimmer.pas:11561
 #: SetNames.pas:58
 #: SetNames.pas:59
 msgid "Kanal "
 msgstr ""
 
 #. Gerät wird noch verwendet -> Dialogbox anzeigen
-#: geraetesteuerungfrm.pas:1649
+#: geraetesteuerungfrm.pas:1667
 msgid "Das zu löschende Gerät wird noch verwendet.  Bitte wählen Sie, wie "
 "weiter verfahren werden soll:"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2010
+#: geraetesteuerungfrm.pas:2028
 #: reordergroupfrm.pas:481
 msgid "Neue Gerätegruppe ("
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2073
+#: geraetesteuerungfrm.pas:2091
 #: reordergroupfrm.pas:524
 msgid "Möchten Sie diese Gruppe wirklich löschen?"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2086
+#: geraetesteuerungfrm.pas:2104
 #: reordergroupfrm.pas:537
 msgid "Geräteanzahl:"
 msgstr ""
 
 #. Gruppe wird noch verwendet -> Dialogbox anzeigen
-#: geraetesteuerungfrm.pas:2091
+#: geraetesteuerungfrm.pas:2109
 #. Gruppe wird noch verwendet -> Dialogbox anzeigen
 #: reordergroupfrm.pas:542
 msgid "Die zu löschende Gruppe wird noch verwendet. Bitte wählen Sie, wie "
 "weiter verfahren werden soll:"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2092
+#: geraetesteuerungfrm.pas:2110
 #: reordergroupfrm.pas:543
 msgid "Gruppe löschen"
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2827
+#: geraetesteuerungfrm.pas:2846
 #: pcdHTTPServer.pas:502
 #: submasterfrm.pas:508
 #: szenenverwaltung.pas:739
@@ -35991,45 +36011,45 @@ msgid "Befehle"
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2848
+#: geraetesteuerungfrm.pas:2867
 #: Tastenabfragefrm.pas:369
 msgid "Tastencode"
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2869
+#: geraetesteuerungfrm.pas:2888
 msgid "Joystickevent"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2873
+#: geraetesteuerungfrm.pas:2892
 msgid "Joystickevent "
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2890
+#: geraetesteuerungfrm.pas:2909
 msgid "Midievent"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2894
+#: geraetesteuerungfrm.pas:2913
 msgid "MidiEvent "
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2911
+#: geraetesteuerungfrm.pas:2930
 msgid "DataInEvent"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2915
+#: geraetesteuerungfrm.pas:2934
 msgid "DataInEvent "
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2947
+#: geraetesteuerungfrm.pas:2966
 msgid "Gerätegruppe"
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:3121
+#: geraetesteuerungfrm.pas:3140
 #: pcdHTTPServer.pas:494
 #: szenenverwaltung.pas:732
 #. Bewegungsszenen
@@ -36037,65 +36057,65 @@ msgstr ""
 msgid "Bewegungsszenen"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:3257
-#: geraetesteuerungfrm.pas:3282
+#: geraetesteuerungfrm.pas:3276
+#: geraetesteuerungfrm.pas:3301
 msgid "PC_DIMMER Geräteadressendatei (*.pcddeva)|*.pcddeva|Alle "
 "Dateien|*.*"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:3259
+#: geraetesteuerungfrm.pas:3278
 msgid "PC_DIMMER Geräteadressendatei speichern"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:3284
+#: geraetesteuerungfrm.pas:3303
 msgid "PC_DIMMER Geräteadressendatei öffnen"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:3434
+#: geraetesteuerungfrm.pas:3453
 msgid "Das Gerät besitzt offenbar keinen Farbkanal. Einstellungen im "
 "folgenden Fenster wirken sich nur auf Geräte mit \"COLOR1\"-Kanal über "
 "die Autoszenen aus."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:3774
+#: geraetesteuerungfrm.pas:3796
 #: reordergroupfrm.pas:608
 msgid "Gruppen-ID"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:3774
+#: geraetesteuerungfrm.pas:3796
 #: reordergroupfrm.pas:608
 msgid "Die ID der aktuellen Gruppe lautet wie "
 "folgt:"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:4473
+#: geraetesteuerungfrm.pas:4496
 msgid "Bitte geben Sie einen neuen Namen für das Gerät "
 "an:"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:4485
+#: geraetesteuerungfrm.pas:4508
 msgid "Geräte sortieren:"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:4606
+#: geraetesteuerungfrm.pas:4631
 msgid "Wenn Sie sicher sind, dass es sich um eine PC_DIMMER-DDF handelt, "
 "kontrollieren Sie, ob im Header der Datei \"<information "
 "id=\"PC_DIMMER\">\" steht."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:4864
+#: geraetesteuerungfrm.pas:4896
 msgid "Mit dieser Funktionen kann die ID des selektierten Gerätes geändert "
 "werden. Falsche Einstellungen können sämtliche Szenenverknüpfungen zu "
 "diesem Gerät zerstören. Fortfahren?"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:4869
-#: geraetesteuerungfrm.pas:7623
+#: geraetesteuerungfrm.pas:4901
+#: geraetesteuerungfrm.pas:7655
 msgid "Geräte-ID"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:4869
-#: geraetesteuerungfrm.pas:7623
+#: geraetesteuerungfrm.pas:4901
+#: geraetesteuerungfrm.pas:7655
 msgid "Die ID des aktuellen Gerätes lautet wie "
 "folgt:"
 msgstr ""
@@ -36106,8 +36126,8 @@ msgid "Sie können maximal 255 Zeichen eingeben"
 msgstr ""
 
 #: insscene.pas:292
-#: pcdimmer.pas:11525
-#: pcdimmer.pas:11527
+#: pcdimmer.pas:11549
+#: pcdimmer.pas:11551
 #: SetNames.pas:84
 #: plugins/Programmplugins/Alt/Kontrollpanel/insscene.pas:243
 #: plugins/Programmplugins/Alt/Leistungsplugin/settingfrm.pas:354
@@ -36241,12 +36261,12 @@ msgid "PC_DIMMER Joystick-Einstellungen öffnen"
 msgstr ""
 
 #: kanaluebersichtfrm.pas:479
-#: pcdimmer.pas:24874
+#: pcdimmer.pas:24901
 msgid "Kanalwert ändern"
 msgstr ""
 
 #: kanaluebersichtfrm.pas:479
-#: pcdimmer.pas:24874
+#: pcdimmer.pas:24901
 msgid "Bitte geben Sie einen neuen Endwert "
 "an:"
 msgstr ""
@@ -36317,19 +36337,19 @@ msgid "Fehler beim Zugriff auf die Datei \""
 msgstr ""
 
 #: kontrollpanelform.pas:584
-#: pcdimmer.pas:24986
+#: pcdimmer.pas:25013
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1030
 msgid "Schwarz"
 msgstr ""
 
 #: kontrollpanelform.pas:586
-#: pcdimmer.pas:24988
+#: pcdimmer.pas:25015
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1032
 msgid "Grau"
 msgstr ""
 
 #: kontrollpanelform.pas:587
-#: pcdimmer.pas:24989
+#: pcdimmer.pas:25016
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1033
 msgid "Rosa"
 msgstr ""
@@ -36483,7 +36503,7 @@ msgid "Neuer Knoten"
 msgstr ""
 
 #: nodecontrolfrm.pas:504
-#: nodecontrolfrm.pas:690
+#: nodecontrolfrm.pas:693
 msgid "Neue Bezeichnung"
 msgstr ""
 
@@ -36492,12 +36512,12 @@ msgid "Bitte geben Sie eine neue Bezeichnung für diesen Knoten "
 "ein..."
 msgstr ""
 
-#: nodecontrolfrm.pas:588
-#: nodecontrolfrm.pas:625
+#: nodecontrolfrm.pas:591
+#: nodecontrolfrm.pas:628
 msgid "Neue Knotensteuerung"
 msgstr ""
 
-#: nodecontrolfrm.pas:690
+#: nodecontrolfrm.pas:693
 msgid "Bitte geben Sie eine neue Bezeichnung "
 "ein..."
 msgstr ""
@@ -36832,7 +36852,7 @@ msgstr ""
 #. Program-Plugins deaktivieren
 #: pcdimmer.pas:3419
 #. Input-Plugins deaktivieren
-#: pcdimmer.pas:11617
+#: pcdimmer.pas:11641
 msgid "Deaktiviere Input-Plugin "
 msgstr ""
 
@@ -36849,12 +36869,12 @@ msgid "Deaktiviere Output-Plugin "
 msgstr ""
 
 #: pcdimmer.pas:3469
-#: pcdimmer.pas:11627
+#: pcdimmer.pas:11651
 msgid "Das Plugin \""
 msgstr ""
 
 #: pcdimmer.pas:3469
-#: pcdimmer.pas:11627
+#: pcdimmer.pas:11651
 msgid "\" hat einen Fehler beim Deaktivieren "
 "gemeldet."
 msgstr ""
@@ -36871,7 +36891,7 @@ msgstr ""
 
 #. Pluginreferenzen entfernen
 #: pcdimmer.pas:3573
-#: pcdimmer.pas:11637
+#: pcdimmer.pas:11661
 msgid "Entferne DLL-Referenzen..."
 msgstr ""
 
@@ -36895,7 +36915,7 @@ msgstr ""
 
 #. 'Neue Audiodatei...' setzen
 #: pcdimmer.pas:3851
-#: pcdimmer.pas:8781
+#: pcdimmer.pas:8793
 msgid "Neue Audiodatei..."
 msgstr ""
 
@@ -36934,7 +36954,7 @@ msgid "PC_DIMMER Projekt speichern..."
 msgstr ""
 
 #: pcdimmer.pas:4079
-#: pcdimmer.pas:9678
+#: pcdimmer.pas:9702
 msgid "PC_DIMMER Projekt (*.pcdproj)|*.pcdproj|*.*|*.*"
 msgstr ""
 
@@ -36953,7 +36973,7 @@ msgid "Projektgröße: "
 msgstr ""
 
 #: pcdimmer.pas:4097
-#: pcdimmer.pas:11026
+#: pcdimmer.pas:11050
 msgid " Speichere Datei... "
 msgstr ""
 
@@ -36967,7 +36987,7 @@ msgstr ""
 
 #: pcdimmer.pas:4161
 #. Ende NodeControl
-#: pcdimmer.pas:5553
+#: pcdimmer.pas:5556
 msgid "Schreibe Datei..."
 msgstr ""
 
@@ -37022,251 +37042,251 @@ msgid "Schreibe Datei... Geräte"
 msgstr ""
 
 #. Presets speichern
-#: pcdimmer.pas:4731
+#: pcdimmer.pas:4734
 msgid "Schreibe Datei... Presets"
 msgstr ""
 
 #. Geräteszenen speichern
-#: pcdimmer.pas:4769
+#: pcdimmer.pas:4772
 msgid "Schreibe Datei... Geräteszenen"
 msgstr ""
 
 #. Gruppen speichern
-#: pcdimmer.pas:4858
+#: pcdimmer.pas:4861
 msgid "Schreibe Datei... Gerätegruppen"
 msgstr ""
 
 #. Softpatch speichern
-#: pcdimmer.pas:4884
+#: pcdimmer.pas:4887
 msgid "Schreibe Datei... Softpatch"
 msgstr ""
 
 #. Effekte speichern
-#: pcdimmer.pas:4913
+#: pcdimmer.pas:4916
 msgid "Schreibe Datei... Effekte"
 msgstr ""
 
 #. Bühnenansicht speichern
-#: pcdimmer.pas:5015
+#: pcdimmer.pas:5018
 msgid "Schreibe Datei... Bühnenansicht"
 msgstr ""
 
 #. Desktopproperties speichern
-#: pcdimmer.pas:5054
+#: pcdimmer.pas:5057
 msgid "Schreibe Datei... Desktopeinstellungen"
 msgstr ""
 
 #. Joystickeinstellungen Speichern
-#: pcdimmer.pas:5076
+#: pcdimmer.pas:5079
 msgid "Schreibe Datei... Joystickeinstellungen"
 msgstr ""
 
 #. Kontrollpanel speichern
-#: pcdimmer.pas:5110
+#: pcdimmer.pas:5113
 msgid "Schreibe Datei... Kontrollpanel"
 msgstr ""
 
 #. MIDI-IN Event speichern
-#: pcdimmer.pas:5136
+#: pcdimmer.pas:5139
 msgid "Schreibe Datei... MIDI-In"
 msgstr ""
 
 #. Data-IN Event speichern
-#: pcdimmer.pas:5171
+#: pcdimmer.pas:5174
 msgid "Schreibe Datei... Data-In"
 msgstr ""
 
 #. Leistungsdaten speichern
-#: pcdimmer.pas:5202
+#: pcdimmer.pas:5205
 msgid "Schreibe Datei... Leistungssteuerung"
 msgstr ""
 
 #. Autoszenen speichern
-#: pcdimmer.pas:5221
+#: pcdimmer.pas:5224
 msgid "Schreibe Datei... Autoszenen"
 msgstr ""
 
 #. Submaster (neu) speichern
-#: pcdimmer.pas:5252
+#: pcdimmer.pas:5255
 msgid "Schreibe Datei... Submaster"
 msgstr ""
 
 #. Cue-Liste speichern
-#: pcdimmer.pas:5306
+#: pcdimmer.pas:5309
 msgid "Schreibe Datei... Cueliste"
 msgstr ""
 
 #. Timecodeplayer-Liste speichern
-#: pcdimmer.pas:5333
+#: pcdimmer.pas:5336
 msgid "Schreibe Datei... Timecodeplayer"
 msgstr ""
 
 #. IR FB speichern
-#: pcdimmer.pas:5353
+#: pcdimmer.pas:5356
 msgid "Schreibe Datei... IR Fernbedienung"
 msgstr ""
 
 #. MediaCenter Szenen speichern
-#: pcdimmer.pas:5368
+#: pcdimmer.pas:5371
 msgid "Schreibe Datei... MediaCenter Szenen"
 msgstr ""
 
 #. Plugin Szenen speichern
-#: pcdimmer.pas:5388
+#: pcdimmer.pas:5391
 msgid "Schreibe Datei... Pluginszenen"
 msgstr ""
 
 #. PresetSzenen speichern
-#: pcdimmer.pas:5480
+#: pcdimmer.pas:5483
 msgid "Schreibe Datei... Preset-Szenen"
 msgstr ""
 
 #. NodeControl speichern
-#: pcdimmer.pas:5514
+#: pcdimmer.pas:5517
 msgid "Schreibe Datei... Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:5575
+#: pcdimmer.pas:5578
 msgid "Erstelle Backup-Datei \""
 msgstr ""
 
-#: pcdimmer.pas:5585
+#: pcdimmer.pas:5588
 msgid "Komprimiere Projektdatei..."
 msgstr ""
 
 #. filesinprojectdirectory:=0;
-#: pcdimmer.pas:5593
+#: pcdimmer.pas:5596
 #. ShowMessage('Informationen über aktuelle Projektdatei:'+#13#10#13#10+GetFileSummaryInfo(Openfilepath+Openfilename));
-#: pcdimmer.pas:5719
+#: pcdimmer.pas:5722
 msgid "Datei (1/"
 msgstr ""
 
-#: pcdimmer.pas:5705
+#: pcdimmer.pas:5708
 msgid "Achtung: Sie versuchen eine Datei als Projekt zu öffnen, die nicht "
 "die Endung \"pcdproj\" besitzt!"
 msgstr ""
 
-#: pcdimmer.pas:5739
-#: pcdimmer.pas:12967
+#: pcdimmer.pas:5742
+#: pcdimmer.pas:12991
 msgid "Lade Projekt..."
 msgstr ""
 
-#: pcdimmer.pas:5740
+#: pcdimmer.pas:5743
 msgid " Öffne Datei... "
 msgstr ""
 
-#: pcdimmer.pas:5752
-#: pcdimmer.pas:5757
+#: pcdimmer.pas:5755
+#: pcdimmer.pas:5760
 msgid "Sende Öffnen-Befehl...Plugins"
 msgstr ""
 
 #. hier aus Datei in Records schreiben
-#: pcdimmer.pas:5772
-#: pcdimmer.pas:8475
+#: pcdimmer.pas:5775
+#: pcdimmer.pas:8487
 msgid "Lese Daten ein..."
 msgstr ""
 
 #. Projekt-Header öffnen
-#: pcdimmer.pas:5786
+#: pcdimmer.pas:5789
 msgid "Lese Daten ein... Projekt-Header"
 msgstr ""
 
-#: pcdimmer.pas:5790
+#: pcdimmer.pas:5793
 msgid "Lese Daten ein...Projekt-Header"
 msgstr ""
 
 #. Version vor 4.x
-#: pcdimmer.pas:5828
-#: pcdimmer.pas:5839
+#: pcdimmer.pas:5831
+#: pcdimmer.pas:5842
 msgid "Projektdatei zurückgewiesen"
 msgstr ""
 
-#: pcdimmer.pas:5829
-#: pcdimmer.pas:8486
+#: pcdimmer.pas:5832
+#: pcdimmer.pas:8498
 msgid "Die Projektdatei ist veraltet"
 msgstr ""
 
-#: pcdimmer.pas:5831
+#: pcdimmer.pas:5834
 msgid "Aufgrund großer Änderungen am Projektformat können die bisherigen "
 "Projekte leider nicht weiter verwendet werden. Zum Teil können "
 "Programmteile über die jeweilige Speicherfunktion exportiert und "
 "reimportiert werden."
 msgstr ""
 
-#: pcdimmer.pas:5833
-#: pcdimmer.pas:5859
-#: pcdimmer.pas:5885
-#: pcdimmer.pas:8490
-#: pcdimmer.pas:8514
+#: pcdimmer.pas:5836
+#: pcdimmer.pas:5862
+#: pcdimmer.pas:5888
+#: pcdimmer.pas:8502
+#: pcdimmer.pas:8526
 msgid "Projektversion: "
 msgstr ""
 
-#: pcdimmer.pas:5834
-#: pcdimmer.pas:8491
-#: pcdimmer.pas:8515
+#: pcdimmer.pas:5837
+#: pcdimmer.pas:8503
+#: pcdimmer.pas:8527
 msgid "Datum: "
 msgstr ""
 
-#: pcdimmer.pas:5835
-#: pcdimmer.pas:8492
-#: pcdimmer.pas:8516
+#: pcdimmer.pas:5838
+#: pcdimmer.pas:8504
+#: pcdimmer.pas:8528
 msgid "Uhrzeit: "
 msgstr ""
 
 #. Hinweise zu neueren Projekten, als diese Programmversion
-#: pcdimmer.pas:5851
+#: pcdimmer.pas:5854
 msgid "Projekt einer neueren Programmversion"
 msgstr ""
 
-#: pcdimmer.pas:5852
+#: pcdimmer.pas:5855
 msgid "Das Projekt wurde mit einer neueren PC_DIMMER Version "
 "gespeichert."
 msgstr ""
 
-#: pcdimmer.pas:5854
+#: pcdimmer.pas:5857
 msgid "Die zu ladende Projektdatei wurde mit einer neueren PC_DIMMER-Version "
 "gespeichert und kann mit der aktuellen Version nicht fehlerfrei "
 "geöffnet werden."
 msgstr ""
 
-#: pcdimmer.pas:5856
+#: pcdimmer.pas:5859
 msgid "Bitte laden Sie sich eine aktuelle Version des PC_DIMMERs von der "
 "Seite http://www.pcdimmer.de herunter."
 msgstr ""
 
-#: pcdimmer.pas:5860
-#: pcdimmer.pas:5886
+#: pcdimmer.pas:5863
+#: pcdimmer.pas:5889
 msgid "Projektdatum: "
 msgstr ""
 
-#: pcdimmer.pas:5861
-#: pcdimmer.pas:5887
+#: pcdimmer.pas:5864
+#: pcdimmer.pas:5890
 msgid "Projektzeit: "
 msgstr ""
 
-#: pcdimmer.pas:5865
-#: pcdimmer.pas:5891
+#: pcdimmer.pas:5868
+#: pcdimmer.pas:5894
 msgid "Hinweis..."
 msgstr ""
 
 #. Hinweise zu älteren Projekten
-#: pcdimmer.pas:5877
+#: pcdimmer.pas:5880
 msgid "Projekt einer früheren Programmversion"
 msgstr ""
 
-#: pcdimmer.pas:5878
+#: pcdimmer.pas:5881
 msgid "Das Projekt wurde mit einer älteren PC_DIMMER Version "
 "gespeichert."
 msgstr ""
 
-#: pcdimmer.pas:5880
+#: pcdimmer.pas:5883
 msgid "Die zu ladende Projektdatei wurde mit einer älteren PC_DIMMER-Version "
 "gespeichert. Die Projektdatei wird beim nächsten Speichervorgang "
 "automatisch konvertiert und als neue Version "
 "abgespeichert."
 msgstr ""
 
-#: pcdimmer.pas:5882
+#: pcdimmer.pas:5885
 msgid "Nach der Konvertierung kann das Projekt nicht mehr in einer älteren "
 "Version des PC_DIMMERs geladen werden. Möchten Sie parallel eine "
 "ältere PC_DIMMER-Version benutzen, sollten Sie eine Sicherungskopie "
@@ -37274,408 +37294,408 @@ msgid "Nach der Konvertierung kann das Projekt nicht mehr in einer älteren "
 "anfertigen."
 msgstr ""
 
-#: pcdimmer.pas:5885
+#: pcdimmer.pas:5888
 msgid " (wird bei nächster Speicherung konvertiert zu Projektversion "
 msgstr ""
 
 #. Effektaudio laden
-#: pcdimmer.pas:5903
+#: pcdimmer.pas:5906
 msgid "Lese Daten ein... Audioeffektplayer"
 msgstr ""
 
-#: pcdimmer.pas:5907
+#: pcdimmer.pas:5910
 msgid "Lese Daten ein...Audioeffektplayer"
 msgstr ""
 
 #. Lese Projekteinstellungen
-#: pcdimmer.pas:6074
+#: pcdimmer.pas:6077
 msgid "Lese Daten ein... Projekteinstellungen"
 msgstr ""
 
-#: pcdimmer.pas:6078
+#: pcdimmer.pas:6081
 msgid "Lese Daten ein...Projekteinstellungen"
 msgstr ""
 
 #. Lese Figurendaten
-#: pcdimmer.pas:6129
+#: pcdimmer.pas:6132
 msgid "Lese Daten ein... Figuren"
 msgstr ""
 
-#: pcdimmer.pas:6134
+#: pcdimmer.pas:6137
 msgid "Lese Daten ein...Figuren"
 msgstr ""
 
 #. Einfache-, Bewegungs- und Audioszenen, sowie Befehle öffnen
-#: pcdimmer.pas:6161
+#: pcdimmer.pas:6164
 msgid "Lese Daten ein... Szenen"
 msgstr ""
 
-#: pcdimmer.pas:6165
+#: pcdimmer.pas:6168
 msgid "Lese Daten ein...Szenen"
 msgstr ""
 
 #. Timeline öffnen
-#: pcdimmer.pas:6455
+#: pcdimmer.pas:6458
 msgid "Lese Daten ein... Timeline"
 msgstr ""
 
-#: pcdimmer.pas:6459
+#: pcdimmer.pas:6462
 msgid "Lese Daten ein...Timeline"
 msgstr ""
 
 #. Skripttimer öffnen
-#: pcdimmer.pas:6484
+#: pcdimmer.pas:6487
 msgid "Lese Daten ein... Skripttimer"
 msgstr ""
 
-#: pcdimmer.pas:6488
+#: pcdimmer.pas:6491
 msgid "Lese Daten ein...Skripttimer"
 msgstr ""
 
 #. Hotkeys öffnen
-#: pcdimmer.pas:6500
+#: pcdimmer.pas:6503
 msgid "Lese Daten ein... Hotkeys"
 msgstr ""
 
-#: pcdimmer.pas:6505
+#: pcdimmer.pas:6508
 msgid "Lese Daten ein...Hotkeys"
 msgstr ""
 
 #. Nebelmaschineneinstellungen laden
-#: pcdimmer.pas:6593
+#: pcdimmer.pas:6596
 msgid "Lese Daten ein... Nebelmaschine"
 msgstr ""
 
-#: pcdimmer.pas:6597
+#: pcdimmer.pas:6600
 msgid "Lese Daten ein...Nebelmaschine"
 msgstr ""
 
 #. Geräte öffnen
-#: pcdimmer.pas:6605
+#: pcdimmer.pas:6608
 msgid "Lese Daten ein... Geräte"
 msgstr ""
 
-#: pcdimmer.pas:6609
+#: pcdimmer.pas:6612
 msgid "Lese Daten ein...Geräte"
 msgstr ""
 
-#: pcdimmer.pas:6636
+#: pcdimmer.pas:6639
 msgid "Konv. Kalibrierung"
 msgstr ""
 
-#: pcdimmer.pas:6648
+#: pcdimmer.pas:6651
 msgid "Konv. Verfolgerkalib."
 msgstr ""
 
 #. Presets öffnen
-#: pcdimmer.pas:6932
+#: pcdimmer.pas:6944
 msgid "Lese Daten ein... Presets"
 msgstr ""
 
-#: pcdimmer.pas:6936
+#: pcdimmer.pas:6948
 msgid "Lese Daten ein...Presets"
 msgstr ""
 
 #. Geräteszenen öffnen
-#: pcdimmer.pas:6988
+#: pcdimmer.pas:7000
 msgid "Lese Daten ein... Geräteszenen"
 msgstr ""
 
-#: pcdimmer.pas:6993
+#: pcdimmer.pas:7005
 msgid "Lese Daten ein...Geräteszenen"
 msgstr ""
 
 #. Gruppen öffnen
-#: pcdimmer.pas:7122
+#: pcdimmer.pas:7134
 msgid "Lese Daten... Gerätegruppen"
 msgstr ""
 
-#: pcdimmer.pas:7126
+#: pcdimmer.pas:7138
 msgid "Lese Daten ein...Gerätegruppen"
 msgstr ""
 
 #. Softpatch öffnen
-#: pcdimmer.pas:7172
+#: pcdimmer.pas:7184
 msgid "Lese Daten ein... Softpatch"
 msgstr ""
 
-#: pcdimmer.pas:7176
+#: pcdimmer.pas:7188
 msgid "Lese Daten ein...Softpatch"
 msgstr ""
 
 #. Effekte Öffnen
-#: pcdimmer.pas:7214
-#: pcdimmer.pas:7218
+#: pcdimmer.pas:7226
+#: pcdimmer.pas:7230
 msgid "Lese Daten ein... Effekte"
 msgstr ""
 
 #. Bühnenansicht öffnen
-#: pcdimmer.pas:7385
-#: pcdimmer.pas:7390
+#: pcdimmer.pas:7397
+#: pcdimmer.pas:7402
 msgid "Lese Daten ein... Bühnenansicht"
 msgstr ""
 
 #. Desktopproperties öffnen
-#: pcdimmer.pas:7461
-#: pcdimmer.pas:7465
+#: pcdimmer.pas:7473
+#: pcdimmer.pas:7477
 msgid "Lese Daten ein... Desktopeinstellungen"
 msgstr ""
 
 #. Joystickeinstellungen öffnen
-#: pcdimmer.pas:7495
-#: pcdimmer.pas:7499
+#: pcdimmer.pas:7507
+#: pcdimmer.pas:7511
 msgid "Lese Daten ein... Joystickeinstellungen"
 msgstr ""
 
 #. Kontrollpanel öffnen
-#: pcdimmer.pas:7586
-#: pcdimmer.pas:7590
+#: pcdimmer.pas:7598
+#: pcdimmer.pas:7602
 msgid "Lese Daten ein... Kontrollpanel"
 msgstr ""
 
 #. MIDI-IN Event öffnen
-#: pcdimmer.pas:7675
-#: pcdimmer.pas:7680
+#: pcdimmer.pas:7687
+#: pcdimmer.pas:7692
 msgid "Lese Daten ein... MIDI Einstellungen"
 msgstr ""
 
 #. Data-IN Event öffnen
-#: pcdimmer.pas:7756
-#: pcdimmer.pas:7760
+#: pcdimmer.pas:7768
+#: pcdimmer.pas:7772
 msgid "Lese Daten ein... DataIn Einstellungen"
 msgstr ""
 
 #. Leistungsdaten öffnen
-#: pcdimmer.pas:7824
-#: pcdimmer.pas:7828
+#: pcdimmer.pas:7836
+#: pcdimmer.pas:7840
 msgid "Lese Daten ein... Leistungssteuerung"
 msgstr ""
 
 #. Autoszenen öffnen
-#: pcdimmer.pas:7868
-#: pcdimmer.pas:7872
+#: pcdimmer.pas:7880
+#: pcdimmer.pas:7884
 msgid "Lese Daten ein... Automatikszenen"
 msgstr ""
 
 #. Textbuch
-#: pcdimmer.pas:7896
-#: pcdimmer.pas:7901
+#: pcdimmer.pas:7908
+#: pcdimmer.pas:7913
 msgid "Lese Daten ein... Textbuch"
 msgstr ""
 
 #. MIDI-DirectSending
-#: pcdimmer.pas:7914
-#: pcdimmer.pas:7918
+#: pcdimmer.pas:7926
+#: pcdimmer.pas:7930
 msgid "Lese Daten ein... MIDI-Informationen"
 msgstr ""
 
 #. Submaster
-#: pcdimmer.pas:7943
-#: pcdimmer.pas:7947
+#: pcdimmer.pas:7955
+#: pcdimmer.pas:7959
 msgid "Lese Daten ein... Submaster"
 msgstr ""
 
-#: pcdimmer.pas:8060
-#: pcdimmer.pas:8064
+#: pcdimmer.pas:8072
+#: pcdimmer.pas:8076
 msgid "Lese Daten ein... Cue-Liste"
 msgstr ""
 
 #. Timecodeplayer-Liste laden
-#: pcdimmer.pas:8130
-#: pcdimmer.pas:8134
+#: pcdimmer.pas:8142
+#: pcdimmer.pas:8146
 msgid "Lese Daten ein... Timecodeplayer"
 msgstr ""
 
 #. IR FB laden
-#: pcdimmer.pas:8162
-#: pcdimmer.pas:8166
+#: pcdimmer.pas:8174
+#: pcdimmer.pas:8178
 msgid "Lese Daten ein... IR Fernbedienung"
 msgstr ""
 
 #. MediaCenter Szenen laden
-#: pcdimmer.pas:8187
-#: pcdimmer.pas:8191
+#: pcdimmer.pas:8199
+#: pcdimmer.pas:8203
 msgid "Lese Daten ein... MediaCenter Szenen"
 msgstr ""
 
 #. Plugin Szenen laden
-#: pcdimmer.pas:8218
-#: pcdimmer.pas:8222
+#: pcdimmer.pas:8230
+#: pcdimmer.pas:8234
 msgid "Lese Daten ein... Pluginszenen"
 msgstr ""
 
 #. PresetSzenen öffnen
-#: pcdimmer.pas:8370
+#: pcdimmer.pas:8382
 msgid "Lese Daten ein... Preset-Szenen"
 msgstr ""
 
-#: pcdimmer.pas:8374
+#: pcdimmer.pas:8386
 msgid "Lese Daten ein...Preset-Szenen"
 msgstr ""
 
 #. NodeControl laden
-#: pcdimmer.pas:8415
+#: pcdimmer.pas:8427
 msgid "Lese Daten ein... Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:8419
+#: pcdimmer.pas:8431
 msgid "Lese Daten ein...Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:8468
+#: pcdimmer.pas:8480
 msgid "Lese Daten ein... Fertig."
 msgstr ""
 
-#: pcdimmer.pas:8473
+#: pcdimmer.pas:8485
 msgid "Lese Daten ein...Fertig."
 msgstr ""
 
 #. MessageDlg('Die Projektdatei ist in einem alten Format. Bitte nutzen Sie die Projektkonvertierung, um das Projekt in die neue Version zu konvertieren.'+#10+#10+'Projektversion: '+projektprogrammversion+#10+'Datum: '+projektdatum+#10+'Uhrzeit: '+projektuhrzeit, mtError, [mbOk], 0);
-#: pcdimmer.pas:8485
-#: pcdimmer.pas:8498
-#: pcdimmer.pas:8509
-#: pcdimmer.pas:8522
+#: pcdimmer.pas:8497
+#: pcdimmer.pas:8510
+#: pcdimmer.pas:8521
+#: pcdimmer.pas:8534
 msgid "Fehler in Projektdatei"
 msgstr ""
 
-#: pcdimmer.pas:8488
+#: pcdimmer.pas:8500
 msgid "Die Projektdatei ist in einem alten Format. Bitte nutzen Sie die "
 "Projektkonvertierung, um das Projekt in die neue Version zu "
 "konvertieren."
 msgstr ""
 
-#: pcdimmer.pas:8494
-#: pcdimmer.pas:8518
+#: pcdimmer.pas:8506
+#: pcdimmer.pas:8530
 msgid "Letzte Meldung: "
 msgstr ""
 
-#: pcdimmer.pas:8510
+#: pcdimmer.pas:8522
 msgid "Projektdatei konnte aufgrund eines Fehlers nicht geöffnet "
 "werden..."
 msgstr ""
 
-#: pcdimmer.pas:8512
+#: pcdimmer.pas:8524
 msgid "Die Projektdatei ist möglicherweise beschädigt, oder in einem "
 "falschen Format! Senden Sie das Projekt bitte an das "
 "PC_DIMMER-Team."
 msgstr ""
 
-#: pcdimmer.pas:8573
+#: pcdimmer.pas:8585
 msgid "Sende Öffnen-Befehl...Kontrollpanel"
 msgstr ""
 
-#: pcdimmer.pas:8578
+#: pcdimmer.pas:8590
 msgid "Sende Öffnen-Befehl... Kontrollpanel"
 msgstr ""
 
-#: pcdimmer.pas:8585
+#: pcdimmer.pas:8597
 msgid "Sende Öffnen-Befehl...Effektsequenzer"
 msgstr ""
 
-#: pcdimmer.pas:8590
+#: pcdimmer.pas:8602
 msgid "Sende Öffnen-Befehl... Effektsequenzer"
 msgstr ""
 
-#: pcdimmer.pas:8597
+#: pcdimmer.pas:8609
 msgid "Sende Öffnen-Befehl...Beattool"
 msgstr ""
 
-#: pcdimmer.pas:8601
+#: pcdimmer.pas:8613
 msgid "Sende Öffnen-Befehl... Beattool"
 msgstr ""
 
-#: pcdimmer.pas:8607
+#: pcdimmer.pas:8619
 msgid "Sende Öffnen-Befehl...Gerätesteuerung"
 msgstr ""
 
-#: pcdimmer.pas:8611
+#: pcdimmer.pas:8623
 msgid "Sende Öffnen-Befehl... Gerätesteuerung"
 msgstr ""
 
-#: pcdimmer.pas:8618
+#: pcdimmer.pas:8630
 msgid "Sende Öffnen-Befehl...Submaster"
 msgstr ""
 
-#: pcdimmer.pas:8623
+#: pcdimmer.pas:8635
 msgid "Sende Öffnen-Befehl... Submaster"
 msgstr ""
 
-#: pcdimmer.pas:8630
+#: pcdimmer.pas:8642
 msgid "Sende Öffnen-Befehl...Grafische Bühnenansicht"
 msgstr ""
 
-#: pcdimmer.pas:8634
+#: pcdimmer.pas:8646
 msgid "Sende Öffnen-Befehl... Bühnenansicht"
 msgstr ""
 
-#: pcdimmer.pas:8640
+#: pcdimmer.pas:8652
 msgid "Sende Öffnen-Befehl...Audioeffektplayer"
 msgstr ""
 
-#: pcdimmer.pas:8644
+#: pcdimmer.pas:8656
 msgid "Sende Öffnen-Befehl... Audioeffektplayer"
 msgstr ""
 
-#: pcdimmer.pas:8649
+#: pcdimmer.pas:8661
 msgid "Sende Öffnen-Befehl...Textbuch"
 msgstr ""
 
-#: pcdimmer.pas:8654
+#: pcdimmer.pas:8666
 msgid "Sende Öffnen-Befehl... Textbuch"
 msgstr ""
 
-#: pcdimmer.pas:8662
+#: pcdimmer.pas:8674
 msgid "Sende Öffnen-Befehl...Cue-List"
 msgstr ""
 
-#: pcdimmer.pas:8666
+#: pcdimmer.pas:8678
 msgid "Sende Öffnen-Befehl... Cue-List"
 msgstr ""
 
-#: pcdimmer.pas:8673
+#: pcdimmer.pas:8685
 msgid "Sende Öffnen-Befehl...Timecodeplayer"
 msgstr ""
 
-#: pcdimmer.pas:8677
+#: pcdimmer.pas:8689
 msgid "Sende Öffnen-Befehl... Timecodeplayer"
 msgstr ""
 
-#: pcdimmer.pas:8684
+#: pcdimmer.pas:8696
 msgid "Sende Öffnen-Befehl...IR Steuerung"
 msgstr ""
 
-#: pcdimmer.pas:8688
+#: pcdimmer.pas:8700
 msgid "Sende Öffnen-Befehl... IR Steuerung"
 msgstr ""
 
-#: pcdimmer.pas:8702
+#: pcdimmer.pas:8714
 msgid "Sende Öffnen-Befehl...Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:8706
+#: pcdimmer.pas:8718
 msgid "Sende Öffnen-Befehl... Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:8713
-#: pcdimmer.pas:8718
+#: pcdimmer.pas:8725
+#: pcdimmer.pas:8730
 msgid "Aktualisiere Hauptprogramm"
 msgstr ""
 
-#: pcdimmer.pas:8719
+#: pcdimmer.pas:8731
 msgid "Sende Öffnen-Befehl..."
 msgstr ""
 
-#: pcdimmer.pas:8731
+#: pcdimmer.pas:8743
 msgid " - [Nicht gespeichertes Projekt]"
 msgstr ""
 
-#: pcdimmer.pas:8767
+#: pcdimmer.pas:8779
 msgid "Audiodateien (*.wav;*.mp3)|*.wav;*.mp3|All files "
 "(*.*)|*.*"
 msgstr ""
 
-#: pcdimmer.pas:8809
-#: pcdimmer.pas:8819
+#: pcdimmer.pas:8821
+#: pcdimmer.pas:8831
 #: schedulerfrm.pas:173
 #: schedulerfrm.pas:183
 #: schedulerfrm.pas:270
@@ -37688,8 +37708,8 @@ msgstr ""
 msgid "<EINMALIG>    "
 msgstr ""
 
-#: pcdimmer.pas:8810
-#: pcdimmer.pas:8820
+#: pcdimmer.pas:8822
+#: pcdimmer.pas:8832
 #: schedulerfrm.pas:174
 #: schedulerfrm.pas:184
 #: schedulerfrm.pas:271
@@ -37701,8 +37721,8 @@ msgstr ""
 msgid "<TÄGLICH>     "
 msgstr ""
 
-#: pcdimmer.pas:8811
-#: pcdimmer.pas:8821
+#: pcdimmer.pas:8823
+#: pcdimmer.pas:8833
 #: schedulerfrm.pas:175
 #: schedulerfrm.pas:185
 #: schedulerfrm.pas:272
@@ -37714,8 +37734,8 @@ msgstr ""
 msgid "<WÖCHENTLICH> "
 msgstr ""
 
-#: pcdimmer.pas:8812
-#: pcdimmer.pas:8822
+#: pcdimmer.pas:8824
+#: pcdimmer.pas:8834
 #: schedulerfrm.pas:176
 #: schedulerfrm.pas:186
 #: schedulerfrm.pas:273
@@ -37727,8 +37747,8 @@ msgstr ""
 msgid "<MONATLICH>   "
 msgstr ""
 
-#: pcdimmer.pas:8812
-#: pcdimmer.pas:8822
+#: pcdimmer.pas:8824
+#: pcdimmer.pas:8834
 #: schedulerfrm.pas:176
 #: schedulerfrm.pas:186
 #: schedulerfrm.pas:273
@@ -37740,8 +37760,8 @@ msgstr ""
 msgid "jeden"
 msgstr ""
 
-#: pcdimmer.pas:8813
-#: pcdimmer.pas:8823
+#: pcdimmer.pas:8825
+#: pcdimmer.pas:8835
 #: schedulerfrm.pas:177
 #: schedulerfrm.pas:187
 #: schedulerfrm.pas:274
@@ -37753,36 +37773,42 @@ msgstr ""
 msgid "<JÄHRLICH>    "
 msgstr ""
 
-#: pcdimmer.pas:8985
+#. Projektgeräte mit Dateien abgleichen
+#: pcdimmer.pas:8862
+#: pcdimmer.pas:8866
+msgid "Synchronisiere Gerätedateien..."
+msgstr ""
+
+#: pcdimmer.pas:9009
 msgid "Scheduler: Warten... (Noch "
 msgstr ""
 
-#: pcdimmer.pas:8987
+#: pcdimmer.pas:9011
 msgid "Scheduler im Leerlauf..."
 msgstr ""
 
-#: pcdimmer.pas:8990
+#: pcdimmer.pas:9014
 msgid "Scheduler: Deaktiviert"
 msgstr ""
 
-#: pcdimmer.pas:9180
+#: pcdimmer.pas:9204
 msgid "PC_DIMMER Change log..."
 msgstr ""
 
-#: pcdimmer.pas:9181
+#: pcdimmer.pas:9205
 msgid "PHOENIXstudios PC_DIMMER"
 msgstr ""
 
-#: pcdimmer.pas:9182
+#: pcdimmer.pas:9206
 msgid "Keep looking on http://www.pcdimmer.de for "
 "updates"
 msgstr ""
 
-#: pcdimmer.pas:9235
+#: pcdimmer.pas:9259
 msgid "PC_DIMMER jetzt beenden?"
 msgstr ""
 
-#: pcdimmer.pas:9243
+#: pcdimmer.pas:9267
 msgid "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Die "
 "Projektdatei wurde noch nicht aktualisiert.\n"
 "Sämtliche Änderungen könnten durch einen Klick auf \"Neues Projekt\" "
@@ -37791,24 +37817,24 @@ msgid "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Die "
 "Datei: \""
 msgstr ""
 
-#: pcdimmer.pas:9245
-#: pcdimmer.pas:9267
+#: pcdimmer.pas:9269
+#: pcdimmer.pas:9291
 msgid "Möchten Sie das aktuelle Projekt vor dem Beenden "
 "speichern?"
 msgstr ""
 
-#: pcdimmer.pas:9247
-#: pcdimmer.pas:9268
+#: pcdimmer.pas:9271
+#: pcdimmer.pas:9292
 msgid "&Fastsave"
 msgstr ""
 
-#: pcdimmer.pas:9247
-#: pcdimmer.pas:9268
+#: pcdimmer.pas:9271
+#: pcdimmer.pas:9292
 msgid "&Abbrechen"
 msgstr ""
 
 #. case messagedlg(text,mtConfirmation,[mbYes,mbNo,mbCancel],0) of
-#: pcdimmer.pas:9265
+#: pcdimmer.pas:9289
 msgid "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Es wurde "
 "noch keine externe Projektdatei erzeugt.\n"
 "Sämtliche Daten könnten derzeit durch einen Klick auf \"Neues Projekt\" "
@@ -37819,104 +37845,104 @@ msgid "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Es wurde "
 msgstr ""
 
 #. messagedlg('Der Ein-/Aus-Schalter am Computergehäuse ist jetzt deaktiviert.'+#13#10#13#10+'Beim kurzen(!) Drücken auf diesen Schalter wird Windows bei Computern mit ATX-Netzteil NICHT heruntergefahren.',mtInformation,[mbOK],0)
-#: pcdimmer.pas:9299
-#: pcdimmer.pas:9309
+#: pcdimmer.pas:9323
+#: pcdimmer.pas:9333
 msgid "Ein-/Ausschalter deaktiviert"
 msgstr ""
 
-#: pcdimmer.pas:9302
+#: pcdimmer.pas:9326
 msgid "Der Ein-/Aus-Schalter am Computergehäuse ist jetzt "
 "deaktiviert."
 msgstr ""
 
-#: pcdimmer.pas:9304
+#: pcdimmer.pas:9328
 msgid "Beim kurzen(!) Drücken auf diesen Schalter wird Windows bei Computern "
 "mit ATX-Netzteil NICHT heruntergefahren."
 msgstr ""
 
 #. messagedlg('Der Ein-/Aus-Schalter am Computergehäuse ist wieder aktiviert.'+#13#10#13#10+'Durch Drücken dieser Taste wird Windows jetzt wieder heruntergefahren.',mtInformation,[mbOK],0)
-#: pcdimmer.pas:9317
+#: pcdimmer.pas:9341
 msgid "Ein-/Ausschalter aktiviert"
 msgstr ""
 
-#: pcdimmer.pas:9320
+#: pcdimmer.pas:9344
 msgid "Der Ein-/Aus-Schalter am Computergehäuse ist wieder "
 "aktiviert."
 msgstr ""
 
-#: pcdimmer.pas:9322
+#: pcdimmer.pas:9346
 msgid "Durch Drücken dieser Taste wird Windows jetzt wieder "
 "heruntergefahren."
 msgstr ""
 
-#: pcdimmer.pas:9326
+#: pcdimmer.pas:9350
 msgid "Ein/-Ausschalter aktiviert"
 msgstr ""
 
-#: pcdimmer.pas:9621
+#: pcdimmer.pas:9645
 msgid "Bildschirmhelligkeit: "
 msgstr ""
 
-#: pcdimmer.pas:9638
+#: pcdimmer.pas:9662
 msgid "Aktuelles Projekt speichern?"
 msgstr ""
 
-#: pcdimmer.pas:9677
+#: pcdimmer.pas:9701
 msgid "PC_DIMMER Projekt öffnen..."
 msgstr ""
 
-#: pcdimmer.pas:9698
+#: pcdimmer.pas:9722
 msgid "\" ist nicht mehr verfügbar!"
 msgstr ""
 
 #. Ladezustand der Batterie
-#: pcdimmer.pas:9867
+#: pcdimmer.pas:9891
 msgid "Unbekannter Status"
 msgstr ""
 
-#: pcdimmer.pas:9869
-#: pcdimmer.pas:9910
+#: pcdimmer.pas:9893
+#: pcdimmer.pas:9934
 msgid "Es existiert kein Akku"
 msgstr ""
 
-#: pcdimmer.pas:9873
+#: pcdimmer.pas:9897
 msgid "Hoher Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:9874
+#: pcdimmer.pas:9898
 msgid "Niedriger Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:9875
+#: pcdimmer.pas:9899
 msgid "Kritischer Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:9877
+#: pcdimmer.pas:9901
 msgid "Unbekannter Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:9880
+#: pcdimmer.pas:9904
 msgid " - Akku wird geladen"
 msgstr ""
 
 #. Vista Progressbar Workaround
-#: pcdimmer.pas:10979
+#: pcdimmer.pas:11003
 msgid " Fortschritt: "
 msgstr ""
 
-#: pcdimmer.pas:10989
+#: pcdimmer.pas:11013
 msgid " Lade Datei... "
 msgstr ""
 
-#: pcdimmer.pas:10992
-#: pcdimmer.pas:11017
+#: pcdimmer.pas:11016
+#: pcdimmer.pas:11041
 msgid "Dekomprimiere: "
 msgstr ""
 
 #. Vista Progressbar Workaround
-#: pcdimmer.pas:11002
+#: pcdimmer.pas:11026
 #. Vista Progressbar Workaround
-#: pcdimmer.pas:11037
+#: pcdimmer.pas:11061
 #. Vista Progressbar Workaround
 #: projektverwaltungfrm.pas:375
 #. Vista Progressbar Workaround
@@ -37924,69 +37950,69 @@ msgstr ""
 msgid "Datei ("
 msgstr ""
 
-#: pcdimmer.pas:11013
+#: pcdimmer.pas:11037
 msgid "Dekomprimiere ("
 msgstr ""
 
-#: pcdimmer.pas:11029
+#: pcdimmer.pas:11053
 msgid "Komprimiere: "
 msgstr ""
 
 #. inprogress.Hide;
-#: pcdimmer.pas:11051
+#: pcdimmer.pas:11075
 msgid "Projekt vollständig geladen"
 msgstr ""
 
-#: pcdimmer.pas:11087
+#: pcdimmer.pas:11111
 msgid "Zeigt beim Starten keinen Splashscreen an "
 "[ALT-Taste]"
 msgstr ""
 
-#: pcdimmer.pas:11088
+#: pcdimmer.pas:11112
 msgid "Wahl zwischen zwei verschiedenen Ladebildschirmen"
 msgstr ""
 
-#: pcdimmer.pas:11089
+#: pcdimmer.pas:11113
 msgid "Zeigt beim Starten die Logdatei an."
 msgstr ""
 
-#: pcdimmer.pas:11090
+#: pcdimmer.pas:11114
 msgid "Verhindert den Start des Akku-Dienstes [Rechte "
 "SHIFT-Taste]"
 msgstr ""
 
-#: pcdimmer.pas:11091
+#: pcdimmer.pas:11115
 msgid "Verhindert das automatische Laden der letzten Projektdatei [Linke "
 "SHIFT-Taste]"
 msgstr ""
 
-#: pcdimmer.pas:11092
+#: pcdimmer.pas:11116
 msgid "Startet PC_DIMMER minimiert"
 msgstr ""
 
-#: pcdimmer.pas:11093
+#: pcdimmer.pas:11117
 msgid "Startet PC_DIMMER mit letzten Werten"
 msgstr ""
 
-#: pcdimmer.pas:11094
+#: pcdimmer.pas:11118
 msgid "Startet den Timer mit als \"DateiX\" übergebener "
 "Timerdatei"
 msgstr ""
 
-#: pcdimmer.pas:11095
+#: pcdimmer.pas:11119
 msgid "Lädt die per Fastsave gespeicherte Projektdatei (bei sehr großen "
 "Projekten entfällt hierdurch das Entpacken)"
 msgstr ""
 
-#: pcdimmer.pas:11495
+#: pcdimmer.pas:11519
 msgid "Es sind keine Drucker im System installiert."
 msgstr ""
 
-#: pcdimmer.pas:11513
+#: pcdimmer.pas:11537
 msgid "PC_DIMMER Kanalnamenübersicht ("
 msgstr ""
 
-#: pcdimmer.pas:11584
+#: pcdimmer.pas:11608
 msgid "Die Power-Taste Ihres Computers wurde gedrückt!\n"
 "Diese Funktion ist im PC_DIMMER jedoch deaktiviert worden.\n"
 "\n"
@@ -37995,146 +38021,146 @@ msgid "Die Power-Taste Ihres Computers wurde gedrückt!\n"
 "werden."
 msgstr ""
 
-#: pcdimmer.pas:11598
+#: pcdimmer.pas:11622
 msgid " Plugin-Reset... "
 msgstr ""
 
-#: pcdimmer.pas:11602
+#: pcdimmer.pas:11626
 msgid "Bereite Reset vor..."
 msgstr ""
 
-#: pcdimmer.pas:11674
+#: pcdimmer.pas:11698
 msgid "Reaktiviere Input-Plugin "
 msgstr ""
 
 #. Plugins starten
-#: pcdimmer.pas:11694
+#: pcdimmer.pas:11718
 msgid "Starte Input-Plugin "
 msgstr ""
 
-#: pcdimmer.pas:11703
+#: pcdimmer.pas:11727
 msgid "Sende allen Plugins aktuelle Werte..."
 msgstr ""
 
-#: pcdimmer.pas:11715
+#: pcdimmer.pas:11739
 msgid "Öffne Plugin "
 msgstr ""
 
-#: pcdimmer.pas:12268
+#: pcdimmer.pas:12292
 msgid "Outputplugins aktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:12304
-#: pcdimmer.pas:12356
+#: pcdimmer.pas:12328
+#: pcdimmer.pas:12380
 msgid "Aktiviere "
 msgstr ""
 
-#: pcdimmer.pas:12338
-#: pcdimmer.pas:12342
+#: pcdimmer.pas:12362
+#: pcdimmer.pas:12366
 msgid "Inputplugins aktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:12420
+#: pcdimmer.pas:12444
 msgid "Anzeigen..."
 msgstr ""
 
-#: pcdimmer.pas:12464
+#: pcdimmer.pas:12488
 msgid "Werte an Interfaces übergeben..."
 msgstr ""
 
-#: pcdimmer.pas:12485
+#: pcdimmer.pas:12509
 msgid "Letztgenutzte Plugins anzeigen..."
 msgstr ""
 
-#: pcdimmer.pas:12538
+#: pcdimmer.pas:12562
 msgid "Letzte Module starten..."
 msgstr ""
 
 #. Dimmerkernel starten
-#: pcdimmer.pas:12546
+#: pcdimmer.pas:12570
 msgid "Starte Dimmerkernel..."
 msgstr ""
 
 #. Joystick starten
-#: pcdimmer.pas:12557
+#: pcdimmer.pas:12581
 msgid "Starte Joystick..."
 msgstr ""
 
 #. MIDI starten
-#: pcdimmer.pas:12567
+#: pcdimmer.pas:12591
 msgid "Starte MIDI-In..."
 msgstr ""
 
-#: pcdimmer.pas:12572
+#: pcdimmer.pas:12596
 msgid "Starte MIDI-Out..."
 msgstr ""
 
 #. Akkukontrolle starten
-#: pcdimmer.pas:12594
+#: pcdimmer.pas:12618
 msgid "Starte Akkukontrolle..."
 msgstr ""
 
 #. Timecodeplayer starten
-#: pcdimmer.pas:12606
+#: pcdimmer.pas:12630
 msgid "Starte MIDI-Timecodeplayer..."
 msgstr ""
 
-#: pcdimmer.pas:12613
+#: pcdimmer.pas:12637
 msgid "Netzwerk und Ambilight aktivieren..."
 msgstr ""
 
 #. HTTP-Server aktivieren, sofern beim letzten mal aktiv
-#: pcdimmer.pas:12628
+#: pcdimmer.pas:12652
 msgid "Webserver kann nicht gestartet werden!"
 msgstr ""
 
 #. Ambilight aktivieren, sofern beim letzten mal aktiv
-#: pcdimmer.pas:12677
+#: pcdimmer.pas:12701
 msgid "Ambilight war in der letzten Sitzung aktiviert. Möchten Sie das "
 "Ambilight nun wieder einschalten?"
 msgstr ""
 
-#: pcdimmer.pas:12688
+#: pcdimmer.pas:12712
 msgid "Letzte Einstellungen laden..."
 msgstr ""
 
-#: pcdimmer.pas:12816
+#: pcdimmer.pas:12840
 msgid "Fenster öffnen..."
 msgstr ""
 
-#: pcdimmer.pas:12913
-#: pcdimmer.pas:12914
+#: pcdimmer.pas:12937
+#: pcdimmer.pas:12938
 msgid "DDF Bilder laden..."
 msgstr ""
 
-#: pcdimmer.pas:12920
+#: pcdimmer.pas:12944
 msgid "Leeres Projekt erzeugen..."
 msgstr ""
 
-#: pcdimmer.pas:12925
+#: pcdimmer.pas:12949
 #. Versuche Dateien zu laden
-#: pcdimmer.pas:12943
+#: pcdimmer.pas:12967
 msgid "Dateien öffnen..."
 msgstr ""
 
-#: pcdimmer.pas:12944
+#: pcdimmer.pas:12968
 msgid "Lade Datei..."
 msgstr ""
 
 #. Falls Skripttimerdatei gestartet werden soll
-#: pcdimmer.pas:12960
+#: pcdimmer.pas:12984
 msgid "Starte Skripttimer..."
 msgstr ""
 
-#: pcdimmer.pas:12966
+#: pcdimmer.pas:12990
 msgid "Dateien öffnen...Projekt"
 msgstr ""
 
-#: pcdimmer.pas:12992
+#: pcdimmer.pas:13016
 msgid "Projektwiederherstellung..."
 msgstr ""
 
-#: pcdimmer.pas:12995
+#: pcdimmer.pas:13019
 msgid "Anscheinend wurde der PC_DIMMER beim letzten Mal nicht richtig "
 "beendet.\n"
 "\n"
@@ -38143,305 +38169,305 @@ msgid "Anscheinend wurde der PC_DIMMER beim letzten Mal nicht richtig "
 "wird dabei überschrieben)?"
 msgstr ""
 
-#: pcdimmer.pas:13004
+#: pcdimmer.pas:13028
 msgid "Timer aktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:13018
+#: pcdimmer.pas:13042
 msgid "Abschließende Arbeiten"
 msgstr ""
 
-#: pcdimmer.pas:13032
+#: pcdimmer.pas:13056
 msgid "Oberfläche aktualisieren..."
 msgstr ""
 
-#: pcdimmer.pas:13042
+#: pcdimmer.pas:13066
 msgid "Geräte initialisieren..."
 msgstr ""
 
-#: pcdimmer.pas:13074
+#: pcdimmer.pas:13098
 msgid "Beatquelle setzen..."
 msgstr ""
 
-#: pcdimmer.pas:13977
+#: pcdimmer.pas:14001
 msgid "Tastatur: "
 msgstr ""
 
-#: pcdimmer.pas:14041
+#: pcdimmer.pas:14065
 msgid "Geräteszene: "
 msgstr ""
 
-#: pcdimmer.pas:14074
+#: pcdimmer.pas:14098
 msgid "Direktszene AEP: "
 msgstr ""
 
-#: pcdimmer.pas:14106
+#: pcdimmer.pas:14130
 msgid "Direktszene Effekt: "
 msgstr ""
 
-#: pcdimmer.pas:14118
+#: pcdimmer.pas:14142
 msgid "Terminal-Schnittstelle"
 msgstr ""
 
 #. BPM-Wert abfragen
-#: pcdimmer.pas:14322
+#: pcdimmer.pas:14346
 msgid "Geschwindigkeit eingeben"
 msgstr ""
 
-#: pcdimmer.pas:14322
+#: pcdimmer.pas:14346
 msgid "Bitte geben Sie eine Geschwindigkeit in Beats-Per-Minute (BPM) "
 "an:"
 msgstr ""
 
-#: pcdimmer.pas:14353
+#: pcdimmer.pas:14377
 msgid "Bitte geben Sie einen Wert für den Grandmaster an [Wert von "
 "0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:14368
+#: pcdimmer.pas:14392
 msgid "Bitte geben Sie einen Wert für den Flashmaster an [Wert von "
 "0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:14383
+#: pcdimmer.pas:14407
 msgid "Bitte geben Sie einen Wert für den Speedmaster an [Wert von "
 "-100..0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:14398
+#: pcdimmer.pas:14422
 msgid "Bitte geben Sie einen Wert für den Audiomaster an [Wert von "
 "0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:14443
+#: pcdimmer.pas:14467
 msgid "2 Ausschalten"
 msgstr ""
 
-#: pcdimmer.pas:14444
+#: pcdimmer.pas:14468
 msgid "3 Einblenden"
 msgstr ""
 
-#: pcdimmer.pas:14445
+#: pcdimmer.pas:14469
 msgid "4 Ausblenden"
 msgstr ""
 
-#: pcdimmer.pas:14446
+#: pcdimmer.pas:14470
 msgid "5 Flashen"
 msgstr ""
 
 #. Abgefragter Wert schalten
-#: pcdimmer.pas:14607
+#: pcdimmer.pas:14631
 #. Abgefragten Wert dimmen
-#: pcdimmer.pas:14625
+#: pcdimmer.pas:14649
 msgid "Kanalwert eingeben"
 msgstr ""
 
-#: pcdimmer.pas:14607
-#: pcdimmer.pas:14625
+#: pcdimmer.pas:14631
+#: pcdimmer.pas:14649
 msgid "Bitte geben Sie einen Kanalwert [0..255] ein, auf den der Kanal "
 "\""
 msgstr ""
 
-#: pcdimmer.pas:14607
+#: pcdimmer.pas:14631
 msgid "\" geschaltet werden soll:"
 msgstr ""
 
-#: pcdimmer.pas:14625
+#: pcdimmer.pas:14649
 msgid "\" gedimmt werden soll:"
 msgstr ""
 
 #. Auf abgefragten Wert schalten
-#: pcdimmer.pas:15728
+#: pcdimmer.pas:15752
 msgid "Faderwert eingeben"
 msgstr ""
 
-#: pcdimmer.pas:15728
+#: pcdimmer.pas:15752
 msgid "Bitte geben Sie einen Faderwert [0..255] ein, auf den der Fader "
 "\""
 msgstr ""
 
-#: pcdimmer.pas:15728
+#: pcdimmer.pas:15752
 msgid "\" gesetzt werden soll:"
 msgstr ""
 
-#: pcdimmer.pas:16353
+#: pcdimmer.pas:16377
 msgid "Es konnte keine Verbindung zum MediaCenter Server hergestellt werden. "
 "Bitte kontrollieren Sie ihre Angaben in den Feldern \"Adresse\" und "
 "\"Port\" der entsprechenden MediaCenter "
 "Szene."
 msgstr ""
 
-#: pcdimmer.pas:17381
+#: pcdimmer.pas:17405
 msgid "Einfache Szene bearbeiten"
 msgstr ""
 
 #. ShowMessage(E.Message); // EConvertError ist nur nervig
-#: pcdimmer.pas:19333
+#: pcdimmer.pas:19357
 msgid "Es wurde aufgrund eines Fehlers versucht eine Größe durch Null zu "
 "teilen."
 msgstr ""
 
-#: pcdimmer.pas:19340
-#: pcdimmer.pas:19349
+#: pcdimmer.pas:19364
+#: pcdimmer.pas:19373
 msgid "Fehlertyp: "
 msgstr ""
 
 #. +' "'+TControl(Sender).Name+'"';
-#: pcdimmer.pas:19341
+#: pcdimmer.pas:19365
 #. +' "'+TControl(Sender).Name+'"');
-#: pcdimmer.pas:19351
+#: pcdimmer.pas:19375
 msgid "Verursacher: "
 msgstr ""
 
-#: pcdimmer.pas:19347
+#: pcdimmer.pas:19371
 msgid "Fehlerbericht vom "
 msgstr ""
 
-#: pcdimmer.pas:19805
+#: pcdimmer.pas:19829
 msgid "Möchten Sie wirklich alle laufenden Effekte und Szenen "
 "beenden?"
 msgstr ""
 
-#: pcdimmer.pas:19853
+#: pcdimmer.pas:19877
 msgid "  Akku: "
 msgstr ""
 
-#: pcdimmer.pas:20601
+#: pcdimmer.pas:20625
 msgid "Datei wird gesucht..."
 msgstr ""
 
 #. Datei ist im Bildverzeichnis 128x128
-#: pcdimmer.pas:20653
+#: pcdimmer.pas:20677
 #. Suchen im Project-Temp
-#: pcdimmer.pas:20662
+#: pcdimmer.pas:20686
 msgid "Suche nach Datei"
 msgstr ""
 
-#: pcdimmer.pas:20653
-#: pcdimmer.pas:20662
+#: pcdimmer.pas:20677
+#: pcdimmer.pas:20686
 msgid "im Ordner"
 msgstr ""
 
 #. ProgressScreenSmall.close;
-#: pcdimmer.pas:20678
+#: pcdimmer.pas:20702
 msgid "Dateioperation abgeschlossen."
 msgstr ""
 
 #. Name
-#: pcdimmer.pas:21255
+#: pcdimmer.pas:21279
 msgid "Presetszene"
 msgstr ""
 
 #. Name
-#: pcdimmer.pas:21269
+#: pcdimmer.pas:21293
 #: szenenverwaltung.pas:2059
 msgid "Plugin Szene"
 msgstr ""
 
 #. Falls Timecodeplayerdatei
-#: pcdimmer.pas:21866
+#: pcdimmer.pas:21890
 msgid "Die zu öffnende Datei konnte nicht gefunden "
 "werden"
 msgstr ""
 
-#: pcdimmer.pas:22200
+#: pcdimmer.pas:22224
 msgid "MediaCenter Verbindung:"
 msgstr ""
 
 #. Sprache des 3D-Visualizers setzen
-#: pcdimmer.pas:22520
+#: pcdimmer.pas:22544
 msgid "Der 3D Visualizer wurde nicht gefunden. Bitte kontrollieren Sie die "
 "Pfadangabe in den erweiterten Einstellungen..."
 msgstr ""
 
-#: pcdimmer.pas:22594
+#: pcdimmer.pas:22618
 msgid "Kennwort festlegen"
 msgstr ""
 
-#: pcdimmer.pas:22594
+#: pcdimmer.pas:22618
 msgid "In den erweiterten Optionen ist kein Standardkennwort hinterlegt. "
 "Geben Sie daher bitte ein Kennwort für die aktuelle Sperrung "
 "ein:"
 msgstr ""
 
-#: pcdimmer.pas:22609
+#: pcdimmer.pas:22633
 msgid "CSV-Datei (*.csv)|*.csv|*.*|*.*"
 msgstr ""
 
-#: pcdimmer.pas:22610
+#: pcdimmer.pas:22634
 msgid "Gerätedaten exportieren"
 msgstr ""
 
-#: pcdimmer.pas:22620
+#: pcdimmer.pas:22644
 msgid "Startadresse"
 msgstr ""
 
-#: pcdimmer.pas:22621
+#: pcdimmer.pas:22645
 msgid "Kanalanzahl"
 msgstr ""
 
-#: pcdimmer.pas:22622
+#: pcdimmer.pas:22646
 msgid "Leistung [W]"
 msgstr ""
 
-#: pcdimmer.pas:22627
+#: pcdimmer.pas:22651
 msgid "CMY"
 msgstr ""
 
-#: pcdimmer.pas:22630
+#: pcdimmer.pas:22654
 msgid "DIP-Startadresse"
 msgstr ""
 
 #. Installierte Geräte
-#: pcdimmer.pas:25466
+#: pcdimmer.pas:25493
 msgid "Installierte Geräte:"
 msgstr ""
 
 #. Anzahl der Szenen
-#: pcdimmer.pas:25470
+#: pcdimmer.pas:25497
 msgid "Erstellte Szenen:"
 msgstr ""
 
 #. Dimmerkernelzeit
-#: pcdimmer.pas:25474
-#: pcdimmer.pas:25476
+#: pcdimmer.pas:25501
+#: pcdimmer.pas:25503
 msgid "Dimmerkernel:"
 msgstr ""
 
-#: pcdimmer.pas:25474
+#: pcdimmer.pas:25501
 msgid "Job"
 msgstr ""
 
-#: pcdimmer.pas:25476
+#: pcdimmer.pas:25503
 msgid "Jobs"
 msgstr ""
 
 #. Kanaländerungen pro Sekunde
-#: pcdimmer.pas:25485
+#: pcdimmer.pas:25512
 msgid "Kanaländerung/s:"
 msgstr ""
 
-#: pcdimmer.pas:25771
-#: pcdimmer.pas:25868
+#: pcdimmer.pas:25798
+#: pcdimmer.pas:25895
 msgid "Aufgenommen"
 msgstr ""
 
-#: pcdimmer.pas:26089
+#: pcdimmer.pas:26116
 msgid "Möchten Sie wirklich alle laufenden Audiowiedergaben "
 "beenden?"
 msgstr ""
 
-#: pcdimmer.pas:26769
-#: pcdimmer.pas:26774
+#: pcdimmer.pas:26796
+#: pcdimmer.pas:26801
 msgid "besitzt keine ausreichenden Rechte für diese "
 "Operation!"
 msgstr ""
 
-#: pcdimmer.pas:26815
+#: pcdimmer.pas:26842
 msgid "Zugang verweigert!"
 msgstr ""
 
-#: pcdimmer.pas:26829
+#: pcdimmer.pas:26856
 msgid "Benutzer:"
 msgstr ""
 
@@ -39318,7 +39344,7 @@ msgstr ""
 msgid "Sie können den Administrator nicht entfernen"
 msgstr ""
 
-#: usermgmtfrm.pas:171
+#: usermgmtfrm.pas:173
 msgid "Sie können den Benutzer \"Admin\" nicht "
 "umbenennen."
 msgstr ""

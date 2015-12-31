@@ -2706,21 +2706,21 @@ object ddfeditorform: Tddfeditorform
               OnChange = maxvalueeditChange
             end
           end
-          object GroupBox1: TGroupBox
+          object foggroupbox: TGroupBox
             Left = 192
             Top = 8
             Width = 177
             Height = 73
             Caption = ' Nebel-Einstellungen '
             TabOrder = 3
-            object Label1: TLabel
+            object fogofflbl: TLabel
               Left = 8
               Top = 24
               Width = 21
               Height = 13
               Caption = 'Aus:'
             end
-            object Label2: TLabel
+            object fogmaxlbl: TLabel
               Left = 64
               Top = 24
               Width = 23

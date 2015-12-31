@@ -159,13 +159,15 @@ procedure Tusermgmtform.Button2Click(Sender: TObject);
 begin
   if (userbox.itemindex>-1) and (userbox.itemindex<length(mainform.UserAccounts)) then
   begin
-    if ((mainform.UserAccounts[userbox.itemindex].Name='Admin') and (mainform.UserAccounts[userbox.itemindex].Name=nameedit.Text)) or
+    if ((mainform.UserAccounts[userbox.itemindex].Name='Admin') and (nameedit.Text='Admin')) or
       (mainform.UserAccounts[userbox.itemindex].Name<>'Admin') then
     begin
       mainform.UserAccounts[userbox.itemindex].Name:=nameedit.Text;
       mainform.UserAccounts[userbox.itemindex].Password:=passwordedit.Text;
       if mainform.UserAccounts[userbox.itemindex].Name='Admin' then
-        mainform.UserAccounts[userbox.itemindex].AccessLevel:=0;
+        mainform.UserAccounts[userbox.itemindex].AccessLevel:=0
+      else
+        mainform.UserAccounts[userbox.itemindex].AccessLevel:=accesslevelbox.ItemIndex;
     end else
     begin
       ShowMessage(_('Sie können den Benutzer "Admin" nicht umbenennen.'));

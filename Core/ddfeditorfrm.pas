@@ -382,9 +382,9 @@ type
     channelfadebox: TCheckBox;
     itemvalueendedit: TJvSpinEdit;
     ColorPicker2: THSLRingPicker;
-    GroupBox1: TGroupBox;
-    Label1: TLabel;
-    Label2: TLabel;
+    foggroupbox: TGroupBox;
+    fogofflbl: TLabel;
+    fogmaxlbl: TLabel;
     fogmaxvalueedit: TJvSpinEdit;
     fogoffvalueedit: TJvSpinEdit;
     procedure sizecontrolcheckedClick(Sender: TObject);
@@ -1484,9 +1484,7 @@ begin
 
   if devicepicturechangeform.ModalResult=mrOK then
   begin
-    newpicturefile:=devicepicturechangeform.aktuellebilddatei;
-    if pos(mainform.pcdimmerdirectory+'Devicepictures\',newpicturefile)>-1 then
-      newpicturefile:=copy(newpicturefile,length(mainform.pcdimmerdirectory+'Devicepictures\32 x 32\')+1,length(newpicturefile));
+    newpicturefile:=copy(devicepicturechangeform.aktuellebilddatei, 9, length(devicepicturechangeform.aktuellebilddatei));
     bildedit.text:=newpicturefile;
   end;
 

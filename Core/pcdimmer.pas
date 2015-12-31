@@ -12178,9 +12178,9 @@ begin
       if (j<length(SendValueOfSelectedDevicesToMidi)) then
       begin
         if ((SendValueOfSelectedDevicesToMidi[j].MSG=MIDIINDATA[0]) and (not SendValueOfSelectedDevicesToMidi[j].UseData2)) then
-          geraetesteuerung.set_channel(mainform.Devices[SelektierteGeraete[i]].ID,'DIMMER',round(MIDIINDATA[1]/127*maxres),round(MIDIINDATA[1]/127*maxres),0);
+          geraetesteuerung.set_dimmer(mainform.Devices[SelektierteGeraete[i]].ID,round(MIDIINDATA[1]/127*maxres));
         if ((SendValueOfSelectedDevicesToMidi[j].MSG=MIDIINDATA[0]) and SendValueOfSelectedDevicesToMidi[j].UseData2 and (SendValueOfSelectedDevicesToMidi[j].Data1=MIDIINDATA[1])) then
-          geraetesteuerung.set_channel(mainform.Devices[SelektierteGeraete[i]].ID,'DIMMER',round(MIDIINDATA[2]/127*maxres),round(MIDIINDATA[2]/127*maxres),0);
+          geraetesteuerung.set_dimmer(mainform.Devices[SelektierteGeraete[i]].ID,round(MIDIINDATA[2]/127*maxres));
       end else
       begin
         break;
@@ -16420,7 +16420,7 @@ begin
           begin
           end else
           begin // Gerät besitzt nur statische Farbe
-            geraetesteuerung.set_channel(devices[j].ID,'DIMMER',geraetesteuerung.get_channel(devices[j].ID,'DIMMER'),geraetesteuerung.get_channel(devices[j].ID,'DIMMER'),0);
+            geraetesteuerung.set_dimmer(devices[j].ID,geraetesteuerung.get_dimmer(devices[j].ID));
           end;
         end;
       end;
@@ -20079,9 +20079,9 @@ begin
             if MIDIActiveRibbonBox.Down then
             begin
               if SendValueOfSelectedDevicesToMidi[length(SelektierteGeraete)-1].UseData2 then
-                SendMidi(SendValueOfSelectedDevicesToMidi[length(SelektierteGeraete)-1].MSG,SendValueOfSelectedDevicesToMidi[length(SelektierteGeraete)-1].Data1,round(geraetesteuerung.get_channel(mainform.Devices[tempvar].ID,'DIMMER')/255*127))
+                SendMidi(SendValueOfSelectedDevicesToMidi[length(SelektierteGeraete)-1].MSG,SendValueOfSelectedDevicesToMidi[length(SelektierteGeraete)-1].Data1,round(geraetesteuerung.get_dimmer(mainform.Devices[tempvar].ID)/255*127))
               else
-                SendMidi(SendValueOfSelectedDevicesToMidi[length(SelektierteGeraete)-1].MSG,round(geraetesteuerung.get_channel(mainform.Devices[tempvar].ID,'DIMMER')/255*127),0);
+                SendMidi(SendValueOfSelectedDevicesToMidi[length(SelektierteGeraete)-1].MSG,round(geraetesteuerung.get_dimmer(mainform.Devices[tempvar].ID)/255*127),0);
             end;
           end;
         end;
@@ -20177,9 +20177,9 @@ begin
           if MIDIActiveRibbonBox.Down then
           begin
             if SendValueOfSelectedDevicesToMidi[InsertPosition].UseData2 then
-              SendMidi(SendValueOfSelectedDevicesToMidi[InsertPosition].MSG,SendValueOfSelectedDevicesToMidi[InsertPosition].Data1,round(geraetesteuerung.get_channel(mainform.Devices[i].ID,'DIMMER')/255*127))
+              SendMidi(SendValueOfSelectedDevicesToMidi[InsertPosition].MSG,SendValueOfSelectedDevicesToMidi[InsertPosition].Data1,round(geraetesteuerung.get_dimmer(mainform.Devices[i].ID)/255*127))
             else
-              SendMidi(SendValueOfSelectedDevicesToMidi[InsertPosition].MSG,round(geraetesteuerung.get_channel(mainform.Devices[i].ID,'DIMMER')/255*127),0);
+              SendMidi(SendValueOfSelectedDevicesToMidi[InsertPosition].MSG,round(geraetesteuerung.get_dimmer(mainform.Devices[i].ID)/255*127),0);
           end;
         end;
       end else
@@ -21062,7 +21062,7 @@ begin
     begin
       if MIDIActiveRibbonBox.Down and (i<length(SelektierteGeraete)) and (i<length(mainform.SendValueOfSelectedDevicesToMidi)) and (SelektierteGeraete[i]<length(mainform.Devices)) then
       begin
-        tempvalue:=geraetesteuerung.get_channel(mainform.Devices[SelektierteGeraete[i]].ID,'DIMMER');
+        tempvalue:=geraetesteuerung.get_dimmer(mainform.Devices[SelektierteGeraete[i]].ID);
 
         if tempvalue<>SendValueOfSelectedDevicesToMidi[i].LastValue then
         begin
@@ -23268,6 +23268,30 @@ begin
 
     geraetesteuerung.set_dimmer(stringtoguid(value[0]), strtoint(value[1]), strtoint(value[2]), strtoint(value[3]));
   end;
+  if (pos('set_fog',cmd)>0) then  // set_fog VALUE FADETIME
+  begin
+    temp:=cmd;
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[0]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[1]:=copy(temp, 0, pos(' ',temp)-1);
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    // Leerzeichen entfernen, sofern vorhanden
+    if pos(' ', temp)>0 then
+      temp:=copy(temp, 0, pos(' ', temp)-1);
+    value[2]:=temp;
+
+    for i:=0 to length(devices)-1 do
+    begin
+      if devices[i].hasFog then
+      begin
+        geraetesteuerung.set_fog(devices[i].ID, strtoint(value[0]), strtoint(value[1]), strtoint(value[2]));
+      end;
+    end;
+  end;
   if (pos('set_highlight',cmd)>0) then  // set_highlight GUID VALUE FADETIME
   begin
     temp:=cmd;
@@ -24290,9 +24314,9 @@ begin
             if value<0 then value:=0;
             if value>255 then value:=255;
             if mainform.devices[grafischebuehnenansicht.MouseOnProgress].hasDimmer then
-              geraetesteuerung.set_channel(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,'DIMMER',value,value,0)
+              geraetesteuerung.set_dimmer(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,value)
             else if mainform.devices[grafischebuehnenansicht.MouseOnProgress].hasFog then
-              geraetesteuerung.set_channel(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,'FOG',value,value,0);
+              geraetesteuerung.set_fog(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,value);
           end;
         end else if grafischebuehnenansicht.MouseOnBuehnenansichtProgress>-1 then
         begin
