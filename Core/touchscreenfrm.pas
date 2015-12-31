@@ -1230,99 +1230,101 @@ begin
 
     OverGoboButton:=(trunc(X/32)+1)+(trunc(Y/32)*GobosPerRow)-1+GoboOffset;
 
-    for i:=0 to length(mainform.Devices)-1 do
+    if (OverGoboButton>-1) and (OverGoboButton<length(GoboButtons)) then
     begin
-      if mainform.DeviceSelected[i] then
+      for i:=0 to length(mainform.Devices)-1 do
       begin
-        if mainform.devices[i].hasGobo or mainform.devices[i].hasGobo2 then
+        if mainform.DeviceSelected[i] then
         begin
-          // GoboButton[j] = Gewähltes Gobo
-          BestGobo1:=-1;
-          BestGobo2:=-1;
-          MaxValueGobo1:=0;
-          MaxValueGobo2:=0;
-
-          // Gobo1 durchsuchen
-          if mainform.devices[i].hasGobo then
+          if mainform.devices[i].hasGobo or mainform.devices[i].hasGobo2 then
           begin
-            // sofern gleiche Gobos, dann 100%ige Übereinstimmung festlegen
-            for j:=0 to length(mainform.devices[i].gobos)-1 do
-            begin
-              if mainform.devices[i].gobos[j]=GoboButtons[OverGoboButton] then
-              begin
-                MaxValueGobo1:=100;
-                BestGobo1:=j;
-              end;
-            end;
+            // GoboButton[j] = Gewähltes Gobo
+            BestGobo1:=-1;
+            BestGobo2:=-1;
+            MaxValueGobo1:=0;
+            MaxValueGobo2:=0;
 
-            // falls kein identisches Gobo gefunden, dann auf Korrelationswert zurückgreifen
-            if MaxValueGobo1<100 then
-            for j:=0 to length(mainform.devices[i].bestgobos)-1 do
+            // Gobo1 durchsuchen
+            if mainform.devices[i].hasGobo then
             begin
-              for k:=0 to length(mainform.devices[i].bestgobos[j])-1 do
+              // sofern gleiche Gobos, dann 100%ige Übereinstimmung festlegen
+              for j:=0 to length(mainform.devices[i].gobos)-1 do
               begin
-                if mainform.devices[i].bestgobos[j][k].GoboName=GoboButtons[OverGoboButton] then
+                if mainform.devices[i].gobos[j]=GoboButtons[OverGoboButton] then
                 begin
-                  if mainform.devices[i].bestgobos[j][k].Percent>MaxValueGobo1 then
+                  MaxValueGobo1:=100;
+                  BestGobo1:=j;
+                end;
+              end;
+
+              // falls kein identisches Gobo gefunden, dann auf Korrelationswert zurückgreifen
+              if MaxValueGobo1<100 then
+              for j:=0 to length(mainform.devices[i].bestgobos)-1 do
+              begin
+                for k:=0 to length(mainform.devices[i].bestgobos[j])-1 do
+                begin
+                  if mainform.devices[i].bestgobos[j][k].GoboName=GoboButtons[OverGoboButton] then
                   begin
-                    MaxValueGobo1:=mainform.devices[i].bestgobos[j][k].Percent;
-                    BestGobo1:=j;
+                    if mainform.devices[i].bestgobos[j][k].Percent>MaxValueGobo1 then
+                    begin
+                      MaxValueGobo1:=mainform.devices[i].bestgobos[j][k].Percent;
+                      BestGobo1:=j;
+                    end;
+                    break;
                   end;
-                  break;
                 end;
               end;
             end;
-          end;
 
-          // Gobo2 durchsuchen
-          if mainform.devices[i].hasGobo2 then
-          begin
-            // sofern gleiche Gobos, dann 100%ige Übereinstimmung festlegen
-            for j:=0 to length(mainform.devices[i].gobos2)-1 do
+            // Gobo2 durchsuchen
+            if mainform.devices[i].hasGobo2 then
             begin
-              if mainform.devices[i].gobos2[j]=GoboButtons[OverGoboButton] then
+              // sofern gleiche Gobos, dann 100%ige Übereinstimmung festlegen
+              for j:=0 to length(mainform.devices[i].gobos2)-1 do
               begin
-                MaxValueGobo2:=100;
-                BestGobo2:=j;
-              end;
-            end;
-
-            // falls kein identisches Gobo gefunden, dann auf Korrelationswert zurückgreifen
-            if MaxValueGobo2<100 then
-            for j:=0 to length(mainform.devices[i].bestgobos2)-1 do
-            begin
-              for k:=0 to length(mainform.devices[i].bestgobos2[j])-1 do
-              begin
-                if mainform.devices[i].bestgobos2[j][k].GoboName=GoboButtons[OverGoboButton] then
+                if mainform.devices[i].gobos2[j]=GoboButtons[OverGoboButton] then
                 begin
-                  if mainform.devices[i].bestgobos2[j][k].Percent>MaxValueGobo2 then
+                  MaxValueGobo2:=100;
+                  BestGobo2:=j;
+                end;
+              end;
+
+              // falls kein identisches Gobo gefunden, dann auf Korrelationswert zurückgreifen
+              if MaxValueGobo2<100 then
+              for j:=0 to length(mainform.devices[i].bestgobos2)-1 do
+              begin
+                for k:=0 to length(mainform.devices[i].bestgobos2[j])-1 do
+                begin
+                  if mainform.devices[i].bestgobos2[j][k].GoboName=GoboButtons[OverGoboButton] then
                   begin
-                    MaxValueGobo2:=mainform.devices[i].bestgobos2[j][k].Percent;
-                    BestGobo2:=j;
+                    if mainform.devices[i].bestgobos2[j][k].Percent>MaxValueGobo2 then
+                    begin
+                      MaxValueGobo2:=mainform.devices[i].bestgobos2[j][k].Percent;
+                      BestGobo2:=j;
+                    end;
+                    break;
                   end;
-                  break;
                 end;
               end;
             end;
-          end;
 
-          if mainform.devices[i].hasGobo2 and (MaxValueGobo2>MaxValueGobo1) then
-          begin
-            geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO1', -1, 0, 0);
-            geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO2', -1, mainform.devices[i].gobolevels2[BestGobo2], 0);
-          end else if mainform.devices[i].hasGobo and (MaxValueGobo1>MaxValueGobo2) then
-          begin
-            geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO1', -1, mainform.devices[i].gobolevels[BestGobo1], 0);
-            geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO2', -1, 0, 0);
-          end else if mainform.devices[i].hasGobo and (MaxValueGobo1>0) then
-          begin
-            geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO1', -1, mainform.devices[i].gobolevels[BestGobo1], 0);
-            geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO2', -1, 0, 0);
+            if mainform.devices[i].hasGobo2 and (MaxValueGobo2>MaxValueGobo1) then
+            begin
+              geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO1', -1, 0, 0);
+              geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO2', -1, mainform.devices[i].gobolevels2[BestGobo2], 0);
+            end else if mainform.devices[i].hasGobo and (MaxValueGobo1>MaxValueGobo2) then
+            begin
+              geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO1', -1, mainform.devices[i].gobolevels[BestGobo1], 0);
+              geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO2', -1, 0, 0);
+            end else if mainform.devices[i].hasGobo and (MaxValueGobo1>0) then
+            begin
+              geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO1', -1, mainform.devices[i].gobolevels[BestGobo1], 0);
+              geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO2', -1, 0, 0);
+            end;
           end;
         end;
       end;
     end;
-
     grafischebuehnenansicht.doimmediaterefresh:=true;
   end;
 end;
@@ -1355,6 +1357,8 @@ begin
   PositionXY.Height:=PositionXY.Width;
   PositionXY.Left:=(fadenkreuz.Width div 2)-(PositionXY.Width div 2);
   PositionXY.Top:=(fadenkreuz.Height div 2)-(PositionXY.Height div 2);
+
+  Timer1.Interval:=25;
 end;
 
 // Erstellt ein Farbverlauf von oben nach unten

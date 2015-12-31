@@ -1,6 +1,6 @@
 object touchscreenform: Ttouchscreenform
-  Left = 329
-  Top = 138
+  Left = 662
+  Top = 113
   Width = 801
   Height = 658
   Caption = 'Touchscreen'

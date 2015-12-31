@@ -6955,7 +6955,7 @@ begin
         begin
           if (intvalue>=mainform.devices[i].gobolevels[j]) and (intvalue<=mainform.Devices[i].goboendlevels[j]) then
           begin
-            if j<length(mainform.devices[i].gobos) then
+            if j<(length(mainform.devices[i].gobos)-1) then
               intvalue:=j+1
             else
               intvalue:=j;
@@ -7331,7 +7331,7 @@ begin
         begin
           if (intvalue>=mainform.devices[i].gobolevels2[j]) and (intvalue<=mainform.Devices[i].goboendlevels2[j]) then
           begin
-            if j<length(mainform.devices[i].gobos2) then
+            if j<(length(mainform.devices[i].gobos2)-1) then
               intvalue:=j+1
             else
               intvalue:=j;

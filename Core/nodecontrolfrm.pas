@@ -517,7 +517,10 @@ begin
 
   for i:=0 to length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1 do
   begin
-    if (X>mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X) and (X<mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X+32) and (Y>mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y) and (Y<mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y+32) then
+    if (X>mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X-16) and
+      (X<mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].X+16) and
+      (Y>mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y-16) and
+      (Y<mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[i].Y+16) then
     begin
       MouseOnNode:=i;
       if (MouseOnNode>-1) and (nodelist.items.count>0) and (MouseOnNode<nodelist.Items.count) then
