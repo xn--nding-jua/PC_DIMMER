@@ -1277,6 +1277,8 @@ begin
 
     save_eqClick(Sender);
 
+    If not DirectoryExists(mainform.userdirectory+'Temp') then
+      ForceDirectories(mainform.userdirectory+'Temp');
     DeleteFile(mainform.userdirectory+'Temp\*.*');
     //Datei öffnen
 		FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektaudio',fmCreate);
@@ -3323,6 +3325,8 @@ begin
       effectfilepath:=ExtractFilepath(openfile);
       effectfilename:=ExtractFileName(openfile);
 
+      If not DirectoryExists(mainform.userdirectory+'Temp') then
+        ForceDirectories(mainform.userdirectory+'Temp');
       DeleteFile(mainform.userdirectory+'Temp\*.*');
       mainform.Compress.DecompressFile(effectfilepath+effectfilename,mainform.userdirectory+'Temp\',true,false);
       if not mainform.startingup then
@@ -3373,6 +3377,8 @@ begin
         effectfilepath:=ExtractFilepath(savefile);
         effectfilename:=ExtractFileName(savefile);
 
+        If not DirectoryExists(mainform.userdirectory+'Temp') then
+          ForceDirectories(mainform.userdirectory+'Temp');
         DeleteFile(mainform.userdirectory+'Temp\*.*');
         FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektlayer',fmCreate);
           // Effektanzahl herausfinden
@@ -3483,6 +3489,8 @@ begin
     effectfilepath:=ExtractFilepath(openfile);
     effectfilename:=ExtractFileName(openfile);
 
+    If not DirectoryExists(mainform.userdirectory+'Temp') then
+      ForceDirectories(mainform.userdirectory+'Temp');
     DeleteFile(mainform.userdirectory+'Temp\*.*');
     mainform.Compress.DecompressFile(effectfilepath+effectfilename,mainform.userdirectory+'Temp\',true,false);
 
@@ -3550,6 +3558,8 @@ begin
       effectfilepath:=ExtractFilepath(savefile);
       effectfilename:=ExtractFileName(savefile);
 
+      If not DirectoryExists(mainform.userdirectory+'Temp') then
+        ForceDirectories(mainform.userdirectory+'Temp');
       DeleteFile(mainform.userdirectory+'Temp\*.*');
 			FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektliste',fmCreate);
       // Einzelne Layer und Effekte speichern
@@ -3940,6 +3950,8 @@ begin
     effectfilepath:=ExtractFilepath(openfile);
     effectfilename:=ExtractFileName(openfile);
 
+    If not DirectoryExists(mainform.userdirectory+'Temp') then
+      ForceDirectories(mainform.userdirectory+'Temp');
     DeleteFile(mainform.userdirectory+'Temp\*.*');
     mainform.Compress.DecompressFile(effectfilepath+effectfilename,mainform.userdirectory+'Temp\',true,false);
 
@@ -4090,6 +4102,8 @@ begin
       effectfilepath:=ExtractFilepath(savefile);
       effectfilename:=ExtractFileName(savefile);
 
+      If not DirectoryExists(mainform.userdirectory+'Temp') then
+        ForceDirectories(mainform.userdirectory+'Temp');
       DeleteFile(mainform.userdirectory+'Temp\*.*');
 			FileStream:=TFileStream.Create(mainform.userdirectory+'Temp\Effektliste',fmCreate);
       // Einzelne Layer und Effekte speichern
@@ -4914,6 +4928,8 @@ begin
     filename:=extractfilename(audioeeffektfile);
     filepath:=extractfilepath(audioeeffektfile);
 
+    If not DirectoryExists(mainform.userdirectory+'Temp') then
+      ForceDirectories(mainform.userdirectory+'Temp');
     DeleteFile(mainform.userdirectory+'Temp\*.*');
  		mainform.Compress.DecompressFile(filepath+filename,mainform.userdirectory+'Temp\',true,false);
 

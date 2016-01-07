@@ -800,6 +800,7 @@ procedure Tddfeditorform.FormPaint(Sender: TObject);
 var
   i,j: integer;
 begin
+  // Draw grid if sizectrl is enabled
   if SizeCtrl.Enabled then
     for i := 0 to width div SizeCtrl.GridSize do
       for j := 0 to height div SizeCtrl.GridSize do
@@ -1012,7 +1013,7 @@ begin
     if State = scsMoving then
       StatusBar1.SimpleText := format('  %s -  left:%d  top:%d, width:%d  height:%d',
         [Name, left+dx, top+dy, width, height])
-    else {State = scsSizing}
+    else //State = scsSizing
       StatusBar1.SimpleText := format('  %s -  left:%d  top:%d, width:%d  height:%d',
         [Name,left, top, width+dx, height+dy]);
 end;
@@ -1382,6 +1383,10 @@ procedure Tddfeditorform.typlisteSelect(Sender: TObject);
 begin
   channels[round(JvSpinEdit1.Value)-1].typ:=typliste.Items[typliste.itemindex];
   channels[round(JvSpinEdit1.Value)-1].name:=typliste.Items[typliste.itemindex];
+
+  channelfadebox.Checked:=not ((lowercase(channels[round(JvSpinEdit1.Value)-1].name)='color1') or
+    (lowercase(channels[round(JvSpinEdit1.Value)-1].name)='color2') or (lowercase(channels[round(JvSpinEdit1.Value)-1].name)='gobo1') or
+    (lowercase(channels[round(JvSpinEdit1.Value)-1].name)='gobo2') or (lowercase(channels[round(JvSpinEdit1.Value)-1].name)='gobo3'));
 end;
 
 procedure Tddfeditorform.PngBitBtn2Click(Sender: TObject);
@@ -3356,7 +3361,7 @@ begin
       colorchannel:=true;
 
   if not colorchannel then
-    ShowMessage(_('Das aktuell bearbeitete Gerät besitzt keinen Farbkanal (Farbrad, oder ähnliches).'+#13#10+'Das Definieren von Farben wird ohne einen Farbkanal ("COLOR1" oder "COLOR2") keine Auwirkungen haben. Die Funktion "Autofarbe" wird ebenfalls nicht zur Verfügung stehen.'+#13#10#13#10+'Fügen Sie einen neuen Kanal mit dem Typ "COLOR1" oder "COLOR2" hinzu, um die Farbfunktionen im PC_DIMMER nutzen zu können.'));
+    ShowMessage(_('Das aktuell bearbeitete Gerät besitzt keinen Farbkanal (Farbrad, oder ähnliches).'+#13#10+_('Das Definieren von Farben wird ohne einen Farbkanal ("COLOR1" oder "COLOR2") keine Auswirkungen haben. Die Funktion "Autofarbe" wird ebenfalls nicht zur Verfügung stehen.')+#13#10#13#10+_('Fügen Sie einen neuen Kanal mit dem Typ "COLOR1" oder "COLOR2" hinzu, um die Farbfunktionen im PC_DIMMER nutzen zu können.')));
 
   setlength(colors,length(colors)+1);
   colors[length(colors)-1].name:='Farbe '+inttostr(length(colors));
@@ -3366,6 +3371,7 @@ begin
   colors[length(colors)-1].G:=0;
   colors[length(colors)-1].B:=0;
   DDFEcolorlist.Items.Add(colors[length(colors)-1].name);
+  DDFEcoloredit.SetFocus;
 end;
 
 procedure Tddfeditorform.DDFEcolorlistMouseUp(Sender: TObject;
@@ -3769,6 +3775,7 @@ begin
   colors2[length(colors2)-1].G:=0;
   colors2[length(colors2)-1].B:=0;
   DDFEcolorlist2.Items.Add(colors2[length(colors2)-1].name);
+  DDFEcoloredit2.SetFocus;
 end;
 
 procedure Tddfeditorform.PngBitBtn13Click(Sender: TObject);
@@ -3858,6 +3865,7 @@ begin
   gobos[length(gobos)-1].filename:='';
   DDFEgobolist.Items.Add;
   DDFEgobolist.Items.Items[DDFEgobolist.Items.Count-1].Text:=gobos[length(gobos)-1].name;
+  DDFEgoboedit.SetFocus;
 end;
 
 procedure Tddfeditorform.PngBitBtn15Click(Sender: TObject);
@@ -3980,6 +3988,7 @@ begin
   gobos2[length(gobos2)-1].filename:='';
   DDFEgobolist2.Items.Add;
   DDFEgobolist2.Items.Items[DDFEgobolist2.Items.Count-1].Text:=gobos2[length(gobos2)-1].name;
+  DDFEgoboedit2.SetFocus;
 end;
 
 procedure Tddfeditorform.PngBitBtn17Click(Sender: TObject);

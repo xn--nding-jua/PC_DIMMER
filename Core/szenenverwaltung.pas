@@ -1379,6 +1379,9 @@ var
 begin
   if not mainform.UserAccessGranted(2) then exit;
 
+  if messagedlg(_('Die selektierten Szenen werden gelöscht. Fortfahren?'),mtWarning,
+    [mbYes,mbNo],0)=mrNo then exit;
+
   position:=0;
   DeleteTreeNode:=false;
 

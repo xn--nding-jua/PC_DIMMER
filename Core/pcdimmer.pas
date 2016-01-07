@@ -567,6 +567,7 @@ type
     HTTPServerActivateRibbonBox: TdxBarButton;
     dxBarSubItem4: TdxBarSubItem;
     dxBarButton7: TdxBarButton;
+    dxBarLargeButton8: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -842,6 +843,7 @@ type
     procedure dxBarLargeButton7Click(Sender: TObject);
     procedure HTTPServerActivateRibbonBoxClick(Sender: TObject);
     procedure dxBarButton7Click(Sender: TObject);
+    procedure dxBarLargeButton8Click(Sender: TObject);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -871,6 +873,7 @@ type
     lastx,lasty:integer;
     scrollbarpositiononmousedown:integer;
 
+    historyribbonitem:TdxBarExtraPaneItem;
     mainpriority:integer;
     channelvalue_blackout,channelvalue_blackoutR,channelvalue_blackoutG,channelvalue_blackoutB,channelvalue_blackoutC,channelvalue_blackoutM,channelvalue_blackoutY,channelvalue_blackoutA,channelvalue_blackoutW,channelvalue_blackoutUV:array of integer;
     dontstartaccu:boolean;
@@ -1819,6 +1822,7 @@ begin
   begin
     CreateDir(GetEnvironmentVariable('APPDATA')+'\PHOENIXstudios\');
     CreateDir(GetEnvironmentVariable('APPDATA')+'\PHOENIXstudios\PC_DIMMER');
+    CreateDir(GetEnvironmentVariable('APPDATA')+'\PHOENIXstudios\PC_DIMMER\Temp');
   end;
 
   currentprojectversion:=actualprojectversion;
@@ -3727,6 +3731,8 @@ begin
   openhistory3ribbon.Visible:=ivNever;
   openhistory4ribbon.Visible:=ivNever;
   openhistory5ribbon.Visible:=ivNever;
+
+  dxBarApplicationMenu1.ExtraPane.Items.Clear;
 
 // Optionen zurücksetzen
   startupwitholdscene:=True;
@@ -13043,12 +13049,16 @@ begin
   RefreshSplashText;
 
   // OpenHistoryMenü aktualisieren
+  dxBarApplicationMenu1.ExtraPane.Items.Clear;
   for i:=1 to 5 do
   begin
     TdxBarButton(FindComponent('openhistory'+inttostr(i)+'ribbon')).Caption:=ExtractFileName(data.openhistory[i-1]);
     if not (data.openhistory[i-1]='') then
     begin
       TdxBarButton(FindComponent('openhistory'+inttostr(i)+'ribbon')).Visible:=ivAlways;
+      historyribbonitem:=dxBarApplicationMenu1.ExtraPane.Items.Add;
+      historyribbonitem.DisplayText:=ExtractFileName(data.openhistory[i-1]);
+      historyribbonitem.Data:=i;
     end;
   end;
 
@@ -15801,7 +15811,7 @@ begin
     if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[11].Steuerung[0].GUID) and EventFired then
     begin // Button schalten
       kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
-      kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
+      kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssShift], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
       kontrollpanel.PaintBox1MouseUp(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
   //    kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1].OnMouseDown(kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1],mbLeft,[ssLeft],0,0);
   //    kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1].OnMouseUp(kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1],mbLeft,[],0,0);
@@ -15811,7 +15821,7 @@ begin
     begin // Button ein/aus
       kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
       if EventFired then
-        kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)))
+        kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssShift], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)))
   //      kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1].OnMouseDown(kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1],mbLeft,[ssLeft],0,0)
       else
         kontrollpanel.PaintBox1MouseUp(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
@@ -21949,6 +21959,7 @@ begin
   end;
 
   // Menü aktualisieren
+  dxBarApplicationMenu1.ExtraPane.Items.Clear;
   for i:=1 to 5 do
   begin
     TdxBarButton(FindComponent('openhistory'+inttostr(i)+'ribbon')).Caption:=ExtractFileName(data.openhistory[i-1]);
@@ -21958,6 +21969,9 @@ begin
     end else
     begin
       TdxBarButton(FindComponent('openhistory'+inttostr(i)+'ribbon')).Visible:=ivAlways;
+      historyribbonitem:=dxBarApplicationMenu1.ExtraPane.Items.Add;
+      historyribbonitem.DisplayText:=ExtractFileName(data.openhistory[i-1]);
+      historyribbonitem.Data:=i;
     end;
   end;
 end;
@@ -23856,7 +23870,13 @@ end;
 procedure TMainform.dxBarApplicationMenu1ExtraPaneItemClick(
   Sender: TObject; AIndex: Integer);
 begin
-  Optionen1Click(nil);
+  if FileExists(data.openhistory[dxBarApplicationMenu1.ExtraPane.Items[AIndex].Data-1]) then
+    openproject(data.openhistory[dxBarApplicationMenu1.ExtraPane.Items[AIndex].Data-1], false)
+  else
+  begin
+    ShowMessage(_('Die Datei "')+data.openhistory[dxBarApplicationMenu1.ExtraPane.Items[AIndex].Data-1]+_('" ist nicht mehr verfügbar!'));
+    data.openhistory[dxBarApplicationMenu1.ExtraPane.Items[AIndex].Data-1]:='';
+  end;
 end;
 
 procedure TMainform.BrightnessBarRibbonChange(Sender: TObject);
@@ -26925,6 +26945,11 @@ begin
         DasMevClose();
     end;
   end;
+end;
+
+procedure TMainform.dxBarLargeButton8Click(Sender: TObject);
+begin
+  close;
 end;
 
 end.

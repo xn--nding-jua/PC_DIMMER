@@ -1,6 +1,6 @@
 object ddfeditorform: Tddfeditorform
-  Left = 291
-  Top = 169
+  Left = 211
+  Top = 422
   Width = 895
   Height = 542
   Caption = 'DDF Editor'
@@ -459,7 +459,7 @@ object ddfeditorform: Tddfeditorform
         CheckMaxValue = False
         MinValue = 1.000000000000000000
         Value = 1.000000000000000000
-        TabOrder = 0
+        TabOrder = 2
         OnChange = JvSpinEdit1Change
       end
       object PngBitBtn1: TPngBitBtn
@@ -470,7 +470,7 @@ object ddfeditorform: Tddfeditorform
         Hint = 'F'#252'gt dem Ger'#228't einen neuen Kanal hinzu'
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 6
+        TabOrder = 0
         OnClick = PngBitBtn1Click
         PngImage.Data = {
           89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -594,7 +594,7 @@ object ddfeditorform: Tddfeditorform
         Hint = 'L'#246'scht den letzten Kanal des Ger'#228'tes'
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 7
+        TabOrder = 1
         OnClick = PngBitBtn2Click
         PngImage.Data = {
           89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -698,7 +698,7 @@ object ddfeditorform: Tddfeditorform
         Top = 104
         Width = 105
         Height = 21
-        TabOrder = 2
+        TabOrder = 4
         Text = 'DIMMER'
         OnKeyUp = kanalnameeditKeyUp
       end
@@ -708,7 +708,7 @@ object ddfeditorform: Tddfeditorform
         Width = 105
         Height = 21
         ItemHeight = 13
-        TabOrder = 1
+        TabOrder = 3
         Text = 'DIMMER'
         OnSelect = typlisteSelect
       end
@@ -720,7 +720,7 @@ object ddfeditorform: Tddfeditorform
         MaxValue = 255.000000000000000000
         MinValue = -1.000000000000000000
         Value = -1.000000000000000000
-        TabOrder = 5
+        TabOrder = 7
         OnChange = initvalueeditChange
       end
       object minvalueedit: TJvSpinEdit
@@ -729,7 +729,7 @@ object ddfeditorform: Tddfeditorform
         Width = 105
         Height = 21
         MaxValue = 255.000000000000000000
-        TabOrder = 3
+        TabOrder = 5
         OnChange = minvalueeditChange
       end
       object maxvalueedit: TJvSpinEdit
@@ -739,7 +739,7 @@ object ddfeditorform: Tddfeditorform
         Height = 21
         MaxValue = 255.000000000000000000
         Value = 255.000000000000000000
-        TabOrder = 4
+        TabOrder = 6
         OnChange = maxvalueeditChange
       end
       object autoddfbtn: TButton
@@ -748,7 +748,7 @@ object ddfeditorform: Tddfeditorform
         Width = 177
         Height = 25
         Caption = 'Erzeuge GUI anhand Kan'#228'len'
-        TabOrder = 8
+        TabOrder = 9
         OnClick = autoddfbtnClick
       end
       object PageControl2: TPageControl
@@ -757,7 +757,7 @@ object ddfeditorform: Tddfeditorform
         Width = 449
         Height = 369
         ActivePage = TabSheet6
-        TabOrder = 9
+        TabOrder = 10
         object TabSheet6: TTabSheet
           Caption = 'Farben'
           object colorlbl2: TLabel
@@ -849,7 +849,7 @@ object ddfeditorform: Tddfeditorform
             Width = 208
             Height = 113
             ItemHeight = 13
-            TabOrder = 0
+            TabOrder = 7
             OnKeyUp = DDFEcolorlist2KeyUp
             OnMouseUp = DDFEcolorlist2MouseUp
           end
@@ -858,7 +858,7 @@ object ddfeditorform: Tddfeditorform
             Top = 136
             Width = 157
             Height = 21
-            TabOrder = 1
+            TabOrder = 8
             Text = 'Neue Farbe'
             OnKeyUp = DDFEcoloredit2KeyUp
           end
@@ -872,7 +872,7 @@ object ddfeditorform: Tddfeditorform
             OnChange = DDFEcolorbutton2Change
             ParentShowHint = False
             ShowHint = False
-            TabOrder = 2
+            TabOrder = 9
             TabStop = False
           end
           object colorvalueedit2: TJvSpinEdit
@@ -881,7 +881,7 @@ object ddfeditorform: Tddfeditorform
             Width = 49
             Height = 21
             MaxValue = 255.000000000000000000
-            TabOrder = 3
+            TabOrder = 10
             OnChange = colorvalueedit2Change
           end
           object colorvalueendedit2: TJvSpinEdit
@@ -890,7 +890,7 @@ object ddfeditorform: Tddfeditorform
             Width = 49
             Height = 21
             MaxValue = 255.000000000000000000
-            TabOrder = 4
+            TabOrder = 11
             OnChange = colorvalueendedit2Change
           end
           object PngBitBtn9: TPngBitBtn
@@ -901,7 +901,7 @@ object ddfeditorform: Tddfeditorform
             Hint = 'F'#252'gt dem Ger'#228't eine neue Farbe hinzu'
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 5
+            TabOrder = 12
             OnClick = PngBitBtn9Click
             PngImage.Data = {
               89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -1025,7 +1025,7 @@ object ddfeditorform: Tddfeditorform
             Hint = 'L'#246'scht die markierte Farbe aus dem Ger'#228'tes'
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 6
+            TabOrder = 13
             OnClick = PngBitBtn13Click
             PngImage.Data = {
               89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -1129,7 +1129,7 @@ object ddfeditorform: Tddfeditorform
             Top = 136
             Width = 157
             Height = 21
-            TabOrder = 7
+            TabOrder = 1
             Text = 'Neue Farbe'
             OnKeyUp = DDFEcoloreditKeyUp
           end
@@ -1143,7 +1143,7 @@ object ddfeditorform: Tddfeditorform
             OnChange = DDFEcolorbuttonChange
             ParentShowHint = False
             ShowHint = False
-            TabOrder = 8
+            TabOrder = 2
             TabStop = False
           end
           object colorvalueedit: TJvSpinEdit
@@ -1152,7 +1152,7 @@ object ddfeditorform: Tddfeditorform
             Width = 49
             Height = 21
             MaxValue = 255.000000000000000000
-            TabOrder = 9
+            TabOrder = 3
             OnChange = colorvalueeditChange
           end
           object DDFEcolorlist: TListBox
@@ -1161,7 +1161,7 @@ object ddfeditorform: Tddfeditorform
             Width = 209
             Height = 113
             ItemHeight = 13
-            TabOrder = 10
+            TabOrder = 0
             OnKeyUp = DDFEcolorlistKeyUp
             OnMouseUp = DDFEcolorlistMouseUp
           end
@@ -1173,7 +1173,7 @@ object ddfeditorform: Tddfeditorform
             Hint = 'F'#252'gt dem Ger'#228't eine neue Farbe hinzu'
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 11
+            TabOrder = 5
             OnClick = PngBitBtn11Click
             PngImage.Data = {
               89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -1297,7 +1297,7 @@ object ddfeditorform: Tddfeditorform
             Hint = 'L'#246'scht die markierte Farbe aus dem Ger'#228'tes'
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 12
+            TabOrder = 6
             OnClick = PngBitBtn12Click
             PngImage.Data = {
               89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -1402,7 +1402,7 @@ object ddfeditorform: Tddfeditorform
             Width = 49
             Height = 21
             MaxValue = 255.000000000000000000
-            TabOrder = 13
+            TabOrder = 4
             OnChange = colorvalueendeditChange
           end
           object UseAmberMixingCheck: TCheckBox
@@ -1460,7 +1460,7 @@ object ddfeditorform: Tddfeditorform
             Value = 191.000000000000000000
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 17
+            TabOrder = 18
             OnChange = colorvalueeditChange
           end
           object AmberratioRBox: TJvSpinEdit
@@ -1473,7 +1473,7 @@ object ddfeditorform: Tddfeditorform
             Value = 255.000000000000000000
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 18
+            TabOrder = 17
             OnChange = colorvalueeditChange
           end
         end
@@ -1527,7 +1527,7 @@ object ddfeditorform: Tddfeditorform
             Top = 136
             Width = 105
             Height = 21
-            TabOrder = 0
+            TabOrder = 8
             Text = 'Neues Gobo'
             OnKeyUp = DDFEgoboedit2KeyUp
           end
@@ -1537,7 +1537,7 @@ object ddfeditorform: Tddfeditorform
             Width = 49
             Height = 21
             MaxValue = 255.000000000000000000
-            TabOrder = 1
+            TabOrder = 10
             OnChange = gobovalueedit2Change
           end
           object gobovalueendedit2: TJvSpinEdit
@@ -1546,7 +1546,7 @@ object ddfeditorform: Tddfeditorform
             Width = 49
             Height = 21
             MaxValue = 255.000000000000000000
-            TabOrder = 2
+            TabOrder = 11
             OnChange = gobovalueendedit2Change
           end
           object PngBitBtn16: TPngBitBtn
@@ -1557,7 +1557,7 @@ object ddfeditorform: Tddfeditorform
             Hint = 'F'#252'gt dem Ger'#228't eine neue Farbe hinzu'
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 3
+            TabOrder = 12
             OnClick = PngBitBtn16Click
             PngImage.Data = {
               89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -1681,7 +1681,7 @@ object ddfeditorform: Tddfeditorform
             Hint = 'L'#246'scht die markierte Farbe aus dem Ger'#228'tes'
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 4
+            TabOrder = 13
             OnClick = PngBitBtn17Click
             PngImage.Data = {
               89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -1791,7 +1791,7 @@ object ddfeditorform: Tddfeditorform
             ButtonStyle = fsLighter
             Images = ImageList1
             ItemHeight = 17
-            TabOrder = 5
+            TabOrder = 7
             OnKeyUp = DDFEgobolist2KeyUp
             OnMouseUp = DDFEgobolist2MouseUp
           end
@@ -1802,7 +1802,7 @@ object ddfeditorform: Tddfeditorform
             Height = 23
             Style = csOwnerDrawFixed
             DropDownCount = 20
-            TabOrder = 6
+            TabOrder = 9
             OnSelect = goboselectbox2Select
           end
           object DDFEgoboedit: TEdit
@@ -1810,7 +1810,7 @@ object ddfeditorform: Tddfeditorform
             Top = 136
             Width = 105
             Height = 21
-            TabOrder = 7
+            TabOrder = 1
             Text = 'Neues Gobo'
             OnKeyUp = DDFEgoboeditKeyUp
           end
@@ -1820,7 +1820,7 @@ object ddfeditorform: Tddfeditorform
             Width = 49
             Height = 21
             MaxValue = 255.000000000000000000
-            TabOrder = 8
+            TabOrder = 3
             OnChange = gobovalueeditChange
           end
           object gobovalueendedit: TJvSpinEdit
@@ -1829,7 +1829,7 @@ object ddfeditorform: Tddfeditorform
             Width = 49
             Height = 21
             MaxValue = 255.000000000000000000
-            TabOrder = 9
+            TabOrder = 4
             OnChange = gobovalueendeditChange
           end
           object PngBitBtn14: TPngBitBtn
@@ -1840,7 +1840,7 @@ object ddfeditorform: Tddfeditorform
             Hint = 'F'#252'gt dem Ger'#228't eine neue Farbe hinzu'
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 10
+            TabOrder = 5
             OnClick = PngBitBtn14Click
             PngImage.Data = {
               89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -1964,7 +1964,7 @@ object ddfeditorform: Tddfeditorform
             Hint = 'L'#246'scht die markierte Farbe aus dem Ger'#228'tes'
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 11
+            TabOrder = 6
             OnClick = PngBitBtn15Click
             PngImage.Data = {
               89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -2074,7 +2074,7 @@ object ddfeditorform: Tddfeditorform
             ButtonStyle = fsLighter
             Images = ImageList1
             ItemHeight = 17
-            TabOrder = 12
+            TabOrder = 0
             OnKeyUp = DDFEgobolistKeyUp
             OnMouseUp = DDFEgobolistMouseUp
           end
@@ -2085,7 +2085,7 @@ object ddfeditorform: Tddfeditorform
             Height = 23
             Style = csOwnerDrawFixed
             DropDownCount = 20
-            TabOrder = 13
+            TabOrder = 2
             OnSelect = goboselectboxSelect
           end
           object goborot1box: TGroupBox
@@ -2144,7 +2144,7 @@ object ddfeditorform: Tddfeditorform
               Height = 21
               MaxValue = 255.000000000000000000
               Value = 128.000000000000000000
-              TabOrder = 0
+              TabOrder = 2
               OnChange = maxvalueeditChange
             end
             object goborotrightvalueedit: TJvSpinEdit
@@ -2154,7 +2154,7 @@ object ddfeditorform: Tddfeditorform
               Height = 21
               MaxValue = 255.000000000000000000
               Value = 255.000000000000000000
-              TabOrder = 1
+              TabOrder = 5
               OnChange = maxvalueeditChange
             end
             object goborotleftvalueedit: TJvSpinEdit
@@ -2163,7 +2163,7 @@ object ddfeditorform: Tddfeditorform
               Width = 49
               Height = 21
               MaxValue = 255.000000000000000000
-              TabOrder = 2
+              TabOrder = 4
               OnChange = maxvalueeditChange
             end
             object gobo1rotchlbox: TComboBox
@@ -2172,7 +2172,7 @@ object ddfeditorform: Tddfeditorform
               Width = 137
               Height = 21
               ItemHeight = 13
-              TabOrder = 3
+              TabOrder = 0
               Text = 'GOBO1ROT'
               OnSelect = typlisteSelect
             end
@@ -2183,7 +2183,7 @@ object ddfeditorform: Tddfeditorform
               Height = 21
               MaxValue = 255.000000000000000000
               Value = 255.000000000000000000
-              TabOrder = 4
+              TabOrder = 3
               OnChange = maxvalueeditChange
             end
             object goborotleftminvalueedit: TJvSpinEdit
@@ -2192,7 +2192,7 @@ object ddfeditorform: Tddfeditorform
               Width = 49
               Height = 21
               MaxValue = 255.000000000000000000
-              TabOrder = 5
+              TabOrder = 1
               OnChange = maxvalueeditChange
             end
           end
@@ -2252,7 +2252,7 @@ object ddfeditorform: Tddfeditorform
               Height = 21
               MaxValue = 255.000000000000000000
               Value = 128.000000000000000000
-              TabOrder = 0
+              TabOrder = 2
               OnChange = maxvalueeditChange
             end
             object gobo2rotrightvalueedit: TJvSpinEdit
@@ -2262,7 +2262,7 @@ object ddfeditorform: Tddfeditorform
               Height = 21
               MaxValue = 255.000000000000000000
               Value = 255.000000000000000000
-              TabOrder = 1
+              TabOrder = 5
               OnChange = maxvalueeditChange
             end
             object gobo2rotleftvalueedit: TJvSpinEdit
@@ -2271,7 +2271,7 @@ object ddfeditorform: Tddfeditorform
               Width = 49
               Height = 21
               MaxValue = 255.000000000000000000
-              TabOrder = 2
+              TabOrder = 4
               OnChange = maxvalueeditChange
             end
             object gobo2rotchlbox: TComboBox
@@ -2280,7 +2280,7 @@ object ddfeditorform: Tddfeditorform
               Width = 137
               Height = 21
               ItemHeight = 13
-              TabOrder = 3
+              TabOrder = 0
               Text = 'GOBO2ROT'
               OnSelect = typlisteSelect
             end
@@ -2291,7 +2291,7 @@ object ddfeditorform: Tddfeditorform
               Height = 21
               MaxValue = 255.000000000000000000
               Value = 255.000000000000000000
-              TabOrder = 4
+              TabOrder = 3
               OnChange = maxvalueeditChange
             end
             object gobo2rotleftminvalueedit: TJvSpinEdit
@@ -2300,7 +2300,7 @@ object ddfeditorform: Tddfeditorform
               Width = 49
               Height = 21
               MaxValue = 255.000000000000000000
-              TabOrder = 5
+              TabOrder = 1
               OnChange = maxvalueeditChange
             end
           end
@@ -2314,7 +2314,7 @@ object ddfeditorform: Tddfeditorform
             Width = 177
             Height = 73
             Caption = ' Prisma '
-            TabOrder = 0
+            TabOrder = 1
             object prismaofflbl: TLabel
               Left = 8
               Top = 24
@@ -2354,7 +2354,7 @@ object ddfeditorform: Tddfeditorform
             Width = 233
             Height = 129
             Caption = ' Prisma-Rotation '
-            TabOrder = 1
+            TabOrder = 0
             object prismarotofflbl: TLabel
               Left = 88
               Top = 56
@@ -2404,7 +2404,7 @@ object ddfeditorform: Tddfeditorform
               Height = 21
               MaxValue = 255.000000000000000000
               Value = 128.000000000000000000
-              TabOrder = 0
+              TabOrder = 2
               OnChange = maxvalueeditChange
             end
             object prismarotrightmaxedit: TJvSpinEdit
@@ -2414,7 +2414,7 @@ object ddfeditorform: Tddfeditorform
               Height = 21
               MaxValue = 255.000000000000000000
               Value = 255.000000000000000000
-              TabOrder = 1
+              TabOrder = 5
               OnChange = maxvalueeditChange
             end
             object prismarotleftmaxedit: TJvSpinEdit
@@ -2423,7 +2423,7 @@ object ddfeditorform: Tddfeditorform
               Width = 49
               Height = 21
               MaxValue = 255.000000000000000000
-              TabOrder = 2
+              TabOrder = 4
               OnChange = maxvalueeditChange
             end
             object prismarotchanneledit: TComboBox
@@ -2432,7 +2432,7 @@ object ddfeditorform: Tddfeditorform
               Width = 137
               Height = 21
               ItemHeight = 13
-              TabOrder = 3
+              TabOrder = 0
               Text = 'PRISMAROT'
               OnSelect = typlisteSelect
             end
@@ -2443,7 +2443,7 @@ object ddfeditorform: Tddfeditorform
               Height = 21
               MaxValue = 255.000000000000000000
               Value = 255.000000000000000000
-              TabOrder = 4
+              TabOrder = 3
               OnChange = maxvalueeditChange
             end
             object prismarotleftminedit: TJvSpinEdit
@@ -2452,7 +2452,7 @@ object ddfeditorform: Tddfeditorform
               Width = 49
               Height = 21
               MaxValue = 255.000000000000000000
-              TabOrder = 5
+              TabOrder = 1
               OnChange = maxvalueeditChange
             end
           end
@@ -2540,7 +2540,7 @@ object ddfeditorform: Tddfeditorform
             Width = 177
             Height = 89
             Caption = ' Shutter-Einstellungen '
-            TabOrder = 0
+            TabOrder = 2
             object shutterlbl: TLabel
               Left = 8
               Top = 20
@@ -2598,7 +2598,7 @@ object ddfeditorform: Tddfeditorform
             Width = 177
             Height = 89
             Caption = ' Strobo-Einstellungen '
-            TabOrder = 1
+            TabOrder = 3
             object strobelbl: TLabel
               Left = 8
               Top = 20
@@ -2652,7 +2652,7 @@ object ddfeditorform: Tddfeditorform
               Width = 49
               Height = 21
               MaxValue = 255.000000000000000000
-              TabOrder = 2
+              TabOrder = 3
               OnChange = maxvalueeditChange
             end
             object strobeminvalueedit: TJvSpinEdit
@@ -2661,7 +2661,7 @@ object ddfeditorform: Tddfeditorform
               Width = 49
               Height = 21
               MaxValue = 255.000000000000000000
-              TabOrder = 3
+              TabOrder = 2
               OnChange = maxvalueeditChange
             end
           end
@@ -2671,7 +2671,7 @@ object ddfeditorform: Tddfeditorform
             Width = 177
             Height = 73
             Caption = ' Dimmer-Einstellungen '
-            TabOrder = 2
+            TabOrder = 0
             object dimmerofflbl: TLabel
               Left = 8
               Top = 24
@@ -2693,7 +2693,7 @@ object ddfeditorform: Tddfeditorform
               Height = 21
               MaxValue = 255.000000000000000000
               Value = 255.000000000000000000
-              TabOrder = 0
+              TabOrder = 1
               OnChange = maxvalueeditChange
             end
             object dimmeroffvalueedit: TJvSpinEdit
@@ -2702,7 +2702,7 @@ object ddfeditorform: Tddfeditorform
               Width = 49
               Height = 21
               MaxValue = 255.000000000000000000
-              TabOrder = 1
+              TabOrder = 0
               OnChange = maxvalueeditChange
             end
           end
@@ -2712,7 +2712,7 @@ object ddfeditorform: Tddfeditorform
             Width = 177
             Height = 73
             Caption = ' Nebel-Einstellungen '
-            TabOrder = 3
+            TabOrder = 1
             object fogofflbl: TLabel
               Left = 8
               Top = 24
@@ -2734,7 +2734,7 @@ object ddfeditorform: Tddfeditorform
               Height = 21
               MaxValue = 255.000000000000000000
               Value = 255.000000000000000000
-              TabOrder = 0
+              TabOrder = 1
               OnChange = maxvalueeditChange
             end
             object fogoffvalueedit: TJvSpinEdit
@@ -2743,7 +2743,7 @@ object ddfeditorform: Tddfeditorform
               Width = 49
               Height = 21
               MaxValue = 255.000000000000000000
-              TabOrder = 1
+              TabOrder = 0
               OnChange = maxvalueeditChange
             end
           end
@@ -2762,7 +2762,7 @@ object ddfeditorform: Tddfeditorform
         ParentShowHint = False
         ShowHint = True
         State = cbChecked
-        TabOrder = 10
+        TabOrder = 8
         OnClick = channelfadeboxClick
       end
     end
@@ -2891,7 +2891,7 @@ object ddfeditorform: Tddfeditorform
         Width = 169
         Height = 25
         Caption = 'Komponente entfernen'
-        TabOrder = 10
+        TabOrder = 13
         OnClick = PngBitBtn3Click
         PngImage.Data = {
           89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -3016,7 +3016,7 @@ object ddfeditorform: Tddfeditorform
         Hint = 'F'#252'gt ein neues Item hinzu'
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 11
+        TabOrder = 6
         Visible = False
         OnClick = PngBitBtn6Click
         PngImage.Data = {
@@ -3141,7 +3141,7 @@ object ddfeditorform: Tddfeditorform
         Hint = 'L'#246'scht das letzte Item'
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 12
+        TabOrder = 7
         Visible = False
         OnClick = PngBitBtn7Click
         PngImage.Data = {
@@ -3257,7 +3257,7 @@ object ddfeditorform: Tddfeditorform
         Top = 232
         Width = 169
         Height = 21
-        TabOrder = 7
+        TabOrder = 9
         Visible = False
         OnKeyUp = itemnameeditKeyUp
       end
@@ -3269,7 +3269,7 @@ object ddfeditorform: Tddfeditorform
         MaxValue = 255.000000000000000000
         Value = 1.000000000000000000
         MaxLength = 3
-        TabOrder = 8
+        TabOrder = 11
         Visible = False
         OnChange = itemvalueeditChange
       end
@@ -3303,7 +3303,7 @@ object ddfeditorform: Tddfeditorform
         Height = 21
         MaxValue = 255.000000000000000000
         MaxLength = 3
-        TabOrder = 6
+        TabOrder = 8
         Visible = False
         OnChange = defaultvaluespinChange
       end
@@ -3312,7 +3312,7 @@ object ddfeditorform: Tddfeditorform
         Top = 256
         Width = 97
         Height = 21
-        TabOrder = 9
+        TabOrder = 14
         Visible = False
         OnKeyUp = bildedtKeyUp
       end
@@ -3322,7 +3322,7 @@ object ddfeditorform: Tddfeditorform
         Width = 41
         Height = 21
         Caption = '...'
-        TabOrder = 13
+        TabOrder = 15
         Visible = False
         OnClick = bildchangeClick
       end
@@ -3333,7 +3333,7 @@ object ddfeditorform: Tddfeditorform
         Height = 23
         Style = csOwnerDrawFixed
         DropDownCount = 20
-        TabOrder = 14
+        TabOrder = 10
         Visible = False
         OnSelect = mbXPImageComboBox1Select
       end
@@ -3345,7 +3345,7 @@ object ddfeditorform: Tddfeditorform
         MaxValue = 255.000000000000000000
         Value = 2.000000000000000000
         MaxLength = 3
-        TabOrder = 15
+        TabOrder = 12
         Visible = False
         OnChange = itemvalueendeditChange
       end
