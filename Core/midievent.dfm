@@ -71,7 +71,7 @@ object midieventfrm: Tmidieventfrm
       Width = 722
       Height = 153
       Align = alClient
-      ColCount = 12
+      ColCount = 14
       DefaultRowHeight = 15
       FixedCols = 0
       RowCount = 2
@@ -90,6 +90,8 @@ object midieventfrm: Tmidieventfrm
         49
         44
         39
+        64
+        64
         64
         64
         64)

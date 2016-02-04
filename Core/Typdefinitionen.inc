@@ -712,6 +712,7 @@
     Active:boolean;
     Visible:boolean;
     Enabled:boolean;
+    Down:boolean;
   end;
   Tkontrollpanelrecord = record
     zeilenanzahl:integer;

@@ -796,7 +796,7 @@ object kontrollpanel: Tkontrollpanel
       Height = 21
       Hint = 'Zeilenanzahl'
       MaxValue = 500.000000000000000000
-      MinValue = 25.000000000000000000
+      MinValue = 15.000000000000000000
       Value = 100.000000000000000000
       ParentShowHint = False
       ShowHint = True
@@ -810,7 +810,7 @@ object kontrollpanel: Tkontrollpanel
       Height = 21
       Hint = 'Spaltenanzahl'
       MaxValue = 500.000000000000000000
-      MinValue = 25.000000000000000000
+      MinValue = 15.000000000000000000
       Value = 60.000000000000000000
       ParentShowHint = False
       ShowHint = True

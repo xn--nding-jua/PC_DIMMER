@@ -7,7 +7,7 @@ uses
   Dialogs, ExtCtrls, TiledImage, StdCtrls, Mask, JvExMask, JvSpin, GR32,
   ComCtrls, mbColorPickerControl, HSColorPicker, XPMan, GnuGetText, Menus,
   Buttons, HSLColorPicker, JvExExtCtrls, JvExtComponent, JvPanel,
-  JvOfficeColorPanel;
+  JvOfficeColorPanel, HSLRingPicker;
 
 type
   Tmatrixrecord = record
@@ -85,9 +85,9 @@ type
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
     AlleGerteselektieren1: TMenuItem;
-    colorpicker: THSLColorPicker;
     ColorPicker2: TJvOfficeColorPanel;
     Button2: TButton;
+    colorpicker: THSLRingPicker;
     procedure dimmersliderChange(Sender: TObject);
     procedure PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -901,6 +901,9 @@ var
 begin
   if opendialog1.Execute then
   begin
+    // zunächst zur Sicherheit alles frisch machen
+    NewMatrix;
+
 		FileStream:=TFileStream.Create(opendialog1.FileName,fmOpenRead);
 
     // Projektversion
@@ -912,16 +915,18 @@ begin
     Filestream.ReadBuffer(cols, sizeof(cols));
 
     stepcount.value:=steps;
+    stepcountChange(stepcount);
     rowcount.value:=rows;
+    rowcountchange(rowcount);
     colcount.value:=cols;
+    colcountchange(colcount);
 
-//    setlength(matrixarray, steps);
+    // die Länge der einzelnen Arrays wird über die Komponenten-Changes sichergestellt
+
     for i:=0 to length(matrixarray)-1 do
     begin
-//      setlength(matrixarray[i], rows);
       for j:=0 to length(matrixarray[i])-1 do
       begin
-//        setlength(matrixarray[i][j], cols);
         for k:=0 to length(matrixarray[i][j])-1 do
         begin
           FileStream.ReadBuffer(matrixarray[i][j][k].enabled,sizeof(matrixarray[i][j][k].enabled));

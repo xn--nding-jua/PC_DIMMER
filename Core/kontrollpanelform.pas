@@ -218,7 +218,6 @@ type
     _Buffer:TBitmap32;
     xoffset, yoffset:integer;
     BtnDown:TPoint;
-    OverBtn:TPoint;
     SourceBtn:TPoint;
     MouseDown,OldOffset:TPoint;
     LastColRows:TPoint;
@@ -250,6 +249,7 @@ type
   public
     { Public-Deklarationen }
     SelectedBtn:TPoint;
+    OverBtn:TPoint;
 
     channelvalue_temp:array[1..chan] of integer;
     buttonwidth,buttonheight:integer;
@@ -2513,6 +2513,7 @@ begin
   mainform.buttonname.text:=buttonname.text;
   mainform.buttonfarbe.Color:=buttonfarbe.Color;
   mainform.ComboBox1.ItemIndex:=Combobox1.ItemIndex;
+  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Down:=true;
 
   CheckForActiveTimer(nil);
 
@@ -2633,6 +2634,7 @@ begin
   mainform.buttonname.text:=buttonname.text;
   mainform.buttonfarbe.Color:=buttonfarbe.Color;
   mainform.ComboBox1.ItemIndex:=Combobox1.ItemIndex;
+  mainform.kontrollpanelbuttons[SelectedBtn.Y][SelectedBtn.X].Down:=false;
 
   CheckForActiveTimer(nil);
 

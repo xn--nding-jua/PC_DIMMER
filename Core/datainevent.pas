@@ -143,26 +143,30 @@ uses pcdimmer, editdatainevent;
 procedure Tdataineventfrm.FormCreate(Sender: TObject);
 begin
   TranslateComponent(self);
-	DataGrid.Cells[0,0]:=_('Kanal');
-  DataGrid.cells[1,0]:=_('Wert');
-  DataGrid.cells[2,0]:=_('Typ');
-  DataGrid.cells[3,0]:=_('Wert1');
-  DataGrid.cells[4,0]:=_('Wert2');
-  DataGrid.cells[5,0]:=_('Wert3');
-  DataGrid.cells[6,0]:=_('Unten');
-  DataGrid.cells[7,0]:=_('Ein');
-  DataGrid.cells[8,0]:=_('Oben');
-  DataGrid.cells[9,0]:=_('Aktuell');
-  DataGrid.ColWidths[0]:=40;
-  DataGrid.ColWidths[1]:=40;
-  DataGrid.ColWidths[2]:=200;
-  DataGrid.ColWidths[3]:=45;
-  DataGrid.ColWidths[4]:=45;
+	DataGrid.Cells[0,0]:=_('Name');
+	DataGrid.Cells[1,0]:=_('Beschreibung');
+	DataGrid.Cells[2,0]:=_('Kanal');
+  DataGrid.cells[3,0]:=_('Wert');
+  DataGrid.cells[4,0]:=_('Typ');
+  DataGrid.cells[5,0]:=_('Wert1');
+  DataGrid.cells[6,0]:=_('Wert2');
+  DataGrid.cells[7,0]:=_('Wert3');
+  DataGrid.cells[8,0]:=_('Unten');
+  DataGrid.cells[9,0]:=_('Ein');
+  DataGrid.cells[10,0]:=_('Oben');
+  DataGrid.cells[11,0]:=_('Aktuell');
+  DataGrid.ColWidths[0]:=75;
+  DataGrid.ColWidths[1]:=75;
+  DataGrid.ColWidths[2]:=40;
+  DataGrid.ColWidths[3]:=40;
+  DataGrid.ColWidths[4]:=200;
   DataGrid.ColWidths[5]:=45;
-  DataGrid.ColWidths[6]:=35;
-  DataGrid.ColWidths[7]:=35;
+  DataGrid.ColWidths[6]:=45;
+  DataGrid.ColWidths[7]:=45;
   DataGrid.ColWidths[8]:=35;
-  DataGrid.ColWidths[9]:=45;
+  DataGrid.ColWidths[9]:=35;
+  DataGrid.ColWidths[10]:=35;
+  DataGrid.ColWidths[11]:=45;
   DataGrid.cells[0,1]:='-';
   DataGrid.cells[1,1]:='-';
   DataGrid.cells[2,1]:='-';
@@ -173,6 +177,8 @@ begin
   DataGrid.cells[7,1]:='-';
   DataGrid.cells[8,1]:='-';
   DataGrid.cells[9,1]:='-';
+  DataGrid.cells[10,1]:='-';
+  DataGrid.cells[11,1]:='-';
 end;
 
 procedure Tdataineventfrm.refreshList(line: integer);
@@ -180,8 +186,10 @@ var
   i,j:integer;
   text:string;
 begin
-  DataGrid.cells[0,line]:=inttostr(mainform.dataineventArray[line-1].Channel);	// Kanal
-  DataGrid.cells[1,line]:=inttostr(mainform.dataineventArray[line-1].Value);	// Wert
+  DataGrid.cells[0,line]:=mainform.dataineventArray[line-1].Befehl.Name;	// Name
+  DataGrid.cells[1,line]:=mainform.dataineventArray[line-1].Befehl.Beschreibung;	// Beschreibung
+  DataGrid.cells[2,line]:=inttostr(mainform.dataineventArray[line-1].Channel);	// Kanal
+  DataGrid.cells[3,line]:=inttostr(mainform.dataineventArray[line-1].Value);	// Wert
 
   for i:=0 to length(mainform.Befehlssystem)-1 do
   begin
@@ -189,12 +197,12 @@ begin
     begin
       if IsEqualGUID(mainform.Befehlssystem[i].Steuerung[j].GUID, mainform.DataInEventArray[line-1].Befehl.Typ) then
       begin
-        DATAGrid.cells[2,line]:=mainform.Befehlssystem[i].Programmteil+': '+mainform.Befehlssystem[i].Steuerung[j].Bezeichnung;
+        DATAGrid.cells[4,line]:=mainform.Befehlssystem[i].Programmteil+': '+mainform.Befehlssystem[i].Steuerung[j].Bezeichnung;
         if length(mainform.DataInEventArray[line-1].Befehl.ArgGUID)>0 then
         begin
           mainform.GetInfo(mainform.DataInEventArray[line-1].Befehl.ArgGUID[0], text);
           if text<>'' then
-            DATAGrid.cells[2,line]:=DATAGrid.cells[2,line]+' ('+text+')';
+            DATAGrid.cells[4,line]:=DATAGrid.cells[4,line]+' ('+text+')';
         end;
         break;
       end;
@@ -202,15 +210,15 @@ begin
   end;
 
   if length(mainform.dataineventArray[line-1].Befehl.ArgInteger)>0 then
-		DataGrid.cells[3,line]:=inttostr(mainform.dataineventArray[line-1].Befehl.ArgInteger[0]);	// Wert1
+		DataGrid.cells[5,line]:=inttostr(mainform.dataineventArray[line-1].Befehl.ArgInteger[0]);	// Wert1
   if length(mainform.dataineventArray[line-1].Befehl.ArgInteger)>1 then
-		DataGrid.cells[4,line]:=inttostr(mainform.dataineventArray[line-1].Befehl.ArgInteger[1]);	// Wert2
+		DataGrid.cells[6,line]:=inttostr(mainform.dataineventArray[line-1].Befehl.ArgInteger[1]);	// Wert2
   if length(mainform.dataineventArray[line-1].Befehl.ArgInteger)>2 then
-		DataGrid.cells[5,line]:=inttostr(mainform.dataineventArray[line-1].Befehl.ArgInteger[2]);	// Wert3
+		DataGrid.cells[7,line]:=inttostr(mainform.dataineventArray[line-1].Befehl.ArgInteger[2]);	// Wert3
 
-  DataGrid.cells[6,line]:=inttostr(mainform.dataineventArray[line-1].Befehl.OffValue);
-  DataGrid.cells[7,line]:=inttostr(mainform.dataineventArray[line-1].Befehl.SwitchValue);
-  DataGrid.cells[8,line]:=inttostr(mainform.dataineventArray[line-1].Befehl.OnValue);
+  DataGrid.cells[8,line]:=inttostr(mainform.dataineventArray[line-1].Befehl.OffValue);
+  DataGrid.cells[9,line]:=inttostr(mainform.dataineventArray[line-1].Befehl.SwitchValue);
+  DataGrid.cells[10,line]:=inttostr(mainform.dataineventArray[line-1].Befehl.OnValue);
 end;
 
 procedure Tdataineventfrm.editdataineventClick(Sender: TObject);
@@ -222,6 +230,8 @@ begin
 	Editdataineventfrm.Data1a.text:=inttostr(mainform.dataineventArray[DataGrid.row-1].Value);
 
   EditDATAINEVENTfrm.AktuellerBefehl.Typ:=mainform.DatainEventArray[DataGrid.row-1].Befehl.Typ;
+  EditDATAINEVENTfrm.AktuellerBefehl.Name:=mainform.DatainEventArray[DataGrid.row-1].Befehl.Name;
+  EditDATAINEVENTfrm.AktuellerBefehl.Beschreibung:=mainform.DatainEventArray[DataGrid.row-1].Befehl.Beschreibung;
   EditDATAINEVENTfrm.AktuellerBefehl.OnValue:=mainform.DatainEventArray[DataGrid.row-1].Befehl.OnValue;
   EditDATAINEVENTfrm.AktuellerBefehl.SwitchValue:=mainform.DatainEventArray[DataGrid.row-1].Befehl.SwitchValue;
   EditDATAINEVENTfrm.AktuellerBefehl.InvertSwitchValue:=mainform.DatainEventArray[DataGrid.row-1].Befehl.InvertSwitchValue;
@@ -247,6 +257,8 @@ begin
 		mainform.dataineventArray[DataGrid.row-1].Value := strtoint(Editdataineventfrm.Data1a.text);
 
     mainform.DatainEventArray[DataGrid.row-1].Befehl.Typ:=EditDATAINEVENTfrm.AktuellerBefehl.Typ;
+    mainform.DatainEventArray[DataGrid.row-1].Befehl.Name:=EditDATAINEVENTfrm.AktuellerBefehl.Name;
+    mainform.DatainEventArray[DataGrid.row-1].Befehl.Beschreibung:=EditDATAINEVENTfrm.AktuellerBefehl.Beschreibung;
     mainform.DatainEventArray[DataGrid.row-1].Befehl.OnValue:=EditDATAINEVENTfrm.AktuellerBefehl.OnValue;
     mainform.DatainEventArray[DataGrid.row-1].Befehl.SwitchValue:=EditDATAINEVENTfrm.AktuellerBefehl.SwitchValue;
     mainform.DatainEventArray[DataGrid.row-1].Befehl.InvertSwitchValue:=EditDATAINEVENTfrm.AktuellerBefehl.InvertSwitchValue;
@@ -299,6 +311,8 @@ begin
 		mainform.dataineventArray[DataGrid.row-1].Value := strtoint(Editdataineventfrm.Data1a.text);
 
     mainform.DatainEventArray[DataGrid.row-1].Befehl.Typ:=EditDATAINEVENTfrm.AktuellerBefehl.Typ;
+    mainform.DatainEventArray[DataGrid.row-1].Befehl.Name:=EditDATAINEVENTfrm.AktuellerBefehl.Name;
+    mainform.DatainEventArray[DataGrid.row-1].Befehl.Beschreibung:=EditDATAINEVENTfrm.AktuellerBefehl.Beschreibung;
     mainform.DatainEventArray[DataGrid.row-1].Befehl.OnValue:=EditDATAINEVENTfrm.AktuellerBefehl.OnValue;
     mainform.DatainEventArray[DataGrid.row-1].Befehl.SwitchValue:=EditDATAINEVENTfrm.AktuellerBefehl.SwitchValue;
     mainform.DatainEventArray[DataGrid.row-1].Befehl.InvertSwitchValue:=EditDATAINEVENTfrm.AktuellerBefehl.InvertSwitchValue;
@@ -390,6 +404,8 @@ begin
 		DataGrid.cells[7,1]:='-';
 		DataGrid.cells[8,1]:='-';
     DataGrid.cells[9,1]:='-';
+    DataGrid.cells[10,1]:='-';
+    DataGrid.cells[11,1]:='-';
 
   	deletedatainevent.Enabled:=false;
     editdatainevent.Enabled:=false;
@@ -474,6 +490,8 @@ if messagedlg(_('Möchten Sie wirklich alle DataIn-Events löschen?'),mtConfirmati
 		DataGrid.cells[7,1]:='-';
 		DataGrid.cells[8,1]:='-';
 		DataGrid.cells[9,1]:='-';
+		DataGrid.cells[10,1]:='-';
+		DataGrid.cells[11,1]:='-';
    	deletedatainevent.Enabled:=false;
 	  editdatainevent.Enabled:=false;
 	end;
@@ -481,7 +499,7 @@ end;
 
 procedure Tdataineventfrm.SpeedButton2Click(Sender: TObject);
 var
-  i,j,startindex,Count,Count2:integer;
+  i,j,FileVersion,startindex,Count,Count2:integer;
   additiv:boolean;
 //  FileStream:TFileStream;
 begin
@@ -502,7 +520,16 @@ begin
       with mainform do
       begin
         FileStream:=TFileStream.Create(OpenDialog1.Filename,fmOpenRead);
-        Filestream.ReadBuffer(Count,sizeof(Count));
+
+        Filestream.ReadBuffer(FileVersion,sizeof(FileVersion));
+        if FileVersion>=477 then
+        begin
+          Filestream.ReadBuffer(Count,sizeof(Count));
+        end else
+        begin
+          Count:=FileVersion; // old format has only number of elements here
+        end;
+
         setlength(DatainEventArray,Count+startindex+1);
         for i:=startindex+1 to length(DatainEventArray)-1 do
         begin
@@ -511,6 +538,11 @@ begin
           Filestream.ReadBuffer(DatainEventArray[i].Value,sizeof(DatainEventArray[i].Value));
 
           Filestream.ReadBuffer(DatainEventArray[i].Befehl.Typ,sizeof(DatainEventArray[i].Befehl.Typ));
+          if FileVersion>477 then
+          begin
+            Filestream.ReadBuffer(DatainEventArray[i].Befehl.Name,sizeof(DatainEventArray[i].Befehl.Name));
+            Filestream.ReadBuffer(DatainEventArray[i].Befehl.Beschreibung,sizeof(DatainEventArray[i].Befehl.Beschreibung));
+          end;
           Filestream.ReadBuffer(DatainEventArray[i].Befehl.OnValue,sizeof(DatainEventArray[i].Befehl.OnValue));
           Filestream.ReadBuffer(DatainEventArray[i].Befehl.SwitchValue,sizeof(DatainEventArray[i].Befehl.SwitchValue));
           Filestream.ReadBuffer(DatainEventArray[i].Befehl.InvertSwitchValue,sizeof(DatainEventArray[i].Befehl.InvertSwitchValue));
@@ -537,7 +569,16 @@ begin
       with mainform do
       begin
         FileStream:=TFileStream.Create(OpenDialog1.Filename,fmOpenRead);
-        Filestream.ReadBuffer(Count,sizeof(Count));
+
+        Filestream.ReadBuffer(FileVersion,sizeof(FileVersion));
+        if FileVersion>=477 then
+        begin
+          Filestream.ReadBuffer(Count,sizeof(Count));
+        end else
+        begin
+          Count:=FileVersion; // old format has only number of elements here
+        end;
+
         setlength(DatainEventArray,Count);
         for i:=0 to length(DatainEventArray)-1 do
         begin
@@ -546,6 +587,11 @@ begin
           Filestream.ReadBuffer(DatainEventArray[i].Value,sizeof(DatainEventArray[i].Value));
 
           Filestream.ReadBuffer(DatainEventArray[i].Befehl.Typ,sizeof(DatainEventArray[i].Befehl.Typ));
+          if FileVersion>477 then
+          begin
+            Filestream.ReadBuffer(DatainEventArray[i].Befehl.Name,sizeof(DatainEventArray[i].Befehl.Name));
+            Filestream.ReadBuffer(DatainEventArray[i].Befehl.Beschreibung,sizeof(DatainEventArray[i].Befehl.Beschreibung));
+          end;
           Filestream.ReadBuffer(DatainEventArray[i].Befehl.OnValue,sizeof(DatainEventArray[i].Befehl.OnValue));
           Filestream.ReadBuffer(DatainEventArray[i].Befehl.SwitchValue,sizeof(DatainEventArray[i].Befehl.SwitchValue));
           Filestream.ReadBuffer(DatainEventArray[i].Befehl.InvertSwitchValue,sizeof(DatainEventArray[i].Befehl.InvertSwitchValue));
@@ -605,6 +651,8 @@ begin
       Filestream.WriteBuffer(DataInEventArray[i].Value,sizeof(DataInEventArray[i].Value));
 
       Filestream.WriteBuffer(DatainEventArray[i].Befehl.Typ,sizeof(DatainEventArray[i].Befehl.Typ));
+      Filestream.WriteBuffer(DatainEventArray[i].Befehl.Name,sizeof(DatainEventArray[i].Befehl.Name));
+      Filestream.WriteBuffer(DatainEventArray[i].Befehl.Beschreibung,sizeof(DatainEventArray[i].Befehl.Beschreibung));
       Filestream.WriteBuffer(DatainEventArray[i].Befehl.OnValue,sizeof(DatainEventArray[i].Befehl.OnValue));
       Filestream.WriteBuffer(DatainEventArray[i].Befehl.SwitchValue,sizeof(DatainEventArray[i].Befehl.SwitchValue));
       Filestream.WriteBuffer(DatainEventArray[i].Befehl.InvertSwitchValue,sizeof(DatainEventArray[i].Befehl.InvertSwitchValue));
@@ -1157,9 +1205,9 @@ begin
     if (lastdatainaddress=mainform.DataInEventArray[i].channel) then
     begin
       // Werte in Liste aktualisieren
-      DataGrid.cells[0,i+1]:=inttostr(mainform.DataInEventArray[i].Channel);	// Value
-      DataGrid.cells[1,i+1]:=inttostr(mainform.DataInEventArray[i].value);	// Value
-      DataGrid.cells[9,i+1]:=inttostr(lastdatainendvalue);
+      DataGrid.cells[2,i+1]:=inttostr(mainform.DataInEventArray[i].Channel);	// Value
+      DataGrid.cells[3,i+1]:=inttostr(mainform.DataInEventArray[i].value);	// Value
+      DataGrid.cells[11,i+1]:=inttostr(lastdatainendvalue);
     end;
   end;
 end;

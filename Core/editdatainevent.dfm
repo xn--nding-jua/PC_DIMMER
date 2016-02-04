@@ -187,7 +187,6 @@ object editdataineventfrm: Teditdataineventfrm
       Width = 31
       Height = 13
       Caption = 'Name:'
-      Enabled = False
     end
     object Label8: TLabel
       Left = 256
@@ -195,7 +194,6 @@ object editdataineventfrm: Teditdataineventfrm
       Width = 68
       Height = 13
       Caption = 'Beschreibung:'
-      Enabled = False
     end
     object Label9: TLabel
       Left = 8
@@ -318,7 +316,6 @@ object editdataineventfrm: Teditdataineventfrm
       Top = 32
       Width = 241
       Height = 21
-      Enabled = False
       TabOrder = 0
       OnChange = Edit1Change
     end
@@ -330,7 +327,6 @@ object editdataineventfrm: Teditdataineventfrm
       Hint = 
         'Hier besteht die M'#246'glichkeit einen kleinen Beschreibungstext ein' +
         'zugeben.'
-      Enabled = False
       ParentShowHint = False
       ShowHint = True
       TabOrder = 1

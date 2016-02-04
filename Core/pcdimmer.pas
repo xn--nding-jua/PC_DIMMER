@@ -54,7 +54,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=477;
+  actualprojectversion=478;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -858,6 +858,8 @@ type
     faderpaneltimerbyte:byte;
     DimmerkernelChanges,DimmerkernelChangesPerSecond:Cardinal;
     scrolltoleft, scrolltoright:boolean;
+    MIDIInPackets, MIDIOutPackets, DataInPackets, DMXOutPackets:integer;
+    MIDIInPacketsFreq, MIDIOutPacketsFreq, DataInPacketsFreq, DMXOutPacketsFreq:integer;
 
     // Dinge für Kanalübersicht
     oldvaluesChannelview:array[1..8192] of byte;
@@ -989,6 +991,8 @@ type
     Rfr_Main, Rfr_AEP, Rfr_Buehnenansicht, Rfr_Cuelist, Rfr_Faderpanel,
     Rfr_Kanaluebersicht, Rfr_Kontrollpanel, Rfr_KontrollpanelCheckForActive,
     Rfr_Submaster: Byte;
+
+    CDPlayerDrives, CDPlayerTracks:TStrings;
 
     windowsmajorversion,windowsminorversion,windowsbuildnumber:byte;
     ShowIconInTaskSwitcher:boolean;
@@ -2744,6 +2748,8 @@ begin
           end;
         end;
 
+        DMXOutPackets:=DMXOutPackets+1;
+
         for i:=0 to length(OutputPlugins)-1 do
         begin
   	      if OutputPlugins[i].IsActive and (@OutputPlugins[i].SendData<>nil) and (not (OutputPlugins[i].IsSending)) and
@@ -2837,6 +2843,8 @@ begin
 
   if (MSG=MSG_ACTUALCHANNELVALUE) then
   begin
+    DMXOutPackets:=DMXOutPackets+1;
+
     // Werte selektierter Kanäle an MIDI-Controller senden
     RefreshValuesOfSelectedDevicesByMIDI:=true;
 
@@ -5154,6 +5162,8 @@ begin
       Filestream.WriteBuffer(MidiEventArray[i].MIDIData2,sizeof(MidiEventArray[i].MIDIData2));
 
       Filestream.WriteBuffer(MidiEventArray[i].Befehl.Typ,sizeof(MidiEventArray[i].Befehl.Typ));
+      Filestream.WriteBuffer(MidiEventArray[i].Befehl.Name,sizeof(MidiEventArray[i].Befehl.Name));
+      Filestream.WriteBuffer(MidiEventArray[i].Befehl.Beschreibung,sizeof(MidiEventArray[i].Befehl.Beschreibung));
       Filestream.WriteBuffer(MidiEventArray[i].Befehl.OnValue,sizeof(MidiEventArray[i].Befehl.OnValue));
       Filestream.WriteBuffer(MidiEventArray[i].Befehl.SwitchValue,sizeof(MidiEventArray[i].Befehl.SwitchValue));
       Filestream.WriteBuffer(MidiEventArray[i].Befehl.InvertSwitchValue,sizeof(MidiEventArray[i].Befehl.InvertSwitchValue));
@@ -5188,6 +5198,8 @@ begin
       Filestream.WriteBuffer(DataInEventArray[i].Value,sizeof(DataInEventArray[i].Value));
 
       Filestream.WriteBuffer(DatainEventArray[i].Befehl.Typ,sizeof(DatainEventArray[i].Befehl.Typ));
+      Filestream.WriteBuffer(DatainEventArray[i].Befehl.Name,sizeof(DatainEventArray[i].Befehl.Name));
+      Filestream.WriteBuffer(DatainEventArray[i].Befehl.Beschreibung,sizeof(DatainEventArray[i].Befehl.Beschreibung));
       Filestream.WriteBuffer(DatainEventArray[i].Befehl.OnValue,sizeof(DatainEventArray[i].Befehl.OnValue));
       Filestream.WriteBuffer(DatainEventArray[i].Befehl.SwitchValue,sizeof(DatainEventArray[i].Befehl.SwitchValue));
       Filestream.WriteBuffer(DatainEventArray[i].Befehl.InvertSwitchValue,sizeof(DatainEventArray[i].Befehl.InvertSwitchValue));
@@ -7712,6 +7724,11 @@ begin
       Filestream.ReadBuffer(MidiEventArray[i].MIDIData2,sizeof(MidiEventArray[i].MIDIData2));
 
       Filestream.ReadBuffer(MidiEventArray[i].Befehl.Typ,sizeof(MidiEventArray[i].Befehl.Typ));
+      if projektprogrammversionint>=478 then
+      begin
+        Filestream.ReadBuffer(MidiEventArray[i].Befehl.Name,sizeof(MidiEventArray[i].Befehl.Name));
+        Filestream.ReadBuffer(MidiEventArray[i].Befehl.Beschreibung,sizeof(MidiEventArray[i].Befehl.Beschreibung));
+      end;
       Filestream.ReadBuffer(MidiEventArray[i].Befehl.OnValue,sizeof(MidiEventArray[i].Befehl.OnValue));
       if projektprogrammversionint>=456 then
         Filestream.ReadBuffer(MidiEventArray[i].Befehl.SwitchValue,sizeof(MidiEventArray[i].Befehl.SwitchValue))
@@ -7790,6 +7807,11 @@ begin
       Filestream.ReadBuffer(DatainEventArray[i].Value,sizeof(DatainEventArray[i].Value));
 
       Filestream.ReadBuffer(DatainEventArray[i].Befehl.Typ,sizeof(DatainEventArray[i].Befehl.Typ));
+      if projektprogrammversionint>=478 then
+      begin
+        Filestream.ReadBuffer(DatainEventArray[i].Befehl.Name,sizeof(DatainEventArray[i].Befehl.Name));
+        Filestream.ReadBuffer(DatainEventArray[i].Befehl.Beschreibung,sizeof(DatainEventArray[i].Befehl.Beschreibung));
+      end;
       Filestream.ReadBuffer(DatainEventArray[i].Befehl.OnValue,sizeof(DatainEventArray[i].Befehl.OnValue));
       if projektprogrammversionint>=456 then
         Filestream.ReadBuffer(DatainEventArray[i].Befehl.SwitchValue,sizeof(DatainEventArray[i].Befehl.SwitchValue))
@@ -9006,6 +9028,15 @@ begin
 
   DimmerkernelChangesPerSecond:=round(DimmerkernelChanges/0.99);
   DimmerkernelChanges:=0;
+
+  MIDIInPacketsFreq:=round(MIDIInPackets/0.99);
+  MIDIOutPacketsFreq:=round(MIDIOutPackets/0.99);
+  DataInPacketsFreq:=round(DataInPackets/0.99);
+  DMXOutPacketsFreq:=round(DMXOutPackets/0.99);
+  MIDIInPackets:=0;
+  MIDIOutPackets:=0;
+  DataInPackets:=0;
+  DMXOutPackets:=0;
 
   schedulerform.skripttimer_time.Caption:=TimeToStr(Time);
   schedulerform.skripttimer_date.Caption:=DateToStr(Date);
@@ -11145,6 +11176,8 @@ begin
   with Mainform do
   if StartupFinished and (not shutdown) then
   begin
+    DataInPackets:=DataInPackets+1;
+
     if address>lastchan then exit;
 
     // Neue Werte an Hardware senden
@@ -11159,7 +11192,10 @@ end;
 procedure CallbackGetDLLValueEvent(address,endvalue:integer);stdcall;
 begin
   if mainform.StartupFinished and (not mainform.shutdown) then
+  begin
+    mainform.DataInPackets:=mainform.DataInPackets+1;
     mainform.ExecuteDataInEvent(address, endvalue);
+  end;
 end;
 
 function CallbackSetDLLValue(address:integer):integer;stdcall;
@@ -11181,6 +11217,8 @@ begin
         // Werte an Output-DLLs senden
         if not IsFreezeMode then
         begin
+          DMXOutPackets:=DMXOutPackets+1;
+
           for k:=0 to length(OutputPlugins)-1 do
           begin
             try
@@ -11398,13 +11436,13 @@ begin
       end;
       MSG_REGISTERPLUGINCOMMAND:
       begin
-        setlength(Befehlssystem[14].Steuerung, length(Befehlssystem[14].Steuerung)+1);
-        Befehlssystem[14].Steuerung[length(Befehlssystem[14].Steuerung)-1].Bezeichnung:=string(Data2);
-        Befehlssystem[14].Steuerung[length(Befehlssystem[14].Steuerung)-1].GUID:=StringToGUID(string(Data1));
-        Befehlssystem[14].Steuerung[length(Befehlssystem[14].Steuerung)-1].InputValueOnly:=false;
-        Befehlssystem[14].Steuerung[length(Befehlssystem[14].Steuerung)-1].IntegerArgCount:=0;
-        Befehlssystem[14].Steuerung[length(Befehlssystem[14].Steuerung)-1].StringArgCount:=0;
-        Befehlssystem[14].Steuerung[length(Befehlssystem[14].Steuerung)-1].GUIDArgCount:=0;
+        setlength(Befehlssystem[15].Steuerung, length(Befehlssystem[15].Steuerung)+1);
+        Befehlssystem[15].Steuerung[length(Befehlssystem[15].Steuerung)-1].Bezeichnung:=string(Data2);
+        Befehlssystem[15].Steuerung[length(Befehlssystem[15].Steuerung)-1].GUID:=StringToGUID(string(Data1));
+        Befehlssystem[15].Steuerung[length(Befehlssystem[15].Steuerung)-1].InputValueOnly:=false;
+        Befehlssystem[15].Steuerung[length(Befehlssystem[15].Steuerung)-1].IntegerArgCount:=0;
+        Befehlssystem[15].Steuerung[length(Befehlssystem[15].Steuerung)-1].StringArgCount:=0;
+        Befehlssystem[15].Steuerung[length(Befehlssystem[15].Steuerung)-1].GUIDArgCount:=0;
       end;
       MSG_SETCOLOR: geraetesteuerung.set_color(StringToGUID(string(Data1)), data2[0], data2[1], data2[2], 0, 0); // Data1=ID, Data2=array[0..2] of byte (=R,G,B)
       MSG_SETDIMMER: geraetesteuerung.set_dimmer(StringToGUID(string(Data1)), data2); // Data1=ID, Data2=byte
@@ -11846,6 +11884,8 @@ begin
       // generell MIDI verarbeiten
       if MIDIActiveRibbonBox.Down then
       begin
+        MIDIInPackets:=MIDIInPackets+1;
+
         // Sysex-Daten lesen
         {
         Datenformat von Sysex-Daten (data kann beliebig lang sein)
@@ -15640,8 +15680,8 @@ begin
       begin
         if IsEqualGUID(AktuellerBefehl.ArgGUID[0],effektsequenzereffekte[j].ID) then
         begin
+          AktuellerEffekt[j].PleaseStopOnNextStep:=false; // otherwise you have to click twice
           EffektSchaltvorgang(j, nil);
-          effektsequenzer.RefreshGUI:=true;
           break;
         end;
       end;
@@ -15810,8 +15850,11 @@ begin
     // Kontrollpanel
     if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[11].Steuerung[0].GUID) and EventFired then
     begin // Button schalten
-      kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
-      kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssShift], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
+      kontrollpanel.OverBtn.X:=AktuellerBefehl.ArgInteger[1]-1;
+      kontrollpanel.OverBtn.Y:=AktuellerBefehl.ArgInteger[0]-1;
+    
+      //kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
+      kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssLeft], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
       kontrollpanel.PaintBox1MouseUp(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
   //    kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1].OnMouseDown(kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1],mbLeft,[ssLeft],0,0);
   //    kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1].OnMouseUp(kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1],mbLeft,[],0,0);
@@ -15819,13 +15862,20 @@ begin
     end;
     if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[11].Steuerung[1].GUID) then
     begin // Button ein/aus
-      kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
+      kontrollpanel.OverBtn.X:=AktuellerBefehl.ArgInteger[1]-1;
+      kontrollpanel.OverBtn.Y:=AktuellerBefehl.ArgInteger[0]-1;
+      //kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
       if EventFired then
-        kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssShift], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)))
+      begin
+        if not kontrollpanelbuttons[kontrollpanel.OverBtn.Y][kontrollpanel.OverBtn.X].Down then
+          kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssLeft], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)))
   //      kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1].OnMouseDown(kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1],mbLeft,[ssLeft],0,0)
-      else
-        kontrollpanel.PaintBox1MouseUp(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
+      end else
+      begin
+        if kontrollpanelbuttons[kontrollpanel.OverBtn.Y][kontrollpanel.OverBtn.X].Down then
+          kontrollpanel.PaintBox1MouseUp(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
   //      kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1].OnMouseUp(kontrollpanel.button[(AktuellerBefehl.ArgInteger[0]-1)-1][(AktuellerBefehl.ArgInteger[1]-1)-1],mbLeft,[],0,0);
+      end;
       exit;
     end;
 
@@ -16020,6 +16070,52 @@ begin
         nodecontrolform.CheckButtons;
         nodecontrolform.PleaseRecalculateDistances:=true;
       end;
+      exit;
+    end;
+    // CD-Player
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[0].GUID) and EventFired then
+    begin // Play
+      cdplayerform.cdplaybtn.Click;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[1].GUID) and EventFired then
+    begin // Pause
+      cdplayerform.cdpausebtn.Click;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[2].GUID) and EventFired then
+    begin // Stop
+      cdplayerform.cdstop.Click;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[3].GUID) and EventFired then
+    begin // Prev
+      cdplayerform.cdprevious.Click;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[4].GUID) and EventFired then
+    begin // Next
+      cdplayerform.cdnext.Click;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[5].GUID) and EventFired then
+    begin // Play specific Title
+      cdplayerform.PlayTrack(AktuellerBefehl.ArgInteger[0], AktuellerBefehl.ArgInteger[1]);
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[6].GUID) and EventFired then
+    begin // Repeat
+      cdplayerform.audioplayer_alsschleife.Checked:=not cdplayerform.audioplayer_alsschleife.Checked;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[7].GUID) and EventFired then
+    begin // Random
+      cdplayerform.shuffle.Checked:=not cdplayerform.shuffle.Checked;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[8].GUID) and EventFired then
+    begin // Next
+      cdplayerform.cdopen.Click;
       exit;
     end;
   except
@@ -22016,6 +22112,8 @@ var
   i:integer;
   thisControl: TMidiOutput;
 begin
+  MIDIOutPackets:=MIDIOutPackets+1;
+
   for i:=0 to length(MidioutControls)-1 do
   begin
     thisControl:=MidioutControls[i];
@@ -23612,7 +23710,9 @@ begin
       temp:=copy(temp, 0, pos(' ', temp)-1);
     value[1]:=temp;
 
-    kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(strtoint(value[0])-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(strtoint(value[1])-1)+(kontrollpanel.btnheight.Value / 2)));
+    kontrollpanel.OverBtn.X:=strtoint(value[1])-1;
+    kontrollpanel.OverBtn.Y:=strtoint(value[0])-1;
+    //kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(strtoint(value[0])-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(strtoint(value[1])-1)+(kontrollpanel.btnheight.Value / 2)));
     kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssLeft], trunc(kontrollpanel.btnwidth.Value*(strtoint(value[0])-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(strtoint(value[1])-1)+(kontrollpanel.btnheight.Value / 2)));
     kontrollpanel.PaintBox1MouseUp(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(strtoint(value[0])-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(strtoint(value[1])-1)+(kontrollpanel.btnheight.Value / 2)));
   end;
@@ -25533,6 +25633,16 @@ begin
       _MainformPreBuffer.Canvas.Font.Color:=clBlue;
       _MainformPreBuffer.Canvas.Font.Name:='Arial';
       _MainformPreBuffer.Canvas.Font.Size:=8;
+      // Datenraten
+      ShowText:=_('MIDI-In:')+' '+inttostr(MIDIInPacketsFreq)+' Pakete/s';
+      _MainformPreBuffer.Canvas.TextOut(_MainformPreBuffer.Width-_MainformPreBuffer.Canvas.TextWidth(ShowText)-250, 10, ShowText);
+      ShowText:=_('MIDI-Out:')+' '+inttostr(MIDIOutPacketsFreq)+' Pakete/s';
+      _MainformPreBuffer.Canvas.TextOut(_MainformPreBuffer.Width-_MainformPreBuffer.Canvas.TextWidth(ShowText)-250, 25, ShowText);
+      ShowText:=_('Data-In:')+' '+inttostr(DataInPacketsFreq)+' Pakete/s';
+      _MainformPreBuffer.Canvas.TextOut(_MainformPreBuffer.Width-_MainformPreBuffer.Canvas.TextWidth(ShowText)-250, 40, ShowText);
+      ShowText:=_('Data-Out:')+' '+inttostr(DMXOutPacketsFreq)+' Pakete/s';
+      _MainformPreBuffer.Canvas.TextOut(_MainformPreBuffer.Width-_MainformPreBuffer.Canvas.TextWidth(ShowText)-250, 55, ShowText);
+
       // Installierte Geräte
       ShowText:=_('Installierte Geräte:')+' '+inttostr(length(mainform.devices));
       _MainformPreBuffer.Canvas.TextOut(_MainformPreBuffer.Width-_MainformPreBuffer.Canvas.TextWidth(ShowText)-16, 10, ShowText);

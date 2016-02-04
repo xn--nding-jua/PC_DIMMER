@@ -21,8 +21,8 @@ object matrixeditorform: Tmatrixeditorform
   object PaintBox1: TPaintBox
     Left = 0
     Top = 0
-    Width = 560
-    Height = 484
+    Width = 552
+    Height = 477
     Hint = 'Rechte Maustaste f'#252'r Men'#252
     Align = alClient
     ParentShowHint = False
@@ -32,10 +32,10 @@ object matrixeditorform: Tmatrixeditorform
     OnMouseMove = PaintBox1MouseMove
   end
   object Panel1: TPanel
-    Left = 560
+    Left = 552
     Top = 0
     Width = 186
-    Height = 484
+    Height = 477
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 0
@@ -236,23 +236,25 @@ object matrixeditorform: Tmatrixeditorform
         TabOrder = 5
         OnMouseUp = chanactiveMouseUp
       end
-      object colorpicker: THSLColorPicker
-        Left = 7
-        Top = 176
-        Width = 154
-        Height = 137
-        SelectedColor = 240
-        HSPickerHintFormat = 'R: %r G: %g B: %b, Hex: %hex'
-        LPickerHintFormat = 'Luminance: %l'
-        HSPickerCursor = crCross
-        LPickerCursor = crCross
-        ShowHint = False
-        ParentShowHint = False
-        TabOrder = 6
+      object Button2: TButton
+        Left = 104
+        Top = 152
+        Width = 57
+        Height = 19
+        Caption = 'Wechsel'
+        TabOrder = 7
+        OnClick = Button2Click
+      end
+      object colorpicker: THSLRingPicker
+        Left = 16
+        Top = 184
+        Width = 137
+        Height = 129
+        RingPickerHintFormat = 'Hue: %h'
+        SLPickerHintFormat = 'S: %hslS L: %l'#13'Hex: %hex'
+        Visible = False
+        TabOrder = 8
         OnChange = colorpickerChange
-        DesignSize = (
-          154
-          137)
       end
       object ColorPicker2: TJvOfficeColorPanel
         Left = 8
@@ -265,7 +267,7 @@ object matrixeditorform: Tmatrixeditorform
         HotTrackFont.Height = -11
         HotTrackFont.Name = 'MS Sans Serif'
         HotTrackFont.Style = []
-        TabOrder = 7
+        TabOrder = 6
         Visible = False
         Properties.ShowDefaultColor = False
         Properties.NoneColorCaption = 'No Color'
@@ -291,15 +293,6 @@ object matrixeditorform: Tmatrixeditorform
         Properties.CustomColorFont.Style = []
         OnColorChange = ColorPicker2ColorChange
       end
-      object Button2: TButton
-        Left = 104
-        Top = 152
-        Width = 57
-        Height = 19
-        Caption = 'Wechsel'
-        TabOrder = 8
-        OnClick = Button2Click
-      end
     end
     object colcount: TJvSpinEdit
       Left = 80
@@ -315,8 +308,8 @@ object matrixeditorform: Tmatrixeditorform
   end
   object Panel2: TPanel
     Left = 0
-    Top = 484
-    Width = 746
+    Top = 477
+    Width = 738
     Height = 57
     Align = alBottom
     BevelOuter = bvNone
@@ -361,7 +354,7 @@ object matrixeditorform: Tmatrixeditorform
     object Panel4: TPanel
       Left = 169
       Top = 0
-      Width = 577
+      Width = 569
       Height = 57
       Align = alClient
       BevelOuter = bvNone

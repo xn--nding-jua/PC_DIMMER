@@ -142,29 +142,33 @@ begin
 
   midisettings:=true;
 
-	midigrid.Cells[0,0]:='Message';
-  midigrid.cells[1,0]:='Data1';
-  midigrid.cells[2,0]:='Data2';
-  midigrid.cells[3,0]:='Typ';
-  midigrid.cells[4,0]:='Wert1';
-  midigrid.cells[5,0]:='Wert2';
-  midigrid.cells[6,0]:='Wert3';
-  midigrid.cells[7,0]:='Unten';
-  midigrid.cells[8,0]:='Ein';
-  midigrid.cells[9,0]:='Oben';
-  midigrid.cells[10,0]:='Data1/2';
-  midigrid.ColWidths[0]:=50;
-  midigrid.ColWidths[1]:=50;
+	midigrid.Cells[0,0]:='Name';
+	midigrid.Cells[1,0]:='Beschreibung';
+	midigrid.Cells[2,0]:='Message';
+  midigrid.cells[3,0]:='Data1';
+  midigrid.cells[4,0]:='Data2';
+  midigrid.cells[5,0]:='Typ';
+  midigrid.cells[6,0]:='Wert1';
+  midigrid.cells[7,0]:='Wert2';
+  midigrid.cells[8,0]:='Wert3';
+  midigrid.cells[9,0]:='Unten';
+  midigrid.cells[10,0]:='Ein';
+  midigrid.cells[11,0]:='Oben';
+  midigrid.cells[12,0]:='Data1/2';
+  midigrid.ColWidths[0]:=75;
+  midigrid.ColWidths[1]:=75;
   midigrid.ColWidths[2]:=50;
-  midigrid.ColWidths[3]:=275;
+  midigrid.ColWidths[3]:=50;
   midigrid.ColWidths[4]:=50;
-  midigrid.ColWidths[5]:=45;
-  midigrid.ColWidths[6]:=45;
-  midigrid.ColWidths[7]:=35;
-  midigrid.ColWidths[8]:=35;
+  midigrid.ColWidths[5]:=275;
+  midigrid.ColWidths[6]:=50;
+  midigrid.ColWidths[7]:=45;
+  midigrid.ColWidths[8]:=45;
   midigrid.ColWidths[9]:=35;
-  midigrid.ColWidths[10]:=45;
-  midigrid.ColWidths[11]:=15;
+  midigrid.ColWidths[10]:=35;
+  midigrid.ColWidths[11]:=35;
+  midigrid.ColWidths[12]:=45;
+  midigrid.ColWidths[13]:=15;
   MIDIGrid.cells[0,1]:='-';
   MIDIGrid.cells[1,1]:='-';
   MIDIGrid.cells[2,1]:='-';
@@ -177,6 +181,8 @@ begin
   MIDIGrid.cells[9,1]:='-';
   MIDIGrid.cells[10,1]:='-';
   MIDIGrid.cells[11,1]:='-';
+  MIDIGrid.cells[12,1]:='-';
+  MIDIGrid.cells[13,1]:='-';
 
   MidiChannelControlBox.Items.Clear;
   for i:=0 to 15 do
@@ -191,16 +197,18 @@ var
   text:string;
 begin
   if line>MIDIGrid.RowCount-1 then exit;
-  MIDIGrid.cells[0,line]:=inttostr(mainform.MidiEventArray[line-1].MIDIMessage);	// Message
+  MIDIGrid.cells[0,line]:=mainform.MidiEventArray[line-1].Befehl.Name;	// Name
+  MIDIGrid.cells[1,line]:=mainform.MidiEventArray[line-1].Befehl.Beschreibung;	// Beschreibung
+  MIDIGrid.cells[2,line]:=inttostr(mainform.MidiEventArray[line-1].MIDIMessage);	// Message
 
   if mainform.MidiEventArray[line-1].Data1orData2=2 then
   begin
-    MIDIGrid.cells[1,line]:=inttostr(mainform.MidiEventArray[line-1].MIDIData1);	// Data1
-    MIDIGrid.cells[2,line]:='-';
+    MIDIGrid.cells[3,line]:=inttostr(mainform.MidiEventArray[line-1].MIDIData1);	// Data1
+    MIDIGrid.cells[4,line]:='-';
   end else
   begin
-    MIDIGrid.cells[1,line]:='-';
-    MIDIGrid.cells[2,line]:='-';//inttostr(mainform.MidiEventArray[line-1].MIDIData2);	// Data2
+    MIDIGrid.cells[3,line]:='-';
+    MIDIGrid.cells[4,line]:='-';//inttostr(mainform.MidiEventArray[line-1].MIDIData2);	// Data2
   end;
 
   for i:=0 to length(mainform.Befehlssystem)-1 do
@@ -209,12 +217,12 @@ begin
     begin
       if IsEqualGUID(mainform.Befehlssystem[i].Steuerung[j].GUID, mainform.MidiEventArray[line-1].Befehl.Typ) then
       begin
-        MIDIGrid.cells[3,line]:=mainform.Befehlssystem[i].Programmteil+': '+mainform.Befehlssystem[i].Steuerung[j].Bezeichnung;
+        MIDIGrid.cells[5,line]:=mainform.Befehlssystem[i].Programmteil+': '+mainform.Befehlssystem[i].Steuerung[j].Bezeichnung;
         if length(mainform.MidiEventArray[line-1].Befehl.ArgGUID)>0 then
         begin
           mainform.GetInfo(mainform.MidiEventArray[line-1].Befehl.ArgGUID[0], text);
           if text<>'' then
-            MIDIGrid.cells[3,line]:=MIDIGrid.cells[3,line]+' ('+text+')';
+            MIDIGrid.cells[5,line]:=MIDIGrid.cells[5,line]+' ('+text+')';
         end;
         break;
       end;
@@ -222,20 +230,20 @@ begin
   end;
 
   if length(mainform.MidiEventArray[line-1].Befehl.ArgInteger)>0 then
-    MIDIGrid.cells[4,line]:=inttostr(mainform.MidiEventArray[line-1].Befehl.ArgInteger[0]);	// Wert1
+    MIDIGrid.cells[6,line]:=inttostr(mainform.MidiEventArray[line-1].Befehl.ArgInteger[0]);	// Wert1
   if length(mainform.MidiEventArray[line-1].Befehl.ArgInteger)>1 then
-    MIDIGrid.cells[5,line]:=inttostr(mainform.MidiEventArray[line-1].Befehl.ArgInteger[1]);	// Wert2
+    MIDIGrid.cells[7,line]:=inttostr(mainform.MidiEventArray[line-1].Befehl.ArgInteger[1]);	// Wert2
   if length(mainform.MidiEventArray[line-1].Befehl.ArgInteger)>2 then
-    MIDIGrid.cells[6,line]:=inttostr(mainform.MidiEventArray[line-1].Befehl.ArgInteger[1]);	// Wert2
+    MIDIGrid.cells[8,line]:=inttostr(mainform.MidiEventArray[line-1].Befehl.ArgInteger[1]);	// Wert2
 
-  MIDIGrid.cells[7,line]:=inttostr(mainform.MidiEventArray[line-1].Befehl.OffValue div 2);
-  MIDIGrid.cells[8,line]:=inttostr(mainform.MidiEventArray[line-1].Befehl.SwitchValue div 2);
-  MIDIGrid.cells[9,line]:=inttostr(mainform.MidiEventArray[line-1].Befehl.OnValue div 2);
+  MIDIGrid.cells[9,line]:=inttostr(mainform.MidiEventArray[line-1].Befehl.OffValue div 2);
+  MIDIGrid.cells[10,line]:=inttostr(mainform.MidiEventArray[line-1].Befehl.SwitchValue div 2);
+  MIDIGrid.cells[11,line]:=inttostr(mainform.MidiEventArray[line-1].Befehl.OnValue div 2);
 
   if mainform.MidiEventArray[line-1].Data1orData2=1 then				// Data1 oder Data2
-    MIDIGrid.cells[10,line]:='Data 1'
+    MIDIGrid.cells[12,line]:='Data 1'
   else
-    MIDIGrid.cells[10,line]:='Data 2';
+    MIDIGrid.cells[12,line]:='Data 2';
 end;
 
 procedure Tmidieventfrm.editmidieventClick(Sender: TObject);
@@ -248,6 +256,8 @@ begin
 	EditMIDIEVENTfrm.Data2a.text:=inttostr(mainform.MidiEventArray[MIDIGrid.row-1].MIDIData2);
 
   EditMIDIEVENTfrm.AktuellerBefehl.Typ:=mainform.MidiEventArray[MIDIGrid.row-1].Befehl.Typ;
+  EditMIDIEVENTfrm.AktuellerBefehl.Name:=mainform.MidiEventArray[MIDIGrid.row-1].Befehl.Name;
+  EditMIDIEVENTfrm.AktuellerBefehl.Beschreibung:=mainform.MidiEventArray[MIDIGrid.row-1].Befehl.Beschreibung;
   EditMIDIEVENTfrm.AktuellerBefehl.OnValue:=mainform.MidiEventArray[MIDIGrid.row-1].Befehl.OnValue;
   EditMIDIEVENTfrm.AktuellerBefehl.SwitchValue:=mainform.MidiEventArray[MIDIGrid.row-1].Befehl.SwitchValue;
   EditMIDIEVENTfrm.AktuellerBefehl.InvertSwitchValue:=mainform.MidiEventArray[MIDIGrid.row-1].Befehl.InvertSwitchValue;
@@ -279,6 +289,8 @@ begin
 		mainform.MidiEventArray[MIDIGrid.row-1].MIDIData2 := strtoint(EditMIDIEVENTfrm.Data2a.text);
 
     mainform.MidiEventArray[MIDIGrid.row-1].Befehl.Typ:=EditMIDIEVENTfrm.AktuellerBefehl.Typ;
+    mainform.MidiEventArray[MIDIGrid.row-1].Befehl.Name:=EditMIDIEVENTfrm.AktuellerBefehl.Name;
+    mainform.MidiEventArray[MIDIGrid.row-1].Befehl.Beschreibung:=EditMIDIEVENTfrm.AktuellerBefehl.Beschreibung;
     mainform.MidiEventArray[MIDIGrid.row-1].Befehl.OnValue:=EditMIDIEVENTfrm.AktuellerBefehl.OnValue;
     mainform.MidiEventArray[MIDIGrid.row-1].Befehl.SwitchValue:=EditMIDIEVENTfrm.AktuellerBefehl.SwitchValue;
     mainform.MidiEventArray[MIDIGrid.row-1].Befehl.InvertSwitchValue:=EditMIDIEVENTfrm.AktuellerBefehl.InvertSwitchValue;
@@ -342,6 +354,8 @@ begin
 		mainform.MidiEventArray[MIDIGrid.row-1].MIDIData2 := strtoint(EditMIDIEVENTfrm.Data2a.text);
 
     mainform.MidiEventArray[MIDIGrid.row-1].Befehl.Typ:=EditMIDIEVENTfrm.AktuellerBefehl.Typ;
+    mainform.MidiEventArray[MIDIGrid.row-1].Befehl.Name:=EditMIDIEVENTfrm.AktuellerBefehl.Name;
+    mainform.MidiEventArray[MIDIGrid.row-1].Befehl.Beschreibung:=EditMIDIEVENTfrm.AktuellerBefehl.Beschreibung;
     mainform.MidiEventArray[MIDIGrid.row-1].Befehl.OnValue:=EditMIDIEVENTfrm.AktuellerBefehl.OnValue;
     mainform.MidiEventArray[MIDIGrid.row-1].Befehl.SwitchValue:=EditMIDIEVENTfrm.AktuellerBefehl.SwitchValue;
     mainform.MidiEventArray[MIDIGrid.row-1].Befehl.InvertSwitchValue:=EditMIDIEVENTfrm.AktuellerBefehl.InvertSwitchValue;
@@ -447,6 +461,8 @@ begin
 		MIDIGrid.cells[9,1]:='-';
 		MIDIGrid.cells[10,1]:='-';
 		MIDIGrid.cells[11,1]:='-';
+		MIDIGrid.cells[12,1]:='-';
+		MIDIGrid.cells[13,1]:='-';
   	deletemidievent.Enabled:=false;
     editmidievent.Enabled:=false;
   end;
@@ -493,6 +509,8 @@ if messagedlg(_('Möchten Sie wirklich alle MIDI-Events löschen?'),mtConfirmation
 		MIDIGrid.cells[9,1]:='-';
 		MIDIGrid.cells[10,1]:='-';
 		MIDIGrid.cells[11,1]:='-';
+		MIDIGrid.cells[12,1]:='-';
+		MIDIGrid.cells[13,1]:='-';
 	 	deletemidievent.Enabled:=false;
 	  editmidievent.Enabled:=false;
 	end;
@@ -500,14 +518,23 @@ end;
 
 procedure Tmidieventfrm.Openfile(Filename:string);
 var
-  i,j,Count,Count2:integer;
+  i,j,FileVersion,Count,Count2:integer;
 begin
   if FileExists(Filename) then
   begin
     with mainform do
     begin
       Filestream:=TFileStream.Create(Filename, fmOpenRead);
-      Filestream.ReadBuffer(Count,sizeof(Count));
+
+      Filestream.ReadBuffer(FileVersion,sizeof(FileVersion));
+      if FileVersion>=477 then
+      begin
+        Filestream.ReadBuffer(Count,sizeof(Count));
+      end else
+      begin
+        Count:=FileVersion; // old format has only number of elements here
+      end;
+
       setlength(MidiEventArray,Count);
       for i:=0 to Count-1 do
       begin
@@ -517,6 +544,11 @@ begin
         Filestream.ReadBuffer(MidiEventArray[i].MIDIData2,sizeof(MidiEventArray[i].MIDIData2));
 
         Filestream.ReadBuffer(MidiEventArray[i].Befehl.Typ,sizeof(MidiEventArray[i].Befehl.Typ));
+        if FileVersion>477 then
+        begin
+          Filestream.ReadBuffer(MidiEventArray[i].Befehl.Name,sizeof(MidiEventArray[i].Befehl.Name));
+          Filestream.ReadBuffer(MidiEventArray[i].Befehl.Beschreibung,sizeof(MidiEventArray[i].Befehl.Beschreibung));
+        end;
         Filestream.ReadBuffer(MidiEventArray[i].Befehl.OnValue,sizeof(MidiEventArray[i].Befehl.OnValue));
         Filestream.ReadBuffer(MidiEventArray[i].Befehl.SwitchValue,sizeof(MidiEventArray[i].Befehl.SwitchValue));
         Filestream.ReadBuffer(MidiEventArray[i].Befehl.InvertSwitchValue,sizeof(MidiEventArray[i].Befehl.InvertSwitchValue));
@@ -545,7 +577,7 @@ end;
 
 procedure Tmidieventfrm.SpeedButton2Click(Sender: TObject);
 var
-  i,j,startindex,Count,Count2:integer;
+  i,j,FileVersion,startindex,Count,Count2:integer;
   additiv:boolean;
 begin
   additiv:=true;
@@ -566,7 +598,16 @@ begin
       with mainform do
       begin
         Filestream:=TFileStream.Create(OpenDialog1.Filename, fmOpenRead);
-        Filestream.ReadBuffer(Count,sizeof(Count));
+
+        Filestream.ReadBuffer(FileVersion,sizeof(FileVersion));
+        if FileVersion>=477 then
+        begin
+          Filestream.ReadBuffer(Count,sizeof(Count));
+        end else
+        begin
+          Count:=FileVersion; // old format has only number of elements here
+        end;
+
         setlength(MidiEventArray,Count+startindex+1);
         for i:=startindex+1 to length(MidiEventArray)-1 do
         begin
@@ -576,6 +617,11 @@ begin
           Filestream.ReadBuffer(MidiEventArray[i].MIDIData2,sizeof(MidiEventArray[i].MIDIData2));
 
           Filestream.ReadBuffer(MidiEventArray[i].Befehl.Typ,sizeof(MidiEventArray[i].Befehl.Typ));
+          if FileVersion>477 then
+          begin
+            Filestream.ReadBuffer(MidiEventArray[i].Befehl.Name,sizeof(MidiEventArray[i].Befehl.Name));
+            Filestream.ReadBuffer(MidiEventArray[i].Befehl.Beschreibung,sizeof(MidiEventArray[i].Befehl.Beschreibung));
+          end;
           Filestream.ReadBuffer(MidiEventArray[i].Befehl.OnValue,sizeof(MidiEventArray[i].Befehl.OnValue));
           Filestream.ReadBuffer(MidiEventArray[i].Befehl.SwitchValue,sizeof(MidiEventArray[i].Befehl.SwitchValue));
           Filestream.ReadBuffer(MidiEventArray[i].Befehl.InvertSwitchValue,sizeof(MidiEventArray[i].Befehl.InvertSwitchValue));
@@ -643,6 +689,8 @@ begin
       Filestream.WriteBuffer(MidiEventArray[i].MIDIData2,sizeof(MidiEventArray[i].MIDIData2));
 
       Filestream.WriteBuffer(MidiEventArray[i].Befehl.Typ,sizeof(MidiEventArray[i].Befehl.Typ));
+      Filestream.WriteBuffer(MidiEventArray[i].Befehl.Name,sizeof(MidiEventArray[i].Befehl.Name));
+      Filestream.WriteBuffer(MidiEventArray[i].Befehl.Beschreibung,sizeof(MidiEventArray[i].Befehl.Beschreibung));
       Filestream.WriteBuffer(MidiEventArray[i].Befehl.OnValue,sizeof(MidiEventArray[i].Befehl.OnValue));
       Filestream.WriteBuffer(MidiEventArray[i].Befehl.SwitchValue,sizeof(MidiEventArray[i].Befehl.SwitchValue));
       Filestream.WriteBuffer(MidiEventArray[i].Befehl.InvertSwitchValue,sizeof(MidiEventArray[i].Befehl.InvertSwitchValue));

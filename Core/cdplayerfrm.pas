@@ -173,6 +173,7 @@ begin
     Halt;
   end;
   cmbDrives.ItemIndex := 0; // das erste Laufwerk automatisch auswählen
+  mainform.CDPlayerDrives:=cmbDrives.items;
   UpdateTracklist;
 end;
 
@@ -352,6 +353,8 @@ begin
     cdprevious.enabled:=false;
     cdnext.enabled:=false;
   end;
+
+  mainform.CDPlayerTracks:=lsttracks.Items;
 end;
 
 procedure Tcdplayerform.lstTracksDblClick(Sender: TObject);

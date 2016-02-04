@@ -1570,4 +1570,41 @@
 
     nousersetting:=false;
   end;
+  // CD-Player
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[0].GUID) or
+    IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[1].GUID) or
+    IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[2].GUID) or
+    IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[3].GUID) or
+    IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[4].GUID) then
+  begin // Play, Pause, Stop, Zurück, Vorwärts
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[5].GUID) then
+  begin // Springe zu Titel Nr
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Laufwerk:');
+    Arg1Combobox.Items.Clear;
+    if mainform.CDPlayerDrives<>nil then
+      Arg1Combobox.Items:=mainform.CDPlayerDrives;
+    Arg1Edit.visible:=false;
+    Arg1Combobox.visible:=true;
+    if AktuellerBefehl.ArgInteger[0]<Arg1Combobox.items.count then
+      Arg1Combobox.Itemindex:=AktuellerBefehl.ArgInteger[0];
+    Optionen2Box.Visible:=true;
+    Arg2Label.Caption:=_('Titel:');
+    Arg2Combobox.Items.Clear;
+    if mainform.CDPlayerTracks<>nil then
+      Arg2Combobox.Items:=mainform.CDPlayerTracks;
+    Arg2Edit.visible:=false;
+    Arg2Combobox.visible:=true;
+    if AktuellerBefehl.ArgInteger[1]<Arg2Combobox.items.count then
+      Arg2Combobox.Itemindex:=AktuellerBefehl.ArgInteger[1];
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[6].GUID) or
+    IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[7].GUID) or
+    IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[14].Steuerung[8].GUID) then
+  begin // Repeat, Random, Eject
+    nousersetting:=false;
+  end;
 

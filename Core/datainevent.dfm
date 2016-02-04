@@ -61,16 +61,16 @@ object dataineventfrm: Tdataineventfrm
     Left = 0
     Top = 57
     Width = 9
-    Height = 235
+    Height = 228
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
   end
   object Panel1: TPanel
-    Left = 584
+    Left = 576
     Top = 57
     Width = 208
-    Height = 235
+    Height = 228
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 1
@@ -78,7 +78,7 @@ object dataineventfrm: Tdataineventfrm
       Left = 9
       Top = 0
       Width = 199
-      Height = 194
+      Height = 187
       Align = alClient
       Caption = ' Routing f'#252'r interne Kan'#228'le '
       TabOrder = 0
@@ -86,7 +86,7 @@ object dataineventfrm: Tdataineventfrm
         Left = 2
         Top = 15
         Width = 9
-        Height = 134
+        Height = 127
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
@@ -95,14 +95,14 @@ object dataineventfrm: Tdataineventfrm
         Left = 188
         Top = 15
         Width = 9
-        Height = 134
+        Height = 127
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
       end
       object Panel14: TPanel
         Left = 2
-        Top = 149
+        Top = 142
         Width = 195
         Height = 43
         Align = alBottom
@@ -230,7 +230,7 @@ object dataineventfrm: Tdataineventfrm
         Left = 11
         Top = 15
         Width = 177
-        Height = 134
+        Height = 127
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 3
@@ -238,7 +238,7 @@ object dataineventfrm: Tdataineventfrm
           Left = 0
           Top = 17
           Width = 89
-          Height = 117
+          Height = 110
           OnClickCheck = Listbox1ClickCheck
           Align = alLeft
           ItemHeight = 13
@@ -251,7 +251,7 @@ object dataineventfrm: Tdataineventfrm
           Left = 88
           Top = 17
           Width = 89
-          Height = 117
+          Height = 110
           Align = alRight
           Enabled = False
           ItemHeight = 13
@@ -278,7 +278,7 @@ object dataineventfrm: Tdataineventfrm
     end
     object Panel16: TPanel
       Left = 0
-      Top = 194
+      Top = 187
       Width = 208
       Height = 41
       Align = alBottom
@@ -289,7 +289,7 @@ object dataineventfrm: Tdataineventfrm
       Left = 0
       Top = 0
       Width = 9
-      Height = 194
+      Height = 187
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 2
@@ -298,26 +298,26 @@ object dataineventfrm: Tdataineventfrm
   object Panel6: TPanel
     Left = 9
     Top = 57
-    Width = 575
-    Height = 235
+    Width = 567
+    Height = 228
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
     object GroupBox1: TGroupBox
       Left = 0
       Top = 0
-      Width = 575
-      Height = 194
+      Width = 567
+      Height = 187
       Align = alClient
       Caption = ' Data-In-Events bearbeiten '
       TabOrder = 0
       object DataGrid: TStringGrid
         Left = 11
         Top = 24
-        Width = 553
-        Height = 125
+        Width = 545
+        Height = 118
         Align = alClient
-        ColCount = 10
+        ColCount = 12
         DefaultColWidth = 50
         DefaultRowHeight = 15
         FixedCols = 0
@@ -337,12 +337,14 @@ object dataineventfrm: Tdataineventfrm
           50
           50
           36
-          21)
+          21
+          50
+          50)
       end
       object Panel7: TPanel
         Left = 2
-        Top = 149
-        Width = 571
+        Top = 142
+        Width = 563
         Height = 43
         Align = alBottom
         BevelOuter = bvNone
@@ -1112,7 +1114,7 @@ object dataineventfrm: Tdataineventfrm
         Left = 2
         Top = 24
         Width = 9
-        Height = 125
+        Height = 118
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 2
@@ -1120,17 +1122,17 @@ object dataineventfrm: Tdataineventfrm
       object Panel9: TPanel
         Left = 2
         Top = 15
-        Width = 571
+        Width = 563
         Height = 9
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 3
       end
       object Panel10: TPanel
-        Left = 564
+        Left = 556
         Top = 24
         Width = 9
-        Height = 125
+        Height = 118
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 4
@@ -1138,8 +1140,8 @@ object dataineventfrm: Tdataineventfrm
     end
     object Panel5: TPanel
       Left = 0
-      Top = 194
-      Width = 575
+      Top = 187
+      Width = 567
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
@@ -1157,10 +1159,10 @@ object dataineventfrm: Tdataineventfrm
     end
   end
   object Panel3: TPanel
-    Left = 792
+    Left = 784
     Top = 57
     Width = 208
-    Height = 235
+    Height = 228
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
@@ -1168,7 +1170,7 @@ object dataineventfrm: Tdataineventfrm
       Left = 9
       Top = 0
       Width = 199
-      Height = 194
+      Height = 187
       Align = alClient
       Caption = ' Routing f'#252'r eingehende Signale '
       TabOrder = 0
@@ -1176,7 +1178,7 @@ object dataineventfrm: Tdataineventfrm
         Left = 2
         Top = 15
         Width = 9
-        Height = 134
+        Height = 127
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
@@ -1185,14 +1187,14 @@ object dataineventfrm: Tdataineventfrm
         Left = 188
         Top = 15
         Width = 9
-        Height = 134
+        Height = 127
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
       end
       object Panel20: TPanel
         Left = 2
-        Top = 149
+        Top = 142
         Width = 195
         Height = 43
         Align = alBottom
@@ -1320,7 +1322,7 @@ object dataineventfrm: Tdataineventfrm
         Left = 11
         Top = 15
         Width = 177
-        Height = 134
+        Height = 127
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 3
@@ -1328,7 +1330,7 @@ object dataineventfrm: Tdataineventfrm
           Left = 0
           Top = 17
           Width = 89
-          Height = 117
+          Height = 110
           OnClickCheck = ListBox2ClickCheck
           Align = alLeft
           ItemHeight = 13
@@ -1341,7 +1343,7 @@ object dataineventfrm: Tdataineventfrm
           Left = 88
           Top = 17
           Width = 89
-          Height = 117
+          Height = 110
           Align = alRight
           Enabled = False
           ItemHeight = 13
@@ -1368,7 +1370,7 @@ object dataineventfrm: Tdataineventfrm
     end
     object Panel23: TPanel
       Left = 0
-      Top = 194
+      Top = 187
       Width = 208
       Height = 41
       Align = alBottom
@@ -1379,7 +1381,7 @@ object dataineventfrm: Tdataineventfrm
       Left = 0
       Top = 0
       Width = 9
-      Height = 194
+      Height = 187
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 2
@@ -1388,7 +1390,7 @@ object dataineventfrm: Tdataineventfrm
   object Panel25: TPanel
     Left = 0
     Top = 0
-    Width = 1000
+    Width = 992
     Height = 57
     Align = alTop
     BevelOuter = bvNone
@@ -1397,7 +1399,7 @@ object dataineventfrm: Tdataineventfrm
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 1000
+      Width = 992
       Height = 57
       Style = grVertical
       StartColor = clWhite

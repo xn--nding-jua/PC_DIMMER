@@ -2470,6 +2470,7 @@ begin
       repeataktiviert1.Checked:=mainform.Effektaudiodatei_record.repeatactive;
     end;
 
+    {
     for j:=1 to maxaudioeffektlayers do
     begin
       maxaudioeffekte[j]:=length(mainform.Effektaudiodatei_record.layer[j].effekt);
@@ -2482,6 +2483,7 @@ begin
             mainform.StopSceneWithoutRecord(mainform.Effektaudiodatei_record.layer[j].effekt[i].ID);
         end;
     end;
+    }
 
     layerbox.ItemIndex:=0;
     layerboxChange(nil);
@@ -3367,7 +3369,7 @@ begin
   if _audioeffektlayer>0 then
   begin
     savedialog.Title:=_('PC_DIMMER Effekt-Layer speichern...');
-    savedialog.Filter:=_('PC_DIMMER Effektliste (*.pcdelyr)|*.pcdelyr|*.*|*.*');
+    savedialog.Filter:=_('PC_DIMMER Effekt-Layer (*.pcdelyr)|*.pcdelyr|*.*|*.*');
     savedialog.FileName:='';
     savedialog.DefaultExt:='*.pcdelyr';
     if savedialog.execute then
@@ -3897,6 +3899,7 @@ begin
     if (BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE)>0) and (not StopEffektaudio.Enabled) then
       StopEffektaudio.Enabled:=true;
 
+    //TODO: ggfs. Zurückspulen ganz deaktivieren
     // Am Ende zurückspulen              // BASS_FX_TempoGetRateRatio(_chan[0])
     if (CurrentPosition>=(BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetLength(_chan[0], BASS_POS_BYTE))-0.1)) or (LastPosition>CurrentPosition) then //    if BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE)>=(BASS_ChannelGetLength(_chan[0], BASS_POS_BYTE)-20000) then
     begin

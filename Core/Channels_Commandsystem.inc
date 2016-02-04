@@ -49,7 +49,7 @@
   // VIRTUALRGBADIMMER ist virtueller Dimmerkanal für RGB(A)-Geräte
 
   // Befehlssystem klarmachen
-  setlength(Befehlssystem, 15);
+  setlength(Befehlssystem, 16);
 
   setlength(Befehlssystem[0].Steuerung, 11);
   Befehlssystem[0].Programmteil:=_('Audioeffektplayer');
@@ -1241,8 +1241,77 @@
   Befehlssystem[13].Steuerung[i].StringArgCount:=0;
   Befehlssystem[13].Steuerung[i].GUIDArgCount:=0;
 
-  Befehlssystem[14].Programmteil:=_('Plugin-Befehle');
-  Befehlssystem[14].ProgrammteilGUID:=StringToGuid('{6A2BCDEF-5E9E-40C8-9B3D-B0C9F8C303F2}');
+  setlength(Befehlssystem[14].Steuerung, 9);
+  Befehlssystem[14].Programmteil:=_('CD-Player');
+  Befehlssystem[14].ProgrammteilGUID:=StringToGuid('{FE0DDA88-EA8F-44E2-9FAC-B3D4DB6DE082}');
+  i:=0;
+  Befehlssystem[14].Steuerung[i].Bezeichnung:=_('Play');
+  Befehlssystem[14].Steuerung[i].GUID:=StringToGuid('{0E17133D-0F8A-4D8C-95F6-B2F0C69FCC89}');
+  Befehlssystem[14].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[14].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[14].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[14].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[14].Steuerung[i].Bezeichnung:=_('Pause');
+  Befehlssystem[14].Steuerung[i].GUID:=StringToGuid('{E2B2D756-7CB8-49A6-A5D3-827015B9FD0E}');
+  Befehlssystem[14].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[14].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[14].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[14].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[14].Steuerung[i].Bezeichnung:=_('Stop');
+  Befehlssystem[14].Steuerung[i].GUID:=StringToGuid('{7AF34AC7-9A04-4E5C-8B54-4B7FA2F55A30}');
+  Befehlssystem[14].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[14].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[14].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[14].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[14].Steuerung[i].Bezeichnung:=_('Zurück');
+  Befehlssystem[14].Steuerung[i].GUID:=StringToGuid('{ADEECC79-3711-4962-BE3F-7533563D7DDE}');
+  Befehlssystem[14].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[14].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[14].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[14].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[14].Steuerung[i].Bezeichnung:=_('Vorwärts');
+  Befehlssystem[14].Steuerung[i].GUID:=StringToGuid('{96648199-9490-4D6C-9949-94C324A2AABC}');
+  Befehlssystem[14].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[14].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[14].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[14].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[14].Steuerung[i].Bezeichnung:=_('Springe zu Titel');
+  Befehlssystem[14].Steuerung[i].GUID:=StringToGuid('{8E8C4419-A1FB-4E39-8B8C-82D52C910AB6}');
+  Befehlssystem[14].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[14].Steuerung[i].IntegerArgCount:=2;
+  Befehlssystem[14].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[14].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[14].Steuerung[i].Bezeichnung:=_('Wiederholung ein/aus');
+  Befehlssystem[14].Steuerung[i].GUID:=StringToGuid('{1176E6E8-7DB6-4C58-A193-233AE3D73C56}');
+  Befehlssystem[14].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[14].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[14].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[14].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[14].Steuerung[i].Bezeichnung:=_('Zufall ein/aus');
+  Befehlssystem[14].Steuerung[i].GUID:=StringToGuid('{94F993E8-4068-4D71-9EAC-6B688E605C54}');
+  Befehlssystem[14].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[14].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[14].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[14].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[14].Steuerung[i].Bezeichnung:=_('CD auswerfen');
+  Befehlssystem[14].Steuerung[i].GUID:=StringToGuid('{21E78D67-3DF9-4E4D-B7B6-1B1B32BDEAA9}');
+  Befehlssystem[14].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[14].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[14].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[14].Steuerung[i].GUIDArgCount:=0;
+
+  Befehlssystem[15].Programmteil:=_('Plugin-Befehle');
+  Befehlssystem[15].ProgrammteilGUID:=StringToGuid('{6A2BCDEF-5E9E-40C8-9B3D-B0C9F8C303F2}');
+
+
 
   setlength(programmfunktionen,11);
   programmfunktionen[0]:=_('Neues Projekt...');
