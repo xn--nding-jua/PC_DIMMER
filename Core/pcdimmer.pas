@@ -23710,8 +23710,8 @@ begin
       temp:=copy(temp, 0, pos(' ', temp)-1);
     value[1]:=temp;
 
-    kontrollpanel.OverBtn.X:=strtoint(value[1])-1;
-    kontrollpanel.OverBtn.Y:=strtoint(value[0])-1;
+    kontrollpanel.OverBtn.X:=strtoint(value[0])-1;
+    kontrollpanel.OverBtn.Y:=strtoint(value[1])-1;
     //kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(strtoint(value[0])-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(strtoint(value[1])-1)+(kontrollpanel.btnheight.Value / 2)));
     kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssLeft], trunc(kontrollpanel.btnwidth.Value*(strtoint(value[0])-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(strtoint(value[1])-1)+(kontrollpanel.btnheight.Value / 2)));
     kontrollpanel.PaintBox1MouseUp(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(strtoint(value[0])-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(strtoint(value[1])-1)+(kontrollpanel.btnheight.Value / 2)));
