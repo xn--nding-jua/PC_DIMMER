@@ -39,9 +39,9 @@ object About: TAbout
   object Label3: TLabel
     Left = 8
     Top = 48
-    Width = 257
+    Width = 250
     Height = 13
-    Caption = 'Copyrights (c) 2011-2015 by Dipl.-Ing. Christian N'#246'ding'
+    Caption = 'Copyrights (c) 2011-2016 by Dr.-Ing. Christian N'#246'ding'
   end
   object Label4: TLabel
     Left = 8

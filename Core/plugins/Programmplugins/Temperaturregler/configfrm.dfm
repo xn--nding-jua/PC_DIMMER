@@ -1,8 +1,8 @@
 object Config: TConfig
-  Left = 269
-  Top = 334
+  Left = 522
+  Top = 476
   Width = 1330
-  Height = 483
+  Height = 497
   Caption = 'Temperaturregler'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -147,18 +147,15 @@ object Config: TConfig
     F00FFFFFF807FFFFFC03FFFFFE03FFFFFF01FFFFFF83FFFFFFC3FFFFFFFF}
   OldCreateOrder = False
   Position = poScreenCenter
-  OnClose = FormClose
   OnCloseQuery = FormCloseQuery
-  OnCreate = FormCreate
   OnHide = FormHide
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object chart: TJvChart
     Left = 305
     Top = 9
     Width = 1000
-    Height = 320
+    Height = 334
     Align = alClient
     Options.XAxisValuesPerDivision = 0
     Options.XAxisLabelAlignment = taLeftJustify
@@ -195,7 +192,7 @@ object Config: TConfig
   end
   object Panel2: TPanel
     Left = 0
-    Top = 329
+    Top = 343
     Width = 1314
     Height = 115
     Align = alBottom
@@ -559,7 +556,7 @@ object Config: TConfig
     Left = 0
     Top = 9
     Width = 305
-    Height = 320
+    Height = 334
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
@@ -927,20 +924,10 @@ object Config: TConfig
     Left = 1305
     Top = 9
     Width = 9
-    Height = 320
+    Height = 334
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
-  end
-  object zoom15mincheckbox: TCheckBox
-    Left = 312
-    Top = 16
-    Width = 153
-    Height = 17
-    Caption = 'Zoom auf letzte 15 Minuten'
-    Color = clWhite
-    ParentColor = False
-    TabOrder = 4
   end
   object comport: TCommPortDriver
     Port = pnCustom

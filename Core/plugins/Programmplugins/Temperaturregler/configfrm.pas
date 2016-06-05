@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, CPDrv, ExtCtrls, Registry, Mask, JvExMask,
   JvSpin, JvExControls, JvSwitch, ComCtrls, JvSimScope, JvLED, gnugettext,
-  messagesystem, JvChart;
+  messagesystem, JvChart, pngimage;
 
 type
   TCallbackValues = procedure(address,startvalue,endvalue,fadetime,delay:integer);stdcall;
@@ -92,18 +92,15 @@ type
     Label17: TLabel;
     Label18: TLabel;
     Label19: TLabel;
-    zoom15mincheckbox: TCheckBox;
     TestCaseBtn: TButton;
     DemoData: TTimer;
-    procedure FormCreate(Sender: TObject);
     procedure comportReceiveData(Sender: TObject; DataPtr: Pointer;
       DataSize: Cardinal);
-    procedure ActivateCOMPort(portnumber: integer);
+    procedure ActivateCOMPort(portnumber, baudrate: integer);
     procedure tempminChange(Sender: TObject);
     procedure tempmaxChange(Sender: TObject);
     procedure temponOn(Sender: TObject);
     procedure temponOff(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure SekundenTimerTimer(Sender: TObject);
     procedure FormHide(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -112,26 +109,22 @@ type
     procedure RegisterPluginCommandsTimer(Sender: TObject);
     procedure TestCaseBtnClick(Sender: TObject);
     procedure DemoDataTimer(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private-Deklarationen }
-    procedure DLLSendMessageTest(MSG, Data1, Data2: Variant);
   public
     { Public-Deklarationen }
-    FirstShow:boolean;
-
     comportnumber:integer;
     baudrate:integer;
     Shutdown:boolean;
 
-    CurrentTemp:Single;
-    Nachtabsenkung:Byte;
+    t_amb:Single;
+    Nachtabsenkung:integer;
     TempVor15Minuten:Single;
     FuenfzehnminutenCounter:Word;
     Temp2msb, Temp2lsb, Temp3msb, Temp3lsb:byte;
-    CurrentTemp2, CurrentTemp3:array[0..9] of Single;
-    CurrentTemp2Mean, CurrentTemp3Mean:single;
-    CurrentTemp2MeanIndex, CurrentTemp3MeanIndex:integer;
+    CurrentTemp, CurrentTemp2, CurrentTemp3:array[0..59] of Single;
+    CurrentTempMean, CurrentTemp2Mean, CurrentTemp3Mean:single;
+    CurrentTempMeanIndex, CurrentTemp2MeanIndex, CurrentTemp3MeanIndex:integer;
     RegelungNeuGestartet:Boolean;
     Heizbetrieb:Boolean;
     Strompreis, Kilowattstunden:Single;
@@ -145,11 +138,22 @@ type
     GetDLLValue:TCallbackGetValue;
     SendMSG:TCallbackSendMessage;
 
+    setup_mixmsblsb:boolean;
+    setup_datain_temp, setup_datain_min, setup_datain_mean, setup_datain_max, setup_datain_heateron:double;
+    setup_scale:double;
+    setup_logdirectory:string;
+    setup_installedpower:double;
+    setup_priceperkwh:double;
+    setup_deltattime:double;
+    setup_temp2msb, setup_temp2lsb, setup_temp3msb, setup_temp3lsb:double;
+    setup_temp2text, setup_temp3text:string;
+
     function CalcMaximum:Single;
     function CalcMinimum:Single;
     function CalcMean:Single;
     function RoundToByte(Temperatur: Single):Byte;
     procedure StartUp;
+    procedure SavePng(Bitmap: TBitmap; Destination:string);
   end;
 
 var
@@ -212,94 +216,82 @@ begin
   result:=LBuffer;
 end;
 
-procedure TConfig.FormCreate(Sender: TObject);
-begin
-  FirstShow:=true;
-end;
-
 procedure TConfig.comportReceiveData(Sender: TObject; DataPtr: Pointer;
   DataSize: Cardinal);
 var
   i: integer;
   s, ss: string;
+  t_amb_temp:single;
 begin
-  // Convert incoming data into a string
-  s := StringOfChar( ' ', DataSize );
-  move( DataPtr^, pchar(s)^, DataSize );
-  // Exit if s is empty. This usually occurs when one or more NULL characters
-  // (chr(0)) are received.
+  try
+    // Convert incoming data into a string
+    s := StringOfChar( ' ', DataSize );
+    move( DataPtr^, pchar(s)^, DataSize );
+    // Exit if s is empty. This usually occurs when one or more NULL characters
+    // (chr(0)) are received.
 
-//  while pos( #0, s ) > 0 do
-//    delete( s, pos( #0, s ), 1 );
-  if s = '' then
-    exit;
+  //  while pos( #0, s ) > 0 do
+  //    delete( s, pos( #0, s ), 1 );
+    if s = '' then
+      exit;
 
-  // Remove line feeds from the string
-  i := pos( #10, s );
-  while i <> 0 do
-  begin
-    delete( s, i, 1 );
+    // Remove line feeds from the string
     i := pos( #10, s );
-  end;
-  // Remove carriage returns from the string (break lines)
-  i := pos( #13, s );
-
-  while i <> 0 do
-  begin
-    ss := copy( s, 1, i-1 );
-    delete( s, 1, i );
-    i := pos( #13, s );
-  end;
-
-  if (length(ss)>2) and (ss[1]='A') and (ss[length(ss)]='E') then
-  begin
-    // "A" und "E" aus Nachricht entfernen
-    ss:=copy(ss, 2, length(ss)-2);
-
-    if setupform.CheckBox2.Checked then
+    while i <> 0 do
     begin
-      CurrentTemp:=integer(ss[1]) shl 8;
-      CurrentTemp:=CurrentTemp+integer(ss[2]);
-    end else
-    begin
-      CurrentTemp:=integer(ss[2]) shl 8;
-      CurrentTemp:=CurrentTemp+integer(ss[1]);
+      delete( s, i, 1 );
+      i := pos( #10, s );
     end;
-    CurrentTemp:=((CurrentTemp/2047)*200)-50;
+    // Remove carriage returns from the string (break lines)
+    i := pos( #13, s );
 
-    if TempVor15Minuten=-1000 then
-      TempVor15Minuten:=CurrentTemp;
-    SekundenTimer.Enabled:=true;
+    while i <> 0 do
+    begin
+      ss := copy( s, 1, i-1 );
+      delete( s, 1, i );
+      i := pos( #13, s );
+    end;
+
+    if (length(ss)>2) and (ss[1]='A') and (ss[length(ss)]='E') then
+    begin
+      // "A" und "E" aus Nachricht entfernen
+      ss:=copy(ss, 2, length(ss)-2);
+
+      if setup_mixmsblsb then
+      begin
+        t_amb_temp:=integer(ss[1]) shl 8;
+        t_amb_temp:=t_amb_temp+integer(ss[2]);
+      end else
+      begin
+        t_amb_temp:=integer(ss[2]) shl 8;
+        t_amb_temp:=t_amb_temp+integer(ss[1]);
+      end;
+      t_amb:=((t_amb_temp/2047)*200)-50;
+
+      if TempVor15Minuten=-1000 then
+        TempVor15Minuten:=t_amb;
+      SekundenTimer.Enabled:=true;
+    end;
+  except
   end;
 end;
 
-procedure TConfig.ActivateCOMPort(portnumber: integer);
-var
-  i:integer;
-  temp:String;
+procedure TConfig.ActivateCOMPort(portnumber, baudrate: integer);
 begin
-  setupform.portchange.ItemIndex:=0;
-  for i:=0 to setupform.portchange.items.count-1 do
-  begin
-    temp:=copy(setupform.portchange.Items[i],4,2);
-    if temp[2]=' ' then
-    begin
-      // einstellig
-      if portnumber=strtoint(temp[1]) then
-      begin
-        setupform.portchange.ItemIndex:=i;
-        break;
-      end;
-    end else
-    begin
-      // zweistellig
-      if portnumber=strtoint(temp) then
-      begin
-        setupform.portchange.ItemIndex:=i;
-        break;
-      end;
-    end;
+  if comport.Connected then
+    comport.Disconnect;
+  case portnumber of
+    1: comport.port:=pnCOM1;   2: comport.port:=pnCOM2;
+    3: comport.port:=pnCOM3;   4: comport.port:=pnCOM4;
+    5: comport.port:=pnCOM5;   6: comport.port:=pnCOM6;
+    7: comport.port:=pnCOM7;   8: comport.port:=pnCOM8;
+    9: comport.port:=pnCOM9;   10: comport.port:=pnCOM10;
+    11: comport.port:=pnCOM11;   12: comport.port:=pnCOM12;
+    13: comport.port:=pnCOM13;   14: comport.port:=pnCOM14;
+    15: comport.port:=pnCOM15;   16: comport.port:=pnCOM16;
   end;
+  comport.BaudRateValue:=baudrate;
+  comport.Connect;
 end;
 
 procedure TConfig.tempminChange(Sender: TObject);
@@ -327,22 +319,13 @@ begin
   label14.Font.Color:=clBlack;
 end;
 
-procedure TConfig.FormShow(Sender: TObject);
-begin
-  if FirstShow then
-  begin
-    FirstShow:=false;
-//    StartUp;
-  end;
-end;
-
 function TConfig.CalcMaximum:Single;
 var
   i:integer;
   maxvalue:double;
 begin
   maxvalue:=-200;
-  for i:=GrowingIndex-1 downto GrowingIndex-301 do
+  for i:=GrowingIndex-1 downto GrowingIndex-16 do
   begin
     if (chart.Data.ValueCount>0) and (i<chart.Data.ValueCount) and (i>0) and (chart.Options.PenCount>0) then
     begin
@@ -359,7 +342,7 @@ var
   minvalue:double;
 begin
   minvalue:=200;
-  for i:=GrowingIndex-1 downto GrowingIndex-301 do
+  for i:=GrowingIndex-1 downto GrowingIndex-16 do
   begin
     if (chart.Data.ValueCount>0) and (i<chart.Data.ValueCount) and (i>0) and (chart.Options.PenCount>0) then
     begin
@@ -377,7 +360,7 @@ var
 begin
   Mean:=0;
   Values:=0;
-  for i:=GrowingIndex-1 downto GrowingIndex-301 do
+  for i:=GrowingIndex-1 downto GrowingIndex-16 do
   begin
     if (chart.Data.ValueCount>0) and (i<chart.Data.ValueCount) and (i>0) and (chart.Options.PenCount>0) then
     begin
@@ -403,250 +386,296 @@ var
   i:integer;
 
   displaymax, displaymin:double;
+
+  t_amb2, t_amb3:double;
 begin
-  // Temperatur in Scope anzeigen
-  chart.Data.Timestamp[GrowingIndex]:=now;
-  chart.Data.Value[0, GrowingIndex]:=CurrentTemp;
-  chart.Data.Value[1, GrowingIndex]:=(tempsoll.value-Nachtabsenkung+tempmax.value);
-  chart.Data.Value[2, GrowingIndex]:=(tempsoll.value-Nachtabsenkung+tempmin.value);
-  chart.Data.Value[3, GrowingIndex]:=CurrentTemp2Mean;
-  chart.Data.Value[4, GrowingIndex]:=CurrentTemp3Mean;
+  try
+    // Aktuellen Temperaturwert in Ringbuffer für Mittelwert schreiben
+    CurrentTempMeanIndex:=CurrentTempMeanIndex+1;
+    if CurrentTempMeanIndex>=length(CurrentTemp) then
+        CurrentTempMeanIndex:=0;
+    CurrentTemp2MeanIndex:=CurrentTemp2MeanIndex+1;
+    if CurrentTemp2MeanIndex>=length(CurrentTemp2) then
+      CurrentTemp2MeanIndex:=0;
+    CurrentTemp3MeanIndex:=CurrentTemp3MeanIndex+1;
+    if CurrentTemp3MeanIndex>=length(CurrentTemp3) then
+      CurrentTemp3MeanIndex:=0;
 
-  TempMinVal:=CalcMinimum;
-  TempMeanVal:=CalcMean;
-  TempMaxVal:=CalcMaximum;
+    // Temperaturen für Sensor 2 und 3 abrufen
+    temp2msb:=GetDLLValue(round(setup_temp2msb));
+    temp2lsb:=GetDLLValue(round(setup_temp2lsb));
+    temp3msb:=GetDLLValue(round(setup_temp3msb));
+    temp3lsb:=GetDLLValue(round(setup_temp3lsb));
+    t_amb2:=(((temp2msb shl 8)+temp2lsb)-550)/10;
+    t_amb3:=(((temp3msb shl 8)+temp3lsb)-550)/10;
 
-  if chart.Data.ValueCount>10 then
-  begin
-    OverallMin:=200;
-    OverallMax:=-200;
-    for i:=10 to chart.data.ValueCount-1 do
+    if (GrowingIndex=0) then
     begin
-      if chart.Data.Value[0, i]<OverallMin then
-        OverallMin:=chart.Data.Value[0, GrowingIndex];
-      if chart.Data.Value[0, i]>OverallMax then
-        OverallMax:=chart.Data.Value[0, GrowingIndex];
+      // Startup
+      for i:=0 to length(CurrentTemp)-1 do
+      begin
+        CurrentTemp[i]:=t_amb;
+        CurrentTemp2[i]:=t_amb2;
+        CurrentTemp3[i]:=t_amb3;
+      end;
+    end else
+    begin
+      // Normalbetrieb
+      CurrentTemp[CurrentTempMeanIndex]:=t_amb;
+      CurrentTemp2[CurrentTemp2MeanIndex]:=t_amb2;
+      CurrentTemp3[CurrentTemp3MeanIndex]:=t_amb3;
     end;
-  end else
-  begin
-    OverallMin:=-10;
-    OverallMax:=35;
-  end;
 
-  if zoom15mincheckbox.checked then
-  begin
-    displaymax:=(tempsoll.value-Nachtabsenkung+tempmax.value);
-    if (tempsoll.value-Nachtabsenkung+tempmin.value)>displaymax then
-      displaymax:=(tempsoll.value-Nachtabsenkung+tempmin.value);
+    // Mittelwert über 60 Sekunden bilden
+    CurrentTempMean:=0;
+    CurrentTemp2Mean:=0;
+    CurrentTemp3Mean:=0;
+    for i:=0 to length(CurrentTemp)-1 do
+    begin
+      CurrentTempMean:=CurrentTempMean+CurrentTemp[i];
+      CurrentTemp2Mean:=CurrentTemp2Mean+CurrentTemp2[i];
+      CurrentTemp3Mean:=CurrentTemp3Mean+CurrentTemp3[i];
+    end;
+    CurrentTempMean:=CurrentTempMean/length(CurrentTemp);
+    CurrentTemp2Mean:=CurrentTemp2Mean/length(CurrentTemp2);
+    CurrentTemp3Mean:=CurrentTemp3Mean/length(CurrentTemp3);
+
+    // Jede Minute Mittelwert der Temperatur in Scope schreiben
+    if (CurrentTempMeanIndex=0) or (GrowingIndex<2) then
+    begin
+      chart.Data.Timestamp[GrowingIndex]:=now;
+      chart.Data.Value[0, GrowingIndex]:=CurrentTempMean;
+      chart.Data.Value[1, GrowingIndex]:=(tempsoll.value+Nachtabsenkung+tempmax.value);
+      chart.Data.Value[2, GrowingIndex]:=(tempsoll.value+Nachtabsenkung+tempmin.value);
+      chart.Data.Value[3, GrowingIndex]:=CurrentTemp2Mean;
+      chart.Data.Value[4, GrowingIndex]:=CurrentTemp3Mean;
+      GrowingIndex:=GrowingIndex+1;
+    end;
+
+    TempMinVal:=CalcMinimum;
+    TempMeanVal:=CalcMean;
+    TempMaxVal:=CalcMaximum;
+
+    if chart.Data.ValueCount>10 then
+    begin
+      OverallMin:=200;
+      OverallMax:=-200;
+      for i:=10 to chart.data.ValueCount-1 do
+      begin
+        if chart.Data.Value[0, i]<OverallMin then
+          OverallMin:=chart.Data.Value[0, GrowingIndex-1];
+        if chart.Data.Value[0, i]>OverallMax then
+          OverallMax:=chart.Data.Value[0, GrowingIndex-1];
+      end;
+    end else
+    begin
+      OverallMin:=-10;
+      OverallMax:=35;
+    end;
+
+    displaymax:=(tempsoll.value+Nachtabsenkung+tempmax.value);
+    if (tempsoll.value+Nachtabsenkung+tempmin.value)>displaymax then
+      displaymax:=(tempsoll.value+Nachtabsenkung+tempmin.value);
     if OverallMax>displaymax then
       displaymax:=OverallMax;
 
-    displaymin:=(tempsoll.value-Nachtabsenkung+tempmax.value);
-    if (tempsoll.value-Nachtabsenkung+tempmin.value)<displaymin then
-      displaymin:=(tempsoll.value-Nachtabsenkung+tempmin.value);
+    displaymin:=(tempsoll.value+Nachtabsenkung+tempmax.value);
+    if (tempsoll.value+Nachtabsenkung+tempmin.value)<displaymin then
+      displaymin:=(tempsoll.value+Nachtabsenkung+tempmin.value);
     if OverallMin<displaymin then
       displaymin:=OverallMin;
-  end else
-  begin
-    displaymax:=(tempsoll.value-Nachtabsenkung+tempmax.value);
-    if (tempsoll.value-Nachtabsenkung+tempmin.value)>displaymax then
-      displaymax:=(tempsoll.value-Nachtabsenkung+tempmin.value);
-    if OverallMax>displaymax then
-      displaymax:=OverallMax;
 
-    displaymin:=(tempsoll.value-Nachtabsenkung+tempmax.value);
-    if (tempsoll.value-Nachtabsenkung+tempmin.value)<displaymin then
-      displaymin:=(tempsoll.value-Nachtabsenkung+tempmin.value);
-    if OverallMin<displaymin then
-      displaymin:=OverallMin;
-  end;
-  chart.Options.PrimaryYAxis.YMax:=round(trunc(displaymax/5)+0.99)*5;
-  chart.Options.PrimaryYAxis.YMin:=round(trunc(displaymin/5)-0.99)*5;
-  chart.Options.PrimaryYAxis.YDivisions:=trunc((chart.Options.PrimaryYAxis.YMax / 5) + (abs(chart.Options.PrimaryYAxis.YMin) / 5));
-  GrowingIndex:=GrowingIndex+1;
+    chart.Options.PrimaryYAxis.YMax:=round(trunc(displaymax/5)+0.99)*5;
+    chart.Options.PrimaryYAxis.YMin:=round(trunc(displaymin/5)-0.99)*5;
+    chart.Options.PrimaryYAxis.YDivisions:=trunc((chart.Options.PrimaryYAxis.YMax / 5) + (abs(chart.Options.PrimaryYAxis.YMin) / 5));
 
-  // Temperatur in Label anzeigen
-  if config.Showing then
-  begin
-    tempcurrentlbl.caption:=floattostrf(CurrentTemp, ffFixed, 5, 1)+'°C';
-    tempminlbl.Caption:=floattostrf(TempMinVal, ffFixed, 5, 1)+'°C';
-    tempmeanlbl.Caption:=floattostrf(TempMeanVal, ffFixed, 5, 1)+'°C';
-    tempmaxlbl.Caption:=floattostrf(TempMaxVal, ffFixed, 5, 1)+'°C';
-  end;
+    // Temperatur in Label anzeigen
+    if config.Showing then
+    begin
+      tempcurrentlbl.caption:=floattostrf(t_amb, ffFixed, 5, 1)+'°C';
+      tempminlbl.Caption:=floattostrf(TempMinVal, ffFixed, 5, 1)+'°C';
+      tempmeanlbl.Caption:=floattostrf(TempMeanVal, ffFixed, 5, 1)+'°C';
+      tempmaxlbl.Caption:=floattostrf(TempMaxVal, ffFixed, 5, 1)+'°C';
 
-  // Aktuelle Temperatur als Kanalwert an PC_DIMMER senden
-  if round(setupform.datainchtemp.Value)>0 then
-    SetDLLEvent(round(setupform.datainchtemp.Value), RoundToByte(CurrentTemp));
-  // Minimale Temperatur als Kanalwert an PC_DIMMER senden
-  if round(setupform.datainchmin.Value)>0 then
-    SetDLLEvent(round(setupform.datainchmin.Value), RoundToByte(TempMinVal));
-  // Mittelwert der Temperatur als Kanalwert an PC_DIMMER senden
-  if round(setupform.datainchmean.Value)>0 then
-    SetDLLEvent(round(setupform.datainchmean.Value), RoundToByte(TempMeanVal));
-  // Maximale Temperatur als Kanalwert an PC_DIMMER senden
-  if round(setupform.datainchmax.Value)>0 then
-    SetDLLEvent(round(setupform.datainchmax.Value), RoundToByte(TempMaxVal));
+      temp2lbl.caption:=floattostrf(CurrentTemp2Mean, ffFixed, 5, 1)+'°C';
+      temp3lbl.caption:=floattostrf(CurrentTemp3Mean, ffFixed, 5, 1)+'°C';
+    end;
 
-  if tempon.StateOn then
-  begin
-    // Mittelwert oder Aktueller Wert als Referenz
-    if CheckBox1.Checked then
-      ReglerTemperaturWert:=TempMeanVal
-    else
-      ReglerTemperaturWert:=CurrentTemp;
+    // Aktuelle Temperatur als Kanalwert an PC_DIMMER senden
+    if round(setup_datain_temp)>0 then
+      SetDLLEvent(round(setup_datain_temp), RoundToByte(t_amb));
+    // Minimale Temperatur als Kanalwert an PC_DIMMER senden
+    if round(setup_datain_min)>0 then
+      SetDLLEvent(round(setup_datain_min), RoundToByte(TempMinVal));
+    // Mittelwert der Temperatur als Kanalwert an PC_DIMMER senden
+    if round(setup_datain_mean)>0 then
+      SetDLLEvent(round(setup_datain_mean), RoundToByte(TempMeanVal));
+    // Maximale Temperatur als Kanalwert an PC_DIMMER senden
+    if round(setup_datain_max)>0 then
+      SetDLLEvent(round(setup_datain_max), RoundToByte(TempMaxVal));
+
+    if tempon.StateOn then
+    begin
+      // Mittelwert oder Aktueller Wert als Referenz
+      if CheckBox1.Checked then
+        ReglerTemperaturWert:=TempMeanVal
+      else
+        ReglerTemperaturWert:=t_amb;
 
       // Nachtabsenkung
-    if Checkbox2.Checked then
-    begin
-      Tagesminuten:=strtoint(copy(TimeToStr(now), 1, 2))*60; // Stunden zu Minuten
-      Tagesminuten:=Tagesminuten+strtoint(copy(TimeToStr(now), 4, 2)); // Minuten
-
-      // Nachtabsenkung zwischen 22:30 = 1350 und 05:00 = 300
-      if (Tagesminuten>=((23*60)+30)) or (Tagesminuten<=((5*60)+00)) then
+      if Checkbox2.Checked then
       begin
-        nachtabsled.Status:=true;
-        Nachtabsenkung:=7; // 7°C weniger als Solltemperatur
+        Tagesminuten:=strtoint(copy(TimeToStr(now), 1, 2))*60; // Stunden zu Minuten
+        Tagesminuten:=Tagesminuten+strtoint(copy(TimeToStr(now), 4, 2)); // Minuten
+
+        // Nachtabsenkung zwischen 22:30 = 1350 und 05:00 = 300
+        if (Tagesminuten>=((absenkung_h_startedit.value*60)+absenkung_min_startedit.value)) or (Tagesminuten<=((absenkung_h_stopedit.value*60)+absenkung_min_stopedit.value)) then
+        begin
+          nachtabsled.Status:=true;
+          Nachtabsenkung:=round(absenkung_temp.value); // 7°C weniger als Solltemperatur
+        end else
+        begin
+          nachtabsled.Status:=false;
+          Nachtabsenkung:=0; // keine Absenkung
+        end;
       end else
       begin
         nachtabsled.Status:=false;
         Nachtabsenkung:=0; // keine Absenkung
       end;
-    end else
-    begin
-      nachtabsled.Status:=false;
-      Nachtabsenkung:=0; // keine Absenkung
-    end;
 
-    if ReglerTemperaturWert>(tempsoll.value-Nachtabsenkung+tempmax.Value) then
-    begin
-      // Zu Warm -> Ausschalten
-      if round(setupform.datainchon.Value)>0 then
-        SetDLLEvent(round(setupform.datainchon.Value), 0);
-      Heizbetrieb:=false;
-      heizenled.active:=false;
-      heizenled.status:=false;
-      label14.Caption:=_('Heizung aus');
-      label14.Font.Color:=clBlack;
-    end;
-    tempokled.Status:=(ReglerTemperaturWert>(tempsoll.value-Nachtabsenkung+tempmax.Value));
-
-    if ReglerTemperaturWert<(tempsoll.value-Nachtabsenkung+tempmin.Value) then
-    begin
-      // Zu Kalt -> Einschalten
-      if round(setupform.datainchon.Value)>0 then
-        SetDLLEvent(round(setupform.datainchon.Value), 255);
-      Heizbetrieb:=true;
-      heizenled.active:=true;
-      label14.Caption:=_('Heizung ein');
-      label14.Font.Color:=clRed;
-    end;
-
-    if (ReglerTemperaturWert>(tempsoll.value-Nachtabsenkung+tempmin.Value)) and (ReglerTemperaturWert<(tempsoll.value-Nachtabsenkung+tempmax.Value)) then
-    begin
-      // Temperatur im Hysteresebereich
-      if RegelungNeuGestartet then
+      if ReglerTemperaturWert>(tempsoll.value+Nachtabsenkung+tempmax.Value) then
       begin
-        // Aufheizen, da Sollwert noch nicht erreicht und Regelung gerade eingeschaltet
-        RegelungNeuGestartet:=false;
-        if round(setupform.datainchon.Value)>0 then
-          SetDLLEvent(round(setupform.datainchon.Value), 255);
+        // Zu Warm -> Ausschalten
+        if round(setup_datain_heateron)>0 then
+          SetDLLEvent(round(setup_datain_heateron), 0);
+        Heizbetrieb:=false;
+        heizenled.active:=false;
+        heizenled.status:=false;
+        label14.Caption:=_('Heizung aus');
+        label14.Font.Color:=clBlack;
+      end;
+      tempokled.Status:=(ReglerTemperaturWert>(tempsoll.value+Nachtabsenkung+tempmax.Value));
+
+      if ReglerTemperaturWert<(tempsoll.value+Nachtabsenkung+tempmin.Value) then
+      begin
+        // Zu Kalt -> Einschalten
+        if round(setup_datain_heateron)>0 then
+          SetDLLEvent(round(setup_datain_heateron), 255);
         Heizbetrieb:=true;
         heizenled.active:=true;
         label14.Caption:=_('Heizung ein');
         label14.Font.Color:=clRed;
-        hystereseled.status:=false;
-      end else
+      end;
+
+      if (ReglerTemperaturWert>(tempsoll.value+Nachtabsenkung+tempmin.Value)) and (ReglerTemperaturWert<(tempsoll.value+Nachtabsenkung+tempmax.Value)) then
       begin
-        // -> nichts ändern (Hysteresebetrieb)
-        if Heizbetrieb then
+        // Temperatur im Hysteresebereich
+        if RegelungNeuGestartet then
         begin
-          // Im Begriff des Aufheizens
+          // Aufheizen, da Sollwert noch nicht erreicht und Regelung gerade eingeschaltet
+          RegelungNeuGestartet:=false;
+          if round(setup_datain_heateron)>0 then
+            SetDLLEvent(round(setup_datain_heateron), 255);
+          Heizbetrieb:=true;
+          heizenled.active:=true;
           label14.Caption:=_('Heizung ein');
           label14.Font.Color:=clRed;
           hystereseled.status:=false;
         end else
         begin
-          label14.Caption:=_('Heizung aus (Hysterese)');
-          label14.Font.Color:=clGreen;
-          hystereseled.status:=true;
+          // -> nichts ändern (Hysteresebetrieb)
+          if Heizbetrieb then
+          begin
+            // Im Begriff des Aufheizens
+            label14.Caption:=_('Heizung ein');
+            label14.Font.Color:=clRed;
+            hystereseled.status:=false;
+          end else
+          begin
+            label14.Caption:=_('Heizung aus (Hysterese)');
+            label14.Font.Color:=clGreen;
+            hystereseled.status:=true;
+          end;
         end;
+      end else
+      begin
+        hystereseled.status:=false;
       end;
     end else
     begin
+      // Regelung ausgeschaltet
+      if round(setup_datain_heateron)>0 then
+        SetDLLEvent(round(setup_datain_heateron), 0);
+      Heizbetrieb:=false;
+      tempokled.Status:=false;
       hystereseled.status:=false;
+      heizenled.active:=false;
+      heizenled.status:=false;
     end;
-  end else
-  begin
-    // Regelung ausgeschaltet
-    if round(setupform.datainchon.Value)>0 then
-      SetDLLEvent(round(setupform.datainchon.Value), 0);
-    Heizbetrieb:=false;
-    tempokled.Status:=false;
-    hystereseled.status:=false;
-    heizenled.active:=false;
-    heizenled.status:=false;
-  end;
 
-  // Berechnung von Delta-T alle 15 Minuten
-  inc(FuenfzehnminutenCounter);
-  if FuenfzehnminutenCounter>=round(setupform.TimeForDeltaTEdit.Value*60) then
-  begin
-    // 15 Minuten sind um
-    FuenfzehnminutenCounter:=0;
-
-    if TempVor15Minuten>-1000 then
+    // Berechnung von Delta-T alle 15 Minuten
+    inc(FuenfzehnminutenCounter);
+    if FuenfzehnminutenCounter>=round(setup_deltattime*60) then
     begin
-      // Temperaturänderung anzeigen
-      deltatemplbl.caption:=floattostrf((CurrentTemp-TempVor15Minuten), ffFixed, 5, 1)+'°C';
-      if (CurrentTemp-TempVor15Minuten)>0 then
-      begin
-        deltatemplbl.Font.Color:=clGreen;
-      end else if (CurrentTemp-TempVor15Minuten)<0 then
-      begin
-        deltatemplbl.Font.Color:=clRed;
-      end else
-      begin
-        deltatemplbl.Font.Color:=clBlack;
-      end;
+      // 15 Minuten sind um
+      FuenfzehnminutenCounter:=0;
 
-      // Zeit bis zum Erreichen des Sollwertes anzeigen
-      if ((CurrentTemp-TempVor15Minuten)/15)>0 then
+      if TempVor15Minuten>-1000 then
       begin
-        ZeitBisSollwert:=(tempsoll.value-CurrentTemp)/((CurrentTemp-TempVor15Minuten)/15); // Zeit in Minuten bis Sollwert erreicht wird
-        if ZeitBisSollwert<0 then
+        // Temperaturänderung anzeigen
+        deltatemplbl.caption:=floattostrf((t_amb-TempVor15Minuten), ffFixed, 5, 1)+'°C';
+        if (t_amb-TempVor15Minuten)>0 then
         begin
-          TimeToSollwertLbl.caption:='...';
+          deltatemplbl.Font.Color:=clGreen;
+        end else if (t_amb-TempVor15Minuten)<0 then
+        begin
+          deltatemplbl.Font.Color:=clRed;
         end else
         begin
-          ZeitBisSollwert_h:=trunc(ZeitBisSollwert/60);
-          ZeitBisSollwert_min:=round(ZeitBisSollwert-(60*ZeitBisSollwert_h));
-          TimeToSollwertLbl.caption:=inttostr(ZeitBisSollwert_h)+'h '+inttostr(ZeitBisSollwert_min)+'min'
+          deltatemplbl.Font.Color:=clBlack;
         end;
-      end else
-      begin
-        TimeToSollwertLbl.caption:='...';
+
+        // Zeit bis zum Erreichen des Sollwertes anzeigen
+        if ((t_amb-TempVor15Minuten)/15)>0 then
+        begin
+          ZeitBisSollwert:=(tempsoll.value-t_amb)/((t_amb-TempVor15Minuten)/15); // Zeit in Minuten bis Sollwert erreicht wird
+          if ZeitBisSollwert<0 then
+          begin
+            TimeToSollwertLbl.caption:='...';
+          end else
+          begin
+            ZeitBisSollwert_h:=trunc(ZeitBisSollwert/60);
+            ZeitBisSollwert_min:=round(ZeitBisSollwert-(60*ZeitBisSollwert_h));
+            TimeToSollwertLbl.caption:=inttostr(ZeitBisSollwert_h)+'h '+inttostr(ZeitBisSollwert_min)+'min'
+          end;
+        end else
+        begin
+          TimeToSollwertLbl.caption:='...';
+        end;
       end;
+      // Temperaturwerte und Kosten in CSV-Datei speichern
+      Memo1.Lines.Add(DateToStr(now)+';'+TimeToStr(now)+';'+
+        floattostrf(t_amb, ffFixed, 5, 1)+';'+
+        floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+';'+
+        floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+';'+
+        floattostrf((t_amb-TempVor15Minuten), ffFixed, 5, 1)+';'+
+        floattostrf(Kilowattstunden+((setup_installedpower/1000)*(1/3600)), ffFixed, 5, 6)+';'+
+        floattostrf(Kilowattstunden+((setup_installedpower/1000)*(1/3600))*(setup_priceperkwh/100), ffFixed, 5, 6));
+
+      TempVor15Minuten:=t_amb;
     end;
-    // Temperaturwerte und Kosten in CSV-Datei speichern
-    Memo1.Lines.Add(DateToStr(now)+';'+TimeToStr(now)+';'+
-      floattostrf(CurrentTemp, ffFixed, 5, 1)+';'+
-      floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+';'+
-      floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+';'+
-      floattostrf((CurrentTemp-TempVor15Minuten), ffFixed, 5, 1)+';'+
-      floattostrf(Kilowattstunden+((setupform.MaxInstalledPowerEdit.Value/1000)*(1/3600)), ffFixed, 5, 6)+';'+
-      floattostrf(Kilowattstunden+((setupform.MaxInstalledPowerEdit.Value/1000)*(1/3600))*(setupform.PricePerkWhEdit.Value/100), ffFixed, 5, 6));
 
-    TempVor15Minuten:=CurrentTemp;
-  end;
+    // Berechnen des Strompreises
+    if Heizbetrieb then
+    begin
+      Kilowattstunden:=Kilowattstunden+((setup_installedpower/1000)*(1/3600)); // ?.?kW*(1/3600) --> kWh
+      Strompreis:=Kilowattstunden*(setup_priceperkwh/100); //kWh * ?.??ct/kWh --> Preis
 
-  // Berechnen des Strompreises
-  if Heizbetrieb then
-  begin
-    Kilowattstunden:=Kilowattstunden+((setupform.MaxInstalledPowerEdit.Value/1000)*(1/3600)); // ?.?kW*(1/3600) --> kWh
-    Strompreis:=Kilowattstunden*(setupform.PricePerkWhEdit.Value/100); //kWh * ?.??ct/kWh --> Preis
-
-    stromverbrauchlbl.Caption:=floattostrf(Kilowattstunden, ffFixed, 5, 3)+' kWh';
-    stromkostenlbl.Caption:=floattostrf(Strompreis, ffFixed, 5, 2)+' €';
+      stromverbrauchlbl.Caption:=floattostrf(Kilowattstunden, ffFixed, 5, 3)+' kWh';
+      stromkostenlbl.Caption:=floattostrf(Strompreis, ffFixed, 5, 2)+' €';
+    end;
+  except
   end;
 end;
 
@@ -654,7 +683,7 @@ function TConfig.RoundToByte(Temperatur: Single):Byte;
 var
   TempInteger:integer;
 begin
-  TempInteger:=round(Temperatur*setupform.TempFaktor.Value);
+  TempInteger:=round(Temperatur*setup_scale);
   if TempInteger>255 then
     TempInteger:=255
   else if TempInteger<0 then
@@ -686,7 +715,7 @@ begin
     	    LReg.WriteInteger('Baudrate',baudrate);
 
           // Generelle Einstellungen
-          LReg.WriteBool('Vertausche L und H', setupform.Checkbox2.Checked);
+          LReg.WriteBool('Vertausche L und H', setup_mixmsblsb);
           LReg.WriteBool('Regler ein', tempon.StateOn);
 
           // Temperatureinstellungen
@@ -704,26 +733,26 @@ begin
           LReg.WriteInteger('Absenkung bis min',round(absenkung_min_stopedit.value));
 
           // Erweiterte Einstellungen
-          LReg.WriteInteger('ChTemp', round(setupform.datainchtemp.value));
-          LReg.WriteInteger('ChMin', round(setupform.datainchmin.value));
-          LReg.WriteInteger('ChMean', round(setupform.datainchmean.value));
-          LReg.WriteInteger('ChMax', round(setupform.datainchmax.value));
-          LReg.WriteInteger('ChHeizungEin', round(setupform.datainchon.value));
-          LReg.WriteFloat('Skalierungsfaktor', setupform.TempFaktor.Value);
-          LReg.WriteInteger('Temp2LSB', round(setupform.temp2_lsb.value));
-          LReg.WriteInteger('Temp2MSB', round(setupform.temp2_msb.value));
-          LReg.WriteInteger('Temp3LSB', round(setupform.temp3_lsb.value));
-          LReg.WriteInteger('Temp3MSB', round(setupform.temp3_msb.value));
-          LReg.WriteString('Temp2Label', setupform.Temp2LabelEdit.Text);
-          LReg.WriteString('Temp3Label', setupform.Temp3LabelEdit.Text);
+          LReg.WriteInteger('ChTemp', round(setup_datain_temp));
+          LReg.WriteInteger('ChMin', round(setup_datain_min));
+          LReg.WriteInteger('ChMean', round(setup_datain_mean));
+          LReg.WriteInteger('ChMax', round(setup_datain_max));
+          LReg.WriteInteger('ChHeizungEin', round(setup_datain_heateron));
+          LReg.WriteFloat('Skalierungsfaktor', setup_scale);
+          LReg.WriteInteger('Temp2LSB', round(setup_temp2lsb));
+          LReg.WriteInteger('Temp2MSB', round(setup_temp2msb));
+          LReg.WriteInteger('Temp3LSB', round(setup_temp3lsb));
+          LReg.WriteInteger('Temp3MSB', round(setup_temp3msb));
+          LReg.WriteString('Temp2Label', setup_temp2text);
+          LReg.WriteString('Temp3Label', setup_temp3text);
 
           // Sonstige Einstellungen
-          LReg.WriteInteger('Installierte elektrische Leistung', round(setupform.MaxInstalledPowerEdit.value));
-          LReg.WriteFloat('Preis pro kWh', setupform.PricePerkWhEdit.Value);
-          LReg.WriteFloat('Zeit für Delta T', setupform.TimeForDeltaTEdit.Value);
+          LReg.WriteInteger('Installierte elektrische Leistung', round(setup_installedpower));
+          LReg.WriteFloat('Preis pro kWh', setup_priceperkwh);
+          LReg.WriteFloat('Zeit für Delta T', setup_deltattime);
 
           // Verzeichnis für Dateien speichern
-          LReg.WriteString('Datafolder', setupform.savefilestoedit.Text);
+          LReg.WriteString('Datafolder', setup_logdirectory);
         end;
       end;
     end;
@@ -740,41 +769,6 @@ begin
 end;
 
 procedure TConfig.Button1Click(Sender: TObject);
-begin
-  setupform.ShowModal;
-  Label3.Caption:='('+setupform.Temp2LabelEdit.Text+')';
-  Label4.Caption:='('+setupform.Temp3LabelEdit.Text+')';
-  Label6.Caption:='('+inttostr(round(setupform.TimeForDeltaTEdit.Value))+'min)';
-end;
-
-procedure TConfig.Button2Click(Sender: TObject);
-begin
-  if button2.Caption='>>' then
-  begin
-    button2.Caption:='<<';
-
-    chart.Visible:=true;
-    panel2.Visible:=chart.Visible;
-    panel4.Visible:=chart.Visible;
-    zoom15mincheckbox.Visible:=chart.Visible;
-
-    config.ClientWidth:=1322;
-    config.ClientHeight:=453;
-  end else
-  begin
-    button2.Caption:='>>';
-
-    config.ClientWidth:=310;
-    config.ClientHeight:=350;
-
-    chart.Visible:=false;
-    panel2.Visible:=chart.Visible;
-    panel4.Visible:=chart.Visible;
-    zoom15mincheckbox.Visible:=chart.Visible;
-  end;
-end;
-
-procedure TConfig.StartUp;
 const
   GUID_DEVINTERFACE_COMPORT: TGUID                = '{86e0d1e0-8089-11d0-9ce4-08003e301f73}';
   GUID_DEVINTERFACE_SERENUM_BUS_ENUMERATOR: TGUID = '{4D36E978-E325-11CE-BFC1-08002BE10318}';
@@ -796,131 +790,15 @@ var
   DeviceDescription: string;
   Bus: string;
 
-  LReg:TRegistry;
-  serialport, regbaudrate:integer;
-  TestHandle : integer;
+
+  temp:string;
+  TestHandle:THAndle;
 begin
+  setupform:=tsetupform.create(nil);
+
   // these API conversions are loaded dynamically by default
   LoadSetupApi;
   LoadConfigManagerApi;
-
-  Shutdown:=false;
-  RegelungNeuGestartet:=false;
-  Heizbetrieb:=false;
-  TempVor15Minuten:=-1000;
-
-  serialport:=2;
-  regbaudrate:=115200;
-
-  LReg := TRegistry.Create;
-  LReg.RootKey:=HKEY_CURRENT_USER;
-
-  if LReg.OpenKey('Software', True) then
-  begin
-    if not LReg.KeyExists('PHOENIXstudios') then
-      LReg.CreateKey('PHOENIXstudios');
-    if LReg.OpenKey('PHOENIXstudios',true) then
-    begin
-      if not LReg.KeyExists('PC_DIMMER') then
-        LReg.CreateKey('PC_DIMMER');
-      if LReg.OpenKey('PC_DIMMER',true) then
-	    begin
-        if not LReg.KeyExists(ExtractFileName(GetModulePath)) then
-	        LReg.CreateKey(ExtractFileName(GetModulePath));
-	      if LReg.OpenKey(ExtractFileName(GetModulePath),true) then
-	      begin
-	        if not LReg.ValueExists('COMPort') then
-	          LReg.WriteInteger('COMPort',1);
-	        serialport:=LReg.ReadInteger('COMPort');
-	        if not LReg.ValueExists('Baudrate') then
-	          LReg.WriteInteger('Baudrate',38400);
-	        regbaudrate:=LReg.ReadInteger('Baudrate');
-
-          // Generelle Einstellungen
-	        if LReg.ValueExists('Vertausche L und H') then
-            setupform.Checkbox2.Checked:=LReg.ReadBool('Vertausche L und H');
-	        if LReg.ValueExists('Regler ein') then
-            tempon.StateOn:=LReg.ReadBool('Regler ein');
-            if LReg.ValueExists('Verwende Mittelwert als Referenz') then
-              Checkbox1.Checked:=LReg.ReadBool('Verwende Mittelwert als Referenz');
-
-          try
-            // Temperatureinstellungen
-            if LReg.ValueExists('Temperatursollwert') then
-              tempsoll.Value:=LReg.ReadFloat('Temperatursollwert');
-            if LReg.ValueExists('Einschaltschwelle') then
-              tempmin.Value:=LReg.ReadFloat('Einschaltschwelle');
-            if LReg.ValueExists('Ausschaltschwelle') then
-              tempmax.Value:=LReg.ReadFloat('Ausschaltschwelle');
-  	        if LReg.ValueExists('Skalierungsfaktor') then
-              setupform.TempFaktor.Value:=LReg.ReadFloat('Skalierungsfaktor');
-          except
-            tempsoll.Value:=19.0;
-            tempmin.Value:=-1.0;
-            tempmax.Value:=1.0;
-            setupform.TempFaktor.Value:=10.0;
-          end;
-
-          // Nachtabsenkung
-	        if LReg.ValueExists('Verwende Nachtabsenkung') then
-            Checkbox2.Checked:=LReg.ReadBool('Verwende Nachtabsenkung');
-	        if LReg.ValueExists('Absenkung um') then
-            absenkung_temp.value:=LReg.ReadInteger('Absenkung um');
-	        if LReg.ValueExists('Absenkung ab h') then
-            absenkung_h_startedit.value:=LReg.ReadInteger('Absenkung ab h');
-	        if LReg.ValueExists('Absenkung ab min') then
-            absenkung_min_startedit.value:=LReg.ReadInteger('Absenkung ab min');
-	        if LReg.ValueExists('Absenkung bis h') then
-            absenkung_h_stopedit.value:=LReg.ReadInteger('Absenkung bis h');
-	        if LReg.ValueExists('Absenkung bis min') then
-            absenkung_min_stopedit.value:=LReg.ReadInteger('Absenkung bis min');
-
-          // Erweiterte Einstellungen
-	        if LReg.ValueExists('ChTemp') then
-            setupform.datainchtemp.value:=LReg.ReadInteger('ChTemp');
-	        if LReg.ValueExists('ChMin') then
-            setupform.datainchmin.value:=LReg.ReadInteger('ChMin');
-	        if LReg.ValueExists('ChMean') then
-            setupform.datainchmean.value:=LReg.ReadInteger('ChMean');
-	        if LReg.ValueExists('ChMax') then
-            setupform.datainchmax.value:=LReg.ReadInteger('ChMax');
-	        if LReg.ValueExists('ChHeizungEin') then
-            setupform.datainchon.value:=LReg.ReadInteger('ChHeizungEin');
-	        if LReg.ValueExists('Temp2LSB') then
-            setupform.temp2_lsb.value:=LReg.ReadInteger('Temp2LSB');
-	        if LReg.ValueExists('Temp2MSB') then
-            setupform.temp2_msb.value:=LReg.ReadInteger('Temp2MSB');
-	        if LReg.ValueExists('Temp3LSB') then
-            setupform.temp3_lsb.value:=LReg.ReadInteger('Temp3LSB');
-	        if LReg.ValueExists('Temp3MSB') then
-            setupform.temp3_msb.value:=LReg.ReadInteger('Temp3MSB');
-	        if LReg.ValueExists('Temp2Label') then
-            setupform.Temp2LabelEdit.Text:=LReg.ReadString('Temp2Label');
-	        if LReg.ValueExists('Temp3Label') then
-            setupform.Temp3LabelEdit.Text:=LReg.ReadString('Temp3Label');
-
-          // Sonstige Einstellungen
-	        if LReg.ValueExists('Installierte elektrische Leistung') then
-            setupform.MaxInstalledPowerEdit.value:=LReg.ReadInteger('Installierte elektrische Leistung');
-          try
-            if LReg.ValueExists('Preis pro kWh') then
-              setupform.PricePerkWhEdit.Value:=LReg.ReadFloat('Preis pro kWh');
-            if LReg.ValueExists('Zeit für Delta T') then
-              setupform.TimeForDeltaTEdit.Value:=LReg.ReadFloat('Zeit für Delta T');
-          except
-            setupform.PricePerkWhEdit.Value:=28.0;
-            setupform.TimeForDeltaTEdit.Value:=15;
-          end;
-
-          // Verzeichnis für Dateien
-          if LReg.ValueExists('Datafolder') then
-            setupform.savefilestoedit.Text:=LReg.ReadString('Datafolder');
-	      end;
- 			end;
-    end;
-  end;
-  LReg.CloseKey;
-  LReg.Free;
 
   // enumerate all serial devices (COM port devices)
   SerialGUID := GUID_DEVINTERFACE_COMPORT;
@@ -979,44 +857,242 @@ begin
   SetupDiDestroyDeviceInfoList(PnPHandle);
   setupform.portchange.Items.EndUpdate;
 
-// COM-Ports von 1 bis 16 abklappern
-//	portchange.Clear;
-//	for i:=1 to 16 do
-//	begin
-//	  TestHandle := CreateFile(PChar('\\.\COM'+IntToStr(i)),GENERIC_READ or GENERIC_WRITE,0,nil,OPEN_EXISTING,FILE_FLAG_OVERLAPPED,LongInt(0));
-//	  if (TestHandle > 0) then
-//	  begin
-//	    portchange.Items.Add('COM'+inttostr(i));
-//	    CloseHandle(TestHandle);
-//	  end;
-//	end;
-
-  ActivateCOMPort(serialport);
-
   setupform.portchange.Visible:=(setupform.portchange.Items.Count>0);
-  setupform.portchangeSelect(nil);
-
-  case regbaudrate of
-    115200: setupform.baudratechange.ItemIndex:=0;
-    57600: setupform.baudratechange.ItemIndex:=1;
-    38400: setupform.baudratechange.ItemIndex:=2;
-    19200: setupform.baudratechange.ItemIndex:=3;
-    9600: setupform.baudratechange.ItemIndex:=4;
-  else
-    setupform.baudratechange.ItemIndex:=0;
-  end;
-  setupform.baudratechangeSelect(nil);
 
   // unload API conversions
   UnloadSetupApi;
   UnloadConfigManagerApi;
 
-  Memo1.Lines.Clear;
-  Memo1.Lines.Add(_('Datum; Uhrzeit; Temperatur 1 [°C]; Temperatur 2 [°C]; Temperatur 3 [°C]; Delta-Temp [°C]; Verbrauch [kWh]; Kosten [€]'));
+
+{
+  // COM-Ports von 1 bis 16 abklappern
+	setupform.portchange.Clear;
+	for i:=1 to 16 do
+	begin
+	  TestHandle := CreateFile(PChar('\\.\COM'+IntToStr(i)),GENERIC_READ or GENERIC_WRITE,0,nil,OPEN_EXISTING,FILE_FLAG_OVERLAPPED,LongInt(0));
+	  if (TestHandle > 0) then
+	  begin
+	    setupform.portchange.Items.Add('COM'+inttostr(i));
+	    CloseHandle(TestHandle);
+	  end;
+	end;
+}
+
+  setupform.portchange.Visible:=(setupform.portchange.Items.Count>0);
+
+  setupform.checkbox2.Checked:=setup_mixmsblsb;
+  setupform.datainchtemp.value:=setup_datain_temp;
+  setupform.datainchmin.value:=setup_datain_min;
+  setupform.datainchmean.value:=setup_datain_mean;
+  setupform.datainchmax.value:=setup_datain_max;
+  setupform.datainchon.value:=setup_datain_heateron;
+  setupform.TempFaktor.value:=setup_scale;
+  setupform.savefilestoedit.Text:=setup_logdirectory;
+  setupform.MaxInstalledPowerEdit.Value:=setup_installedpower;
+  setupform.PricePerkWhEdit.Value:=setup_priceperkwh;
+  setupform.TimeForDeltaTEdit.Value:=setup_deltattime;
+  setupform.temp2_msb.Value:=setup_temp2msb;
+  setupform.temp2_lsb.Value:=setup_temp2lsb;
+  setupform.temp3_msb.Value:=setup_temp3msb;
+  setupform.temp3_lsb.Value:=setup_temp3lsb;
+  setupform.temp2labeledit.text:=setup_temp2text;
+  setupform.temp3labeledit.Text:=setup_temp3text;
+
+  setupform.ShowModal;
+
+  if setupform.portchange.items.Count>0 then
+  begin
+    temp:=copy(setupform.portchange.Items[setupform.portchange.Itemindex],4,2);
+    if temp[2]=' ' then
+      comportnumber:=strtoint(temp[1])
+    else
+      comportnumber:=strtoint(temp);
+    baudrate:=strtoint(setupform.baudratechange.Items[setupform.baudratechange.Itemindex]);
+
+    ActivateCOMPort(comportnumber, baudrate);
+  end;
+
 
   Label3.Caption:='('+setupform.Temp2LabelEdit.Text+')';
   Label4.Caption:='('+setupform.Temp3LabelEdit.Text+')';
   Label6.Caption:='('+inttostr(round(setupform.TimeForDeltaTEdit.Value))+'min)';
+
+  setup_mixmsblsb:=setupform.checkbox2.Checked;
+  setup_datain_temp:=setupform.datainchtemp.value;
+  setup_datain_min:=setupform.datainchmin.value;
+  setup_datain_mean:=setupform.datainchmean.value;
+  setup_datain_max:=setupform.datainchmax.value;
+  setup_datain_heateron:=setupform.datainchon.value;
+  setup_scale:=setupform.TempFaktor.value;
+  setup_logdirectory:=setupform.savefilestoedit.Text;
+  setup_installedpower:=setupform.MaxInstalledPowerEdit.Value;
+  setup_priceperkwh:=setupform.PricePerkWhEdit.Value;
+  setup_deltattime:=setupform.TimeForDeltaTEdit.Value;
+  setup_temp2msb:=setupform.temp2_msb.Value;
+  setup_temp2lsb:=setupform.temp2_lsb.Value;
+  setup_temp3msb:=setupform.temp3_msb.Value;
+  setup_temp3lsb:=setupform.temp3_lsb.Value;
+  setup_temp2text:=setupform.temp2labeledit.text;
+  setup_temp3text:=setupform.temp3labeledit.Text;
+
+  setupform.release;
+end;
+
+procedure TConfig.Button2Click(Sender: TObject);
+begin
+  if button2.Caption='>>' then
+  begin
+    button2.Caption:='<<';
+
+    chart.Visible:=true;
+    panel2.Visible:=chart.Visible;
+    panel4.Visible:=chart.Visible;
+
+    config.ClientWidth:=1322;
+    config.ClientHeight:=453;
+  end else
+  begin
+    button2.Caption:='>>';
+
+    config.ClientWidth:=310;
+    config.ClientHeight:=350;
+
+    chart.Visible:=false;
+    panel2.Visible:=chart.Visible;
+    panel4.Visible:=chart.Visible;
+  end;
+end;
+
+procedure TConfig.StartUp;
+var
+  LReg:TRegistry;
+begin
+  Shutdown:=false;
+  RegelungNeuGestartet:=false;
+  Heizbetrieb:=false;
+  TempVor15Minuten:=-1000;
+
+  comportnumber:=2;
+  baudrate:=115200;
+
+  LReg := TRegistry.Create;
+  LReg.RootKey:=HKEY_CURRENT_USER;
+
+  if LReg.OpenKey('Software', True) then
+  begin
+    if not LReg.KeyExists('PHOENIXstudios') then
+      LReg.CreateKey('PHOENIXstudios');
+    if LReg.OpenKey('PHOENIXstudios',true) then
+    begin
+      if not LReg.KeyExists('PC_DIMMER') then
+        LReg.CreateKey('PC_DIMMER');
+      if LReg.OpenKey('PC_DIMMER',true) then
+	    begin
+        if not LReg.KeyExists(ExtractFileName(GetModulePath)) then
+	        LReg.CreateKey(ExtractFileName(GetModulePath));
+	      if LReg.OpenKey(ExtractFileName(GetModulePath),true) then
+	      begin
+	        if not LReg.ValueExists('COMPort') then
+	          LReg.WriteInteger('COMPort',1);
+	        comportnumber:=LReg.ReadInteger('COMPort');
+	        if not LReg.ValueExists('Baudrate') then
+	          LReg.WriteInteger('Baudrate',38400);
+	        baudrate:=LReg.ReadInteger('Baudrate');
+
+          // Generelle Einstellungen
+	        if LReg.ValueExists('Vertausche L und H') then
+            setup_mixmsblsb:=LReg.ReadBool('Vertausche L und H');
+	        if LReg.ValueExists('Regler ein') then
+            tempon.StateOn:=LReg.ReadBool('Regler ein');
+            if LReg.ValueExists('Verwende Mittelwert als Referenz') then
+              Checkbox1.Checked:=LReg.ReadBool('Verwende Mittelwert als Referenz');
+
+          try
+            // Temperatureinstellungen
+            if LReg.ValueExists('Temperatursollwert') then
+              tempsoll.Value:=LReg.ReadFloat('Temperatursollwert');
+            if LReg.ValueExists('Einschaltschwelle') then
+              tempmin.Value:=LReg.ReadFloat('Einschaltschwelle');
+            if LReg.ValueExists('Ausschaltschwelle') then
+              tempmax.Value:=LReg.ReadFloat('Ausschaltschwelle');
+  	        if LReg.ValueExists('Skalierungsfaktor') then
+              setup_scale:=LReg.ReadFloat('Skalierungsfaktor');
+          except
+            tempsoll.Value:=19.0;
+            tempmin.Value:=-1.0;
+            tempmax.Value:=1.0;
+            setup_scale:=10.0;
+          end;
+
+          // Nachtabsenkung
+	        if LReg.ValueExists('Verwende Nachtabsenkung') then
+            Checkbox2.Checked:=LReg.ReadBool('Verwende Nachtabsenkung');
+	        if LReg.ValueExists('Absenkung um') then
+            absenkung_temp.value:=LReg.ReadInteger('Absenkung um');
+	        if LReg.ValueExists('Absenkung ab h') then
+            absenkung_h_startedit.value:=LReg.ReadInteger('Absenkung ab h');
+	        if LReg.ValueExists('Absenkung ab min') then
+            absenkung_min_startedit.value:=LReg.ReadInteger('Absenkung ab min');
+	        if LReg.ValueExists('Absenkung bis h') then
+            absenkung_h_stopedit.value:=LReg.ReadInteger('Absenkung bis h');
+	        if LReg.ValueExists('Absenkung bis min') then
+            absenkung_min_stopedit.value:=LReg.ReadInteger('Absenkung bis min');
+
+          // Erweiterte Einstellungen
+	        if LReg.ValueExists('ChTemp') then
+            setup_datain_temp:=LReg.ReadInteger('ChTemp');
+	        if LReg.ValueExists('ChMin') then
+            setup_datain_min:=LReg.ReadInteger('ChMin');
+	        if LReg.ValueExists('ChMean') then
+            setup_datain_mean:=LReg.ReadInteger('ChMean');
+	        if LReg.ValueExists('ChMax') then
+            setup_datain_max:=LReg.ReadInteger('ChMax');
+	        if LReg.ValueExists('ChHeizungEin') then
+            setup_datain_heateron:=LReg.ReadInteger('ChHeizungEin');
+	        if LReg.ValueExists('Temp2LSB') then
+            setup_temp2lsb:=LReg.ReadInteger('Temp2LSB');
+	        if LReg.ValueExists('Temp2MSB') then
+            setup_temp2msb:=LReg.ReadInteger('Temp2MSB');
+	        if LReg.ValueExists('Temp3LSB') then
+            setup_temp3lsb:=LReg.ReadInteger('Temp3LSB');
+	        if LReg.ValueExists('Temp3MSB') then
+            setup_temp3msb:=LReg.ReadInteger('Temp3MSB');
+	        if LReg.ValueExists('Temp2Label') then
+            setup_temp2text:=LReg.ReadString('Temp2Label');
+	        if LReg.ValueExists('Temp3Label') then
+            setup_temp3text:=LReg.ReadString('Temp3Label');
+
+          // Sonstige Einstellungen
+	        if LReg.ValueExists('Installierte elektrische Leistung') then
+            setup_installedpower:=LReg.ReadInteger('Installierte elektrische Leistung');
+          try
+            if LReg.ValueExists('Preis pro kWh') then
+              setup_priceperkwh:=LReg.ReadFloat('Preis pro kWh');
+            if LReg.ValueExists('Zeit für Delta T') then
+              setup_deltattime:=LReg.ReadFloat('Zeit für Delta T');
+          except
+            setup_priceperkwh:=28.0;
+            setup_deltattime:=15;
+          end;
+
+          // Verzeichnis für Dateien
+          if LReg.ValueExists('Datafolder') then
+            setup_logdirectory:=LReg.ReadString('Datafolder');
+	      end;
+ 			end;
+    end;
+  end;
+  LReg.CloseKey;
+  LReg.Free;
+
+  ActivateCOMPort(comportnumber, baudrate);
+
+  Memo1.Lines.Clear;
+  Memo1.Lines.Add(_('Datum; Uhrzeit; Temperatur 1 [°C]; Temperatur 2 [°C]; Temperatur 3 [°C]; Delta-Temp [°C]; Verbrauch [kWh]; Kosten [€]'));
+
+  Label3.Caption:='('+setup_temp2text+')';
+  Label4.Caption:='('+setup_temp3text+')';
+  Label6.Caption:='('+inttostr(round(setup_deltattime))+'min)';
 
 
   // Chart vorbereiten
@@ -1063,84 +1139,38 @@ end;
 
 procedure TConfig.TestCaseBtnClick(Sender: TObject);
 begin
-  CurrentTemp:=1.1;
   DemoData.Enabled:=true;
   SekundenTimer.Enabled:=true;
   SekundenTimer.Interval:=75;
-  FuenfzehnminutenCounter:=round(setupform.TimeForDeltaTEdit.Value*60)-20;
+  FuenfzehnminutenCounter:=round(setup_deltattime*60)-20;
 end;
 
 procedure TConfig.DemoDataTimer(Sender: TObject);
 begin
-  CurrentTemp:=CurrentTemp+0.01;
+  t_amb:=(random(256)/256)*30;
 
-  DLLSendMessageTest(integer(14), integer(random(10)+60), integer(random(255)));
-
-  if CurrentTemp>30 then
-    CurrentTemp:=CurrentTemp-10;
+{
+  t_amb:=t_amb+0.1;
+  if t_amb>30 then
+    t_amb:=t_amb-10;
+}
 
   if TempVor15Minuten=-1000 then
-    TempVor15Minuten:=CurrentTemp;
+    TempVor15Minuten:=t_amb;
 end;
 
-procedure TConfig.DLLSendMessageTest(MSG, Data1, Data2: Variant);
+procedure TConfig.SavePng(Bitmap: TBitmap; Destination:string);
 var
-  i:integer;
+  Png: TPNGObject;
 begin
-      if Integer(Data1)=round(setupform.temp2_msb.value) then
-      begin
-        config.temp2msb:=Integer(Data2);
-      end;
-      if Integer(Data1)=round(setupform.temp2_lsb.value) then
-      begin
-        config.temp2lsb:=Integer(Data2);
-        config.CurrentTemp2[config.CurrentTemp2MeanIndex]:=(((config.temp2msb shl 8)+config.temp2lsb)-550)/10;
-        config.CurrentTemp2MeanIndex:=config.CurrentTemp2MeanIndex+1;
-        if config.CurrentTemp2MeanIndex>=length(config.CurrentTemp2) then
-          config.CurrentTemp2MeanIndex:=0;
-      end;
-
-      if Integer(Data1)=round(setupform.temp3_msb.value) then
-      begin
-        config.temp3msb:=Integer(Data2);
-      end;
-      if Integer(Data1)=round(setupform.temp3_lsb.value) then
-      begin
-        config.temp3lsb:=Integer(Data2);
-        config.CurrentTemp3[config.CurrentTemp3MeanIndex]:=(((config.temp3msb shl 8)+config.temp3lsb)-550)/10;
-        config.CurrentTemp3MeanIndex:=config.CurrentTemp3MeanIndex+1;
-        if config.CurrentTemp3MeanIndex>=length(config.CurrentTemp3) then
-          config.CurrentTemp3MeanIndex:=0;
-      end;
-
-      config.CurrentTemp2Mean:=0;
-      config.CurrentTemp3Mean:=0;
-      for i:=0 to length(config.CurrentTemp2)-1 do
-      begin
-        config.CurrentTemp2Mean:=config.CurrentTemp2Mean+config.CurrentTemp2[i];
-        config.CurrentTemp3Mean:=config.CurrentTemp3Mean+config.CurrentTemp3[i];
-      end;
-      config.CurrentTemp2Mean:=config.CurrentTemp2Mean/length(config.CurrentTemp2);
-      config.CurrentTemp3Mean:=config.CurrentTemp3Mean/length(config.CurrentTemp3);
-
-      config.temp2lbl.caption:=floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+'°C';
-      config.temp3lbl.caption:=floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+'°C';
-end;
-
-procedure TConfig.FormClose(Sender: TObject; var Action: TCloseAction);
-var
-  LReg:TRegistry;
-begin
-  LReg:=TRegistry.Create;
-  LReg.RootKey:=HKEY_CURRENT_USER;
-  LReg.OpenKey('Software', True);
-  LReg.OpenKey('PHOENIXstudios', True);
-  LReg.OpenKey('PC_DIMMER', True);
-  if not LReg.KeyExists(ExtractFileName(GetModulePath)) then
-    LReg.CreateKey(ExtractFileName(GetModulePath));
-  LReg.OpenKey(ExtractFileName(GetModulePath), False);
-  LReg.WriteBool('Showing Plugin', True);
-  LReg.Free;
+  Png := TPNGObject.Create;
+  try
+    Png.Transparent:=false;
+    Png.Assign(Bitmap);
+    Png.SaveToFile(Destination);
+  finally
+    Png.Free;
+  end;
 end;
 
 end.

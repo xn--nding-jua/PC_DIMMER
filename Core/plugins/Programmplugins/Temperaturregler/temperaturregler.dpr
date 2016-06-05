@@ -44,16 +44,18 @@ end;
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
+  SetProcessAffinityMask(GetCurrentProcess, 1); // 1=CPU0 , 2=CPU1
+
   ShuttingDown:=false;
-  config:=Tconfig.Create(Application);
-  setupform:=tsetupform.create(Application);
+  config:=Tconfig.Create(nil);
+
   @Config.SetDLLEvent:=CallbackSetDLLValueEvent;
   @Config.SendMSG:=CallbackSendMessage;
+  @Config.GetDLLValue:=CallbackGetDLLValue;
 end;
 
 procedure DLLStart;stdcall;
 begin
-  // DLL wird bei FormShow() gestartet
   config.StartUp;
 end;
 
@@ -65,25 +67,25 @@ var
 begin
   ShuttingDown:=true;
 
-  // Letzte Temperaturwerte eintragen
-  Config.Memo1.Lines.Add(DateToStr(now)+';'+TimeToStr(now)+';'+
-    floattostrf(Config.CurrentTemp, ffFixed, 5, 1)+';'+
-    floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+';'+
-    floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+';'+
-    floattostrf((Config.CurrentTemp-Config.TempVor15Minuten), ffFixed, 5, 1)+';'+
-    floattostrf(Config.Kilowattstunden+(7.5*(1/3600)), ffFixed, 5, 6)+';'+
-    floattostrf(Config.Kilowattstunden+(7.5*(1/3600))*0.24, ffFixed, 5, 6));
-
   config.chart.Options.AutoUpdateGraph:=false;
   if config.comport.Connected then
 		Config.comport.Disconnect;
   Config.SekundenTimer.Enabled:=false;
 
   // Datei abspeichern
-  if setupform.savefilestoedit.Text<>'' then
+  if config.setup_logdirectory<>'' then
   begin
-    if not DirectoryExists(setupform.savefilestoedit.Text) then
-      CreateDir(setupform.savefilestoedit.Text);
+    // Letzte Temperaturwerte eintragen
+    Config.Memo1.Lines.Add(DateToStr(now)+';'+TimeToStr(now)+';'+
+      floattostrf(Config.t_amb, ffFixed, 5, 1)+';'+
+      floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+';'+
+      floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+';'+
+      floattostrf((Config.t_amb-Config.TempVor15Minuten), ffFixed, 5, 1)+';'+
+      floattostrf(Config.Kilowattstunden+((config.setup_installedpower/1000)*(1/3600)), ffFixed, 5, 6)+';'+
+      floattostrf(Config.Kilowattstunden+((config.setup_installedpower/1000)*(1/3600))*(config.setup_priceperkwh/100), ffFixed, 5, 6));
+
+    if not DirectoryExists(config.setup_logdirectory) then
+      CreateDir(config.setup_logdirectory);
     DecodeDate(Date(), CurrYear, CurrMonth, CurrDay);
     Month:=inttostr(CurrMonth);
     Day:=inttostr(CurrDay);
@@ -91,12 +93,12 @@ begin
       Month:='0'+Month;
     if length(Day)<2 then
       Day:='0'+Day;
-    Config.Memo1.Lines.SaveToFile(setupform.savefilestoedit.Text+'\'+inttostr(CurrYear)+Month+Day+'_'+
-      stringreplace(TimeToStr(now), ':', '', [rfReplaceAll, rfIgnoreCase])+'_Temperatur.csv');
-  end;
 
-  Application.ProcessMessages;
-  sleep(150);
+    Config.Memo1.Lines.SaveToFile(config.setup_logdirectory+'\'+inttostr(CurrYear)+Month+Day+'_'+
+      stringreplace(TimeToStr(now), ':', '', [rfReplaceAll, rfIgnoreCase])+'_Temperatur.csv');
+    config.SavePng(config.chart.Picture.Bitmap, config.setup_logdirectory+'\'+inttostr(CurrYear)+Month+Day+'_'+
+      stringreplace(TimeToStr(now), ':', '', [rfReplaceAll, rfIgnoreCase])+'_Temperatur.png');
+  end;
 
   Config.Shutdown:=true;
 
@@ -109,16 +111,8 @@ begin
   LReg.WriteBool('Showing Plugin', config.Showing);
   LReg.Free;
 
-  Application.ProcessMessages;
-  sleep(150);
-
-	@config.SetDLLEvent:=nil;
-
-  setupform.release;
+  config.close;
 	Config.release;
-
-  Application.ProcessMessages;
-  sleep(150);
 
   Result:=True;
 end;
@@ -135,7 +129,7 @@ end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v1.8');
+  Result := PChar('v2.1');
 end;
 
 function DLLGetResourceData(const ResName: PChar; Buffer: Pointer; var Length: Integer):boolean;stdcall;
@@ -193,8 +187,6 @@ begin
 end;
 
 procedure DLLSendMessage(MSG:Byte; Data1, Data2:Variant);stdcall;
-var
-  i:integer;
 begin
   if ShuttingDown then
     exit;
@@ -202,44 +194,6 @@ begin
   case MSG of
     MSG_ACTUALCHANNELVALUE:
     begin
-      if Integer(Data1)=round(setupform.temp2_msb.value) then
-      begin
-        config.temp2msb:=Integer(Data2);
-      end;
-      if Integer(Data1)=round(setupform.temp2_lsb.value) then
-      begin
-        config.temp2lsb:=Integer(Data2);
-        config.CurrentTemp2[config.CurrentTemp2MeanIndex]:=(((config.temp2msb shl 8)+config.temp2lsb)-550)/10;
-        config.CurrentTemp2MeanIndex:=config.CurrentTemp2MeanIndex+1;
-        if config.CurrentTemp2MeanIndex>=length(config.CurrentTemp2) then
-          config.CurrentTemp2MeanIndex:=0;
-      end;
-
-      if Integer(Data1)=round(setupform.temp3_msb.value) then
-      begin
-        config.temp3msb:=Integer(Data2);
-      end;
-      if Integer(Data1)=round(setupform.temp3_lsb.value) then
-      begin
-        config.temp3lsb:=Integer(Data2);
-        config.CurrentTemp3[config.CurrentTemp3MeanIndex]:=(((config.temp3msb shl 8)+config.temp3lsb)-550)/10;
-        config.CurrentTemp3MeanIndex:=config.CurrentTemp3MeanIndex+1;
-        if config.CurrentTemp3MeanIndex>=length(config.CurrentTemp3) then
-          config.CurrentTemp3MeanIndex:=0;
-      end;
-
-      config.CurrentTemp2Mean:=0;
-      config.CurrentTemp3Mean:=0;
-      for i:=0 to length(config.CurrentTemp2)-1 do
-      begin
-        config.CurrentTemp2Mean:=config.CurrentTemp2Mean+config.CurrentTemp2[i];
-        config.CurrentTemp3Mean:=config.CurrentTemp3Mean+config.CurrentTemp3[i];
-      end;
-      config.CurrentTemp2Mean:=config.CurrentTemp2Mean/length(config.CurrentTemp2);
-      config.CurrentTemp3Mean:=config.CurrentTemp3Mean/length(config.CurrentTemp3);
-
-      config.temp2lbl.caption:=floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+'°C';
-      config.temp3lbl.caption:=floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+'°C';
     end;
     MSG_EDITPLUGINSCENE:
     begin
@@ -250,11 +204,6 @@ begin
       if string(Data1)='{EB86EDF4-F750-420C-81D9-3023741988E8}' then
       begin
         //Temperaturregler: Ein
-        if Config.FirstShow then
-        begin
-          Config.FirstShow:=false;
-          Config.StartUp;
-        end;
         Config.tempon.StateOn:=true;
         Config.tempon.OnOn(nil);
       end;

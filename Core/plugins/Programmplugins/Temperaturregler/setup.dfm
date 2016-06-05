@@ -1,6 +1,6 @@
 object setupform: Tsetupform
-  Left = 188
-  Top = 143
+  Left = 194
+  Top = 220
   BorderStyle = bsSingle
   Caption = 'Einstellungen'
   ClientHeight = 337
@@ -13,6 +13,7 @@ object setupform: Tsetupform
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object GroupBox1: TGroupBox
@@ -49,33 +50,6 @@ object setupform: Tsetupform
       Font.Style = []
       ParentFont = False
     end
-    object Label5: TLabel
-      Left = 112
-      Top = 64
-      Width = 33
-      Height = 13
-      Caption = 'Status:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentFont = False
-    end
-    object statuslabel: TLabel
-      Left = 112
-      Top = 83
-      Width = 233
-      Height = 13
-      AutoSize = False
-      Caption = 'Nicht verbunden...'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clRed
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
     object baudratechange: TComboBox
       Left = 8
       Top = 80
@@ -84,7 +58,6 @@ object setupform: Tsetupform
       Style = csDropDownList
       ItemHeight = 13
       TabOrder = 0
-      OnSelect = baudratechangeSelect
       Items.Strings = (
         '115200'
         '57600'
@@ -100,7 +73,6 @@ object setupform: Tsetupform
       Style = csDropDownList
       ItemHeight = 13
       TabOrder = 1
-      OnSelect = portchangeSelect
       Items.Strings = (
         '1'
         '2'

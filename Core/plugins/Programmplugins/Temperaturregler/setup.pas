@@ -12,8 +12,6 @@ type
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
-    Label5: TLabel;
-    statuslabel: TLabel;
     baudratechange: TComboBox;
     portchange: TComboBox;
     Button1: TButton;
@@ -60,9 +58,8 @@ type
     Temp2LabelEdit: TEdit;
     Temp3LabelEdit: TEdit;
     procedure Button1Click(Sender: TObject);
-    procedure portchangeSelect(Sender: TObject);
     procedure Button2Click(Sender: TObject);
-    procedure baudratechangeSelect(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -95,47 +92,8 @@ begin
 	    CloseHandle(TestHandle);
 	  end;
 	end;
-end;
 
-procedure Tsetupform.portchangeSelect(Sender: TObject);
-var
-  temp:string;
-begin
-  with config do
-  begin
-    if (portchange.Items.Count>0) and (portchange.itemindex>-1) then
-    begin
-      temp:=copy(portchange.Items[portchange.Itemindex],4,2);
-      if temp[2]=' ' then
-        comportnumber:=strtoint(temp[1])
-      else
-        comportnumber:=strtoint(temp);
-
-      if comport.Connected then
-        comport.Disconnect;
-      case comportnumber of
-        1: comport.port:=pnCOM1;   2: comport.port:=pnCOM2;
-        3: comport.port:=pnCOM3;   4: comport.port:=pnCOM4;
-        5: comport.port:=pnCOM5;   6: comport.port:=pnCOM6;
-        7: comport.port:=pnCOM7;   8: comport.port:=pnCOM8;
-        9: comport.port:=pnCOM9;   10: comport.port:=pnCOM10;
-        11: comport.port:=pnCOM11;   12: comport.port:=pnCOM12;
-        13: comport.port:=pnCOM13;   14: comport.port:=pnCOM14;
-        15: comport.port:=pnCOM15;   16: comport.port:=pnCOM16;
-      end;
-      comport.Connect;
-    end;
-
-    if comport.Connected then
-    begin
-      statuslabel.Caption:=_('Verbunden mit COM')+inttostr(comportnumber)+' @ '+inttostr(baudrate);
-      statuslabel.Font.Color:=clGreen;
-    end else
-    begin
-      statuslabel.Caption:=_('Nicht verbunden...');
-      statuslabel.Font.Color:=clRed;
-    end;
-  end;
+  portchange.Visible:=portchange.Items.count>0;
 end;
 
 procedure Tsetupform.Button2Click(Sender: TObject);
@@ -148,26 +106,42 @@ begin
               '((WORD/2047)*200)-50');
 end;
 
-procedure Tsetupform.baudratechangeSelect(Sender: TObject);
+procedure Tsetupform.FormShow(Sender: TObject);
+var
+  i:integer;
+  temp:string;
 begin
-  with config do
+  portchange.ItemIndex:=0;
+  for i:=0 to portchange.items.count-1 do
   begin
-    baudrate:=strtoint(baudratechange.Items[baudratechange.Itemindex]);
-
-    if comport.Connected then
-      comport.Disconnect;
-    comport.BaudRateValue:=baudrate;
-    comport.Connect;
-
-    if comport.Connected then
+    temp:=copy(portchange.Items[i],4,2);
+    if temp[2]=' ' then
     begin
-      statuslabel.Caption:=_('Verbunden mit COM')+inttostr(comportnumber)+' @ '+inttostr(baudrate);
-      statuslabel.Font.Color:=clGreen;
+      // einstellig
+      if config.comportnumber=strtoint(temp[1]) then
+      begin
+        portchange.ItemIndex:=i;
+        break;
+      end;
     end else
     begin
-      statuslabel.Caption:=_('Nicht verbunden...');
-      statuslabel.Font.Color:=clRed;
+      // zweistellig
+      if config.comportnumber=strtoint(temp) then
+      begin
+        portchange.ItemIndex:=i;
+        break;
+      end;
     end;
+  end;
+
+  case config.baudrate of
+    115200: baudratechange.ItemIndex:=0;
+    57600: baudratechange.ItemIndex:=1;
+    38400: baudratechange.ItemIndex:=2;
+    19200: baudratechange.ItemIndex:=3;
+    9600: baudratechange.ItemIndex:=4;
+  else
+    baudratechange.ItemIndex:=0;
   end;
 end;
 
