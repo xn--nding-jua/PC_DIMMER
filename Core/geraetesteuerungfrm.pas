@@ -83,6 +83,7 @@ type
     ddffilename:string[255];
     funktionen:string;
     hasDimmer:boolean;
+    hasShutter:boolean;
     hasVirtualRGBAWDimmer:boolean;
     hasRGB:boolean;
     hasCMY:boolean;
@@ -745,6 +746,8 @@ begin
      	  Filestream.ReadBuffer(mainform.Devices[i].bank[j],sizeof(mainform.Devices[i].bank[j]));
       end;
    	  Filestream.ReadBuffer(mainform.Devices[i].hasDimmer,sizeof(mainform.Devices[i].hasDIMMER));
+      if Version>=481 then
+        Filestream.ReadBuffer(mainform.Devices[i].hasShutter,sizeof(mainform.Devices[i].hasShutter));
       if Version>=464 then
      	  Filestream.ReadBuffer(mainform.Devices[i].hasVirtualRGBAWDimmer,sizeof(mainform.Devices[i].hasVirtualRGBAWDIMMER));
    	  Filestream.ReadBuffer(mainform.Devices[i].hasRGB,sizeof(mainform.Devices[i].hasRGB));
@@ -1061,6 +1064,7 @@ begin
       Filestream.WriteBuffer(mainform.Devices[i].bank[j],sizeof(mainform.Devices[i].bank[j]));
     end;
     Filestream.WriteBuffer(mainform.Devices[i].hasDimmer,sizeof(mainform.Devices[i].hasDIMMER));
+    Filestream.WriteBuffer(mainform.Devices[i].hasShutter,sizeof(mainform.Devices[i].hasShutter));
     Filestream.WriteBuffer(mainform.Devices[i].hasVirtualRGBAWDimmer,sizeof(mainform.Devices[i].hasVirtualRGBAWDIMMER));
     Filestream.WriteBuffer(mainform.Devices[i].hasRGB,sizeof(mainform.Devices[i].hasRGB));
     Filestream.WriteBuffer(mainform.Devices[i].hasCMY,sizeof(mainform.Devices[i].hasCMY));
@@ -1377,6 +1381,7 @@ begin
         mainform.Devices[length(mainform.Devices)-1].MaxChan:=deviceprototyp[devposition].MaxChan;
         mainform.Devices[length(mainform.Devices)-1].color:=clWhite;
         mainform.Devices[length(mainform.Devices)-1].hasDimmer:=deviceprototyp[devposition].hasDimmer;
+        mainform.Devices[length(mainform.Devices)-1].hasShutter:=deviceprototyp[devposition].hasShutter;
         mainform.Devices[length(mainform.Devices)-1].hasVirtualRGBAWDimmer:=deviceprototyp[devposition].hasVirtualRGBAWDimmer;
         mainform.Devices[length(mainform.Devices)-1].hasRGB:=deviceprototyp[devposition].hasRGB;
         mainform.Devices[length(mainform.Devices)-1].hasCMY:=deviceprototyp[devposition].hasCMY;
@@ -2279,6 +2284,7 @@ begin
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].MaxChan:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].MaxChan;
 
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasDimmer:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasDimmer;
+        mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasShutter:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasShutter;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasVirtualRGBAWDimmer:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasVirtualRGBAWDimmer;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasRGB:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasRGB;
         mainform.Devices[GetDevicePositionInDeviceArray(@Data^.ID)].hasCMY:=deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].hasCMY;
@@ -3784,6 +3790,7 @@ begin
           mainform.devices[i].IrisMaxValue:=DevicePrototyp[j].IrisMaxValue;
 
           mainform.devices[i].hasDimmer:=DevicePrototyp[j].hasDimmer;
+          mainform.devices[i].hasShutter:=DevicePrototyp[j].hasShutter;
           mainform.devices[i].hasVirtualRGBAWDimmer:=DevicePrototyp[j].hasVirtualRGBAWDimmer;
           mainform.devices[i].hasRGB:=DevicePrototyp[j].hasRGB;
           mainform.devices[i].hasCMY:=DevicePrototyp[j].hasCMY;
@@ -4066,6 +4073,7 @@ begin
   mainform.devices[Destination].OldPos:=mainform.devices[Source].OldPos;
 
   mainform.devices[Destination].hasDimmer:=mainform.devices[Source].hasDimmer;
+  mainform.devices[Destination].hasShutter:=mainform.devices[Source].hasShutter;
   mainform.devices[Destination].hasVirtualRGBAWDimmer:=mainform.devices[Source].hasVirtualRGBAWDimmer;
   mainform.devices[Destination].hasRGB:=mainform.devices[Source].hasRGB;
   mainform.devices[Destination].hasCMY:=mainform.devices[Source].hasCMY;
@@ -4728,6 +4736,8 @@ begin
               geraetesteuerung.DevicePrototyp[i].hasPANTILT:=true;
           if lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('DIMMER') then
             geraetesteuerung.DevicePrototyp[i].hasDimmer:=true;
+          if lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('SHUTTER') then
+            geraetesteuerung.DevicePrototyp[i].hasShutter:=true;
           if (lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('VIRTUALRGBDIMMER')) or
             (lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('VIRTUALRGBADIMMER')) or
             (lowercase(geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))])=lowercase('VIRTUALRGBAWDIMMER')) then

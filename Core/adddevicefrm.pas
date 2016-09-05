@@ -639,6 +639,7 @@ begin
           geraetesteuerung.DevicePrototyp[i].kanaltyp[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))]:=lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'));
           geraetesteuerung.DevicePrototyp[i].kanalfade[strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('channel'))]:=lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('fade'))='yes';
           if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('DIMMER') then geraetesteuerung.DevicePrototyp[i].hasDimmer:=true;
+          if lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('SHUTTER') then geraetesteuerung.DevicePrototyp[i].hasShutter:=true;
           if (lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('VIRTUALRGBDIMMER')) or
             (lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('VIRTUALRGBADIMMER')) or
             (lowercase(XML.XML.Root.Items[j].Items[k].Properties.Value('type'))=lowercase('VIRTUALRGBAWDIMMER')) then

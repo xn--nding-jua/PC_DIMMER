@@ -77,6 +77,12 @@ begin
   	geraetesteuerung.set_channel(mainform.devices[i].ID,'r',geraetesteuerung.get_channel(mainform.devices[i].ID,'r'),geraetesteuerung.get_channel(mainform.devices[i].ID,'r'),0);
   	geraetesteuerung.set_channel(mainform.devices[i].ID,'g',geraetesteuerung.get_channel(mainform.devices[i].ID,'g'),geraetesteuerung.get_channel(mainform.devices[i].ID,'g'),0);
   	geraetesteuerung.set_channel(mainform.devices[i].ID,'b',geraetesteuerung.get_channel(mainform.devices[i].ID,'b'),geraetesteuerung.get_channel(mainform.devices[i].ID,'b'),0);
+  	geraetesteuerung.set_channel(mainform.devices[i].ID,'a',geraetesteuerung.get_channel(mainform.devices[i].ID,'a'),geraetesteuerung.get_channel(mainform.devices[i].ID,'a'),0);
+  	geraetesteuerung.set_channel(mainform.devices[i].ID,'w',geraetesteuerung.get_channel(mainform.devices[i].ID,'w'),geraetesteuerung.get_channel(mainform.devices[i].ID,'w'),0);
+  	geraetesteuerung.set_channel(mainform.devices[i].ID,'uv',geraetesteuerung.get_channel(mainform.devices[i].ID,'uv'),geraetesteuerung.get_channel(mainform.devices[i].ID,'uv'),0);
+  	geraetesteuerung.set_channel(mainform.devices[i].ID,'c',geraetesteuerung.get_channel(mainform.devices[i].ID,'c'),geraetesteuerung.get_channel(mainform.devices[i].ID,'c'),0);
+  	geraetesteuerung.set_channel(mainform.devices[i].ID,'m',geraetesteuerung.get_channel(mainform.devices[i].ID,'m'),geraetesteuerung.get_channel(mainform.devices[i].ID,'m'),0);
+  	geraetesteuerung.set_channel(mainform.devices[i].ID,'y',geraetesteuerung.get_channel(mainform.devices[i].ID,'y'),geraetesteuerung.get_channel(mainform.devices[i].ID,'y'),0);
   end;
   Timer1Timer(Sender);
   mainform.SendMSG(MSG_GRANDMASTER, 255-dimmermaster.Position, 0);

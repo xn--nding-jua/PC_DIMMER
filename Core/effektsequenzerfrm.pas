@@ -478,6 +478,20 @@ begin
     VST.InvertSelection(false);
     VST.FocusedNode:=VSTEffektNodes[New^.Effektnummer][New^.Position];
     VST.Selected[VSTEffektNodes[New^.Effektnummer][New^.Position]]:=true;
+  end else
+  begin
+//    RefreshTreeView;
+    Old:=VST.GetNodeData(VSTEffektNodes[Data^.EffektnummerInTree][Data^.Position]);
+    New:=VST.GetNodeData(VSTEffektNodes[Data^.EffektnummerInTree][Data^.Position-1]);
+
+    Old^.Caption:=newtext;
+    Old^.Beschreibung:=newdesc;
+    New^.Caption:=oldtext;
+    New^.Beschreibung:=olddesc;
+    VST.SelectAll(false);
+    VST.InvertSelection(false);
+    VST.FocusedNode:=VSTEffektNodes[New^.EffektnummerInTree][New^.Position];
+    VST.Selected[VSTEffektNodes[New^.EffektnummerInTree][New^.Position]]:=true;
   end;
   
   checkbuttons;
@@ -536,6 +550,21 @@ begin
     VST.InvertSelection(false);
     VST.FocusedNode:=VSTEffektNodes[New^.Effektnummer][New^.Position];
     VST.Selected[VSTEffektNodes[New^.Effektnummer][New^.Position]]:=true;
+  end else
+  begin
+    //RefreshTreeView;
+    Old:=VST.GetNodeData(VSTEffektNodes[Data^.EffektnummerInTree][Data^.Position]);
+    New:=VST.GetNodeData(VSTEffektNodes[Data^.EffektnummerInTree][Data^.Position+1]);
+
+    Old^.Caption:=newtext;
+    Old^.Beschreibung:=newdesc;
+    New^.Caption:=oldtext;
+    New^.Beschreibung:=olddesc;
+
+    VST.SelectAll(false);
+    VST.InvertSelection(false);
+    VST.FocusedNode:=VSTEffektNodes[New^.EffektnummerInTree][New^.Position];
+    VST.Selected[VSTEffektNodes[New^.EffektnummerInTree][New^.Position]]:=true;
   end;
 
   checkbuttons;
@@ -3497,7 +3526,7 @@ end;
 procedure Teffektsequenzer.effekttotabSelect(Sender: TObject);
 var
   Data: PTreeData;
-  i,j:integer;
+  TempNode:PVirtualNode;
 begin
   if not mainform.UserAccessGranted(1) then exit;
 
@@ -3509,18 +3538,19 @@ begin
       mainform.Effektsequenzereffekte[Data^.Effektnummer].TabPosition:=effekttotab.ItemIndex;
     end else
     begin
-      for i:=0 to length(VSTEffektNodes)-1 do
-      for j:=0 to length(VSTEffektNodes[i])-1 do
-      if VST.Selected[VSTEffektNodes[i][j]] or VST.Selected[VSTEffektNodes[i][j].Parent] then
+      TempNode:=VST.GetFirst;
+      while Assigned(TempNode) do
       begin
-        Data:=VST.GetNodeData(VSTEffektNodes[i][j]);
-        mainform.Effektsequenzereffekte[Data^.Effektnummer].TabPosition:=effekttotab.ItemIndex;
+        if VST.Selected[TempNode] then
+        begin
+          Data:=VST.GetNodeData(TempNode);
+          if (Data^.Effektnummer<length(mainform.Effektsequenzereffekte)) and (Data^.Effektnummer>-1) then
+            mainform.Effektsequenzereffekte[Data^.Effektnummer].TabPosition:=effekttotab.ItemIndex;
+        end;
+
+        TempNode:=VST.GetNext(TempNode);
       end;
     end;
-
-//    if VST.SelectedCount=0 then exit;
-//    Data:=VST.GetNodeData(VST.FocusedNode);
-//    mainform.Effektsequenzereffekte[Data^.Effektnummer].TabPosition:=effekttotab.ItemIndex;
   end;
   RefreshTreeView;
 end;

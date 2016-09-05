@@ -3,7 +3,7 @@
 {**  PHOENIXstudios PC_DIMMER                                                   **}
 {**  Copyrights (c) 2004-2016 by PHOENIXstudios Remsfeld                        **}
 {**                                                                             **}
-{**  Author: Dipl.-Ing. Christian Nöding, info@pcdimmer.de                      **}
+{**  Author: Dr.-Ing. Christian Nöding, info@pcdimmer.de                        **}
 {**  Co-Author: Martin Mikula (2012-2013)                                       **}
 {**                                                                             **}
 {**  Website: http://www.pcdimmer.de (Updates, Infos, etc.)                     **}
@@ -54,7 +54,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=480;
+  actualprojectversion=482;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -2711,9 +2711,13 @@ begin
               useCalibrationValue:=true;
             end;
 
-            if (devices[k].kanaltyp[address-devices[k].Startaddress]='dimmer') or (devices[k].kanaltyp[address-devices[k].Startaddress]='r') or (devices[k].kanaltyp[address-devices[k].Startaddress]='g') or (devices[k].kanaltyp[address-devices[k].Startaddress]='b') or (devices[k].kanaltyp[address-devices[k].Startaddress]='a') then
+            if (devices[k].kanaltyp[address-devices[k].Startaddress]='dimmer') or (devices[k].kanaltyp[address-devices[k].Startaddress]='r') or
+             (devices[k].kanaltyp[address-devices[k].Startaddress]='g') or (devices[k].kanaltyp[address-devices[k].Startaddress]='b') or
+             (devices[k].kanaltyp[address-devices[k].Startaddress]='a') or (devices[k].kanaltyp[address-devices[k].Startaddress]='w') or
+             (devices[k].kanaltyp[address-devices[k].Startaddress]='uv') or (devices[k].kanaltyp[address-devices[k].Startaddress]='c') or
+             (devices[k].kanaltyp[address-devices[k].Startaddress]='m') or (devices[k].kanaltyp[address-devices[k].Startaddress]='y') then
             begin
-              // falls aktueller Kanal DIMMER, R, G, B oder A
+              // falls aktueller Kanal DIMMER, R, G, B, A, UV, C, M, Y
               startvalue_Calibrated:=round(((maxres-masterform.dimmermaster.position)/maxres)*startvalue);
               endvalue_Calibrated:=round(((maxres-masterform.dimmermaster.position)/maxres)*endvalue);
               useCalibrationValue:=true;
@@ -2725,9 +2729,12 @@ begin
                   (devices[k].kanaltyp[address-devices[k].Startaddress]='b') or
                   (devices[k].kanaltyp[address-devices[k].Startaddress]='a') or
                   (devices[k].kanaltyp[address-devices[k].Startaddress]='w') or
-                  (devices[k].kanaltyp[address-devices[k].Startaddress]='uv')) then
+                  (devices[k].kanaltyp[address-devices[k].Startaddress]='uv') or
+                  (devices[k].kanaltyp[address-devices[k].Startaddress]='c') or
+                  (devices[k].kanaltyp[address-devices[k].Startaddress]='m') or
+                  (devices[k].kanaltyp[address-devices[k].Startaddress]='y')) then
                 begin
-                  // falls aktueller Kanal R,G,B,A,W oder UV
+                  // falls aktueller Kanal R,G,B,A,W, UV, C, M, Y
                   virtualdimmerfaktor:=(geraetesteuerung.get_channel(devices[k].ID, 'DIMMER')/maxres);
                   startvalue_Calibrated:=round(maxres-(virtualdimmerfaktor*(maxres-startvalue)));
                   endvalue_Calibrated:=round(maxres-(virtualdimmerfaktor*(maxres-endvalue)));
@@ -2742,6 +2749,9 @@ begin
                   geraetesteuerung.set_channel(devices[k].ID, 'a', -1, geraetesteuerung.get_channel(devices[k].ID, 'a'), 0);
                   geraetesteuerung.set_channel(devices[k].ID, 'w', -1, geraetesteuerung.get_channel(devices[k].ID, 'w'), 0);
                   geraetesteuerung.set_channel(devices[k].ID, 'uv', -1, geraetesteuerung.get_channel(devices[k].ID, 'uv'), 0);
+                  geraetesteuerung.set_channel(devices[k].ID, 'c', -1, geraetesteuerung.get_channel(devices[k].ID, 'c'), 0);
+                  geraetesteuerung.set_channel(devices[k].ID, 'm', -1, geraetesteuerung.get_channel(devices[k].ID, 'm'), 0);
+                  geraetesteuerung.set_channel(devices[k].ID, 'y', -1, geraetesteuerung.get_channel(devices[k].ID, 'y'), 0);
                 end;
               end;
             end;
@@ -2876,11 +2886,15 @@ begin
         begin
           // Filterfunktionen für Pan, Tilt, Dimmer und Farbkanäle RGBA
           // !! Achtung weitere Filterfunktion findet in der Funktion .senddata statt!!
-          if (devices[k].kanaltyp[tempvalue]='dimmer') or (devices[k].kanaltyp[tempvalue]='r') or (devices[k].kanaltyp[tempvalue]='g') or (devices[k].kanaltyp[tempvalue]='b') or (devices[k].kanaltyp[tempvalue]='a') then
+          if (devices[k].kanaltyp[tempvalue]='dimmer') or (devices[k].kanaltyp[tempvalue]='r') or
+           (devices[k].kanaltyp[tempvalue]='g') or (devices[k].kanaltyp[tempvalue]='b') or
+           (devices[k].kanaltyp[tempvalue]='a') or (devices[k].kanaltyp[tempvalue]='w') or
+           (devices[k].kanaltyp[tempvalue]='uv') or (devices[k].kanaltyp[tempvalue]='c') or
+           (devices[k].kanaltyp[tempvalue]='m') or (devices[k].kanaltyp[tempvalue]='y') then
           begin
-            // Gerät benutzt auf aktuellem Kanal DIMMER, R,G,B oder Amber
+            // Gerät benutzt auf aktuellem Kanal DIMMER, R,G,B,A,UV,C,M,Y
 
-            // falls aktueller Kanal DIMMER oder R, G, B oder A
+            // falls aktueller Kanal DIMMER oder R, G, B, A, UV, C, M, Y
             Value:=round(((maxres-masterform.dimmermaster.position)/maxres)*FilterWithDimmcurve(Data1,Data2));
             useCalibrationValue:=true;
 
@@ -2891,21 +2905,27 @@ begin
                 (devices[k].kanaltyp[tempvalue]='b') or
                 (devices[k].kanaltyp[tempvalue]='a') or
                 (devices[k].kanaltyp[tempvalue]='w') or
-                (devices[k].kanaltyp[tempvalue]='uv')) then
+                (devices[k].kanaltyp[tempvalue]='uv') or
+                (devices[k].kanaltyp[tempvalue]='c') or
+                (devices[k].kanaltyp[tempvalue]='m') or
+                (devices[k].kanaltyp[tempvalue]='y')) then
               begin
-                // falls aktueller Kanal R,G,B,A,W oder UV und aktivierter VirtualDimmer, dann diesen berechnen
+                // falls aktueller Kanal R,G,B,A,W, UV, C,M,Y und aktivierter VirtualDimmer, dann diesen berechnen
                 virtualdimmerfaktor:=(geraetesteuerung.get_channel(devices[k].ID, 'DIMMER')/255);
                 Value:=round(virtualdimmerfaktor*Integer(Data2));
               end;
               if (devices[k].kanaltyp[tempvalue]='dimmer') then
               begin
-                // R,G,B,A,W,UV aktualisieren
+                // R,G,B,A,W,UV,C,M,Y aktualisieren
                 geraetesteuerung.set_channel(devices[k].ID, 'r', -1, geraetesteuerung.get_channel(devices[k].ID, 'r'), 0);
                 geraetesteuerung.set_channel(devices[k].ID, 'g', -1, geraetesteuerung.get_channel(devices[k].ID, 'g'), 0);
                 geraetesteuerung.set_channel(devices[k].ID, 'b', -1, geraetesteuerung.get_channel(devices[k].ID, 'b'), 0);
                 geraetesteuerung.set_channel(devices[k].ID, 'a', -1, geraetesteuerung.get_channel(devices[k].ID, 'a'), 0);
                 geraetesteuerung.set_channel(devices[k].ID, 'w', -1, geraetesteuerung.get_channel(devices[k].ID, 'w'), 0);
                 geraetesteuerung.set_channel(devices[k].ID, 'uv', -1, geraetesteuerung.get_channel(devices[k].ID, 'uv'), 0);
+                geraetesteuerung.set_channel(devices[k].ID, 'c', -1, geraetesteuerung.get_channel(devices[k].ID, 'c'), 0);
+                geraetesteuerung.set_channel(devices[k].ID, 'm', -1, geraetesteuerung.get_channel(devices[k].ID, 'm'), 0);
+                geraetesteuerung.set_channel(devices[k].ID, 'y', -1, geraetesteuerung.get_channel(devices[k].ID, 'y'), 0);
               end;
             end;
           end else if ((devices[k].kanaltyp[tempvalue]='pan') or (devices[k].kanaltyp[tempvalue]='tilt')) then
@@ -4523,7 +4543,18 @@ begin
     Count:=length(AblaufTimer);
 		Filestream.WriteBuffer(Count,sizeof(Count));
     for i:=0 to Count-1 do
-  		Filestream.WriteBuffer(AblaufTimer[i],sizeof(AblaufTimer[i]));
+    begin
+  		Filestream.WriteBuffer(AblaufTimer[i].Aktiviert,sizeof(AblaufTimer[i].Aktiviert));
+  		Filestream.WriteBuffer(AblaufTimer[i].Name,sizeof(AblaufTimer[i].Name));
+  		Filestream.WriteBuffer(AblaufTimer[i].Beschreibung,sizeof(AblaufTimer[i].Beschreibung));
+  		Filestream.WriteBuffer(AblaufTimer[i].Datum,sizeof(AblaufTimer[i].Datum));
+  		Filestream.WriteBuffer(AblaufTimer[i].Uhrzeit,sizeof(AblaufTimer[i].Uhrzeit));
+  		Filestream.WriteBuffer(AblaufTimer[i].TimerTyp,sizeof(AblaufTimer[i].TimerTyp));
+  		Filestream.WriteBuffer(AblaufTimer[i].Skriptdatei,sizeof(AblaufTimer[i].Skriptdatei));
+  		Filestream.WriteBuffer(AblaufTimer[i].LoadTyp,sizeof(AblaufTimer[i].LoadTyp));
+  		Filestream.WriteBuffer(AblaufTimer[i].LoadID,sizeof(AblaufTimer[i].LoadID));
+  		Filestream.WriteBuffer(AblaufTimer[i].Weekday,sizeof(AblaufTimer[i].Weekday));
+    end;
 // Ende Skripttimer speichern
 
 // Hotkeys speichern
@@ -4612,6 +4643,7 @@ begin
      	  Filestream.WriteBuffer(mainform.Devices[i].bank[j],sizeof(mainform.Devices[i].bank[j]));
       end;
    	  Filestream.WriteBuffer(mainform.Devices[i].hasDimmer,sizeof(mainform.Devices[i].hasDIMMER));
+   	  Filestream.WriteBuffer(mainform.Devices[i].hasShutter,sizeof(mainform.Devices[i].hasShutter));
    	  Filestream.WriteBuffer(mainform.Devices[i].hasVirtualRGBAWDimmer,sizeof(mainform.Devices[i].hasVirtualRGBAWDIMMER));
    	  Filestream.WriteBuffer(mainform.Devices[i].hasRGB,sizeof(mainform.Devices[i].hasRGB));
    	  Filestream.WriteBuffer(mainform.Devices[i].hasCMY,sizeof(mainform.Devices[i].hasCMY));
@@ -6522,7 +6554,30 @@ begin
     		Filestream.ReadBuffer(Count,sizeof(Count));
         setlength(AblaufTimer,Count);
         for i:=0 to Count-1 do
-      		Filestream.ReadBuffer(AblaufTimer[i],sizeof(AblaufTimer[i]));
+      	begin
+          Filestream.ReadBuffer(AblaufTimer[i].Aktiviert,sizeof(AblaufTimer[i].Aktiviert));
+          Filestream.ReadBuffer(AblaufTimer[i].Name,sizeof(AblaufTimer[i].Name));
+          Filestream.ReadBuffer(AblaufTimer[i].Beschreibung,sizeof(AblaufTimer[i].Beschreibung));
+          Filestream.ReadBuffer(AblaufTimer[i].Datum,sizeof(AblaufTimer[i].Datum));
+          Filestream.ReadBuffer(AblaufTimer[i].Uhrzeit,sizeof(AblaufTimer[i].Uhrzeit));
+          Filestream.ReadBuffer(AblaufTimer[i].TimerTyp,sizeof(AblaufTimer[i].TimerTyp));
+          Filestream.ReadBuffer(AblaufTimer[i].Skriptdatei,sizeof(AblaufTimer[i].Skriptdatei));
+          Filestream.ReadBuffer(AblaufTimer[i].LoadTyp,sizeof(AblaufTimer[i].LoadTyp));
+          Filestream.ReadBuffer(AblaufTimer[i].LoadID,sizeof(AblaufTimer[i].LoadID));
+          if projektprogrammversionint>=482 then
+          begin
+            Filestream.ReadBuffer(AblaufTimer[i].Weekday,sizeof(AblaufTimer[i].Weekday));
+          end else
+          begin
+            AblaufTimer[i].Weekday[1]:=true;
+            AblaufTimer[i].Weekday[2]:=true;
+            AblaufTimer[i].Weekday[3]:=true;
+            AblaufTimer[i].Weekday[4]:=true;
+            AblaufTimer[i].Weekday[5]:=true;
+            AblaufTimer[i].Weekday[6]:=true;
+            AblaufTimer[i].Weekday[7]:=true;
+          end;
+        end;
     // Ende Skripttimer öffnen
     // Hotkeys öffnen
 	if not startingup then
@@ -6728,6 +6783,8 @@ begin
        	  Filestream.ReadBuffer(mainform.Devices[i].bank[j],sizeof(mainform.Devices[i].bank[j]));
       end;
    	  Filestream.ReadBuffer(mainform.Devices[i].hasDimmer,sizeof(mainform.Devices[i].hasDIMMER));
+      if projektprogrammversionint>=481 then
+        Filestream.ReadBuffer(mainform.Devices[i].hasShutter,sizeof(mainform.Devices[i].hasShutter));
       if projektprogrammversionint>=464 then
      	  Filestream.ReadBuffer(mainform.Devices[i].hasVirtualRGBAWDimmer,sizeof(mainform.Devices[i].hasVirtualRGBAWDIMMER));
    	  Filestream.ReadBuffer(mainform.Devices[i].hasRGB,sizeof(mainform.Devices[i].hasRGB));
@@ -21963,7 +22020,18 @@ begin
   		Filestream.ReadBuffer(Count,sizeof(Count));
       setlength(AblaufTimer,Count);
       for j:=0 to Count-1 do
-    		Filestream.ReadBuffer(AblaufTimer[j],sizeof(AblaufTimer[j]));
+    	begin
+        Filestream.ReadBuffer(AblaufTimer[j].Aktiviert,sizeof(AblaufTimer[j].Aktiviert));
+        Filestream.ReadBuffer(AblaufTimer[j].Name,sizeof(AblaufTimer[j].Name));
+        Filestream.ReadBuffer(AblaufTimer[j].Beschreibung,sizeof(AblaufTimer[j].Beschreibung));
+        Filestream.ReadBuffer(AblaufTimer[j].Datum,sizeof(AblaufTimer[j].Datum));
+        Filestream.ReadBuffer(AblaufTimer[j].Uhrzeit,sizeof(AblaufTimer[j].Uhrzeit));
+        Filestream.ReadBuffer(AblaufTimer[j].TimerTyp,sizeof(AblaufTimer[j].TimerTyp));
+        Filestream.ReadBuffer(AblaufTimer[j].Skriptdatei,sizeof(AblaufTimer[j].Skriptdatei));
+        Filestream.ReadBuffer(AblaufTimer[j].LoadTyp,sizeof(AblaufTimer[j].LoadTyp));
+        Filestream.ReadBuffer(AblaufTimer[j].LoadID,sizeof(AblaufTimer[j].LoadID));
+        Filestream.ReadBuffer(AblaufTimer[j].Weekday,sizeof(AblaufTimer[j].Weekday));
+      end;
       Filestream.Free;
       schedulerform.skripttimer_listbox.Clear;
       for j:=0 to Count-1 do
@@ -22788,7 +22856,7 @@ end;
 
 procedure TMainform.TBItem66Click(Sender: TObject);
 var
-  i:integer;
+  i,j:integer;
   CSV,Values:TStrings;
   myaddress:byte;
   myaddress_string:string;
@@ -22810,29 +22878,60 @@ begin
     Values.Add(_('Kanalanzahl'));
     Values.Add(_('Leistung [W]'));
     Values.Add(_('Phase'));
-    Values.Add(_('Farbrad'));
-    Values.Add(_('Pan/Tilt'));
+
+    Values.Add(_('Dimmer'));
+    Values.Add(_('Shutter'));
+    Values.Add(_('V-Dimmer'));
     Values.Add(_('RGB'));
     Values.Add(_('CMY'));
-    Values.Add(_('Dimmer'));
+    Values.Add(_('Amber'));
+    Values.Add(_('Weiß'));
+    Values.Add(_('UV'));
+    Values.Add(_('Nebel'));
+    Values.Add(_('Pan/Tilt'));
+    Values.Add(_('Farbrad'));
+    Values.Add(_('Farbrad 2'));
+    Values.Add(_('Goborad'));
+    Values.Add(_('Goborad 2'));
     Values.Add(_('Autoscening'));
     Values.Add(_('DIP-Startadresse'));
     CSV.Add(MakeCSVLine(Values, ',', '"'));
     Values.Clear;
 
-    for i:=0 to length(devices)-1 do
+    setlength(devicelistform.DeviceOrder, length(mainform.devices));
+    for i:=0 to length(mainform.devices)-1 do
     begin
+      devicelistform.DeviceOrder[i].Startaddress:=mainform.devices[i].Startaddress;
+      devicelistform.DeviceOrder[i].PositionInDeviceArray:=i;
+    end;
+    if length(devicelistform.DeviceOrder)>1 then
+      devicelistform.SortDeviceOrder(Low(devicelistform.DeviceOrder),High(devicelistform.DeviceOrder));
+
+    for j:=0 to length(devices)-1 do
+    begin
+      i:=devicelistform.DeviceOrder[j].PositionInDeviceArray;
+
       Values.Add(devices[i].Name);
       Values.Add(devices[i].Vendor);
       Values.Add(inttostr(devices[i].Startaddress));
       Values.Add(inttostr(devices[i].MaxChan));
       Values.Add(inttostr(devices[i].Power));
       Values.Add(inttostr(devices[i].Phase));
-      if devices[i].hasColor then Values.Add('X') else Values.Add('');
-      if devices[i].hasPANTILT then Values.Add('X') else Values.Add('');
+
+      if devices[i].hasDimmer then Values.Add('X') else Values.Add('');
+      if devices[i].hasShutter then Values.Add('X') else Values.Add('');
+      if devices[i].hasVirtualRGBAWDimmer then Values.Add('X') else Values.Add('');
       if devices[i].hasRGB then Values.Add('X') else Values.Add('');
       if devices[i].hasCMY then Values.Add('X') else Values.Add('');
-      if devices[i].hasDimmer then Values.Add('X') else Values.Add('');
+      if devices[i].hasAmber then Values.Add('X') else Values.Add('');
+      if devices[i].hasWhite then Values.Add('X') else Values.Add('');
+      if devices[i].hasUV then Values.Add('X') else Values.Add('');
+      if devices[i].hasFog then Values.Add('X') else Values.Add('');
+      if devices[i].hasPANTILT then Values.Add('X') else Values.Add('');
+      if devices[i].hasColor then Values.Add('X') else Values.Add('');
+      if devices[i].hasColor2 then Values.Add('X') else Values.Add('');
+      if devices[i].hasGobo then Values.Add('X') else Values.Add('');
+      if devices[i].hasGobo2 then Values.Add('X') else Values.Add('');
       if devices[i].autoscening then Values.Add('X') else Values.Add('');
       // Kanaladresse als BITs
       myaddress:=devices[i].Startaddress;

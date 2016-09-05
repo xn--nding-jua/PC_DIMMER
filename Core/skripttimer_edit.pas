@@ -65,6 +65,13 @@ type
     skripttimer_hour: TEdit;
     skripttimer_minute: TEdit;
     skripttimer_second: TEdit;
+    mo_check: TCheckBox;
+    di_check: TCheckBox;
+    mi_check: TCheckBox;
+    do_check: TCheckBox;
+    fr_check: TCheckBox;
+    sa_check: TCheckBox;
+    so_check: TCheckBox;
     procedure skripttimer_filechange1Click(Sender: TObject);
     procedure Skripttimer_typechange1Change(Sender: TObject);
     procedure ClocktimerTimer(Sender: TObject);
@@ -186,6 +193,14 @@ begin
       Skripttimer_date1.Enabled:=true;
     end;
   end;
+
+  mo_check.Enabled:=(Skripttimer_typechange1.ItemIndex=1);
+  di_check.Enabled:=mo_check.Enabled;
+  mi_check.Enabled:=mo_check.Enabled;
+  do_check.Enabled:=mo_check.Enabled;
+  fr_check.Enabled:=mo_check.Enabled;
+  sa_check.Enabled:=mo_check.Enabled;
+  so_check.Enabled:=mo_check.Enabled;
 
   if timeoption1.Checked then
     mainform.AktuellerTimer.TimerTyp:=Skripttimer_typechange1.ItemIndex
@@ -337,6 +352,13 @@ begin
   end;
 
   mainform.AktuellerTimer.Datum:=DateToStr(Skripttimer_date1.Date);
+  mainform.AktuellerTimer.Weekday[1]:=mo_check.Checked;
+  mainform.AktuellerTimer.Weekday[2]:=di_check.Checked;
+  mainform.AktuellerTimer.Weekday[3]:=mi_check.Checked;
+  mainform.AktuellerTimer.Weekday[4]:=do_check.Checked;
+  mainform.AktuellerTimer.Weekday[5]:=fr_check.Checked;
+  mainform.AktuellerTimer.Weekday[6]:=sa_check.Checked;
+  mainform.AktuellerTimer.Weekday[7]:=so_check.Checked;
 
   mainform.AktuellerTimer.LoadTyp:=Combobox1.ItemIndex;
 end;

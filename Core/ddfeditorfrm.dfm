@@ -2171,7 +2171,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 137
               Height = 21
-              ItemHeight = 13
+              ItemHeight = 0
               TabOrder = 0
               Text = 'GOBO1ROT'
               OnSelect = typlisteSelect
@@ -2279,7 +2279,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 137
               Height = 21
-              ItemHeight = 13
+              ItemHeight = 0
               TabOrder = 0
               Text = 'GOBO2ROT'
               OnSelect = typlisteSelect
@@ -2431,7 +2431,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 137
               Height = 21
-              ItemHeight = 13
+              ItemHeight = 0
               TabOrder = 0
               Text = 'PRISMAROT'
               OnSelect = typlisteSelect
@@ -2567,7 +2567,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 89
               Height = 21
-              ItemHeight = 13
+              ItemHeight = 0
               TabOrder = 0
               Text = 'SHUTTER'
               OnSelect = typlisteSelect
@@ -2632,7 +2632,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 89
               Height = 21
-              ItemHeight = 13
+              ItemHeight = 0
               TabOrder = 0
               Text = 'SHUTTER'
               OnSelect = typlisteSelect
@@ -2873,7 +2873,7 @@ object ddfeditorform: Tddfeditorform
         Height = 21
         Style = csDropDownList
         DropDownCount = 16
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 2
         OnSelect = funktionsliste2Select
       end
@@ -3665,7 +3665,7 @@ object ddfeditorform: Tddfeditorform
           Height = 21
           Style = csDropDownList
           DropDownCount = 16
-          ItemHeight = 13
+          ItemHeight = 0
           TabOrder = 1
           OnSelect = funktionsliste1Select
         end

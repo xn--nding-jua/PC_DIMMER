@@ -222,6 +222,7 @@
                Skriptdatei:String[255];
                LoadTyp:byte;
                LoadID:TGUID;
+               Weekday:array[1..7] of boolean;
               end;
 
   // Typen für Effekttimeline
@@ -414,6 +415,7 @@
 
     // Erweiterte Einstellungen
     hasDimmer:boolean;
+    hasShutter:boolean;
     hasVirtualRGBAWDimmer:boolean;
     hasRGB:boolean;
     hasCMY:boolean;

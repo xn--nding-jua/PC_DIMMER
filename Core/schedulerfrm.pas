@@ -120,6 +120,13 @@ begin
     AktuellerTimer.TimerTyp:=0;
     AktuellerTimer.LoadTyp:=0;
     AktuellerTimer.Skriptdatei:='';
+    AktuellerTimer.Weekday[1]:=true;
+    AktuellerTimer.Weekday[2]:=true;
+    AktuellerTimer.Weekday[3]:=true;
+    AktuellerTimer.Weekday[4]:=true;
+    AktuellerTimer.Weekday[5]:=true;
+    AktuellerTimer.Weekday[6]:=true;
+    AktuellerTimer.Weekday[7]:=true;
 
     AktuellerTimer.Datum:=DateToStr(date);
     if strtoint(copy(TimeToStr(now),0,2))<23 then
@@ -210,6 +217,13 @@ begin
       AktuellerTimer:=AblaufTimer[aktuelleposition];
 
       skripttimer_editform.skripttimer_active1.Checked:=AktuellerTimer.Aktiviert;
+      skripttimer_editform.mo_check.Checked:=AktuellerTimer.Weekday[1];
+      skripttimer_editform.di_check.Checked:=AktuellerTimer.Weekday[2];
+      skripttimer_editform.mi_check.Checked:=AktuellerTimer.Weekday[3];
+      skripttimer_editform.do_check.Checked:=AktuellerTimer.Weekday[4];
+      skripttimer_editform.fr_check.Checked:=AktuellerTimer.Weekday[5];
+      skripttimer_editform.sa_check.Checked:=AktuellerTimer.Weekday[6];
+      skripttimer_editform.so_check.Checked:=AktuellerTimer.Weekday[7];
 
       if AktuellerTimer.TimerTyp>=200 then
       begin
@@ -469,21 +483,21 @@ begin
           end;
         1: // Täglich: Datum wird ignoriert
           begin
-            if (AblaufTimer[i].Uhrzeit=TimeToStr(time)) then
+            if AblaufTimer[i].Weekday[DayOfTheWeek(Now)] and (AblaufTimer[i].Uhrzeit=TimeToStr(time)) then
             begin
               dxRibbonStatusBar1.Panels[5].Text:=_('Scheduler: Ausgeführt');
     //	      skripttimer_listbox.Items.Objects[i]:=TObject(clGreen);
 
-            case AblaufTimer[i].LoadTyp of
-              0:
-              begin
-                StartScene(AblaufTimer[i].LoadID,false,false,-1);
+              case AblaufTimer[i].LoadTyp of
+                0:
+                begin
+                  StartScene(AblaufTimer[i].LoadID,false,false,-1);
+                end;
+                1:
+                begin
+                  StartEffekt(AblaufTimer[i].LoadID);
+                end;
               end;
-              1:
-              begin
-                StartEffekt(AblaufTimer[i].LoadID);
-              end;
-            end;
 
     //				skripttimer_todo:=skripttimer_todo-1;
             end;
@@ -602,7 +616,16 @@ begin
 		mainform.Filestream.WriteBuffer(Count,sizeof(Count));
     for i:=0 to Count-1 do
   	begin
-    	mainform.Filestream.WriteBuffer(mainform.AblaufTimer[i],sizeof(mainform.AblaufTimer[i]));
+  		mainform.FileStream.WriteBuffer(mainform.Ablauftimer[i].Aktiviert,sizeof(mainform.Ablauftimer[i].Aktiviert));
+  		mainform.FileStream.WriteBuffer(mainform.Ablauftimer[i].Name,sizeof(mainform.Ablauftimer[i].Name));
+  		mainform.FileStream.WriteBuffer(mainform.Ablauftimer[i].Beschreibung,sizeof(mainform.Ablauftimer[i].Beschreibung));
+  		mainform.FileStream.WriteBuffer(mainform.Ablauftimer[i].Datum,sizeof(mainform.Ablauftimer[i].Datum));
+  		mainform.FileStream.WriteBuffer(mainform.Ablauftimer[i].Uhrzeit,sizeof(mainform.Ablauftimer[i].Uhrzeit));
+  		mainform.FileStream.WriteBuffer(mainform.Ablauftimer[i].TimerTyp,sizeof(mainform.Ablauftimer[i].TimerTyp));
+  		mainform.FileStream.WriteBuffer(mainform.Ablauftimer[i].Skriptdatei,sizeof(mainform.Ablauftimer[i].Skriptdatei));
+  		mainform.FileStream.WriteBuffer(mainform.Ablauftimer[i].LoadTyp,sizeof(mainform.Ablauftimer[i].LoadTyp));
+  		mainform.FileStream.WriteBuffer(mainform.Ablauftimer[i].LoadID,sizeof(mainform.Ablauftimer[i].LoadID));
+  		mainform.FileStream.WriteBuffer(mainform.Ablauftimer[i].Weekday,sizeof(mainform.Ablauftimer[i].Weekday));
     end;
     mainform.Filestream.Free;
 //    skripttimer_listbox.Items.SaveToFile(savedialog.FileName);
@@ -627,7 +650,18 @@ begin
 		Filestream.ReadBuffer(Count,sizeof(Count));
     setlength(AblaufTimer,Count);
     for i:=0 to Count-1 do
-  		Filestream.ReadBuffer(AblaufTimer[i],sizeof(AblaufTimer[i]));
+  	begin
+  		Filestream.ReadBuffer(AblaufTimer[i].Aktiviert,sizeof(AblaufTimer[i].Aktiviert));
+  		Filestream.ReadBuffer(AblaufTimer[i].Name,sizeof(AblaufTimer[i].Name));
+  		Filestream.ReadBuffer(AblaufTimer[i].Beschreibung,sizeof(AblaufTimer[i].Beschreibung));
+  		Filestream.ReadBuffer(AblaufTimer[i].Datum,sizeof(AblaufTimer[i].Datum));
+  		Filestream.ReadBuffer(AblaufTimer[i].Uhrzeit,sizeof(AblaufTimer[i].Uhrzeit));
+  		Filestream.ReadBuffer(AblaufTimer[i].TimerTyp,sizeof(AblaufTimer[i].TimerTyp));
+  		Filestream.ReadBuffer(AblaufTimer[i].Skriptdatei,sizeof(AblaufTimer[i].Skriptdatei));
+  		Filestream.ReadBuffer(AblaufTimer[i].LoadTyp,sizeof(AblaufTimer[i].LoadTyp));
+  		Filestream.ReadBuffer(AblaufTimer[i].LoadID,sizeof(AblaufTimer[i].LoadID));
+  		Filestream.ReadBuffer(AblaufTimer[i].Weekday,sizeof(AblaufTimer[i].Weekday));
+    end;
     Filestream.Free;
     skripttimer_listbox.Clear;
     for i:=0 to Count-1 do

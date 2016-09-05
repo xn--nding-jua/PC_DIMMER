@@ -383,8 +383,6 @@ begin
   checkbox1.Checked:=false;
   checkbox2.Checked:=false;
   checkbox3.Checked:=false;
-  checkbox2.enabled:=false;
-  checkbox3.enabled:=false;
   edit2.Text:='0';
   edit3.Text:='0';
   edit4.Text:='0';
@@ -595,6 +593,8 @@ begin
             edit3.Enabled:=Checkbox1.Checked;
             edit4.Enabled:=Checkbox1.Checked;
             edit5.Enabled:=Checkbox1.Checked;
+            Checkbox2.Enabled:=Checkbox1.Checked;
+            Checkbox3.Enabled:=Checkbox1.Checked;
             if checkbox1.Checked then
             begin
               mainform.AktuelleDeviceScene.Devices[i].ChanFadetime[Data^.ChannelInDevice]:=-1;
@@ -661,6 +661,8 @@ begin
             edit3.Enabled:=Checkbox1.Checked;
             edit4.Enabled:=Checkbox1.Checked;
             edit5.Enabled:=Checkbox1.Checked;
+            Checkbox2.Enabled:=Checkbox1.Checked;
+            Checkbox3.Enabled:=Checkbox1.Checked;
             if checkbox1.Checked then
             begin
               mainform.AktuelleDeviceScene.Devices[i].ChanFadetime[Data^.ChannelInDevice]:=-1;
@@ -701,6 +703,8 @@ begin
             edit3.Enabled:=Checkbox1.Checked;
             edit4.Enabled:=Checkbox1.Checked;
             edit5.Enabled:=Checkbox1.Checked;
+            Checkbox2.Enabled:=Checkbox1.Checked;
+            Checkbox3.Enabled:=Checkbox1.Checked;
 
             if checkbox1.Checked then
             begin

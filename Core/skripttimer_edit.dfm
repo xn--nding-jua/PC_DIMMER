@@ -975,7 +975,7 @@ object skripttimer_editform: Tskripttimer_editform
     end
     object Label4: TLabel
       Left = 120
-      Top = 88
+      Top = 104
       Width = 90
       Height = 13
       Caption = 'Zu ladende Szene:'
@@ -1022,7 +1022,7 @@ object skripttimer_editform: Tskripttimer_editform
     end
     object Label7: TLabel
       Left = 8
-      Top = 88
+      Top = 104
       Width = 21
       Height = 13
       Caption = 'Typ:'
@@ -1104,14 +1104,14 @@ object skripttimer_editform: Tskripttimer_editform
     end
     object skripttimer_file1: TEdit
       Left = 120
-      Top = 104
+      Top = 120
       Width = 161
       Height = 21
       TabOrder = 2
     end
     object skripttimer_filechange1: TButton
       Left = 288
-      Top = 104
+      Top = 120
       Width = 20
       Height = 21
       Caption = '...'
@@ -1138,7 +1138,7 @@ object skripttimer_editform: Tskripttimer_editform
     end
     object ComboBox1: TComboBox
       Left = 8
-      Top = 104
+      Top = 120
       Width = 105
       Height = 21
       Style = csDropDownList
@@ -1260,6 +1260,83 @@ object skripttimer_editform: Tskripttimer_editform
       TabOrder = 14
       Text = '00'
       OnChange = skripttimer_hourChange
+    end
+    object mo_check: TCheckBox
+      Left = 8
+      Top = 78
+      Width = 41
+      Height = 17
+      Caption = 'Mo'
+      Checked = True
+      Enabled = False
+      State = cbChecked
+      TabOrder = 15
+    end
+    object di_check: TCheckBox
+      Left = 48
+      Top = 78
+      Width = 33
+      Height = 17
+      Caption = 'Di'
+      Checked = True
+      Enabled = False
+      State = cbChecked
+      TabOrder = 16
+    end
+    object mi_check: TCheckBox
+      Left = 88
+      Top = 78
+      Width = 33
+      Height = 17
+      Caption = 'Mi'
+      Checked = True
+      Enabled = False
+      State = cbChecked
+      TabOrder = 17
+    end
+    object do_check: TCheckBox
+      Left = 128
+      Top = 78
+      Width = 41
+      Height = 17
+      Caption = 'Do'
+      Checked = True
+      Enabled = False
+      State = cbChecked
+      TabOrder = 18
+    end
+    object fr_check: TCheckBox
+      Left = 168
+      Top = 78
+      Width = 33
+      Height = 17
+      Caption = 'Fr'
+      Checked = True
+      Enabled = False
+      State = cbChecked
+      TabOrder = 19
+    end
+    object sa_check: TCheckBox
+      Left = 208
+      Top = 78
+      Width = 41
+      Height = 17
+      Caption = 'Sa'
+      Checked = True
+      Enabled = False
+      State = cbChecked
+      TabOrder = 20
+    end
+    object so_check: TCheckBox
+      Left = 248
+      Top = 78
+      Width = 41
+      Height = 17
+      Caption = 'So'
+      Checked = True
+      Enabled = False
+      State = cbChecked
+      TabOrder = 21
     end
   end
   object Button1: TButton

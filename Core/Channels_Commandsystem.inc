@@ -41,9 +41,9 @@
   DeviceChannelNames[39]:='POSITION';
   DeviceChannelNames[40]:='W'; // White
   DeviceChannelNames[41]:='A'; // Amber
-  DeviceChannelNames[42]:='CYAN';
-  DeviceChannelNames[43]:='MAGENTA';
-  DeviceChannelNames[44]:='YELLOW';
+  DeviceChannelNames[42]:='C';
+  DeviceChannelNames[43]:='M';
+  DeviceChannelNames[44]:='Y';
   DeviceChannelNames[45]:='UV';
   DeviceChannelNames[46]:='FOG';
   // VIRTUALRGBADIMMER ist virtueller Dimmerkanal für RGB(A)-Geräte

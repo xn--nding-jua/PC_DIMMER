@@ -3247,9 +3247,9 @@ begin
         // Nebelbar anzeigen
         Dimmerwert:=geraetesteuerung.get_channel(mainform.devices[i].ID, 'fog');
         if checkbox1.checked then
-          offset:=11
+          offset:=11+8
         else
-          offset:=2;
+          offset:=2+8;
 
         // Umrandung zeichnen
         _Buffer.Brush.Color:=ClMedGray;
@@ -3512,14 +3512,17 @@ begin
           _Buffer.Pen.Color:=clBlack;
         end;
       end;
-      shuttervalue:=geraetesteuerung.get_shutter(mainform.devices[i].ID);
-      if (shuttervalue=0) or (shuttervalue=255) then
+      if mainform.Devices[i].hasShutter then
       begin
-        TColor2RGB(_Buffer.Brush.Color, R, G, B);
-        R:=round(R*shuttervalue/255);
-        G:=round(G*shuttervalue/255);
-        B:=round(B*shuttervalue/255);
-        _Buffer.Brush.Color:=RGB2TColor(R, G, B);
+        shuttervalue:=geraetesteuerung.get_shutter(mainform.devices[i].ID);
+        if (shuttervalue=0) or (shuttervalue=255) then
+        begin
+          TColor2RGB(_Buffer.Brush.Color, R, G, B);
+          R:=round(R*shuttervalue/255);
+          G:=round(G*shuttervalue/255);
+          B:=round(B*shuttervalue/255);
+          _Buffer.Brush.Color:=RGB2TColor(R, G, B);
+        end;
       end;
 
       if mainform.devices[i].hasPANTILT then

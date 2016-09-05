@@ -125,7 +125,7 @@ begin
     //////////////////////////
     LHTMLCode.Add('<br><br><br><hr><br><font face="Arial" size="2"><font style="font-size: 10pt">'+
              '<center><img border="0" src="HTML/pcdimmerlogo.jpg"><br>'+
-             'PC_DIMMER (c) 2004-2015 by Dipl.-Ing. Christian Nöding</center></font>');
+             'PC_DIMMER (c) 2004-2016 by Dr.-Ing. Christian Nöding</center></font>');
     LHTMLCode.Add('</body></html>');
 
     AResponseInfo.ContentText:=LHTMLCode.Text;
@@ -291,7 +291,7 @@ begin
                '<input type="submit" value="Stageview" name="goto"></p></form>';
   LFooter := '<br><br><br><hr><br><font face="Arial" size="2"><font style="font-size: 10pt">'+
              '<center><img border="0" src="HTML/pcdimmerlogo.jpg"><br>'+
-             'PC_DIMMER (c) 2004-2015 by Dipl.-Ing. Christian Nöding</center></font>';
+             'PC_DIMMER (c) 2004-2016 by Dr.-Ing. Christian Nöding</center></font>';
 
   AHTMLCode.Clear;
   AHTMLCode.Add('<html><head><meta http-equiv="Content-Language" content="de"><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><title>'+_('PC_DIMMER Webserver')+'</title></head>');

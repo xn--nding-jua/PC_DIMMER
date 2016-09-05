@@ -20,7 +20,7 @@ object schedulerform: Tschedulerform
   TextHeight = 13
   object Shape1: TShape
     Left = 0
-    Top = 288
+    Top = 284
     Width = 545
     Height = 44
     Pen.Style = psClear

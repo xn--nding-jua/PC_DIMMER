@@ -1,7 +1,7 @@
 object devicelistform: Tdevicelistform
   Left = 411
   Top = 289
-  Width = 754
+  Width = 1016
   Height = 439
   Caption = 'Ger'#228'teliste'
   Color = clBtnFace
@@ -56,7 +56,7 @@ object devicelistform: Tdevicelistform
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 738
+    Width = 1000
     Height = 57
     Align = alTop
     BevelOuter = bvNone
@@ -65,7 +65,7 @@ object devicelistform: Tdevicelistform
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 738
+      Width = 1000
       Height = 57
       Style = grVertical
       StartColor = clWhite
@@ -700,10 +700,10 @@ object devicelistform: Tdevicelistform
   object StringGrid1: TStringGrid
     Left = 0
     Top = 57
-    Width = 738
+    Width = 1000
     Height = 300
     Align = alClient
-    ColCount = 13
+    ColCount = 23
     DefaultColWidth = 100
     DefaultRowHeight = 32
     FixedCols = 0
@@ -711,11 +711,35 @@ object devicelistform: Tdevicelistform
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goRowSelect, goThumbTracking]
     TabOrder = 1
     OnDrawCell = StringGrid1DrawCell
+    ColWidths = (
+      100
+      100
+      398
+      100
+      100
+      100
+      100
+      100
+      100
+      100
+      100
+      100
+      100
+      100
+      100
+      100
+      100
+      100
+      100
+      100
+      100
+      100
+      100)
   end
   object Panel2: TPanel
     Left = 0
     Top = 357
-    Width = 738
+    Width = 1000
     Height = 43
     Align = alBottom
     BevelOuter = bvNone
@@ -723,7 +747,7 @@ object devicelistform: Tdevicelistform
     object Shape1: TShape
       Left = 0
       Top = 1
-      Width = 738
+      Width = 1000
       Height = 42
       Align = alClient
       Pen.Style = psClear
@@ -731,7 +755,7 @@ object devicelistform: Tdevicelistform
     object Shape2: TShape
       Left = 0
       Top = 0
-      Width = 738
+      Width = 1000
       Height = 1
       Align = alTop
     end
