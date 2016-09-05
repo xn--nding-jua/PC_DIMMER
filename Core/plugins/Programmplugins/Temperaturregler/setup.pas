@@ -111,37 +111,40 @@ var
   i:integer;
   temp:string;
 begin
-  portchange.ItemIndex:=0;
-  for i:=0 to portchange.items.count-1 do
-  begin
-    temp:=copy(portchange.Items[i],4,2);
-    if temp[2]=' ' then
+  try
+    portchange.ItemIndex:=0;
+    for i:=0 to portchange.items.count-1 do
     begin
-      // einstellig
-      if config.comportnumber=strtoint(temp[1]) then
+      temp:=copy(portchange.Items[i],4,2);
+      if temp[2]=' ' then
       begin
-        portchange.ItemIndex:=i;
-        break;
-      end;
-    end else
-    begin
-      // zweistellig
-      if config.comportnumber=strtoint(temp) then
+        // einstellig
+        if config.comportnumber=strtoint(temp[1]) then
+        begin
+          portchange.ItemIndex:=i;
+          break;
+        end;
+      end else
       begin
-        portchange.ItemIndex:=i;
-        break;
+        // zweistellig
+        if config.comportnumber=strtoint(temp) then
+        begin
+          portchange.ItemIndex:=i;
+          break;
+        end;
       end;
     end;
-  end;
 
-  case config.baudrate of
-    115200: baudratechange.ItemIndex:=0;
-    57600: baudratechange.ItemIndex:=1;
-    38400: baudratechange.ItemIndex:=2;
-    19200: baudratechange.ItemIndex:=3;
-    9600: baudratechange.ItemIndex:=4;
-  else
-    baudratechange.ItemIndex:=0;
+    case config.baudrate of
+      115200: baudratechange.ItemIndex:=0;
+      57600: baudratechange.ItemIndex:=1;
+      38400: baudratechange.ItemIndex:=2;
+      19200: baudratechange.ItemIndex:=3;
+      9600: baudratechange.ItemIndex:=4;
+    else
+      baudratechange.ItemIndex:=0;
+    end;
+  except
   end;
 end;
 

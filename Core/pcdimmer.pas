@@ -54,7 +54,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=478;
+  actualprojectversion=480;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -4730,6 +4730,14 @@ begin
       Filestream.WriteBuffer(mainform.Devices[i].ContinuousPower,sizeof(mainform.Devices[i].ContinuousPower));
       Filestream.WriteBuffer(mainform.Devices[i].UseFullPowerOnChannelvalue,sizeof(mainform.Devices[i].UseFullPowerOnChannelvalue));
 
+      Filestream.WriteBuffer(mainform.Devices[i].MatrixDeviceLevel,sizeof(mainform.Devices[i].MatrixDeviceLevel));
+      Filestream.WriteBuffer(mainform.Devices[i].MatrixMainDeviceID,sizeof(mainform.Devices[i].MatrixMainDeviceID));
+      Filestream.WriteBuffer(mainform.Devices[i].MatrixOrderType,sizeof(mainform.Devices[i].MatrixOrderType));
+      Filestream.WriteBuffer(mainform.Devices[i].MatrixXCount,sizeof(mainform.Devices[i].MatrixXCount));
+      Filestream.WriteBuffer(mainform.Devices[i].MatrixYCount,sizeof(mainform.Devices[i].MatrixYCount));
+      Filestream.WriteBuffer(mainform.Devices[i].MatrixXPosition,sizeof(mainform.Devices[i].MatrixXPosition));
+      Filestream.WriteBuffer(mainform.Devices[i].MatrixYPosition,sizeof(mainform.Devices[i].MatrixYPosition));
+
       Count2:=length(mainform.Devices[i].kanaltyp);
   	  Filestream.WriteBuffer(Count2,sizeof(Count2));
       for j:=0 to length(mainform.Devices[i].kanaltyp)-1 do
@@ -5654,6 +5662,7 @@ function TMainform.Openproject(openfile:string; OnlyProject:boolean):boolean;
   end;
 var
   i,j,k,l,m,effektanzahl,laenge, Count, Count2, Count3, Count4:integer;
+  b:byte;
   filename,openfilename,openfilepath:string;
   openerror:boolean;
   scan:boolean;
@@ -6689,7 +6698,18 @@ begin
         mainform.Devices[i].picturesize:=mainform.Devices[i].picturesize*16;
       end;
 
-   	  Filestream.ReadBuffer(mainform.Devices[i].pictureangle,sizeof(mainform.Devices[i].pictureangle));
+      if projektprogrammversionint>=480 then
+     	  Filestream.ReadBuffer(mainform.Devices[i].pictureangle,sizeof(mainform.Devices[i].pictureangle))
+      else
+     	begin
+        Filestream.ReadBuffer(b,sizeof(b));
+        case b of
+          0: mainform.Devices[i].pictureangle:=0;
+          1: mainform.Devices[i].pictureangle:=90;
+          2: mainform.Devices[i].pictureangle:=180;
+          3: mainform.Devices[i].pictureangle:=270;
+        end;
+      end;
    	  Filestream.ReadBuffer(mainform.Devices[i].picturefliphor,sizeof(mainform.Devices[i].picturefliphor));
    	  Filestream.ReadBuffer(mainform.Devices[i].pictureflipver,sizeof(mainform.Devices[i].pictureflipver));
    	  Filestream.ReadBuffer(mainform.Devices[i].pictureispng,sizeof(mainform.Devices[i].pictureispng));
@@ -6930,6 +6950,16 @@ begin
             mainform.Devices[i].UseChannelBasedPower:=false;
           end else
             mainform.Devices[i].ContinuousPower:=0;
+        end;
+        if projektprogrammversionint>=479 then
+        begin
+          Filestream.ReadBuffer(mainform.Devices[i].MatrixDeviceLevel,sizeof(mainform.Devices[i].MatrixDeviceLevel));
+          Filestream.ReadBuffer(mainform.Devices[i].MatrixMainDeviceID,sizeof(mainform.Devices[i].MatrixMainDeviceID));
+          Filestream.ReadBuffer(mainform.Devices[i].MatrixOrderType,sizeof(mainform.Devices[i].MatrixOrderType));
+          Filestream.ReadBuffer(mainform.Devices[i].MatrixXCount,sizeof(mainform.Devices[i].MatrixXCount));
+          Filestream.ReadBuffer(mainform.Devices[i].MatrixYCount,sizeof(mainform.Devices[i].MatrixYCount));
+          Filestream.ReadBuffer(mainform.Devices[i].MatrixXPosition,sizeof(mainform.Devices[i].MatrixXPosition));
+          Filestream.ReadBuffer(mainform.Devices[i].MatrixYPosition,sizeof(mainform.Devices[i].MatrixYPosition));
         end;
       end;
 
@@ -7467,7 +7497,18 @@ begin
       if projektprogrammversionint<=433 then
         mainform.buehnenansichtdevices[i].picturesize:=mainform.buehnenansichtdevices[i].picturesize*16;
 
-      FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].pictureangle,sizeof(mainform.buehnenansichtdevices[i].pictureangle));
+      if projektprogrammversionint>=480 then
+        FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].pictureangle,sizeof(mainform.buehnenansichtdevices[i].pictureangle))
+      else
+      begin
+        FileStream.ReadBuffer(b,sizeof(b));
+        case b of
+          0: mainform.buehnenansichtdevices[i].pictureangle:=0;
+          1: mainform.buehnenansichtdevices[i].pictureangle:=90;
+          2: mainform.buehnenansichtdevices[i].pictureangle:=180;
+          3: mainform.buehnenansichtdevices[i].pictureangle:=270;
+        end;
+      end;
       FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].picturefliphor,sizeof(mainform.buehnenansichtdevices[i].picturefliphor));
       FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].pictureflipver,sizeof(mainform.buehnenansichtdevices[i].pictureflipver));
       FileStream.ReadBuffer(mainform.buehnenansichtdevices[i].pictureispng,sizeof(mainform.buehnenansichtdevices[i].pictureispng));
@@ -13069,10 +13110,13 @@ begin
       end;
     end;
   end;
-
+  
   SplashProgress(1, 95, 100);
   SplashCaptioninfo(_('Timer aktivieren...'));
+  DebugAdd('INIT: Activating timers...');
   RefreshSplashText;
+  Application.ProcessMessages;
+  sleep(1000); // give the system a second to swing in before activating the timers
 
   Uhrzeit_Timer.enabled:=true;
   Autobackuptimer.Enabled:=true;
@@ -13106,12 +13150,10 @@ begin
   SplashCaptioninfo(_('Oberfläche aktualisieren...'));
   RefreshSplashText;
 
-  DebugAdd('----------------------------------------------------------------------------', false);
-  DebugAdd('INIT: Starting up was successful, now showing the desktop...', false);
-  DebugAdd('', true, false);
-
   if not (LastSessionWasCorrupt or RestoreLastValues or startupwitholdscene) then
   begin
+    DebugAdd('INIT: Initializing devices...');
+  
     SplashProgress(1, 98, 100);
     SplashCaptioninfo(_('Geräte initialisieren...'));
     RefreshSplashText;
@@ -13143,6 +13185,7 @@ begin
     end;
   end;
 
+  DebugAdd('INIT: Activating beat source...');
   MidiCallbackTimer.Enabled:=true;
   SplashProgress(1, 99, 100);
   SplashCaptioninfo(_('Beatquelle setzen...'));
@@ -13158,6 +13201,7 @@ begin
   RefreshSplashText;
 
   // Splashscreen von Timer löschen lassen
+  DebugAdd('INIT: Removing splashscreen...');
   case splashscreenvalue of
     0:
     begin
@@ -13175,6 +13219,8 @@ begin
     end;
   end;
 
+  DebugAdd('INIT: Starting timers...');
+  
   if smallwindowstyle then
   begin
     mainform.ClientHeight:=dxRibbon1.Height+dxRibbonStatusBar1.Height+mainpanel.Height;
@@ -13233,6 +13279,9 @@ begin
   LReg.CloseKey;
   LReg.Free;
 
+  
+  DebugAdd('INIT: Login user ' + StartupUser + '...');
+  
   // Login as set StartupUser
   if StartupUser<>'' then
   begin
@@ -13247,6 +13296,10 @@ begin
   end;
 
   StartupFinished:=true;
+
+  DebugAdd('----------------------------------------------------------------------------', false);
+  DebugAdd('INIT: Starting up was successful, now showing the desktop...', false);
+  DebugAdd('', true, false);
 end;
 
 procedure Tmainform.startmidiin(Sender: TObject);
@@ -24069,7 +24122,7 @@ begin
         end else if grafischebuehnenansicht.ClickOnBuehnenansichtColor(X,Y)>-1 then
         begin
           paintbox1.PopupMenu:=nil;
-        end else if (grafischebuehnenansicht.ClickOnDevice(X,Y)>-1) or (grafischebuehnenansicht.ClickOnBuehnenansichtDevice(X,Y)>-1) then
+        end else if (grafischebuehnenansicht.ClickOnDevice(X,Y,Shift)>-1) or (grafischebuehnenansicht.ClickOnBuehnenansichtDevice(X,Y)>-1) then
         begin
           paintbox1.PopupMenu:=nil;
 

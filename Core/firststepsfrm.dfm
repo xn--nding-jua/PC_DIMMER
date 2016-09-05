@@ -7806,7 +7806,7 @@ object firststepsform: Tfirststepsform
         Width = 321
         Height = 21
         Style = csDropDownList
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 4
         OnDropDown = ComboBox1DropDown
         OnSelect = ComboBox1Select

@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2016-02-04 00:03\n"
-"PO-Revision-Date: 2016-02-04 00:03\n"
+"POT-Creation-Date: 2016-09-05 01:35\n"
+"PO-Revision-Date: 2016-09-05 01:35\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -199,23 +199,23 @@ msgstr ""
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..Label22..Font.Name
 #: buehnenansicht.dfm:2479
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label15..Font.Name
-#: buehnenansicht.dfm:2608
+#: buehnenansicht.dfm:2632
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label16..Font.Name
-#: buehnenansicht.dfm:2621
+#: buehnenansicht.dfm:2645
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label19..Font.Name
-#: buehnenansicht.dfm:2655
+#: buehnenansicht.dfm:2679
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label21..Font.Name
-#: buehnenansicht.dfm:2682
+#: buehnenansicht.dfm:2706
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label8..Font.Name
-#: buehnenansicht.dfm:2730
+#: buehnenansicht.dfm:2754
 #. grafischebuehnenansicht..Panel2..colorbox1..HotTrackFont.Name
-#: buehnenansicht.dfm:2826
+#: buehnenansicht.dfm:2850
 #. grafischebuehnenansicht..Panel2..colorbox1..Properties.NoneColorFont.Name
-#: buehnenansicht.dfm:2839
+#: buehnenansicht.dfm:2863
 #. grafischebuehnenansicht..Panel2..colorbox1..Properties.DefaultColorFont.Name
-#: buehnenansicht.dfm:2844
+#: buehnenansicht.dfm:2868
 #. grafischebuehnenansicht..Panel2..colorbox1..Properties.CustomColorFont.Name
-#: buehnenansicht.dfm:2849
+#: buehnenansicht.dfm:2873
 #. cdplayerform..Font.Name
 #: cdplayerfrm.dfm:11
 #. cdplayerform..Panel1..Label1..Font.Name
@@ -441,7 +441,7 @@ msgstr ""
 #. geraetesteuerung..Panel3..VST..Header.Font.Name
 #: geraetesteuerungfrm.dfm:872
 #. geraetesteuerung..Panel1..Panel11..suchfenstergruppen..Font.Name
-#: geraetesteuerungfrm.dfm:1832
+#: geraetesteuerungfrm.dfm:1831
 #. gnulicense..Font.Name
 #: gpl.dfm:14
 #. importform..Font.Name
@@ -1655,59 +1655,37 @@ msgstr ""
 #. Config..Font.Name
 #: plugins/Programmplugins/Temperaturregler/configfrm.dfm:11
 #. Config..chart..Options.HeaderFont.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:179
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:176
 #. Config..chart..Options.LegendFont.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:184
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:181
 #. Config..chart..Options.AxisFont.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:189
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:186
 #. Config..Panel2..GroupBox1..Label2..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:222
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:219
 #. Config..Panel2..GroupBox1..Label1..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:252
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:249
 #. Config..Panel2..GroupBox2..Label5..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:308
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:305
 #. Config..Panel2..GroupBox2..Label33..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:347
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:344
 #. Config..Panel2..GroupBox7..Label7..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:457
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:454
 #. Config..Panel2..GroupBox7..Label12..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:472
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:469
 #. Config..Panel2..GroupBox7..Label15..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:487
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:484
 #. Config..Panel2..GroupBox7..Label34..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:502
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:499
 #. Config..Panel1..GroupBox3..Label14..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:599
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:596
 #. Config..Panel1..GroupBox3..Label9..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:683
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:680
 #. setupform..Font.Name
 #: plugins/Programmplugins/Temperaturregler/setup.dfm:12
 #. setupform..GroupBox1..Label4..Font.Name
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:48
-#. setupform..GroupBox1..Label5..Font.Name
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:61
-#. setupform..GroupBox1..statuslabel..Font.Name
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:75
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:49
 #. Programmer's name: FONT 8
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:81
-#. Programmer's name: FONT 8
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:79
-#. Programmer's name: FONT 8
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:93
-#. Programmer's name: FONT 8
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:150
-#. Programmer's name: FONT 8
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:79
-#. Programmer's name: FONT 8
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:94
-#. Programmer's name: FONT 8
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:151
-#. Programmer's name: FONT 8
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:79
-#. Programmer's name: FONT 8
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:94
-#. Programmer's name: FONT 8
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:151
 msgid "MS Sans Serif"
 msgstr ""
 
@@ -2172,19 +2150,7 @@ msgstr ""
 #. About..Button1..Caption
 #: plugins/Programmplugins/Temperaturregler/aboutfrm.dfm:72
 #. setupform..Button3..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:377
-#. Programmer's name: DEFPUSHBUTTON
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:85
-#. Programmer's name: DEFPUSHBUTTON
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:152
-#. Programmer's name: DEFPUSHBUTTON
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:85
-#. Programmer's name: DEFPUSHBUTTON
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:153
-#. Programmer's name: DEFPUSHBUTTON
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:85
-#. Programmer's name: DEFPUSHBUTTON
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:153
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:349
 msgid "OK"
 msgstr ""
 
@@ -2550,23 +2516,23 @@ msgstr ""
 #. Settings..Label2..Font.Name
 #: plugins/Programmplugins/SoftScanner/settingfrm.dfm:1375
 #. Config..Panel2..GroupBox1..temp2lbl..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:237
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:234
 #. Config..Panel2..GroupBox1..temp3lbl..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:267
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:264
 #. Config..Panel2..GroupBox2..deltatemplbl..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:332
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:329
 #. Config..Panel2..GroupBox2..stromkostenlbl..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:371
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:368
 #. Config..Panel2..GroupBox7..tempminlbl..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:412
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:409
 #. Config..Panel2..GroupBox7..tempmeanlbl..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:427
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:424
 #. Config..Panel2..GroupBox7..tempmaxlbl..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:442
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:439
 #. Config..Panel2..GroupBox7..TimeToSollwertLbl..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:517
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:514
 #. Config..Panel1..GroupBox3..tempcurrentlbl..Font.Name
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:584
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:581
 msgid "Arial"
 msgstr ""
 
@@ -2694,8 +2660,6 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:356
 #. setupform..Caption
 #: plugins/Programmplugins/Temperaturregler/setup.dfm:5
-#. Programmer's name: POPUP
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:248
 msgid "Einstellungen"
 msgstr ""
 
@@ -3316,11 +3280,11 @@ msgstr ""
 #. Settings..Label2..Caption
 #: plugins/Programmplugins/Alt/WinLIRC/settingfrm.dfm:568
 #. Config..Panel2..GroupBox7..TimeToSollwertLbl..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:513
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:510
 #. GUIDtoString(ID); // Name
-#: pcdimmer.pas:21406
-#: pcdimmer.pas:21407
-#: pcdimmer.pas:21409
+#: pcdimmer.pas:21459
+#: pcdimmer.pas:21460
+#: pcdimmer.pas:21462
 msgid "..."
 msgstr ""
 
@@ -3472,15 +3436,15 @@ msgstr ""
 #. bewegungsszeneneditorform..Panel3..GroupBox2..Panel10..Button5..Caption
 #: bewegungsszeneneditor.dfm:702
 #. grafischebuehnenansicht..PopupMenu1..N3..Caption
-#: buehnenansicht.dfm:2897
+#: buehnenansicht.dfm:2921
 #. grafischebuehnenansicht..PopupMenu1..N1..Caption
-#: buehnenansicht.dfm:2920
+#: buehnenansicht.dfm:2944
 #. grafischebuehnenansicht..PopupMenu1..N5..Caption
-#: buehnenansicht.dfm:2940
+#: buehnenansicht.dfm:2964
 #. grafischebuehnenansicht..PopupMenu1..N2..Caption
-#: buehnenansicht.dfm:2953
-#. grafischebuehnenansicht..devicepicture_popup..N4..Caption
 #: buehnenansicht.dfm:2977
+#. grafischebuehnenansicht..devicepicture_popup..N4..Caption
+#: buehnenansicht.dfm:3001
 #. clockform..PopupMenu1..N1..Caption
 #: clockfrm.dfm:136
 #. devicechannelselectionform..Panel3..Button6..Caption
@@ -3654,7 +3618,7 @@ msgstr ""
 #: reordergroupfrm.dfm:145
 #. Tastenabfrage..Panel1..GroupBox2..Label4..Caption
 #: Tastenabfragefrm.dfm:1015
-#: geraetesteuerungfrm.pas:2103
+#: geraetesteuerungfrm.pas:2163
 #: reordergroupfrm.pas:535
 #: szenenverwaltung.pas:1411
 #: szenenverwaltung.pas:1453
@@ -3732,7 +3696,7 @@ msgstr ""
 #. geraetesteuerung..Panel3..Panel5..suchfensteredit..Text
 #: geraetesteuerungfrm.dfm:815
 #. geraetesteuerung..Panel1..Panel11..suchfenstergruppen..Text
-#: geraetesteuerungfrm.dfm:1836
+#: geraetesteuerungfrm.dfm:1835
 #. preseteditor..Panel1..GroupBox2..Edit3..Text
 #: preseteditorform.dfm:127
 #. presetsceneeditor..Panel1..Panel11..GroupBox2..Panel13..Edit3..Text
@@ -3740,20 +3704,20 @@ msgstr ""
 #. szenenverwaltungform..Panel2..Edit1..Text
 #: szenenverwaltung.dfm:1164
 #: adddevicefrm.pas:175
-#: adddevicefrm.pas:360
-#: adddevicefrm.pas:371
+#: adddevicefrm.pas:373
+#: adddevicefrm.pas:384
 #: bewegungsszeneneditor.pas:1861
 #: bewegungsszeneneditor.pas:1872
 #: devicechannelselectionfrm.pas:163
 #: devicechannelselectionfrm.pas:174
 #: devicescenefrm.pas:359
 #: devicescenefrm.pas:370
-#: geraetesteuerungfrm.pas:2675
-#: geraetesteuerungfrm.pas:2686
-#: geraetesteuerungfrm.pas:3227
-#: geraetesteuerungfrm.pas:3228
-#: geraetesteuerungfrm.pas:3519
-#: geraetesteuerungfrm.pas:3526
+#: geraetesteuerungfrm.pas:2735
+#: geraetesteuerungfrm.pas:2746
+#: geraetesteuerungfrm.pas:3287
+#: geraetesteuerungfrm.pas:3288
+#: geraetesteuerungfrm.pas:3579
+#: geraetesteuerungfrm.pas:3586
 #: preseteditorform.pas:614
 #: preseteditorform.pas:625
 #: presetsceneeditorform.pas:787
@@ -3841,14 +3805,14 @@ msgstr ""
 #. devicesceneform..Treeviewpanel..VST......WideText
 #: devicescenefrm.dfm:629
 #. geraetesteuerung..Panel3..VST......WideText
-#: geraetesteuerungfrm.dfm:895
+#: geraetesteuerungfrm.dfm:894
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..Caption
-#: geraetesteuerungfrm.dfm:3448
+#: geraetesteuerungfrm.dfm:3447
 #. MainForm..dxRibbon1..DeviceRibbonTab..Caption
 #: pcdimmer.dfm:228
 #. touchscreenform..Panel1..devicebtn..Caption
 #: touchscreenfrm.dfm:100
-#: geraetesteuerungfrm.pas:1549
+#: geraetesteuerungfrm.pas:1560
 msgid "Geräte"
 msgstr ""
 
@@ -3879,7 +3843,7 @@ msgstr ""
 #: audioeffektplayerfrm.pas:1934
 #: cuelistfrm.pas:278
 #: datainevent.pas:147
-#: geraetesteuerungfrm.pas:617
+#: geraetesteuerungfrm.pas:622
 #: timecodeplayerfrm.pas:135
 #: winlircfrm.pas:88
 msgid "Beschreibung"
@@ -3902,7 +3866,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Kontrollpanel/midievent.dfm:272
 #. midieventfrm..GroupBox1..addmidievent..Caption
 #: plugins/Programmplugins/Alt/Submaster/midievent.dfm:272
-#: geraetesteuerungfrm.pas:2202
+#: geraetesteuerungfrm.pas:2262
 msgid "Hinzufügen"
 msgstr ""
 
@@ -3933,7 +3897,7 @@ msgstr ""
 #. DDFWindow..XML..StorageOptions.BooleanStringTrueValues
 #: ddfwindowfrm.dfm:2329
 #. geraetesteuerung..XML..StorageOptions.BooleanStringTrueValues
-#: geraetesteuerungfrm.dfm:3588
+#: geraetesteuerungfrm.dfm:3587
 #. MainForm..XML..StorageOptions.BooleanStringTrueValues
 #: pcdimmer.dfm:17657
 msgid "TRUE, YES, Y"
@@ -3946,7 +3910,7 @@ msgstr ""
 #. DDFWindow..XML..StorageOptions.BooleanStringFalseValues
 #: ddfwindowfrm.dfm:2330
 #. geraetesteuerung..XML..StorageOptions.BooleanStringFalseValues
-#: geraetesteuerungfrm.dfm:3589
+#: geraetesteuerungfrm.dfm:3588
 #. MainForm..XML..StorageOptions.BooleanStringFalseValues
 #: pcdimmer.dfm:17658
 msgid "FALSE, NO, N"
@@ -3959,7 +3923,7 @@ msgstr ""
 #. DDFWindow..XML..StorageOptions.InvalidCharReplacement
 #: ddfwindowfrm.dfm:2333
 #. geraetesteuerung..XML..StorageOptions.InvalidCharReplacement
-#: geraetesteuerungfrm.dfm:3592
+#: geraetesteuerungfrm.dfm:3591
 #. MainForm..XML..StorageOptions.InvalidCharReplacement
 #: pcdimmer.dfm:17661
 msgid "_"
@@ -3972,7 +3936,7 @@ msgstr ""
 #. DDFWindow..XML..RootNodeName
 #: ddfwindowfrm.dfm:2335
 #. geraetesteuerung..XML..RootNodeName
-#: geraetesteuerungfrm.dfm:3594
+#: geraetesteuerungfrm.dfm:3593
 #. MainForm..XML..RootNodeName
 #: pcdimmer.dfm:17663
 msgid "device"
@@ -3980,7 +3944,7 @@ msgstr ""
 
 #. adddevicetogroupform..Panel4..geraetegruppenlbl..Caption
 #: adddevicetogroupfrm.dfm:106
-#: geraetesteuerungfrm.pas:4514
+#: geraetesteuerungfrm.pas:4576
 msgid "Geräte auswählen:"
 msgstr ""
 
@@ -4169,7 +4133,7 @@ msgstr ""
 #: kontrollpanelform.pas:581
 #. Standard-Autoszenen erstellen
 #: pcdimmer.pas:3915
-#: pcdimmer.pas:25154
+#: pcdimmer.pas:25207
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1027
 msgid "Rot"
 msgstr ""
@@ -4182,7 +4146,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:585
 #: kontrollpanelform.pas:583
 #: pcdimmer.pas:3925
-#: pcdimmer.pas:25156
+#: pcdimmer.pas:25209
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1029
 msgid "Grün"
 msgstr ""
@@ -4195,7 +4159,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:587
 #: kontrollpanelform.pas:588
 #: pcdimmer.pas:3935
-#: pcdimmer.pas:25161
+#: pcdimmer.pas:25214
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1034
 msgid "Blau"
 msgstr ""
@@ -4344,7 +4308,7 @@ msgstr ""
 #: ambilight.dfm:3780
 #: ambilight.pas:1061
 #. Ambilight aus
-#: pcdimmer.pas:14625
+#: pcdimmer.pas:14678
 msgid "Ambilight einschalten"
 msgstr ""
 
@@ -4417,7 +4381,7 @@ msgstr ""
 #. arbeitsbereichform..Button1..Caption
 #: arbeitsbereichfrm.dfm:31
 #. grafischebuehnenansicht..PopupMenu1..Speichern1..Caption
-#: buehnenansicht.dfm:2934
+#: buehnenansicht.dfm:2958
 #. FramePlayList..Panel3..BtnSpeichern..Caption
 #: FramePlayListU.dfm:29
 #. konsolensteuerung..GroupBox3..SaveBtn..Caption
@@ -4492,8 +4456,8 @@ msgstr ""
 #: befehleditorform.dfm:298
 #: Channels_Commandsystem.inc:55
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:3035
-#: geraetesteuerungfrm.pas:3061
+#: geraetesteuerungfrm.pas:3095
+#: geraetesteuerungfrm.pas:3121
 #. Audioeffektplayer
 #: szenenverwaltung.pas:4050
 #: szenenverwaltung.pas:4074
@@ -5124,7 +5088,7 @@ msgstr ""
 #. audioeffektplayerform..TBDock1..TBToolbar1..Caption
 #: audioeffektplayerfrm.dfm:4211
 #. geraetesteuerung..TBDock1..TBToolbar1..Caption
-#: geraetesteuerungfrm.dfm:3424
+#: geraetesteuerungfrm.dfm:3423
 #. kontrollpanel..TBDock1..TBToolbar1..Caption
 #: kontrollpanelform.dfm:1229
 #. textbuchform..PageControl1..TabSheet2..TBDock1..TBToolbar1..Caption
@@ -5139,7 +5103,7 @@ msgstr ""
 #. ddfeditorform..Mainmenu..TBToolbar3..Datei1..Caption
 #: ddfeditorfrm.dfm:3945
 #. geraetesteuerung..TBDock1..TBToolbar1..Datei1..Caption
-#: geraetesteuerungfrm.dfm:3429
+#: geraetesteuerungfrm.dfm:3428
 #. kontrollpanel..TBDock1..TBToolbar1..Datei1..Caption
 #: kontrollpanelform.dfm:1234
 #. MainForm..dxBarManager1..DateiRibbonGroup..Caption
@@ -5148,12 +5112,6 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:628
 #. Settings..MainMenu1..Datei1..Caption
 #: plugins/Programmplugins/Alt/WinLIRC/settingfrm.dfm:988
-#. Programmer's name: POPUP
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:244
-#. Programmer's name: POPUP
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:240
-#. Programmer's name: POPUP
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:240
 msgid "Datei"
 msgstr ""
 
@@ -5295,13 +5253,7 @@ msgstr ""
 #. setupform..GroupBox1..Button2..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:142
 #. setupform..GroupBox1..Button2..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:142
-#. Programmer's name: POPUP
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:257
-#. Programmer's name: POPUP
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:251
-#. Programmer's name: POPUP
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:244
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:114
 msgid "?"
 msgstr ""
 
@@ -5676,7 +5628,7 @@ msgstr ""
 #. Tastenabfrage..Panel1..GroupBox2..ZeitBox..Label12..Caption
 #: Tastenabfragefrm.dfm:1123
 #. setupform..GroupBox4..Label17..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:450
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:422
 #: About.pas:158
 msgid "min"
 msgstr ""
@@ -5811,7 +5763,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Audioszene1..Caption
 #: szenenverwaltung.dfm:1445
 #. Name
-#: pcdimmer.pas:21245
+#: pcdimmer.pas:21298
 #: szenenverwaltung.pas:1569
 msgid "Audioszene"
 msgstr ""
@@ -5927,7 +5879,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Automatikszene1..Caption
 #: szenenverwaltung.dfm:1470
 #. Name
-#: pcdimmer.pas:21326
+#: pcdimmer.pas:21379
 #: szenenverwaltung.pas:1861
 msgid "Automatikszene"
 msgstr ""
@@ -5958,7 +5910,7 @@ msgstr ""
 #: audioeffektplayerfrm.pas:1932
 #: cuelistfrm.pas:278
 #: datainevent.pas:146
-#: geraetesteuerungfrm.pas:616
+#: geraetesteuerungfrm.pas:621
 #: timecodeplayerfrm.pas:134
 #: winlircfrm.pas:87
 msgid "Name"
@@ -6019,7 +5971,7 @@ msgstr ""
 #. firststepsform..Notebook1....GroupBox5..buttonfarbe..OtherCaption
 #: firststepsfrm.dfm:8565
 #. geraetesteuerung..Panel7..GrundsetupBox..colorBtn..OtherCaption
-#: geraetesteuerungfrm.dfm:3272
+#: geraetesteuerungfrm.dfm:3271
 #. kontrollpanel..Panel1..buttonfarbe..OtherCaption
 #: kontrollpanelform.dfm:365
 #. MainForm..Panel1..PageControl1..TabSheet2..buttonfarbe..OtherCaption
@@ -6477,8 +6429,8 @@ msgstr ""
 #: FrameChannelU.dfm:283
 #: Channels_Commandsystem.inc:966
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:3101
-#: geraetesteuerungfrm.pas:3116
+#: geraetesteuerungfrm.pas:3161
+#: geraetesteuerungfrm.pas:3176
 #: pcdHTTPServer.pas:534
 #: szenenverwaltung.pas:767
 #. noch schnell die Einträge alphabetisch sortieren
@@ -6502,7 +6454,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Submaster/main.dfm:9
 #: Channels_Commandsystem.inc:1054
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:3164
+#: geraetesteuerungfrm.pas:3224
 #: plugins/Programmplugins/Alt/Submaster/midievent.pas:82
 msgid "Submaster"
 msgstr ""
@@ -6765,7 +6717,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Befehle1..Caption
 #: szenenverwaltung.dfm:1455
 #. Name
-#: pcdimmer.pas:21282
+#: pcdimmer.pas:21335
 #: szenenverwaltung.pas:1682
 msgid "Befehl"
 msgstr ""
@@ -7370,7 +7322,7 @@ msgstr ""
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..Button5..Caption
 #: buehnenansicht.dfm:1919
 #. grafischebuehnenansicht..PopupMenu1..Schlieen1..Caption
-#: buehnenansicht.dfm:2956
+#: buehnenansicht.dfm:2980
 #. compileerrorform..Panel1..Button1..Caption
 #: compileerrorfrm.dfm:50
 #. ddfeditorform..Mainmenu..TBToolbar3..Datei1..TBItem16..Caption
@@ -7420,7 +7372,7 @@ msgstr ""
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..Button2..Caption
 #: buehnenansicht.dfm:1941
 #. grafischebuehnenansicht..PopupMenu1..NeuesGerthinzufgen1..Caption
-#: buehnenansicht.dfm:2887
+#: buehnenansicht.dfm:2911
 msgid "Neues Kanalicon hinzufügen"
 msgstr ""
 
@@ -7473,7 +7425,7 @@ msgstr ""
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..Button3..Caption
 #: buehnenansicht.dfm:1988
 #. geraetesteuerung..TBDock1..TBToolbar1..Datei1..Gertesteuerungffnen1..Caption
-#: geraetesteuerungfrm.dfm:3437
+#: geraetesteuerungfrm.dfm:3436
 msgid "Gerätesteuerung öffnen..."
 msgstr ""
 
@@ -7493,8 +7445,8 @@ msgstr ""
 #: pcdimmer.dfm:970
 #. MainForm..Panel1..PageControl1..TabSheet1..BankCopy....Items.Strings
 #: pcdimmer.dfm:973
-#: buehnenansicht.pas:1942
-#: buehnenansicht.pas:1943
+#: buehnenansicht.pas:1991
+#: buehnenansicht.pas:1992
 msgid "Bühne 1"
 msgstr ""
 
@@ -7602,17 +7554,22 @@ msgstr ""
 msgid "Größe:"
 msgstr ""
 
-#. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..Button6..Hint
+#. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..Label25..Caption
 #: buehnenansicht.dfm:2518
+msgid "Drehung:"
+msgstr ""
+
+#. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..Button6..Hint
+#: buehnenansicht.dfm:2526
 #. MainForm..Panel1..PageControl1..TabSheet1..Button6..Hint
 #: pcdimmer.dfm:1393
 msgid "Ändert das Hintergrundbild"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..Button6..Caption
-#: buehnenansicht.dfm:2519
+#: buehnenansicht.dfm:2527
 #. grafischebuehnenansicht..PopupMenu1..Hintergrundndern1..Caption
-#: buehnenansicht.dfm:2892
+#: buehnenansicht.dfm:2916
 #. MainForm..Panel1..PageControl1..TabSheet1..Button6..Caption
 #: pcdimmer.dfm:1394
 #. grafischebuehnenansicht..PopupMenu1..Hintergrundndern1..Caption
@@ -7621,21 +7578,21 @@ msgid "Hintergrund ändern"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..RotateBtn..Caption
-#: buehnenansicht.dfm:2545
+#: buehnenansicht.dfm:2554
 msgid "Icon um 90° Drehen"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..FlipHorBtn..Caption
-#: buehnenansicht.dfm:2554
+#: buehnenansicht.dfm:2564
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..FlipHorBtn..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1283
 msgid "ó"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..FlipHorBtn..Font.Name
-#: buehnenansicht.dfm:2558
+#: buehnenansicht.dfm:2568
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..FlipVerBtn..Font.Name
-#: buehnenansicht.dfm:2574
+#: buehnenansicht.dfm:2584
 #. editskriptfrm..GroupBox1..Button4..Font.Name
 #: editskript.dfm:205
 #. editskriptfrm..GroupBox1..Button5..Font.Name
@@ -7662,110 +7619,110 @@ msgid "Wingdings"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet2..FlipVerBtn..Caption
-#: buehnenansicht.dfm:2570
+#: buehnenansicht.dfm:2580
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..FlipVerBtn..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1299
 msgid "ô"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Caption
-#: buehnenansicht.dfm:2583
+#: buehnenansicht.dfm:2607
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1312
 msgid "Tastenkürzel"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label12..Caption
-#: buehnenansicht.dfm:2590
+#: buehnenansicht.dfm:2614
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label7..Caption
-#: buehnenansicht.dfm:2712
+#: buehnenansicht.dfm:2736
 msgid "Strg+Linksklick = (De-)Selektieren"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label15..Caption
-#: buehnenansicht.dfm:2604
+#: buehnenansicht.dfm:2628
 msgid "Klick auf Gerätebild:"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label16..Caption
-#: buehnenansicht.dfm:2617
+#: buehnenansicht.dfm:2641
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label16..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1366
 msgid "Klick auf Text:"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label17..Caption
-#: buehnenansicht.dfm:2637
+#: buehnenansicht.dfm:2661
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label17..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1386
 msgid "Rechtsklick = Kanalnamen ändern"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label18..Caption
-#: buehnenansicht.dfm:2644
+#: buehnenansicht.dfm:2668
 msgid "Rechtsklick = Kanalnummer ändern"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label19..Caption
-#: buehnenansicht.dfm:2651
+#: buehnenansicht.dfm:2675
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label19..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1400
 msgid "Klick auf Nummer:"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label20..Caption
-#: buehnenansicht.dfm:2671
+#: buehnenansicht.dfm:2695
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label20..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1420
 msgid "Klick = Farbe des Kanals ändern"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label21..Caption
-#: buehnenansicht.dfm:2678
+#: buehnenansicht.dfm:2702
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label21..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1427
 msgid "Klick auf Farbkreis:"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label2..Caption
-#: buehnenansicht.dfm:2698
+#: buehnenansicht.dfm:2722
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label9..Caption
-#: buehnenansicht.dfm:2739
+#: buehnenansicht.dfm:2763
 msgid "Linksklick+Ziehen = Verschieben"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label4..Caption
-#: buehnenansicht.dfm:2705
+#: buehnenansicht.dfm:2729
 msgid "Rechtsklick = Geräteeigenschaften"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label8..Caption
-#: buehnenansicht.dfm:2726
+#: buehnenansicht.dfm:2750
 msgid "Klick auf Kanalbild:"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label10..Caption
-#: buehnenansicht.dfm:2746
+#: buehnenansicht.dfm:2770
 msgid "Rechtsklick = Menü"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label5..Caption
-#: buehnenansicht.dfm:2753
+#: buehnenansicht.dfm:2777
 msgid "Shift+Strg+Links = Geräteselektion"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label1..Caption
-#: buehnenansicht.dfm:2760
+#: buehnenansicht.dfm:2784
 msgid "Shift+Linksklick = Geräteselektion"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet3..Label24..Caption
-#: buehnenansicht.dfm:2767
+#: buehnenansicht.dfm:2791
 msgid "Alt+Ziehen = Dynamisches Ziehen"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel2..colorbox1..Properties.DefaultColorCaption
-#: buehnenansicht.dfm:2834
+#: buehnenansicht.dfm:2858
 #. ddfeditorform..Panel4..Panel1..ColorPicker..Properties.DefaultColorCaption
 #: ddfeditorfrm.dfm:4909
 #. ddfeditorform..Panel4..Panel1..ColorPicker..Properties.DefaultColorHint
@@ -7804,7 +7761,7 @@ msgid "Automatic"
 msgstr ""
 
 #. grafischebuehnenansicht..Panel2..colorbox1..Properties.CustomColorCaption
-#: buehnenansicht.dfm:2835
+#: buehnenansicht.dfm:2859
 #. ddfeditorform..Panel4..Panel1..ColorPicker..Properties.CustomColorCaption
 #: ddfeditorfrm.dfm:4910
 #. DDFWindow..ColorPicker..Properties.CustomColorCaption
@@ -7823,11 +7780,11 @@ msgid "Andere Farben..."
 msgstr ""
 
 #. grafischebuehnenansicht..OpenDialog1....Filter
-#: buehnenansicht.dfm:2857
+#: buehnenansicht.dfm:2881
 #. grafischebuehnenansicht..SaveDialog1....Filter
-#: buehnenansicht.dfm:2866
+#: buehnenansicht.dfm:2890
 #. geraetesteuerung..OpenDialog2....Filter
-#: geraetesteuerungfrm.dfm:3602
+#: geraetesteuerungfrm.dfm:3601
 #. grafischebuehnenansicht..OpenDialog1....Filter
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2608
 #. grafischebuehnenansicht..SaveDialog1....Filter
@@ -7837,46 +7794,46 @@ msgid "PC_DIMMER Bühnenansicht (*.pcdstge)|*.pcdstge|Alle Dateien "
 msgstr ""
 
 #. grafischebuehnenansicht..PopupMenu1..Panelausblenden1..Caption
-#: buehnenansicht.dfm:2877
+#: buehnenansicht.dfm:2901
 #. grafischebuehnenansicht..PopupMenu1..Panelausblenden1..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2633
 msgid "Panel aus-/einblenden"
 msgstr ""
 
 #. grafischebuehnenansicht..PopupMenu1..NeuesGerthinzufgen2..Caption
-#: buehnenansicht.dfm:2882
+#: buehnenansicht.dfm:2906
 msgid "Neues Gerät hinzufügen..."
 msgstr ""
 
 #. grafischebuehnenansicht..PopupMenu1..extanzeigen1..Caption
-#: buehnenansicht.dfm:2900
+#: buehnenansicht.dfm:2924
 msgid "Text ein/aus"
 msgstr ""
 
 #. grafischebuehnenansicht..PopupMenu1..GroeFarbanzeige1..Caption
-#: buehnenansicht.dfm:2905
+#: buehnenansicht.dfm:2929
 #. grafischebuehnenansicht..PopupMenu1..GroeFarbanzeige1..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2642
 msgid "Große Farbanzeige ein/aus"
 msgstr ""
 
 #. grafischebuehnenansicht..PopupMenu1..NureinGertefensterffneneinaus1..Caption
-#: buehnenansicht.dfm:2910
+#: buehnenansicht.dfm:2934
 msgid "Nur ein Gerätefenster öffnen ein/aus"
 msgstr ""
 
 #. grafischebuehnenansicht..PopupMenu1..Iconsverriegeln1..Caption
-#: buehnenansicht.dfm:2915
+#: buehnenansicht.dfm:2939
 msgid "Icons verriegeln ein/aus"
 msgstr ""
 
 #. grafischebuehnenansicht..PopupMenu1..Zurcksetzen1..Caption
-#: buehnenansicht.dfm:2923
+#: buehnenansicht.dfm:2947
 msgid "Bühnenansicht leeren"
 msgstr ""
 
 #. grafischebuehnenansicht..PopupMenu1..ffnen1..Caption
-#: buehnenansicht.dfm:2928
+#: buehnenansicht.dfm:2952
 #. patcontrol..Open..Caption
 #: Pat.dfm:67
 #. projektverwaltung..PopupMenu1..ffnen1..Caption
@@ -7889,38 +7846,38 @@ msgid "Öffnen"
 msgstr ""
 
 #. grafischebuehnenansicht..PopupMenu1..BhnenansichtalsBilddateispeichern1..Caption
-#: buehnenansicht.dfm:2943
+#: buehnenansicht.dfm:2967
 #. grafischebuehnenansicht..PopupMenu1..BhnenansichtalsBilddateispeichern1..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2665
 msgid "Bühnenansicht als Bild speichern..."
 msgstr ""
 
 #. grafischebuehnenansicht..PopupMenu1..Bhnenansichtausdrucken1..Caption
-#: buehnenansicht.dfm:2948
+#: buehnenansicht.dfm:2972
 #. grafischebuehnenansicht..PopupMenu1..Bhnenansichtausdrucken1..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2669
 msgid "Bühnenansicht ausdrucken"
 msgstr ""
 
 #. grafischebuehnenansicht..devicepicture_popup..Gertebildndern1..Caption
-#: buehnenansicht.dfm:2969
+#: buehnenansicht.dfm:2993
 msgid "Iconbild ändern..."
 msgstr ""
 
 #. grafischebuehnenansicht..devicepicture_popup..Gertlschen1..Caption
-#: buehnenansicht.dfm:2973
+#: buehnenansicht.dfm:2997
 msgid "Icon löschen"
 msgstr ""
 
 #. grafischebuehnenansicht..devicepicture_popup..Kanalnamenndern1..Caption
-#: buehnenansicht.dfm:2980
+#: buehnenansicht.dfm:3004
 #. grafischebuehnenansicht..devicepicture_popup..Kanalnamenndern1..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2699
 msgid "Kanalnamen ändern"
 msgstr ""
 
 #. grafischebuehnenansicht..devicepicture_popup..Kanalnummerndern1..Caption
-#: buehnenansicht.dfm:2984
+#: buehnenansicht.dfm:3008
 #. grafischebuehnenansicht..devicepicture_popup..Kanalnummerndern1..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2703
 msgid "Kanalnummer ändern"
@@ -8391,7 +8348,7 @@ msgstr ""
 #. colormanagerform..Caption
 #: colormanagerfrm.dfm:5
 #. geraetesteuerung..Panel7..DeviceSetupBox..PngBitBtn4..Caption
-#: geraetesteuerungfrm.dfm:2110
+#: geraetesteuerungfrm.dfm:2109
 msgid "Farbmanager"
 msgstr ""
 
@@ -8528,10 +8485,10 @@ msgstr ""
 #: commandfrm.pas:276
 #: commandfrm.pas:286
 #: commandfrm.pas:296
-#: pcdimmer.pas:22342
-#: pcdimmer.pas:22353
-#: pcdimmer.pas:22370
-#: pcdimmer.pas:22387
+#: pcdimmer.pas:22395
+#: pcdimmer.pas:22406
+#: pcdimmer.pas:22423
+#: pcdimmer.pas:22440
 msgid "Kommando hier eingeben..."
 msgstr ""
 
@@ -10343,7 +10300,7 @@ msgstr ""
 #: ddfwindowfrm.dfm:553
 #. askforremovingform..Label4..Caption
 #: geraeteremovedfrm.dfm:25
-#: geraetesteuerungfrm.pas:1658
+#: geraetesteuerungfrm.pas:1719
 msgid "Gerätename:"
 msgstr ""
 
@@ -10952,7 +10909,7 @@ msgstr ""
 #. devicechannelselectionform..Panel3..ShowDDFCheckbox..Caption
 #: devicechannelselectionfrm.dfm:337
 #. geraetesteuerung..TBDock1..TBToolbar1..TBSubmenuItem1..showddfbtn..Caption
-#: geraetesteuerungfrm.dfm:3558
+#: geraetesteuerungfrm.dfm:3557
 #. kanaluebersichtform..PopupMenu1..DDFanzeigen1..Caption
 #: kanaluebersichtfrm.dfm:212
 msgid "DDF anzeigen"
@@ -11157,13 +11114,13 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Gerteszene1..Caption
 #: szenenverwaltung.dfm:1440
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2990
-#: geraetesteuerungfrm.pas:3005
+#: geraetesteuerungfrm.pas:3050
+#: geraetesteuerungfrm.pas:3065
 #. Name
-#: pcdimmer.pas:21230
-#: pcdimmer.pas:25949
+#: pcdimmer.pas:21283
+#: pcdimmer.pas:26002
 #. Werte einfügen
-#: pcdimmer.pas:26046
+#: pcdimmer.pas:26099
 #: szenenverwaltung.pas:1456
 #. Geräteszene
 #: szenenverwaltung.pas:4124
@@ -11766,7 +11723,7 @@ msgstr ""
 #: touchscreenfrm.dfm:1112
 #: devicelistfrm.pas:120
 #: nodecontrolfrm.pas:174
-#: pcdimmer.pas:22764
+#: pcdimmer.pas:22817
 #: preseteditorform.pas:857
 #: preseteditorform.pas:859
 #: presetsceneeditorform.pas:583
@@ -11999,8 +11956,8 @@ msgstr ""
 #: devicechannelselectionfrm.pas:1943
 #: devicescenefrm.pas:2435
 #: insscene.pas:291
-#: pcdimmer.pas:11592
-#: pcdimmer.pas:11594
+#: pcdimmer.pas:11633
+#: pcdimmer.pas:11635
 #: SetNames.pas:83
 #: plugins/Programmplugins/Alt/Kontrollpanel/insscene.pas:242
 #: plugins/Programmplugins/Alt/Leistungsplugin/settingfrm.pas:351
@@ -12420,7 +12377,7 @@ msgstr ""
 #. alle Effekte bis zur aktuellen Position abspielen
 #: audioeffektplayerfrm.pas:6296
 #: audioeffektplayerfrm.pas:6319
-#: pcdimmer.pas:21356
+#: pcdimmer.pas:21409
 #: szenenverwaltung.pas:2105
 msgid "Effekt"
 msgstr ""
@@ -12444,7 +12401,7 @@ msgstr ""
 #. effektsequenzer..Panel3..Panel2..Button12..Caption
 #: effektsequenzerfrm.dfm:634
 #. geraetesteuerung..Panel7..sortbtn..Caption
-#: geraetesteuerungfrm.dfm:3409
+#: geraetesteuerungfrm.dfm:3408
 msgid "Sortieren"
 msgstr ""
 
@@ -12524,9 +12481,9 @@ msgstr ""
 #. effektsequenzer..Panel1..GroupBox4..Button7..Caption
 #: effektsequenzerfrm.dfm:2402
 #. geraetesteuerung..Panel1..Panel6..ShowGroupIDbtn..Caption
-#: geraetesteuerungfrm.dfm:1576
+#: geraetesteuerungfrm.dfm:1575
 #. geraetesteuerung..Panel7..idbtn..Caption
-#: geraetesteuerungfrm.dfm:3397
+#: geraetesteuerungfrm.dfm:3396
 #. groupeditorform..Panel1..GroupBox2..ShowGroupIDbtn..Caption
 #: reordergroupfrm.dfm:682
 #. szenenverwaltungform..Panel1..Button6..Caption
@@ -13478,7 +13435,7 @@ msgstr ""
 
 #. firststepsform..Notebook1....JvXPButton10..Caption
 #: firststepsfrm.dfm:7768
-#: geraetesteuerungfrm.pas:1333
+#: geraetesteuerungfrm.pas:1258
 msgid "Geräte hinzufügen..."
 msgstr ""
 
@@ -13490,7 +13447,7 @@ msgstr ""
 #. firststepsform..Notebook1....GroupBox5..Caption
 #: firststepsfrm.dfm:7828
 #. geraetesteuerung..Panel7..GrundsetupBox..Caption
-#: geraetesteuerungfrm.dfm:2537
+#: geraetesteuerungfrm.dfm:2536
 #. joystickform..GroupBox3..Caption
 #: joystickfrm.dfm:886
 #. preseteditor..Panel1..GroupBox1..Caption
@@ -13510,7 +13467,7 @@ msgstr ""
 #. firststepsform..Notebook1....GroupBox5..buttonfarbe....Hint
 #: firststepsfrm.dfm:8564
 #. geraetesteuerung..Panel7..GrundsetupBox..colorBtn....Hint
-#: geraetesteuerungfrm.dfm:3271
+#: geraetesteuerungfrm.dfm:3270
 msgid "Ermöglicht das Einstellen der Farbe des Farbfilters für den "
 "Dimmerkanal"
 msgstr ""
@@ -13524,7 +13481,7 @@ msgstr ""
 #: firststepsfrm.dfm:8593
 #. grafischebuehnenansicht..Panel1..PageControl1..TabSheet1..Button6..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:1180
-#: geraetesteuerungfrm.pas:2192
+#: geraetesteuerungfrm.pas:2252
 msgid "Ändern"
 msgstr ""
 
@@ -13579,7 +13536,7 @@ msgstr ""
 #. pmmform..GroupBox3..usecolor12check..Caption
 #: pmm.dfm:6131
 #: devicelistfrm.pas:117
-#: pcdimmer.pas:22760
+#: pcdimmer.pas:22813
 msgid "Farbrad"
 msgstr ""
 
@@ -13921,7 +13878,7 @@ msgstr ""
 
 #. askforremovingform..Label6..Caption
 #: geraeteremovedfrm.dfm:41
-#: geraetesteuerungfrm.pas:1662
+#: geraetesteuerungfrm.pas:1723
 msgid "Adressbereich:"
 msgstr ""
 
@@ -13937,7 +13894,7 @@ msgstr ""
 
 #. askforremovingform..Label2..Caption
 #: geraeteremovedfrm.dfm:63
-#: geraetesteuerungfrm.pas:1660
+#: geraetesteuerungfrm.pas:1721
 msgid "Gerätetyp:"
 msgstr ""
 
@@ -13952,7 +13909,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2692
 #. mainform..PopupMenu1..Gertlschen1..Caption
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:793
-#: geraetesteuerungfrm.pas:1669
+#: geraetesteuerungfrm.pas:1730
 msgid "Gerät löschen"
 msgstr ""
 
@@ -14031,19 +13988,19 @@ msgid "Geräte:"
 msgstr ""
 
 #. geraetesteuerung..Panel3..VST......WideText
-#: geraetesteuerungfrm.dfm:899
+#: geraetesteuerungfrm.dfm:898
 #: devicelistfrm.pas:113
 #: reordergroupfrm.pas:139
 msgid "Adresse"
 msgstr ""
 
 #. geraetesteuerung..Panel3..VST......WideText
-#: geraetesteuerungfrm.dfm:904
+#: geraetesteuerungfrm.dfm:903
 msgid "Leistung"
 msgstr ""
 
 #. geraetesteuerung..Panel1..Panel6..RefreshGroupBtn..Hint
-#: geraetesteuerungfrm.dfm:958
+#: geraetesteuerungfrm.dfm:957
 #. groupeditorform..Panel2..RefreshGroupBtn..Hint
 #: reordergroupfrm.dfm:1550
 msgid "Aktualisiert die gewählte Gerätegruppe mit aktueller "
@@ -14051,21 +14008,21 @@ msgid "Aktualisiert die gewählte Gerätegruppe mit aktueller "
 msgstr ""
 
 #. geraetesteuerung..Panel1..Panel6..ActivateGroupBtn..Hint
-#: geraetesteuerungfrm.dfm:1075
+#: geraetesteuerungfrm.dfm:1074
 #. groupeditorform..Panel1..GroupBox2..ActivateGroupBtn..Hint
 #: reordergroupfrm.dfm:432
 msgid "Selektiert nur Gruppengeräte"
 msgstr ""
 
 #. geraetesteuerung..Panel1..Panel6..DeleteGroupBtn..Hint
-#: geraetesteuerungfrm.dfm:1196
+#: geraetesteuerungfrm.dfm:1195
 #. groupeditorform..Panel1..GroupBox2..DeleteGroupBtn..Hint
 #: reordergroupfrm.dfm:287
 msgid "Löscht die ausgewählte Gerätegruppe"
 msgstr ""
 
 #. geraetesteuerung..Panel1..Panel6..AddGroupBtn..Hint
-#: geraetesteuerungfrm.dfm:1323
+#: geraetesteuerungfrm.dfm:1322
 #. groupeditorform..Panel1..GroupBox2..AddGroupBtn..Hint
 #: reordergroupfrm.dfm:163
 msgid "Fügt eine neue Gerätegruppe mit der aktuellen Auswahl "
@@ -14073,7 +14030,7 @@ msgid "Fügt eine neue Gerätegruppe mit der aktuellen Auswahl "
 msgstr ""
 
 #. geraetesteuerung..Panel1..Panel6..AddDeviceGroupWithoutDeselectBtn..Hint
-#: geraetesteuerungfrm.dfm:1447
+#: geraetesteuerungfrm.dfm:1446
 #. groupeditorform..Panel1..GroupBox2..AddDeviceGroupWithoutDeselectBtn..Hint
 #: reordergroupfrm.dfm:553
 msgid "Fügt die Geräte der Gruppe der aktuellen Selektion "
@@ -14081,7 +14038,7 @@ msgid "Fügt die Geräte der Gruppe der aktuellen Selektion "
 msgstr ""
 
 #. geraetesteuerung..Panel1..Panel6..ShowGroupIDbtn....Hint
-#: geraetesteuerungfrm.dfm:1575
+#: geraetesteuerungfrm.dfm:1574
 #. groupeditorform..Panel1..GroupBox2..ShowGroupIDbtn....Hint
 #: reordergroupfrm.dfm:681
 msgid "Zeigt die ID der aktuellen Gruppe an. Wird z.B. in "
@@ -14089,71 +14046,71 @@ msgid "Zeigt die ID der aktuellen Gruppe an. Wird z.B. in "
 msgstr ""
 
 #. geraetesteuerung..Panel1..Panel6..ReorderGroupBtn..Hint
-#: geraetesteuerungfrm.dfm:1587
+#: geraetesteuerungfrm.dfm:1586
 msgid "Gruppeneditor öffnen..."
 msgstr ""
 
 #. geraetesteuerung..Panel1..Panel8..Panel12..deviceusedinlbl..Caption
-#: geraetesteuerungfrm.dfm:1746
+#: geraetesteuerungfrm.dfm:1745
 msgid "Verwendungsort des markierten Gerätes:"
 msgstr ""
 
 #. geraetesteuerung..Panel1..Panel11..geraetegruppenlbl..Caption
-#: geraetesteuerungfrm.dfm:1815
+#: geraetesteuerungfrm.dfm:1814
 msgid "Gerätegruppen:"
 msgstr ""
 
 #. geraetesteuerung..Panel7..DeviceSetupBox..Caption
-#: geraetesteuerungfrm.dfm:1857
+#: geraetesteuerungfrm.dfm:1856
 msgid "  Gerätewerte "
 msgstr ""
 
 #. geraetesteuerung..Panel7..DeviceSetupBox..positionlbl..Caption
-#: geraetesteuerungfrm.dfm:1864
+#: geraetesteuerungfrm.dfm:1863
 msgid "Positionskalibrierung:"
 msgstr ""
 
 #. geraetesteuerung..Panel7..DeviceSetupBox..PngBitBtn2....Hint
-#: geraetesteuerungfrm.dfm:1873
+#: geraetesteuerungfrm.dfm:1872
 msgid "Ermöglicht das Einstellen einer Dimmerkurve für die einzelnen Kanäle "
 "des selektierten Gerätes"
 msgstr ""
 
 #. geraetesteuerung..Panel7..DeviceSetupBox..PngBitBtn2..Caption
-#: geraetesteuerungfrm.dfm:1874
+#: geraetesteuerungfrm.dfm:1873
 msgid "Dimmerkurve"
 msgstr ""
 
 #. geraetesteuerung..Panel7..DeviceSetupBox..PngBitBtn1..Hint
-#: geraetesteuerungfrm.dfm:1980
+#: geraetesteuerungfrm.dfm:1979
 msgid "Ändert das Bild für die grafische Bühnenansicht"
 msgstr ""
 
 #. geraetesteuerung..Panel7..DeviceSetupBox..PngBitBtn1..Caption
-#: geraetesteuerungfrm.dfm:1981
+#: geraetesteuerungfrm.dfm:1980
 msgid "Gerätebild"
 msgstr ""
 
 #. geraetesteuerung..Panel7..DeviceSetupBox..PngBitBtn4..Hint
-#: geraetesteuerungfrm.dfm:2109
+#: geraetesteuerungfrm.dfm:2108
 msgid "Richtet für Geräte mit Farbrad die einzelnen Farben "
 "ein"
 msgstr ""
 
 #. geraetesteuerung..Panel7..DeviceSetupBox..panmirror..Caption
-#: geraetesteuerungfrm.dfm:2236
+#: geraetesteuerungfrm.dfm:2235
 msgid "Invertiere Pan"
 msgstr ""
 
 #. geraetesteuerung..Panel7..DeviceSetupBox..tiltmirror..Caption
-#: geraetesteuerungfrm.dfm:2246
+#: geraetesteuerungfrm.dfm:2245
 msgid "Invertiere Tilt"
 msgstr ""
 
 #. geraetesteuerung..Panel7..DeviceSetupBox..SyncTypeBox..Text
-#: geraetesteuerungfrm.dfm:2262
+#: geraetesteuerungfrm.dfm:2261
 #. geraetesteuerung..Panel7..DeviceSetupBox..SyncTypeBox....Items.Strings
-#: geraetesteuerungfrm.dfm:2265
+#: geraetesteuerungfrm.dfm:2264
 #. OptionenBox..Notebook1....GroupBox8..autolocktime..Text
 #: Optionen.dfm:1557
 #. OptionenBox..Notebook1....GroupBox8..autolocktime....Items.Strings
@@ -14174,23 +14131,23 @@ msgid "Deaktiviert"
 msgstr ""
 
 #. geraetesteuerung..Panel7..DeviceSetupBox..CalibrateBtn..Hint
-#: geraetesteuerungfrm.dfm:2288
+#: geraetesteuerungfrm.dfm:2287
 msgid "Richtet für jeden Scanner/MH ein eigenes Koordinatensystem "
 "ein"
 msgstr ""
 
 #. geraetesteuerung..Panel7..DeviceSetupBox..CalibrateBtn..Caption
-#: geraetesteuerungfrm.dfm:2289
+#: geraetesteuerungfrm.dfm:2288
 msgid "Kalibrieren"
 msgstr ""
 
 #. geraetesteuerung..Panel7..DeviceSetupBox..PngBitBtn3..Caption
-#: geraetesteuerungfrm.dfm:2410
+#: geraetesteuerungfrm.dfm:2409
 msgid "Geräteleistung"
 msgstr ""
 
 #. geraetesteuerung..Panel7..GrundsetupBox..adresselbl..Caption
-#: geraetesteuerungfrm.dfm:2544
+#: geraetesteuerungfrm.dfm:2543
 #. lauflichtassistentownpatternform..Panel1..GroupBox1..Label6..Caption
 #: lauflichtassistentownpatternfrm.dfm:86
 #. matrixeditorform..Panel1..GroupBox1..Label6..Caption
@@ -14212,7 +14169,7 @@ msgid "Adresse:"
 msgstr ""
 
 #. geraetesteuerung..Panel7..GrundsetupBox..colorlbl..Caption
-#: geraetesteuerungfrm.dfm:2551
+#: geraetesteuerungfrm.dfm:2550
 #. kontrollpanel..Panel1..Label3..Caption
 #: kontrollpanelform.dfm:197
 #. MainForm..Panel1..PageControl1..TabSheet2..Label4..Caption
@@ -14223,12 +14180,12 @@ msgid "Farbe:"
 msgstr ""
 
 #. geraetesteuerung..Panel7..renameBtn..Hint
-#: geraetesteuerungfrm.dfm:3286
+#: geraetesteuerungfrm.dfm:3285
 msgid "Nennt ein Gerät um"
 msgstr ""
 
 #. geraetesteuerung..Panel7..renameBtn..Caption
-#: geraetesteuerungfrm.dfm:3287
+#: geraetesteuerungfrm.dfm:3286
 #. projektverwaltung..PopupMenu1..Umbenennen1..Caption
 #: projektverwaltungfrm.dfm:545
 #. scannersynchronisationform..Button1..Caption
@@ -14237,98 +14194,98 @@ msgid "Umbenennen"
 msgstr ""
 
 #. geraetesteuerung..Panel7..idbtn....Hint
-#: geraetesteuerungfrm.dfm:3396
+#: geraetesteuerungfrm.dfm:3395
 msgid "Zeigt die ID des aktuellen Gerätes an. Halten Sie zum Ändern der ID "
 "die STRG-Taste beim Klicken gedrückt."
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Datei1..Gertesteuerungzurcksetzen1..Caption
-#: geraetesteuerungfrm.dfm:3432
+#: geraetesteuerungfrm.dfm:3431
 msgid "Gerätesteuerung zurücksetzen"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Datei1..Gertesteuerungspeichern1..Caption
-#: geraetesteuerungfrm.dfm:3442
+#: geraetesteuerungfrm.dfm:3441
 msgid "Gerätesteuerung speichern..."
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..Gerthinzufgen1..Caption
-#: geraetesteuerungfrm.dfm:3450
+#: geraetesteuerungfrm.dfm:3449
 msgid "Hinzufügen..."
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..Bearbeiten1..Caption
-#: geraetesteuerungfrm.dfm:3454
+#: geraetesteuerungfrm.dfm:3453
 msgid "Bearbeiten..."
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..Lschen1..Caption
-#: geraetesteuerungfrm.dfm:3459
+#: geraetesteuerungfrm.dfm:3458
 msgid "Löschen..."
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..Bildndern1..Caption
-#: geraetesteuerungfrm.dfm:3465
+#: geraetesteuerungfrm.dfm:3464
 #. kontrollpanel..ButtonPopup..Bildndern1..Caption
 #: kontrollpanelform.dfm:1362
 msgid "Bild ändern..."
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..Kanalnamesenden1..Caption
-#: geraetesteuerungfrm.dfm:3470
+#: geraetesteuerungfrm.dfm:3469
 msgid "Kanalname senden"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..Dimmerkurveneinstellen1..Caption
-#: geraetesteuerungfrm.dfm:3475
+#: geraetesteuerungfrm.dfm:3474
 msgid "Dimmerkurven einstellen..."
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..Scannersynchronisation1..Caption
-#: geraetesteuerungfrm.dfm:3480
+#: geraetesteuerungfrm.dfm:3479
 msgid "Scanner kalibrieren..."
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..Gerteadressenexportieren1..Caption
-#: geraetesteuerungfrm.dfm:3489
+#: geraetesteuerungfrm.dfm:3488
 msgid "Adressen exportieren..."
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..Adressenimportieren1..Caption
-#: geraetesteuerungfrm.dfm:3493
+#: geraetesteuerungfrm.dfm:3492
 msgid "Adressen importieren..."
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..TBSubmenuItem2..Caption
-#: geraetesteuerungfrm.dfm:3499
+#: geraetesteuerungfrm.dfm:3498
 #. MainForm..dxBarManager1..dxBarManager1Bar6..Caption
 #: pcdimmer.dfm:18372
 msgid "Zusatzfunktionen"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..TBSubmenuItem2..TBItem2..Caption
-#: geraetesteuerungfrm.dfm:3501
+#: geraetesteuerungfrm.dfm:3500
 msgid "Alle Gerätebilder neu synchronisieren"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..TBSubmenuItem2..TBItem3..Caption
-#: geraetesteuerungfrm.dfm:3505
+#: geraetesteuerungfrm.dfm:3504
 msgid "Gobokorrelation neu erstellen"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..TBSubmenuItem2..GertemitGertedateiabgleichen1..Caption
-#: geraetesteuerungfrm.dfm:3509
+#: geraetesteuerungfrm.dfm:3508
 msgid "Selektierte Geräte mit Gerätedefinition "
 "abgleichen"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gerte1..TBSubmenuItem2..TBItem4..Caption
-#: geraetesteuerungfrm.dfm:3514
+#: geraetesteuerungfrm.dfm:3513
 msgid "ID des selektierten Gerätes ändern"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gruppen1..Caption
-#: geraetesteuerungfrm.dfm:3520
+#: geraetesteuerungfrm.dfm:3519
 #. konsolensteuerung..GroupBox3..GroupsBtn..Caption
 #: konsolensteuerungfrm.dfm:775
 #. touchscreenform..Panel1..groupbtn..Caption
@@ -14337,59 +14294,59 @@ msgid "Gruppen"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gruppen1..Gruppeneditor1..Caption
-#: geraetesteuerungfrm.dfm:3522
+#: geraetesteuerungfrm.dfm:3521
 msgid "Gruppeneditor öffnen"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gruppen1..Gruppenhinzufgen1..Caption
-#: geraetesteuerungfrm.dfm:3528
+#: geraetesteuerungfrm.dfm:3527
 msgid "Neue Gruppe hinzufügen"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gruppen1..Lschen2..Caption
-#: geraetesteuerungfrm.dfm:3532
+#: geraetesteuerungfrm.dfm:3531
 msgid "Selektierte Gruppe löschen"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gruppen1..Auswahlaktualisieren1..Caption
-#: geraetesteuerungfrm.dfm:3536
+#: geraetesteuerungfrm.dfm:3535
 msgid "Auswahl aktualisieren"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gruppen1..Gruppeanzeigen1..Caption
-#: geraetesteuerungfrm.dfm:3540
+#: geraetesteuerungfrm.dfm:3539
 msgid "Nur Gruppengeräte selektieren"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gruppen1..Gruppeadditivanzeigen1..Caption
-#: geraetesteuerungfrm.dfm:3544
+#: geraetesteuerungfrm.dfm:3543
 msgid "Aktuelle Selektion + Gruppe"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..Gruppen1..IDderaktuellenGruppeanzeigen1..Caption
-#: geraetesteuerungfrm.dfm:3550
+#: geraetesteuerungfrm.dfm:3549
 msgid "ID der aktuellen Gruppe anzeigen"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..TBSubmenuItem1..Caption
-#: geraetesteuerungfrm.dfm:3555
+#: geraetesteuerungfrm.dfm:3554
 msgid "DDFs"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..TBSubmenuItem1..TBItem1..Caption
-#: geraetesteuerungfrm.dfm:3563
+#: geraetesteuerungfrm.dfm:3562
 msgid "DDFs aktualisieren"
 msgstr ""
 
 #. geraetesteuerung..TBDock1..TBToolbar1..DDFEditor1..Caption
-#: geraetesteuerungfrm.dfm:3568
+#: geraetesteuerungfrm.dfm:3567
 msgid "Geräteeditor"
 msgstr ""
 
 #. geraetesteuerung..OpenDialog1..DefaultExt
-#: geraetesteuerungfrm.dfm:3573
+#: geraetesteuerungfrm.dfm:3572
 #. geraetesteuerung..SaveDialog1..DefaultExt
-#: geraetesteuerungfrm.dfm:3580
+#: geraetesteuerungfrm.dfm:3579
 #. mainform..OpenDialog1..DefaultExt
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:771
 #. mainform..SaveDialog1..DefaultExt
@@ -14398,28 +14355,28 @@ msgid "*.pcddevs"
 msgstr ""
 
 #. geraetesteuerung..OpenDialog1..Filter
-#: geraetesteuerungfrm.dfm:3574
+#: geraetesteuerungfrm.dfm:3573
 #. geraetesteuerung..SaveDialog1..Filter
-#: geraetesteuerungfrm.dfm:3581
+#: geraetesteuerungfrm.dfm:3580
 #. mainform..OpenDialog1..Filter
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:772
 #. mainform..SaveDialog1..Filter
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:778
-#: geraetesteuerungfrm.pas:651
-#: geraetesteuerungfrm.pas:664
+#: geraetesteuerungfrm.pas:656
+#: geraetesteuerungfrm.pas:669
 msgid "PC_DIMMER Gerätedatei (*.pcddevs)|*.pcddevs|Alle "
 "Dateien|*.*"
 msgstr ""
 
 #. geraetesteuerung..OpenDialog1..Title
-#: geraetesteuerungfrm.dfm:3575
-#: geraetesteuerungfrm.pas:666
+#: geraetesteuerungfrm.dfm:3574
+#: geraetesteuerungfrm.pas:671
 msgid "PC_DIMMER Gerätedatei öffnen"
 msgstr ""
 
 #. geraetesteuerung..SaveDialog1..Title
-#: geraetesteuerungfrm.dfm:3583
-#: geraetesteuerungfrm.pas:653
+#: geraetesteuerungfrm.dfm:3582
+#: geraetesteuerungfrm.pas:658
 msgid "PC_DIMMER Gerätedatei speichern"
 msgstr ""
 
@@ -16179,7 +16136,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..EinfacheSzene1..Caption
 #: szenenverwaltung.dfm:1435
 #. Name
-#: pcdimmer.pas:21215
+#: pcdimmer.pas:21268
 #: szenenverwaltung.pas:1414
 msgid "Einfache Szene"
 msgstr ""
@@ -16772,7 +16729,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Kompositionsszene1..Caption
 #: szenenverwaltung.dfm:1460
 #. Name
-#: pcdimmer.pas:21296
+#: pcdimmer.pas:21349
 #: szenenverwaltung.pas:1740
 msgid "Kombinationsszene"
 msgstr ""
@@ -17002,7 +16959,7 @@ msgstr ""
 #: pcdimmer.dfm:1667
 #. mainform..Panel1..ComboBox1....Items.Strings
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:472
-#: pcdimmer.pas:26627
+#: pcdimmer.pas:26680
 msgid "<Leer>"
 msgstr ""
 
@@ -17585,7 +17542,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:581
 #: kontrollpanelform.pas:585
 #: nodecontrolfrm.pas:169
-#: pcdimmer.pas:25158
+#: pcdimmer.pas:25211
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1031
 msgid "Weiß"
 msgstr ""
@@ -18170,7 +18127,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..MediaCenterSzene1..Caption
 #: szenenverwaltung.dfm:1475
 #. Name
-#: pcdimmer.pas:21370
+#: pcdimmer.pas:21423
 #: szenenverwaltung.pas:1951
 msgid "MediaCenter Szene"
 msgstr ""
@@ -18582,7 +18539,7 @@ msgstr ""
 #. pmmform..GroupBox3..usergbcheck..Caption
 #: pmm.dfm:6113
 #: devicelistfrm.pas:119
-#: pcdimmer.pas:22762
+#: pcdimmer.pas:22815
 msgid "RGB"
 msgstr ""
 
@@ -19484,12 +19441,6 @@ msgstr ""
 #: pcdimmer.dfm:32877
 #. MainForm..dxBarManager1..dxBarButton7..Hint
 #: pcdimmer.dfm:32879
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:246
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:242
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:242
 msgid "Beenden"
 msgstr ""
 
@@ -19814,7 +19765,7 @@ msgstr ""
 
 #. MainForm..dxRibbonStatusBar1......Text
 #: pcdimmer.dfm:319
-#: pcdimmer.pas:14516
+#: pcdimmer.pas:14569
 msgid "1 Einschalten"
 msgstr ""
 
@@ -20028,7 +19979,7 @@ msgstr ""
 #: plugins/Programmplugins/SoftScanner/aboutfrm.dfm:5
 #. About..Caption
 #: plugins/Programmplugins/Temperaturregler/aboutfrm.dfm:5
-#: pcdimmer.pas:12496
+#: pcdimmer.pas:12537
 msgid "Info..."
 msgstr ""
 
@@ -22993,7 +22944,7 @@ msgstr ""
 #. groupeditorform..Panel1..GroupBox2..Label1..Caption
 #: reordergroupfrm.dfm:137
 #. Objektekopieren nur starten, wenn nicht letztes Element (Row=RowCount-1) selektiert
-#: geraetesteuerungfrm.pas:2101
+#: geraetesteuerungfrm.pas:2161
 #. Objektekopieren nur starten, wenn nicht letztes Element selektiert
 #: reordergroupfrm.pas:533
 msgid "Gruppenname:"
@@ -23486,9 +23437,9 @@ msgstr ""
 #. Config..GroupBox3..GroupBox5..Label28..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:319
 #. Config..Panel1..GroupBox3..GroupBox5..Label25..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:719
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:716
 #. Config..Panel1..GroupBox3..GroupBox5..Label28..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:726
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:723
 msgid ":"
 msgstr ""
 
@@ -23857,7 +23808,7 @@ msgstr ""
 
 #. szenenverwaltungform..PopupMenu1..Bewegungsszene1..Caption
 #: szenenverwaltung.dfm:1450
-#: pcdimmer.pas:21268
+#: pcdimmer.pas:21321
 #: szenenverwaltung.pas:1611
 msgid "Bewegungsszene"
 msgstr ""
@@ -23865,7 +23816,7 @@ msgstr ""
 #. szenenverwaltungform..PopupMenu1..Preset1..Caption
 #: szenenverwaltung.dfm:1465
 #. Name
-#: pcdimmer.pas:21311
+#: pcdimmer.pas:21364
 msgid "Preset"
 msgstr ""
 
@@ -23999,9 +23950,9 @@ msgstr ""
 #. Config..GroupBox3..GroupBox6..Label23..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:450
 #. Config..Panel1..GroupBox3..GroupBox6..Label22..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:850
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:847
 #. Config..Panel1..GroupBox3..GroupBox6..Label23..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:857
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:854
 msgid "K"
 msgstr ""
 
@@ -24416,15 +24367,15 @@ msgstr ""
 
 #. frmInternetUpdateFound..Panel2..Button1..Caption
 #: UpdateFoundFormD4.dfm:169
-#: pcdimmer.pas:9308
-#: pcdimmer.pas:9329
+#: pcdimmer.pas:9349
+#: pcdimmer.pas:9370
 msgid "&Ja"
 msgstr ""
 
 #. frmInternetUpdateFound..Panel2..Button2..Caption
 #: UpdateFoundFormD4.dfm:187
-#: pcdimmer.pas:9308
-#: pcdimmer.pas:9329
+#: pcdimmer.pas:9349
+#: pcdimmer.pas:9370
 msgid "&Nein"
 msgstr ""
 
@@ -24503,7 +24454,7 @@ msgstr ""
 #. usermgmtform..GroupBox1..accesslevelbox....Items.Strings
 #: usermgmtfrm.dfm:674
 #. switch to Visitor-Access-Level
-#: pcdimmer.pas:9145
+#: pcdimmer.pas:9186
 msgid "Besucher"
 msgstr ""
 
@@ -25344,8 +25295,6 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:57
 #. Settings..Label4..Caption
 #: plugins/Programmplugins/SoftScanner/settingfrm.dfm:1398
-#. setupform..GroupBox1..Label5..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:57
 msgid "Status:"
 msgstr ""
 
@@ -25491,8 +25440,6 @@ msgstr ""
 #: plugins/Ausgabeplugin/ArtNet/mainfrm.dfm:598
 #. mainform..PageControl1..TabSheet5..GroupBox8..Label29..Caption
 #: plugins/Ausgabeplugin/ArtNet/mainfrm.dfm:963
-#. Programmer's name: POPUP
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:244
 msgid "Universe"
 msgstr ""
 
@@ -26458,13 +26405,9 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:71
 #. Settings..Label5..Caption
 #: plugins/Programmplugins/SoftScanner/settingfrm.dfm:1405
-#. setupform..GroupBox1..statuslabel..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:71
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.pas:120
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.pas:153
 #: plugins/Programmplugins/SoftScanner/settingfrm.pas:253
-#: plugins/Programmplugins/Temperaturregler/setup.pas:135
-#: plugins/Programmplugins/Temperaturregler/setup.pas:168
 msgid "Nicht verbunden..."
 msgstr ""
 
@@ -26489,7 +26432,7 @@ msgstr ""
 #. Config..comport..PortName
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:715
 #. Config..comport..PortName
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:947
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:934
 msgid "\\\\.\\COM2"
 msgstr ""
 
@@ -28159,12 +28102,6 @@ msgstr ""
 #: plugins/Ausgabeplugin/Parallelport/aboutfrm.dfm:5
 #. About..Caption
 #: plugins/Ausgabeplugin/Velleman_K8055/aboutfrm.dfm:5
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:259
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:253
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:246
 msgid "About"
 msgstr ""
 
@@ -28466,15 +28403,11 @@ msgstr ""
 
 #. Mainform..GroupBox4..Button9..Caption
 #: plugins/Ausgabeplugin/dmx4all/Testprogramm/main.dfm:4115
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:254
 msgid "19200 Baud"
 msgstr ""
 
 #. Mainform..GroupBox4..Button10..Caption
 #: plugins/Ausgabeplugin/dmx4all/Testprogramm/main.dfm:4124
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:255
 msgid "38400 Baud"
 msgstr ""
 
@@ -30129,7 +30062,7 @@ msgstr ""
 #. setupform..GroupBox1..Label2..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:30
 #. setupform..GroupBox1..Label2..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:30
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:31
 msgid "Serieller Anschluss:"
 msgstr ""
 
@@ -30138,7 +30071,7 @@ msgstr ""
 #. setupform..GroupBox1..Label3..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:37
 #. setupform..GroupBox1..Label3..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:37
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:38
 msgid "Baudrate:"
 msgstr ""
 
@@ -30147,7 +30080,7 @@ msgstr ""
 #. setupform..GroupBox1..Label4..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:44
 #. setupform..GroupBox1..Label4..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:44
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:45
 msgid "kein serieller Anschluss mehr frei"
 msgstr ""
 
@@ -30183,7 +30116,7 @@ msgstr ""
 #. setupform..GroupBox1..Button1....Hint
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:130
 #. setupform..GroupBox1..Button1....Hint
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:130
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:102
 msgid "Falls oben nicht alle verfügbaren COM-Ports angezeigt werden, können "
 "hier auf eine alternative Weise die COM-Ports erkannt "
 "werden."
@@ -30194,7 +30127,7 @@ msgstr ""
 #. setupform..GroupBox1..Button1..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:131
 #. setupform..GroupBox1..Button1..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:131
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:103
 msgid "COM-Ports neu suchen"
 msgstr ""
 
@@ -31245,7 +31178,7 @@ msgstr ""
 #: lauflichtassistentfrm.pas:922
 #: lauflichtassistentownpatternfrm.pas:267
 #: matrixeditorfrm.pas:236
-#: pcdimmer.pas:25492
+#: pcdimmer.pas:25545
 msgid "n/a"
 msgstr ""
 
@@ -31327,7 +31260,7 @@ msgstr ""
 #: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:583
 #: kontrollpanelform.pas:582
 #: pcdimmer.pas:3945
-#: pcdimmer.pas:25155
+#: pcdimmer.pas:25208
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1028
 msgid "Gelb"
 msgstr ""
@@ -31675,7 +31608,7 @@ msgstr ""
 #. Config..GroupBox3..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:163
 #. Config..Panel1..GroupBox3..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:571
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:568
 msgid " Temperatureinstellungen "
 msgstr ""
 
@@ -31706,17 +31639,17 @@ msgstr ""
 #. Config..GroupBox2..deltatemplbl..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:704
 #. Config..Panel2..GroupBox1..temp2lbl..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:233
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:230
 #. Config..Panel2..GroupBox1..temp3lbl..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:263
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:260
 #. Config..Panel2..GroupBox7..tempminlbl..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:408
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:405
 #. Config..Panel2..GroupBox7..tempmeanlbl..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:423
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:420
 #. Config..Panel2..GroupBox7..tempmaxlbl..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:438
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:435
 #. Config..Panel1..GroupBox3..tempcurrentlbl..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:580
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:577
 msgid "0,0°C"
 msgstr ""
 
@@ -31725,9 +31658,9 @@ msgstr ""
 #. Config..GroupBox3..Label14..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:205
 #. Config..Panel1..GroupBox3..Label14..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:595
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:592
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.pas:512
-#: plugins/Programmplugins/Temperaturregler/configfrm.pas:326
+#: plugins/Programmplugins/Temperaturregler/configfrm.pas:318
 msgid "Temperaturregler deaktiviert..."
 msgstr ""
 
@@ -31736,7 +31669,7 @@ msgstr ""
 #. Config..GroupBox3..Label8..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:240
 #. Config..Panel1..GroupBox3..Label8..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:630
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:627
 msgid "Heizen"
 msgstr ""
 
@@ -31745,7 +31678,7 @@ msgstr ""
 #. Config..GroupBox3..Label26..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:247
 #. Config..Panel1..GroupBox3..Label26..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:637
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:634
 msgid "Hysterese"
 msgstr ""
 
@@ -31754,21 +31687,21 @@ msgstr ""
 #. Config..GroupBox3..Label27..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:265
 #. Config..Panel1..GroupBox3..Label27..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:655
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:652
 msgid "Temp. OK"
 msgstr ""
 
 #. Config..GroupBox3..Label24..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:263
 #. Config..Panel1..GroupBox3..Label24..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:670
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:667
 msgid "Nachtabs."
 msgstr ""
 
 #. Config..GroupBox3..Label9..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:272
 #. Config..Panel1..GroupBox3..Label9..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:679
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:676
 msgid "Aktuelle Temperatur:"
 msgstr ""
 
@@ -31777,42 +31710,42 @@ msgstr ""
 #. Config..GroupBox3..tempon..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:305
 #. Config..Panel1..GroupBox3..tempon..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:692
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:689
 msgid "Regelung ein"
 msgstr ""
 
 #. Config..GroupBox3..Button1..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:296
 #. Config..Panel1..GroupBox3..Button1..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:703
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:700
 msgid "Erweiterte Einstellungen..."
 msgstr ""
 
 #. Config..GroupBox3..GroupBox5..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:305
 #. Config..Panel1..GroupBox3..GroupBox5..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:712
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:709
 msgid " Nachtabsenkung "
 msgstr ""
 
 #. Config..GroupBox3..GroupBox5..Label29..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:327
 #. Config..Panel1..GroupBox3..GroupBox5..Label29..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:734
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:731
 msgid "Ab:"
 msgstr ""
 
 #. Config..GroupBox3..GroupBox5..Label30..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:335
 #. Config..Panel1..GroupBox3..GroupBox5..Label30..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:742
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:739
 msgid "Bis:"
 msgstr ""
 
 #. Config..GroupBox3..GroupBox5..Label31..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:343
 #. Config..Panel1..GroupBox3..GroupBox5..Label31..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:750
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:747
 msgid "Absenkung:"
 msgstr ""
 
@@ -31821,51 +31754,51 @@ msgstr ""
 #. Config..GroupBox3..GroupBox6..Label13..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:418
 #. Config..Panel1..GroupBox3..GroupBox5..Label32..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:757
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:754
 #. Config..Panel1..GroupBox3..GroupBox6..Label13..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:825
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:822
 msgid "°C"
 msgstr ""
 
 #. Config..GroupBox3..GroupBox5..CheckBox2..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:357
 #. Config..Panel1..GroupBox3..GroupBox5..CheckBox2..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:764
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:761
 msgid "Nachtabsenkung ein"
 msgstr ""
 
 #. Config..GroupBox3..GroupBox6..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:411
 #. Config..Panel1..GroupBox3..GroupBox6..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:818
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:815
 msgid " Temperatur-Sollwert "
 msgstr ""
 
 #. Config..GroupBox3..GroupBox6..Label10..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:427
 #. Config..Panel1..GroupBox3..GroupBox6..Label10..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:834
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:831
 msgid "Ein-Schwelle: dT<"
 msgstr ""
 
 #. Config..GroupBox3..GroupBox6..Label11..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:436
 #. Config..Panel1..GroupBox3..GroupBox6..Label11..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:843
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:840
 msgid "Aus-Schwelle: dT>"
 msgstr ""
 
 #. Config..GroupBox3..GroupBox6..CheckBox1..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:494
 #. Config..Panel1..GroupBox3..GroupBox6..CheckBox1..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:901
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:898
 msgid "Mittelwert als Referenz"
 msgstr ""
 
 #. Config..GroupBox3..Button2..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:504
 #. Config..Panel1..GroupBox3..Button2..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:911
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:908
 msgid "<<"
 msgstr ""
 
@@ -31957,7 +31890,7 @@ msgstr ""
 #. Config..GroupBox1..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:585
 #. Config..Panel2..GroupBox1..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:209
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:206
 msgid " Weitere Temperatursensoren "
 msgstr ""
 
@@ -31968,9 +31901,9 @@ msgstr ""
 #. Config..GroupBox1..Label2..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:594
 #. Config..Panel2..GroupBox1..Label2..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:218
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:215
 #. setupform..GroupBox5..Label1..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:290
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:262
 msgid "Temperatur 2:"
 msgstr ""
 
@@ -31981,9 +31914,9 @@ msgstr ""
 #. Config..GroupBox1..Label1..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:624
 #. Config..Panel2..GroupBox1..Label1..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:248
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:245
 #. setupform..GroupBox5..Label6..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:299
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:271
 msgid "Temperatur 3:"
 msgstr ""
 
@@ -31992,7 +31925,7 @@ msgstr ""
 #. Config..GroupBox1..Label3..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:654
 #. Config..Panel2..GroupBox1..Label3..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:278
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:275
 msgid "(Eingangstür)"
 msgstr ""
 
@@ -32001,7 +31934,7 @@ msgstr ""
 #. Config..GroupBox1..Label4..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:663
 #. Config..Panel2..GroupBox1..Label4..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:287
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:284
 msgid "(Decke)"
 msgstr ""
 
@@ -32010,7 +31943,7 @@ msgstr ""
 #. Config..GroupBox2..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:671
 #. Config..Panel2..GroupBox2..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:295
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:292
 msgid " Ermittelte Werte "
 msgstr ""
 
@@ -32019,7 +31952,7 @@ msgstr ""
 #. Config..GroupBox2..Label5..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:680
 #. Config..Panel2..GroupBox2..Label5..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:304
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:301
 msgid "Delta T:"
 msgstr ""
 
@@ -32033,49 +31966,49 @@ msgstr ""
 #. Config..GroupBox2..deltatemplbl..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.dfm:841
 #. Config..Panel2..GroupBox2..deltatemplbl..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:328
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:325
 msgid "... °C"
 msgstr ""
 
 #. setupform..GroupBox1..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:23
 #. setupform..GroupBox1..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:23
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:24
 msgid " Kommunikationseinstellungen "
 msgstr ""
 
 #. setupform..GroupBox1..CheckBox2..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:151
 #. setupform..GroupBox1..CheckBox2..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:151
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:123
 msgid "Vertausche L/H"
 msgstr ""
 
 #. setupform..GroupBox2..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:160
 #. setupform..GroupBox2..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:160
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:132
 msgid " Sende Werte an folgende Data-In-Kanäle "
 msgstr ""
 
 #. setupform..GroupBox2..Label13..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:167
 #. setupform..GroupBox2..Label13..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:167
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:139
 msgid "Temperatur:"
 msgstr ""
 
 #. setupform..GroupBox2..Label9..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:174
 #. setupform..GroupBox2..Label9..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:174
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:146
 msgid "\"Heizung-Ein\""
 msgstr ""
 
 #. setupform..GroupBox2..Label22..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:181
 #. setupform..GroupBox2..Label22..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:181
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:153
 msgid "Minimum:"
 msgstr ""
 
@@ -32084,30 +32017,30 @@ msgstr ""
 #. Config..GroupBox4..Label12..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.dfm:475
 #. Config..Panel2..GroupBox7..Label12..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:468
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:465
 #. setupform..GroupBox2..Label23..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:188
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:160
 msgid "Mittelwert:"
 msgstr ""
 
 #. setupform..GroupBox2..Label24..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:195
 #. setupform..GroupBox2..Label24..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:195
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:167
 msgid "Maximum:"
 msgstr ""
 
 #. setupform..GroupBox2..Label25..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:204
 #. setupform..GroupBox2..Label25..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:204
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:176
 msgid "Skalierungsfaktor für Temperaturwerte:"
 msgstr ""
 
 #. setupform..GroupBox5..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:272
 #. setupform..GroupBox5..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:267
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:239
 msgid " Empfange Temperaturen von folgenden PC_DIMMER-Kanälen "
 msgstr ""
 
@@ -32116,9 +32049,9 @@ msgstr ""
 #. setupform..GroupBox5..Label7..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:311
 #. setupform..GroupBox5..Label28..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:274
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:246
 #. setupform..GroupBox5..Label7..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:306
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:278
 msgid "MSB:"
 msgstr ""
 
@@ -32127,9 +32060,9 @@ msgstr ""
 #. setupform..GroupBox5..Label8..Caption
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.dfm:318
 #. setupform..GroupBox5..Label30..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:281
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:253
 #. setupform..GroupBox5..Label8..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:313
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:285
 msgid "LSB:"
 msgstr ""
 
@@ -32361,8 +32294,6 @@ msgstr ""
 
 #. About..Label3..Caption
 #: plugins/Programmplugins/SoftScanner/aboutfrm.dfm:44
-#. About..Label3..Caption
-#: plugins/Programmplugins/Temperaturregler/aboutfrm.dfm:44
 msgid "Copyrights (c) 2011-2015 by Dipl.-Ing. Christian "
 "Nöding"
 msgstr ""
@@ -32392,113 +32323,114 @@ msgstr ""
 msgid "Dialog"
 msgstr ""
 
+#. About..Label3..Caption
+#: plugins/Programmplugins/Temperaturregler/aboutfrm.dfm:44
+msgid "Copyrights (c) 2011-2016 by Dr.-Ing. Christian "
+"Nöding"
+msgstr ""
+
 #. Config..Panel2..GroupBox2..Label6..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:319
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:316
 msgid "(in den letzten 15 Minuten)"
 msgstr ""
 
 #. Config..Panel2..GroupBox2..Label33..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:343
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:340
 msgid "Verbrauch:"
 msgstr ""
 
 #. Config..Panel2..GroupBox2..stromverbrauchlbl..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:358
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:355
 msgid "0,000 kWh"
 msgstr ""
 
 #. Config..Panel2..GroupBox2..stromkostenlbl..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:367
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:364
 msgid "0,00 €"
 msgstr ""
 
 #. Config..Panel2..GroupBox2..TestCaseBtn..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:388
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:385
 msgid "TestCaseBtn"
 msgstr ""
 
 #. Config..Panel2..GroupBox7..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:399
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:396
 msgid " Statistik- und Prognosewerte "
 msgstr ""
 
 #. Config..Panel2..GroupBox7..Label7..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:453
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:450
 msgid "Min. Temperatur:"
 msgstr ""
 
 #. Config..Panel2..GroupBox7..Label15..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:483
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:480
 msgid "Max. Temperatur:"
 msgstr ""
 
 #. Config..Panel2..GroupBox7..Label34..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:498
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:495
 msgid "Zeit bis Sollwert:"
 msgstr ""
 
 #. Config..Panel2..GroupBox7..Label16..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:528
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:525
 #. Config..Panel2..GroupBox7..Label17..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:537
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:534
 #. Config..Panel2..GroupBox7..Label18..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:546
+#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:543
 msgid "(in den letzten 5 Minuten)"
 msgstr ""
 
-#. Config..zoom15mincheckbox..Caption
-#: plugins/Programmplugins/Temperaturregler/configfrm.dfm:940
-msgid "Zoom auf letzte 15 Minuten"
-msgstr ""
-
 #. setupform..GroupBox5..Temp2LabelEdit..Text
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:361
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:333
 msgid "Eingangstür"
 msgstr ""
 
 #. setupform..GroupBox5..Temp3LabelEdit..Text
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:369
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:341
 msgid "Decke"
 msgstr ""
 
 #. setupform..GroupBox3..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:386
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:358
 msgid " Temperaturen und Verbrauch in Verzeichnis speichern: "
 msgstr ""
 
 #. setupform..GroupBox3..Label10..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:393
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:365
 msgid "(Feld leer lassen, um keine Dateien zu "
 "speichern)"
 msgstr ""
 
 #. setupform..GroupBox4..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:408
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:380
 msgid " Sonstige Einstellungen "
 msgstr ""
 
 #. setupform..GroupBox4..Label11..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:415
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:387
 msgid "Installierte elektrische Heizleistung:"
 msgstr ""
 
 #. setupform..GroupBox4..Label12..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:422
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:394
 msgid "kW"
 msgstr ""
 
 #. setupform..GroupBox4..Label14..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:429
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:401
 msgid "Preis pro kWh:"
 msgstr ""
 
 #. setupform..GroupBox4..Label15..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:436
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:408
 msgid "ct/kWh"
 msgstr ""
 
 #. setupform..GroupBox4..Label16..Caption
-#: plugins/Programmplugins/Temperaturregler/setup.dfm:443
+#: plugins/Programmplugins/Temperaturregler/setup.dfm:415
 msgid "Zeit für \"Delta T\"-Berechnung:"
 msgstr ""
 
@@ -32843,7 +32775,7 @@ msgstr ""
 #. Master
 #: befehleditorform.pas:846
 #. Grandmaster abfragen
-#: pcdimmer.pas:14427
+#: pcdimmer.pas:14480
 msgid "Grandmaster setzen"
 msgstr ""
 
@@ -32859,7 +32791,7 @@ msgstr ""
 #: Channels_Commandsystem.inc:245
 #: befehleditorform.pas:848
 #. Flashmaster auf abfragen
-#: pcdimmer.pas:14442
+#: pcdimmer.pas:14495
 msgid "Flashmaster setzen"
 msgstr ""
 
@@ -32874,7 +32806,7 @@ msgstr ""
 
 #: Channels_Commandsystem.inc:266
 #. Speedmaster abfragen
-#: pcdimmer.pas:14457
+#: pcdimmer.pas:14510
 msgid "Speedmaster setzen"
 msgstr ""
 
@@ -32888,7 +32820,7 @@ msgstr ""
 
 #: Channels_Commandsystem.inc:287
 #. Audiomaster abfragen
-#: pcdimmer.pas:14472
+#: pcdimmer.pas:14525
 msgid "Audiomaster setzen"
 msgstr ""
 
@@ -33660,7 +33592,7 @@ msgstr ""
 #: EditBefehl.inc:1018
 #: EditBefehl.inc:1034
 #: befehleditorform.pas:787
-#: geraetesteuerungfrm.pas:1886
+#: geraetesteuerungfrm.pas:1946
 #: scannersynchronisationfrm.pas:583
 msgid "Kalibrierung "
 msgstr ""
@@ -33876,43 +33808,43 @@ msgstr ""
 msgid "Fertig"
 msgstr ""
 
-#: adddevicefrm.pas:514
-#: geraetesteuerungfrm.pas:4545
+#: adddevicefrm.pas:527
+#: geraetesteuerungfrm.pas:4607
 msgid "Suche DDFs..."
 msgstr ""
 
-#: adddevicefrm.pas:565
-#: geraetesteuerungfrm.pas:4601
+#: adddevicefrm.pas:578
+#: geraetesteuerungfrm.pas:4663
 msgid "Verarbeite DDFs..."
 msgstr ""
 
 #. <information>
-#: adddevicefrm.pas:596
+#: adddevicefrm.pas:609
 #. <information>
-#: geraetesteuerungfrm.pas:4632
+#: geraetesteuerungfrm.pas:4694
 msgid "Die DDF-Datei \""
 msgstr ""
 
-#: adddevicefrm.pas:596
-#: geraetesteuerungfrm.pas:4632
+#: adddevicefrm.pas:609
+#: geraetesteuerungfrm.pas:4694
 msgid "\" ist nicht zu dieser Version von PC_DIMMER "
 "kompatibel."
 msgstr ""
 
-#: adddevicefrm.pas:596
-#: geraetesteuerungfrm.pas:4632
+#: adddevicefrm.pas:609
+#: geraetesteuerungfrm.pas:4694
 msgid "DMXControl-DDFs können aufgrund konzeptioneller Unterschiede nicht "
 "verwendet werden."
 msgstr ""
 
-#: adddevicefrm.pas:812
-#: geraetesteuerungfrm.pas:1612
-#: geraetesteuerungfrm.pas:4834
-#: pcdimmer.pas:13157
+#: adddevicefrm.pas:832
+#: geraetesteuerungfrm.pas:1623
+#: geraetesteuerungfrm.pas:4903
+#: pcdimmer.pas:13200
 msgid "Fertig."
 msgstr ""
 
-#: adddevicefrm.pas:813
+#: adddevicefrm.pas:833
 msgid "DDFs geladen und ausgewertet."
 msgstr ""
 
@@ -34124,9 +34056,9 @@ msgid "Möchten Sie das Ambilight einschalten?"
 msgstr ""
 
 #: ambilight.pas:1065
-#: pcdimmer.pas:12751
+#: pcdimmer.pas:12792
 #. Ambilight ein
-#: pcdimmer.pas:14619
+#: pcdimmer.pas:14672
 msgid "Ambilight ausschalten"
 msgstr ""
 
@@ -34224,7 +34156,7 @@ msgid "Bewegungsszene starten"
 msgstr ""
 
 #: audioeffektplayerfrm.pas:2107
-#: pcdimmer.pas:21266
+#: pcdimmer.pas:21319
 msgid "Unbegrenzt"
 msgstr ""
 
@@ -34259,7 +34191,7 @@ msgid "Automatikszene starten"
 msgstr ""
 
 #: audioeffektplayerfrm.pas:2220
-#: pcdimmer.pas:21353
+#: pcdimmer.pas:21406
 msgid "Unendlich"
 msgstr ""
 
@@ -34285,13 +34217,13 @@ msgstr ""
 
 #: audioeffektplayerfrm.pas:2362
 #: audioeffektplayerfrm.pas:5035
-#: pcdimmer.pas:8804
+#: pcdimmer.pas:8845
 msgid "Die Audiodatei \""
 msgstr ""
 
 #: audioeffektplayerfrm.pas:2362
 #: audioeffektplayerfrm.pas:5035
-#: pcdimmer.pas:8804
+#: pcdimmer.pas:8845
 msgid "\" wurde nicht gefunden. Möchten Sie jetzt danach "
 "suchen?"
 msgstr ""
@@ -34303,7 +34235,7 @@ msgstr ""
 
 #: audioeffektplayerfrm.pas:2366
 #: audioeffektplayerfrm.pas:5039
-#: pcdimmer.pas:8808
+#: pcdimmer.pas:8849
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:915
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1000
 msgid "Audiodatei öffnen"
@@ -34822,141 +34754,152 @@ msgid "Bitte fügen Sie mindestens ein Gerät über die Gerätesteuerung hinzu, 
 "kann."
 msgstr ""
 
-#: buehnenansicht.pas:427
-msgid "Only COLOR_RGBALPHA and COLOR_RGB formats are "
-"supported"
-msgstr ""
-
-#: buehnenansicht.pas:566
+#: buehnenansicht.pas:582
 msgid "Die gesamte Bühnenansicht wird zurückgesetzt. "
 "Fortfahren?"
 msgstr ""
 
-#: buehnenansicht.pas:575
-#: buehnenansicht.pas:853
-#: buehnenansicht.pas:1713
-#: buehnenansicht.pas:2120
-#: buehnenansicht.pas:2175
+#: buehnenansicht.pas:591
+#: buehnenansicht.pas:869
+#: buehnenansicht.pas:1762
+#: buehnenansicht.pas:2151
+#: buehnenansicht.pas:2206
 msgid "Bilddateien (*.bmp;*.jpg;*.gif;*.ico;*.png)|*.bmp;*.jpg;*.gif;*.ico;*."
 "png|Alle Dateien (*.*)|*.*"
 msgstr ""
 
-#: buehnenansicht.pas:588
+#: buehnenansicht.pas:604
 msgid "PC_DIMMER Bühnenansicht öffnen..."
 msgstr ""
 
-#: buehnenansicht.pas:589
-#: buehnenansicht.pas:604
+#: buehnenansicht.pas:605
+#: buehnenansicht.pas:620
 msgid "PC_DIMMER Bühnenansicht (*.pcdstge)|*.pcdstge|*.*|*.*"
 msgstr ""
 
-#: buehnenansicht.pas:603
-#: buehnenansicht.pas:1583
+#: buehnenansicht.pas:619
+#: buehnenansicht.pas:1632
 msgid "PC_DIMMER Bühnenansicht speichern..."
 msgstr ""
 
-#: buehnenansicht.pas:849
+#: buehnenansicht.pas:865
 #. {
-#: buehnenansicht.pas:1709
-#: buehnenansicht.pas:2116
+#: buehnenansicht.pas:1758
+#: buehnenansicht.pas:2147
 #. {
-#: buehnenansicht.pas:2171
+#: buehnenansicht.pas:2202
 msgid "Das Hintergrundbild \""
 msgstr ""
 
-#: buehnenansicht.pas:849
-#: buehnenansicht.pas:1709
-#: buehnenansicht.pas:2116
-#: buehnenansicht.pas:2171
+#: buehnenansicht.pas:865
+#: buehnenansicht.pas:1758
+#: buehnenansicht.pas:2147
+#: buehnenansicht.pas:2202
 msgid "\" für die Bühnenansicht wurde nicht gefunden. Möchten Sie jetzt "
 "danach suchen?"
 msgstr ""
 
-#: buehnenansicht.pas:852
-#: buehnenansicht.pas:1712
-#: buehnenansicht.pas:2119
-#: buehnenansicht.pas:2174
+#: buehnenansicht.pas:868
+#: buehnenansicht.pas:1761
+#: buehnenansicht.pas:2150
+#: buehnenansicht.pas:2205
 msgid "Bilddatei öffnen..."
 msgstr ""
 
-#: buehnenansicht.pas:1073
+#: buehnenansicht.pas:1089
 msgid "), Geräteicon"
 msgstr ""
 
-#: buehnenansicht.pas:1076
+#: buehnenansicht.pas:1092
 msgid "Geräteicon, "
 msgstr ""
 
-#: buehnenansicht.pas:1133
+#: buehnenansicht.pas:1159
 msgid "Kanalicon, Kanal: "
 msgstr ""
 
-#: buehnenansicht.pas:1502
-#: buehnenansicht.pas:1853
+#: buehnenansicht.pas:1529
+#: buehnenansicht.pas:1531
+#: buehnenansicht.pas:1902
 msgid "Beschriftung für \""
 msgstr ""
 
-#: buehnenansicht.pas:1502
+#: buehnenansicht.pas:1529
 msgid "Bitte geben Sie eine neue Bezeichnung für das aktuelle Gerät "
 "ein:"
 msgstr ""
 
+#: buehnenansicht.pas:1531
+msgid "Bitte geben Sie eine neue Bezeichnung für das gewählte Matrix-Gerät "
+"ein:"
+msgstr ""
+
 #. Kanalnummer ändern
-#: buehnenansicht.pas:1517
+#: buehnenansicht.pas:1556
+#: buehnenansicht.pas:1563
 #. Kanalnummer ändern
-#: buehnenansicht.pas:1538
-#: buehnenansicht.pas:1868
+#: buehnenansicht.pas:1587
+#: buehnenansicht.pas:1917
 #. Kanalnummer ändern
-#: pcdimmer.pas:24787
+#: pcdimmer.pas:24840
 msgid "Kanaleinstellung"
 msgstr ""
 
-#: buehnenansicht.pas:1517
-#: buehnenansicht.pas:1538
-#: buehnenansicht.pas:1868
-#: pcdimmer.pas:24787
+#: buehnenansicht.pas:1556
+msgid "Welche Startadresse soll für dieses Gerät "
+"gelten:"
+msgstr ""
+
+#: buehnenansicht.pas:1563
+msgid "Welche Startadresse soll für dieses Matrix-Gerät "
+"gelten:"
+msgstr ""
+
+#: buehnenansicht.pas:1587
+#: buehnenansicht.pas:1917
+#: pcdimmer.pas:24840
 msgid "Welcher Kanal soll für dieses Gerät "
 "gelten:"
 msgstr ""
 
-#: buehnenansicht.pas:1584
+#: buehnenansicht.pas:1633
 msgid "Windows-Bitmap (*.bmp)|*.bmp|*.*|*.*"
 msgstr ""
 
-#: buehnenansicht.pas:1603
+#: buehnenansicht.pas:1652
 msgid "Die gesamte Bühnenansicht mit dem Standarddrucker "
 "\""
 msgstr ""
 
-#: buehnenansicht.pas:1603
+#: buehnenansicht.pas:1652
 msgid "\" ausdrucken?"
 msgstr ""
 
 #. Temp-Verzeichnis reinigen
-#: buehnenansicht.pas:1794
+#: buehnenansicht.pas:1843
 msgid "Bühnenansicht: Es ist ein Fehler beim Speichern der Szene "
 "aufgetreten."
 msgstr ""
 
-#: buehnenansicht.pas:1827
+#: buehnenansicht.pas:1876
 msgid "PNG-Datei (*.png)|*.png"
 msgstr ""
 
-#: buehnenansicht.pas:1853
+#: buehnenansicht.pas:1902
 msgid "Bitte geben Sie eine neue Bezeichnung für den aktuellen Kanal "
 "ein:"
 msgstr ""
 
-#: buehnenansicht.pas:2433
-#: buehnenansicht.pas:2434
+#: buehnenansicht.pas:2464
+#: buehnenansicht.pas:2465
 msgid "Bühne "
 msgstr ""
 
-#: buehnenansicht.pas:2451
+#: buehnenansicht.pas:2482
 msgid "Neue Bühnenbezeichnung"
 msgstr ""
 
-#: buehnenansicht.pas:2451
+#: buehnenansicht.pas:2482
 msgid "Bitte geben Sie eine neue Bezeichnung für diese "
 "Bühne:"
 msgstr ""
@@ -35001,8 +34944,8 @@ msgid "aber entriegelt"
 msgstr ""
 
 #: codeeditorfrm.pas:203
-#: pcdimmer.pas:9759
-#: pcdimmer.pas:23977
+#: pcdimmer.pas:9800
+#: pcdimmer.pas:24030
 #. mainform.DeleteDir(mainform.userdirectory+''+NodePath(TreeView1.Selected));
 #: projektverwaltungfrm.pas:342
 msgid "Die Datei \""
@@ -35365,15 +35308,16 @@ msgid "Es werden alle Kanäle der Szene hinzugefügt. "
 msgstr ""
 
 #: devicelistfrm.pas:111
-#: geraetesteuerungfrm.pas:4497
+#: geraetesteuerungfrm.pas:4545
+#: geraetesteuerungfrm.pas:4557
 #. HEADER
-#: pcdimmer.pas:22754
+#: pcdimmer.pas:22807
 #: reordergroupfrm.pas:138
 msgid "Gerätename"
 msgstr ""
 
 #: devicelistfrm.pas:112
-#: pcdimmer.pas:22755
+#: pcdimmer.pas:22808
 #: reordergroupfrm.pas:141
 msgid "Hersteller"
 msgstr ""
@@ -35383,18 +35327,18 @@ msgid "P [W]"
 msgstr ""
 
 #: devicelistfrm.pas:116
-#: pcdimmer.pas:22759
+#: pcdimmer.pas:22812
 #: plugins/Programmplugins/Alt/Leistungsplugin/settingfrm.pas:352
 msgid "Phase"
 msgstr ""
 
 #: devicelistfrm.pas:118
-#: pcdimmer.pas:22761
+#: pcdimmer.pas:22814
 msgid "Pan/Tilt"
 msgstr ""
 
 #: devicelistfrm.pas:121
-#: pcdimmer.pas:22765
+#: pcdimmer.pas:22818
 msgid "Autoscening"
 msgstr ""
 
@@ -35424,27 +35368,22 @@ msgstr ""
 
 #: dimmcurvefrm.pas:275
 #: dimmcurvefrm.pas:316
-#. Falls andere Gerätekanäle mit diesem konkurrieren, dann Meldung
-#: geraetesteuerungfrm.pas:1272
 msgid "Ein anderer Gerätekanal ("
 msgstr ""
 
 #: dimmcurvefrm.pas:275
 #: dimmcurvefrm.pas:316
-#: geraetesteuerungfrm.pas:1272
 msgid "Es kann allerdings nur eine Kurve pro Kanal genutzt "
 "werden."
 msgstr ""
 
 #: dimmcurvefrm.pas:275
 #: dimmcurvefrm.pas:316
-#: geraetesteuerungfrm.pas:1272
 msgid "Soll die Kurvenform des anderen Gerätekanals nun automatisch "
 "angepasst werden?"
 msgstr ""
 
 #: dimmcurvefrm.pas:316
-#: geraetesteuerungfrm.pas:1272
 msgid ") belegt die gleiche Adresse wie der ausgewählte "
 "Kanal."
 msgstr ""
@@ -35902,139 +35841,137 @@ msgstr ""
 msgid "Startadresse: "
 msgstr ""
 
-#: geraetesteuerungfrm.pas:643
+#: geraetesteuerungfrm.pas:648
 msgid "Möchten Sie wirklich alle Geräte und Presets "
 "löschen?"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1237
-msgid "In den Optionen ist die Kanalzahl auf "
-msgstr ""
-
-#: geraetesteuerungfrm.pas:1237
-msgid " begrenzt. Diese Grenze kann in den erweiterten Einstellungen auf bis "
-"zu 8192 erhöht werden."
-msgstr ""
-
-#: geraetesteuerungfrm.pas:1334
-#: geraetesteuerungfrm.pas:1538
-#: geraetesteuerungfrm.pas:1584
+#: geraetesteuerungfrm.pas:1259
+#: geraetesteuerungfrm.pas:1549
+#: geraetesteuerungfrm.pas:1595
 #: sidebarfrm.pas:1086
 msgid "Es werden "
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1334
-#: geraetesteuerungfrm.pas:1538
-#: geraetesteuerungfrm.pas:1584
-#: geraetesteuerungfrm.pas:1613
+#: geraetesteuerungfrm.pas:1259
+#: geraetesteuerungfrm.pas:1549
+#: geraetesteuerungfrm.pas:1595
+#: geraetesteuerungfrm.pas:1624
 msgid " Geräte hinzugefügt."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1348
-#: geraetesteuerungfrm.pas:1350
+#: geraetesteuerungfrm.pas:1321
+#: geraetesteuerungfrm.pas:1323
 msgid "Das zu erstellende Gerät liegt außerhalb der möglichen Kanäle "
 "("
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1348
+#: geraetesteuerungfrm.pas:1321
 msgid "). In den erweiterten Optionen kann die maximale Kanalzahl auf "
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1348
+#: geraetesteuerungfrm.pas:1321
 msgid " erhöht werden."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1348
-#: geraetesteuerungfrm.pas:1350
+#: geraetesteuerungfrm.pas:1321
+#: geraetesteuerungfrm.pas:1323
 msgid "Das Hinzufügen neuer Geräte wird nun "
 "abgebrochen."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1350
+#: geraetesteuerungfrm.pas:1323
 msgid "). Diese Software unterstützt maximal "
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1350
+#: geraetesteuerungfrm.pas:1323
 msgid " Kanäle. Sollten mehr als diese Kanäle benötigt werden, wenden Sie "
 "sich bitte an christian@noeding-online.de, bzw. auf der Website "
 "http://www.pcdimmer.de, um die Software entsprechend anpassen zu "
 "lassen."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1537
+#: geraetesteuerungfrm.pas:1548
 msgid "Gerätegruppen erstellen..."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1549
+#: geraetesteuerungfrm.pas:1560
 msgid "Gruppierte"
 msgstr ""
 
 #. Gruppeneditor aktualisieren
-#: geraetesteuerungfrm.pas:1569
+#: geraetesteuerungfrm.pas:1580
 #: reordergroupfrm.pas:506
 msgid "Neue Gerätegruppe"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1583
+#: geraetesteuerungfrm.pas:1594
 msgid "Initialisierungsfunktion ausführen..."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1613
+#: geraetesteuerungfrm.pas:1624
 msgid "Es wurden "
 msgstr ""
 
-#: geraetesteuerungfrm.pas:1663
-#: geraetesteuerungfrm.pas:3210
+#: geraetesteuerungfrm.pas:1697
+msgid "Sie sind im Begriff einen Teil eines Matrix-Gerätes zu löschen. Dabei "
+"werden auch alle zugehörigen Matrix-Geräte gelöscht, selbst wenn "
+"diese nicht selektiert wurden. Bitte wählen Sie, wie weiter verfahren "
+"werden soll:"
+msgstr ""
+
+#: geraetesteuerungfrm.pas:1724
+#: geraetesteuerungfrm.pas:3270
 #: insscene.pas:494
 #: konsolensteuerungfrm.pas:391
 #: pcdHTTPServer.pas:353
 #: pcdimmer.pas:2199
 #: pcdimmer.pas:3853
 #. Ungerade Kanäle
-#: pcdimmer.pas:11602
+#: pcdimmer.pas:11643
 #. Gerade Kanäle
-#: pcdimmer.pas:11605
+#: pcdimmer.pas:11646
 #: SetNames.pas:58
 #: SetNames.pas:59
 msgid "Kanal "
 msgstr ""
 
 #. Gerät wird noch verwendet -> Dialogbox anzeigen
-#: geraetesteuerungfrm.pas:1668
+#: geraetesteuerungfrm.pas:1729
 msgid "Das zu löschende Gerät wird noch verwendet.  Bitte wählen Sie, wie "
 "weiter verfahren werden soll:"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2029
+#: geraetesteuerungfrm.pas:2089
 #: reordergroupfrm.pas:481
 msgid "Neue Gerätegruppe ("
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2092
+#: geraetesteuerungfrm.pas:2152
 #: reordergroupfrm.pas:524
 msgid "Möchten Sie diese Gruppe wirklich löschen?"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2105
+#: geraetesteuerungfrm.pas:2165
 #: reordergroupfrm.pas:537
 msgid "Geräteanzahl:"
 msgstr ""
 
 #. Gruppe wird noch verwendet -> Dialogbox anzeigen
-#: geraetesteuerungfrm.pas:2110
+#: geraetesteuerungfrm.pas:2170
 #. Gruppe wird noch verwendet -> Dialogbox anzeigen
 #: reordergroupfrm.pas:542
 msgid "Die zu löschende Gruppe wird noch verwendet. Bitte wählen Sie, wie "
 "weiter verfahren werden soll:"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2111
+#: geraetesteuerungfrm.pas:2171
 #: reordergroupfrm.pas:543
 msgid "Gruppe löschen"
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2847
+#: geraetesteuerungfrm.pas:2907
 #: pcdHTTPServer.pas:502
 #: submasterfrm.pas:508
 #: szenenverwaltung.pas:739
@@ -36044,45 +35981,45 @@ msgid "Befehle"
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2868
+#: geraetesteuerungfrm.pas:2928
 #: Tastenabfragefrm.pas:369
 msgid "Tastencode"
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2889
+#: geraetesteuerungfrm.pas:2949
 msgid "Joystickevent"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2893
+#: geraetesteuerungfrm.pas:2953
 msgid "Joystickevent "
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2910
+#: geraetesteuerungfrm.pas:2970
 msgid "Midievent"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2914
+#: geraetesteuerungfrm.pas:2974
 msgid "MidiEvent "
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2931
+#: geraetesteuerungfrm.pas:2991
 msgid "DataInEvent"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:2935
+#: geraetesteuerungfrm.pas:2995
 msgid "DataInEvent "
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:2967
+#: geraetesteuerungfrm.pas:3027
 msgid "Gerätegruppe"
 msgstr ""
 
 #. ProgressScreenSmall.Refresh;
-#: geraetesteuerungfrm.pas:3141
+#: geraetesteuerungfrm.pas:3201
 #: pcdHTTPServer.pas:494
 #: szenenverwaltung.pas:732
 #. Bewegungsszenen
@@ -36090,67 +36027,81 @@ msgstr ""
 msgid "Bewegungsszenen"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:3277
-#: geraetesteuerungfrm.pas:3302
+#: geraetesteuerungfrm.pas:3337
+#: geraetesteuerungfrm.pas:3362
 msgid "PC_DIMMER Geräteadressendatei (*.pcddeva)|*.pcddeva|Alle "
 "Dateien|*.*"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:3279
+#: geraetesteuerungfrm.pas:3339
 msgid "PC_DIMMER Geräteadressendatei speichern"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:3304
+#: geraetesteuerungfrm.pas:3364
 msgid "PC_DIMMER Geräteadressendatei öffnen"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:3454
+#: geraetesteuerungfrm.pas:3514
 msgid "Das Gerät besitzt offenbar keinen Farbkanal. Einstellungen im "
 "folgenden Fenster wirken sich nur auf Geräte mit \"COLOR1\"-Kanal über "
 "die Autoszenen aus."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:3797
+#: geraetesteuerungfrm.pas:3857
 #: reordergroupfrm.pas:608
 msgid "Gruppen-ID"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:3797
+#: geraetesteuerungfrm.pas:3857
 #: reordergroupfrm.pas:608
 msgid "Die ID der aktuellen Gruppe lautet wie "
 "folgt:"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:4497
+#: geraetesteuerungfrm.pas:4545
+msgid "Bitte geben Sie einen neuen Namen für das Matrix-Gerät "
+"an:"
+msgstr ""
+
+#: geraetesteuerungfrm.pas:4557
 msgid "Bitte geben Sie einen neuen Namen für das Gerät "
 "an:"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:4509
+#: geraetesteuerungfrm.pas:4571
 msgid "Geräte sortieren:"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:4632
+#: geraetesteuerungfrm.pas:4694
 msgid "Wenn Sie sicher sind, dass es sich um eine PC_DIMMER-DDF handelt, "
 "kontrollieren Sie, ob im Header der Datei \"<information "
 "id=\"PC_DIMMER\">\" steht."
 msgstr ""
 
-#: geraetesteuerungfrm.pas:4897
+#: geraetesteuerungfrm.pas:4966
 msgid "Mit dieser Funktionen kann die ID des selektierten Gerätes geändert "
 "werden. Falsche Einstellungen können sämtliche Szenenverknüpfungen zu "
 "diesem Gerät zerstören. Fortfahren?"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:4902
-#: geraetesteuerungfrm.pas:7827
+#: geraetesteuerungfrm.pas:4971
+#: geraetesteuerungfrm.pas:8009
 msgid "Geräte-ID"
 msgstr ""
 
-#: geraetesteuerungfrm.pas:4902
-#: geraetesteuerungfrm.pas:7827
+#: geraetesteuerungfrm.pas:4971
+#: geraetesteuerungfrm.pas:8009
 msgid "Die ID des aktuellen Gerätes lautet wie "
 "folgt:"
+msgstr ""
+
+#: geraetesteuerungfrm.pas:7951
+msgid "In den Optionen ist die Kanalzahl auf "
+msgstr ""
+
+#: geraetesteuerungfrm.pas:7951
+msgid " begrenzt. Diese Grenze kann in den erweiterten Einstellungen auf bis "
+"zu 8192 erhöht werden."
 msgstr ""
 
 #: insscene.pas:113
@@ -36159,8 +36110,8 @@ msgid "Sie können maximal 255 Zeichen eingeben"
 msgstr ""
 
 #: insscene.pas:292
-#: pcdimmer.pas:11593
-#: pcdimmer.pas:11595
+#: pcdimmer.pas:11634
+#: pcdimmer.pas:11636
 #: SetNames.pas:84
 #: plugins/Programmplugins/Alt/Kontrollpanel/insscene.pas:243
 #: plugins/Programmplugins/Alt/Leistungsplugin/settingfrm.pas:354
@@ -36294,12 +36245,12 @@ msgid "PC_DIMMER Joystick-Einstellungen öffnen"
 msgstr ""
 
 #: kanaluebersichtfrm.pas:479
-#: pcdimmer.pas:25045
+#: pcdimmer.pas:25098
 msgid "Kanalwert ändern"
 msgstr ""
 
 #: kanaluebersichtfrm.pas:479
-#: pcdimmer.pas:25045
+#: pcdimmer.pas:25098
 msgid "Bitte geben Sie einen neuen Endwert "
 "an:"
 msgstr ""
@@ -36370,19 +36321,19 @@ msgid "Fehler beim Zugriff auf die Datei \""
 msgstr ""
 
 #: kontrollpanelform.pas:584
-#: pcdimmer.pas:25157
+#: pcdimmer.pas:25210
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1030
 msgid "Schwarz"
 msgstr ""
 
 #: kontrollpanelform.pas:586
-#: pcdimmer.pas:25159
+#: pcdimmer.pas:25212
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1032
 msgid "Grau"
 msgstr ""
 
 #: kontrollpanelform.pas:587
-#: pcdimmer.pas:25160
+#: pcdimmer.pas:25213
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.pas:1033
 msgid "Rosa"
 msgstr ""
@@ -36885,7 +36836,7 @@ msgstr ""
 #. Program-Plugins deaktivieren
 #: pcdimmer.pas:3431
 #. Input-Plugins deaktivieren
-#: pcdimmer.pas:11685
+#: pcdimmer.pas:11726
 msgid "Deaktiviere Input-Plugin "
 msgstr ""
 
@@ -36902,12 +36853,12 @@ msgid "Deaktiviere Output-Plugin "
 msgstr ""
 
 #: pcdimmer.pas:3481
-#: pcdimmer.pas:11695
+#: pcdimmer.pas:11736
 msgid "Das Plugin \""
 msgstr ""
 
 #: pcdimmer.pas:3481
-#: pcdimmer.pas:11695
+#: pcdimmer.pas:11736
 msgid "\" hat einen Fehler beim Deaktivieren "
 "gemeldet."
 msgstr ""
@@ -36924,7 +36875,7 @@ msgstr ""
 
 #. Pluginreferenzen entfernen
 #: pcdimmer.pas:3585
-#: pcdimmer.pas:11705
+#: pcdimmer.pas:11746
 msgid "Entferne DLL-Referenzen..."
 msgstr ""
 
@@ -36948,7 +36899,7 @@ msgstr ""
 
 #. 'Neue Audiodatei...' setzen
 #: pcdimmer.pas:3865
-#: pcdimmer.pas:8821
+#: pcdimmer.pas:8862
 msgid "Neue Audiodatei..."
 msgstr ""
 
@@ -36987,7 +36938,7 @@ msgid "PC_DIMMER Projekt speichern..."
 msgstr ""
 
 #: pcdimmer.pas:4093
-#: pcdimmer.pas:9739
+#: pcdimmer.pas:9780
 msgid "PC_DIMMER Projekt (*.pcdproj)|*.pcdproj|*.*|*.*"
 msgstr ""
 
@@ -37006,7 +36957,7 @@ msgid "Projektgröße: "
 msgstr ""
 
 #: pcdimmer.pas:4111
-#: pcdimmer.pas:11087
+#: pcdimmer.pas:11128
 msgid " Speichere Datei... "
 msgstr ""
 
@@ -37020,7 +36971,7 @@ msgstr ""
 
 #: pcdimmer.pas:4175
 #. Ende NodeControl
-#: pcdimmer.pas:5574
+#: pcdimmer.pas:5582
 msgid "Schreibe Datei..."
 msgstr ""
 
@@ -37075,251 +37026,251 @@ msgid "Schreibe Datei... Geräte"
 msgstr ""
 
 #. Presets speichern
-#: pcdimmer.pas:4748
+#: pcdimmer.pas:4756
 msgid "Schreibe Datei... Presets"
 msgstr ""
 
 #. Geräteszenen speichern
-#: pcdimmer.pas:4786
+#: pcdimmer.pas:4794
 msgid "Schreibe Datei... Geräteszenen"
 msgstr ""
 
 #. Gruppen speichern
-#: pcdimmer.pas:4875
+#: pcdimmer.pas:4883
 msgid "Schreibe Datei... Gerätegruppen"
 msgstr ""
 
 #. Softpatch speichern
-#: pcdimmer.pas:4901
+#: pcdimmer.pas:4909
 msgid "Schreibe Datei... Softpatch"
 msgstr ""
 
 #. Effekte speichern
-#: pcdimmer.pas:4930
+#: pcdimmer.pas:4938
 msgid "Schreibe Datei... Effekte"
 msgstr ""
 
 #. Bühnenansicht speichern
-#: pcdimmer.pas:5032
+#: pcdimmer.pas:5040
 msgid "Schreibe Datei... Bühnenansicht"
 msgstr ""
 
 #. Desktopproperties speichern
-#: pcdimmer.pas:5071
+#: pcdimmer.pas:5079
 msgid "Schreibe Datei... Desktopeinstellungen"
 msgstr ""
 
 #. Joystickeinstellungen Speichern
-#: pcdimmer.pas:5093
+#: pcdimmer.pas:5101
 msgid "Schreibe Datei... Joystickeinstellungen"
 msgstr ""
 
 #. Kontrollpanel speichern
-#: pcdimmer.pas:5127
+#: pcdimmer.pas:5135
 msgid "Schreibe Datei... Kontrollpanel"
 msgstr ""
 
 #. MIDI-IN Event speichern
-#: pcdimmer.pas:5153
+#: pcdimmer.pas:5161
 msgid "Schreibe Datei... MIDI-In"
 msgstr ""
 
 #. Data-IN Event speichern
-#: pcdimmer.pas:5190
+#: pcdimmer.pas:5198
 msgid "Schreibe Datei... Data-In"
 msgstr ""
 
 #. Leistungsdaten speichern
-#: pcdimmer.pas:5223
+#: pcdimmer.pas:5231
 msgid "Schreibe Datei... Leistungssteuerung"
 msgstr ""
 
 #. Autoszenen speichern
-#: pcdimmer.pas:5242
+#: pcdimmer.pas:5250
 msgid "Schreibe Datei... Autoszenen"
 msgstr ""
 
 #. Submaster (neu) speichern
-#: pcdimmer.pas:5273
+#: pcdimmer.pas:5281
 msgid "Schreibe Datei... Submaster"
 msgstr ""
 
 #. Cue-Liste speichern
-#: pcdimmer.pas:5327
+#: pcdimmer.pas:5335
 msgid "Schreibe Datei... Cueliste"
 msgstr ""
 
 #. Timecodeplayer-Liste speichern
-#: pcdimmer.pas:5354
+#: pcdimmer.pas:5362
 msgid "Schreibe Datei... Timecodeplayer"
 msgstr ""
 
 #. IR FB speichern
-#: pcdimmer.pas:5374
+#: pcdimmer.pas:5382
 msgid "Schreibe Datei... IR Fernbedienung"
 msgstr ""
 
 #. MediaCenter Szenen speichern
-#: pcdimmer.pas:5389
+#: pcdimmer.pas:5397
 msgid "Schreibe Datei... MediaCenter Szenen"
 msgstr ""
 
 #. Plugin Szenen speichern
-#: pcdimmer.pas:5409
+#: pcdimmer.pas:5417
 msgid "Schreibe Datei... Pluginszenen"
 msgstr ""
 
 #. PresetSzenen speichern
-#: pcdimmer.pas:5501
+#: pcdimmer.pas:5509
 msgid "Schreibe Datei... Preset-Szenen"
 msgstr ""
 
 #. NodeControl speichern
-#: pcdimmer.pas:5535
+#: pcdimmer.pas:5543
 msgid "Schreibe Datei... Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:5596
+#: pcdimmer.pas:5604
 msgid "Erstelle Backup-Datei \""
 msgstr ""
 
-#: pcdimmer.pas:5606
+#: pcdimmer.pas:5614
 msgid "Komprimiere Projektdatei..."
 msgstr ""
 
 #. filesinprojectdirectory:=0;
-#: pcdimmer.pas:5614
+#: pcdimmer.pas:5622
 #. ShowMessage('Informationen über aktuelle Projektdatei:'+#13#10#13#10+GetFileSummaryInfo(Openfilepath+Openfilename));
-#: pcdimmer.pas:5740
+#: pcdimmer.pas:5749
 msgid "Datei (1/"
 msgstr ""
 
-#: pcdimmer.pas:5726
+#: pcdimmer.pas:5735
 msgid "Achtung: Sie versuchen eine Datei als Projekt zu öffnen, die nicht "
 "die Endung \"pcdproj\" besitzt!"
 msgstr ""
 
-#: pcdimmer.pas:5760
-#: pcdimmer.pas:13037
+#: pcdimmer.pas:5769
+#: pcdimmer.pas:13078
 msgid "Lade Projekt..."
 msgstr ""
 
-#: pcdimmer.pas:5761
+#: pcdimmer.pas:5770
 msgid " Öffne Datei... "
 msgstr ""
 
-#: pcdimmer.pas:5773
-#: pcdimmer.pas:5778
+#: pcdimmer.pas:5782
+#: pcdimmer.pas:5787
 msgid "Sende Öffnen-Befehl...Plugins"
 msgstr ""
 
 #. hier aus Datei in Records schreiben
-#: pcdimmer.pas:5793
-#: pcdimmer.pas:8515
+#: pcdimmer.pas:5802
+#: pcdimmer.pas:8556
 msgid "Lese Daten ein..."
 msgstr ""
 
 #. Projekt-Header öffnen
-#: pcdimmer.pas:5807
+#: pcdimmer.pas:5816
 msgid "Lese Daten ein... Projekt-Header"
 msgstr ""
 
-#: pcdimmer.pas:5811
+#: pcdimmer.pas:5820
 msgid "Lese Daten ein...Projekt-Header"
 msgstr ""
 
 #. Version vor 4.x
-#: pcdimmer.pas:5849
-#: pcdimmer.pas:5860
+#: pcdimmer.pas:5858
+#: pcdimmer.pas:5869
 msgid "Projektdatei zurückgewiesen"
 msgstr ""
 
-#: pcdimmer.pas:5850
-#: pcdimmer.pas:8526
+#: pcdimmer.pas:5859
+#: pcdimmer.pas:8567
 msgid "Die Projektdatei ist veraltet"
 msgstr ""
 
-#: pcdimmer.pas:5852
+#: pcdimmer.pas:5861
 msgid "Aufgrund großer Änderungen am Projektformat können die bisherigen "
 "Projekte leider nicht weiter verwendet werden. Zum Teil können "
 "Programmteile über die jeweilige Speicherfunktion exportiert und "
 "reimportiert werden."
 msgstr ""
 
-#: pcdimmer.pas:5854
-#: pcdimmer.pas:5880
-#: pcdimmer.pas:5906
-#: pcdimmer.pas:8530
-#: pcdimmer.pas:8554
+#: pcdimmer.pas:5863
+#: pcdimmer.pas:5889
+#: pcdimmer.pas:5915
+#: pcdimmer.pas:8571
+#: pcdimmer.pas:8595
 msgid "Projektversion: "
 msgstr ""
 
-#: pcdimmer.pas:5855
-#: pcdimmer.pas:8531
-#: pcdimmer.pas:8555
+#: pcdimmer.pas:5864
+#: pcdimmer.pas:8572
+#: pcdimmer.pas:8596
 msgid "Datum: "
 msgstr ""
 
-#: pcdimmer.pas:5856
-#: pcdimmer.pas:8532
-#: pcdimmer.pas:8556
+#: pcdimmer.pas:5865
+#: pcdimmer.pas:8573
+#: pcdimmer.pas:8597
 msgid "Uhrzeit: "
 msgstr ""
 
 #. Hinweise zu neueren Projekten, als diese Programmversion
-#: pcdimmer.pas:5872
+#: pcdimmer.pas:5881
 msgid "Projekt einer neueren Programmversion"
 msgstr ""
 
-#: pcdimmer.pas:5873
+#: pcdimmer.pas:5882
 msgid "Das Projekt wurde mit einer neueren PC_DIMMER Version "
 "gespeichert."
 msgstr ""
 
-#: pcdimmer.pas:5875
+#: pcdimmer.pas:5884
 msgid "Die zu ladende Projektdatei wurde mit einer neueren PC_DIMMER-Version "
 "gespeichert und kann mit der aktuellen Version nicht fehlerfrei "
 "geöffnet werden."
 msgstr ""
 
-#: pcdimmer.pas:5877
+#: pcdimmer.pas:5886
 msgid "Bitte laden Sie sich eine aktuelle Version des PC_DIMMERs von der "
 "Seite http://www.pcdimmer.de herunter."
 msgstr ""
 
-#: pcdimmer.pas:5881
-#: pcdimmer.pas:5907
+#: pcdimmer.pas:5890
+#: pcdimmer.pas:5916
 msgid "Projektdatum: "
 msgstr ""
 
-#: pcdimmer.pas:5882
-#: pcdimmer.pas:5908
+#: pcdimmer.pas:5891
+#: pcdimmer.pas:5917
 msgid "Projektzeit: "
 msgstr ""
 
-#: pcdimmer.pas:5886
-#: pcdimmer.pas:5912
+#: pcdimmer.pas:5895
+#: pcdimmer.pas:5921
 msgid "Hinweis..."
 msgstr ""
 
 #. Hinweise zu älteren Projekten
-#: pcdimmer.pas:5898
+#: pcdimmer.pas:5907
 msgid "Projekt einer früheren Programmversion"
 msgstr ""
 
-#: pcdimmer.pas:5899
+#: pcdimmer.pas:5908
 msgid "Das Projekt wurde mit einer älteren PC_DIMMER Version "
 "gespeichert."
 msgstr ""
 
-#: pcdimmer.pas:5901
+#: pcdimmer.pas:5910
 msgid "Die zu ladende Projektdatei wurde mit einer älteren PC_DIMMER-Version "
 "gespeichert. Die Projektdatei wird beim nächsten Speichervorgang "
 "automatisch konvertiert und als neue Version "
 "abgespeichert."
 msgstr ""
 
-#: pcdimmer.pas:5903
+#: pcdimmer.pas:5912
 msgid "Nach der Konvertierung kann das Projekt nicht mehr in einer älteren "
 "Version des PC_DIMMERs geladen werden. Möchten Sie parallel eine "
 "ältere PC_DIMMER-Version benutzen, sollten Sie eine Sicherungskopie "
@@ -37327,408 +37278,408 @@ msgid "Nach der Konvertierung kann das Projekt nicht mehr in einer älteren "
 "anfertigen."
 msgstr ""
 
-#: pcdimmer.pas:5906
+#: pcdimmer.pas:5915
 msgid " (wird bei nächster Speicherung konvertiert zu Projektversion "
 msgstr ""
 
 #. Effektaudio laden
-#: pcdimmer.pas:5924
+#: pcdimmer.pas:5933
 msgid "Lese Daten ein... Audioeffektplayer"
 msgstr ""
 
-#: pcdimmer.pas:5928
+#: pcdimmer.pas:5937
 msgid "Lese Daten ein...Audioeffektplayer"
 msgstr ""
 
 #. Lese Projekteinstellungen
-#: pcdimmer.pas:6095
+#: pcdimmer.pas:6104
 msgid "Lese Daten ein... Projekteinstellungen"
 msgstr ""
 
-#: pcdimmer.pas:6099
+#: pcdimmer.pas:6108
 msgid "Lese Daten ein...Projekteinstellungen"
 msgstr ""
 
 #. Lese Figurendaten
-#: pcdimmer.pas:6150
+#: pcdimmer.pas:6159
 msgid "Lese Daten ein... Figuren"
 msgstr ""
 
-#: pcdimmer.pas:6155
+#: pcdimmer.pas:6164
 msgid "Lese Daten ein...Figuren"
 msgstr ""
 
 #. Einfache-, Bewegungs- und Audioszenen, sowie Befehle öffnen
-#: pcdimmer.pas:6182
+#: pcdimmer.pas:6191
 msgid "Lese Daten ein... Szenen"
 msgstr ""
 
-#: pcdimmer.pas:6186
+#: pcdimmer.pas:6195
 msgid "Lese Daten ein...Szenen"
 msgstr ""
 
 #. Timeline öffnen
-#: pcdimmer.pas:6476
+#: pcdimmer.pas:6485
 msgid "Lese Daten ein... Timeline"
 msgstr ""
 
-#: pcdimmer.pas:6480
+#: pcdimmer.pas:6489
 msgid "Lese Daten ein...Timeline"
 msgstr ""
 
 #. Skripttimer öffnen
-#: pcdimmer.pas:6505
+#: pcdimmer.pas:6514
 msgid "Lese Daten ein... Skripttimer"
 msgstr ""
 
-#: pcdimmer.pas:6509
+#: pcdimmer.pas:6518
 msgid "Lese Daten ein...Skripttimer"
 msgstr ""
 
 #. Hotkeys öffnen
-#: pcdimmer.pas:6521
+#: pcdimmer.pas:6530
 msgid "Lese Daten ein... Hotkeys"
 msgstr ""
 
-#: pcdimmer.pas:6526
+#: pcdimmer.pas:6535
 msgid "Lese Daten ein...Hotkeys"
 msgstr ""
 
 #. Nebelmaschineneinstellungen laden
-#: pcdimmer.pas:6614
+#: pcdimmer.pas:6623
 msgid "Lese Daten ein... Nebelmaschine"
 msgstr ""
 
-#: pcdimmer.pas:6618
+#: pcdimmer.pas:6627
 msgid "Lese Daten ein...Nebelmaschine"
 msgstr ""
 
 #. Geräte öffnen
-#: pcdimmer.pas:6626
+#: pcdimmer.pas:6635
 msgid "Lese Daten ein... Geräte"
 msgstr ""
 
-#: pcdimmer.pas:6630
+#: pcdimmer.pas:6639
 msgid "Lese Daten ein...Geräte"
 msgstr ""
 
-#: pcdimmer.pas:6657
+#: pcdimmer.pas:6666
 msgid "Konv. Kalibrierung"
 msgstr ""
 
-#: pcdimmer.pas:6669
+#: pcdimmer.pas:6678
 msgid "Konv. Verfolgerkalib."
 msgstr ""
 
 #. Presets öffnen
-#: pcdimmer.pas:6962
+#: pcdimmer.pas:6992
 msgid "Lese Daten ein... Presets"
 msgstr ""
 
-#: pcdimmer.pas:6966
+#: pcdimmer.pas:6996
 msgid "Lese Daten ein...Presets"
 msgstr ""
 
 #. Geräteszenen öffnen
-#: pcdimmer.pas:7018
+#: pcdimmer.pas:7048
 msgid "Lese Daten ein... Geräteszenen"
 msgstr ""
 
-#: pcdimmer.pas:7023
+#: pcdimmer.pas:7053
 msgid "Lese Daten ein...Geräteszenen"
 msgstr ""
 
 #. Gruppen öffnen
-#: pcdimmer.pas:7152
+#: pcdimmer.pas:7182
 msgid "Lese Daten... Gerätegruppen"
 msgstr ""
 
-#: pcdimmer.pas:7156
+#: pcdimmer.pas:7186
 msgid "Lese Daten ein...Gerätegruppen"
 msgstr ""
 
 #. Softpatch öffnen
-#: pcdimmer.pas:7202
+#: pcdimmer.pas:7232
 msgid "Lese Daten ein... Softpatch"
 msgstr ""
 
-#: pcdimmer.pas:7206
+#: pcdimmer.pas:7236
 msgid "Lese Daten ein...Softpatch"
 msgstr ""
 
 #. Effekte Öffnen
-#: pcdimmer.pas:7244
-#: pcdimmer.pas:7248
+#: pcdimmer.pas:7274
+#: pcdimmer.pas:7278
 msgid "Lese Daten ein... Effekte"
 msgstr ""
 
 #. Bühnenansicht öffnen
-#: pcdimmer.pas:7415
-#: pcdimmer.pas:7420
+#: pcdimmer.pas:7445
+#: pcdimmer.pas:7450
 msgid "Lese Daten ein... Bühnenansicht"
 msgstr ""
 
 #. Desktopproperties öffnen
-#: pcdimmer.pas:7491
-#: pcdimmer.pas:7495
+#: pcdimmer.pas:7532
+#: pcdimmer.pas:7536
 msgid "Lese Daten ein... Desktopeinstellungen"
 msgstr ""
 
 #. Joystickeinstellungen öffnen
-#: pcdimmer.pas:7525
-#: pcdimmer.pas:7529
+#: pcdimmer.pas:7566
+#: pcdimmer.pas:7570
 msgid "Lese Daten ein... Joystickeinstellungen"
 msgstr ""
 
 #. Kontrollpanel öffnen
-#: pcdimmer.pas:7616
-#: pcdimmer.pas:7620
+#: pcdimmer.pas:7657
+#: pcdimmer.pas:7661
 msgid "Lese Daten ein... Kontrollpanel"
 msgstr ""
 
 #. MIDI-IN Event öffnen
-#: pcdimmer.pas:7705
-#: pcdimmer.pas:7710
+#: pcdimmer.pas:7746
+#: pcdimmer.pas:7751
 msgid "Lese Daten ein... MIDI Einstellungen"
 msgstr ""
 
 #. Data-IN Event öffnen
-#: pcdimmer.pas:7791
-#: pcdimmer.pas:7795
+#: pcdimmer.pas:7832
+#: pcdimmer.pas:7836
 msgid "Lese Daten ein... DataIn Einstellungen"
 msgstr ""
 
 #. Leistungsdaten öffnen
-#: pcdimmer.pas:7864
-#: pcdimmer.pas:7868
+#: pcdimmer.pas:7905
+#: pcdimmer.pas:7909
 msgid "Lese Daten ein... Leistungssteuerung"
 msgstr ""
 
 #. Autoszenen öffnen
-#: pcdimmer.pas:7908
-#: pcdimmer.pas:7912
+#: pcdimmer.pas:7949
+#: pcdimmer.pas:7953
 msgid "Lese Daten ein... Automatikszenen"
 msgstr ""
 
 #. Textbuch
-#: pcdimmer.pas:7936
-#: pcdimmer.pas:7941
+#: pcdimmer.pas:7977
+#: pcdimmer.pas:7982
 msgid "Lese Daten ein... Textbuch"
 msgstr ""
 
 #. MIDI-DirectSending
-#: pcdimmer.pas:7954
-#: pcdimmer.pas:7958
+#: pcdimmer.pas:7995
+#: pcdimmer.pas:7999
 msgid "Lese Daten ein... MIDI-Informationen"
 msgstr ""
 
 #. Submaster
-#: pcdimmer.pas:7983
-#: pcdimmer.pas:7987
+#: pcdimmer.pas:8024
+#: pcdimmer.pas:8028
 msgid "Lese Daten ein... Submaster"
 msgstr ""
 
-#: pcdimmer.pas:8100
-#: pcdimmer.pas:8104
+#: pcdimmer.pas:8141
+#: pcdimmer.pas:8145
 msgid "Lese Daten ein... Cue-Liste"
 msgstr ""
 
 #. Timecodeplayer-Liste laden
-#: pcdimmer.pas:8170
-#: pcdimmer.pas:8174
+#: pcdimmer.pas:8211
+#: pcdimmer.pas:8215
 msgid "Lese Daten ein... Timecodeplayer"
 msgstr ""
 
 #. IR FB laden
-#: pcdimmer.pas:8202
-#: pcdimmer.pas:8206
+#: pcdimmer.pas:8243
+#: pcdimmer.pas:8247
 msgid "Lese Daten ein... IR Fernbedienung"
 msgstr ""
 
 #. MediaCenter Szenen laden
-#: pcdimmer.pas:8227
-#: pcdimmer.pas:8231
+#: pcdimmer.pas:8268
+#: pcdimmer.pas:8272
 msgid "Lese Daten ein... MediaCenter Szenen"
 msgstr ""
 
 #. Plugin Szenen laden
-#: pcdimmer.pas:8258
-#: pcdimmer.pas:8262
+#: pcdimmer.pas:8299
+#: pcdimmer.pas:8303
 msgid "Lese Daten ein... Pluginszenen"
 msgstr ""
 
 #. PresetSzenen öffnen
-#: pcdimmer.pas:8410
+#: pcdimmer.pas:8451
 msgid "Lese Daten ein... Preset-Szenen"
 msgstr ""
 
-#: pcdimmer.pas:8414
+#: pcdimmer.pas:8455
 msgid "Lese Daten ein...Preset-Szenen"
 msgstr ""
 
 #. NodeControl laden
-#: pcdimmer.pas:8455
+#: pcdimmer.pas:8496
 msgid "Lese Daten ein... Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:8459
+#: pcdimmer.pas:8500
 msgid "Lese Daten ein...Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:8508
+#: pcdimmer.pas:8549
 msgid "Lese Daten ein... Fertig."
 msgstr ""
 
-#: pcdimmer.pas:8513
+#: pcdimmer.pas:8554
 msgid "Lese Daten ein...Fertig."
 msgstr ""
 
 #. MessageDlg('Die Projektdatei ist in einem alten Format. Bitte nutzen Sie die Projektkonvertierung, um das Projekt in die neue Version zu konvertieren.'+#10+#10+'Projektversion: '+projektprogrammversion+#10+'Datum: '+projektdatum+#10+'Uhrzeit: '+projektuhrzeit, mtError, [mbOk], 0);
-#: pcdimmer.pas:8525
-#: pcdimmer.pas:8538
-#: pcdimmer.pas:8549
-#: pcdimmer.pas:8562
+#: pcdimmer.pas:8566
+#: pcdimmer.pas:8579
+#: pcdimmer.pas:8590
+#: pcdimmer.pas:8603
 msgid "Fehler in Projektdatei"
 msgstr ""
 
-#: pcdimmer.pas:8528
+#: pcdimmer.pas:8569
 msgid "Die Projektdatei ist in einem alten Format. Bitte nutzen Sie die "
 "Projektkonvertierung, um das Projekt in die neue Version zu "
 "konvertieren."
 msgstr ""
 
-#: pcdimmer.pas:8534
-#: pcdimmer.pas:8558
+#: pcdimmer.pas:8575
+#: pcdimmer.pas:8599
 msgid "Letzte Meldung: "
 msgstr ""
 
-#: pcdimmer.pas:8550
+#: pcdimmer.pas:8591
 msgid "Projektdatei konnte aufgrund eines Fehlers nicht geöffnet "
 "werden..."
 msgstr ""
 
-#: pcdimmer.pas:8552
+#: pcdimmer.pas:8593
 msgid "Die Projektdatei ist möglicherweise beschädigt, oder in einem "
 "falschen Format! Senden Sie das Projekt bitte an das "
 "PC_DIMMER-Team."
 msgstr ""
 
-#: pcdimmer.pas:8613
+#: pcdimmer.pas:8654
 msgid "Sende Öffnen-Befehl...Kontrollpanel"
 msgstr ""
 
-#: pcdimmer.pas:8618
+#: pcdimmer.pas:8659
 msgid "Sende Öffnen-Befehl... Kontrollpanel"
 msgstr ""
 
-#: pcdimmer.pas:8625
+#: pcdimmer.pas:8666
 msgid "Sende Öffnen-Befehl...Effektsequenzer"
 msgstr ""
 
-#: pcdimmer.pas:8630
+#: pcdimmer.pas:8671
 msgid "Sende Öffnen-Befehl... Effektsequenzer"
 msgstr ""
 
-#: pcdimmer.pas:8637
+#: pcdimmer.pas:8678
 msgid "Sende Öffnen-Befehl...Beattool"
 msgstr ""
 
-#: pcdimmer.pas:8641
+#: pcdimmer.pas:8682
 msgid "Sende Öffnen-Befehl... Beattool"
 msgstr ""
 
-#: pcdimmer.pas:8647
+#: pcdimmer.pas:8688
 msgid "Sende Öffnen-Befehl...Gerätesteuerung"
 msgstr ""
 
-#: pcdimmer.pas:8651
+#: pcdimmer.pas:8692
 msgid "Sende Öffnen-Befehl... Gerätesteuerung"
 msgstr ""
 
-#: pcdimmer.pas:8658
+#: pcdimmer.pas:8699
 msgid "Sende Öffnen-Befehl...Submaster"
 msgstr ""
 
-#: pcdimmer.pas:8663
+#: pcdimmer.pas:8704
 msgid "Sende Öffnen-Befehl... Submaster"
 msgstr ""
 
-#: pcdimmer.pas:8670
+#: pcdimmer.pas:8711
 msgid "Sende Öffnen-Befehl...Grafische Bühnenansicht"
 msgstr ""
 
-#: pcdimmer.pas:8674
+#: pcdimmer.pas:8715
 msgid "Sende Öffnen-Befehl... Bühnenansicht"
 msgstr ""
 
-#: pcdimmer.pas:8680
+#: pcdimmer.pas:8721
 msgid "Sende Öffnen-Befehl...Audioeffektplayer"
 msgstr ""
 
-#: pcdimmer.pas:8684
+#: pcdimmer.pas:8725
 msgid "Sende Öffnen-Befehl... Audioeffektplayer"
 msgstr ""
 
-#: pcdimmer.pas:8689
+#: pcdimmer.pas:8730
 msgid "Sende Öffnen-Befehl...Textbuch"
 msgstr ""
 
-#: pcdimmer.pas:8694
+#: pcdimmer.pas:8735
 msgid "Sende Öffnen-Befehl... Textbuch"
 msgstr ""
 
-#: pcdimmer.pas:8702
+#: pcdimmer.pas:8743
 msgid "Sende Öffnen-Befehl...Cue-List"
 msgstr ""
 
-#: pcdimmer.pas:8706
+#: pcdimmer.pas:8747
 msgid "Sende Öffnen-Befehl... Cue-List"
 msgstr ""
 
-#: pcdimmer.pas:8713
+#: pcdimmer.pas:8754
 msgid "Sende Öffnen-Befehl...Timecodeplayer"
 msgstr ""
 
-#: pcdimmer.pas:8717
+#: pcdimmer.pas:8758
 msgid "Sende Öffnen-Befehl... Timecodeplayer"
 msgstr ""
 
-#: pcdimmer.pas:8724
+#: pcdimmer.pas:8765
 msgid "Sende Öffnen-Befehl...IR Steuerung"
 msgstr ""
 
-#: pcdimmer.pas:8728
+#: pcdimmer.pas:8769
 msgid "Sende Öffnen-Befehl... IR Steuerung"
 msgstr ""
 
-#: pcdimmer.pas:8742
+#: pcdimmer.pas:8783
 msgid "Sende Öffnen-Befehl...Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:8746
+#: pcdimmer.pas:8787
 msgid "Sende Öffnen-Befehl... Knotensteuerung"
 msgstr ""
 
-#: pcdimmer.pas:8753
-#: pcdimmer.pas:8758
+#: pcdimmer.pas:8794
+#: pcdimmer.pas:8799
 msgid "Aktualisiere Hauptprogramm"
 msgstr ""
 
-#: pcdimmer.pas:8759
+#: pcdimmer.pas:8800
 msgid "Sende Öffnen-Befehl..."
 msgstr ""
 
-#: pcdimmer.pas:8771
+#: pcdimmer.pas:8812
 msgid " - [Nicht gespeichertes Projekt]"
 msgstr ""
 
-#: pcdimmer.pas:8807
+#: pcdimmer.pas:8848
 msgid "Audiodateien (*.wav;*.mp3)|*.wav;*.mp3|All files "
 "(*.*)|*.*"
 msgstr ""
 
-#: pcdimmer.pas:8849
-#: pcdimmer.pas:8859
+#: pcdimmer.pas:8890
+#: pcdimmer.pas:8900
 #: schedulerfrm.pas:173
 #: schedulerfrm.pas:183
 #: schedulerfrm.pas:270
@@ -37741,8 +37692,8 @@ msgstr ""
 msgid "<EINMALIG>    "
 msgstr ""
 
-#: pcdimmer.pas:8850
-#: pcdimmer.pas:8860
+#: pcdimmer.pas:8891
+#: pcdimmer.pas:8901
 #: schedulerfrm.pas:174
 #: schedulerfrm.pas:184
 #: schedulerfrm.pas:271
@@ -37754,8 +37705,8 @@ msgstr ""
 msgid "<TÄGLICH>     "
 msgstr ""
 
-#: pcdimmer.pas:8851
-#: pcdimmer.pas:8861
+#: pcdimmer.pas:8892
+#: pcdimmer.pas:8902
 #: schedulerfrm.pas:175
 #: schedulerfrm.pas:185
 #: schedulerfrm.pas:272
@@ -37767,8 +37718,8 @@ msgstr ""
 msgid "<WÖCHENTLICH> "
 msgstr ""
 
-#: pcdimmer.pas:8852
-#: pcdimmer.pas:8862
+#: pcdimmer.pas:8893
+#: pcdimmer.pas:8903
 #: schedulerfrm.pas:176
 #: schedulerfrm.pas:186
 #: schedulerfrm.pas:273
@@ -37780,8 +37731,8 @@ msgstr ""
 msgid "<MONATLICH>   "
 msgstr ""
 
-#: pcdimmer.pas:8852
-#: pcdimmer.pas:8862
+#: pcdimmer.pas:8893
+#: pcdimmer.pas:8903
 #: schedulerfrm.pas:176
 #: schedulerfrm.pas:186
 #: schedulerfrm.pas:273
@@ -37793,8 +37744,8 @@ msgstr ""
 msgid "jeden"
 msgstr ""
 
-#: pcdimmer.pas:8853
-#: pcdimmer.pas:8863
+#: pcdimmer.pas:8894
+#: pcdimmer.pas:8904
 #: schedulerfrm.pas:177
 #: schedulerfrm.pas:187
 #: schedulerfrm.pas:274
@@ -37807,41 +37758,41 @@ msgid "<JÄHRLICH>    "
 msgstr ""
 
 #. Projektgeräte mit Dateien abgleichen
-#: pcdimmer.pas:8890
-#: pcdimmer.pas:8894
+#: pcdimmer.pas:8931
+#: pcdimmer.pas:8935
 msgid "Synchronisiere Gerätedateien..."
 msgstr ""
 
-#: pcdimmer.pas:9046
+#: pcdimmer.pas:9087
 msgid "Scheduler: Warten... (Noch "
 msgstr ""
 
-#: pcdimmer.pas:9048
+#: pcdimmer.pas:9089
 msgid "Scheduler im Leerlauf..."
 msgstr ""
 
-#: pcdimmer.pas:9051
+#: pcdimmer.pas:9092
 msgid "Scheduler: Deaktiviert"
 msgstr ""
 
-#: pcdimmer.pas:9241
+#: pcdimmer.pas:9282
 msgid "PC_DIMMER Change log..."
 msgstr ""
 
-#: pcdimmer.pas:9242
+#: pcdimmer.pas:9283
 msgid "PHOENIXstudios PC_DIMMER"
 msgstr ""
 
-#: pcdimmer.pas:9243
+#: pcdimmer.pas:9284
 msgid "Keep looking on http://www.pcdimmer.de for "
 "updates"
 msgstr ""
 
-#: pcdimmer.pas:9296
+#: pcdimmer.pas:9337
 msgid "PC_DIMMER jetzt beenden?"
 msgstr ""
 
-#: pcdimmer.pas:9304
+#: pcdimmer.pas:9345
 msgid "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Die "
 "Projektdatei wurde noch nicht aktualisiert.\n"
 "Sämtliche Änderungen könnten durch einen Klick auf \"Neues Projekt\" "
@@ -37850,24 +37801,24 @@ msgid "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Die "
 "Datei: \""
 msgstr ""
 
-#: pcdimmer.pas:9306
-#: pcdimmer.pas:9328
+#: pcdimmer.pas:9347
+#: pcdimmer.pas:9369
 msgid "Möchten Sie das aktuelle Projekt vor dem Beenden "
 "speichern?"
 msgstr ""
 
-#: pcdimmer.pas:9308
-#: pcdimmer.pas:9329
+#: pcdimmer.pas:9349
+#: pcdimmer.pas:9370
 msgid "&Fastsave"
 msgstr ""
 
-#: pcdimmer.pas:9308
-#: pcdimmer.pas:9329
+#: pcdimmer.pas:9349
+#: pcdimmer.pas:9370
 msgid "&Abbrechen"
 msgstr ""
 
 #. case messagedlg(text,mtConfirmation,[mbYes,mbNo,mbCancel],0) of
-#: pcdimmer.pas:9326
+#: pcdimmer.pas:9367
 msgid "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Es wurde "
 "noch keine externe Projektdatei erzeugt.\n"
 "Sämtliche Daten könnten derzeit durch einen Klick auf \"Neues Projekt\" "
@@ -37878,105 +37829,105 @@ msgid "Bislang wurde das Projekt nur per \"Fastsave\" gespeichert. Es wurde "
 msgstr ""
 
 #. messagedlg('Der Ein-/Aus-Schalter am Computergehäuse ist jetzt deaktiviert.'+#13#10#13#10+'Beim kurzen(!) Drücken auf diesen Schalter wird Windows bei Computern mit ATX-Netzteil NICHT heruntergefahren.',mtInformation,[mbOK],0)
-#: pcdimmer.pas:9360
-#: pcdimmer.pas:9370
+#: pcdimmer.pas:9401
+#: pcdimmer.pas:9411
 msgid "Ein-/Ausschalter deaktiviert"
 msgstr ""
 
-#: pcdimmer.pas:9363
+#: pcdimmer.pas:9404
 msgid "Der Ein-/Aus-Schalter am Computergehäuse ist jetzt "
 "deaktiviert."
 msgstr ""
 
-#: pcdimmer.pas:9365
+#: pcdimmer.pas:9406
 msgid "Beim kurzen(!) Drücken auf diesen Schalter wird Windows bei Computern "
 "mit ATX-Netzteil NICHT heruntergefahren."
 msgstr ""
 
 #. messagedlg('Der Ein-/Aus-Schalter am Computergehäuse ist wieder aktiviert.'+#13#10#13#10+'Durch Drücken dieser Taste wird Windows jetzt wieder heruntergefahren.',mtInformation,[mbOK],0)
-#: pcdimmer.pas:9378
+#: pcdimmer.pas:9419
 msgid "Ein-/Ausschalter aktiviert"
 msgstr ""
 
-#: pcdimmer.pas:9381
+#: pcdimmer.pas:9422
 msgid "Der Ein-/Aus-Schalter am Computergehäuse ist wieder "
 "aktiviert."
 msgstr ""
 
-#: pcdimmer.pas:9383
+#: pcdimmer.pas:9424
 msgid "Durch Drücken dieser Taste wird Windows jetzt wieder "
 "heruntergefahren."
 msgstr ""
 
-#: pcdimmer.pas:9387
+#: pcdimmer.pas:9428
 msgid "Ein/-Ausschalter aktiviert"
 msgstr ""
 
-#: pcdimmer.pas:9682
+#: pcdimmer.pas:9723
 msgid "Bildschirmhelligkeit: "
 msgstr ""
 
-#: pcdimmer.pas:9699
+#: pcdimmer.pas:9740
 msgid "Aktuelles Projekt speichern?"
 msgstr ""
 
-#: pcdimmer.pas:9738
+#: pcdimmer.pas:9779
 msgid "PC_DIMMER Projekt öffnen..."
 msgstr ""
 
-#: pcdimmer.pas:9759
-#: pcdimmer.pas:23977
+#: pcdimmer.pas:9800
+#: pcdimmer.pas:24030
 msgid "\" ist nicht mehr verfügbar!"
 msgstr ""
 
 #. Ladezustand der Batterie
-#: pcdimmer.pas:9928
+#: pcdimmer.pas:9969
 msgid "Unbekannter Status"
 msgstr ""
 
-#: pcdimmer.pas:9930
 #: pcdimmer.pas:9971
+#: pcdimmer.pas:10012
 msgid "Es existiert kein Akku"
 msgstr ""
 
-#: pcdimmer.pas:9934
+#: pcdimmer.pas:9975
 msgid "Hoher Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:9935
+#: pcdimmer.pas:9976
 msgid "Niedriger Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:9936
+#: pcdimmer.pas:9977
 msgid "Kritischer Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:9938
+#: pcdimmer.pas:9979
 msgid "Unbekannter Ladezustand"
 msgstr ""
 
-#: pcdimmer.pas:9941
+#: pcdimmer.pas:9982
 msgid " - Akku wird geladen"
 msgstr ""
 
 #. Vista Progressbar Workaround
-#: pcdimmer.pas:11040
+#: pcdimmer.pas:11081
 msgid " Fortschritt: "
 msgstr ""
 
-#: pcdimmer.pas:11050
+#: pcdimmer.pas:11091
 msgid " Lade Datei... "
 msgstr ""
 
-#: pcdimmer.pas:11053
-#: pcdimmer.pas:11078
+#: pcdimmer.pas:11094
+#: pcdimmer.pas:11119
 msgid "Dekomprimiere: "
 msgstr ""
 
 #. Vista Progressbar Workaround
-#: pcdimmer.pas:11063
+#: pcdimmer.pas:11104
 #. Vista Progressbar Workaround
-#: pcdimmer.pas:11098
+#: pcdimmer.pas:11139
 #. Vista Progressbar Workaround
 #: projektverwaltungfrm.pas:375
 #. Vista Progressbar Workaround
@@ -37984,69 +37935,69 @@ msgstr ""
 msgid "Datei ("
 msgstr ""
 
-#: pcdimmer.pas:11074
+#: pcdimmer.pas:11115
 msgid "Dekomprimiere ("
 msgstr ""
 
-#: pcdimmer.pas:11090
+#: pcdimmer.pas:11131
 msgid "Komprimiere: "
 msgstr ""
 
 #. inprogress.Hide;
-#: pcdimmer.pas:11112
+#: pcdimmer.pas:11153
 msgid "Projekt vollständig geladen"
 msgstr ""
 
-#: pcdimmer.pas:11148
+#: pcdimmer.pas:11189
 msgid "Zeigt beim Starten keinen Splashscreen an "
 "[ALT-Taste]"
 msgstr ""
 
-#: pcdimmer.pas:11149
+#: pcdimmer.pas:11190
 msgid "Wahl zwischen zwei verschiedenen Ladebildschirmen"
 msgstr ""
 
-#: pcdimmer.pas:11150
+#: pcdimmer.pas:11191
 msgid "Zeigt beim Starten die Logdatei an."
 msgstr ""
 
-#: pcdimmer.pas:11151
+#: pcdimmer.pas:11192
 msgid "Verhindert den Start des Akku-Dienstes [Rechte "
 "SHIFT-Taste]"
 msgstr ""
 
-#: pcdimmer.pas:11152
+#: pcdimmer.pas:11193
 msgid "Verhindert das automatische Laden der letzten Projektdatei [Linke "
 "SHIFT-Taste]"
 msgstr ""
 
-#: pcdimmer.pas:11153
+#: pcdimmer.pas:11194
 msgid "Startet PC_DIMMER minimiert"
 msgstr ""
 
-#: pcdimmer.pas:11154
+#: pcdimmer.pas:11195
 msgid "Startet PC_DIMMER mit letzten Werten"
 msgstr ""
 
-#: pcdimmer.pas:11155
+#: pcdimmer.pas:11196
 msgid "Startet den Timer mit als \"DateiX\" übergebener "
 "Timerdatei"
 msgstr ""
 
-#: pcdimmer.pas:11156
+#: pcdimmer.pas:11197
 msgid "Lädt die per Fastsave gespeicherte Projektdatei (bei sehr großen "
 "Projekten entfällt hierdurch das Entpacken)"
 msgstr ""
 
-#: pcdimmer.pas:11563
+#: pcdimmer.pas:11604
 msgid "Es sind keine Drucker im System installiert."
 msgstr ""
 
-#: pcdimmer.pas:11581
+#: pcdimmer.pas:11622
 msgid "PC_DIMMER Kanalnamenübersicht ("
 msgstr ""
 
-#: pcdimmer.pas:11652
+#: pcdimmer.pas:11693
 msgid "Die Power-Taste Ihres Computers wurde gedrückt!\n"
 "Diese Funktion ist im PC_DIMMER jedoch deaktiviert worden.\n"
 "\n"
@@ -38055,146 +38006,146 @@ msgid "Die Power-Taste Ihres Computers wurde gedrückt!\n"
 "werden."
 msgstr ""
 
-#: pcdimmer.pas:11666
+#: pcdimmer.pas:11707
 msgid " Plugin-Reset... "
 msgstr ""
 
-#: pcdimmer.pas:11670
+#: pcdimmer.pas:11711
 msgid "Bereite Reset vor..."
 msgstr ""
 
-#: pcdimmer.pas:11742
+#: pcdimmer.pas:11783
 msgid "Reaktiviere Input-Plugin "
 msgstr ""
 
 #. Plugins starten
-#: pcdimmer.pas:11762
+#: pcdimmer.pas:11803
 msgid "Starte Input-Plugin "
 msgstr ""
 
-#: pcdimmer.pas:11771
+#: pcdimmer.pas:11812
 msgid "Sende allen Plugins aktuelle Werte..."
 msgstr ""
 
-#: pcdimmer.pas:11783
+#: pcdimmer.pas:11824
 msgid "Öffne Plugin "
 msgstr ""
 
-#: pcdimmer.pas:12338
+#: pcdimmer.pas:12379
 msgid "Outputplugins aktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:12374
-#: pcdimmer.pas:12426
+#: pcdimmer.pas:12415
+#: pcdimmer.pas:12467
 msgid "Aktiviere "
 msgstr ""
 
-#: pcdimmer.pas:12408
-#: pcdimmer.pas:12412
+#: pcdimmer.pas:12449
+#: pcdimmer.pas:12453
 msgid "Inputplugins aktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:12490
+#: pcdimmer.pas:12531
 msgid "Anzeigen..."
 msgstr ""
 
-#: pcdimmer.pas:12534
+#: pcdimmer.pas:12575
 msgid "Werte an Interfaces übergeben..."
 msgstr ""
 
-#: pcdimmer.pas:12555
+#: pcdimmer.pas:12596
 msgid "Letztgenutzte Plugins anzeigen..."
 msgstr ""
 
-#: pcdimmer.pas:12608
+#: pcdimmer.pas:12649
 msgid "Letzte Module starten..."
 msgstr ""
 
 #. Dimmerkernel starten
-#: pcdimmer.pas:12616
+#: pcdimmer.pas:12657
 msgid "Starte Dimmerkernel..."
 msgstr ""
 
 #. Joystick starten
-#: pcdimmer.pas:12627
+#: pcdimmer.pas:12668
 msgid "Starte Joystick..."
 msgstr ""
 
 #. MIDI starten
-#: pcdimmer.pas:12637
+#: pcdimmer.pas:12678
 msgid "Starte MIDI-In..."
 msgstr ""
 
-#: pcdimmer.pas:12642
+#: pcdimmer.pas:12683
 msgid "Starte MIDI-Out..."
 msgstr ""
 
 #. Akkukontrolle starten
-#: pcdimmer.pas:12664
+#: pcdimmer.pas:12705
 msgid "Starte Akkukontrolle..."
 msgstr ""
 
 #. Timecodeplayer starten
-#: pcdimmer.pas:12676
+#: pcdimmer.pas:12717
 msgid "Starte MIDI-Timecodeplayer..."
 msgstr ""
 
-#: pcdimmer.pas:12683
+#: pcdimmer.pas:12724
 msgid "Netzwerk und Ambilight aktivieren..."
 msgstr ""
 
 #. HTTP-Server aktivieren, sofern beim letzten mal aktiv
-#: pcdimmer.pas:12698
+#: pcdimmer.pas:12739
 msgid "Webserver kann nicht gestartet werden!"
 msgstr ""
 
 #. Ambilight aktivieren, sofern beim letzten mal aktiv
-#: pcdimmer.pas:12747
+#: pcdimmer.pas:12788
 msgid "Ambilight war in der letzten Sitzung aktiviert. Möchten Sie das "
 "Ambilight nun wieder einschalten?"
 msgstr ""
 
-#: pcdimmer.pas:12758
+#: pcdimmer.pas:12799
 msgid "Letzte Einstellungen laden..."
 msgstr ""
 
-#: pcdimmer.pas:12886
+#: pcdimmer.pas:12927
 msgid "Fenster öffnen..."
 msgstr ""
 
-#: pcdimmer.pas:12983
-#: pcdimmer.pas:12984
+#: pcdimmer.pas:13024
+#: pcdimmer.pas:13025
 msgid "DDF Bilder laden..."
 msgstr ""
 
-#: pcdimmer.pas:12990
+#: pcdimmer.pas:13031
 msgid "Leeres Projekt erzeugen..."
 msgstr ""
 
-#: pcdimmer.pas:12995
+#: pcdimmer.pas:13036
 #. Versuche Dateien zu laden
-#: pcdimmer.pas:13013
+#: pcdimmer.pas:13054
 msgid "Dateien öffnen..."
 msgstr ""
 
-#: pcdimmer.pas:13014
+#: pcdimmer.pas:13055
 msgid "Lade Datei..."
 msgstr ""
 
 #. Falls Skripttimerdatei gestartet werden soll
-#: pcdimmer.pas:13030
+#: pcdimmer.pas:13071
 msgid "Starte Skripttimer..."
 msgstr ""
 
-#: pcdimmer.pas:13036
+#: pcdimmer.pas:13077
 msgid "Dateien öffnen...Projekt"
 msgstr ""
 
-#: pcdimmer.pas:13062
+#: pcdimmer.pas:13103
 msgid "Projektwiederherstellung..."
 msgstr ""
 
-#: pcdimmer.pas:13065
+#: pcdimmer.pas:13106
 msgid "Anscheinend wurde der PC_DIMMER beim letzten Mal nicht richtig "
 "beendet.\n"
 "\n"
@@ -38203,322 +38154,322 @@ msgid "Anscheinend wurde der PC_DIMMER beim letzten Mal nicht richtig "
 "wird dabei überschrieben)?"
 msgstr ""
 
-#: pcdimmer.pas:13074
+#: pcdimmer.pas:13115
 msgid "Timer aktivieren..."
 msgstr ""
 
-#: pcdimmer.pas:13088
+#: pcdimmer.pas:13132
 msgid "Abschließende Arbeiten"
 msgstr ""
 
-#: pcdimmer.pas:13106
+#: pcdimmer.pas:13150
 msgid "Oberfläche aktualisieren..."
 msgstr ""
 
-#: pcdimmer.pas:13116
+#: pcdimmer.pas:13158
 msgid "Geräte initialisieren..."
 msgstr ""
 
-#: pcdimmer.pas:13148
+#: pcdimmer.pas:13191
 msgid "Beatquelle setzen..."
 msgstr ""
 
-#: pcdimmer.pas:14051
+#: pcdimmer.pas:14104
 msgid "Tastatur: "
 msgstr ""
 
-#: pcdimmer.pas:14115
+#: pcdimmer.pas:14168
 msgid "Geräteszene: "
 msgstr ""
 
-#: pcdimmer.pas:14148
+#: pcdimmer.pas:14201
 msgid "Direktszene AEP: "
 msgstr ""
 
-#: pcdimmer.pas:14180
+#: pcdimmer.pas:14233
 msgid "Direktszene Effekt: "
 msgstr ""
 
-#: pcdimmer.pas:14192
+#: pcdimmer.pas:14245
 msgid "Terminal-Schnittstelle"
 msgstr ""
 
 #. BPM-Wert abfragen
-#: pcdimmer.pas:14396
+#: pcdimmer.pas:14449
 msgid "Geschwindigkeit eingeben"
 msgstr ""
 
-#: pcdimmer.pas:14396
+#: pcdimmer.pas:14449
 msgid "Bitte geben Sie eine Geschwindigkeit in Beats-Per-Minute (BPM) "
 "an:"
 msgstr ""
 
-#: pcdimmer.pas:14427
+#: pcdimmer.pas:14480
 msgid "Bitte geben Sie einen Wert für den Grandmaster an [Wert von "
 "0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:14442
+#: pcdimmer.pas:14495
 msgid "Bitte geben Sie einen Wert für den Flashmaster an [Wert von "
 "0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:14457
+#: pcdimmer.pas:14510
 msgid "Bitte geben Sie einen Wert für den Speedmaster an [Wert von "
 "-100..0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:14472
+#: pcdimmer.pas:14525
 msgid "Bitte geben Sie einen Wert für den Audiomaster an [Wert von "
 "0..100]:"
 msgstr ""
 
-#: pcdimmer.pas:14517
+#: pcdimmer.pas:14570
 msgid "2 Ausschalten"
 msgstr ""
 
-#: pcdimmer.pas:14518
+#: pcdimmer.pas:14571
 msgid "3 Einblenden"
 msgstr ""
 
-#: pcdimmer.pas:14519
+#: pcdimmer.pas:14572
 msgid "4 Ausblenden"
 msgstr ""
 
-#: pcdimmer.pas:14520
+#: pcdimmer.pas:14573
 msgid "5 Flashen"
 msgstr ""
 
 #. Abgefragter Wert schalten
-#: pcdimmer.pas:14681
+#: pcdimmer.pas:14734
 #. Abgefragten Wert dimmen
-#: pcdimmer.pas:14699
+#: pcdimmer.pas:14752
 msgid "Kanalwert eingeben"
 msgstr ""
 
-#: pcdimmer.pas:14681
-#: pcdimmer.pas:14699
+#: pcdimmer.pas:14734
+#: pcdimmer.pas:14752
 msgid "Bitte geben Sie einen Kanalwert [0..255] ein, auf den der Kanal "
 "\""
 msgstr ""
 
-#: pcdimmer.pas:14681
+#: pcdimmer.pas:14734
 msgid "\" geschaltet werden soll:"
 msgstr ""
 
-#: pcdimmer.pas:14699
+#: pcdimmer.pas:14752
 msgid "\" gedimmt werden soll:"
 msgstr ""
 
 #. Auf abgefragten Wert schalten
-#: pcdimmer.pas:15802
+#: pcdimmer.pas:15855
 msgid "Faderwert eingeben"
 msgstr ""
 
-#: pcdimmer.pas:15802
+#: pcdimmer.pas:15855
 msgid "Bitte geben Sie einen Faderwert [0..255] ein, auf den der Fader "
 "\""
 msgstr ""
 
-#: pcdimmer.pas:15802
+#: pcdimmer.pas:15855
 msgid "\" gesetzt werden soll:"
 msgstr ""
 
-#: pcdimmer.pas:16483
+#: pcdimmer.pas:16536
 msgid "Es konnte keine Verbindung zum MediaCenter Server hergestellt werden. "
 "Bitte kontrollieren Sie ihre Angaben in den Feldern \"Adresse\" und "
 "\"Port\" der entsprechenden MediaCenter "
 "Szene."
 msgstr ""
 
-#: pcdimmer.pas:17511
+#: pcdimmer.pas:17564
 msgid "Einfache Szene bearbeiten"
 msgstr ""
 
 #. ShowMessage(E.Message); // EConvertError ist nur nervig
-#: pcdimmer.pas:19463
+#: pcdimmer.pas:19516
 msgid "Es wurde aufgrund eines Fehlers versucht eine Größe durch Null zu "
 "teilen."
 msgstr ""
 
-#: pcdimmer.pas:19470
-#: pcdimmer.pas:19479
+#: pcdimmer.pas:19523
+#: pcdimmer.pas:19532
 msgid "Fehlertyp: "
 msgstr ""
 
 #. +' "'+TControl(Sender).Name+'"';
-#: pcdimmer.pas:19471
+#: pcdimmer.pas:19524
 #. +' "'+TControl(Sender).Name+'"');
-#: pcdimmer.pas:19481
+#: pcdimmer.pas:19534
 msgid "Verursacher: "
 msgstr ""
 
-#: pcdimmer.pas:19477
+#: pcdimmer.pas:19530
 msgid "Fehlerbericht vom "
 msgstr ""
 
-#: pcdimmer.pas:19935
+#: pcdimmer.pas:19988
 msgid "Möchten Sie wirklich alle laufenden Effekte und Szenen "
 "beenden?"
 msgstr ""
 
-#: pcdimmer.pas:19983
+#: pcdimmer.pas:20036
 msgid "  Akku: "
 msgstr ""
 
-#: pcdimmer.pas:20731
+#: pcdimmer.pas:20784
 msgid "Datei wird gesucht..."
 msgstr ""
 
 #. Datei ist im Bildverzeichnis 128x128
-#: pcdimmer.pas:20783
+#: pcdimmer.pas:20836
 #. Suchen im Project-Temp
-#: pcdimmer.pas:20792
+#: pcdimmer.pas:20845
 msgid "Suche nach Datei"
 msgstr ""
 
-#: pcdimmer.pas:20783
-#: pcdimmer.pas:20792
+#: pcdimmer.pas:20836
+#: pcdimmer.pas:20845
 msgid "im Ordner"
 msgstr ""
 
 #. ProgressScreenSmall.close;
-#: pcdimmer.pas:20808
+#: pcdimmer.pas:20861
 msgid "Dateioperation abgeschlossen."
 msgstr ""
 
 #. Name
-#: pcdimmer.pas:21385
+#: pcdimmer.pas:21438
 msgid "Presetszene"
 msgstr ""
 
 #. Name
-#: pcdimmer.pas:21399
+#: pcdimmer.pas:21452
 #: szenenverwaltung.pas:2062
 msgid "Plugin Szene"
 msgstr ""
 
 #. Falls Timecodeplayerdatei
-#: pcdimmer.pas:21996
+#: pcdimmer.pas:22049
 msgid "Die zu öffnende Datei konnte nicht gefunden "
 "werden"
 msgstr ""
 
-#: pcdimmer.pas:22336
+#: pcdimmer.pas:22389
 msgid "MediaCenter Verbindung:"
 msgstr ""
 
 #. Sprache des 3D-Visualizers setzen
-#: pcdimmer.pas:22656
+#: pcdimmer.pas:22709
 msgid "Der 3D Visualizer wurde nicht gefunden. Bitte kontrollieren Sie die "
 "Pfadangabe in den erweiterten Einstellungen..."
 msgstr ""
 
-#: pcdimmer.pas:22730
+#: pcdimmer.pas:22783
 msgid "Kennwort festlegen"
 msgstr ""
 
-#: pcdimmer.pas:22730
+#: pcdimmer.pas:22783
 msgid "In den erweiterten Optionen ist kein Standardkennwort hinterlegt. "
 "Geben Sie daher bitte ein Kennwort für die aktuelle Sperrung "
 "ein:"
 msgstr ""
 
-#: pcdimmer.pas:22745
+#: pcdimmer.pas:22798
 msgid "CSV-Datei (*.csv)|*.csv|*.*|*.*"
 msgstr ""
 
-#: pcdimmer.pas:22746
+#: pcdimmer.pas:22799
 msgid "Gerätedaten exportieren"
 msgstr ""
 
-#: pcdimmer.pas:22756
+#: pcdimmer.pas:22809
 msgid "Startadresse"
 msgstr ""
 
-#: pcdimmer.pas:22757
+#: pcdimmer.pas:22810
 msgid "Kanalanzahl"
 msgstr ""
 
-#: pcdimmer.pas:22758
+#: pcdimmer.pas:22811
 msgid "Leistung [W]"
 msgstr ""
 
-#: pcdimmer.pas:22763
+#: pcdimmer.pas:22816
 msgid "CMY"
 msgstr ""
 
-#: pcdimmer.pas:22766
+#: pcdimmer.pas:22819
 msgid "DIP-Startadresse"
 msgstr ""
 
 #. Datenraten
-#: pcdimmer.pas:25637
+#: pcdimmer.pas:25690
 msgid "MIDI-In:"
 msgstr ""
 
-#: pcdimmer.pas:25639
+#: pcdimmer.pas:25692
 msgid "MIDI-Out:"
 msgstr ""
 
-#: pcdimmer.pas:25641
+#: pcdimmer.pas:25694
 msgid "Data-In:"
 msgstr ""
 
-#: pcdimmer.pas:25643
+#: pcdimmer.pas:25696
 msgid "Data-Out:"
 msgstr ""
 
 #. Installierte Geräte
-#: pcdimmer.pas:25647
+#: pcdimmer.pas:25700
 msgid "Installierte Geräte:"
 msgstr ""
 
 #. Anzahl der Szenen
-#: pcdimmer.pas:25651
+#: pcdimmer.pas:25704
 msgid "Erstellte Szenen:"
 msgstr ""
 
 #. Dimmerkernelzeit
-#: pcdimmer.pas:25655
-#: pcdimmer.pas:25657
+#: pcdimmer.pas:25708
+#: pcdimmer.pas:25710
 msgid "Dimmerkernel:"
 msgstr ""
 
-#: pcdimmer.pas:25655
+#: pcdimmer.pas:25708
 msgid "Job"
 msgstr ""
 
-#: pcdimmer.pas:25657
+#: pcdimmer.pas:25710
 msgid "Jobs"
 msgstr ""
 
 #. Kanaländerungen pro Sekunde
-#: pcdimmer.pas:25666
+#: pcdimmer.pas:25719
 msgid "Kanaländerung/s:"
 msgstr ""
 
-#: pcdimmer.pas:25952
-#: pcdimmer.pas:26049
+#: pcdimmer.pas:26005
+#: pcdimmer.pas:26102
 msgid "Aufgenommen"
 msgstr ""
 
-#: pcdimmer.pas:26270
+#: pcdimmer.pas:26323
 msgid "Möchten Sie wirklich alle laufenden Audiowiedergaben "
 "beenden?"
 msgstr ""
 
-#: pcdimmer.pas:26950
-#: pcdimmer.pas:26955
+#: pcdimmer.pas:27003
+#: pcdimmer.pas:27008
 msgid "besitzt keine ausreichenden Rechte für diese "
 "Operation!"
 msgstr ""
 
-#: pcdimmer.pas:26996
+#: pcdimmer.pas:27049
 msgid "Zugang verweigert!"
 msgstr ""
 
-#: pcdimmer.pas:27010
+#: pcdimmer.pas:27063
 msgid "Benutzer:"
 msgstr ""
 
@@ -39687,7 +39638,7 @@ msgid "Auto-Regulieren"
 msgstr ""
 
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.pas:506
-#: plugins/Programmplugins/Temperaturregler/configfrm.pas:320
+#: plugins/Programmplugins/Temperaturregler/configfrm.pas:312
 msgid "Temperaturregler aktiviert..."
 msgstr ""
 
@@ -39696,7 +39647,7 @@ msgstr ""
 #. Zu Warm -> Ausschalten
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.pas:606
 #. Zu Warm -> Ausschalten
-#: plugins/Programmplugins/Temperaturregler/configfrm.pas:528
+#: plugins/Programmplugins/Temperaturregler/configfrm.pas:555
 msgid "Heizung aus"
 msgstr ""
 
@@ -39713,52 +39664,50 @@ msgstr ""
 #. Im Begriff des Aufheizens
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.pas:640
 #. Zu Kalt -> Einschalten
-#: plugins/Programmplugins/Temperaturregler/configfrm.pas:540
+#: plugins/Programmplugins/Temperaturregler/configfrm.pas:567
 #. Aufheizen, da Sollwert noch nicht erreicht und Regelung gerade eingeschaltet
-#: plugins/Programmplugins/Temperaturregler/configfrm.pas:555
+#: plugins/Programmplugins/Temperaturregler/configfrm.pas:582
 #. Im Begriff des Aufheizens
-#: plugins/Programmplugins/Temperaturregler/configfrm.pas:564
+#: plugins/Programmplugins/Temperaturregler/configfrm.pas:591
 msgid "Heizung ein"
 msgstr ""
 
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/configfrm.pas:693
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/Backups/configfrm.pas:645
-#: plugins/Programmplugins/Temperaturregler/configfrm.pas:569
+#: plugins/Programmplugins/Temperaturregler/configfrm.pas:596
 msgid "Heizung aus (Hysterese)"
 msgstr ""
 
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.pas:116
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.pas:149
-#: plugins/Programmplugins/Temperaturregler/setup.pas:131
-#: plugins/Programmplugins/Temperaturregler/setup.pas:164
 msgid "Verbunden mit COM"
 msgstr ""
 
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.pas:128
-#: plugins/Programmplugins/Temperaturregler/setup.pas:143
+#: plugins/Programmplugins/Temperaturregler/setup.pas:101
 msgid "Es wird folgendes RS232-Protokoll für den Messwert "
 "verwendet:"
 msgstr ""
 
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.pas:129
-#: plugins/Programmplugins/Temperaturregler/setup.pas:144
+#: plugins/Programmplugins/Temperaturregler/setup.pas:102
 msgid "ALHE (bzw. AHLE bei aktiviertem \"Vertausche "
 "L/H\")"
 msgstr ""
 
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.pas:130
-#: plugins/Programmplugins/Temperaturregler/setup.pas:145
+#: plugins/Programmplugins/Temperaturregler/setup.pas:103
 msgid "A und E sind einfache ASCII-Zeichen"
 msgstr ""
 
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.pas:131
-#: plugins/Programmplugins/Temperaturregler/setup.pas:146
+#: plugins/Programmplugins/Temperaturregler/setup.pas:104
 msgid "L und H sind entsprechend Low- und High-Byte des "
 "Temperaturwertes."
 msgstr ""
 
 #: plugins/Programmplugins/Alt/Temperaturregler_Dezember_2012/setup.pas:132
-#: plugins/Programmplugins/Temperaturregler/setup.pas:147
+#: plugins/Programmplugins/Temperaturregler/setup.pas:105
 msgid "Es wird im Programm folgende Formel für die Umrechnung "
 "verwendet:"
 msgstr ""
@@ -39805,7 +39754,7 @@ msgstr ""
 msgid "Verbindung hergestellt"
 msgstr ""
 
-#: plugins/Programmplugins/Temperaturregler/configfrm.pas:1015
+#: plugins/Programmplugins/Temperaturregler/configfrm.pas:1096
 msgid "Datum; Uhrzeit; Temperatur 1 [°C]; Temperatur 2 [°C]; Temperatur 3 "
 "[°C]; Delta-Temp [°C]; Verbrauch [kWh]; Kosten "
 "[€]"
@@ -39979,9 +39928,6 @@ msgid "usb.txt"
 msgstr ""
 
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:32
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:32
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:32
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:32
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:90
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/dll/src/okdmx31.rc:73
 #: plugins/Ausgabeplugin/enttec_prodmx_mk2/pro_mk2_example/app.rc:33
@@ -39995,15 +39941,6 @@ msgstr ""
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:37
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:53
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:54
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:37
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:53
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:54
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:37
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:53
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:54
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:37
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:53
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:54
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:95
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:111
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:112
@@ -40018,45 +39955,30 @@ msgid "#include "
 msgstr ""
 
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:43
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:43
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:43
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:43
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:101
 #: plugins/Ausgabeplugin/oksid_dmx31/OksiD/Visual_C++_sample/test_cpp.rc:101
 msgid "#define _AFX_NO_SPLITTER_RESOURCES\n"
 msgstr ""
 
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:44
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:44
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:44
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:44
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:102
 #: plugins/Ausgabeplugin/oksid_dmx31/OksiD/Visual_C++_sample/test_cpp.rc:102
 msgid "#define _AFX_NO_OLE_RESOURCES\n"
 msgstr ""
 
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:45
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:45
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:45
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:45
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:103
 #: plugins/Ausgabeplugin/oksid_dmx31/OksiD/Visual_C++_sample/test_cpp.rc:103
 msgid "#define _AFX_NO_TRACKER_RESOURCES\n"
 msgstr ""
 
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:46
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:46
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:46
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:46
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:104
 #: plugins/Ausgabeplugin/oksid_dmx31/OksiD/Visual_C++_sample/test_cpp.rc:104
 msgid "#define _AFX_NO_PROPERTY_RESOURCES\n"
 msgstr ""
 
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:47
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:47
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:47
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:47
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:105
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/dll/src/okdmx31.rc:84
 #: plugins/Ausgabeplugin/oksid_dmx31/OksiD/dll/DasHard.rc:89
@@ -40071,9 +39993,6 @@ msgid "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)\n"
 msgstr ""
 
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:49
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:49
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:49
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:49
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:107
 #: plugins/Ausgabeplugin/oksid_dmx31/OksiD/Visual_C++_sample/test_cpp.rc:107
 msgid "#ifdef _WIN32\n"
@@ -40084,27 +40003,18 @@ msgid "LANGUAGE 12, 1\n"
 msgstr ""
 
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:51
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:51
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:51
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:51
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:109
 #: plugins/Ausgabeplugin/oksid_dmx31/OksiD/Visual_C++_sample/test_cpp.rc:109
 msgid "#pragma code_page(1252)\n"
 msgstr ""
 
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:52
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:52
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:52
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:52
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:110
 #: plugins/Ausgabeplugin/oksid_dmx31/OksiD/Visual_C++_sample/test_cpp.rc:110
 msgid "#endif //_WIN32\n"
 msgstr ""
 
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:55
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:55
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:55
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:55
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:113
 #: plugins/Ausgabeplugin/oksid_dmx31/OksiD/Visual_C++_sample/test_cpp.rc:113
 msgid "#endif\n"
@@ -40249,12 +40159,6 @@ msgstr ""
 #. Programmer's name: BLOCK
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:160
 #. Programmer's name: BLOCK
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:178
-#. Programmer's name: BLOCK
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:178
-#. Programmer's name: BLOCK
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:178
-#. Programmer's name: BLOCK
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:43
 #. Programmer's name: BLOCK
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/dll/src/okdmx31.rc:42
@@ -40277,12 +40181,6 @@ msgstr ""
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:164
 #. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:183
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:182
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:182
-#. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:49
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/dll/src/okdmx31.rc:48
@@ -40299,12 +40197,6 @@ msgstr ""
 
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:165
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:184
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:183
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:183
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:50
 #. Programmer's name: VALUE
@@ -40323,12 +40215,6 @@ msgstr ""
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:166
 #. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:185
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:184
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:184
-#. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:51
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/dll/src/okdmx31.rc:50
@@ -40345,12 +40231,6 @@ msgstr ""
 
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:167
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:186
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:185
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:185
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:52
 #. Programmer's name: VALUE
@@ -40369,12 +40249,6 @@ msgstr ""
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:168
 #. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:188
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:186
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:186
-#. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:54
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/dll/src/okdmx31.rc:52
@@ -40391,12 +40265,6 @@ msgstr ""
 
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:169
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:189
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:187
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:187
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:56
 #. Programmer's name: VALUE
@@ -40415,12 +40283,6 @@ msgstr ""
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:170
 #. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:190
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:188
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:188
-#. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:57
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/dll/src/okdmx31.rc:55
@@ -40437,12 +40299,6 @@ msgstr ""
 
 #. Programmer's name: BLOCK
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:173
-#. Programmer's name: BLOCK
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:193
-#. Programmer's name: BLOCK
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:191
-#. Programmer's name: BLOCK
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:191
 #. Programmer's name: BLOCK
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:61
 #. Programmer's name: BLOCK
@@ -40461,12 +40317,6 @@ msgstr ""
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:175
 #. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:195
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:193
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:193
-#. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:63
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/dll/src/okdmx31.rc:60
@@ -40484,320 +40334,6 @@ msgstr ""
 #. Programmer's name: IDC_CURSOR1             CURSOR
 #: plugins/Ausgabeplugin/DasLight_Siudi5-6-8_Multi/devkit/slmini2006/slmini.rc:233
 msgid "res\\cursor1.cur"
-msgstr ""
-
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:48
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:48
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:48
-msgid "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)\n"
-msgstr ""
-
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:50
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:50
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:50
-msgid "LANGUAGE 7, 1\n"
-msgstr ""
-
-#. Programmer's name: IDR_MAINFRAME           ICON    DISCARDABLE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:69
-#. Programmer's name: IDR_MAINFRAME           ICON
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:69
-#. Programmer's name: IDR_MAINFRAME           ICON
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:69
-msgid "res\\DMXDemo.ico"
-msgstr ""
-
-#. Programmer's name: CAPTION
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:78
-#. Programmer's name: CAPTION
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:78
-#. Programmer's name: CAPTION
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:78
-msgid "Info über DMXDemo"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:82
-msgid "DMXDemo Version 1.3"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:83
-msgid "Copyright (C) 2007 by DMX4ALL Markus "
-"Siwek"
-msgstr ""
-
-#. Programmer's name: CAPTION
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:91
-msgid "Demo für DMX4ALL-PC-Interfaces"
-msgstr ""
-
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:95
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:97
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:99
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:101
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:103
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:105
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:107
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:109
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:111
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:113
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:96
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:98
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:100
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:102
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:104
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:106
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:108
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:110
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:112
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:114
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:96
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:98
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:100
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:102
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:104
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:106
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:108
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:110
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:112
-#. Programmer's name: CONTROL
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:114
-msgid "Slider1"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:115
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:116
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:116
-msgid "Ch1"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:116
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:117
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:117
-msgid "Ch2"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:117
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:118
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:118
-msgid "Ch3"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:118
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:119
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:119
-msgid "Ch4"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:119
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:120
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:120
-msgid "Ch5"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:120
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:121
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:121
-msgid "Ch6"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:121
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:122
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:122
-msgid "Ch7"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:122
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:123
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:123
-msgid "Ch8"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:123
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:124
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:124
-msgid "Ch9"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:124
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:125
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:125
-msgid "Ch10"
-msgstr ""
-
-#. Programmer's name: CAPTION
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:149
-#. Programmer's name: CAPTION
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:150
-#. Programmer's name: CAPTION
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:150
-msgid "Hardware-Info"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:153
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:154
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:154
-msgid "Hardware-Info:"
-msgstr ""
-
-#. Programmer's name: BLOCK
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:180
-#. Programmer's name: BLOCK
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:180
-#. Programmer's name: BLOCK
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:180
-msgid "040704B0"
-msgstr ""
-
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:182
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:48
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/dll/src/okdmx31.rc:47
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/dll/DasHard.rc:48
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/dll/okdmx31.rc:47
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/dll/old/link/okdmx31.rc:48
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/Visual_C++_sample/test_cpp.rc:48
-msgid "CompanyName"
-msgstr ""
-
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:187
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:53
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/dll/DasHard.rc:53
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/dll/old/link/okdmx31.rc:53
-#. Programmer's name: VALUE
-#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/Visual_C++_sample/test_cpp.rc:53
-msgid "LegalTrademarks"
-msgstr ""
-
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:250
-msgid "Martin Pinbelegung"
-msgstr ""
-
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample1/Source/DMXDemo.rc:252
-msgid "Internationale Pinbelegung"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:82
-msgid "DMXDemo2"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:83
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:83
-msgid "Copyright (C) 2008 by DMX4ALL Markus "
-"Siwek"
-msgstr ""
-
-#. Programmer's name: CAPTION
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:92
-msgid "Demo2 für DMX4ALL-PC-Interfaces"
-msgstr ""
-
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:246
-msgid "DMX-Universe 1"
-msgstr ""
-
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:247
-msgid "DMX-Universe 2"
-msgstr ""
-
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:248
-msgid "DMX-Universe 3"
-msgstr ""
-
-#. Programmer's name: MENUITEM
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample2/Source/DMXDemo.rc:249
-msgid "DMX-Universe 4"
-msgstr ""
-
-#. Programmer's name: LTEXT
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:82
-msgid "DMXDemo3"
-msgstr ""
-
-#. Programmer's name: CAPTION
-#: plugins/Ausgabeplugin/dmx4all/DMX4ALL_DLL_Development/C++_Sample3/Source/DMXDemo.rc:92
-msgid "Demo3 für DMX4ALL-PC-Interfaces"
 msgstr ""
 
 #. Programmer's name: BLOCK
@@ -40826,6 +40362,32 @@ msgstr ""
 #. Programmer's name: VALUE
 #: plugins/Ausgabeplugin/oksid_dmx31/OksiD/Visual_C++_sample/test_cpp.rc:47
 msgid "Comments"
+msgstr ""
+
+#. Programmer's name: VALUE
+#: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:48
+#. Programmer's name: VALUE
+#: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/dll/src/okdmx31.rc:47
+#. Programmer's name: VALUE
+#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/dll/DasHard.rc:48
+#. Programmer's name: VALUE
+#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/dll/okdmx31.rc:47
+#. Programmer's name: VALUE
+#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/dll/old/link/okdmx31.rc:48
+#. Programmer's name: VALUE
+#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/Visual_C++_sample/test_cpp.rc:48
+msgid "CompanyName"
+msgstr ""
+
+#. Programmer's name: VALUE
+#: plugins/Ausgabeplugin/elektor_oksidizer_dmx/Elektor/cpp_test/test_cpp.rc:53
+#. Programmer's name: VALUE
+#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/dll/DasHard.rc:53
+#. Programmer's name: VALUE
+#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/dll/old/link/okdmx31.rc:53
+#. Programmer's name: VALUE
+#: plugins/Ausgabeplugin/oksid_dmx31/OksiD/Visual_C++_sample/test_cpp.rc:53
+msgid "LegalTrademarks"
 msgstr ""
 
 #. Programmer's name: VALUE

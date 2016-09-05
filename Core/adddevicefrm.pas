@@ -307,6 +307,19 @@ begin
         maxchanlabel.Caption:=inttostr(geraetesteuerung.DevicePrototyp[GetDevicePositionInDeviceArray(@geraetesteuerung.DevicePrototyp[l].ID)].MaxChan);
         dateilabel.Caption:=ExtractFileName(geraetesteuerung.DevicePrototyp[GetDevicePositionInDeviceArray(@geraetesteuerung.DevicePrototyp[l].ID)].ddffilename);
 
+{
+        if (geraetesteuerung.DevicePrototyp[l].MatrixXCount>0) or (geraetesteuerung.DevicePrototyp[l].MatrixYCount>0) then
+        begin
+          Edit2.Enabled:=false;
+          Label7.Enabled:=false;
+          Edit2.Text:='1';
+        end else
+        begin
+          Edit2.Enabled:=true;
+          Label7.Enabled:=true;
+        end;
+}
+
         SomethingSelected:=true;
         break;
       end;
@@ -753,7 +766,7 @@ begin
         geraetesteuerung.DevicePrototyp[i].IrisMaxValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('MaxValue'));
       end;
       if XML.XML.Root.Items[j].Name='gobos' then
-      begin // <channels>
+      begin // <gobos>
         setlength(geraetesteuerung.DevicePrototyp[i].gobos,XML.XML.Root.Items[j].Items.Count);
         setlength(geraetesteuerung.DevicePrototyp[i].gobolevels,XML.XML.Root.Items[j].Items.Count);
         setlength(geraetesteuerung.DevicePrototyp[i].goboendlevels,XML.XML.Root.Items[j].Items.Count);
@@ -767,7 +780,7 @@ begin
         end;
       end;
       if XML.XML.Root.Items[j].Name='gobos2' then
-      begin // <channels>
+      begin // <gobos2>
         setlength(geraetesteuerung.DevicePrototyp[i].gobos2,XML.XML.Root.Items[j].Items.Count);
         setlength(geraetesteuerung.DevicePrototyp[i].gobolevels2,XML.XML.Root.Items[j].Items.Count);
         setlength(geraetesteuerung.DevicePrototyp[i].goboendlevels2,XML.XML.Root.Items[j].Items.Count);
@@ -779,6 +792,13 @@ begin
           geraetesteuerung.DevicePrototyp[i].gobolevels2[k]:=strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('value'));
           geraetesteuerung.DevicePrototyp[i].goboendlevels2[k]:=strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('valueend',inttostr(geraetesteuerung.DevicePrototyp[i].gobolevels2[k])));
         end;
+      end;
+      if XML.XML.Root.Items[j].Name='matrix' then
+      begin // <Matrix>
+        geraetesteuerung.DevicePrototyp[i].IsMatrixDevice:=true;
+        geraetesteuerung.DevicePrototyp[i].MatrixXCount:=XML.XML.Root.Items[j].Properties.IntValue('xcount');
+        geraetesteuerung.DevicePrototyp[i].MatrixYCount:=XML.XML.Root.Items[j].Properties.IntValue('ycount');
+        geraetesteuerung.DevicePrototyp[i].MatrixOrdertype:=XML.XML.Root.Items[j].Properties.IntValue('ordertype');
       end;
     end;
 

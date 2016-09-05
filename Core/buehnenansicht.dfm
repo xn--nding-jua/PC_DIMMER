@@ -2510,6 +2510,14 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Alignment = taRightJustify
           Caption = '...'
         end
+        object Label25: TLabel
+          Left = 8
+          Top = 40
+          Width = 44
+          Height = 13
+          Caption = 'Drehung:'
+          Transparent = True
+        end
         object Button6: TButton
           Left = 8
           Top = 112
@@ -2523,12 +2531,13 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           OnClick = Button6Click
         end
         object TrackBar1: TTrackBar
-          Left = 48
+          Left = 56
           Top = 61
-          Width = 127
+          Width = 119
           Height = 21
           Ctl3D = True
-          Max = 255
+          Max = 192
+          Min = 16
           ParentCtl3D = False
           Position = 32
           TabOrder = 1
@@ -2538,17 +2547,18 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           OnChange = Trackbar1Change
         end
         object RotateBtn: TButton
-          Left = 8
-          Top = 32
+          Left = 0
+          Top = 216
           Width = 169
           Height = 25
           Caption = 'Icon um 90'#176' Drehen'
           TabOrder = 2
+          Visible = False
           OnClick = RotateBtnClick
         end
         object FlipHorBtn: TButton
-          Left = 80
-          Top = 32
+          Left = 72
+          Top = 216
           Width = 41
           Height = 25
           Caption = #243
@@ -2564,7 +2574,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
         end
         object FlipVerBtn: TButton
           Left = 128
-          Top = 32
+          Top = 216
           Width = 41
           Height = 25
           Caption = #244
@@ -2577,6 +2587,20 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           TabOrder = 4
           Visible = False
           OnClick = FlipVerBtnClick
+        end
+        object TrackBar2: TTrackBar
+          Left = 56
+          Top = 37
+          Width = 118
+          Height = 21
+          Ctl3D = True
+          Max = 360
+          ParentCtl3D = False
+          TabOrder = 5
+          ThumbLength = 16
+          TickMarks = tmBoth
+          TickStyle = tsNone
+          OnChange = TrackBar2Change
         end
       end
       object TabSheet3: TTabSheet

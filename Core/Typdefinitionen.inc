@@ -401,7 +401,7 @@
     ShowInStageview:boolean;
     color: TColor;
     picturesize:Byte;
-    pictureangle:Byte;
+    pictureangle:Word;
     picturefliphor:boolean;
     pictureflipver:boolean;
     pictureispng:boolean;
@@ -499,6 +499,12 @@
     UseFullPowerOnChannelvalue:boolean;
     ContinuousPower:integer;
     Phase:byte;
+
+    MatrixDeviceLevel:byte; // 0=No, 1=Main, 2=Sub-Device
+    MatrixMainDeviceID:TGUID;
+    MatrixOrderType:byte;
+    MatrixXCount, MatrixYCount:byte;
+    MatrixXPosition, MatrixYPosition:byte;
   end;
 
   TDevicePreset = record
@@ -681,7 +687,7 @@
     color: TColor;
     picture:string[255];
     picturesize:Byte;
-    pictureangle:Byte;
+    pictureangle:Word;
     picturefliphor:boolean;
     pictureflipver:boolean;
     pictureispng:boolean;

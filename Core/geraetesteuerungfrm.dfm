@@ -885,7 +885,6 @@ object geraetesteuerung: Tgeraetesteuerung
       OnKeyUp = VSTKeyUp
       OnMouseDown = VSTMouseDown
       OnMouseUp = VSTMouseUp
-      OnNewText = VSTNewText
       Columns = <
         item
           CheckType = ctTriStateCheckBox
@@ -3260,7 +3259,7 @@ object geraetesteuerung: Tgeraetesteuerung
         Height = 21
         TabOrder = 0
         Text = '1'
-        OnChange = DevStartaddressEditChange
+        OnKeyUp = DevStartaddressEditKeyUp
       end
       object colorBtn: TJvColorButton
         Left = 62

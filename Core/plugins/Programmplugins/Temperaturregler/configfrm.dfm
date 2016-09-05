@@ -949,7 +949,6 @@ object Config: TConfig
     Top = 40
   end
   object RegisterPluginCommands: TTimer
-    Interval = 5000
     OnTimer = RegisterPluginCommandsTimer
     Left = 840
     Top = 40

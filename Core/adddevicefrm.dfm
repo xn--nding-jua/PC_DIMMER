@@ -1,6 +1,6 @@
 object adddevice: Tadddevice
-  Left = 737
-  Top = 144
+  Left = 757
+  Top = 191
   Width = 690
   Height = 579
   Caption = 'Ger'#228'teliste'

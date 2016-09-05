@@ -878,6 +878,9 @@ begin
 	end;
 }
 
+  Application.ProcessMessages;
+  sleep(150);
+
   setupform.portchange.Visible:=(setupform.portchange.Items.Count>0);
 
   setupform.checkbox2.Checked:=setup_mixmsblsb;
@@ -935,6 +938,8 @@ begin
   setup_temp2text:=setupform.temp2labeledit.text;
   setup_temp3text:=setupform.temp3labeledit.Text;
 
+  Application.ProcessMessages;
+  sleep(150);
   setupform.release;
 end;
 

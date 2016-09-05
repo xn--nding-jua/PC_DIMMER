@@ -44,10 +44,10 @@ end;
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
-  SetProcessAffinityMask(GetCurrentProcess, 1); // 1=CPU0 , 2=CPU1
+//  SetProcessAffinityMask(GetCurrentProcess, 1); // 1=CPU0 , 2=CPU1
 
   ShuttingDown:=false;
-  config:=Tconfig.Create(nil);
+  config:=Tconfig.Create(Application);
 
   @Config.SetDLLEvent:=CallbackSetDLLValueEvent;
   @Config.SendMSG:=CallbackSendMessage;
@@ -101,6 +101,9 @@ begin
   end;
 
   Config.Shutdown:=true;
+  @Config.SetDLLEvent:=nil;
+  @Config.SendMSG:=nil;
+  @Config.GetDLLValue:=nil;
 
   LReg:=TRegistry.Create;
   LReg.RootKey:=HKEY_CURRENT_USER;
@@ -109,10 +112,11 @@ begin
   LReg.OpenKey('PC_DIMMER', True);
   LReg.OpenKey(ExtractFileName(GetModulePath), True);
   LReg.WriteBool('Showing Plugin', config.Showing);
+  LReg.CloseKey;
   LReg.Free;
 
   config.close;
-	Config.release;
+	Config.Release;
 
   Result:=True;
 end;
@@ -129,7 +133,7 @@ end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v2.1');
+  Result := PChar('v2.2');
 end;
 
 function DLLGetResourceData(const ResName: PChar; Buffer: Pointer; var Length: Integer):boolean;stdcall;

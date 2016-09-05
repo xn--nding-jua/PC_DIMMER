@@ -135,6 +135,8 @@ type
     CheckBox4: TCheckBox;
     CheckBox6: TCheckBox;
     Label24: TLabel;
+    Label25: TLabel;
+    TrackBar2: TTrackBar;
     procedure FormCreate(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
@@ -215,6 +217,7 @@ type
     procedure CheckBox6MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure FormDestroy(Sender: TObject);
+    procedure TrackBar2Change(Sender: TObject);
   private
     { Private-Deklarationen }
     Puffer1, Puffer2:TBitmap;
@@ -230,6 +233,7 @@ type
     procedure GetSelectedIcons(X,Y:integer);
     procedure ArrangeIcons(X1, Y1, X2, Y2:Integer);
     procedure SortSelectedIcons(Low, High:Integer);
+    procedure SmoothResize(apng:tpngobject; NuWidth,NuHeight:integer);
   public
     { Public-Deklarationen }
     aktualisierungsintervall:integer;
@@ -250,7 +254,7 @@ type
 	  filename,filepath:string;
     SaveToBMP:boolean;
     procedure MSGSave;
-    function ClickOnDevice(X,Y:integer):integer;
+    function ClickOnDevice(X,Y:integer; ssShift: TShiftState):integer;
     function ClickOnBuehnenansichtDevice(X,Y:integer):integer;
     function ClickOnLabel(X,Y:integer):integer;
     function ClickOnNumber(X,Y:integer):integer;
@@ -355,6 +359,7 @@ begin
 end;
 
 procedure Tgrafischebuehnenansicht.SmoothRotate(var aPng: TPNGObject; Angle: Extended);
+  {Supporting functions}
   function TrimInt(i, Min, Max: Integer): Integer;
   begin
     if      i>Max then Result:=Max
@@ -382,6 +387,7 @@ procedure Tgrafischebuehnenansicht.SmoothRotate(var aPng: TPNGObject; Angle: Ext
       Inc(Result);
   end;
 
+  {Calculates the png new size}
   function newsize: tsize;
   var
     fRadians: Extended;
@@ -389,6 +395,7 @@ procedure Tgrafischebuehnenansicht.SmoothRotate(var aPng: TPNGObject; Angle: Ext
     fPoint1x, fPoint1y, fPoint2x, fPoint2y, fPoint3x, fPoint3y: Double;
     fMinx, fMiny, fMaxx, fMaxy: Double;
   begin
+    {Convert degrees to radians}
     fRadians := (2 * PI * Angle) / 360;
 
     fCosine := abs(cos(fRadians));
@@ -412,41 +419,46 @@ procedure Tgrafischebuehnenansicht.SmoothRotate(var aPng: TPNGObject; Angle: Ext
 type
  TFColor  = record b,g,r:Byte end;
 var
-  Top, Bottom, Left, Right, eww,nsw, fx,fy, wx,wy: Extended;
-  cAngle, sAngle:   Double;
-  xDiff, yDiff, ifx,ify, px,py, ix,iy, x,y, cx, cy: Integer;
-  nw,ne, sw,se: TFColor;
-  anw,ane, asw,ase: Byte;
-  P1,P2,P3:pbytearray;
-  A1,A2,A3: pbytearray;
-  dst: TPNGObject;
-  IsAlpha: Boolean;
-  new_colortype: Integer;
+Top, Bottom, Left, Right, eww,nsw, fx,fy, wx,wy: Extended;
+cAngle, sAngle:   Double;
+xDiff, yDiff, ifx,ify, px,py, ix,iy, x,y, cx, cy: Integer;
+nw,ne, sw,se: TFColor;
+anw,ane, asw,ase: Byte;
+P1,P2,P3:Pbytearray;
+A1,A2,A3: pbytearray;
+dst: TPNGObject;
+IsAlpha: Boolean;
+new_colortype: Integer;
 begin
+  {Only allows RGB and RGBALPHA images}
   if not (apng.Header.ColorType in [COLOR_RGBALPHA, COLOR_RGB]) then
-    raise Exception.Create(_('Only COLOR_RGBALPHA and COLOR_RGB formats are supported'));
+    raise Exception.Create('Only COLOR_RGBALPHA and COLOR_RGB formats' +
+    ' are supported');
   IsAlpha := apng.Header.ColorType in [COLOR_RGBALPHA];
   if IsAlpha then new_colortype := COLOR_RGBALPHA else
     new_colortype := COLOR_RGB;
 
+  {Creates a copy}
   dst := tpngobject.Create;
-
   with newsize do
     dst.createblank(new_colortype, 8, cx, cy);
   cx := dst.width div 2; cy := dst.height div 2;
 
+  {Gather some variables}
   Angle:=angle;
   Angle:=-Angle*Pi/180;
   sAngle:=Sin(Angle);
   cAngle:=Cos(Angle);
   xDiff:=(Dst.Width-apng.Width)div 2;
   yDiff:=(Dst.Height-apng.Height)div 2;
- 
+
+  {Iterates over each line}
   for y:=0 to Dst.Height-1 do
   begin
     P3:=Dst.scanline[y];
     if IsAlpha then A3 := Dst.AlphaScanline[y];
     py:=2*(y-cy)+1;
+    {Iterates over each column}
     for x:=0 to Dst.Width-1 do
     begin
       px:=2*(x-cx)+1;
@@ -455,8 +467,10 @@ begin
       ifx:=Round(fx);
       ify:=Round(fy);
 
+      {Only continues if it does not exceed image boundaries}
       if(ifx>-1)and(ifx<apng.Width)and(ify>-1)and(ify<apng.Height)then
       begin
+        {Obtains data to paint the new pixel}
         eww:=fx-ifx;
         nsw:=fy-ify;
         iy:=TrimInt(ify+1,0,apng.Height-1);
@@ -483,6 +497,7 @@ begin
         if IsAlpha then ase:=A2[ix];
 
 
+        {Defines the new pixel}
         Top:=nw.b+eww*(ne.b-nw.b);
         Bottom:=sw.b+eww*(se.b-sw.b);
         P3[x*3+2]:=IntToByte(Round(Top+nsw*(Bottom-Top)));
@@ -493,6 +508,7 @@ begin
         Bottom:=sw.r+eww*(se.r-sw.r);
         P3[x*3]:=IntToByte(Round(Top+nsw*(Bottom-Top)));
 
+        {Only for alpha}
         if IsAlpha then
         begin
           Top:=anw+eww*(ane-anw);
@@ -911,7 +927,7 @@ begin
   end else if ClickOnBuehnenansichtColor(X,Y)>-1 then
   begin
     paintbox1.PopupMenu:=nil;
-  end else if (ClickOnDevice(X,Y)>-1) or (ClickOnBuehnenansichtDevice(X,Y)>-1) then
+  end else if (ClickOnDevice(X,Y, Shift)>-1) or (ClickOnBuehnenansichtDevice(X,Y)>-1) then
   begin
     paintbox1.PopupMenu:=nil;
 
@@ -985,7 +1001,7 @@ end;
 procedure Tgrafischebuehnenansicht.StageMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 var
-	i,j,k,l:integer;
+	i,j,k,l,m:integer;
   value:integer;
   dobreak:boolean;
 begin
@@ -1084,6 +1100,16 @@ begin
         // Sender GeräteBild
         mainform.devices[MouseOnDevice].Left[MouseOnDeviceCopy]:=X-round(mainform.devices[MouseOnDevice].picturesize/2);
         mainform.devices[MouseOnDevice].Top[MouseOnDeviceCopy]:=Y-round(mainform.devices[MouseOnDevice].picturesize/2);
+
+        for m:=0 to length(mainform.Devices)-1 do
+        begin
+          if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[MouseOnDevice].ID)) then
+          begin
+            mainform.Devices[m].left[MouseOnDeviceCopy]:=X-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixXPosition;
+            mainform.Devices[m].top[MouseOnDeviceCopy]:=Y-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixYPosition;
+          end;
+        end;
+
         // Sender GeräteBild Ende
       end else
       begin
@@ -1282,7 +1308,7 @@ end;
 procedure Tgrafischebuehnenansicht.StageMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
-	j,k,oldvalue,channel,raster:integer;
+	j,k,m,oldvalue,channel,raster:integer;
   ddfwindowposition:integer;
   toppos, leftpos:single;
 begin
@@ -1499,9 +1525,21 @@ begin
     paintbox1.PopupMenu:=nil;
     if Button=mbRight then
     begin
-      mainform.Devices[MouseOnLabel].Name:=InputBox(_('Beschriftung für "')+mainform.Devices[MouseOnLabel].Name+'"',_('Bitte geben Sie eine neue Bezeichnung für das aktuelle Gerät ein:'),mainform.Devices[MouseOnLabel].Name);
+      if mainform.Devices[length(mainform.Devices)-1].MatrixDeviceLevel=0 then
+        mainform.Devices[MouseOnLabel].Name:=InputBox(_('Beschriftung für "')+mainform.Devices[MouseOnLabel].Name+'"',_('Bitte geben Sie eine neue Bezeichnung für das aktuelle Gerät ein:'),mainform.Devices[MouseOnLabel].Name)
+      else begin
+        mainform.Devices[MouseOnLabel].Name:='[M] '+InputBox(_('Beschriftung für "')+mainform.Devices[MouseOnLabel].Name+'"',_('Bitte geben Sie eine neue Bezeichnung für das gewählte Matrix-Gerät ein:'),copy(mainform.Devices[MouseOnLabel].Name, 5, length(mainform.Devices[MouseOnLabel].Name)));
 
-      for k:=0 to  mainform.Devices[MouseOnLabel].MaxChan-1 do
+        for m:=0 to length(mainform.Devices)-1 do
+        begin
+          if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[MouseOnLabel].ID)) then
+          begin
+            mainform.Devices[m].Name:='[M '+inttostr(mainform.Devices[m].MatrixXPosition+1)+'x'+inttostr(mainform.Devices[m].MatrixYPosition+1)+'] '+copy(mainform.Devices[MouseOnLabel].Name, 5, length(mainform.Devices[MouseOnLabel].Name));
+          end;
+        end;
+      end;
+
+      for k:=0 to mainform.Devices[MouseOnLabel].MaxChan-1 do
         mainform.data.Names[mainform.Devices[MouseOnLabel].Startaddress+k]:=mainform.Devices[MouseOnLabel].Name+': '+mainform.Devices[MouseOnLabel].Kanalname[k];
     end;
   end else if MouseOnNumber>-1 then
@@ -1512,18 +1550,29 @@ begin
     if Button=mbRight then
     begin
     	// Kanalnummer ändern
-      oldvalue:=mainform.devices[MouseOnNumber].Startaddress;
-      try
-  	    channel:=strtoint(InputBox(_('Kanaleinstellung'),_('Welcher Kanal soll für dieses Gerät gelten:'),inttostr(mainform.devices[MouseOnNumber].Startaddress)));
-        if channel>mainform.lastchan then
-        	mainform.devices[MouseOnNumber].Startaddress:=mainform.lastchan
-    		else if channel<1 then
-         	mainform.devices[MouseOnNumber].Startaddress:=1
-        else
-        	mainform.devices[MouseOnNumber].Startaddress:=channel;
- 	    except
-   	  	mainform.devices[MouseOnNumber].Startaddress:=oldvalue;
-   	  end;
+      if mainform.Devices[length(mainform.Devices)-1].MatrixDeviceLevel=0 then
+      begin
+        try
+          channel:=strtoint(InputBox(_('Kanaleinstellung'),_('Welche Startadresse soll für dieses Gerät gelten:'),inttostr(mainform.devices[MouseOnNumber].Startaddress)));
+          geraetesteuerung.ChangeDeviceStartaddress(mainform.devices[MouseOnNumber].ID, channel);
+        except
+        end;
+      end else
+      begin
+        try
+          channel:=strtoint(InputBox(_('Kanaleinstellung'),_('Welche Startadresse soll für dieses Matrix-Gerät gelten:'),inttostr(mainform.devices[MouseOnNumber].Startaddress)));
+          geraetesteuerung.ChangeDeviceStartaddress(mainform.devices[MouseOnNumber].ID, channel);
+
+          for m:=0 to length(mainform.Devices)-1 do
+          begin
+            if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[MouseOnNumber].ID)) then
+            begin
+              geraetesteuerung.ChangeDeviceStartaddress(mainform.Devices[m].ID, geraetesteuerung.GetMatrixDeviceStartAddress(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[m].MatrixXPosition, mainform.devices[m].MatrixYPosition));
+            end;
+          end;
+        except
+        end;
+      end;
     end;
   end else if MouseOnBuehnenansichtNumber>-1 then
   begin
@@ -1962,46 +2011,28 @@ procedure Tgrafischebuehnenansicht.Trackbar1Change(Sender: TObject);
 var
   i,j:integer;
 begin
-  case TrackBar1.Position of
-    0..48: label6.caption:='32x32px';
-    49..80: label6.caption:='64x64px';
-    81..112: label6.caption:='96x96px';
-    113..255: label6.caption:='128x128px';
-  end;
+  label6.caption:=inttostr(TrackBar1.Position)+'x'+inttostr(TrackBar1.Position)+'px';
 
   for i:=0 to length(mainform.buehnenansichtdevices)-1 do
   begin
     if (mainform.buehnenansichtdevices[i].selected) then
-    begin
-      case TrackBar1.Position of
-        0..48: mainform.buehnenansichtdevices[i].picturesize:=32;
-        49..80: mainform.buehnenansichtdevices[i].picturesize:=64;
-        81..112: mainform.buehnenansichtdevices[i].picturesize:=96;
-        113..255: mainform.buehnenansichtdevices[i].picturesize:=128;
-      end;
-    end;
+      mainform.buehnenansichtdevices[i].picturesize:=TrackBar1.Position;
   end;
   for i:=0 to length(mainform.devices)-1 do
   for j:=0 to length(mainform.devices[i].selected)-1 do
   begin
     if (mainform.devices[i].selected[j]) then
-    begin
-      case TrackBar1.Position of
-        0..48: mainform.devices[i].picturesize:=32;
-        49..80: mainform.devices[i].picturesize:=64;
-        81..112: mainform.devices[i].picturesize:=96;
-        113..255: mainform.devices[i].picturesize:=128;
-      end;
-    end;
+      mainform.devices[i].picturesize:=TrackBar1.Position;
   end;
 
   doimmediaterefresh:=true;
 end;
 
 procedure Tgrafischebuehnenansicht.RotateBtnClick(Sender: TObject);
-var
-  i,j:integer;
+//var
+//  i,j:integer;
 begin
+{
   for i:=0 to length(mainform.buehnenansichtdevices)-1 do
   begin
     if (mainform.buehnenansichtdevices[i].selected) then
@@ -2024,7 +2055,7 @@ begin
   end;
 
   doimmediaterefresh:=true;
-end;
+}end;
 
 procedure Tgrafischebuehnenansicht.FlipHorBtnClick(Sender: TObject);
 var
@@ -2528,7 +2559,7 @@ end;
 
 procedure Tgrafischebuehnenansicht.BankCopySelect(Sender: TObject);
 var
-  i,j:integer;
+  i,j,m:integer;
 begin
   for i:=0 to length(mainform.buehnenansichtdevices)-1 do
   begin
@@ -2541,9 +2572,26 @@ begin
   for i:=0 to length(mainform.devices)-1 do
   for j:=0 to length(mainform.devices[i].bank)-1 do
   begin
-    if (mainform.devices[i].selected[j]) then
+    if mainform.devices[i].MatrixDeviceLevel>0 then
     begin
-      mainform.devices[i].bank[j]:=BankCopy.ItemIndex;
+      if (mainform.devices[i].selected[j]) then
+      begin
+        mainform.devices[i].bank[j]:=BankCopy.ItemIndex;
+
+        for m:=0 to length(mainform.devices)-1 do
+        begin
+          if (mainform.devices[m].MatrixDeviceLevel>0) and IsEqualGUID(mainform.devices[i].MatrixMainDeviceID, mainform.devices[m].MatrixMainDeviceID) then
+          begin
+            mainform.devices[m].bank[j]:=BankCopy.ItemIndex;
+          end;
+        end;
+      end;
+    end else
+    begin
+      if (mainform.devices[i].selected[j]) then
+      begin
+        mainform.devices[i].bank[j]:=BankCopy.ItemIndex;
+      end;
     end;
   end;
   BankSelectSelect(nil);
@@ -2614,7 +2662,7 @@ begin
   end;
 end;
 
-function Tgrafischebuehnenansicht.ClickOnDevice(X,Y:integer):integer;
+function Tgrafischebuehnenansicht.ClickOnDevice(X,Y:integer; ssShift: TShiftState):integer;
 var
   i,j,position:integer;
 begin
@@ -2633,6 +2681,11 @@ begin
       and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize)>=Y) then
       begin
         position:=i;
+
+        if ssShift=[ssLeft] then
+          if mainform.Devices[position].MatrixDeviceLevel=2 then
+            position:=Geraetesteuerung.GetDevicePositionInDeviceArray(@mainform.Devices[position].MatrixMainDeviceID);
+
         MouseOnDeviceCopy:=j;
       end;
     end;
@@ -2705,10 +2758,14 @@ begin
       // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
   		if (mainform.devices[i].left[j]<=X)
       and ((mainform.devices[i].left[j]+mainform.devices[i].picturesize)>=X)
-      and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize+1)<=Y)
-      and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize+9)>=Y) then
+      and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize+1+8)<=Y)
+      and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize+9+8+8)>=Y) then
       begin
         position:=i;
+
+        if mainform.Devices[position].MatrixDeviceLevel=2 then
+          position:=Geraetesteuerung.GetDevicePositionInDeviceArray(@mainform.Devices[position].MatrixMainDeviceID);
+
         MouseOnDeviceCopy:=j;
       end;
     end;
@@ -2737,9 +2794,9 @@ begin
   MouseOnDeviceCopy:=-1;
 
   if checkbox1.checked then
-    offset:=11
+    offset:=11+8
   else
-    offset:=2;
+    offset:=2+8;
 
   for i:=0 to length(mainform.devices)-1 do
 	for j:=0 to length(mainform.devices[i].bank)-1 do
@@ -2781,7 +2838,7 @@ begin
   position:=-1;
   MouseOnDeviceCopy:=-1;
 
-  offset:=2;
+  offset:=2+8;
 
   for i:=0 to length(mainform.buehnenansichtdevices)-1 do
   begin
@@ -2828,10 +2885,14 @@ begin
       // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
   		if (mainform.devices[i].left[j]<=X)
       and ((mainform.devices[i].left[j]+10)>=X)
-      and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize-5)<=Y)
-      and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize)>=Y) then
+      and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize-5+8)<=Y)
+      and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize+8)>=Y) then
       begin
         position:=i;
+
+        if mainform.Devices[position].MatrixDeviceLevel=2 then
+          position:=Geraetesteuerung.GetDevicePositionInDeviceArray(@mainform.Devices[position].MatrixMainDeviceID);
+
         MouseOnDeviceCopy:=j;
       end;
     end;
@@ -2865,8 +2926,8 @@ begin
       // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
   		if (mainform.buehnenansichtdevices[i].left<=X)
       and ((mainform.buehnenansichtdevices[i].left+10)>=X)
-      and ((mainform.buehnenansichtdevices[i].Top+mainform.buehnenansichtdevices[i].picturesize-5)<=Y)
-      and ((mainform.buehnenansichtdevices[i].Top+mainform.buehnenansichtdevices[i].picturesize)>=Y) then
+      and ((mainform.buehnenansichtdevices[i].Top+mainform.buehnenansichtdevices[i].picturesize-5+8)<=Y)
+      and ((mainform.buehnenansichtdevices[i].Top+mainform.buehnenansichtdevices[i].picturesize+8)>=Y) then
       begin
         position:=i;
       end;
@@ -2924,7 +2985,7 @@ end;
 
 procedure TGrafischeBuehnenansicht.DrawGrafischeBuehnenansichtDevices(_Buffer:TCanvas);
 var
-  i,j,k,l, temp:integer;
+  i,j,k,l:integer;
   rect:TRect;
   gobolevel:byte;
 begin
@@ -2949,29 +3010,25 @@ begin
       rect.right:=mainform.devices[i].left[j]+mainform.devices[i].picturesize;
       rect.Bottom:=mainform.devices[i].top[j]+mainform.devices[i].picturesize;
       case mainform.devices[i].picturesize of
-        0..48:
+        0..48: // 32px
         begin
           pngobject.Assign(mainform.devicepictures32.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage);
         end;
-        49..80:
+        49..80: // 64px
         begin
           pngobject.Assign(mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage);
         end;
-        81..112:
+        81..111: // 96px
         begin
           pngobject.Assign(mainform.devicepictures96.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage);
         end;
-        113..255:
+        112..255: // 128px
         begin
           pngobject.Assign(mainform.devicepictures128.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage);
         end;
       end;
-      pngobject.Resize(mainform.devices[i].picturesize,mainform.devices[i].picturesize);
-
-      temp:=mainform.devices[i].pictureangle;
-//      mainform.devices[i].pictureangle:=0;
-      for k:=1 to temp do
-        SmoothRotate(pngobject,90);
+      SmoothResize(pngobject, mainform.devices[i].picturesize, mainform.devices[i].picturesize);
+      SmoothRotate(pngobject, mainform.devices[i].pictureangle);
       pngobject.Draw(_Buffer, rect);
 
       // Gobos 1 darstellen
@@ -3055,21 +3112,17 @@ begin
       begin
         pngobject.Assign(mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage);
       end;
-      81..112:
+      81..111:
       begin
-        pngobject.Assign(mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage);
+        pngobject.Assign(mainform.devicepictures96.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage);
       end;
-      113..255:
+      112..255:
       begin
         pngobject.Assign(mainform.devicepictures128.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage);
       end;
     end;
-    pngobject.Resize(mainform.buehnenansichtdevices[i].picturesize,mainform.buehnenansichtdevices[i].picturesize);
-
-    temp:=mainform.buehnenansichtdevices[i].pictureangle;
-    mainform.buehnenansichtdevices[i].pictureangle:=0;
-    for k:=1 to temp do
-      SmoothRotate(pngobject,90);
+    SmoothResize(pngobject, mainform.devices[i].picturesize, mainform.devices[i].picturesize);
+    SmoothRotate(pngobject, mainform.devices[i].pictureangle);
 
     pngobject.Draw(_Buffer, rect);
   end;
@@ -3127,11 +3180,11 @@ begin
         _Buffer.Brush.Color:=$008080FF;
 
       _Buffer.Pen.Style:=psClear;
-      _Buffer.TextOut(mainform.devices[i].left[j],mainform.devices[i].top[j]+mainform.devices[i].picturesize-8,inttostr(mainform.devices[i].Startaddress));
+      _Buffer.TextOut(mainform.devices[i].left[j],mainform.devices[i].top[j]+mainform.devices[i].picturesize,inttostr(mainform.devices[i].Startaddress));
 
       // Namen anzeigen
       if checkbox1.checked then
-        _Buffer.TextOut(mainform.devices[i].left[j],mainform.devices[i].top[j]+mainform.devices[i].picturesize+1,mainform.devices[i].Name);
+        _Buffer.TextOut(mainform.devices[i].left[j],mainform.devices[i].top[j]+mainform.devices[i].picturesize+9,mainform.devices[i].Name);
       _Buffer.Font.Color:=clBlack;
 
       // Dimmerbar anzeigen
@@ -3139,9 +3192,9 @@ begin
       begin
         Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[i].ID);
         if checkbox1.checked then
-          offset:=11
+          offset:=11+8
         else
-          offset:=2;
+          offset:=2+8;
 
         // Umrandung zeichnen
         _Buffer.Brush.Color:=ClMedGray;
@@ -3269,7 +3322,9 @@ begin
             _Buffer.Brush.Color:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
           end else
           begin
-            _Buffer.Brush.Color:=RGB2TColor(round(AmberR*(Dimmerwert/255)),round(AmberG*(Dimmerwert/255)),round(AmberB*(Dimmerwert/255)));
+            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, 0, 128, 128, false, false, White, UV, R, G, B);
+            _Buffer.Brush.Color:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
+//            _Buffer.Brush.Color:=RGB2TColor(round(AmberR*(Dimmerwert/255)),round(AmberG*(Dimmerwert/255)),round(AmberB*(Dimmerwert/255)));
           end;
         end else
         begin
@@ -3287,7 +3342,8 @@ begin
             _Buffer.Brush.Color:=RGB2TColor(R, G, B);
           end else
           begin
-            _Buffer.Brush.Color:=RGB2TColor(AmberR,AmberG,AmberB);
+            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, 0, 128, 128, false, false, White, UV, R, G, B);
+            _Buffer.Brush.Color:=RGB2TColor(R, G, B);
           end;
         end;
       end else if mainform.devices[i].hasCMY then
@@ -3309,7 +3365,9 @@ begin
             _Buffer.Brush.Color:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
           end else
           begin
-            _Buffer.Brush.Color:=RGB2TColor(round(AmberR*(Dimmerwert/255)),round(AmberG*(Dimmerwert/255)),round(AmberB*(Dimmerwert/255)));
+            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, 0, 128, 128, false, false, White, UV, R, G, B);
+            _Buffer.Brush.Color:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
+//            _Buffer.Brush.Color:=RGB2TColor(round(AmberR*(Dimmerwert/255)),round(AmberG*(Dimmerwert/255)),round(AmberB*(Dimmerwert/255)));
           end;
         end else
         begin
@@ -3327,7 +3385,9 @@ begin
             _Buffer.Brush.Color:=RGB2TColor(R, G, B);
           end else
           begin
-            _Buffer.Brush.Color:=RGB2TColor(AmberR,AmberG,AmberB);
+            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, 0, 128, 128, false, false, White, UV, R, G, B);
+            _Buffer.Brush.Color:=RGB2TColor(R, G, B);
+//            _Buffer.Brush.Color:=RGB2TColor(AmberR,AmberG,AmberB);
           end;
         end;
       end else if (mainform.devices[i].hasColor or mainform.devices[i].hasColor2) then
@@ -3982,6 +4042,91 @@ end;
 procedure Tgrafischebuehnenansicht.FormDestroy(Sender: TObject);
 begin
   pngobject.free;
+end;
+
+procedure Tgrafischebuehnenansicht.SmoothResize(apng:tpngobject; NuWidth,NuHeight:integer);
+var
+  xscale, yscale         : Single;
+  sfrom_y, sfrom_x       : Single;
+  ifrom_y, ifrom_x       : Integer;
+  to_y, to_x             : Integer;
+  weight_x, weight_y     : array[0..1] of Single;
+  weight                 : Single;
+  new_red, new_green     : Integer;
+  new_blue, new_alpha    : Integer;
+  new_colortype          : Integer;
+  total_red, total_green : Single;
+  total_blue, total_alpha: Single;
+  IsAlpha                : Boolean;
+  ix, iy                 : Integer;
+  bTmp : TPNGObject;
+  sli, slo : pRGBLine;
+  ali, alo: pbytearray;
+begin
+  new_alpha:=0;
+  if not (apng.Header.ColorType in [COLOR_RGBALPHA, COLOR_RGB]) then
+    raise Exception.Create('Only COLOR_RGBALPHA and COLOR_RGB formats' +
+    ' are supported');
+  IsAlpha := apng.Header.ColorType in [COLOR_RGBALPHA];
+  if IsAlpha then new_colortype := COLOR_RGBALPHA else
+    new_colortype := COLOR_RGB;
+  bTmp := Tpngobject.CreateBlank(new_colortype, 8, NuWidth, NuHeight);
+  xscale := bTmp.Width / (apng.Width-1);
+  yscale := bTmp.Height / (apng.Height-1);
+  for to_y := 0 to bTmp.Height-1 do begin
+    sfrom_y := to_y / yscale;
+    ifrom_y := Trunc(sfrom_y);
+    weight_y[1] := sfrom_y - ifrom_y;
+    weight_y[0] := 1 - weight_y[1];
+    for to_x := 0 to bTmp.Width-1 do begin
+      sfrom_x := to_x / xscale;
+      ifrom_x := Trunc(sfrom_x);
+      weight_x[1] := sfrom_x - ifrom_x;
+      weight_x[0] := 1 - weight_x[1];
+
+      total_red   := 0.0;
+      total_green := 0.0;
+      total_blue  := 0.0;
+      total_alpha  := 0.0;
+      for ix := 0 to 1 do begin
+        for iy := 0 to 1 do begin
+          sli := apng.Scanline[ifrom_y + iy];
+          if IsAlpha then ali := apng.AlphaScanline[ifrom_y + iy];
+          new_red := sli[ifrom_x + ix].rgbtRed;
+          new_green := sli[ifrom_x + ix].rgbtGreen;
+          new_blue := sli[ifrom_x + ix].rgbtBlue;
+          if IsAlpha then new_alpha := ali[ifrom_x + ix];
+          weight := weight_x[ix] * weight_y[iy];
+          total_red   := total_red   + new_red   * weight;
+          total_green := total_green + new_green * weight;
+          total_blue  := total_blue  + new_blue  * weight;
+          if IsAlpha then total_alpha  := total_alpha  + new_alpha  * weight;
+        end;
+      end;
+      slo := bTmp.ScanLine[to_y];
+      if IsAlpha then alo := bTmp.AlphaScanLine[to_y];
+      slo[to_x].rgbtRed := Round(total_red);
+      slo[to_x].rgbtGreen := Round(total_green);
+      slo[to_x].rgbtBlue := Round(total_blue);
+      if isAlpha then alo[to_x] := Round(total_alpha);
+    end;
+  end;
+  apng.Assign(bTmp);
+  bTmp.Free;
+end;
+
+procedure Tgrafischebuehnenansicht.TrackBar2Change(Sender: TObject);
+var
+  i,j:integer;
+begin
+  for i:=0 to length(mainform.devices)-1 do
+  for j:=0 to length(mainform.devices[i].selected)-1 do
+  begin
+    if (mainform.devices[i].selected[j]) then
+      mainform.devices[i].pictureangle:=Trackbar2.Position;
+  end;
+
+  doimmediaterefresh:=true;
 end;
 
 end.

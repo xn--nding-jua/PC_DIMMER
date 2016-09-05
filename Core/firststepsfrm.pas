@@ -570,6 +570,7 @@ procedure Tfirststepsform.DevStartaddressEditChangeChange(Sender: TObject);
 var
   temp,startaddress:Byte;
   i:integer;
+  key:word;
 begin
   if DontUpdateDevStartaddressEdit then exit;
 
@@ -595,7 +596,8 @@ begin
       Timage(FindComponent('DIP'+inttostr(i))).Picture:=DIPOFF.Picture;
 
   geraetesteuerung.DevStartaddressEdit.Text:=inttostr(startaddress);
-  geraetesteuerung.DevStartaddressEditChange(nil);
+  key:=vk_return;
+  geraetesteuerung.DevStartaddressEditKeyUp(geraetesteuerung.DevStartaddressEdit, key, []);
 end;
 
 procedure Tfirststepsform.ComboBox1Select(Sender: TObject);

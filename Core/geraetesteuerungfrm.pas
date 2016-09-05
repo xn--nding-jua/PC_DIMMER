@@ -154,6 +154,10 @@ type
     IrisOpenValue:byte;
     IrisMinValue:byte;
     IrisMaxValue:byte;
+
+    IsMatrixDevice: boolean;
+    MatrixXCount, MatrixYCount:byte;
+    MatrixOrdertype:byte;
   end;
 
   Tgeraetesteuerung = class(TForm)
@@ -288,7 +292,6 @@ type
     procedure SpeedButton3Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
-    procedure DevStartaddressEditChange(Sender: TObject);
     procedure TreeViewCheckbuttons(Shift: TShiftState);
     procedure Gerthinzufgen1Click(Sender: TObject);
     procedure Gertlschen1Click(Sender: TObject);
@@ -373,8 +376,6 @@ type
     procedure VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType;
       var CellText: WideString);
-    procedure VSTNewText(Sender: TBaseVirtualTree; Node: PVirtualNode;
-      Column: TColumnIndex; NewText: WideString);
     procedure VSTEditing(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; var Allowed: Boolean);
     procedure VSTKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -390,6 +391,8 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure idbtnMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure DevStartaddressEditKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private-Deklarationen }
 //    SystemVals: array [0..2] of Integer;
@@ -397,7 +400,6 @@ type
     argumente:TJvInterpreterArgs;
     dipstate:array[1..10] of boolean;
     Bmp : TImage;
-    EditingTreeNode:boolean;
     procedure WMMoving(var AMsg: TMessage); message WM_MOVING;
     procedure RefreshDeviceDependencies;
   public
@@ -453,6 +455,9 @@ type
     function get_dimmer(DeviceID: TGUID):integer;
     function get_strobe(DeviceID: TGUID):integer;
     function get_shutter(DeviceID: TGUID):integer;
+
+    function GetMatrixDeviceStartAddress(MasterDeviceID:TGUID; MatrixXPosition, MatrixYPosition:byte):integer;
+    procedure ChangeDeviceStartaddress(ID: TGUID; NewStartaddress:Word);
 
     function FindDeviceConnections(ID:TGUID; var TreeView:TTreeView):boolean;
     procedure GroupListChanged;
@@ -942,6 +947,17 @@ begin
       Filestream.ReadBuffer(mainform.Devices[i].ContinuousPower,sizeof(mainform.Devices[i].ContinuousPower));
       Filestream.ReadBuffer(mainform.Devices[i].Phase,sizeof(mainform.Devices[i].Phase));
 
+      if Version>=479 then
+      begin
+        Filestream.ReadBuffer(mainform.Devices[i].MatrixDeviceLevel,sizeof(mainform.Devices[i].MatrixDeviceLevel));
+        Filestream.ReadBuffer(mainform.Devices[i].MatrixMainDeviceID,sizeof(mainform.Devices[i].MatrixMainDeviceID));
+        Filestream.ReadBuffer(mainform.Devices[i].MatrixOrderType,sizeof(mainform.Devices[i].MatrixOrderType));
+        Filestream.ReadBuffer(mainform.Devices[i].MatrixXCount,sizeof(mainform.Devices[i].MatrixXCount));
+        Filestream.ReadBuffer(mainform.Devices[i].MatrixYCount,sizeof(mainform.Devices[i].MatrixYCount));
+        Filestream.ReadBuffer(mainform.Devices[i].MatrixXPosition,sizeof(mainform.Devices[i].MatrixXPosition));
+        Filestream.ReadBuffer(mainform.Devices[i].MatrixYPosition,sizeof(mainform.Devices[i].MatrixYPosition));
+      end;
+
   	  Filestream.ReadBuffer(Count2,sizeof(Count2));
       setlength(mainform.Devices[i].KanalMinValue,Count2);
       setlength(mainform.Devices[i].KanalMaxValue,Count2);
@@ -1154,14 +1170,22 @@ begin
     Filestream.WriteBuffer(mainform.Devices[i].IrisMinValue,sizeof(mainform.Devices[i].IrisMinValue));
     Filestream.WriteBuffer(mainform.Devices[i].IrisMaxValue,sizeof(mainform.Devices[i].IrisMaxValue));
 
-    Filestream.ReadBuffer(mainform.Devices[i].UseChannelBasedPower,sizeof(mainform.Devices[i].UseChannelBasedPower));
-    Filestream.ReadBuffer(mainform.Devices[i].AlwaysOn,sizeof(mainform.Devices[i].AlwaysOn));
-    Filestream.ReadBuffer(mainform.Devices[i].ChannelForPower,sizeof(mainform.Devices[i].ChannelForPower));
-    Filestream.ReadBuffer(mainform.Devices[i].CalcPowerAboveValue,sizeof(mainform.Devices[i].CalcPowerAboveValue));
-    Filestream.ReadBuffer(mainform.Devices[i].Power,sizeof(mainform.Devices[i].Power));
-    Filestream.ReadBuffer(mainform.Devices[i].UseFullPowerOnChannelvalue,sizeof(mainform.Devices[i].UseFullPowerOnChannelvalue));
-    Filestream.ReadBuffer(mainform.Devices[i].ContinuousPower,sizeof(mainform.Devices[i].ContinuousPower));
-    Filestream.ReadBuffer(mainform.Devices[i].Phase,sizeof(mainform.Devices[i].Phase));
+    Filestream.WriteBuffer(mainform.Devices[i].UseChannelBasedPower,sizeof(mainform.Devices[i].UseChannelBasedPower));
+    Filestream.WriteBuffer(mainform.Devices[i].AlwaysOn,sizeof(mainform.Devices[i].AlwaysOn));
+    Filestream.WriteBuffer(mainform.Devices[i].ChannelForPower,sizeof(mainform.Devices[i].ChannelForPower));
+    Filestream.WriteBuffer(mainform.Devices[i].CalcPowerAboveValue,sizeof(mainform.Devices[i].CalcPowerAboveValue));
+    Filestream.WriteBuffer(mainform.Devices[i].Power,sizeof(mainform.Devices[i].Power));
+    Filestream.WriteBuffer(mainform.Devices[i].UseFullPowerOnChannelvalue,sizeof(mainform.Devices[i].UseFullPowerOnChannelvalue));
+    Filestream.WriteBuffer(mainform.Devices[i].ContinuousPower,sizeof(mainform.Devices[i].ContinuousPower));
+    Filestream.WriteBuffer(mainform.Devices[i].Phase,sizeof(mainform.Devices[i].Phase));
+
+    Filestream.WriteBuffer(mainform.Devices[i].MatrixDeviceLevel,sizeof(mainform.Devices[i].MatrixDeviceLevel));
+    Filestream.WriteBuffer(mainform.Devices[i].MatrixMainDeviceID,sizeof(mainform.Devices[i].MatrixMainDeviceID));
+    Filestream.WriteBuffer(mainform.Devices[i].MatrixOrderType,sizeof(mainform.Devices[i].MatrixOrderType));
+    Filestream.WriteBuffer(mainform.Devices[i].MatrixXCount,sizeof(mainform.Devices[i].MatrixXCount));
+    Filestream.WriteBuffer(mainform.Devices[i].MatrixYCount,sizeof(mainform.Devices[i].MatrixYCount));
+    Filestream.WriteBuffer(mainform.Devices[i].MatrixXPosition,sizeof(mainform.Devices[i].MatrixXPosition));
+    Filestream.WriteBuffer(mainform.Devices[i].MatrixYPosition,sizeof(mainform.Devices[i].MatrixYPosition));
 
     Count2:=length(mainform.Devices[i].kanaltyp);
     Filestream.WriteBuffer(Count2,sizeof(Count2));
@@ -1203,113 +1227,12 @@ begin
   FileStream.Free;
 end;
 
-procedure Tgeraetesteuerung.DevStartaddressEditChange(Sender: TObject);
-var
-  s:string;
-  i,j,k,oldstartaddress:integer;
-  position:integer;
-  channelstillinuse:boolean;
-  newaddress:word;
-  temp:byte;
-  Data:PTreeData;
-begin
-  if not mainform.UserAccessGranted(1, false) then exit;
-
-  s:=DevStartaddressEdit.text;
-  i:=DevStartaddressEdit.selstart;
-  mainform.input_number(i,s);
-  DevStartaddressEdit.text:=s;
-  DevStartaddressEdit.selstart:=i;
-
-  if DevStartaddressEdit.text='0' then
-    DevStartaddressEdit.text:='1';
-
-  if DevStartaddressEdit.text<>'' then
-  begin
-    Data:=VST.GetNodeData(VST.FocusedNode);
-    position:=GetDevicePositionInDeviceArray(@Data^.ID);
-    if position < 0 then
-      Exit;
-
-    if strtoint(DevStartaddressEdit.text)>mainform.lastchan then
-    begin
-      DevStartaddressEdit.text:=inttostr(mainform.lastchan);
-      ShowMessage(_('In den Optionen ist die Kanalzahl auf ')+inttostr(mainform.lastchan)+_(' begrenzt. Diese Grenze kann in den erweiterten Einstellungen auf bis zu 8192 erhöht werden.'));
-    end;
-    oldstartaddress:=mainform.devices[position].Startaddress;
-    mainform.devices[position].Startaddress:=strtoint(DevStartaddressEdit.Text);
-
-    for i:=0 to mainform.devices[position].MaxChan-1 do
-    begin
-      // Alte Kanaldimmkurven zurücksetzen, falls dort kein Gerät liegt
-      // Checken, ob an alten Kanälen noch Geräte adressiert sind
-      channelstillinuse:=false;
-      for j:=0 to length(mainform.devices)-1 do
-      begin // Geräte durchlaufen
-        for k:=0 to mainform.devices[j].MaxChan-1 do
-        begin // Gerätekanäle durchlaufen
-          if (mainform.devices[j].Startaddress+k)=(oldstartaddress+i) then
-            channelstillinuse:=true;
-        end;
-
-        // Kanal wird von keinem Gerät mehr genutzt
-        if not channelstillinuse then
-        begin
-          mainform.channel_dimmcurve[oldstartaddress+i]:=0;
-          mainform.channel_absolutedimmcurve[oldstartaddress+i]:=0;
-        end;
-      end;
-
-      // Neue Dimmkurven setzen
-      mainform.channel_dimmcurve[mainform.devices[position].Startaddress+i]:=mainform.devices[position].kanaldimmcurve[i];
-      mainform.channel_absolutedimmcurve[mainform.devices[position].Startaddress+i]:=mainform.devices[position].kanalabsolutedimmcurve[i];
-
-      // Falls andere Gerätekanäle mit diesem konkurrieren, dann Meldung
-      for j:=0 to length(mainform.devices)-1 do
-      begin
-        if (mainform.devices[j].Startaddress>=(mainform.Devices[position].Startaddress+i)) and (mainform.devices[j].Startaddress+mainform.devices[j].MaxChan-1<=(mainform.Devices[position].Startaddress+i)) and (j<>position) and ((mainform.Devices[j].kanaldimmcurve[mainform.Devices[position].Startaddress+i-mainform.devices[j].Startaddress]<>mainform.devices[position].kanaldimmcurve[i]) or (mainform.Devices[j].kanalabsolutedimmcurve[mainform.Devices[position].Startaddress+i-mainform.devices[j].Startaddress]<>mainform.devices[position].kanalabsolutedimmcurve[i])) then
-        begin
-          if messagedlg(_('Ein anderer Gerätekanal (')+mainform.Devices[j].Name+': '+mainform.Devices[j].Kanalname[mainform.Devices[position].Startaddress+i-mainform.devices[j].Startaddress]+_(') belegt die gleiche Adresse wie der ausgewählte Kanal.')+#10#13+_('Es kann allerdings nur eine Kurve pro Kanal genutzt werden.')+#10#13#10#13+_('Soll die Kurvenform des anderen Gerätekanals nun automatisch angepasst werden?'),mtConfirmation,
-            [mbYes,mbNo],0)=mrYes then
-            begin
-              mainform.Devices[j].kanaldimmcurve[mainform.Devices[position].Startaddress+i-mainform.devices[j].Startaddress]:=mainform.devices[position].kanaldimmcurve[i];
-              mainform.Devices[j].kanalabsolutedimmcurve[mainform.Devices[position].Startaddress+i-mainform.devices[j].Startaddress]:=mainform.devices[position].kanalabsolutedimmcurve[i];
-            end;
-        end;
-      end;
-    end;
-
-    newaddress:=strtoint(DevStartaddressEdit.Text);
-    temp:=newaddress;
-    dipstate[1]:=BitSet(temp, 1);
-    dipstate[2]:=BitSet(temp, 2);
-    dipstate[3]:=BitSet(temp, 4);
-    dipstate[4]:=BitSet(temp, 8);
-    dipstate[5]:=BitSet(temp, 16);
-    dipstate[6]:=BitSet(temp, 32);
-    dipstate[7]:=BitSet(temp, 64);
-    dipstate[8]:=BitSet(temp, 128);
-
-    temp:=newaddress shr 8;
-    dipstate[9]:=BitSet(temp, 1);
-    dipstate[10]:=BitSet(temp, 2);
-
-    for i:=1 to 10 do
-      if dipstate[i] then
-        Timage(FindComponent('DIP'+inttostr(i))).Picture:=DIPON.Picture
-      else
-        Timage(FindComponent('DIP'+inttostr(i))).Picture:=DIPOFF.Picture;
-  end;
-  VST.Refresh;
-  SendNamesBtnClick(nil);
-end;
-
 procedure Tgeraetesteuerung.Gerthinzufgen1Click(Sender: TObject);
 var
-  i,j,k,l,offset, newdevicesstart, space, devposition:integer;
+  i,j,k,l,m,mx,my,offset, matrixoffset, newdevicesstart, space, devposition:integer;
   bildname, bildpfad:string;
   NewDeviceWithGobos:boolean;
-
+  MatrixMainDeviceID:TGUID;
   PicturesInCols, CurrentRow:integer;
 begin
   if not mainform.UserAccessGranted(1) then exit;
@@ -1330,19 +1253,69 @@ begin
     begin
       offset:=strtoint(adddevice.Edit3.Text)-1;
 
+      devposition:=adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype);
+
       ProgressScreenSmall.Label1.Caption:=_('Geräte hinzufügen...');
       ProgressScreenSmall.Label2.Caption:=_('Es werden ')+adddevice.Edit2.Text+_(' Geräte hinzugefügt.');
-      ProgressScreenSmall.ProgressBar1.Max:=strtoint(adddevice.Edit2.Text);
+      ProgressScreenSmall.ProgressBar1.Max:=strtoint(adddevice.Edit2.Text)+deviceprototyp[devposition].MatrixXCount+deviceprototyp[devposition].MatrixYCount;
       ProgressScreenSmall.Show;
 
+      if deviceprototyp[devposition].MatrixXCount<1 then
+        deviceprototyp[devposition].MatrixXCount:=1;
+      if deviceprototyp[devposition].MatrixYCount<1 then
+        deviceprototyp[devposition].MatrixYCount:=1;
+
+      matrixoffset:=0;
       for k:=0 to strtoint(adddevice.Edit2.Text)-1 do
+      for m:=0 to (deviceprototyp[devposition].MatrixXCount*deviceprototyp[devposition].MatrixYCount)-1 do
       begin
+        my:=0;
+        mx:=0;
+        case deviceprototyp[devposition].MatrixOrdertype of
+          1:
+          begin
+            my:=trunc(m/deviceprototyp[devposition].MatrixXCount);
+            mx:=m-(my*deviceprototyp[devposition].MatrixXCount);
+          end;
+          2:
+          begin
+            my:=trunc(m/deviceprototyp[devposition].MatrixXCount);
+            if ((my mod 2) = 0) then
+            begin
+              // gerade Reihe (von links nach rechts)
+              mx:=m-(my*deviceprototyp[devposition].MatrixXCount);
+            end else
+            begin
+              // ungerade Reihe (von rechts nach links)
+              mx:=(deviceprototyp[devposition].MatrixXCount-1)-(m-(my*deviceprototyp[devposition].MatrixXCount));
+            end;
+          end;
+          3:
+          begin
+            mx:=trunc(m/deviceprototyp[devposition].MatrixYCount);
+            my:=m-(mx*deviceprototyp[devposition].MatrixYCount);
+          end;
+          4:
+          begin
+            mx:=trunc(m/deviceprototyp[devposition].MatrixYCount);
+            if ((mx mod 2) = 0) then
+            begin
+              // gerade Reihe (von links nach rechts)
+              my:=m-(mx*deviceprototyp[devposition].MatrixYCount);
+            end else
+            begin
+              // ungerade Reihe (von rechts nach links)
+              my:=(deviceprototyp[devposition].MatrixYCount-1)-(m-(mx*deviceprototyp[devposition].MatrixYCount));
+            end;
+          end;
+        end;
+
         if k>0 then
           space:=strtoint(adddevice.Edit4.text)
         else
           space:=0;
 
-        if (offset+space+k*deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].MaxChan)+deviceprototyp[adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype)].MaxChan>mainform.lastchan then
+        if (offset+space+k*deviceprototyp[devposition].MaxChan+(mx+my)*deviceprototyp[devposition].MaxChan)+deviceprototyp[devposition].MaxChan>mainform.lastchan then
         begin
           if mainform.lastchan<chan then
             ShowMessage(_('Das zu erstellende Gerät liegt außerhalb der möglichen Kanäle (')+inttostr(mainform.lastchan)+_('). In den erweiterten Optionen kann die maximale Kanalzahl auf ')+inttostr(chan)+_(' erhöht werden.')+#13#10#13#10+_('Das Hinzufügen neuer Geräte wird nun abgebrochen.'))
@@ -1351,24 +1324,52 @@ begin
           break;
         end;
 
-        if (k mod 10 = 0) or (strtoint(adddevice.Edit2.Text)<20) then
+        if ((k+mx+my) mod 10 = 0) or (strtoint(adddevice.Edit2.Text)+mx+my<20) then
         begin
-          ProgressScreenSmall.ProgressBar1.Position:=k+1;
+          ProgressScreenSmall.ProgressBar1.Position:=k+mx+my+1;
 //          ProgressScreenSmall.ProgressBar1.Refresh;
           ProgressScreenSmall.Refresh;
         end;
-        
+
+        // Grundkonfiguration des neuen Gerätes
         setlength(mainform.Devices,length(mainform.Devices)+1);
         setlength(mainform.DeviceSelected,length(mainform.Devices)+1);
 
         CreateGUID(mainform.Devices[length(mainform.Devices)-1].ID);
         Position:=mainform.Devices[length(mainform.Devices)-1].ID;
 
-        devposition:=adddevice.GetDevicePositionInDeviceArray(@adddevice.SelectedPrototype);
+        mainform.Devices[length(mainform.Devices)-1].startaddress:=1+(offset+matrixoffset+space*k+(k+m)*deviceprototyp[devposition].MaxChan);
 
-        mainform.Devices[length(mainform.Devices)-1].startaddress:=1+(offset+space*k+k*deviceprototyp[devposition].MaxChan);
 
-        mainform.Devices[length(mainform.Devices)-1].Name:=deviceprototyp[devposition].Name;
+        // Matrix-Funktionen
+        if DevicePrototyp[devposition].IsMatrixDevice then
+        begin
+          if ((mx+my)=0) then
+            mainform.devices[length(mainform.Devices)-1].MatrixDeviceLevel:=1
+          else
+            mainform.devices[length(mainform.Devices)-1].MatrixDeviceLevel:=2;
+        end else
+          mainform.devices[length(mainform.Devices)-1].MatrixDeviceLevel:=0;
+
+        if mainform.devices[length(mainform.Devices)-1].MatrixDeviceLevel<2 then
+        begin
+          MatrixMainDeviceID:=mainform.Devices[length(mainform.Devices)-1].ID;
+        end;
+        mainform.devices[length(mainform.Devices)-1].MatrixMainDeviceID:=MatrixMainDeviceID;
+        mainform.devices[length(mainform.Devices)-1].MatrixOrderType:=deviceprototyp[devposition].MatrixOrderType;
+        mainform.devices[length(mainform.Devices)-1].MatrixXCount:=deviceprototyp[devposition].MatrixXCount;
+        mainform.devices[length(mainform.Devices)-1].MatrixYCount:=deviceprototyp[devposition].MatrixYCount;
+        mainform.devices[length(mainform.Devices)-1].MatrixXPosition:=mx;
+        mainform.devices[length(mainform.Devices)-1].MatrixYPosition:=my;
+
+
+        // Kanal- und Geräteeinstellungen
+        if mainform.Devices[length(mainform.Devices)-1].MatrixDeviceLevel=1 then
+          mainform.Devices[length(mainform.Devices)-1].Name:='[M] '+deviceprototyp[devposition].Name
+        else if mainform.Devices[length(mainform.Devices)-1].MatrixDeviceLevel=2 then
+          mainform.Devices[length(mainform.Devices)-1].Name:='[M '+inttostr(mx+1)+'x'+inttostr(my+1)+'] '+deviceprototyp[devposition].Name
+        else
+          mainform.Devices[length(mainform.Devices)-1].Name:=deviceprototyp[devposition].Name;
         mainform.Devices[length(mainform.Devices)-1].DeviceName:=deviceprototyp[devposition].DeviceName;
         mainform.Devices[length(mainform.Devices)-1].Vendor:=deviceprototyp[devposition].Vendor;
         mainform.Devices[length(mainform.Devices)-1].Beschreibung:=deviceprototyp[devposition].Beschreibung;
@@ -1448,10 +1449,17 @@ begin
         setlength(mainform.Devices[length(mainform.Devices)-1].OldPos,1);
 
         // neue Bilder der Reihe nach anordnen und ggfs. mehrere Zeilen bilden
-        PicturesInCols:=trunc(grafischebuehnenansicht.Paintbox1.Width/32);
-        CurrentRow:=trunc(k/PicturesInCols);
-        mainform.Devices[length(mainform.Devices)-1].left[0]:=k*32-(CurrentRow*PicturesInCols*32);
-        mainform.Devices[length(mainform.Devices)-1].top[0]:=CurrentRow*32;
+        if deviceprototyp[devposition].IsMatrixDevice then
+        begin
+          mainform.Devices[length(mainform.Devices)-1].left[0]:=mx*32;
+          mainform.Devices[length(mainform.Devices)-1].top[0]:=my*32;
+        end else
+        begin
+          PicturesInCols:=trunc(grafischebuehnenansicht.Paintbox1.Width/32);
+          CurrentRow:=trunc(k/PicturesInCols);
+          mainform.Devices[length(mainform.Devices)-1].left[0]:=k*32-(CurrentRow*PicturesInCols*32);
+          mainform.Devices[length(mainform.Devices)-1].top[0]:=CurrentRow*32;
+        end;
 
         setlength(mainform.Devices[length(mainform.Devices)-1].KanalMinValue,mainform.devices[length(mainform.devices)-1].MaxChan);
         setlength(mainform.Devices[length(mainform.Devices)-1].KanalMaxValue,mainform.devices[length(mainform.devices)-1].MaxChan);
@@ -1532,6 +1540,9 @@ begin
         begin
           mainform.Devices[length(mainform.Devices)-1].ShowInStageview:=false;
         end;
+
+        if deviceprototyp[devposition].IsMatrixDevice and (m=(deviceprototyp[devposition].MatrixXCount*deviceprototyp[devposition].MatrixYCount)-1) then
+          matrixoffset:=matrixoffset+m*deviceprototyp[devposition].MaxChan;
       end;
 
       ProgressScreenSmall.Label1.Caption:=_('Gerätegruppen erstellen...');
@@ -1619,9 +1630,11 @@ end;
 
 procedure Tgeraetesteuerung.Gertlschen1Click(Sender: TObject);
 var
-  i,j,k,l,devicefordelete:integer;
+  i,j,k,l,m,n,devicefordelete,devposition:integer;
   IDsfordelete:array of TGUID;
   deviceinuse,channelstillinuse:boolean;
+  DeviceSelectedForDelete:boolean;
+  WarnForMatrixDeviceDelete:boolean;
   Data:PTreeData;
 begin
   if not mainform.UserAccessGranted(1) then exit;
@@ -1640,6 +1653,54 @@ begin
       IDsfordelete[length(IDsfordelete)-1]:=Data^.ID;
     end;
   end;
+
+  // Matrixbehandlung
+  // Prüfen, ob ein Matrixgerät vorhanden ist
+  WarnForMatrixDeviceDelete:=false;
+  for l:=0 to length(IDsfordelete)-1 do
+  begin
+    devposition:=geraetesteuerung.GetDevicePositionInDeviceArray(@IDsfordelete[l]);
+
+    if mainform.Devices[devposition].MatrixDeviceLevel>0 then
+    begin
+      // Gerät ist ein Matrixgerät
+      WarnForMatrixDeviceDelete:=true;
+
+      // alle zugehörigen Matrixgeräte zum Löschen hinzufügen (sofern noch nicht geschehen)
+      for m:=0 to length(mainform.devices)-1 do
+      begin
+        if (mainform.devices[m].MatrixDeviceLevel>0) and IsEqualGUID(mainform.Devices[devposition].MatrixMainDeviceID, mainform.devices[m].MatrixMainDeviceID) then
+        begin
+          // prüfen, ob Gerät bereits zum Löschen eingetragen wurde
+          DeviceSelectedForDelete:=false;
+          for n:=0 to length(IDsfordelete)-1 do
+          begin
+            if IsEqualGUID(IDsfordelete[n], mainform.devices[m].ID) then
+            begin
+              DeviceSelectedForDelete:=true;
+              break;
+            end;
+          end;
+          if not DeviceSelectedForDelete then
+          begin
+            // Gerät zum Löschen hinzufügen
+            setlength(IDsfordelete, length(IDsfordelete)+1);
+            IDsfordelete[length(IDsfordelete)-1]:=mainform.devices[m].ID;
+          end;
+        end;
+      end;
+    end;
+  end;
+
+  if WarnForMatrixDeviceDelete then
+  begin
+    if messagedlg(_('Sie sind im Begriff einen Teil eines Matrix-Gerätes zu löschen. Dabei werden auch alle zugehörigen Matrix-Geräte gelöscht, selbst wenn diese nicht selektiert wurden. Bitte wählen Sie, wie weiter verfahren werden soll:'), mtWarning,
+    [mbYes,mbNo],0)=mrNo then
+    begin
+      exit;
+    end;
+  end;
+
 
   for l:=0 to length(IDsfordelete)-1 do
   begin
@@ -1873,7 +1934,6 @@ begin
       mastertype:=mainform.devices[actualdevice].DeviceName;
       mastertypevendor:=mainform.devices[actualdevice].Vendor;
       DevStartAddressEdit.Text:=inttostr(mainform.devices[actualdevice].Startaddress);
-      DevStartaddressEditChange(DevStartaddressEdit);
       panmirror.Checked:=mainform.Devices[actualdevice].invertpan;
       tiltmirror.Checked:=mainform.Devices[actualdevice].inverttilt;
       panmirror.Enabled:=mainform.Devices[actualdevice].hasPANTILT;
@@ -2648,7 +2708,7 @@ var
   k:integer;
   actualdevice:integer;
 begin
-  Result:=-1; // -1 macht hier Probleme, da vielfach bei PanTilt auch der Wert von PanFine/TiltFine geholt wird.
+  Result:=0; // -1 macht hier Probleme, da vielfach bei PanTilt auch der Wert von PanFine/TiltFine geholt wird.
               // ist nun kein PanFine/TiltFine vorhanden, wird -1 auf get_channel(PanFine) zurückgegeben und dann
               // wird die Berechnung fehlerhaft. Vor Allem der Befehl "Aktuell selektierte Geräte 16-Bit PAN/TILT"
               // funktioniert dann nicht, da bei 8-Bit-Geräten der Cursor einfach aufgrund des -1 wegwandert
@@ -4095,6 +4155,14 @@ begin
   mainform.devices[Destination].UseFullPowerOnChannelvalue:=mainform.devices[Source].UseFullPowerOnChannelvalue;
   mainform.devices[Destination].ContinuousPower:=mainform.devices[Source].ContinuousPower;
   mainform.devices[Destination].Phase:=mainform.devices[Source].Phase;
+
+  mainform.devices[Destination].MatrixDeviceLevel:=mainform.devices[Source].MatrixDeviceLevel;
+  mainform.devices[Destination].MatrixMainDeviceID:=mainform.devices[Source].MatrixMainDeviceID;
+  mainform.devices[Destination].MatrixOrderType:=mainform.devices[Source].MatrixOrderType;
+  mainform.devices[Destination].MatrixXCount:=mainform.devices[Source].MatrixXCount;
+  mainform.devices[Destination].MatrixYCount:=mainform.devices[Source].MatrixYCount;
+  mainform.devices[Destination].MatrixXPosition:=mainform.devices[Source].MatrixXPosition;
+  mainform.devices[Destination].MatrixYPosition:=mainform.devices[Source].MatrixYPosition;
 end;
 
 procedure Tgeraetesteuerung.GrouplistDrawCell(Sender: TObject; ACol,
@@ -4328,34 +4396,10 @@ begin
   end;
 end;
 
-procedure Tgeraetesteuerung.VSTNewText(Sender: TBaseVirtualTree;
-  Node: PVirtualNode; Column: TColumnIndex; NewText: WideString);
-var
-  j:integer;
-  Data:PTreeData;
-begin
-  if not mainform.UserAccessGranted(1) then exit;
-
-  EditingTreeNode:=false;
-
-  if not VST.HasChildren[Node] then
-  begin
-    Data:=VST.GetNodeData(Node);
-    mainform.devices[GetDevicePositionInDeviceArray(@Data^.ID)].Name:=NewText;
-    Data^.Caption:=NewText;
-
-    for j:=0 to mainform.devices[GetDevicePositionInDeviceArray(@Data^.ID)].MaxChan-1 do
-    begin
-      mainform.data.names[mainform.devices[GetDevicePositionInDeviceArray(@Data^.ID)].Startaddress+j]:=mainform.devices[GetDevicePositionInDeviceArray(@Data^.ID)].Name+': '+mainform.devices[GetDevicePositionInDeviceArray(@Data^.ID)].kanalname[j];
-    end;
-  end;
-end;
-
 procedure Tgeraetesteuerung.VSTEditing(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
 begin
-  Allowed:=not VST.HasChildren[Node];
-  EditingTreeNode:=not VST.HasChildren[Node];
+  Allowed:=false;
 end;
 
 procedure Tgeraetesteuerung.VSTKeyUp(Sender: TObject; var Key: Word;
@@ -4366,52 +4410,49 @@ var
 begin
   if not mainform.UserAccessGranted(1) then exit;
 
-  if not EditingTreeNode then
+  for i:=0 to length(VSTDeviceNodes)-1 do
+  for j:=0 to length(VSTDeviceNodes[i])-1 do
+  for k:=0 to length(VSTDeviceNodes[i][j])-1 do
+  if VST.Selected[VSTDeviceNodes[i][j][k]] then
   begin
-    for i:=0 to length(VSTDeviceNodes)-1 do
-    for j:=0 to length(VSTDeviceNodes[i])-1 do
-    for k:=0 to length(VSTDeviceNodes[i][j])-1 do
-    if VST.Selected[VSTDeviceNodes[i][j][k]] then
-    begin
-      Data:=VST.GetNodeData(VSTDeviceNodes[i][j][k]);
+    Data:=VST.GetNodeData(VSTDeviceNodes[i][j][k]);
 
-      if Data^.NodeType=2 then
-      for l:=0 to length(mainform.devices)-1 do
+    if Data^.NodeType=2 then
+    for l:=0 to length(mainform.devices)-1 do
+    begin
+      if IsEqualGUID(Data^.ID, mainform.devices[l].ID) then
       begin
-        if IsEqualGUID(Data^.ID, mainform.devices[l].ID) then
-        begin
-          mainform.deviceselected[l]:=VST.Selected[VSTDeviceNodes[i][j][k]];
-          break;
-        end;
+        mainform.deviceselected[l]:=VST.Selected[VSTDeviceNodes[i][j][k]];
+        break;
       end;
     end;
+  end;
 
-    TreeViewCheckbuttons(Shift);
-    mainform.DeviceSelectionChanged(vst);
-    RefreshDeviceDependencies;
+  TreeViewCheckbuttons(Shift);
+  mainform.DeviceSelectionChanged(vst);
+  RefreshDeviceDependencies;
 
-    if VST.SelectedCount>0 then
+  if VST.SelectedCount>0 then
+  begin
+    Data:=VST.GetNodeData(VST.FocusedNode);
+    if (Data^.NodeType=2) then
     begin
-      Data:=VST.GetNodeData(VST.FocusedNode);
-      if (Data^.NodeType=2) then
+      if showddfbtn.Checked then
       begin
-        if showddfbtn.Checked then
-        begin
-          DDFWindowDeviceScene.top:=geraetesteuerung.Top;
-          DDFWindowDeviceScene.left:=geraetesteuerung.Left+geraetesteuerung.Width;
-          DDFWindowDeviceScene.loadddf(Data^.ID);
-          geraetesteuerung.SetFocus;
-        end;
-      end else
-      begin
-        if DDFWindowDeviceScene.Showing then
-          DDFWindowDeviceScene.close;
+        DDFWindowDeviceScene.top:=geraetesteuerung.Top;
+        DDFWindowDeviceScene.left:=geraetesteuerung.Left+geraetesteuerung.Width;
+        DDFWindowDeviceScene.loadddf(Data^.ID);
+        geraetesteuerung.SetFocus;
       end;
     end else
     begin
       if DDFWindowDeviceScene.Showing then
         DDFWindowDeviceScene.close;
     end;
+  end else
+  begin
+    if DDFWindowDeviceScene.Showing then
+      DDFWindowDeviceScene.close;
   end;
 end;
 
@@ -4488,15 +4529,36 @@ end;
 procedure Tgeraetesteuerung.renameBtnClick(Sender: TObject);
 var
   Data:PTreeData;
+  maindevposition, m:integer;
 begin
   if not mainform.UserAccessGranted(1) then exit;
 
   if VST.SelectedCount=0 then exit;
 
   Data:=VST.GetNodeData(VST.FocusedNode);
-  Data^.Caption:=InputBox(_('Gerätename'),_('Bitte geben Sie einen neuen Namen für das Gerät an:'),Data^.Caption);
-  mainform.devices[GetDevicePositionInDeviceArray(@Data^.ID)].Name:=Data^.Caption;
-  VST.Refresh;
+
+  if mainform.devices[GetDevicePositionInDeviceArray(@Data^.ID)].MatrixDeviceLevel>0 then
+  begin
+    // Matrixgerät
+    maindevposition:=GetDevicePositionInDeviceArray(@mainform.devices[GetDevicePositionInDeviceArray(@Data^.ID)].MatrixMainDeviceID);
+
+    mainform.devices[maindevposition].Name:='[M] '+InputBox(_('Gerätename'),_('Bitte geben Sie einen neuen Namen für das Matrix-Gerät an:'),copy(mainform.devices[maindevposition].Name, pos(']', mainform.devices[maindevposition].Name)+2, length(mainform.devices[maindevposition].Name)));
+
+    for m:=0 to length(mainform.Devices)-1 do
+    begin
+      if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[GetDevicePositionInDeviceArray(@Data^.ID)].MatrixMainDeviceID)) then
+      begin
+        mainform.Devices[m].Name:='[M '+inttostr(mainform.Devices[m].MatrixXPosition+1)+'x'+inttostr(mainform.Devices[m].MatrixYPosition+1)+'] '+copy(mainform.devices[maindevposition].Name, pos(']', mainform.devices[maindevposition].Name)+2, length(mainform.devices[maindevposition].Name));
+      end;
+    end;
+    RefreshTreeNew;
+  end else
+  begin
+    Data^.Caption:=InputBox(_('Gerätename'),_('Bitte geben Sie einen neuen Namen für das Gerät an:'),Data^.Caption);
+    mainform.devices[GetDevicePositionInDeviceArray(@Data^.ID)].Name:=Data^.Caption;
+    VST.Refresh;
+  end;
+
   SendNamesBtnClick(nil);
 end;
 
@@ -4827,6 +4889,13 @@ begin
           geraetesteuerung.DevicePrototyp[i].gobolevels2[k]:=strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('value'));
           geraetesteuerung.DevicePrototyp[i].goboendlevels2[k]:=strtoint(XML.XML.Root.Items[j].Items[k].Properties.Value('valueend',inttostr(geraetesteuerung.DevicePrototyp[i].gobolevels2[k])));
         end;
+      end;
+      if XML.XML.Root.Items[j].Name='matrix' then
+      begin // <Matrix>
+        geraetesteuerung.DevicePrototyp[i].IsMatrixDevice:=true;
+        geraetesteuerung.DevicePrototyp[i].MatrixXCount:=XML.XML.Root.Items[j].Properties.IntValue('xcount');
+        geraetesteuerung.DevicePrototyp[i].MatrixYCount:=XML.XML.Root.Items[j].Properties.IntValue('ycount');
+        geraetesteuerung.DevicePrototyp[i].MatrixOrdertype:=XML.XML.Root.Items[j].Properties.IntValue('ordertype');
       end;
     end;
   end;
@@ -5244,7 +5313,7 @@ begin
   AmberRGratio:=AmberColorG/AmberColorR;
 
 {
-  // Mathematisch korrekte Umwandlung (führt aber zu Verwirrungen bei manueller Anpassung von R, G und A und ist nicht ggfs. nicht zum realen Ergebnis vergleichbar
+  // Mathematisch korrekte Umwandlung (führt aber zu Verwirrungen bei manueller Anpassung von R, G und A und ist ggfs. nicht zum realen Ergebnis vergleichbar
   if CompRG then
   begin
     if CompBlue then
@@ -7812,6 +7881,119 @@ begin
     result:=128;
 end;
 
+function Tgeraetesteuerung.GetMatrixDeviceStartAddress(MasterDeviceID:TGUID; MatrixXPosition, MatrixYPosition:byte):integer;
+var
+  my,mx,m, devposition:integer;
+begin
+  devposition:=GetDevicePositionInDeviceArray(@MasterDeviceID);
+
+  result:=0;
+
+  for m:=0 to (mainform.Devices[devposition].MatrixXCount*mainform.Devices[devposition].MatrixYCount)-1 do
+  begin
+    my:=0;
+    mx:=0;
+    case mainform.Devices[devposition].MatrixOrdertype of
+      1:
+      begin
+        my:=trunc(m/mainform.Devices[devposition].MatrixXCount);
+        mx:=m-(my*mainform.Devices[devposition].MatrixXCount);
+      end;
+      2:
+      begin
+        my:=trunc(m/mainform.Devices[devposition].MatrixXCount);
+        if ((my mod 2) = 0) then
+        begin
+          // gerade Reihe (von links nach rechts)
+          mx:=m-(my*mainform.Devices[devposition].MatrixXCount);
+        end else
+        begin
+          // ungerade Reihe (von rechts nach links)
+          mx:=(mainform.Devices[devposition].MatrixXCount-1)-(m-(my*mainform.Devices[devposition].MatrixXCount));
+        end;
+      end;
+      3:
+      begin
+        mx:=trunc(m/mainform.Devices[devposition].MatrixYCount);
+        my:=m-(mx*mainform.Devices[devposition].MatrixYCount);
+      end;
+      4:
+      begin
+        mx:=trunc(m/mainform.Devices[devposition].MatrixYCount);
+        if ((mx mod 2) = 0) then
+        begin
+          // gerade Reihe (von links nach rechts)
+          my:=m-(mx*mainform.Devices[devposition].MatrixYCount);
+        end else
+        begin
+          // ungerade Reihe (von rechts nach links)
+          my:=(mainform.Devices[devposition].MatrixYCount-1)-(m-(mx*mainform.Devices[devposition].MatrixYCount));
+        end;
+      end;
+    end;
+
+    if (mx=MatrixXPosition) and (my=MatrixYPosition) then
+    begin
+      result:=mainform.Devices[devposition].Startaddress+m*mainform.Devices[devposition].MaxChan;
+      break;
+    end;
+  end;
+end;
+
+procedure Tgeraetesteuerung.ChangeDeviceStartaddress(ID: TGUID; NewStartaddress:Word);
+var
+  position, oldstartaddress, i, j, k:integer;
+  channelstillinuse:boolean;
+begin
+  position:=GetDevicePositionInDeviceArray(@ID);
+
+  if (NewStartaddress+mainform.devices[position].MaxChan-1)>mainform.lastchan then
+    ShowMessage(_('In den Optionen ist die Kanalzahl auf ')+inttostr(mainform.lastchan)+_(' begrenzt. Diese Grenze kann in den erweiterten Einstellungen auf bis zu 8192 erhöht werden.'));
+
+  oldstartaddress:=mainform.devices[position].Startaddress;
+  mainform.devices[position].Startaddress:=NewStartaddress;
+
+  for i:=0 to mainform.devices[position].MaxChan-1 do
+  begin
+    // Alte Kanaldimmkurven zurücksetzen, falls dort kein Gerät liegt
+    // Checken, ob an alten Kanälen noch Geräte adressiert sind
+    channelstillinuse:=false;
+    for j:=0 to length(mainform.devices)-1 do
+    begin // Geräte durchlaufen
+      for k:=0 to mainform.devices[j].MaxChan-1 do
+      begin // Gerätekanäle durchlaufen
+        if (mainform.devices[j].Startaddress+k)=(oldstartaddress+i) then
+          channelstillinuse:=true;
+      end;
+
+      // Kanal wird von keinem Gerät mehr genutzt
+      if not channelstillinuse then
+      begin
+        mainform.channel_dimmcurve[oldstartaddress+i]:=0;
+        mainform.channel_absolutedimmcurve[oldstartaddress+i]:=0;
+      end;
+    end;
+
+    // Neue Dimmkurven setzen
+    mainform.channel_dimmcurve[mainform.devices[position].Startaddress+i]:=mainform.devices[position].kanaldimmcurve[i];
+    mainform.channel_absolutedimmcurve[mainform.devices[position].Startaddress+i]:=mainform.devices[position].kanalabsolutedimmcurve[i];
+
+    // Falls andere Gerätekanäle mit diesem konkurrieren, dann Meldung
+    for j:=0 to length(mainform.devices)-1 do
+    begin
+      if (mainform.devices[j].Startaddress>=(mainform.Devices[position].Startaddress+i)) and (mainform.devices[j].Startaddress+mainform.devices[j].MaxChan-1<=(mainform.Devices[position].Startaddress+i)) and (j<>position) and ((mainform.Devices[j].kanaldimmcurve[mainform.Devices[position].Startaddress+i-mainform.devices[j].Startaddress]<>mainform.devices[position].kanaldimmcurve[i]) or (mainform.Devices[j].kanalabsolutedimmcurve[mainform.Devices[position].Startaddress+i-mainform.devices[j].Startaddress]<>mainform.devices[position].kanalabsolutedimmcurve[i])) then
+      begin
+        //if messagedlg(_('Ein anderer Gerätekanal (')+mainform.Devices[j].Name+': '+mainform.Devices[j].Kanalname[mainform.Devices[position].Startaddress+i-mainform.devices[j].Startaddress]+_(') belegt die gleiche Adresse wie der ausgewählte Kanal.')+#10#13+_('Es kann allerdings nur eine Dimmerkurve pro Kanal genutzt werden.')+#10#13#10#13+_('Soll die Kurvenform des anderen Gerätekanals nun automatisch angepasst werden?'),mtConfirmation,
+        //  [mbYes,mbNo],0)=mrYes then
+        //  begin
+            mainform.Devices[j].kanaldimmcurve[mainform.Devices[position].Startaddress+i-mainform.devices[j].Startaddress]:=mainform.devices[position].kanaldimmcurve[i];
+            mainform.Devices[j].kanalabsolutedimmcurve[mainform.Devices[position].Startaddress+i-mainform.devices[j].Startaddress]:=mainform.devices[position].kanalabsolutedimmcurve[i];
+        //  end;
+      end;
+    end;
+  end;
+end;
+
 procedure Tgeraetesteuerung.idbtnMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
@@ -7829,6 +8011,81 @@ begin
 
   if Shift=[ssCtrl] then
     TBItem4Click(nil);
+end;
+
+procedure Tgeraetesteuerung.DevStartaddressEditKeyUp(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+var
+  s:string;
+  i,m:integer;
+  position, maindevposition:integer;
+  newaddress:word;
+  temp:byte;
+  Data:PTreeData;
+begin
+  if Key=vk_return then
+  begin
+    if not mainform.UserAccessGranted(1, false) then exit;
+
+    s:=DevStartaddressEdit.text;
+    i:=DevStartaddressEdit.selstart;
+    mainform.input_number(i,s);
+    DevStartaddressEdit.text:=s;
+    DevStartaddressEdit.selstart:=i;
+
+    if DevStartaddressEdit.text='0' then
+      DevStartaddressEdit.text:='1';
+
+    if DevStartaddressEdit.text<>'' then
+    begin
+      Data:=VST.GetNodeData(VST.FocusedNode);
+      position:=GetDevicePositionInDeviceArray(@Data^.ID);
+      if position < 0 then
+        Exit;
+
+      newaddress:=strtoint(DevStartaddressEdit.Text);
+
+      if mainform.devices[position].MatrixDeviceLevel=0 then
+      begin
+        ChangeDeviceStartaddress(mainform.devices[position].ID, newaddress);
+      end else
+      begin
+        // ist ein Matrixgerät
+        maindevposition:=GetDevicePositionInDeviceArray(@mainform.devices[position].MatrixMainDeviceID);
+        ChangeDeviceStartaddress(mainform.devices[maindevposition].ID, newaddress);
+
+        for m:=0 to length(mainform.Devices)-1 do
+        begin
+          if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[maindevposition].ID)) then
+          begin
+            ChangeDeviceStartaddress(mainform.Devices[m].ID, GetMatrixDeviceStartAddress(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[m].MatrixXPosition, mainform.devices[m].MatrixYPosition));
+          end;
+        end;
+      end;
+
+      temp:=newaddress;
+      dipstate[1]:=BitSet(temp, 1);
+      dipstate[2]:=BitSet(temp, 2);
+      dipstate[3]:=BitSet(temp, 4);
+      dipstate[4]:=BitSet(temp, 8);
+      dipstate[5]:=BitSet(temp, 16);
+      dipstate[6]:=BitSet(temp, 32);
+      dipstate[7]:=BitSet(temp, 64);
+      dipstate[8]:=BitSet(temp, 128);
+
+      temp:=newaddress shr 8;
+      dipstate[9]:=BitSet(temp, 1);
+      dipstate[10]:=BitSet(temp, 2);
+
+      for i:=1 to 10 do
+        if dipstate[i] then
+          Timage(FindComponent('DIP'+inttostr(i))).Picture:=DIPON.Picture
+        else
+          Timage(FindComponent('DIP'+inttostr(i))).Picture:=DIPOFF.Picture;
+    end;
+    VST.Refresh;
+    SendNamesBtnClick(nil);
+  end;
 end;
 
 end.
