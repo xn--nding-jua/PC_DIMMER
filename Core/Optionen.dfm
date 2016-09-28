@@ -663,7 +663,8 @@ object OptionenBox: TOptionenBox
           'Prozentanzeige (0%...50%...100%)'
           'Prozentanzeige (0.0%...50.0%...100.0%)'
           'Byteanzeige (0...127...255)'
-          'Hexdezimalanzeige (0..7F..FF)')
+          'Hexdezimalanzeige (0..7F..FF)'
+          'Prozent- und Byteanzeige (50%/128)')
         TabOrder = 0
       end
       object askforsaveproject_checkbox: TCheckBox
@@ -1038,7 +1039,7 @@ object OptionenBox: TOptionenBox
         Height = 21
         Hint = 'Soundkarte: '
         Style = csDropDownList
-        ItemHeight = 13
+        ItemHeight = 0
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0

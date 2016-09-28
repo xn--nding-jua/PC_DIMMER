@@ -54,7 +54,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=482;
+  actualprojectversion=483;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -568,6 +568,8 @@ type
     dxBarSubItem4: TdxBarSubItem;
     dxBarButton7: TdxBarButton;
     dxBarLargeButton8: TdxBarLargeButton;
+    TrackBar3: TTrackBar;
+    Label15: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -844,6 +846,7 @@ type
     procedure HTTPServerActivateRibbonBoxClick(Sender: TObject);
     procedure dxBarButton7Click(Sender: TObject);
     procedure dxBarLargeButton8Click(Sender: TObject);
+    procedure TrackBar3Change(Sender: TObject);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -927,7 +930,7 @@ type
     DasMevWriteDmx : function(iUniverse:integer; DmxArray:Pointer):integer;cdecl;
     // END OF WORKAROUND FOR MEVP
 
-    procedure NewProject;
+    procedure NewProject(PreserveValues:boolean=false);
     function Saveproject(savewithoutprompt,fastsave, Autosave:boolean):boolean;
     function Openproject(openfile:string; OnlyProject:boolean):boolean;
     function pcdimmerreset(Sender: TObject):boolean;
@@ -1034,6 +1037,7 @@ type
     OutputPlugins: array of TOutputPlugin;
     ProgramPlugins: array of TProgramPlugin;
 // Dimmerkernel-Variablen deklarieren
+    data_in_channels:array[1..chan] of byte;
     channel_endvalue:array[1..chan] of byte;
     channel_value:array[1..chan] of byte;
     channel_value_highresolution:array[1..chan] of Single; // auf 7-8 Stellen genau - sollte hier reichen ;-)
@@ -2459,6 +2463,7 @@ begin
     1: result:=inttostr(round((pos*100) / maxres))+'.'+copy(inttostr((pos*100) mod maxres),0,1)+'%';
     2: result:=inttostr(pos);
     3: result:='0x'+inttohex(pos,2);
+    4: result:=inttostr(round((pos*100) / maxres))+'%/'+inttostr(pos);
   end;
 end;
 
@@ -3155,9 +3160,8 @@ procedure TMainform.About1Click(Sender: TObject);
 begin
   if AboutBox=nil then
     AboutBox:=TAboutBox.Create(AboutBox);
-    
+
   aboutbox.Version.Caption:=GetFileVersionBuild(paramstr(0))+' (' + osversion + ')';
-  aboutbox.windowsversion.Caption:=GetWindowsVersion;
   Aboutbox.showmodal;
 
   Aboutbox.Free;
@@ -3434,91 +3438,16 @@ begin
   _KillBuehnenansicht:=true;
   _killaccu := true;
 
-  DebugAdd('SHUTDOWN: Deactivating Input-Plugins...');
+  // Letzte Werte in Datei speichern (bei Switchlightoffatshutown alle auf 0%)
+  DebugAdd('SHUTDOWN: Saving current DMX-values...');
+  CreateValueBackup;
 
   BASS_CD_Door(curdrive, BASS_CD_DOOR_UNLOCK);
-
-// Program-Plugins deaktivieren
-  if deactivateinputdllsonclose then
-  begin
-    for i:=0 to length(ProgramPlugins)-1 do
-    begin
-      funccall := GetProcAddress(ProgramPlugins[i].Handle,'DLLDestroy');
-      if not Assigned(funccall) then
-        funccall := GetProcAddress(ProgramPlugins[i].Handle,'DLLDeactivate');
-      if Assigned(funccall) then
-      begin
-        inprogress.filename.Caption:=_('Deaktiviere Input-Plugin ')+ProgramPlugins[i].Filename;
-        inprogress.ProgressBar1.Position:=41;
-        inprogress.ProgressBar1.Position:=40;
-        inprogress.Refresh;
-        DebugAdd('SHUTDOWN: Deactivating Plugin '+ProgramPlugins[i].Filename);
-        if funccall then
-        begin
-          DebugAddToLine(' - OK');
-        end else
-        begin
-          ShowMessage('Das Plugin "'+ProgramPlugins[i].Filename+'" hat einen Fehler beim Deaktivieren gemeldet.');
-          DebugAddToLine(' - ERROR');
-        end;
-//	        FreeLibrary(InputDLL[i]);
-      end else
-      begin
-        DebugAddToLine(' - ERROR');
-//	        FreeLibrary(InputDLL[i]);
-      end;
-    end;
-    DebugAdd('SHUTDOWN: -----------------------------------', false);
-    DebugAdd('SHUTDOWN: Deactivating Output-Plugins...');
-  end else
-  begin
-    ShowMessage(_('Hinweis: Das Deaktivieren der Programmplugins ist in den Optionen deaktiviert.'+#13+'Dies ist nur für Testzwecke zu empfehlen. Bitte die Einstellungen kontrollieren.'));
-    DebugAdd('SHUTDOWN: Deactivating all Inputplugins disabled...', false);
-    DebugAdd('SHUTDOWN: Deactivating Output-Plugins...');
-  end;
-
-// Output-Plugin deaktivieren
-  if deactivateoutputdllsonclose then
-  begin
-    for i:=0 to length(OutputPlugins)-1 do
-    begin
-      FuncCall := GetProcAddress(OutputPlugins[i].Handle,'DLLDestroy');
-      if not Assigned(FuncCall) then
-        FuncCall := GetProcAddress(OutputPlugins[i].Handle,'DLLDeactivate');
-      try
-        if Assigned(funccall) then
-        begin
-          inprogress.filename.Caption:=_('Deaktiviere Output-Plugin ')+OutputPlugins[i].Filename;
-          inprogress.ProgressBar1.Position:=61;
-          inprogress.ProgressBar1.Position:=60;
-          inprogress.Refresh;
-          DebugAdd('SHUTDOWN: Deactivating Plugin '+OutputPlugins[i].Filename);
-          if funccall then
-          begin
-            DebugAddToLine(' - OK');
-          end else
-          begin
-            ShowMessage(_('Das Plugin "')+OutputPlugins[i].Filename+_('" hat einen Fehler beim Deaktivieren gemeldet.'));
-            DebugAddToLine(' - ERROR');
-          end;
-        end;
-      except
-      end;
-    end;
-    DebugAdd('SHUTDOWN: -----------------------------------');
-  end else
-  begin
-    ShowMessage(_('Hinweis: Das Deaktivieren der Ausgabeplugins ist in den Optionen deaktiviert.'+#13+'Dies ist nur für Testzwecke zu empfehlen. Bitte die Einstellungen kontrollieren.'));
-    DebugAdd('SHUTDOWN: Deactivating Outputplugins disabled...', false);
-    DebugAdd('SHUTDOWN: Closing Audio-, Joystick- and MIDI-Input...');
-  end;
 
   // Live Audio-In deaktivieren
   AudioIn.StopAtOnce;
   StopMIDI(nil);
   joystickform.gcp.Free;
-
-  DebugAddToLine(' - OK');
 
   inprogress.filename.Caption:=_('Schreibe Konfigurationsdatei...');
   inprogress.ProgressBar1.Position:=81;
@@ -3599,6 +3528,82 @@ begin
           brightnesseditribbon.text:=inttostr(strtoint(brightnesseditribbon.text)-3);
       until ((strtoint(brightnesseditribbon.text)>120) and (strtoint(brightnesseditribbon.text)<136));
 
+
+  // Program-Plugins deaktivieren
+  DebugAdd('SHUTDOWN: Deactivating Input-Plugins...');
+  if deactivateinputdllsonclose then
+  begin
+    for i:=0 to length(ProgramPlugins)-1 do
+    begin
+      funccall := GetProcAddress(ProgramPlugins[i].Handle,'DLLDestroy');
+      if not Assigned(funccall) then
+        funccall := GetProcAddress(ProgramPlugins[i].Handle,'DLLDeactivate');
+      if Assigned(funccall) then
+      begin
+        inprogress.filename.Caption:=_('Deaktiviere Input-Plugin ')+ProgramPlugins[i].Filename;
+        inprogress.ProgressBar1.Position:=41;
+        inprogress.ProgressBar1.Position:=40;
+        inprogress.Refresh;
+        DebugAdd('SHUTDOWN: Deactivating Plugin '+ProgramPlugins[i].Filename);
+        if funccall then
+        begin
+          DebugAddToLine(' - OK');
+        end else
+        begin
+          ShowMessage('Das Plugin "'+ProgramPlugins[i].Filename+'" hat einen Fehler beim Deaktivieren gemeldet.');
+          DebugAddToLine(' - ERROR');
+        end;
+//	        FreeLibrary(InputDLL[i]);
+      end else
+      begin
+        DebugAddToLine(' - ERROR');
+//	        FreeLibrary(InputDLL[i]);
+      end;
+    end;
+    DebugAdd('SHUTDOWN: -----------------------------------', false);
+  end else
+  begin
+    ShowMessage(_('Hinweis: Das Deaktivieren der Programmplugins ist in den Optionen deaktiviert.'+#13+'Dies ist nur für Testzwecke zu empfehlen. Bitte die Einstellungen kontrollieren.'));
+    DebugAdd('SHUTDOWN: Deactivating all Inputplugins disabled...', false);
+  end;
+
+// Output-Plugin deaktivieren
+  DebugAdd('SHUTDOWN: Deactivating Output-Plugins...');
+  if deactivateoutputdllsonclose then
+  begin
+    for i:=0 to length(OutputPlugins)-1 do
+    begin
+      FuncCall := GetProcAddress(OutputPlugins[i].Handle,'DLLDestroy');
+      if not Assigned(FuncCall) then
+        FuncCall := GetProcAddress(OutputPlugins[i].Handle,'DLLDeactivate');
+      try
+        if Assigned(funccall) then
+        begin
+          inprogress.filename.Caption:=_('Deaktiviere Output-Plugin ')+OutputPlugins[i].Filename;
+          inprogress.ProgressBar1.Position:=61;
+          inprogress.ProgressBar1.Position:=60;
+          inprogress.Refresh;
+          DebugAdd('SHUTDOWN: Deactivating Plugin '+OutputPlugins[i].Filename);
+          if funccall then
+          begin
+            DebugAddToLine(' - OK');
+          end else
+          begin
+            ShowMessage(_('Das Plugin "')+OutputPlugins[i].Filename+_('" hat einen Fehler beim Deaktivieren gemeldet.'));
+            DebugAddToLine(' - ERROR');
+          end;
+        end;
+      except
+      end;
+    end;
+    DebugAdd('SHUTDOWN: -----------------------------------');
+  end else
+  begin
+    ShowMessage(_('Hinweis: Das Deaktivieren der Ausgabeplugins ist in den Optionen deaktiviert.'+#13+'Dies ist nur für Testzwecke zu empfehlen. Bitte die Einstellungen kontrollieren.'));
+    DebugAdd('SHUTDOWN: Deactivating Outputplugins disabled...', false);
+    DebugAdd('SHUTDOWN: Closing Audio-, Joystick- and MIDI-Input...');
+  end;
+
   // Pluginreferenzen entfernen
   if deactivateinputdllsonclose or deactivateoutputdllsonclose then
   begin
@@ -3618,9 +3623,6 @@ begin
 
     DebugAddToLine(' - OK');
   end;
-
-  // Letzte Werte in Datei speichern (bei Switchlightoffatshutown alle auf 0%)
-  CreateValueBackup;
 
   inprogress.filename.Caption:=_('Entferne Fenster...');
   inprogress.ProgressBar1.Position:=95;
@@ -3807,7 +3809,7 @@ begin
   result:=true;
 end;
 
-procedure Tmainform.NewProject;
+procedure Tmainform.NewProject(PreserveValues: boolean=false);
 var
 	i:integer;
   LReg:TPCDRegistry;
@@ -3864,14 +3866,17 @@ begin
 
 	audioeffektplayerform.layerbox.ItemIndex:=0;
 
-  for i:=1 to lastchan do
+  if not PreserveValues then
   begin
-    changedchannels[i]:=false;
-    channel_dimmcurve[i]:=0;
-    channel_minvalue[i]:=0;
-    channel_maxvalue[i]:=maxres;
-    data.Names[i]:=_('Kanal ')+inttostr(i);
-    data.ch[i]:=maxres;
+    for i:=1 to lastchan do
+    begin
+      changedchannels[i]:=false;
+      channel_dimmcurve[i]:=0;
+      channel_minvalue[i]:=0;
+      channel_maxvalue[i]:=maxres;
+      data.Names[i]:=_('Kanal ')+inttostr(i);
+      data.ch[i]:=maxres;
+    end;
   end;
 
   schedulerform.skripttimer_listbox.Clear;
@@ -3938,6 +3943,8 @@ begin
   Autoszenen[0].R:=255;
   Autoszenen[0].G:=0;
   Autoszenen[0].B:=0;
+  Autoszenen[0].A:=0;
+  Autoszenen[0].W:=0;
   Autoszenen[0].accuracy:=1;
   Autoszenen[0].helligkeit:=255;
 
@@ -3948,6 +3955,8 @@ begin
   Autoszenen[1].R:=0;
   Autoszenen[1].G:=255;
   Autoszenen[1].B:=0;
+  Autoszenen[1].A:=0;
+  Autoszenen[1].W:=0;
   Autoszenen[1].accuracy:=1;
   Autoszenen[1].helligkeit:=255;
 
@@ -3958,6 +3967,8 @@ begin
   Autoszenen[2].R:=0;
   Autoszenen[2].G:=0;
   Autoszenen[2].B:=255;
+  Autoszenen[2].A:=0;
+  Autoszenen[2].W:=0;
   Autoszenen[2].accuracy:=1;
   Autoszenen[2].helligkeit:=255;
 
@@ -3968,6 +3979,8 @@ begin
   Autoszenen[3].R:=255;
   Autoszenen[3].G:=255;
   Autoszenen[3].B:=0;
+  Autoszenen[3].A:=0;
+  Autoszenen[3].W:=0;
   Autoszenen[3].accuracy:=1;
   Autoszenen[3].helligkeit:=255;
 
@@ -3978,6 +3991,8 @@ begin
   Autoszenen[4].R:=255;
   Autoszenen[4].G:=127;
   Autoszenen[4].B:=0;
+  Autoszenen[4].A:=0;
+  Autoszenen[4].W:=0;
   Autoszenen[4].accuracy:=1;
   Autoszenen[4].helligkeit:=255;
 
@@ -3988,6 +4003,8 @@ begin
   Autoszenen[5].R:=127;
   Autoszenen[5].G:=0;
   Autoszenen[5].B:=255;
+  Autoszenen[5].A:=0;
+  Autoszenen[5].W:=0;
   Autoszenen[5].accuracy:=1;
   Autoszenen[5].helligkeit:=255;
 //////////////////////
@@ -4065,7 +4082,7 @@ begin
     pmmform.RefreshListBoxes;
 
   for i:=1 to lastchan do
-    senddata(i,maxres,maxres,0);
+    senddata(i,data.ch[i],data.ch[i],0);
 
   if szenenverwaltung_formarray[0].Showing then
     szenenverwaltung_formarray[0].FormShow(nil);
@@ -5292,6 +5309,8 @@ begin
    	  Filestream.WriteBuffer(mainform.Autoszenen[i].R,sizeof(mainform.Autoszenen[i].R));
    	  Filestream.WriteBuffer(mainform.Autoszenen[i].G,sizeof(mainform.Autoszenen[i].G));
    	  Filestream.WriteBuffer(mainform.Autoszenen[i].B,sizeof(mainform.Autoszenen[i].B));
+   	  Filestream.WriteBuffer(mainform.Autoszenen[i].A,sizeof(mainform.Autoszenen[i].A));
+   	  Filestream.WriteBuffer(mainform.Autoszenen[i].W,sizeof(mainform.Autoszenen[i].W));
    	  Filestream.WriteBuffer(mainform.Autoszenen[i].accuracy,sizeof(mainform.Autoszenen[i].accuracy));
    	  Filestream.WriteBuffer(mainform.Autoszenen[i].helligkeit,sizeof(mainform.Autoszenen[i].helligkeit));
    	  Filestream.WriteBuffer(mainform.Autoszenen[i].Category,sizeof(mainform.Autoszenen[i].Category));
@@ -8022,7 +8041,16 @@ begin
    	  Filestream.ReadBuffer(mainform.Autoszenen[i].R,sizeof(mainform.Autoszenen[i].R));
    	  Filestream.ReadBuffer(mainform.Autoszenen[i].G,sizeof(mainform.Autoszenen[i].G));
    	  Filestream.ReadBuffer(mainform.Autoszenen[i].B,sizeof(mainform.Autoszenen[i].B));
-   	  Filestream.ReadBuffer(mainform.Autoszenen[i].accuracy,sizeof(mainform.Autoszenen[i].accuracy));
+      if projektprogrammversionint>=483 then
+      begin
+     	  Filestream.ReadBuffer(mainform.Autoszenen[i].A,sizeof(mainform.Autoszenen[i].A));
+     	  Filestream.ReadBuffer(mainform.Autoszenen[i].W,sizeof(mainform.Autoszenen[i].W));
+   	  end else
+      begin
+        mainform.Autoszenen[i].A:=-1;
+        mainform.Autoszenen[i].W:=-1;
+      end;
+      Filestream.ReadBuffer(mainform.Autoszenen[i].accuracy,sizeof(mainform.Autoszenen[i].accuracy));
    	  Filestream.ReadBuffer(mainform.Autoszenen[i].helligkeit,sizeof(mainform.Autoszenen[i].helligkeit));
       if projektprogrammversionint>=439 then
         Filestream.ReadBuffer(Autoszenen[i].Category,sizeof(Autoszenen[i].Category));
@@ -11601,6 +11629,8 @@ procedure TMainform.ExecuteDataInEvent(address, endvalue:integer);
 var
   i,j:integer;
 begin
+  data_in_channels[address]:=endvalue;
+
   if DataInEventfrm.showing then
   begin
     DataInEventFrm.lastdatainaddress:=address;
@@ -12433,78 +12463,9 @@ begin
   debuglistbox.Items.LoadFromFile(userdirectory+'\PC_DIMMER.log');
   DebugAdd('INIT: Found handle. PC_DIMMER Desktop is starting...');
 
-  SplashCaptioninfo(_('Outputplugins aktivieren...'));
-  SplashProgress(1, 45, 100);
-  RefreshSplashText;
-
-  // Plugineinstellungen aus Registry lesen
-  LReg := TPCDRegistry.Create;
-  // Lese zuletzt verwendete Plugins
-  for i:=0 to length(OutputPlugins)-1 do
-  begin
-    if LReg.OpenRegKey(OutputPlugins[i].Filename) then
-    begin
-      OutputPlugins[i].IsEnabled:=LReg.ReadWriteBool('Plugin Enabled', false);
-      OutputPlugins[i].IsBlacklisted:=LReg.ReadWriteBool('Plugin Blacklisted', false);
-      OutputPlugins[i].Startaddress:=LReg.ReadWriteInt('Plugin Startaddress', 1);
-      OutputPlugins[i].Stopaddress:=LReg.ReadWriteInt('Plugin Stopaddress', 512);
-      LReg.CloseKey;
-    end else
-    begin
-      OutputPlugins[i].IsEnabled:=false;
-      OutputPlugins[i].IsBlacklisted:=false;
-      OutputPlugins[i].Startaddress:=1;
-      OutputPlugins[i].Stopaddress:=512;
-    end;
-  end;
-  LReg.Free;
-
-  // Zuletzt genutzte Plugins rausfinden und aktivieren
-  DebugAdd('', false, false);
-  for i:=0 to length(OutputPlugins)-1 do
-  begin
-    if (OutputPlugins[i].IsEnabled and (not OutputPlugins[i].IsActive)) then
-    begin
-      DebugAdd('PLUGIN: Try to activate outputplugin "'+OutputPlugins[i].Filename+'"...');
-
-      OutputPlugins[i].Handle:=LoadLibrary(PChar(pcdimmerdirectory+'\plugins\'+OutputPlugins[i].Filename));
-      SplashProgress(1, 45+round(15*(i / length(OutputPlugins))), 100);
-      SplashAddText(_('Aktiviere ')+OutputPlugins[i].Name);
-      RefreshSplashText;
-      ProcCall := GetProcAddress(OutputPlugins[i].Handle,'DLLCreate');
-      if not Assigned(ProcCall) then
-        ProcCall := GetProcAddress(OutputPlugins[i].Handle,'DLLActivate');
-      if Assigned(ProcCall) then
-      begin
-        Proccall(@CallbackGetDLLValue,@CallbackGetDLLValueEvent,@CallbackGetDLLName,@CallbackSetDLLValue,@CallbackMessage);
-        DebugAddToLine(' - OK');
-      end else
-      begin
-        DebugAddToLine(' - ERROR');
-      end;
-      @OutputPlugins[i].SendData := GetProcAddress(OutputPlugins[i].Handle,'DLLSendData');
-      @OutputPlugins[i].IsSending := GetProcAddress(OutputPlugins[i].Handle,'DLLIsSending');
-      @OutputPlugins[i].SendMessage := GetProcAddress(OutputPlugins[i].Handle,'DLLSendMessage');
-    end;
-  end;
-
-  // Plugins starten
-  for i:=0 to length(OutputPlugins)-1 do
-  if OutputPlugins[i].IsEnabled and (not OutputPlugins[i].IsActive) then
-  begin
-    ProcCall2 := GetProcAddress(OutputPlugins[i].Handle,'DLLStart');
-    if Assigned(ProcCall2) then
-    begin
-      Proccall2;
-      OutputPlugins[i].IsActive:=true;
-    end;
-  end;
-
-  DebugAdd('', false, false);
-
   debuglistbox.Items.LoadFromFile(userdirectory+'\PC_DIMMER.log');
   SplashCaptioninfo(_('Inputplugins aktivieren...'));
-  SplashProgress(1, 60, 100);
+  SplashProgress(1, 45, 100);
   RefreshSplashText;
 
   SplashCaptioninfo(_('Inputplugins aktivieren...'));
@@ -12628,13 +12589,108 @@ begin
     PluginRibbonTab.Visible:=true;
   end;
 
-  SplashProgress(1, 75, 100);
-  SplashCaptioninfo(_('Werte an Interfaces übergeben...'));
+
+  SplashCaptioninfo(_('Outputplugins aktivieren...'));
+  SplashProgress(1, 60, 100);
   RefreshSplashText;
+
+  // Plugineinstellungen aus Registry lesen
+  LReg := TPCDRegistry.Create;
+  // Lese zuletzt verwendete Plugins
+  for i:=0 to length(OutputPlugins)-1 do
+  begin
+    if LReg.OpenRegKey(OutputPlugins[i].Filename) then
+    begin
+      OutputPlugins[i].IsEnabled:=LReg.ReadWriteBool('Plugin Enabled', false);
+      OutputPlugins[i].IsBlacklisted:=LReg.ReadWriteBool('Plugin Blacklisted', false);
+      OutputPlugins[i].Startaddress:=LReg.ReadWriteInt('Plugin Startaddress', 1);
+      OutputPlugins[i].Stopaddress:=LReg.ReadWriteInt('Plugin Stopaddress', 512);
+      LReg.CloseKey;
+    end else
+    begin
+      OutputPlugins[i].IsEnabled:=false;
+      OutputPlugins[i].IsBlacklisted:=false;
+      OutputPlugins[i].Startaddress:=1;
+      OutputPlugins[i].Stopaddress:=512;
+    end;
+  end;
+  LReg.Free;
+
+  // Zuletzt genutzte Plugins rausfinden und aktivieren
+  DebugAdd('', false, false);
+  for i:=0 to length(OutputPlugins)-1 do
+  begin
+    if (OutputPlugins[i].IsEnabled and (not OutputPlugins[i].IsActive)) then
+    begin
+      DebugAdd('PLUGIN: Try to activate outputplugin "'+OutputPlugins[i].Filename+'"...');
+
+      OutputPlugins[i].Handle:=LoadLibrary(PChar(pcdimmerdirectory+'\plugins\'+OutputPlugins[i].Filename));
+      SplashProgress(1, 45+round(15*(i / length(OutputPlugins))), 100);
+      SplashAddText(_('Aktiviere ')+OutputPlugins[i].Name);
+      RefreshSplashText;
+      ProcCall := GetProcAddress(OutputPlugins[i].Handle,'DLLCreate');
+      if not Assigned(ProcCall) then
+        ProcCall := GetProcAddress(OutputPlugins[i].Handle,'DLLActivate');
+      if Assigned(ProcCall) then
+      begin
+        Proccall(@CallbackGetDLLValue,@CallbackGetDLLValueEvent,@CallbackGetDLLName,@CallbackSetDLLValue,@CallbackMessage);
+        DebugAddToLine(' - OK');
+      end else
+      begin
+        DebugAddToLine(' - ERROR');
+      end;
+      @OutputPlugins[i].SendData := GetProcAddress(OutputPlugins[i].Handle,'DLLSendData');
+      @OutputPlugins[i].IsSending := GetProcAddress(OutputPlugins[i].Handle,'DLLIsSending');
+      @OutputPlugins[i].SendMessage := GetProcAddress(OutputPlugins[i].Handle,'DLLSendMessage');
+    end;
+  end;
+
+  // Plugins starten
+  for i:=0 to length(OutputPlugins)-1 do
+  if OutputPlugins[i].IsEnabled and (not OutputPlugins[i].IsActive) then
+  begin
+    ProcCall2 := GetProcAddress(OutputPlugins[i].Handle,'DLLStart');
+    if Assigned(ProcCall2) then
+    begin
+      Proccall2;
+      OutputPlugins[i].IsActive:=true;
+    end;
+  end;
+  DebugAdd('', false, false);
+
+
+  ///////////////////////////////
+  // LETZTE WERTE WIEDERHERSTELLEN
+  ///////////////////////////////
+  // Letzte Werte wiederherstellen
+  if LastSessionWasCorrupt or startupwitholdscene then
+  begin
+    RestoreValueBackup;
+  end else
+  begin
+    for i:=1 to paramcount do
+    begin
+      if (paramstr(i)='/restorelastvalues') then
+      begin
+        RestoreLastValues:=true;
+        RestoreValueBackup;
+        break;
+      end;
+    end;
+  end;
+
+  SplashProgress(1, 75, 100);
+  SplashCaptioninfo(_('Werte an Plugins und Interfaces übergeben...'));
+  RefreshSplashText;
+
+  DebugAdd('PLUGIN: Sending values to all Inputplugins...');
+  for i:=0 to lastchan do
+    Senddata(i, data.ch[i], data.ch[i], 0);
+  DebugAddToLine(' - OK', false);
+  DebugAdd('', true, false);
 
   // Allen DLLs die aktuellen Werte zusenden
   DebugAdd('PLUGIN: Sending values to all Programplugins...');
-
   pluginsaktualisieren(Sender);
   DebugAddToLine(' - OK', false);
   DebugAdd('', true, false);
@@ -12679,27 +12735,6 @@ begin
       end;
     end;
     LReg.Free;
-  end;
-
-  ///////////////////////////////
-  // LETZTE WERTE WIEDERHERSTELLEN
-  ///////////////////////////////
-
-  // Letzte Werte wiederherstellen
-  if LastSessionWasCorrupt or startupwitholdscene then
-  begin
-    RestoreValueBackup;
-  end else
-  begin
-    for i:=1 to paramcount do
-    begin
-      if (paramstr(i)='/restorelastvalues') then
-      begin
-        RestoreLastValues:=true;
-        RestoreValueBackup;
-        break;
-      end;
-    end;
   end;
 
   SplashProgress(1, 77, 100);
@@ -13086,7 +13121,7 @@ begin
 
   SplashProgress(1, 80, 100);
   SplashCaptioninfo(_('Leeres Projekt erzeugen...'));
-  NewProject;
+  NewProject(true);
 
   debuglistbox.Items.SaveToFile(userdirectory+'\PC_DIMMER.log');
   SplashProgress(1, 85, 100);
@@ -13135,23 +13170,6 @@ begin
       SplashAddText(_('Lade Projekt...'));
       DebugAdd('FILE: Loading Projectfile: '+paramstr(i));
       openproject('', true);
-    end;
-  end;
-
-  // Letzte Werte wiederherstellen
-  if LastSessionWasCorrupt or startupwitholdscene then
-  begin
-    RestoreValueBackup;
-  end else
-  begin
-    for i:=1 to paramcount do
-    begin
-      if (paramstr(i)='/restorelastvalues') then
-      begin
-        RestoreLastValues:=true;
-        RestoreValueBackup;
-        break;
-      end;
     end;
   end;
 
@@ -16547,7 +16565,7 @@ begin
       begin
         if devices[j].autoscening then
         begin // Gerät soll autoscening anwenden
-          geraetesteuerung.set_color(devices[j].ID, autoszenen[i].R, autoszenen[i].G, autoszenen[i].B, autoszenen[i].fadetime, 0);
+          geraetesteuerung.set_color(devices[j].ID, autoszenen[i].R, autoszenen[i].G, autoszenen[i].B, autoszenen[i].A, autoszenen[i].W, autoszenen[i].fadetime, 0);
         end;
       end;
       break;
@@ -16620,15 +16638,15 @@ begin
             geraetesteuerung.set_channel(devices[j].ID,'R',geraetesteuerung.get_channel(devices[j].ID,'R'),geraetesteuerung.get_channel(devices[j].ID,'R'),0);
             geraetesteuerung.set_channel(devices[j].ID,'G',geraetesteuerung.get_channel(devices[j].ID,'G'),geraetesteuerung.get_channel(devices[j].ID,'G'),0);
             geraetesteuerung.set_channel(devices[j].ID,'B',geraetesteuerung.get_channel(devices[j].ID,'B'),geraetesteuerung.get_channel(devices[j].ID,'B'),0);
+            if (autoszenen[i].A>-1) and devices[j].hasAmber then
+              geraetesteuerung.set_channel(devices[j].ID,'A',geraetesteuerung.get_channel(devices[j].ID,'A'),geraetesteuerung.get_channel(devices[j].ID,'A'),0);
+            if (autoszenen[i].W>-1) and devices[j].hasWhite then
+              geraetesteuerung.set_channel(devices[j].ID,'W',geraetesteuerung.get_channel(devices[j].ID,'W'),geraetesteuerung.get_channel(devices[j].ID,'W'),0);
 
             geraetesteuerung.set_channel(devices[j].ID,'C',geraetesteuerung.get_channel(devices[j].ID,'C'),geraetesteuerung.get_channel(devices[j].ID,'C'),0);
             geraetesteuerung.set_channel(devices[j].ID,'M',geraetesteuerung.get_channel(devices[j].ID,'M'),geraetesteuerung.get_channel(devices[j].ID,'M'),0);
             geraetesteuerung.set_channel(devices[j].ID,'Y',geraetesteuerung.get_channel(devices[j].ID,'Y'),geraetesteuerung.get_channel(devices[j].ID,'Y'),0);
 
-            if devices[j].hasAmber then
-              geraetesteuerung.set_channel(devices[j].ID,'A',geraetesteuerung.get_channel(devices[j].ID,'A'),geraetesteuerung.get_channel(devices[j].ID,'A'),0);
-            if devices[j].hasWhite then
-              geraetesteuerung.set_channel(devices[j].ID,'W',geraetesteuerung.get_channel(devices[j].ID,'W'),geraetesteuerung.get_channel(devices[j].ID,'W'),0);
             if devices[j].hasUV then
               geraetesteuerung.set_channel(devices[j].ID,'UV',geraetesteuerung.get_channel(devices[j].ID,'UV'),geraetesteuerung.get_channel(devices[j].ID,'UV'),0);
           end else
@@ -18382,6 +18400,8 @@ begin
       mainform.AktuelleAutoszene.R:=mainform.autoszenen[j].R;
       mainform.AktuelleAutoszene.G:=mainform.autoszenen[j].G;
       mainform.AktuelleAutoszene.B:=mainform.autoszenen[j].B;
+      mainform.AktuelleAutoszene.A:=mainform.autoszenen[j].A;
+      mainform.AktuelleAutoszene.W:=mainform.autoszenen[j].W;
       mainform.AktuelleAutoszene.accuracy:=mainform.autoszenen[j].accuracy;
       mainform.AktuelleAutoszene.helligkeit:=mainform.autoszenen[j].helligkeit;
 
@@ -18396,6 +18416,8 @@ begin
         mainform.autoszenen[j].R:=mainform.AktuelleAutoszene.R;
         mainform.autoszenen[j].G:=mainform.AktuelleAutoszene.G;
         mainform.autoszenen[j].B:=mainform.AktuelleAutoszene.B;
+        mainform.autoszenen[j].A:=mainform.AktuelleAutoszene.A;
+        mainform.autoszenen[j].W:=mainform.AktuelleAutoszene.W;
         mainform.autoszenen[j].accuracy:=mainform.AktuelleAutoszene.accuracy;
         mainform.autoszenen[j].helligkeit:=mainform.AktuelleAutoszene.helligkeit;
       end;
@@ -24178,6 +24200,9 @@ var
   i,j,offset:integer;
   row,col,channelperrow:integer;
 begin
+  if combobox1.ItemIndex=-1 then
+    combobox1.itemindex:=3;
+
   if (faderpanelup and (y>Paintbox1.Height-258)) or (Y>(Paintbox1.Height-48)) then
   begin
     if not UserAccessGranted(2, false) then exit;
@@ -24223,6 +24248,8 @@ begin
           paintbox1.PopupMenu:=nil;
         end else if (grafischebuehnenansicht.ClickOnDevice(X,Y,Shift)>-1) or (grafischebuehnenansicht.ClickOnBuehnenansichtDevice(X,Y)>-1) then
         begin
+          grafischebuehnenansicht.ProcessorFriendlyRedraw:=true;
+
           paintbox1.PopupMenu:=nil;
 
           for i:=0 to length(mainform.devices)-1 do
@@ -24289,7 +24316,6 @@ begin
             grafischebuehnenansicht.ShowAuswahl:=true;
           end;
         end;
-        grafischebuehnenansicht.doimmediaterefresh:=true;
       end;
       1:  // Kanäle
       begin
@@ -24322,7 +24348,7 @@ end;
 procedure TMainform.PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
 var
-  i,j,k,l,value,col,row,channelperrow,fadergroup,offset:integer;
+  i,j,k,l,m,value,col,row,channelperrow,fadergroup,offset:integer;
   dobreak:boolean;
 begin
   if (faderpanelup and (Y>Paintbox1.Height-258)) or (Y>(Paintbox1.Height-48)) then
@@ -24401,9 +24427,10 @@ begin
       begin
         if not UserAccessGranted(2, false) then exit;
 
-        grafischebuehnenansicht.doimmediaterefresh:=(Shift=[ssLeft]);
+        grafischebuehnenansicht.dorefresh:=(Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]);
 
 /////////// DeviceHoverEffect
+        grafischebuehnenansicht.MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
         dobreak:=false;
         for i:=0 to length(mainform.devices)-1 do
         begin
@@ -24474,60 +24501,71 @@ begin
         begin
           if CheckBox3.Checked then exit;
 
-            if mainform.devices[grafischebuehnenansicht.MouseOnDevice].hasDimmer then
-            begin
-              for k:=0 to length(mainform.devices[grafischebuehnenansicht.MouseOnDevice].kanaltyp)-1 do
-              if lowercase(mainform.devices[grafischebuehnenansicht.MouseOnDevice].kanaltyp[k])='dimmer' then
-                Paintbox1.Hint:=mainform.devices[grafischebuehnenansicht.MouseOnDevice].Name+' ('+mainform.levelstr(255-mainform.data.ch[mainform.devices[grafischebuehnenansicht.MouseOnDevice].Startaddress+k])+'), Geräteicon'
+          if mainform.devices[grafischebuehnenansicht.MouseOnDevice].hasDimmer then
+          begin
+            for k:=0 to length(mainform.devices[grafischebuehnenansicht.MouseOnDevice].kanaltyp)-1 do
+            if lowercase(mainform.devices[grafischebuehnenansicht.MouseOnDevice].kanaltyp[k])='dimmer' then
+              Paintbox1.Hint:=mainform.devices[grafischebuehnenansicht.MouseOnDevice].Name+' ('+mainform.levelstr(255-mainform.data.ch[mainform.devices[grafischebuehnenansicht.MouseOnDevice].Startaddress+k])+'), Geräteicon'
+          end else
+          begin
+            Paintbox1.Hint:='Geräteicon, '+mainform.devices[grafischebuehnenansicht.MouseOnDevice].Name;
+          end;
+
+          if Shift = [ssLeft] then
+          begin
+            // Linke Maustaste
+            grafischebuehnenansicht.RedrawPictures:=true;
+
+            if (mainform.devices[grafischebuehnenansicht.MouseOnDevice].selected[grafischebuehnenansicht.MouseOnDeviceCopy]=false) then
+            begin // einzelnes Gerätebild verschieben
+              // Sender GeräteBild
+              mainform.devices[grafischebuehnenansicht.MouseOnDevice].Left[grafischebuehnenansicht.MouseOnDeviceCopy]:=X-round(mainform.devices[grafischebuehnenansicht.MouseOnDevice].picturesize/2);
+              mainform.devices[grafischebuehnenansicht.MouseOnDevice].Top[grafischebuehnenansicht.MouseOnDeviceCopy]:=Y-round(mainform.devices[grafischebuehnenansicht.MouseOnDevice].picturesize/2);
+
+              for m:=0 to length(mainform.Devices)-1 do
+              begin
+                if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[grafischebuehnenansicht.MouseOnDevice].ID)) then
+                begin
+                  mainform.Devices[m].left[grafischebuehnenansicht.MouseOnDeviceCopy]:=X-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixXPosition;
+                  mainform.Devices[m].top[grafischebuehnenansicht.MouseOnDeviceCopy]:=Y-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixYPosition;
+                end;
+              end;
+              // Sender GeräteBild Ende
             end else
             begin
-              Paintbox1.Hint:='Geräteicon, '+mainform.devices[grafischebuehnenansicht.MouseOnDevice].Name;
-            end;
-
-            if Shift = [ssLeft] then
-            begin
-              // Linke Maustaste
-              if (mainform.devices[grafischebuehnenansicht.MouseOnDevice].selected[grafischebuehnenansicht.MouseOnDeviceCopy]=false) then
-              begin // einzelnes Gerätebild verschieben
-                // Sender GeräteBild
-                mainform.devices[grafischebuehnenansicht.MouseOnDevice].Left[grafischebuehnenansicht.MouseOnDeviceCopy]:=X-round(mainform.devices[grafischebuehnenansicht.MouseOnDevice].picturesize/2);
-                mainform.devices[grafischebuehnenansicht.MouseOnDevice].Top[grafischebuehnenansicht.MouseOnDeviceCopy]:=Y-round(mainform.devices[grafischebuehnenansicht.MouseOnDevice].picturesize/2);
-                // Sender GeräteBild Ende
-              end else
+              // Andere GeräteBilder
+              for k:=0 to length(mainform.devices)-1 do
+              for l:=0 to length(mainform.devices[k].selected)-1 do
               begin
-                // Andere GeräteBilder
-                for k:=0 to length(mainform.devices)-1 do
-                for l:=0 to length(mainform.devices[k].selected)-1 do
+                if ((mainform.devices[k].selected[l])) then
                 begin
-                  if ((mainform.devices[k].selected[l])) then
+                  grafischebuehnenansicht.StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
+                  if not grafischebuehnenansicht.StopDeviceMoving then
                   begin
-                    grafischebuehnenansicht.StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
-                    if not grafischebuehnenansicht.StopDeviceMoving then
-                    begin
-                      mainform.devices[k].Left[l]:=mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X);
-                      mainform.devices[k].Top[l]:=mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
-                    end;
+                    mainform.devices[k].Left[l]:=mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X);
+                    mainform.devices[k].Top[l]:=mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
                   end;
                 end;
-                // Andere GeräteBilder Ende
-
-                // Andere Kanal-Bilder
-                for k:=0 to length(mainform.buehnenansichtdevices)-1 do
-                begin
-                  if ((mainform.buehnenansichtdevices[k].selected)) then
-                  begin
-                    grafischebuehnenansicht.StopDeviceMoving:=(mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Height);
-                    if not grafischebuehnenansicht.StopDeviceMoving then
-                    begin
-                      mainform.buehnenansichtdevices[k].left:=mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X);
-                      mainform.buehnenansichtdevices[k].top:=mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
-                    end;
-                  end;
-                end;
-                // Andere Kanal-Bilder Ende
               end;
-              // Ende von Linke Maustaste
+              // Andere GeräteBilder Ende
+
+              // Andere Kanal-Bilder
+              for k:=0 to length(mainform.buehnenansichtdevices)-1 do
+              begin
+                if ((mainform.buehnenansichtdevices[k].selected)) then
+                begin
+                  grafischebuehnenansicht.StopDeviceMoving:=(mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Height);
+                  if not grafischebuehnenansicht.StopDeviceMoving then
+                  begin
+                    mainform.buehnenansichtdevices[k].left:=mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X);
+                    mainform.buehnenansichtdevices[k].top:=mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
+                  end;
+                end;
+              end;
+              // Andere Kanal-Bilder Ende
             end;
+            // Ende von Linke Maustaste
+          end;
         end else if grafischebuehnenansicht.MouseOnBuehnenansichtDevice>-1 then
         begin
           if CheckBox3.Checked then exit;
@@ -24665,7 +24703,6 @@ begin
           end;
         end;
         end;
-        grafischebuehnenansicht.doimmediaterefresh:=true;
       end;
       1:  // Kanäle
       begin
@@ -24728,7 +24765,7 @@ end;
 procedure TMainform.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var
-  i,j,k,oldvalue,channel,offset,raster:integer;
+  i,j,k,m,oldvalue,channel,offset,raster:integer;
   ddfwindowposition:integer;
   toppos, leftpos:single;
 begin
@@ -24751,6 +24788,8 @@ begin
       0:  // Bühne
       begin
         if not UserAccessGranted(2) then exit;
+
+        grafischebuehnenansicht.ProcessorFriendlyRedraw:=false;
 
         grafischebuehnenansicht.MouseUpPoint.X:=X;
         grafischebuehnenansicht.MouseUpPoint.Y:=Y;
@@ -24873,7 +24912,7 @@ begin
                 mainform.buehnenansichtdevices[k].top:=round(toppos*raster);
                 mainform.buehnenansichtdevices[k].left:=round(leftpos*raster);
               end;
-              grafischebuehnenansicht.doimmediaterefresh:=true;
+              grafischebuehnenansicht.RedrawPictures:=true;
             end;
         end else if grafischebuehnenansicht.MouseOnBuehnenansichtDevice>-1 then
         begin
@@ -24904,9 +24943,27 @@ begin
           paintbox1.PopupMenu:=nil;
           if Button=mbRight then
           begin
+{
             mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name:=InputBox('Beschriftung für "'+mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name+'"','Bitte geben Sie eine neue Bezeichnung für das aktuelle Gerät ein:',mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name);
 
             for k:=0 to  mainform.Devices[grafischebuehnenansicht.MouseOnLabel].MaxChan-1 do
+              mainform.data.Names[mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Startaddress+k]:=mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name+': '+mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Kanalname[k];
+}
+            if mainform.Devices[grafischebuehnenansicht.MouseOnLabel].MatrixDeviceLevel=0 then
+              mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name:=InputBox(_('Beschriftung für "')+mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name+'"',_('Bitte geben Sie eine neue Bezeichnung für das aktuelle Gerät ein:'),mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name)
+            else begin
+              mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name:='[M] '+InputBox(_('Beschriftung für "')+mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name+'"',_('Bitte geben Sie eine neue Bezeichnung für das gewählte Matrix-Gerät ein:'),copy(mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name, 5, length(mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name)));
+
+              for m:=0 to length(mainform.Devices)-1 do
+              begin
+                if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[grafischebuehnenansicht.MouseOnLabel].ID)) then
+                begin
+                  mainform.Devices[m].Name:='[M '+inttostr(mainform.Devices[m].MatrixXPosition+1)+'x'+inttostr(mainform.Devices[m].MatrixYPosition+1)+'] '+copy(mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name, 5, length(mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name));
+                end;
+              end;
+            end;
+
+            for k:=0 to mainform.Devices[grafischebuehnenansicht.MouseOnLabel].MaxChan-1 do
               mainform.data.Names[mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Startaddress+k]:=mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Name+': '+mainform.Devices[grafischebuehnenansicht.MouseOnLabel].Kanalname[k];
           end;
         end else if grafischebuehnenansicht.MouseOnNumber>-1 then
@@ -24914,6 +24971,7 @@ begin
           paintbox1.PopupMenu:=nil;
           if Button=mbRight then
           begin
+{
             // Kanalnummer ändern
             oldvalue:=mainform.devices[grafischebuehnenansicht.MouseOnNumber].Startaddress;
             try
@@ -24926,6 +24984,31 @@ begin
                 mainform.devices[grafischebuehnenansicht.MouseOnNumber].Startaddress:=channel;
             except
               mainform.devices[grafischebuehnenansicht.MouseOnNumber].Startaddress:=oldvalue;
+            end;
+}
+            // Kanalnummer ändern
+            if mainform.Devices[grafischebuehnenansicht.MouseOnNumber].MatrixDeviceLevel=0 then
+            begin
+              try
+                channel:=strtoint(InputBox(_('Kanaleinstellung'),_('Welche Startadresse soll für dieses Gerät gelten:'),inttostr(mainform.devices[grafischebuehnenansicht.MouseOnNumber].Startaddress)));
+                geraetesteuerung.ChangeDeviceStartaddress(mainform.devices[grafischebuehnenansicht.MouseOnNumber].ID, channel);
+              except
+              end;
+            end else
+            begin
+              try
+                channel:=strtoint(InputBox(_('Kanaleinstellung'),_('Welche Startadresse soll für dieses Matrix-Gerät gelten:'),inttostr(mainform.devices[grafischebuehnenansicht.MouseOnNumber].Startaddress)));
+                geraetesteuerung.ChangeDeviceStartaddress(mainform.devices[grafischebuehnenansicht.MouseOnNumber].ID, channel);
+
+                for m:=0 to length(mainform.Devices)-1 do
+                begin
+                  if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[grafischebuehnenansicht.MouseOnNumber].ID)) then
+                  begin
+                    geraetesteuerung.ChangeDeviceStartaddress(mainform.Devices[m].ID, geraetesteuerung.GetMatrixDeviceStartAddress(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[m].MatrixXPosition, mainform.devices[m].MatrixYPosition));
+                  end;
+                end;
+              except
+              end;
             end;
           end;
         end else if grafischebuehnenansicht.MouseOnBuehnenansichtNumber>-1 then
@@ -24970,8 +25053,6 @@ begin
         grafischebuehnenansicht.MouseOnProgress:=-1;
         grafischebuehnenansicht.MouseOnBuehnenansichtProgress:=-1;
         grafischebuehnenansicht.MouseOnBuehnenansichtColor:=-1;
-
-        grafischebuehnenansicht.doimmediaterefresh:=true;
       end;
       1:  // Kanäle
       begin
@@ -25065,21 +25146,21 @@ procedure TMainform.CheckBox1MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   grafischebuehnenansicht.CheckBox1.Checked:=checkbox1.Checked;
-  grafischebuehnenansicht.doimmediaterefresh:=true;
+  grafischebuehnenansicht.RedrawPictures:=true;
 end;
 
 procedure TMainform.CheckBox2MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   grafischebuehnenansicht.CheckBox2.Checked:=checkbox2.Checked;
-  grafischebuehnenansicht.doimmediaterefresh:=true;
+  grafischebuehnenansicht.RedrawPictures:=true;
 end;
 
 procedure TMainform.CheckBox2KeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   grafischebuehnenansicht.CheckBox2.Checked:=checkbox2.Checked;
-  grafischebuehnenansicht.doimmediaterefresh:=true;
+  grafischebuehnenansicht.RedrawPictures:=true;
 end;
 
 procedure TMainform.CheckBox1KeyUp(Sender: TObject; var Key: Word;
@@ -25242,7 +25323,7 @@ begin
     0:  // Bühnenansicht
     begin
       grafischebuehnenansicht.RefreshTimer.enabled:=true;
-      grafischebuehnenansicht.doimmediaterefresh:=true;
+      grafischebuehnenansicht.RedrawPictures:=true;
       kontrollpanel.RefreshTimer.Enabled:=kontrollpanel.Showing;
 
       Paintbox1.Popupmenu:=grafischebuehnenansicht.PopupMenu1;
@@ -25777,7 +25858,7 @@ begin
         if i>lastchan then break;
 
         _MainformPreBuffer.Canvas.Pen.Style:=psSolid;
-        _MainformPreBuffer.Canvas.Pen.Color:=clBlue;
+        _MainformPreBuffer.Canvas.Pen.Color:=clBlue; //GetColor3(0,192,255,channel_value[i+1],clBlue,clYellow,clRed,255);
         _MainformPreBuffer.Canvas.MoveTo(i, _MainformPreBuffer.Height);
         _MainformPreBuffer.Canvas.LineTo(i, round(_MainformPreBuffer.Height-(_MainformPreBuffer.Height*(channel_value[i+1]/255))));
       end;
@@ -27212,6 +27293,12 @@ end;
 procedure TMainform.dxBarLargeButton8Click(Sender: TObject);
 begin
   close;
+end;
+
+procedure TMainform.TrackBar3Change(Sender: TObject);
+begin
+  grafischebuehnenansicht.Trackbar2.Position:=Trackbar3.Position;
+  grafischebuehnenansicht.Trackbar2Change(nil);
 end;
 
 end.

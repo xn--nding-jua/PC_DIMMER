@@ -637,9 +637,9 @@ begin
         end;
 
         // Zeit bis zum Erreichen des Sollwertes anzeigen
-        if ((t_amb-TempVor15Minuten)/15)>0 then
+        //if ((t_amb-TempVor15Minuten)/15)>0 then
         begin
-          ZeitBisSollwert:=(tempsoll.value-t_amb)/((t_amb-TempVor15Minuten)/15); // Zeit in Minuten bis Sollwert erreicht wird
+          ZeitBisSollwert:=(tempsoll.value-t_amb)/abs((t_amb-TempVor15Minuten)/15); // Zeit in Minuten bis Sollwert erreicht wird
           if ZeitBisSollwert<0 then
           begin
             TimeToSollwertLbl.caption:='...';
@@ -649,9 +649,11 @@ begin
             ZeitBisSollwert_min:=round(ZeitBisSollwert-(60*ZeitBisSollwert_h));
             TimeToSollwertLbl.caption:=inttostr(ZeitBisSollwert_h)+'h '+inttostr(ZeitBisSollwert_min)+'min'
           end;
+{
         end else
         begin
           TimeToSollwertLbl.caption:='...';
+}
         end;
       end;
       // Temperaturwerte und Kosten in CSV-Datei speichern

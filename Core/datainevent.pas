@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, Grids, Buttons, CheckLst, PngBitBtn, ExtCtrls, gnugettext,
-  pngimage, JvExControls, JvGradient;
+  pngimage, JvExControls, JvGradient, GR32, pcdutils;
 
 type
   Tdataineventfrm = class(TForm)
@@ -18,7 +18,6 @@ type
     GroupBox1: TGroupBox;
     DataGrid: TStringGrid;
     Panel5: TPanel;
-    okbtn: TButton;
     Panel7: TPanel;
     adddatainevent: TPngBitBtn;
     editdatainevent: TPngBitBtn;
@@ -75,6 +74,9 @@ type
     Label35: TLabel;
     Button5: TButton;
     Button6: TButton;
+    Panel26: TPanel;
+    okbtn: TButton;
+    PaintBox1: TPaintBox;
     procedure FormCreate(Sender: TObject);
 		procedure refreshList(line: integer);
     procedure editdataineventClick(Sender: TObject);
@@ -122,8 +124,10 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     { Private-Deklarationen }
+    DataInUniverseBuffer: TBitmap32;
     procedure FlipEntry(Source, Destination:integer);
   public
     { Public-Deklarationen }
@@ -179,6 +183,10 @@ begin
   DataGrid.cells[9,1]:='-';
   DataGrid.cells[10,1]:='-';
   DataGrid.cells[11,1]:='-';
+
+  DataInUniverseBuffer := TBitmap32.Create;
+  DataInUniverseBuffer.Width:=paintbox1.Width;
+  DataInUniverseBuffer.Height:=paintbox1.Height;
 end;
 
 procedure Tdataineventfrm.refreshList(line: integer);
@@ -1210,6 +1218,22 @@ begin
       DataGrid.cells[11,i+1]:=inttostr(lastdatainendvalue);
     end;
   end;
+
+  //DataIn-Universe zeichnen
+  DataInUniverseBuffer.Canvas.Pen.Style:=psSolid;
+  DataInUniverseBuffer.Canvas.Pen.Color:=clBlack;
+  DataInUniverseBuffer.Canvas.Brush.Style:=bsSolid;
+  DataInUniverseBuffer.Canvas.Brush.Color:=clBlack;
+
+  DataInUniverseBuffer.Canvas.Rectangle(0, 0, DataInUniverseBuffer.Width, DataInUniverseBuffer.Height);
+  for i:=0 to paintbox1.Width do
+  begin
+    DataInUniverseBuffer.Canvas.Pen.Style:=psSolid;
+    DataInUniverseBuffer.Canvas.Pen.Color:=GetColor3(0, 192, 255, mainform.data_in_channels[i+1], cllime, clyellow, clred, 255);
+    DataInUniverseBuffer.Canvas.MoveTo(i, DataInUniverseBuffer.Height);
+    DataInUniverseBuffer.Canvas.LineTo(i, round(DataInUniverseBuffer.Height-(DataInUniverseBuffer.Height*(mainform.data_in_channels[i+1]/255))));
+  end;
+  BitBlt(Paintbox1.Canvas.Handle,0,0,DataInUniverseBuffer.Width,DataInUniverseBuffer.Height,DataInUniverseBuffer.Canvas.Handle,0,0,SRCCOPY);
 end;
 
 procedure Tdataineventfrm.FormHide(Sender: TObject);
@@ -1349,6 +1373,12 @@ begin
       self.ParentWindow := GetDesktopWindow;
     end;
   end;
+end;
+
+procedure Tdataineventfrm.FormResize(Sender: TObject);
+begin
+  DataInUniverseBuffer.Width:= PaintBox1.Width;
+  DataInUniverseBuffer.Height:= PaintBox1.Height;
 end;
 
 end.

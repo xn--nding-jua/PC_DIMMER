@@ -438,7 +438,8 @@ type
     procedure set_group(GroupID: TGUID; channel:string; startvalue, endvalue, fadetime, delay:integer);overload;
     function get_channel(DeviceID: TGUID; channel:string):integer;
 
-    procedure set_color(DeviceID: TGUID; R, G, B:byte; Fadetime, Delay:Integer; Mode:Byte=7);
+    procedure set_color(DeviceID: TGUID; R, G, B:byte; Fadetime, Delay:Integer; Mode:Byte=7);overload;
+    procedure set_color(DeviceID: TGUID; R, G, B:byte; A,W:integer; Fadetime, Delay:Integer; Mode:Byte=7);overload;
     procedure set_shutter(DeviceID: TGUID; OpenOrClose:byte; Delaytime:integer=0);
     procedure set_prisma(DeviceID: TGUID; SingleOrTriple:byte; Delaytime:integer=0);
     procedure set_prismarot(DeviceID: TGUID; Value:integer; Fadetime:integer=0; Delaytime:integer=0);
@@ -4823,7 +4824,7 @@ begin
         geraetesteuerung.DevicePrototyp[i].StrobeMaxValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('MaxValue'));
         geraetesteuerung.DevicePrototyp[i].StrobeChannel:=XML.XML.Root.Items[j].Properties.Value('ChannelName');
       end;
-      if (XML.XML.Root.Items[j].Name='dimmer') or (XML.XML.Root.Items[j].Name='virtualrgbadimmer') then
+      if (XML.XML.Root.Items[j].Name='dimmer') or (XML.XML.Root.Items[j].Name='virtualrgbdimmer') or (XML.XML.Root.Items[j].Name='virtualrgbadimmer') or (XML.XML.Root.Items[j].Name='virtualrgbawdimmer') then
       begin // <dimmer>
         geraetesteuerung.DevicePrototyp[i].DimmerOffValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('OffValue'));
         geraetesteuerung.DevicePrototyp[i].DimmerMaxValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('MaxValue'));
@@ -4990,14 +4991,20 @@ end;
 procedure Tgeraetesteuerung.VSTMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  if Shift=[] then
+  if Shift=[ssLeft] then
   begin
     // Geräteselektion löschen
     mainform.DeSelectAllDevices;
+    VST.ClearSelection;
   end;
 end;
 
 procedure Tgeraetesteuerung.set_color(DeviceID: TGUID; R, G, B:byte; Fadetime, Delay:Integer; Mode:Byte=7);
+begin
+  set_color(DeviceID, R, G, B, -1, -1, Fadetime, Delay, Mode);
+end;
+
+procedure Tgeraetesteuerung.set_color(DeviceID: TGUID; R, G, B:byte; A,W:integer; Fadetime, Delay:Integer; Mode:Byte=7);
 var
   k, kanalwert,Rdiff,Gdiff,Bdiff,temp,temp2,bestcolor,bestcolor2:integer;
   Rdev,Gdev,Bdev,ra,ga,ba,aa:byte;
@@ -5178,6 +5185,10 @@ begin
       set_channel(DeviceID, 'R', -1, R, Fadetime, Delay);
       set_channel(DeviceID, 'G', -1, G, Fadetime, Delay);
       set_channel(DeviceID, 'B', -1, B, Fadetime, Delay);
+      if A>-1 then
+        set_channel(DeviceID, 'A', -1, A, Fadetime, Delay);
+      if W>-1 then
+        set_channel(DeviceID, 'W', -1, W, Fadetime, Delay);
 
       set_channel(DeviceID, 'C', -1, 255-R, Fadetime, Delay);
       set_channel(DeviceID, 'M', -1, 255-G, Fadetime, Delay);
@@ -7065,7 +7076,7 @@ begin
     end;
   end;
 
-  grafischebuehnenansicht.doimmediaterefresh:=true;
+  grafischebuehnenansicht.RedrawPictures:=true;
 end;
 
 procedure Tgeraetesteuerung.set_gobo1plus(DeviceID: TGUID; Delaytime:integer);
@@ -7248,7 +7259,7 @@ begin
 
         geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO1', -1, mainform.devices[i].gobolevels[intvalue], 0, 0);
 
-        grafischebuehnenansicht.doimmediaterefresh:=true;
+        grafischebuehnenansicht.RedrawPictures:=true;
       end;
         
       break;
@@ -7436,7 +7447,7 @@ begin
 
         geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO1', -1, mainform.devices[i].gobolevels[intvalue], 0, 0);
 
-        grafischebuehnenansicht.doimmediaterefresh:=true;
+        grafischebuehnenansicht.RedrawPictures:=true;
       end;
         
       break;
@@ -7624,7 +7635,7 @@ begin
 
         geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO2', -1, mainform.devices[i].gobolevels2[intvalue], 0, 0);
 
-        grafischebuehnenansicht.doimmediaterefresh:=true;
+        grafischebuehnenansicht.RedrawPictures:=true;
       end;
         
       break;
@@ -7812,7 +7823,7 @@ begin
 
         geraetesteuerung.set_channel(mainform.devices[i].ID, 'GOBO2', -1, mainform.devices[i].gobolevels2[intvalue], 0, 0);
 
-        grafischebuehnenansicht.doimmediaterefresh:=true;
+        grafischebuehnenansicht.RedrawPictures:=true;
       end;
         
       break;

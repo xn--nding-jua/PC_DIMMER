@@ -1043,8 +1043,8 @@ begin
   source:=Grouplistbox.ItemIndex;
   destination:=length(mainform.DeviceGroups)-1;
   mainform.DeviceGroups[destination].Active:=mainform.DeviceGroups[source].Active;
-  mainform.DeviceGroups[destination].ID:=mainform.DeviceGroups[source].ID;
-  mainform.DeviceGroups[destination].Name:=mainform.DeviceGroups[source].Name;
+  CreateGUID(mainform.DeviceGroups[destination].ID);
+  mainform.DeviceGroups[destination].Name:=mainform.DeviceGroups[source].Name+' - '+_('Kopie');
   mainform.DeviceGroups[destination].Beschreibung:=mainform.DeviceGroups[source].Beschreibung;
 
   setlength(mainform.DeviceGroups[destination].IDs,length(mainform.DeviceGroups[source].IDs));
@@ -1061,6 +1061,8 @@ begin
   mainform.DeviceGroups[destination].FanMode:=mainform.DeviceGroups[source].FanMode;
   mainform.DeviceGroups[destination].FanMorph:=mainform.DeviceGroups[source].FanMorph;
   mainform.DeviceGroups[destination].Delay:=mainform.DeviceGroups[source].Delay;
+
+  GroupListBox.Items.Add(mainform.DeviceGroups[destination].Name);
 end;
 
 end.

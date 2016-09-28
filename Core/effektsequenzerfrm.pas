@@ -581,6 +581,9 @@ begin
 
   if VST.SelectedCount=0 then exit;
 
+  // Effekt anhalten, falls er läuft
+  Button4Click(Button4);
+
   SomethingDeleted:=false;
   Differenz:=0;
   TempNode:=VST.GetFirst;
@@ -652,6 +655,9 @@ begin
   if not mainform.UserAccessGranted(1) then exit;
 
   if VST.SelectedCount=0 then exit;
+
+  // Effekt anhalten, falls er läuft
+  Button4Click(Button4);
 
   TempNode:=VST.GetFirst;
   while Assigned(TempNode) do
@@ -2829,6 +2835,26 @@ begin
               mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanValue[16]:=0;
             mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanDelay[16]:=lauflichtassistentform.lauflichtarray[i][j].delay;
             mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanFadetime[16]:=lauflichtassistentform.lauflichtarray[i][j].fadetime;
+
+            // A-Kanal eintragen
+            mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanActive[41]:=true;
+            if lauflichtassistentform.lauflichtarray[i][j].enabled then
+            begin
+              mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanValue[41]:=lauflichtassistentform.lauflichtarray[i][j].a;
+            end else
+              mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanValue[41]:=0;
+            mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanDelay[41]:=lauflichtassistentform.lauflichtarray[i][j].delay;
+            mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanFadetime[41]:=lauflichtassistentform.lauflichtarray[i][j].fadetime;
+
+            // W-Kanal eintragen
+            mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanActive[40]:=true;
+            if lauflichtassistentform.lauflichtarray[i][j].enabled then
+            begin
+              mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanValue[40]:=lauflichtassistentform.lauflichtarray[i][j].w;
+            end else
+              mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanValue[40]:=0;
+            mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanDelay[40]:=lauflichtassistentform.lauflichtarray[i][j].delay;
+            mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanFadetime[40]:=lauflichtassistentform.lauflichtarray[i][j].fadetime;
           end else
           begin
             // Standardkanal eintragen
@@ -2885,6 +2911,28 @@ begin
                 if lauflichtassistentform.lauflichtarray[i][j].enabled then
                 begin
                   mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanValue[k]:=lauflichtassistentform.lauflichtarray[i][j].b;
+                end else
+                  mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanValue[k]:=0;
+                mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanDelay[k]:=lauflichtassistentform.lauflichtarray[i][j].delay;
+                mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanFadetime[k]:=lauflichtassistentform.lauflichtarray[i][j].fadetime;
+              end;
+              if ('a'=lowercase(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(@lauflichtassistentform.lauflichtdevices[j])].kanaltyp[k])) then
+              begin
+                mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanActive[k]:=true;
+                if lauflichtassistentform.lauflichtarray[i][j].enabled then
+                begin
+                  mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanValue[k]:=lauflichtassistentform.lauflichtarray[i][j].a;
+                end else
+                  mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanValue[k]:=0;
+                mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanDelay[k]:=lauflichtassistentform.lauflichtarray[i][j].delay;
+                mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanFadetime[k]:=lauflichtassistentform.lauflichtarray[i][j].fadetime;
+              end;
+              if ('w'=lowercase(mainform.devices[geraetesteuerung.GetDevicePositionInDeviceArray(@lauflichtassistentform.lauflichtdevices[j])].kanaltyp[k])) then
+              begin
+                mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanActive[k]:=true;
+                if lauflichtassistentform.lauflichtarray[i][j].enabled then
+                begin
+                  mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanValue[k]:=lauflichtassistentform.lauflichtarray[i][j].w;
                 end else
                   mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanValue[k]:=0;
                 mainform.Effektsequenzereffekte[effectnodeindex].Effektschritte[length(mainform.effektsequenzereffekte[effectnodeindex].Effektschritte)-1].Devices[j].ChanDelay[k]:=lauflichtassistentform.lauflichtarray[i][j].delay;

@@ -3,7 +3,7 @@ object projekteigenschaftenform: Tprojekteigenschaftenform
   Top = 124
   BorderStyle = bsSingle
   Caption = 'Projekteigenschaften'
-  ClientHeight = 233
+  ClientHeight = 217
   ClientWidth = 369
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object projekteigenschaftenform: Tprojekteigenschaftenform
     Left = 8
     Top = 8
     Width = 353
-    Height = 185
+    Height = 169
     Caption = ' Projekteigenschaften bearbeiten '
     TabOrder = 0
     object Label1: TLabel
@@ -120,21 +120,10 @@ object projekteigenschaftenform: Tprojekteigenschaftenform
       Height = 21
       TabOrder = 2
     end
-    object CheckBox1: TCheckBox
-      Left = 8
-      Top = 160
-      Width = 209
-      Height = 17
-      Caption = 'Automatisch Computernutzer eintragen'
-      Checked = True
-      State = cbChecked
-      TabOrder = 3
-      OnMouseUp = CheckBox1MouseUp
-    end
   end
   object Button1: TButton
     Left = 16
-    Top = 200
+    Top = 184
     Width = 75
     Height = 25
     Caption = 'OK'

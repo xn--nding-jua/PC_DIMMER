@@ -1203,7 +1203,7 @@ begin
   begin
     change(Paintbox1);
   end;
-  grafischebuehnenansicht.doimmediaterefresh:=true;
+  grafischebuehnenansicht.RedrawPictures:=true;
 end;
 
 procedure Tsidebarform.Button3Click(Sender: TObject);

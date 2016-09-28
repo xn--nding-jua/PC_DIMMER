@@ -717,7 +717,7 @@ begin
         geraetesteuerung.DevicePrototyp[i].StrobeMaxValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('MaxValue'));
         geraetesteuerung.DevicePrototyp[i].StrobeChannel:=XML.XML.Root.Items[j].Properties.Value('ChannelName');
       end;
-      if (XML.XML.Root.Items[j].Name='dimmer') or (XML.XML.Root.Items[j].Name='virtualrgbadimmer') then
+      if (XML.XML.Root.Items[j].Name='dimmer') or (XML.XML.Root.Items[j].Name='virtualrgbdimmer') or (XML.XML.Root.Items[j].Name='virtualrgbadimmer') or (XML.XML.Root.Items[j].Name='virtualrgbawdimmer') then
       begin // <dimmer>
         geraetesteuerung.DevicePrototyp[i].DimmerOffValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('OffValue'));
         geraetesteuerung.DevicePrototyp[i].DimmerMaxValue:=strtoint(XML.XML.Root.Items[j].Properties.Value('MaxValue'));

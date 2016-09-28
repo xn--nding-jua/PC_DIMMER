@@ -1,10 +1,10 @@
 object autoszeneform: Tautoszeneform
-  Left = 439
-  Top = 109
+  Left = 779
+  Top = 125
   BorderStyle = bsSingle
   Caption = 'Automatikszene'
   ClientHeight = 290
-  ClientWidth = 497
+  ClientWidth = 577
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -155,7 +155,7 @@ object autoszeneform: Tautoszeneform
   object Shape4: TShape
     Left = 0
     Top = 249
-    Width = 497
+    Width = 577
     Height = 41
     Align = alBottom
     Pen.Style = psClear
@@ -174,13 +174,13 @@ object autoszeneform: Tautoszeneform
   object Shape2: TShape
     Left = 0
     Top = 248
-    Width = 497
+    Width = 601
     Height = 1
   end
   object GroupBox1: TGroupBox
     Left = 8
     Top = 64
-    Width = 481
+    Width = 561
     Height = 177
     Caption = ' Automatikszene bearbeiten '
     TabOrder = 0
@@ -341,6 +341,44 @@ object autoszeneform: Tautoszeneform
       TabOrder = 9
       OnMouseMove = HSLColorPicker1MouseMove
     end
+    object usea_checkbox: TCheckBox
+      Left = 472
+      Top = 152
+      Width = 33
+      Height = 17
+      Caption = 'A'
+      TabOrder = 10
+    end
+    object usew_checkbox: TCheckBox
+      Left = 512
+      Top = 152
+      Width = 41
+      Height = 17
+      Caption = 'W'
+      TabOrder = 11
+    end
+    object a_slider: TScrollBar
+      Left = 472
+      Top = 22
+      Width = 17
+      Height = 123
+      Kind = sbVertical
+      Max = 255
+      PageSize = 0
+      Position = 255
+      TabOrder = 12
+    end
+    object w_slider: TScrollBar
+      Left = 512
+      Top = 22
+      Width = 17
+      Height = 123
+      Kind = sbVertical
+      Max = 255
+      PageSize = 0
+      Position = 255
+      TabOrder = 13
+    end
   end
   object Button1: TButton
     Left = 16
@@ -364,7 +402,7 @@ object autoszeneform: Tautoszeneform
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 497
+    Width = 577
     Height = 57
     Align = alTop
     BevelOuter = bvNone
@@ -373,7 +411,7 @@ object autoszeneform: Tautoszeneform
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 497
+      Width = 577
       Height = 57
       Style = grVertical
       StartColor = clWhite

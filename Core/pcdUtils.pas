@@ -32,6 +32,9 @@ function ThreadPriorityToInt(APriority: TThreadPriority): integer;
 
 function PNGToBitmap32(DstBitmap: TBitmap32; Png: TPngObject): Boolean;
 
+function GetColor2(Min, Max, Index: integer; MinColor, MaxColor:TColor; Brightness: Byte):TColor;
+function GetColor3(Min, Mean, Max, Index: integer; MinColor, MeanColor, MaxColor:TColor; Brightness: Byte):TColor;
+
 implementation
 
 uses
@@ -461,6 +464,66 @@ begin
       end;
     ptmNone: Result := False;
   end;
+end;
+
+function GetColor2(Min, Max, Index: integer; MinColor, MaxColor:TColor; Brightness: Byte):TColor;
+var
+  Rmin,Gmin,Bmin, Rmax, Gmax, Bmax: Byte;
+  Rout, Gout, Bout:Double;
+begin
+  // Farben zwischen StartColor und EndColor automatisch in Bezug Min, Max und Index abstufen
+  TColor2RGB(MinColor, Rmin, Gmin, Bmin);
+  TColor2RGB(MaxColor, Rmax, Gmax, Bmax);
+
+  if (Max=Min) or ((Max-Min)=0) then
+  begin
+    Rout:=Rmin;
+    Gout:=Gmin;
+    Bout:=Bmin;
+  end else
+  begin
+    // Interpolation über die eingebenen Werte und Berechnung der neuen Farbe
+    Rout:=(Rmin-Rmax)*(   (Index-Max)   /   (Min-Max)   )+Rmax;
+    Gout:=(Gmin-Gmax)*(   (Index-Max)   /   (Min-Max)   )+Gmax;
+    Bout:=(Bmin-Bmax)*(   (Index-Max)   /   (Min-Max)   )+Bmax;
+  end;
+
+  result:=RGB2TColor(round(Rout*Brightness/255), round(Gout*Brightness/255), round(Bout*Brightness/255));
+end;
+
+function GetColor3(Min, Mean, Max, Index: integer; MinColor, MeanColor, MaxColor:TColor; Brightness: Byte):TColor;
+var
+  Rmin,Gmin,Bmin, Rmean,Gmean,Bmean, Rmax, Gmax, Bmax: Byte;
+  Rout, Gout, Bout:Double;
+begin
+  // Farben zwischen StartColor und EndColor automatisch in Bezug Min, Max und Index abstufen
+  TColor2RGB(MinColor, Rmin, Gmin, Bmin);
+  TColor2RGB(MeanColor, Rmean, Gmean, Bmean);
+  TColor2RGB(MaxColor, Rmax, Gmax, Bmax);
+
+  if (Max=Min) or ((Max-Min)=0) then
+  begin
+    Rout:=Rmin;
+    Gout:=Gmin;
+    Bout:=Bmin;
+  end else
+  begin
+    if Index<Mean then
+    begin
+      // Interpolation über die eingebenen Werte und Berechnung der neuen Farbe
+      Rout:=(Rmin-Rmean)*(   (Index-Mean)   /   (Min-Mean)   )+Rmean;
+      Gout:=(Gmin-Gmean)*(   (Index-Mean)   /   (Min-Mean)   )+Gmean;
+      Bout:=(Bmin-Bmean)*(   (Index-Mean)   /   (Min-Mean)   )+Bmean;
+    end else
+    begin
+      // Interpolation über die eingebenen Werte und Berechnung der neuen Farbe
+      Rout:=(Rmean-Rmax)*(   (Index-Max)   /   (Mean-Max)   )+Rmax;
+      Gout:=(Gmean-Gmax)*(   (Index-Max)   /   (Mean-Max)   )+Gmax;
+      Bout:=(Bmean-Bmax)*(   (Index-Max)   /   (Mean-Max)   )+Bmax;
+    end;
+  end;
+
+  result:=RGB2TColor(round(Rout*Brightness/255), round(Gout*Brightness/255), round(Bout*Brightness/255));
 end;
 
 end.

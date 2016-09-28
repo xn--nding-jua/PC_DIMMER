@@ -4208,6 +4208,8 @@ begin
   mainform.AktuelleAutoszene.R:=255;
   mainform.AktuelleAutoszene.G:=0;
   mainform.AktuelleAutoszene.B:=0;
+  mainform.AktuelleAutoszene.A:=-1;
+  mainform.AktuelleAutoszene.W:=-1;
   mainform.AktuelleAutoszene.accuracy:=1;
   mainform.AktuelleAutoszene.helligkeit:=255;
 
@@ -4222,6 +4224,8 @@ begin
     mainform.autoszenen[length(mainform.autoszenen)-1].R:=mainform.AktuelleAutoszene.R;
     mainform.autoszenen[length(mainform.autoszenen)-1].G:=mainform.AktuelleAutoszene.G;
     mainform.autoszenen[length(mainform.autoszenen)-1].B:=mainform.AktuelleAutoszene.B;
+    mainform.autoszenen[length(mainform.autoszenen)-1].A:=mainform.AktuelleAutoszene.A;
+    mainform.autoszenen[length(mainform.autoszenen)-1].W:=mainform.AktuelleAutoszene.W;
     mainform.autoszenen[length(mainform.autoszenen)-1].accuracy:=mainform.AktuelleAutoszene.accuracy;
     mainform.autoszenen[length(mainform.autoszenen)-1].helligkeit:=mainform.AktuelleAutoszene.helligkeit;
 

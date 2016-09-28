@@ -1,8 +1,8 @@
 object grafischebuehnenansicht: Tgrafischebuehnenansicht
-  Left = 1037
-  Top = 204
+  Left = 711
+  Top = 143
   Width = 768
-  Height = 471
+  Height = 463
   Caption = 'Grafische B'#252'hnenansicht'
   Color = clWhite
   TransparentColorValue = 8388863
@@ -1762,7 +1762,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
     Left = 560
     Top = 0
     Width = 192
-    Height = 432
+    Height = 424
     Align = alRight
     Alignment = taRightJustify
     AutoSize = True
@@ -2423,6 +2423,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           ItemIndex = 3
           TabOrder = 14
           Text = '32px'
+          OnSelect = ComboBox1Select
           Items.Strings = (
             '8px'
             '16px'
@@ -2536,7 +2537,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Width = 119
           Height = 21
           Ctl3D = True
-          Max = 192
+          Max = 255
           Min = 16
           ParentCtl3D = False
           Position = 32
@@ -2545,16 +2546,6 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           TickMarks = tmBoth
           TickStyle = tsNone
           OnChange = Trackbar1Change
-        end
-        object RotateBtn: TButton
-          Left = 0
-          Top = 216
-          Width = 169
-          Height = 25
-          Caption = 'Icon um 90'#176' Drehen'
-          TabOrder = 2
-          Visible = False
-          OnClick = RotateBtnClick
         end
         object FlipHorBtn: TButton
           Left = 72
@@ -2568,7 +2559,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Font.Name = 'Wingdings'
           Font.Style = []
           ParentFont = False
-          TabOrder = 3
+          TabOrder = 2
           Visible = False
           OnClick = FlipHorBtnClick
         end
@@ -2584,7 +2575,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Font.Name = 'Wingdings'
           Font.Style = []
           ParentFont = False
-          TabOrder = 4
+          TabOrder = 3
           Visible = False
           OnClick = FlipVerBtnClick
         end
@@ -2594,9 +2585,9 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Width = 118
           Height = 21
           Ctl3D = True
-          Max = 360
+          Max = 359
           ParentCtl3D = False
-          TabOrder = 5
+          TabOrder = 4
           ThumbLength = 16
           TickMarks = tmBoth
           TickStyle = tsNone
@@ -2797,7 +2788,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
     Left = 0
     Top = 0
     Width = 560
-    Height = 432
+    Height = 424
     Align = alClient
     AutoSize = True
     BevelOuter = bvNone
@@ -2808,7 +2799,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
       Left = 0
       Top = 0
       Width = 560
-      Height = 432
+      Height = 424
       Align = alClient
       AutoSize = True
       IncrementalDisplay = True
@@ -2822,7 +2813,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
       Left = 0
       Top = 0
       Width = 560
-      Height = 432
+      Height = 424
       Align = alClient
       Color = clWhite
       ParentColor = False

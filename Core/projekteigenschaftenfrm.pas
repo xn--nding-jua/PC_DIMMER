@@ -24,9 +24,6 @@ type
     Label9: TLabel;
     Label10: TLabel;
     Label11: TLabel;
-    CheckBox1: TCheckBox;
-    procedure CheckBox1MouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
   private
     { Private-Deklarationen }
   public
@@ -41,11 +38,5 @@ implementation
 uses About;
 
 {$R *.dfm}
-
-procedure Tprojekteigenschaftenform.CheckBox1MouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
-  edit3.text:=aboutbox.JvComputerInfoEx1.Identification.LocalUserName;
-end;
 
 end.

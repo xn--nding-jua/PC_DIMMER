@@ -944,7 +944,7 @@ begin
       geraetesteuerung.set_gobo2minus(mainform.Devices[i].ID);
   end;
 
-  grafischebuehnenansicht.doimmediaterefresh:=true;
+  grafischebuehnenansicht.RedrawPictures:=true;
 end;
 
 procedure Ttouchscreenform.prevcolor1btnClick(Sender: TObject);
@@ -1212,7 +1212,7 @@ begin
     if (BtnDown.X>-1) and (BtnDown.Y>-1) and ((BtnDown.Y*maxbtns+BtnDown.Y+BtnDown.X)<length(mainform.DeviceSelected)) then
       mainform.DeviceSelected[BtnDown.Y*maxbtns+BtnDown.Y+BtnDown.X]:=not mainform.DeviceSelected[BtnDown.Y*maxbtns+BtnDown.Y+BtnDown.X];
     mainform.DeviceSelectionChanged(nil);
-    grafischebuehnenansicht.doimmediaterefresh:=true;
+    grafischebuehnenansicht.RedrawPictures:=true;
 
     BtnDown.Y:=-1;
     BtnDown.X:=-1;
@@ -1220,7 +1220,7 @@ begin
   begin
     if (BtnDown.X>-1) and (BtnDown.Y>-1) and ((BtnDown.Y*maxbtns+BtnDown.Y+BtnDown.X)<length(mainform.devicegroups)) then
       mainform.SelectDeviceGroup(mainform.devicegroups[BtnDown.Y*maxbtns+BtnDown.Y+BtnDown.X].ID, Shift=[ssCtrl]);
-    grafischebuehnenansicht.doimmediaterefresh:=true;
+    grafischebuehnenansicht.RedrawPictures:=true;
 
     BtnDown.Y:=-1;
     BtnDown.X:=-1;
@@ -1325,7 +1325,7 @@ begin
         end;
       end;
     end;
-    grafischebuehnenansicht.doimmediaterefresh:=true;
+    grafischebuehnenansicht.RedrawPictures:=true;
   end;
 end;
 

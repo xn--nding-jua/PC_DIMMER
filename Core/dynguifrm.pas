@@ -612,7 +612,7 @@ begin
       geraetesteuerung.set_gobo1plus(mainform.devices[i].ID, 0);
   end;
 
-  grafischebuehnenansicht.doimmediaterefresh:=true;
+  grafischebuehnenansicht.RedrawPictures:=true;
 end;
 
 procedure Tdynguiform.nextcolor1btnClick(Sender: TObject);
@@ -685,7 +685,7 @@ begin
       geraetesteuerung.set_gobo2plus(mainform.devices[i].ID, 0);
   end;
 
-  grafischebuehnenansicht.doimmediaterefresh:=true;
+  grafischebuehnenansicht.RedrawPictures:=true;
 end;
 
 procedure Tdynguiform.prevgobo1btnClick(Sender: TObject);
@@ -698,7 +698,7 @@ begin
       geraetesteuerung.set_gobo1minus(mainform.devices[i].ID, 0);
   end;
 
-  grafischebuehnenansicht.doimmediaterefresh:=true;
+  grafischebuehnenansicht.RedrawPictures:=true;
 end;
 
 procedure Tdynguiform.prevgobo2btnClick(Sender: TObject);
@@ -711,7 +711,7 @@ begin
       geraetesteuerung.set_gobo2minus(mainform.devices[i].ID, 0);
   end;
 
-  grafischebuehnenansicht.doimmediaterefresh:=true;
+  grafischebuehnenansicht.RedrawPictures:=true;
 end;
 
 procedure Tdynguiform.prevcolor1btnClick(Sender: TObject);
@@ -1072,7 +1072,7 @@ begin
     end;
   end;
   
-  grafischebuehnenansicht.doimmediaterefresh:=true;
+  grafischebuehnenansicht.RedrawPictures:=true;
 end;
 
 procedure Tdynguiform.FormResize(Sender: TObject);

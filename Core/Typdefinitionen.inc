@@ -576,6 +576,8 @@
     R: byte;
     G: byte;
     B: byte;
+    A: integer;
+    W: integer;
     accuracy:byte;
     helligkeit:byte;
     Category:string[255];

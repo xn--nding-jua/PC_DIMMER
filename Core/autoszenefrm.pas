@@ -37,6 +37,10 @@ type
     Shape4: TShape;
     Shape2: TShape;
     HSLColorPicker1: THSLRingPicker;
+    usea_checkbox: TCheckBox;
+    usew_checkbox: TCheckBox;
+    a_slider: TScrollBar;
+    w_slider: TScrollBar;
     procedure FormShow(Sender: TObject);
     procedure scenefade_time_hChange(Sender: TObject);
     procedure scenefade_time_hKeyUp(Sender: TObject; var Key: Word;
@@ -91,6 +95,12 @@ begin
   Shape1.Brush.Color:=RGB2TColor(mainform.AktuelleAutoszene.R,mainform.AktuelleAutoszene.G,mainform.AktuelleAutoszene.B);
   buttonfarbe.Color:=RGB2TColor(mainform.AktuelleAutoszene.R,mainform.AktuelleAutoszene.G,mainform.AktuelleAutoszene.B);
   HSLColorPicker1.SelectedColor:=RGB2TColor(mainform.AktuelleAutoszene.R,mainform.AktuelleAutoszene.G,mainform.AktuelleAutoszene.B);
+  if mainform.AktuelleAutoszene.A>-1 then
+    a_slider.position:=255-mainform.AktuelleAutoszene.A;
+  if mainform.AktuelleAutoszene.W>-1 then
+    w_slider.position:=255-mainform.AktuelleAutoszene.W;
+  usea_checkbox.checked:=(mainform.AktuelleAutoszene.A>-1);
+  usew_checkbox.checked:=(mainform.AktuelleAutoszene.W>-1);
 
   // Fadezeit in Dialogfeld schreiben
   t:=mainform.AktuelleAutoszene.fadetime;
@@ -139,6 +149,14 @@ begin
   mainform.AktuelleAutoszene.R:=R;
   mainform.AktuelleAutoszene.G:=G;
   mainform.AktuelleAutoszene.B:=B;
+  if usea_checkbox.checked then
+    mainform.AktuelleAutoszene.A:=255-a_slider.position
+  else
+    mainform.AktuelleAutoszene.A:=-1;
+  if usew_checkbox.checked then
+    mainform.AktuelleAutoszene.W:=255-w_slider.position
+  else
+    mainform.AktuelleAutoszene.W:=-1;
 
   mainform.AktuelleAutoszene.accuracy:=Combobox1.ItemIndex;
   mainform.AktuelleAutoszene.helligkeit:=Scrollbar1.Position;

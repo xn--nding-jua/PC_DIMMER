@@ -2,7 +2,7 @@ object effektsequenzer: Teffektsequenzer
   Left = 622
   Top = 124
   Width = 690
-  Height = 591
+  Height = 600
   Caption = 'Effektsequenzer'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -62,13 +62,13 @@ object effektsequenzer: Teffektsequenzer
     Left = 0
     Top = 0
     Width = 392
-    Height = 552
+    Height = 561
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
     object Panel2: TPanel
       Left = 0
-      Top = 311
+      Top = 320
       Width = 392
       Height = 241
       Align = alBottom
@@ -1315,7 +1315,7 @@ object effektsequenzer: Teffektsequenzer
       Left = 0
       Top = 0
       Width = 392
-      Height = 286
+      Height = 295
       Align = alClient
       Colors.UnfocusedSelectionColor = clInactiveBorder
       Colors.UnfocusedSelectionBorderColor = clInactiveBorder
@@ -1362,7 +1362,7 @@ object effektsequenzer: Teffektsequenzer
     end
     object Panel4: TPanel
       Left = 0
-      Top = 286
+      Top = 295
       Width = 392
       Height = 25
       Align = alBottom
@@ -1768,7 +1768,7 @@ object effektsequenzer: Teffektsequenzer
     Left = 392
     Top = 0
     Width = 282
-    Height = 552
+    Height = 561
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 0

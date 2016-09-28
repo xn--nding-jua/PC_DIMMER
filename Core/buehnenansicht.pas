@@ -7,7 +7,7 @@ uses
   Dialogs, ComCtrls, StdCtrls, ExtCtrls, Mask, Menus, Buttons, Registry,
   JvComponent, JvZlibMultiple, JvExExtCtrls, Printers, JvOfficeColorPanel,
   jpeg, JvComponentBase, JvExtComponent, JvPanel, JvAppStorage,
-  JvAppXMLStorage, ddfwindowfrm, PngBitBtn, Grids,
+  JvAppXMLStorage, ddfwindowfrm, PngBitBtn, Grids, pcdutils,
   JvExMask, JvSpin, gnugettext, pngimage, Math, GR32;
 
 const
@@ -112,7 +112,6 @@ type
     Label23: TLabel;
     Button6: TButton;
     TrackBar1: TTrackBar;
-    RotateBtn: TButton;
     FlipHorBtn: TButton;
     FlipVerBtn: TButton;
     Bevel2: TBevel;
@@ -174,9 +173,6 @@ type
     procedure GroeFarbanzeige1Click(Sender: TObject);
     procedure NewPanel;
     procedure Trackbar1Change(Sender: TObject);
-//    procedure searchpicture(Device: integer);
-//    procedure device_searchpicture(Device: integer; DeviceInStageView: integer);
-    procedure RotateBtnClick(Sender: TObject);
     procedure SmoothRotate(var aPng: TPNGObject; Angle: Extended);
     procedure FlipHorBtnClick(Sender: TObject);
     procedure FlipVerBtnClick(Sender: TObject);
@@ -218,13 +214,14 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure FormDestroy(Sender: TObject);
     procedure TrackBar2Change(Sender: TObject);
+    procedure ComboBox1Select(Sender: TObject);
   private
     { Private-Deklarationen }
     Puffer1, Puffer2:TBitmap;
     startingup:boolean;
 
     LastDevice, LastBuehnenansichtdevice:integer;
-    Counter, Counter2:integer;
+    Counter:integer;
     oldvalues:array[1..8192] of byte;
     SelectedIcons:array of TSelectedIcons;
     pngobject:TPNGObject;
@@ -244,7 +241,8 @@ type
     MouseDownPoint,MouseUpPoint:TPoint;
     ShowAuswahl:boolean;
     Auswahl:TRect;
-    doimmediaterefresh:boolean;
+    RedrawPictures:boolean;
+    ProcessorFriendlyRedraw:boolean;
     StopDeviceMoving:boolean;
     
     dorefresh:boolean;
@@ -596,7 +594,7 @@ begin
     mainform.buehnenansicht_background[BankSelect.ItemIndex]:=OpenDialog1.Filename;
   end;
 
-  doimmediaterefresh:=true;
+  RedrawPictures:=true;
 end;
 
 procedure Tgrafischebuehnenansicht.SpeedButton4Click(Sender: TObject);
@@ -654,7 +652,7 @@ begin
   LReg.CloseKey;
   LReg.Free;
 
-  doimmediaterefresh:=true;
+  RedrawPictures:=true;
 
   mainform.CheckBox1.Checked:=Checkbox1.Checked;
 end;
@@ -718,10 +716,6 @@ procedure Tgrafischebuehnenansicht.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   MSGSave;
-
-  mainform.buehnenansichtsetup.Buehnenansicht_width:=grafischebuehnenansicht.Width;
-  mainform.buehnenansichtsetup.Buehnenansicht_height:=grafischebuehnenansicht.Height;
-  mainform.buehnenansichtsetup.Buehnenansicht_panel:=panel1.Visible;
 end;
 
 procedure Tgrafischebuehnenansicht.FormShow(Sender: TObject);
@@ -837,6 +831,20 @@ begin
           begin
             checkbox4.checked:=true;
           end;
+
+
+          if LReg.ValueExists('GridSize') then
+          begin
+            if LReg.ReadInteger('GridSize')<>Combobox1.Itemindex then
+            begin
+              Combobox1.Itemindex:=LReg.ReadInteger('GridSize');
+              mainform.ComboBox1.ItemIndex:=Combobox1.Itemindex;
+            end;
+          end else
+          begin
+            Combobox1.Itemindex:=3;
+            mainform.ComboBox1.ItemIndex:=Combobox1.Itemindex;
+          end;
 				end;
       end;
     end;
@@ -929,6 +937,8 @@ begin
     paintbox1.PopupMenu:=nil;
   end else if (ClickOnDevice(X,Y, Shift)>-1) or (ClickOnBuehnenansichtDevice(X,Y)>-1) then
   begin
+    ProcessorFriendlyRedraw:=true;
+
     paintbox1.PopupMenu:=nil;
 
     for i:=0 to length(mainform.devices)-1 do
@@ -1007,11 +1017,10 @@ var
 begin
   if not mainform.UserAccessGranted(2, false) then exit;
 
-  doimmediaterefresh:=(Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]);
+  dorefresh:=(Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]);
 
-/////////// DeviceHoverEffect
+  /////////// DeviceHoverEffect
   MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
-
   dobreak:=false;
   for i:=0 to length(mainform.devices)-1 do
   begin
@@ -1050,8 +1059,8 @@ begin
     geraetesteuerung.set_color(LastMouseOverHighlightDevice.ID, LastMouseOverHighlightDevice.R, LastMouseOverHighlightDevice.G, LastMouseOverHighlightDevice.B, 150, 0);
     geraetesteuerung.set_shutter(LastMouseOverHighlightDevice.ID, LastMouseOverHighlightDevice.ShutterOpenOrClose);
     geraetesteuerung.set_dimmer(LastMouseOverHighlightDevice.ID, LastMouseOverHighlightDevice.Dimmer, 150, 0);
-    geraetesteuerung.set_channel(LastMouseOverHighlightDevice.ID, 'a', LastMouseOverHighlightDevice.A, 150, 0);
-    geraetesteuerung.set_channel(LastMouseOverHighlightDevice.ID, 'w', LastMouseOverHighlightDevice.W, 150, 0);
+    geraetesteuerung.set_channel(LastMouseOverHighlightDevice.ID, 'a', -1, LastMouseOverHighlightDevice.A, 150, 0);
+    geraetesteuerung.set_channel(LastMouseOverHighlightDevice.ID, 'w', -1, LastMouseOverHighlightDevice.W, 150, 0);
 
     // Aktuelle Werte speichern
     if not IsEqualGUID(LastMouseOverHighlightDevice.ID, MouseOnDeviceID) then
@@ -1072,8 +1081,8 @@ begin
       geraetesteuerung.set_shutter(MouseOnDeviceID, 255);
       geraetesteuerung.set_color(MouseOnDeviceID, 255, 255, 255, 150, 0);
       geraetesteuerung.set_dimmer(MouseOnDeviceID, 255, 150, 0);
-      geraetesteuerung.set_channel(MouseOnDeviceID, 'a', 255, 150, 0);
-      geraetesteuerung.set_channel(MouseOnDeviceID, 'w', 255, 150, 0);
+      geraetesteuerung.set_channel(MouseOnDeviceID, 'a', -1, 255, 150,0 );
+      geraetesteuerung.set_channel(MouseOnDeviceID, 'w', -1, 255, 150,0 );
     end;
   end;
 ////////////
@@ -1095,6 +1104,8 @@ begin
     if (Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]) then
     begin
       // Linke Maustaste
+      RedrawPictures:=true;
+
       if (mainform.devices[MouseOnDevice].selected[MouseOnDeviceCopy]=false) then
       begin // einzelnes Gerätebild verschieben
         // Sender GeräteBild
@@ -1314,6 +1325,8 @@ var
 begin
   if not mainform.UserAccessGranted(2) then exit;
 
+  ProcessorFriendlyRedraw:=false;
+
   MouseUpPoint.X:=X;
   MouseUpPoint.Y:=Y;
 
@@ -1435,8 +1448,9 @@ begin
         mainform.buehnenansichtdevices[k].top:=round(toppos*raster);
         mainform.buehnenansichtdevices[k].left:=round(leftpos*raster);
       end;
-      doimmediaterefresh:=true;
     end;
+    ProcessorFriendlyRedraw:=false;
+    RedrawPictures:=true;
   end else if MouseOnBuehnenansichtDevice>-1 then
   begin
     paintbox1.PopupMenu:=devicepicture_popup;
@@ -1499,8 +1513,9 @@ begin
         mainform.buehnenansichtdevices[k].top:=round(toppos*raster);
         mainform.buehnenansichtdevices[k].left:=round(leftpos*raster);
       end;
-      doimmediaterefresh:=true;
     end;
+    ProcessorFriendlyRedraw:=false;
+    RedrawPictures:=true;
   end else if MouseOnProgress>-1 then
   begin
     paintbox1.PopupMenu:=nil;
@@ -1525,7 +1540,7 @@ begin
     paintbox1.PopupMenu:=nil;
     if Button=mbRight then
     begin
-      if mainform.Devices[length(mainform.Devices)-1].MatrixDeviceLevel=0 then
+      if mainform.Devices[MouseOnLabel].MatrixDeviceLevel=0 then
         mainform.Devices[MouseOnLabel].Name:=InputBox(_('Beschriftung für "')+mainform.Devices[MouseOnLabel].Name+'"',_('Bitte geben Sie eine neue Bezeichnung für das aktuelle Gerät ein:'),mainform.Devices[MouseOnLabel].Name)
       else begin
         mainform.Devices[MouseOnLabel].Name:='[M] '+InputBox(_('Beschriftung für "')+mainform.Devices[MouseOnLabel].Name+'"',_('Bitte geben Sie eine neue Bezeichnung für das gewählte Matrix-Gerät ein:'),copy(mainform.Devices[MouseOnLabel].Name, 5, length(mainform.Devices[MouseOnLabel].Name)));
@@ -1550,7 +1565,7 @@ begin
     if Button=mbRight then
     begin
     	// Kanalnummer ändern
-      if mainform.Devices[length(mainform.Devices)-1].MatrixDeviceLevel=0 then
+      if mainform.Devices[MouseOnNumber].MatrixDeviceLevel=0 then
       begin
         try
           channel:=strtoint(InputBox(_('Kanaleinstellung'),_('Welche Startadresse soll für dieses Gerät gelten:'),inttostr(mainform.devices[MouseOnNumber].Startaddress)));
@@ -1609,7 +1624,6 @@ begin
   end;
 
 	dorefresh:=true;
-	doimmediaterefresh:=true;
 	RefreshTimerTimer(sender);
 
   MouseOnBuehnenansichtdevice:=-1;
@@ -1680,7 +1694,7 @@ begin
   mainform.buehnenansichtdevices[i].bank:=0;
   mainform.buehnenansichtdevices[i].color:=clYellow;
 
-  doimmediaterefresh:=true;
+  RedrawPictures:=true;
 end;
 
 procedure Tgrafischebuehnenansicht.openscene(scenefilename:string);
@@ -1789,15 +1803,15 @@ var
   filename,filepath:string;
   text:string;
 begin
-    mainform.buehnenansichtsetup.Buehnenansicht_width:=grafischebuehnenansicht.Width;
-    mainform.buehnenansichtsetup.Buehnenansicht_height:=grafischebuehnenansicht.Height;
-    mainform.buehnenansichtsetup.Buehnenansicht_panel:=panel1.Visible;
+  mainform.buehnenansichtsetup.Buehnenansicht_width:=grafischebuehnenansicht.Width;
+  mainform.buehnenansichtsetup.Buehnenansicht_height:=grafischebuehnenansicht.Height;
+  mainform.buehnenansichtsetup.Buehnenansicht_panel:=panel1.Visible;
 
-    filename:=extractfilename(scenefilename);
-    filepath:=extractfilepath(scenefilename);
+  filename:=extractfilename(scenefilename);
+  filepath:=extractfilepath(scenefilename);
 
-    if pos('\ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex])>0 then
-      mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.userdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
+  if pos('\ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex])>0 then
+    mainform.buehnenansicht_background[BankSelect.ItemIndex]:=mainform.userdirectory+copy(mainform.buehnenansicht_background[BankSelect.ItemIndex],pos('ProjectTemp\',mainform.buehnenansicht_background[BankSelect.ItemIndex]),length(mainform.buehnenansicht_background[BankSelect.ItemIndex]));
 
   try
     // Temp-Verzeichnis reinigen
@@ -1963,7 +1977,7 @@ begin
   LReg.CloseKey;
   LReg.Free;
 
-  doimmediaterefresh:=true;
+  RedrawPictures:=true;
 
   mainform.CheckBox2.Checked:=Checkbox2.Checked;
 end;
@@ -2025,37 +2039,8 @@ begin
       mainform.devices[i].picturesize:=TrackBar1.Position;
   end;
 
-  doimmediaterefresh:=true;
+  RedrawPictures:=true;
 end;
-
-procedure Tgrafischebuehnenansicht.RotateBtnClick(Sender: TObject);
-//var
-//  i,j:integer;
-begin
-{
-  for i:=0 to length(mainform.buehnenansichtdevices)-1 do
-  begin
-    if (mainform.buehnenansichtdevices[i].selected) then
-    begin
-      mainform.buehnenansichtdevices[i].pictureangle:=mainform.buehnenansichtdevices[i].pictureangle+1;
-      if mainform.buehnenansichtdevices[i].pictureangle>3 then
-        mainform.buehnenansichtdevices[i].pictureangle:=0;
-    end;
-  end;
-
-  for i:=0 to length(mainform.devices)-1 do
-  for j:=0 to length(mainform.devices[i].selected)-1 do
-  begin
-    if (mainform.devices[i].selected[j]) then
-    begin
-      mainform.devices[i].pictureangle:=mainform.devices[i].pictureangle+1;
-      if mainform.devices[i].pictureangle>3 then
-        mainform.devices[i].pictureangle:=0;
-    end;
-  end;
-
-  doimmediaterefresh:=true;
-}end;
 
 procedure Tgrafischebuehnenansicht.FlipHorBtnClick(Sender: TObject);
 var
@@ -2078,7 +2063,7 @@ begin
     end;
   end;
 
-  doimmediaterefresh:=true;
+  RedrawPictures:=true;
 end;
 
 procedure Tgrafischebuehnenansicht.FlipVerBtnClick(Sender: TObject);
@@ -2102,7 +2087,7 @@ begin
     end;
   end;
 
-  doimmediaterefresh:=true;
+  RedrawPictures:=true;
 end;
 
 procedure Tgrafischebuehnenansicht.CreateParams(var Params:TCreateParams);
@@ -2238,7 +2223,9 @@ end;
 
 procedure Tgrafischebuehnenansicht.MSGSave;
 begin
-//
+  mainform.buehnenansichtsetup.Buehnenansicht_width:=grafischebuehnenansicht.Width;
+  mainform.buehnenansichtsetup.Buehnenansicht_height:=grafischebuehnenansicht.Height;
+  mainform.buehnenansichtsetup.Buehnenansicht_panel:=panel1.Visible;
 end;
 
 procedure Tgrafischebuehnenansicht.DeviceSelectedTimerTimer(
@@ -2266,8 +2253,6 @@ begin
     end;
   end;
   mainform.DeviceSelectionChanged(nil);
-
-  doimmediaterefresh:=true;
 end;
 
 procedure Tgrafischebuehnenansicht.CheckBox5MouseUp(Sender: TObject;
@@ -2330,8 +2315,7 @@ begin
   end;
   Counter:=Counter+1;
 
-  if not (dorefresh or doimmediaterefresh) then exit;
-
+  if not (dorefresh or RedrawPictures) then exit;
   dorefresh:=false;
 
   if grafischebuehnenansicht.Showing or nodecontrolform.showing or ((mainform.pagecontrol1.ActivePageIndex=0) and (mainform.Panel1.Visible)) then
@@ -2340,10 +2324,12 @@ begin
     begin
       Puffer1.Width:=mainform.Paintbox1.Width;
       Puffer2.Width:=mainform.Paintbox1.Width;
+      RedrawPictures:=true;
     end else if ((Puffer1.Width<Paintbox1.Width) or (Puffer2.Width<Paintbox1.Width)) then
     begin
       Puffer1.Width:=Paintbox1.Width;
       Puffer2.Width:=Paintbox1.Width;
+      RedrawPictures:=true;
     end else
     begin
       if ((Puffer1.Width<>Paintbox1.Width) or (Puffer2.Width<>Paintbox1.Width)) and
@@ -2351,6 +2337,7 @@ begin
       begin
         Puffer1.Width:=Paintbox1.Width;
         Puffer2.Width:=Paintbox1.Width;
+        RedrawPictures:=true;
       end;
     end;
 
@@ -2358,10 +2345,12 @@ begin
     begin
       Puffer1.Height:=mainform.Paintbox1.Height;
       Puffer2.Height:=mainform.Paintbox1.Height;
+      RedrawPictures:=true;
     end else if ((Puffer1.Height<Paintbox1.Height) or (Puffer2.Height<Paintbox1.Height)) then
     begin
       Puffer1.Height:=Paintbox1.Height;
       Puffer2.Height:=Paintbox1.Height;
+      RedrawPictures:=true;
     end else
     begin
       if ((Puffer1.Height<>Paintbox1.Height) or (Puffer2.Height<>Paintbox1.Height)) and
@@ -2369,15 +2358,13 @@ begin
       begin
         Puffer1.Height:=Paintbox1.Height;
         Puffer2.Height:=Paintbox1.Height;
+        RedrawPictures:=true;
       end;
     end;
 
-    Counter2:=Counter2+1;
-    if (Counter2>5) or doimmediaterefresh then
+    if RedrawPictures then
     begin
-      Counter2:=0;
-      doimmediaterefresh:=false;
-
+      RedrawPictures:=false;
       Puffer1.Canvas.Pen.Style:=psClear;
       Puffer1.Canvas.Brush.Color:=clWhite;
       Puffer1.Canvas.Brush.Style:=bsSolid;
@@ -2395,6 +2382,14 @@ begin
 
     // Optionen und Anzeigen zeichnen
     DrawGrafischeBuehnenansicht(Puffer2.Canvas);
+
+    if ShowAuswahl then
+    begin
+      Puffer2.Canvas.Pen.mode:=pmNotXor;
+      Puffer2.Canvas.Pen.style:=psDot;
+      Puffer2.Canvas.Brush.Style:=bsclear;
+      Puffer2.Canvas.Rectangle(Auswahl);
+    end;
 
     if grafischebuehnenansicht.Showing then
     begin
@@ -2554,7 +2549,7 @@ begin
     mainform.buehnenansicht_background[BankSelect.ItemIndex]:='';
   end;
 
-  doimmediaterefresh:=true;
+  RedrawPictures:=true;
 end;
 
 procedure Tgrafischebuehnenansicht.BankCopySelect(Sender: TObject);
@@ -2596,7 +2591,7 @@ begin
   end;
   BankSelectSelect(nil);
 
-  doimmediaterefresh:=true;
+  RedrawPictures:=true;
 end;
 
 procedure Tgrafischebuehnenansicht.CheckBox3MouseUp(Sender: TObject;
@@ -2885,7 +2880,7 @@ begin
       // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
   		if (mainform.devices[i].left[j]<=X)
       and ((mainform.devices[i].left[j]+10)>=X)
-      and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize-5+8)<=Y)
+      and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize+8-8)<=Y)
       and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize+8)>=Y) then
       begin
         position:=i;
@@ -3009,6 +3004,7 @@ begin
       // Bild zeichnen
       rect.right:=mainform.devices[i].left[j]+mainform.devices[i].picturesize;
       rect.Bottom:=mainform.devices[i].top[j]+mainform.devices[i].picturesize;
+
       case mainform.devices[i].picturesize of
         0..48: // 32px
         begin
@@ -3027,8 +3023,16 @@ begin
           pngobject.Assign(mainform.devicepictures128.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[i].bildadresse)].PngImage);
         end;
       end;
-      SmoothResize(pngobject, mainform.devices[i].picturesize, mainform.devices[i].picturesize);
-      SmoothRotate(pngobject, mainform.devices[i].pictureangle);
+      if not ProcessorFriendlyRedraw then
+      begin
+        if not ((mainform.devices[i].picturesize=32) or
+          (mainform.devices[i].picturesize=64) or
+          (mainform.devices[i].picturesize=96) or
+          (mainform.devices[i].picturesize=128)) then
+          SmoothResize(pngobject, mainform.devices[i].picturesize, mainform.devices[i].picturesize);
+        if mainform.devices[i].pictureangle>0 then
+          SmoothRotate(pngobject, mainform.devices[i].pictureangle);
+      end;
       pngobject.Draw(_Buffer, rect);
 
       // Gobos 1 darstellen
@@ -3103,6 +3107,7 @@ begin
     // Bild zeichnen
     rect.right:=mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize;
     rect.Bottom:=mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize;
+
     case mainform.buehnenansichtdevices[i].picturesize of
       0..48:
       begin
@@ -3121,9 +3126,16 @@ begin
         pngobject.Assign(mainform.devicepictures128.Items.Items[geraetesteuerung.GetImageIndex(mainform.buehnenansichtdevices[i].picture)].PngImage);
       end;
     end;
-    SmoothResize(pngobject, mainform.devices[i].picturesize, mainform.devices[i].picturesize);
-    SmoothRotate(pngobject, mainform.devices[i].pictureangle);
-
+    if not ProcessorFriendlyRedraw then
+    begin
+      if not ((mainform.buehnenansichtdevices[i].picturesize=32) or
+        (mainform.buehnenansichtdevices[i].picturesize=64) or
+        (mainform.buehnenansichtdevices[i].picturesize=96) or
+        (mainform.buehnenansichtdevices[i].picturesize=128)) then
+        SmoothResize(pngobject, mainform.buehnenansichtdevices[i].picturesize, mainform.buehnenansichtdevices[i].picturesize);
+      if mainform.buehnenansichtdevices[i].pictureangle>0 then
+        SmoothRotate(pngobject, mainform.buehnenansichtdevices[i].pictureangle);
+    end;
     pngobject.Draw(_Buffer, rect);
   end;
 end;
@@ -3144,6 +3156,7 @@ var
   topval,leftval:integer;
   rect:TRect;
   offset:integer;
+  NewStartaddress, UniverseNr:integer;
 begin
   // Canvas bereit machen
   _Buffer.Pen.mode:=pmCopy;
@@ -3164,9 +3177,11 @@ begin
       rect.right:=mainform.devices[i].left[j]+mainform.devices[i].picturesize;
       rect.Bottom:=mainform.devices[i].top[j]+mainform.devices[i].picturesize;
 
-      // Startadresse anzeigen
       _Buffer.Font.Size:=7;
       _Buffer.Font.Name:='Arial';
+      _Buffer.Brush.Style:=bsClear;
+
+      // Startadresse anzeigen
       _Buffer.Brush.Style:=bsSolid;
       if mainform.devices[i].selected[j] then
         _Buffer.Font.Color:=clRed
@@ -3179,8 +3194,15 @@ begin
       if IsEqualGUID(mainform.devices[i].ID, MouseOnDeviceID) then
         _Buffer.Brush.Color:=$008080FF;
 
-      _Buffer.Pen.Style:=psClear;
-      _Buffer.TextOut(mainform.devices[i].left[j],mainform.devices[i].top[j]+mainform.devices[i].picturesize,inttostr(mainform.devices[i].Startaddress));
+      if mainform.devices[i].Startaddress<=512 then
+      begin
+        _Buffer.TextOut(mainform.devices[i].left[j],mainform.devices[i].top[j]+mainform.devices[i].picturesize,inttostr(mainform.devices[i].Startaddress));
+      end else
+      begin
+        UniverseNr:=trunc(mainform.devices[i].Startaddress/512);
+        NewStartaddress:=mainform.devices[i].Startaddress-(UniverseNr*512);
+        _Buffer.TextOut(mainform.devices[i].left[j],mainform.devices[i].top[j]+mainform.devices[i].picturesize,'U'+inttostr(UniverseNr+1)+': '+inttostr(NewStartaddress)+' ('+inttostr(mainform.devices[i].Startaddress)+')');
+      end;
 
       // Namen anzeigen
       if checkbox1.checked then
@@ -3219,19 +3241,19 @@ begin
         _Buffer.LineTo(round(mainform.devices[i].left[j]+mainform.devices[i].picturesize-1), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+7);
 
         // Füllung zeichnen
-        _Buffer.Pen.Color:=$00FFFFFF;
+        _Buffer.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,128);//$00FFFFFF;
         _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+3);
         _Buffer.LineTo(round(mainform.devices[i].left[j]+1+((mainform.devices[i].picturesize-2)*(Dimmerwert/255))), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+3);
-        _Buffer.Pen.Color:=$00A4FFA4;
+        _Buffer.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,192);//$00A4FFA4;
         _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+4);
         _Buffer.LineTo(round(mainform.devices[i].left[j]+1+((mainform.devices[i].picturesize-2)*(Dimmerwert/255))), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+4);
-        _Buffer.Pen.Color:=$0000FF00;
+        _Buffer.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,255);//$0000FF00;
         _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+5);
         _Buffer.LineTo(round(mainform.devices[i].left[j]+1+((mainform.devices[i].picturesize-2)*(Dimmerwert/255))), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+5);
-        _Buffer.Pen.Color:=$0000B000;
+        _Buffer.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,96);//$0000B000;
         _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+6);
         _Buffer.LineTo(round(mainform.devices[i].left[j]+1+((mainform.devices[i].picturesize-2)*(Dimmerwert/255))), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+6);
-        _Buffer.Pen.Color:=$00008000;
+        _Buffer.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,64);//$00008000;
         _Buffer.MoveTo(mainform.devices[i].left[j]+1, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+7);
         _Buffer.LineTo(round(mainform.devices[i].left[j]+1+((mainform.devices[i].picturesize-2)*(Dimmerwert/255))), mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset+7);
 
@@ -3241,7 +3263,7 @@ begin
         _Buffer.Brush.Style:=bsClear;
         _Buffer.Pen.Style:=psClear;
         _Buffer.Font.Color:=clBlack;
-        _Buffer.TextOut(mainform.devices[i].left[j]+mainform.devices[i].picturesize+3, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset ,inttostr(round(Dimmerwert/2.55))+'%');
+        _Buffer.TextOut(mainform.devices[i].left[j]+mainform.devices[i].picturesize+3, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset, mainform.levelstr(Dimmerwert));
       end else if mainform.Devices[i].hasFog then
       begin
         // Nebelbar anzeigen
@@ -3296,7 +3318,7 @@ begin
         _Buffer.Brush.Style:=bsClear;
         _Buffer.Pen.Style:=psClear;
         _Buffer.Font.Color:=clBlack;
-        _Buffer.TextOut(mainform.devices[i].left[j]+mainform.devices[i].picturesize+3, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset ,inttostr(round(Dimmerwert/2.55))+'%');
+        _Buffer.TextOut(mainform.devices[i].left[j]+mainform.devices[i].picturesize+3, mainform.devices[i].top[j]+mainform.devices[i].picturesize+offset , mainform.levelstr(Dimmerwert));
       end;
 
       // Farbball anzeigen
@@ -3567,114 +3589,106 @@ begin
   for i:=0 to length(mainform.buehnenansichtdevices)-1 do
   if mainform.buehnenansichtdevices[i].bank=BankSelect.ItemIndex then
   begin
-      rect.Top:=mainform.buehnenansichtdevices[i].top;
-      rect.Left:=mainform.buehnenansichtdevices[i].left;
-      rect.right:=mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize;
-      rect.Bottom:=mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize;
+    rect.Top:=mainform.buehnenansichtdevices[i].top;
+    rect.Left:=mainform.buehnenansichtdevices[i].left;
+    rect.right:=mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize;
+    rect.Bottom:=mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize;
 
-      // Startadresse anzeigen
-      _Buffer.Font.Size:=7;
-      _Buffer.Font.Name:='Arial';
-      _Buffer.Brush.Style:=bsSolid;
-      _Buffer.Brush.Color:=clWhite;
-      if mainform.buehnenansichtdevices[i].selected then
-        _Buffer.Font.Color:=clRed
-      else
-        _Buffer.Font.Color:=clBlack;
-      _Buffer.Pen.Style:=psClear;
-      _Buffer.TextOut(mainform.buehnenansichtdevices[i].left,mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize-8,inttostr(mainform.buehnenansichtdevices[i].channel));
+    // Startadresse anzeigen
+    _Buffer.Font.Size:=7;
+    _Buffer.Font.Name:='Arial';
+    _Buffer.Brush.Style:=bsSolid;
+    _Buffer.Brush.Color:=clWhite;
+    if mainform.buehnenansichtdevices[i].selected then
+      _Buffer.Font.Color:=clRed
+    else
+      _Buffer.Font.Color:=clBlack;
+    _Buffer.Pen.Style:=psClear;
+    _Buffer.TextOut(mainform.buehnenansichtdevices[i].left,mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize-8,inttostr(mainform.buehnenansichtdevices[i].channel));
 
-      // Dimmerbar anzeigen
-        Dimmerwert:=mainform.channel_value[mainform.buehnenansichtdevices[i].channel];
-        offset:=2;
+    // Dimmerbar anzeigen
+    Dimmerwert:=mainform.channel_value[mainform.buehnenansichtdevices[i].channel];
+    offset:=2;
 
-        // Umrandung zeichnen
-        _Buffer.Brush.Color:=ClMedGray;
-        _Buffer.Pen.Style:=psSolid;
-        _Buffer.Rectangle(mainform.buehnenansichtdevices[i].left, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+2,mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize,mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+9);
+    // Umrandung zeichnen
+    _Buffer.Brush.Color:=ClMedGray;
+    _Buffer.Pen.Style:=psSolid;
+    _Buffer.Rectangle(mainform.buehnenansichtdevices[i].left, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+2,mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize,mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+9);
 
-        // Hintergrund zeichnen
-        _Buffer.Pen.Color:=clSilver;
-        _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+3);
-        _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize-1), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+3);
-        _Buffer.Pen.Color:=clMedGray;
-        _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+4);
-        _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize-1), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+4);
-        _Buffer.Pen.Color:=clGray;
-        _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+5);
-        _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize-1), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+5);
-        _Buffer.Pen.Color:=clGray;
-        _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+6);
-        _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize-1), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+6);
-        _Buffer.Pen.Color:=clMedGray;
-        _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+7);
-        _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize-1), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+7);
+    // Hintergrund zeichnen
+    _Buffer.Pen.Color:=clSilver;
+    _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+3);
+    _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize-1), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+3);
+    _Buffer.Pen.Color:=clMedGray;
+    _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+4);
+    _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize-1), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+4);
+    _Buffer.Pen.Color:=clGray;
+    _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+5);
+    _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize-1), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+5);
+    _Buffer.Pen.Color:=clGray;
+    _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+6);
+    _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize-1), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+6);
+    _Buffer.Pen.Color:=clMedGray;
+    _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+7);
+    _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize-1), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+7);
 
-        // Füllung zeichnen
-        _Buffer.Pen.Color:=$00FFFFFF;
-        _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+3);
-        _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+1+((mainform.buehnenansichtdevices[i].picturesize-2)*(Dimmerwert/255))), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+3);
-        _Buffer.Pen.Color:=$00A4FFA4;
-        _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+4);
-        _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+1+((mainform.buehnenansichtdevices[i].picturesize-2)*(Dimmerwert/255))), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+4);
-        _Buffer.Pen.Color:=$0000FF00;
-        _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+5);
-        _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+1+((mainform.buehnenansichtdevices[i].picturesize-2)*(Dimmerwert/255))), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+5);
-        _Buffer.Pen.Color:=$0000B000;
-        _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+6);
-        _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+1+((mainform.buehnenansichtdevices[i].picturesize-2)*(Dimmerwert/255))), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+6);
-        _Buffer.Pen.Color:=$00008000;
-        _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+7);
-        _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+1+((mainform.buehnenansichtdevices[i].picturesize-2)*(Dimmerwert/255))), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+7);
+    // Füllung zeichnen
+    _Buffer.Pen.Color:=$00FFFFFF;
+    _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+3);
+    _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+1+((mainform.buehnenansichtdevices[i].picturesize-2)*(Dimmerwert/255))), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+3);
+    _Buffer.Pen.Color:=$00A4FFA4;
+    _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+4);
+    _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+1+((mainform.buehnenansichtdevices[i].picturesize-2)*(Dimmerwert/255))), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+4);
+    _Buffer.Pen.Color:=$0000FF00;
+    _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+5);
+    _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+1+((mainform.buehnenansichtdevices[i].picturesize-2)*(Dimmerwert/255))), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+5);
+    _Buffer.Pen.Color:=$0000B000;
+    _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+6);
+    _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+1+((mainform.buehnenansichtdevices[i].picturesize-2)*(Dimmerwert/255))), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+6);
+    _Buffer.Pen.Color:=$00008000;
+    _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+7);
+    _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+1+((mainform.buehnenansichtdevices[i].picturesize-2)*(Dimmerwert/255))), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+7);
 
 {
-        // Grün
-        _Buffer.Pen.Color:=$00FFFFFF;
-        _Buffer.Pen.Color:=$00A4FFA4;
-        _Buffer.Pen.Color:=$0000FF00;
-        _Buffer.Pen.Color:=$0000B000;
-        _Buffer.Pen.Color:=$00008000;
+    // Grün
+    _Buffer.Pen.Color:=$00FFFFFF;
+    _Buffer.Pen.Color:=$00A4FFA4;
+    _Buffer.Pen.Color:=$0000FF00;
+    _Buffer.Pen.Color:=$0000B000;
+    _Buffer.Pen.Color:=$00008000;
 
-        //Blau
-        _Buffer.Pen.Color:=clNavy;
-        _Buffer.Pen.Color:=clBlue;
-        _Buffer.Pen.Color:=clBlue;
-        _Buffer.Pen.Color:=$00FF4242;
-        _Buffer.Pen.Color:=clNavy;
+    //Blau
+    _Buffer.Pen.Color:=clNavy;
+    _Buffer.Pen.Color:=clBlue;
+    _Buffer.Pen.Color:=clBlue;
+    _Buffer.Pen.Color:=$00FF4242;
+    _Buffer.Pen.Color:=clNavy;
 }
-      // Farbball anzeigen
-      _Buffer.Brush.Style:=bsSolid;
-      _Buffer.Pen.Style:=psSolid;
-      _Buffer.Pen.Color:=clBlack;
-        // nur Farbfilter
-        Dimmerwert:=mainform.channel_value[mainform.buehnenansichtdevices[i].channel];
-        RGB:=ColorToRGB(mainform.buehnenansichtdevices[i].color);
-        R:=round(GetRValue(RGB)*Dimmerwert / 255);
-        G:=round(GetGValue(RGB)*Dimmerwert / 255);
-        B:=round(GetBValue(RGB)*Dimmerwert / 255);
-        _Buffer.Brush.Color:=RGB2TColor(R,G,B);
+    // Farbball anzeigen
+    _Buffer.Brush.Style:=bsSolid;
+    _Buffer.Pen.Style:=psSolid;
+    _Buffer.Pen.Color:=clBlack;
+    // nur Farbfilter
+    Dimmerwert:=mainform.channel_value[mainform.buehnenansichtdevices[i].channel];
+    RGB:=ColorToRGB(mainform.buehnenansichtdevices[i].color);
+    R:=round(GetRValue(RGB)*Dimmerwert / 255);
+    G:=round(GetGValue(RGB)*Dimmerwert / 255);
+    B:=round(GetBValue(RGB)*Dimmerwert / 255);
+    _Buffer.Brush.Color:=RGB2TColor(R,G,B);
 
-        if not Checkbox2.Checked then
-        begin
-          _Buffer.Ellipse(mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize-round(mainform.buehnenansichtdevices[i].picturesize/(mainform.buehnenansichtdevices[i].picturesize/10)),
-                                mainform.buehnenansichtdevices[i].top,
-                                mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize,
-                                mainform.buehnenansichtdevices[i].top+round(mainform.buehnenansichtdevices[i].picturesize/(mainform.buehnenansichtdevices[i].picturesize/10)));
-        end else
-        begin
-          _Buffer.Ellipse(mainform.buehnenansichtdevices[i].left,
-                                mainform.buehnenansichtdevices[i].top,
-                                mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize,
-                                mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize);
-        end;
-  end;
-
-  if ShowAuswahl then
-  begin
-	  _Buffer.Pen.mode:=pmNotXor;
-    _Buffer.Pen.style:=psDot;
-    _Buffer.Brush.Style:=bsclear;
-    _Buffer.Rectangle(Auswahl);
+    if not Checkbox2.Checked then
+    begin
+      _Buffer.Ellipse(mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize-round(mainform.buehnenansichtdevices[i].picturesize/(mainform.buehnenansichtdevices[i].picturesize/10)),
+                            mainform.buehnenansichtdevices[i].top,
+                            mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize,
+                            mainform.buehnenansichtdevices[i].top+round(mainform.buehnenansichtdevices[i].picturesize/(mainform.buehnenansichtdevices[i].picturesize/10)));
+    end else
+    begin
+      _Buffer.Ellipse(mainform.buehnenansichtdevices[i].left,
+                            mainform.buehnenansichtdevices[i].top,
+                            mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize,
+                            mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize);
+    end;
   end;
 end;
 
@@ -3741,7 +3755,7 @@ begin
     mainform.buehnenansichtdevices[i].top:=round(toppos*raster);
     mainform.buehnenansichtdevices[i].left:=round(leftpos*raster);
   end;
-  doimmediaterefresh:=true;
+  RedrawPictures:=true;
 end;
 
 procedure Tgrafischebuehnenansicht.CheckBox4MouseUp(Sender: TObject;
@@ -3777,7 +3791,7 @@ end;
 
 procedure Tgrafischebuehnenansicht.Paintbox1Paint(Sender: TObject);
 begin
-  doimmediaterefresh:=true;
+  RedrawPictures:=true;
 end;
 
 procedure Tgrafischebuehnenansicht.GetSelectedIcons(X,Y:integer);
@@ -4129,7 +4143,37 @@ begin
       mainform.devices[i].pictureangle:=Trackbar2.Position;
   end;
 
-  doimmediaterefresh:=true;
+  RedrawPictures:=true;
+end;
+
+procedure Tgrafischebuehnenansicht.ComboBox1Select(Sender: TObject);
+var
+  LReg:TRegistry;
+begin
+  LReg := TRegistry.Create;
+  LReg.RootKey:=HKEY_CURRENT_USER;
+
+  if LReg.OpenKey('Software', True) then
+  begin
+    if not LReg.KeyExists('PHOENIXstudios') then
+      LReg.CreateKey('PHOENIXstudios');
+    if LReg.OpenKey('PHOENIXstudios',true) then
+    begin
+      if not LReg.KeyExists('PC_DIMMER') then
+        LReg.CreateKey('PC_DIMMER');
+      if LReg.OpenKey('PC_DIMMER',true) then
+      begin
+        if not LReg.KeyExists('Buehnenansicht') then
+	        LReg.CreateKey('Buehnenansicht');
+	      if LReg.OpenKey('Buehnenansicht',true) then
+	      begin
+          LReg.WriteInteger('GridSize',Combobox1.ItemIndex);
+        end;
+      end;
+    end;
+  end;
+  LReg.CloseKey;
+  LReg.Free;
 end;
 
 end.
