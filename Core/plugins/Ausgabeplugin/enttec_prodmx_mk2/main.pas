@@ -288,7 +288,7 @@ begin
     exit;
   end;
 	// Write The Data
-	FT_Write(device_handle,data,laenge,@bytes_written);
+ 	FT_Write(device_handle,data,laenge,@bytes_written);
 	if (bytes_written <> Cardinal(laenge)) then
   begin
     LastErrorString:='Error writing DMX-Data';
@@ -324,6 +324,8 @@ var
 begin
 	bytes_read :=0;
 	bytes := 0;
+
+  FT_Read(device_handle,@bytes,ONE_BYTE,@bytes_read);
 
 	// Check for Start Code and matching Label
 	while (bytes <> lbl) do
@@ -456,12 +458,15 @@ begin
 
 	// Try at least 3 times
 	repeat
-		memo1.lines.add('Try to connect to interface '+inttostr(device_num)+' - '+inttostr(tries)+' of 3 tries');
+		memo1.lines.add('Try to connect to interface '+inttostr(device_num)+' - '+inttostr(tries+1)+' of 3 tries');
+
+    // delay for next try
+    if tries>0 then
+      sleep(750);
+
 		// Open the PRO
 		ftStatus := FT_Open(device_num,@device_handle);
     CheckFTDIStatus(ftStatus);
-		// delay for next try
-		Sleep(750);
 		inc(tries);
 	until ((ftStatus = FT_OK) or (tries < 3));
 
@@ -1087,7 +1092,9 @@ begin
       FTDI_ClosePort;
       exit;
     end;
-  end;
+  end else
+    memo1.Lines.add('Interface connected successfully.');
+
   // Receive Widget Response
   memo1.lines.add('Waiting for GET_WIDGET_PARAMS_REPLY packet... ');
   res:=FTDI_ReceiveData(GET_WIDGET_PARAMS_REPLY, @Pro_Params, sizeof(Pro_Params));

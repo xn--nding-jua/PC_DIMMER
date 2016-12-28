@@ -100,7 +100,7 @@ Conditionals=
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
-RunParams=C:\Cloud\Programmieren\Delphi\PC_DIMMER\Core\plugins\enttec_promk2_dmx.dll
+RunParams=C:\Cloud\Programmieren\Delphi\PC_DIMMER\Core\plugins\eurolite_usbdmx512pro_mk2.dll
 HostApplication=C:\Cloud\Programmieren\Delphi\PC_DIMMER\Plugintester\PC_DIMMER_Plugintester.exe
 Launcher=
 UseLauncher=0
@@ -113,7 +113,7 @@ RootDir=
 IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=1
-MinorVer=3
+MinorVer=0
 Release=0
 Build=0
 Debug=0
@@ -125,14 +125,14 @@ Locale=1031
 CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
-FileDescription=Enttec Pro MK2 DMX Interfaces-Plugin
-FileVersion=1.3.0.0
+FileDescription=Eurolite USB-DMX512 Pro MK2
+FileVersion=1.0.0.0
 InternalName=
-LegalCopyright=(c) 2015 by Dipl.-Ing. Christian Nöding
+LegalCopyright=(c) 2016 by Dr.-Ing. Christian Nöding
 LegalTrademarks=
 OriginalFilename=
 ProductName=
-ProductVersion=1.3.0.0
+ProductVersion=1.0.0.0
 Comments=http://www.pcdimmer.de
 [HistoryLists\hlUnitAliases]
 Count=1

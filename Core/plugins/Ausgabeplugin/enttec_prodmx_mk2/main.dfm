@@ -963,7 +963,7 @@ object mainform: Tmainform
       Height = 21
       MaxValue = 5000.000000000000000000
       MinValue = 1.000000000000000000
-      Value = 1.000000000000000000
+      Value = 200.000000000000000000
       TabOrder = 1
       OnChange = JvSpinEdit1Change
     end
@@ -1060,7 +1060,7 @@ object mainform: Tmainform
   end
   object DMXTimer: TCHHighResTimer
     OnTimer = DMXTimerTimer
-    Interval = 1
+    Interval = 200
     Accuracy = 0
     Enabled = False
     Left = 312

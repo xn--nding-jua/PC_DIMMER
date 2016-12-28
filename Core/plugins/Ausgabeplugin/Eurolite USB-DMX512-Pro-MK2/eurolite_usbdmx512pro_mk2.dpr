@@ -1,4 +1,4 @@
-library enttec_promk2_dmx;
+library eurolite_usbdmx512pro_mk2;
 
 uses
   Forms,
@@ -29,7 +29,6 @@ begin
   try
     mainform.Button4Click(nil);
 
-    mainform.ReceiveMIDITimer.Enabled:=false;
     mainform.SlowTimer.Enabled:=false;
 
     Application.ProcessMessages;
@@ -52,12 +51,12 @@ end;
 
 function DLLGetName:PChar;stdcall;
 begin
-  Result := PChar('Enttec Pro MK2 DMX512');
+  Result := PChar('Eurolite USB-DMX512 Pro MK2');
 end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v1.3');
+  Result := PChar('v1.0');
 end;
 
 procedure DLLConfigure;stdcall;
@@ -93,15 +92,8 @@ begin
       if Integer(Data1)<513 then
       begin
         // Data1 = 1..512
-        mainform.DMXOutputBuffer[Integer(Data1)]:=Integer(Data2);
+        mainform.DMXOutputBuffer[Integer(Data1)+4]:=Integer(Data2);
         mainform.NewDataForOutput:=true;
-      end;
-
-      if ((Integer(Data1)>=513) and (Integer(Data1)<1026)) then
-      begin
-        // Data1 = 513..1024
-        mainform.DMXOutputBuffer2[Integer(Data1)-512]:=Integer(Data2);
-        mainform.NewDataForOutput2:=true;
       end;
     end;
   end;
