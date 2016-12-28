@@ -1,8 +1,8 @@
 object mainform: Tmainform
   Left = 726
   Top = 146
-  Width = 353
-  Height = 455
+  Width = 361
+  Height = 464
   Caption = 'Main'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
