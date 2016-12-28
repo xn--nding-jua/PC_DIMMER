@@ -92,29 +92,13 @@ object Form1: TForm1
     TabOrder = 7
   end
   object comport: TCommPortDriver
-    Port = pnCOM5
-    PortName = '\\.\COM5'
-    BaudRate = br115200
-    BaudRateValue = 115200
+    Port = pnCOM3
+    PortName = '\\.\COM3'
+    BaudRate = brCustom
+    BaudRateValue = 250000
     EnableDTROnOpen = False
     OnReceiveData = comportReceiveData
     Left = 152
-    Top = 160
-  end
-  object ComPort1: TComPort
-    BaudRate = br115200
-    Port = 'COM5'
-    Parity.Bits = prNone
-    StopBits = sbOneStopBit
-    DataBits = dbEight
-    Events = [evRxChar, evTxEmpty, evRxFlag, evRing, evBreak, evCTS, evDSR, evError, evRLSD, evRx80Full]
-    FlowControl.OutCTSFlow = False
-    FlowControl.OutDSRFlow = False
-    FlowControl.ControlDTR = dtrDisable
-    FlowControl.ControlRTS = rtsDisable
-    FlowControl.XonXoffOut = False
-    FlowControl.XonXoffIn = False
-    Left = 192
     Top = 160
   end
   object Timer1: TTimer

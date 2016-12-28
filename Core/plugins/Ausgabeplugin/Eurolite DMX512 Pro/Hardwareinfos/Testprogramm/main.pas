@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, CPort, CPDrv, ExtCtrls;
+  Dialogs, StdCtrls, CPDrv, ExtCtrls;
 
 type
   TForm1 = class(TForm)
@@ -18,7 +18,6 @@ type
     Button7: TButton;
     Label1: TLabel;
     ListBox1: TListBox;
-    ComPort1: TComPort;
     Timer1: TTimer;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -136,15 +135,13 @@ end;
 
 procedure TForm1.Button5Click(Sender: TObject);
 begin
-//  comport.Connect;
-  comport1.Open;
+  comport.Connect;
 end;
 
 procedure TForm1.Button6Click(Sender: TObject);
 begin
-//  comport.Disconnect;
+  comport.Disconnect;
   OK:=false;
-  comport1.Close;
 end;
 
 procedure TForm1.Button7Click(Sender: TObject);
@@ -198,7 +195,6 @@ Package to port: 1-20Hz
 
   label1.Caption:=TimeToStr(Now);
 }
-  first:=true;
   OK:=true;
 end;
 
@@ -245,87 +241,20 @@ end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
 var
-  rs232frame_0:array[0..531] of byte;
-  rs232frame_1:array[0..13] of byte;
   rs232frame_2:array[0..517] of byte;
   j:integer;
 begin
-    rs232frame_0[0]:=126;   // "Start of message delimiter, hex 7E.
-    rs232frame_0[1]:=6;     // Label to identify type of message. => 6
-    rs232frame_0[2]:=1;     // Data length LSB. Valid range for data length is 513
-    rs232frame_0[3]:=2;     // Data length MSB.
-    rs232frame_0[4]:=0;     // Startbyte
-    rs232frame_0[5]:=255;   // Startbyte
-    for j:=6 to 13 do
-      rs232frame_0[j]:=0;
-    rs232frame_0[0+14]:=126;   // "Start of message delimiter, hex 7E.
-    rs232frame_0[1+14]:=6;     // Label to identify type of message. => 6
-    rs232frame_0[2+14]:=1;     // Data length LSB. Valid range for data length is 513
-    rs232frame_0[3+14]:=2;     // Data length MSB.
-    for j:=4 to 516 do
-      rs232frame_0[j+14]:=0;
-    rs232frame_0[517+14]:=135; // End of message delimiter, hex E7.
-
-
-
-    rs232frame_1[0]:=Byte(StrToInt('$'+'7E'));   // "Start of message delimiter, hex 7E.
-    rs232frame_1[1]:=Byte(StrToInt('$'+'06'));     // Label to identify type of message. => 6
-    rs232frame_1[2]:=Byte(StrToInt('$'+'01'));     // Data length LSB. Valid range for data length is 513
-    rs232frame_1[3]:=Byte(StrToInt('$'+'02'));     // Data length MSB.
-    rs232frame_1[4]:=Byte(StrToInt('$'+'00'));     // Startbyte
-    rs232frame_1[5]:=Byte(StrToInt('$'+'FF'));   // Startbyte
-    for j:=6 to 13 do
-      rs232frame_1[j]:=0;
-
-
-    rs232frame_2[0]:=Byte(StrToInt('$'+'7E'));   // "Start of message delimiter, hex 7E.
-    rs232frame_2[1]:=Byte(StrToInt('$'+'06'));     // Label to identify type of message. => 6
-    rs232frame_2[2]:=Byte(StrToInt('$'+'01'));     // Data length LSB. Valid range for data length is 513
-    rs232frame_2[3]:=Byte(StrToInt('$'+'02'));     // Data length MSB.
-    for j:=4 to 516 do
-      rs232frame_2[j]:=Byte(StrToInt('$'+'00'));
-    rs232frame_2[517]:=Byte(StrToInt('$'+'E7')); // End of message delimiter, hex E7.
+  rs232frame_2[0]:=Byte(StrToInt('$'+'7E'));   // "Start of message delimiter, hex 7E.
+  rs232frame_2[1]:=Byte(StrToInt('$'+'06'));     // Label to identify type of message. => 6
+  rs232frame_2[2]:=Byte(StrToInt('$'+'01'));     // Data length LSB. Valid range for data length is 513
+  rs232frame_2[3]:=Byte(StrToInt('$'+'02'));     // Data length MSB.
+  for j:=4 to 516 do
+    rs232frame_2[j]:=Byte(StrToInt('$'+'00'));
+  rs232frame_2[517]:=Byte(StrToInt('$'+'E7')); // End of message delimiter, hex E7.
 
   if OK then
   begin
-{
-    if first then
-    begin
-      first:=false;
-      comport.SendData(@rs232frame_1, 14);
-    end;
     comport.SendData(@rs232frame_2, 518);
-}
-{
-    if first then
-    begin
-      first:=false;
-      comport.SendData(@rs232frame_0, 532);
-    end else
-    begin
-      comport.SendData(@rs232frame_2, 518);
-    end;
-}
-
-{
-    if first then
-    begin
-      first:=false;
-      comport1.Write(rs232frame_1, 14);
-    end;
-}
-    comport1.Write(rs232frame_2, 518);
-
-{
-    if first then
-    begin
-      first:=false;
-      comport1.Write(rs232frame_0, 532);
-    end else
-    begin
-      comport1.Write(rs232frame_2, 518);
-    end;
-}
   end;
 end;
 
