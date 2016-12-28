@@ -1116,8 +1116,8 @@ begin
         begin
           if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[MouseOnDevice].ID)) then
           begin
-            mainform.Devices[m].left[MouseOnDeviceCopy]:=X-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixXPosition;
-            mainform.Devices[m].top[MouseOnDeviceCopy]:=Y-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixYPosition;
+            mainform.Devices[m].left[MouseOnDeviceCopy]:=X-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixXPosition; // TODO
+            mainform.Devices[m].top[MouseOnDeviceCopy]:=Y-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixYPosition; // TODO
           end;
         end;
 

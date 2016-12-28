@@ -12573,7 +12573,6 @@ begin
     @ProgramPlugins[i].SendData := GetProcAddress(ProgramPlugins[i].Handle,'DLLSendData');
     @ProgramPlugins[i].SendMessage := GetProcAddress(ProgramPlugins[i].Handle,'DLLSendMessage');
   end;
-
   // Plugins starten
   for i:=0 to length(ProgramPlugins)-1 do
   begin
@@ -12583,7 +12582,6 @@ begin
       Proccall2;
     end;
   end;
-
   if length(ProgramPlugins)>0 then
   begin
     PluginRibbonTab.Visible:=true;
@@ -12644,7 +12642,6 @@ begin
       @OutputPlugins[i].SendMessage := GetProcAddress(OutputPlugins[i].Handle,'DLLSendMessage');
     end;
   end;
-
   // Plugins starten
   for i:=0 to length(OutputPlugins)-1 do
   if OutputPlugins[i].IsEnabled and (not OutputPlugins[i].IsActive) then
@@ -13185,13 +13182,11 @@ begin
       end;
     end;
   end;
-  
+
   SplashProgress(1, 95, 100);
   SplashCaptioninfo(_('Timer aktivieren...'));
   DebugAdd('INIT: Activating timers...');
   RefreshSplashText;
-  Application.ProcessMessages;
-  sleep(1000); // give the system a second to swing in before activating the timers
 
   Uhrzeit_Timer.enabled:=true;
   Autobackuptimer.Enabled:=true;

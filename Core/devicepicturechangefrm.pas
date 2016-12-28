@@ -71,6 +71,11 @@ begin
   if (Item<>nil) and (Item.Caption<>'') then
   begin
     aktuellebilddatei:='64 x 64\'+Item.Caption;
+
+    if pos('.png', aktuellebilddatei)=0 then
+    begin
+      aktuellebilddatei:=aktuellebilddatei+'.png';
+    end;
   end;
 end;
 

@@ -1313,6 +1313,16 @@ begin
               my:=(deviceprototyp[devposition].MatrixYCount-1)-(m-(mx*deviceprototyp[devposition].MatrixYCount));
             end;
           end;
+          5:
+          begin
+            my:=trunc(m/deviceprototyp[devposition].MatrixXCount);
+            mx:=(my*deviceprototyp[devposition].MatrixXCount)-m;
+          end;
+          6:
+          begin
+            mx:=trunc(m/deviceprototyp[devposition].MatrixYCount);
+            my:=(mx*deviceprototyp[devposition].MatrixYCount)-m;
+          end;
         end;
 
         if k>0 then
@@ -2840,6 +2850,7 @@ begin
       end;
     end;
   end;
+  grafischebuehnenansicht.dorefresh:=true;
   TreeViewCheckbuttons([]);
 end;
 
@@ -3816,6 +3827,9 @@ begin
           mainform.devices[i].AmberRatioR:=DevicePrototyp[j].AmberRatioR;
           mainform.devices[i].AmberRatioG:=DevicePrototyp[j].AmberRatioG;
 
+          mainform.devices[i].MatrixXCount:=DevicePrototyp[j].MatrixXCount;
+          mainform.devices[i].MatrixYCount:=DevicePrototyp[j].MatrixYCount;
+          mainform.devices[i].MatrixOrdertype:=DevicePrototyp[j].MatrixOrdertype;
           break;
         end;
       end;

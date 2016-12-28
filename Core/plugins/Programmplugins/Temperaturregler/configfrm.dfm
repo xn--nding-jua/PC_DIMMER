@@ -1,6 +1,6 @@
 object Config: TConfig
-  Left = 522
-  Top = 476
+  Left = 418
+  Top = 385
   Width = 1330
   Height = 497
   Caption = 'Temperaturregler'
@@ -959,5 +959,12 @@ object Config: TConfig
     OnTimer = DemoDataTimer
     Left = 536
     Top = 378
+  end
+  object StartupCounter: TTimer
+    Enabled = False
+    Interval = 2000
+    OnTimer = StartupCounterTimer
+    Left = 176
+    Top = 9
   end
 end

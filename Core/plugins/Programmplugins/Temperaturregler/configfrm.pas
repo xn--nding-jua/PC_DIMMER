@@ -94,6 +94,7 @@ type
     Label19: TLabel;
     TestCaseBtn: TButton;
     DemoData: TTimer;
+    StartupCounter: TTimer;
     procedure comportReceiveData(Sender: TObject; DataPtr: Pointer;
       DataSize: Cardinal);
     procedure ActivateCOMPort(portnumber, baudrate: integer);
@@ -109,6 +110,7 @@ type
     procedure RegisterPluginCommandsTimer(Sender: TObject);
     procedure TestCaseBtnClick(Sender: TObject);
     procedure DemoDataTimer(Sender: TObject);
+    procedure StartupCounterTimer(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -1092,7 +1094,7 @@ begin
   LReg.CloseKey;
   LReg.Free;
 
-  ActivateCOMPort(comportnumber, baudrate);
+  StartupCounter.Enabled:=true;
 
   Memo1.Lines.Clear;
   Memo1.Lines.Add(_('Datum; Uhrzeit; Temperatur 1 [°C]; Temperatur 2 [°C]; Temperatur 3 [°C]; Delta-Temp [°C]; Verbrauch [kWh]; Kosten [€]'));
@@ -1178,6 +1180,13 @@ begin
   finally
     Png.Free;
   end;
+end;
+
+procedure TConfig.StartupCounterTimer(Sender: TObject);
+begin
+  StartupCounter.Enabled:=false;
+
+  ActivateCOMPort(comportnumber, baudrate);
 end;
 
 end.
