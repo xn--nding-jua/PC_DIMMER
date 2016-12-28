@@ -1,6 +1,6 @@
 object Config: TConfig
-  Left = 418
-  Top = 385
+  Left = 539
+  Top = 494
   Width = 1330
   Height = 497
   Caption = 'Temperaturregler'
@@ -693,11 +693,11 @@ object Config: TConfig
         OnOff = temponOff
       end
       object Button1: TButton
-        Left = 8
+        Left = 152
         Top = 296
-        Width = 233
+        Width = 89
         Height = 25
-        Caption = 'Erweiterte Einstellungen...'
+        Caption = 'Einstellungen...'
         TabOrder = 1
         OnClick = Button1Click
       end
@@ -909,6 +909,24 @@ object Config: TConfig
         TabOrder = 4
         OnClick = Button2Click
       end
+      object Button3: TButton
+        Left = 8
+        Top = 296
+        Width = 65
+        Height = 25
+        Caption = 'Verbinden'
+        TabOrder = 5
+        OnClick = Button3Click
+      end
+      object Button4: TButton
+        Left = 80
+        Top = 296
+        Width = 65
+        Height = 25
+        Caption = 'Trennen'
+        TabOrder = 6
+        OnClick = Button4Click
+      end
     end
   end
   object Panel3: TPanel
@@ -959,12 +977,5 @@ object Config: TConfig
     OnTimer = DemoDataTimer
     Left = 536
     Top = 378
-  end
-  object StartupCounter: TTimer
-    Enabled = False
-    Interval = 2000
-    OnTimer = StartupCounterTimer
-    Left = 176
-    Top = 9
   end
 end
