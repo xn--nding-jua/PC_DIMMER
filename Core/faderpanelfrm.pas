@@ -137,16 +137,21 @@ begin
 	      if LReg.OpenKey('Faderpanel',true) then
 	      begin
           if LReg.ValueExists('Blendout Free Channels') then
+          begin
             NurKanlemitGertenanzeigen1.Checked:=LReg.ReadBool('Blendout Free Channels');
+            mainform.NurKanlemitGertenanzeigen1.Checked:=NurKanlemitGertenanzeigen1.Checked;
+          end;
           blendoutdevicelesschannel:=NurKanlemitGertenanzeigen1.Checked;
 
           if LReg.ValueExists('Autohide') then
           begin
             Panelautomatischausblenden1.Checked:=LReg.ReadBool('Autohide');
+            mainform.Panelautomatischausblenden1.Checked:=Panelautomatischausblenden1.Checked;
           end;
           if LReg.ValueExists('Show Rectangles Full') then
           begin
             Kstchenimmervoll1.Checked:=LReg.ReadBool('Show Rectangles Full');
+            mainform.Kstchenimmervoll1.Checked:=Kstchenimmervoll1.Checked;
           end;
 
           if LReg.ValueExists('PosX') then

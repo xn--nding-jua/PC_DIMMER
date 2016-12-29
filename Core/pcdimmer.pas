@@ -13008,6 +13008,24 @@ begin
     if Rfr_Submaster < 15 then Rfr_Submaster:=15;
     submasterform.Timer1.Interval:=Rfr_Submaster;
 
+    if LReg.OpenKey('Faderpanel',true) then
+    begin
+      if LReg.ValueExists('Blendout Free Channels') then
+      begin
+        NurKanlemitGertenanzeigen1.Checked:=LReg.ReadBool('Blendout Free Channels');
+      end;
+
+      if LReg.ValueExists('Autohide') then
+      begin
+        Panelautomatischausblenden1.Checked:=LReg.ReadBool('Autohide');
+      end;
+      if LReg.ValueExists('Show Rectangles Full') then
+      begin
+        Kstchenimmervoll1.Checked:=LReg.ReadBool('Show Rectangles Full');
+      end;
+      LReg.CloseKey;
+    end;
+
     LReg.CloseKey;
   end;
   LReg.Free;

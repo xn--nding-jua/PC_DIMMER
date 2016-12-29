@@ -144,9 +144,9 @@ begin
 
 	midigrid.Cells[0,0]:='Name';
 	midigrid.Cells[1,0]:='Beschreibung';
-	midigrid.Cells[2,0]:='Message';
-  midigrid.cells[3,0]:='Data1';
-  midigrid.cells[4,0]:='Data2';
+	midigrid.Cells[2,0]:='ValA';
+  midigrid.cells[3,0]:='ValB';
+  midigrid.cells[4,0]:='ValC';
   midigrid.cells[5,0]:='Typ';
   midigrid.cells[6,0]:='Wert1';
   midigrid.cells[7,0]:='Wert2';
