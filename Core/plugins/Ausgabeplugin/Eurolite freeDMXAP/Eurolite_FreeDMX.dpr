@@ -1,14 +1,14 @@
-library eurolite_dmx512_pro;
+library Eurolite_FreeDMX;
 
 { Wichtiger Hinweis zur DLL-Speicherverwaltung: ShareMem muss sich in der
   ersten Unit der unit-Klausel der Bibliothek und des Projekts befinden (Projekt-
   Quelltext anzeigen), falls die DLL Prozeduren oder Funktionen exportiert, die
-  Strings als Parameter oder Funktionsergebnisse übergeben. Das gilt für alle
-  Strings, die von oder an die DLL übergeben werden -- sogar für diejenigen, die
+  Strings als Parameter oder Funktionsergebnisse Ã¼bergeben. Das gilt fÃ¼r alle
+  Strings, die von oder an die DLL Ã¼bergeben werden -- sogar fÃ¼r diejenigen, die
   sich in Records und Klassen befinden. Sharemem ist die Schnittstellen-Unit zur
-  Verwaltungs-DLL für gemeinsame Speicherzugriffe, BORLNDMM.DLL.
-  Um die Verwendung von BORLNDMM.DLL zu vermeiden, können Sie String-
-  Informationen als PChar- oder ShortString-Parameter übergeben. }
+  Verwaltungs-DLL fÃ¼r gemeinsame Speicherzugriffe, BORLNDMM.DLL.
+  Um die Verwendung von BORLNDMM.DLL zu vermeiden, kÃ¶nnen Sie String-
+  Informationen als PChar- oder ShortString-Parameter Ã¼bergeben. }
 
 
 uses
@@ -19,15 +19,15 @@ uses
   Windows,
   configfrm in 'configfrm.pas' {Config},
   aboutfrm in 'aboutfrm.pas' {About},
-  messagesystem in 'messagesystem.pas';
+  messagesystem in '..\..\..\messagesystem.pas';
 
 {$R *.res}
 
 procedure DLLCreate(CallbackSetDLLValues,CallbackSetDLLValueEvent,CallbackSetDLLNames,CallbackGetDLLValue,CallbackSendMessage:Pointer);stdcall;
 begin
   config:=TConfig.Create(Application);
-  @Config.RefreshDLLValues:=CallbackSetDLLValues;
-  @Config.RefreshDLLEvent:=CallbackSetDLLValueEvent;
+  @config.RefreshDLLValues:=CallbackSetDLLValues;
+  @config.RefreshDLLEvent:=CallbackSetDLLValueEvent;
 end;
 
 procedure DLLStart;stdcall;
@@ -38,13 +38,7 @@ end;
 function DLLDestroy:boolean;stdcall;
 begin
   try
-	  config.shutdown:=true;
-
-	  try
-      if config.comport.Connected then
-        Config.comport.Disconnect;
-	  except
-	  end;
+	  config.Button2Click(config.Button2);
 	  @config.RefreshDLLValues:=nil;
 	  @config.RefreshDLLEvent:=nil;
 	  Config.Release;
@@ -60,17 +54,17 @@ end;
 
 function DLLGetName:PChar;stdcall;
 begin
-  Result := PChar('Eurolite DMX512 Pro Interface');
+  Result := PChar('Eurolite freeDMX-AP Wi-Fi');
 end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v1.1');
+  Result := PChar('v1.0');
 end;
 
 procedure DLLConfigure;stdcall;
 begin
-  Config.ShowModal;
+  Config.Showmodal;
 end;
 
 procedure DLLAbout;stdcall;
@@ -96,10 +90,9 @@ begin
     MSG_ACTUALCHANNELVALUE:
     begin
       if Data1>512 then exit;
-      if (config.shutdown=false) then
-      begin
-        config.rs232frame_new[Integer(Data1)+4]:=Byte(Data2);
-      end;
+      setlength(config.ChangedChannels, length(config.ChangedChannels)+1);
+      config.ChangedChannels[length(config.ChangedChannels)-1].Address:=Integer(Data1);
+      config.ChangedChannels[length(config.ChangedChannels)-1].Value:=Byte(Data2);
     end;
   end;
 end;
