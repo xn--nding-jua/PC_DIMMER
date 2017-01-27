@@ -173,7 +173,7 @@ object editmidieventfrm: Teditmidieventfrm
       Top = 39
       Width = 209
       Height = 17
-      Caption = 'Bei n'#228'chstem MIDI-Event aufzeichnen'
+      Caption = 'Bei n'#228'chstem MIDI-Event anlernen'
       TabOrder = 0
     end
     object data2a: TEdit
@@ -206,7 +206,7 @@ object editmidieventfrm: Teditmidieventfrm
     object usemidibacktrack: TCheckBox
       Left = 544
       Top = 56
-      Width = 161
+      Width = 209
       Height = 17
       Caption = 'Midi Backtrack verwenden'
       Checked = True

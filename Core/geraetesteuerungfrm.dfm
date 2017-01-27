@@ -1,6 +1,6 @@
 object geraetesteuerung: Tgeraetesteuerung
-  Left = 251
-  Top = 102
+  Left = 566
+  Top = 87
   Width = 700
   Height = 512
   HorzScrollBar.Smooth = True

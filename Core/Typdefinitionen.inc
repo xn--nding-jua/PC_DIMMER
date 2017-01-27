@@ -504,7 +504,7 @@
 
     MatrixDeviceLevel:byte; // 0=No, 1=Main, 2=Sub-Device
     MatrixMainDeviceID:TGUID;
-    MatrixOrderType:byte;
+    MatrixOrderType:byte; // 1-6
     MatrixXCount, MatrixYCount:byte;
     MatrixXPosition, MatrixYPosition:byte;
   end;

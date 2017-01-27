@@ -7965,6 +7965,16 @@ begin
           my:=(mainform.Devices[devposition].MatrixYCount-1)-(m-(mx*mainform.Devices[devposition].MatrixYCount));
         end;
       end;
+      5:
+      begin
+        my:=trunc(m/deviceprototyp[devposition].MatrixXCount);
+        mx:=(my*deviceprototyp[devposition].MatrixXCount)-m;
+      end;
+      6:
+      begin
+        mx:=trunc(m/deviceprototyp[devposition].MatrixYCount);
+        my:=(mx*deviceprototyp[devposition].MatrixYCount)-m;
+      end;
     end;
 
     if (mx=MatrixXPosition) and (my=MatrixYPosition) then
