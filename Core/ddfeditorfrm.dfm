@@ -1,6 +1,6 @@
 object ddfeditorform: Tddfeditorform
-  Left = 211
-  Top = 422
+  Left = 704
+  Top = 298
   Width = 895
   Height = 542
   Caption = 'DDF Editor'
@@ -287,6 +287,49 @@ object ddfeditorform: Tddfeditorform
         Alignment = taRightJustify
         Caption = 'H'#246'he:'
       end
+      object Bevel2: TBevel
+        Left = 8
+        Top = 240
+        Width = 377
+        Height = 9
+        Shape = bsTopLine
+      end
+      object matrixheaderlbl: TLabel
+        Left = 8
+        Top = 224
+        Width = 64
+        Height = 13
+        Caption = 'Matrixger'#228't'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object matrixbreitelbl: TLabel
+        Left = 9
+        Top = 276
+        Width = 30
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Breite:'
+      end
+      object matrixhoehelbl: TLabel
+        Left = 114
+        Top = 276
+        Width = 29
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'H'#246'he:'
+      end
+      object typeofmatrixlbl: TLabel
+        Left = 8
+        Top = 300
+        Width = 65
+        Height = 13
+        Caption = 'Art der Matrix:'
+      end
       object nameedit: TEdit
         Left = 80
         Top = 32
@@ -363,6 +406,52 @@ object ddfeditorform: Tddfeditorform
         Caption = 'Erzeuge GUI anhand Kan'#228'len'
         TabOrder = 8
         OnClick = autoddfbtnClick
+      end
+      object IsMatrixDevice: TCheckBox
+        Left = 8
+        Top = 248
+        Width = 185
+        Height = 17
+        Caption = 'Ger'#228't als Matrixger'#228't verwenden'
+        TabOrder = 9
+      end
+      object MatrixXCount: TJvSpinEdit
+        Left = 40
+        Top = 272
+        Width = 65
+        Height = 21
+        MaxValue = 64.000000000000000000
+        MinValue = 1.000000000000000000
+        Value = 1.000000000000000000
+        TabOrder = 10
+        OnChange = widthspinChange
+      end
+      object MatrixYCount: TJvSpinEdit
+        Left = 144
+        Top = 272
+        Width = 65
+        Height = 21
+        MaxValue = 64.000000000000000000
+        MinValue = 1.000000000000000000
+        Value = 1.000000000000000000
+        TabOrder = 11
+        OnChange = heightspinChange
+      end
+      object MatrixType: TComboBox
+        Left = 8
+        Top = 320
+        Width = 377
+        Height = 21
+        Style = csDropDownList
+        ItemHeight = 13
+        ItemIndex = 0
+        TabOrder = 12
+        Text = 'L->R, n'#228'chste Zeile wieder L->R'
+        Items.Strings = (
+          'L->R, n'#228'chste Zeile wieder L->R'
+          'Gerade Reihe: L->R, ungerade Reihe: R->L'
+          'Oben->Unten, n'#228'chste Spalte wieder Oben->Unten'
+          'Gerade Spalte Oben->Unten, ungerade Spalte Unten->Oben')
       end
     end
     object TabSheet2: TTabSheet
@@ -2171,7 +2260,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 137
               Height = 21
-              ItemHeight = 0
+              ItemHeight = 13
               TabOrder = 0
               Text = 'GOBO1ROT'
               OnSelect = typlisteSelect
@@ -2279,7 +2368,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 137
               Height = 21
-              ItemHeight = 0
+              ItemHeight = 13
               TabOrder = 0
               Text = 'GOBO2ROT'
               OnSelect = typlisteSelect
@@ -2431,7 +2520,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 137
               Height = 21
-              ItemHeight = 0
+              ItemHeight = 13
               TabOrder = 0
               Text = 'PRISMAROT'
               OnSelect = typlisteSelect
@@ -2567,7 +2656,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 89
               Height = 21
-              ItemHeight = 0
+              ItemHeight = 13
               TabOrder = 0
               Text = 'SHUTTER'
               OnSelect = typlisteSelect
@@ -2632,7 +2721,7 @@ object ddfeditorform: Tddfeditorform
               Top = 16
               Width = 89
               Height = 21
-              ItemHeight = 0
+              ItemHeight = 13
               TabOrder = 0
               Text = 'SHUTTER'
               OnSelect = typlisteSelect
@@ -2873,7 +2962,7 @@ object ddfeditorform: Tddfeditorform
         Height = 21
         Style = csDropDownList
         DropDownCount = 16
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 2
         OnSelect = funktionsliste2Select
       end
@@ -3665,7 +3754,7 @@ object ddfeditorform: Tddfeditorform
           Height = 21
           Style = csDropDownList
           DropDownCount = 16
-          ItemHeight = 0
+          ItemHeight = 13
           TabOrder = 1
           OnSelect = funktionsliste1Select
         end

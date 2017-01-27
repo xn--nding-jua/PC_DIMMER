@@ -1310,23 +1310,13 @@ begin
             mx:=trunc(m/deviceprototyp[devposition].MatrixYCount);
             if ((mx mod 2) = 0) then
             begin
-              // gerade Reihe (von links nach rechts)
+              // gerade Spalte (von links nach rechts)
               my:=m-(mx*deviceprototyp[devposition].MatrixYCount);
             end else
             begin
-              // ungerade Reihe (von rechts nach links)
+              // ungerade Spalte (von rechts nach links)
               my:=(deviceprototyp[devposition].MatrixYCount-1)-(m-(mx*deviceprototyp[devposition].MatrixYCount));
             end;
-          end;
-          5:
-          begin
-            my:=trunc(m/deviceprototyp[devposition].MatrixXCount);
-            mx:=(my*deviceprototyp[devposition].MatrixXCount)-m;
-          end;
-          6:
-          begin
-            mx:=trunc(m/deviceprototyp[devposition].MatrixYCount);
-            my:=(mx*deviceprototyp[devposition].MatrixYCount)-m;
           end;
         end;
 
@@ -7970,16 +7960,6 @@ begin
           my:=(mainform.Devices[devposition].MatrixYCount-1)-(m-(mx*mainform.Devices[devposition].MatrixYCount));
         end;
       end;
-      5:
-      begin
-        my:=trunc(m/deviceprototyp[devposition].MatrixXCount);
-        mx:=(my*deviceprototyp[devposition].MatrixXCount)-m;
-      end;
-      6:
-      begin
-        mx:=trunc(m/deviceprototyp[devposition].MatrixYCount);
-        my:=(mx*deviceprototyp[devposition].MatrixYCount)-m;
-      end;
     end;
 
     if (mx=MatrixXPosition) and (my=MatrixYPosition) then
@@ -8150,6 +8130,12 @@ begin
 
   deviceposition:=GetDevicePositionInDeviceArray(@Data^.ID);
 
+  if mainform.devices[deviceposition].MatrixDeviceLevel=0 then
+  begin
+    ShowMessage(_('Das ausgewählte Gerät ist kein Matrixgerät!'));
+    exit;
+  end;
+
   for i:=0 to length(mainform.devices)-1 do
   begin
     if IsEqualGUID(mainform.devices[i].MatrixMainDeviceID, mainform.devices[deviceposition].MatrixMainDeviceID) then
@@ -8170,6 +8156,12 @@ begin
   Data:=VST.GetNodeData(VST.FocusedNode);
 
   deviceposition:=GetDevicePositionInDeviceArray(@Data^.ID);
+
+  if mainform.devices[deviceposition].MatrixDeviceLevel=0 then
+  begin
+    ShowMessage(_('Das ausgewählte Gerät ist kein Matrixgerät!'));
+    exit;
+  end;
 
   for i:=0 to length(mainform.devices)-1 do
   begin

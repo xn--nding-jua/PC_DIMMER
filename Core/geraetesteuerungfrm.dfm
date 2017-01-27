@@ -2,7 +2,7 @@ object geraetesteuerung: Tgeraetesteuerung
   Left = 566
   Top = 87
   Width = 700
-  Height = 512
+  Height = 522
   HorzScrollBar.Smooth = True
   HorzScrollBar.Tracking = True
   VertScrollBar.Smooth = True
@@ -68,20 +68,20 @@ object geraetesteuerung: Tgeraetesteuerung
   object Splitter1: TSplitter
     Left = 368
     Top = 25
-    Height = 448
+    Height = 458
     Align = alRight
   end
   object Panel3: TPanel
     Left = 0
     Top = 25
     Width = 237
-    Height = 448
+    Height = 458
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     object fortschrittsbalken: TProgressBar
       Left = 0
-      Top = 302
+      Top = 312
       Width = 237
       Height = 17
       Align = alBottom
@@ -92,14 +92,14 @@ object geraetesteuerung: Tgeraetesteuerung
       Left = 0
       Top = 41
       Width = 8
-      Height = 261
+      Height = 271
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 1
     end
     object Panel4: TPanel
       Left = 0
-      Top = 319
+      Top = 329
       Width = 237
       Height = 129
       Align = alBottom
@@ -544,7 +544,6 @@ object geraetesteuerung: Tgeraetesteuerung
         Height = 25
         Enabled = False
         TabOrder = 4
-        Visible = False
         OnClick = upbtnClick
         PngImage.Data = {
           89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -665,7 +664,6 @@ object geraetesteuerung: Tgeraetesteuerung
         Height = 25
         Enabled = False
         TabOrder = 5
-        Visible = False
         OnClick = downbtnClick
         PngImage.Data = {
           89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -861,7 +859,7 @@ object geraetesteuerung: Tgeraetesteuerung
       Left = 8
       Top = 41
       Width = 229
-      Height = 261
+      Height = 271
       Align = alClient
       Colors.UnfocusedSelectionColor = clInactiveBorder
       Colors.UnfocusedSelectionBorderColor = clInactiveBorder
@@ -910,7 +908,7 @@ object geraetesteuerung: Tgeraetesteuerung
     Left = 371
     Top = 25
     Width = 313
-    Height = 448
+    Height = 458
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 1
@@ -926,7 +924,7 @@ object geraetesteuerung: Tgeraetesteuerung
       Left = 4
       Top = 269
       Width = 301
-      Height = 138
+      Height = 148
       Align = alClient
       ColCount = 3
       DefaultRowHeight = 15
@@ -945,7 +943,7 @@ object geraetesteuerung: Tgeraetesteuerung
     end
     object Panel6: TPanel
       Left = 0
-      Top = 407
+      Top = 417
       Width = 313
       Height = 41
       Align = alBottom
@@ -1786,7 +1784,7 @@ object geraetesteuerung: Tgeraetesteuerung
       Left = 0
       Top = 269
       Width = 4
-      Height = 138
+      Height = 148
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 3
@@ -1795,7 +1793,7 @@ object geraetesteuerung: Tgeraetesteuerung
       Left = 305
       Top = 269
       Width = 8
-      Height = 138
+      Height = 148
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 4
@@ -1846,7 +1844,7 @@ object geraetesteuerung: Tgeraetesteuerung
     Left = 237
     Top = 25
     Width = 131
-    Height = 448
+    Height = 458
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
@@ -3555,11 +3553,11 @@ object geraetesteuerung: Tgeraetesteuerung
       object TBSubmenuItem3: TTBSubmenuItem
         Caption = 'Matrix'
         object TBItem5: TTBItem
-          Caption = 'Matrix horizontal spiegeln'
+          Caption = 'Matrix oben/unten spiegeln'
           OnClick = TBItem5Click
         end
         object TBItem6: TTBItem
-          Caption = 'Matrix vertikal spiegeln'
+          Caption = 'Matrix links/rechts spiegeln'
           OnClick = TBItem6Click
         end
       end

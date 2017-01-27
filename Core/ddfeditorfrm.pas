@@ -387,6 +387,15 @@ type
     fogmaxlbl: TLabel;
     fogmaxvalueedit: TJvSpinEdit;
     fogoffvalueedit: TJvSpinEdit;
+    Bevel2: TBevel;
+    matrixheaderlbl: TLabel;
+    IsMatrixDevice: TCheckBox;
+    matrixbreitelbl: TLabel;
+    MatrixXCount: TJvSpinEdit;
+    matrixhoehelbl: TLabel;
+    MatrixYCount: TJvSpinEdit;
+    MatrixType: TComboBox;
+    typeofmatrixlbl: TLabel;
     procedure sizecontrolcheckedClick(Sender: TObject);
     procedure TBItem8Click(Sender: TObject);
     procedure TBItem7Click(Sender: TObject);
@@ -1094,6 +1103,14 @@ begin
       tmp:=tmp+' ch'+inttostr(i)+'="'+inttostr(channels[i].initvalue)+'"';
   end;
   memo1.Lines.Add(' <initvalues '+tmp+' />');
+
+  if IsMatrixDevice.Checked then
+  begin
+    if MatrixType.ItemIndex<0 then
+      MatrixType.ItemIndex:=0;
+
+    memo1.Lines.Add(' <matrix xcount="'+inttostr(round(MatrixXCount.Value))+'" ycount="'+inttostr(round(MatrixYCount.Value))+'" ordertype="'+inttostr(MatrixType.ItemIndex+1)+'"/>');
+  end;
 
   if length(colors)>0 then
   begin
@@ -2030,6 +2047,7 @@ begin
     deviceimage.width:=64;
     deviceimage.height:=64;
     deviceimage.Picture.LoadFromFile(mainform.pcdimmerdirectory+'Devicepictures\64 x 64\'+bildedit.text);
+    IsMatrixDevice.Checked:=false;
 
     for j:=0 to XML.Xml.Root.Items.Count-1 do
     begin // <device>
@@ -2077,6 +2095,14 @@ begin
         begin
           channels[k].initvalue:=XML.XML.Root.Items[j].Properties.IntValue('ch'+inttostr(k));
         end;
+      end;
+
+      if lowercase(XML.XML.Root.Items[j].Name)='matrix' then
+      begin // <matrix>
+        IsMatrixDevice.Checked:=true;
+        MatrixXCount.Value:=XML.XML.Root.Items[j].Properties.IntValue('xcount');
+        MatrixYCount.Value:=XML.XML.Root.Items[j].Properties.IntValue('ycount');
+        MatrixType.ItemIndex:=XML.XML.Root.Items[j].Properties.IntValue('ordertype');
       end;
 
       if lowercase(XML.XML.Root.Items[j].Name)='colors' then
