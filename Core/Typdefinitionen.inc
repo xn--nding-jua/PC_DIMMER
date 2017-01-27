@@ -506,7 +506,7 @@
     MatrixMainDeviceID:TGUID;
     MatrixOrderType:byte; // 1-6
     MatrixXCount, MatrixYCount:byte;
-    MatrixXPosition, MatrixYPosition:byte;
+    MatrixXPosition, MatrixYPosition:shortint; // Ursprünglich als Byte gedacht... aber eine Matrix mit mehr als 127 wird im PC_DIMMER nie verwendet werden können
   end;
 
   TDevicePreset = record

@@ -544,6 +544,7 @@ object geraetesteuerung: Tgeraetesteuerung
         Height = 25
         Enabled = False
         TabOrder = 4
+        Visible = False
         OnClick = upbtnClick
         PngImage.Data = {
           89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -664,6 +665,7 @@ object geraetesteuerung: Tgeraetesteuerung
         Height = 25
         Enabled = False
         TabOrder = 5
+        Visible = False
         OnClick = downbtnClick
         PngImage.Data = {
           89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -3548,6 +3550,17 @@ object geraetesteuerung: Tgeraetesteuerung
         object IDderaktuellenGruppeanzeigen1: TTBItem
           Caption = 'ID der aktuellen Gruppe anzeigen'
           OnClick = ShowGroupIDbtnClick
+        end
+      end
+      object TBSubmenuItem3: TTBSubmenuItem
+        Caption = 'Matrix'
+        object TBItem5: TTBItem
+          Caption = 'Matrix horizontal spiegeln'
+          OnClick = TBItem5Click
+        end
+        object TBItem6: TTBItem
+          Caption = 'Matrix vertikal spiegeln'
+          OnClick = TBItem6Click
         end
       end
       object TBSubmenuItem1: TTBSubmenuItem

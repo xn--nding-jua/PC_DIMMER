@@ -286,6 +286,9 @@ type
     TBSeparatorItem1: TTBSeparatorItem;
     TBItem3: TTBItem;
     TBItem4: TTBItem;
+    TBSubmenuItem3: TTBSubmenuItem;
+    TBItem5: TTBItem;
+    TBItem6: TTBItem;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormHide(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -394,6 +397,8 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure DevStartaddressEditKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure TBItem6Click(Sender: TObject);
+    procedure TBItem5Click(Sender: TObject);
   private
     { Private-Deklarationen }
 //    SystemVals: array [0..2] of Integer;
@@ -8130,6 +8135,48 @@ begin
     end;
     VST.Refresh;
     SendNamesBtnClick(nil);
+  end;
+end;
+
+procedure Tgeraetesteuerung.TBItem6Click(Sender: TObject);
+var
+  i, deviceposition:integer;
+  Data:PTreeData;
+begin
+  if not mainform.UserAccessGranted(1) then exit;
+
+  if VST.SelectedCount=0 then exit;
+  Data:=VST.GetNodeData(VST.FocusedNode);
+
+  deviceposition:=GetDevicePositionInDeviceArray(@Data^.ID);
+
+  for i:=0 to length(mainform.devices)-1 do
+  begin
+    if IsEqualGUID(mainform.devices[i].MatrixMainDeviceID, mainform.devices[deviceposition].MatrixMainDeviceID) then
+    begin
+      mainform.devices[i].MatrixXPosition:=-1*mainform.devices[i].MatrixXPosition;
+    end;
+  end;
+end;
+
+procedure Tgeraetesteuerung.TBItem5Click(Sender: TObject);
+var
+  i, deviceposition:integer;
+  Data:PTreeData;
+begin
+  if not mainform.UserAccessGranted(1) then exit;
+
+  if VST.SelectedCount=0 then exit;
+  Data:=VST.GetNodeData(VST.FocusedNode);
+
+  deviceposition:=GetDevicePositionInDeviceArray(@Data^.ID);
+
+  for i:=0 to length(mainform.devices)-1 do
+  begin
+    if IsEqualGUID(mainform.devices[i].MatrixMainDeviceID, mainform.devices[deviceposition].MatrixMainDeviceID) then
+    begin
+      mainform.devices[i].MatrixYPosition:=-1*mainform.devices[i].MatrixYPosition;
+    end;
   end;
 end;
 
