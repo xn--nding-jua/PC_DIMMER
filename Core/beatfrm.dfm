@@ -535,43 +535,36 @@ object beatform: Tbeatform
     Caption = ' Aktion bei Beat-Impuls '
     TabOrder = 17
     object Label12: TLabel
-      Left = 184
-      Top = 24
-      Width = 153
+      Left = 232
+      Top = 16
+      Width = 121
       Height = 13
       Alignment = taRightJustify
       AutoSize = False
       Caption = 'Kanalwert bei Beat ON:'
     end
     object Label13: TLabel
-      Left = 184
-      Top = 48
-      Width = 153
+      Left = 232
+      Top = 40
+      Width = 121
       Height = 13
       Alignment = taRightJustify
       AutoSize = False
       Caption = 'Kanalwert bei Beat OFF:'
     end
-    object Label14: TLabel
-      Left = 8
-      Top = 48
-      Width = 143
-      Height = 13
-      Caption = 'Sende Wert auf DataIn-Kanal:'
-    end
     object CheckBox4: TCheckBox
       Left = 8
-      Top = 24
+      Top = 16
       Width = 161
       Height = 17
-      Caption = 'Sende Kanalwert an DataIn'
+      Caption = 'Sende Beat an DataIn'
       TabOrder = 0
       OnMouseUp = CheckBox4MouseUp
     end
     object JvSpinEdit5: TJvSpinEdit
-      Left = 344
-      Top = 20
-      Width = 65
+      Left = 360
+      Top = 12
+      Width = 49
       Height = 21
       MaxValue = 255.000000000000000000
       Value = 255.000000000000000000
@@ -579,17 +572,17 @@ object beatform: Tbeatform
       OnChange = JvSpinEdit5Change
     end
     object JvSpinEdit6: TJvSpinEdit
-      Left = 344
-      Top = 44
-      Width = 65
+      Left = 360
+      Top = 36
+      Width = 49
       Height = 21
       MaxValue = 255.000000000000000000
       TabOrder = 2
       OnChange = JvSpinEdit6Change
     end
     object JvSpinEdit7: TJvSpinEdit
-      Left = 160
-      Top = 44
+      Left = 176
+      Top = 12
       Width = 49
       Height = 21
       MaxValue = 8192.000000000000000000
@@ -597,6 +590,26 @@ object beatform: Tbeatform
       Value = 400.000000000000000000
       TabOrder = 3
       OnChange = JvSpinEdit7Change
+    end
+    object CheckBox5: TCheckBox
+      Left = 8
+      Top = 40
+      Width = 161
+      Height = 17
+      Caption = 'Sende Lautst'#228'rke an Data-In'
+      TabOrder = 4
+      OnMouseUp = CheckBox5MouseUp
+    end
+    object JvSpinEdit8: TJvSpinEdit
+      Left = 176
+      Top = 36
+      Width = 49
+      Height = 21
+      MaxValue = 8192.000000000000000000
+      MinValue = 1.000000000000000000
+      Value = 401.000000000000000000
+      TabOrder = 5
+      OnChange = JvSpinEdit8Change
     end
   end
   object GroupBox3: TGroupBox

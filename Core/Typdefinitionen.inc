@@ -865,6 +865,8 @@
     SceneOnBeatLost:TGUID;
     SceneOnBeatStart:TGUID;
     Timeout:integer;
+    SendVolumeToDataIn:boolean;
+    SendVolumeToDataInChannel:Word;
   end;
 
   TTerminalSystem = record

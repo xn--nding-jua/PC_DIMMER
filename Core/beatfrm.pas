@@ -75,7 +75,6 @@ type
     Label12: TLabel;
     Label13: TLabel;
     JvSpinEdit7: TJvSpinEdit;
-    Label14: TLabel;
     ComboBox1: TComboBox;
     BeatTimer: TSVATimer;
     GroupBox3: TGroupBox;
@@ -94,6 +93,8 @@ type
     TimeoutTimer: TTimer;
     Label22: TLabel;
     timeoutlbl: TLabel;
+    CheckBox5: TCheckBox;
+    JvSpinEdit8: TJvSpinEdit;
     procedure TemposourceboxChange(Sender: TObject);
     procedure CreateParams(var Params:TCreateParams);override;
     procedure soundcardselectChange(Sender: TObject);
@@ -140,6 +141,9 @@ type
     procedure removestopscenebtnClick(Sender: TObject);
     procedure TimeoutTimerTimer(Sender: TObject);
     procedure timeouteditChange(Sender: TObject);
+    procedure CheckBox5MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure JvSpinEdit8Change(Sender: TObject);
     // Ende von BeatDetection
   private
     { Private-Deklarationen }
@@ -714,9 +718,11 @@ end;
 procedure Tbeatform.MSGOpen;
 begin
   checkbox4.Checked:=mainform.BeatImpuls.Active;
-  JvSpinEdit4.value:=mainform.BeatImpuls.Channel;
+  JvSpinEdit7.Value:=mainform.BeatImpuls.Channel;
   JvSpinEdit5.value:=mainform.BeatImpuls.OnValue;
   JvSpinEdit6.value:=mainform.BeatImpuls.OffValue;
+  checkbox5.Checked:=mainform.BeatImpuls.SendVolumeToDataIn;
+  JvSpinEdit8.Value:=mainform.BeatImpuls.SendVolumeToDataInChannel;
 
   label19.Caption:=mainform.GetSceneInfo2(mainform.BeatImpuls.SceneonBeatLost, 'type')+': '+mainform.GetSceneInfo2(mainform.BeatImpuls.SceneonBeatLost, 'name')+' ('+mainform.GetSceneInfo2(mainform.BeatImpuls.SceneonBeatLost, 'desc')+')';
   label17.Caption:=mainform.GetSceneInfo2(mainform.BeatImpuls.SceneonBeatStart, 'type')+': '+mainform.GetSceneInfo2(mainform.BeatImpuls.SceneonBeatStart, 'name')+' ('+mainform.GetSceneInfo2(mainform.BeatImpuls.SceneonBeatStart, 'desc')+')';
@@ -1267,6 +1273,17 @@ end;
 procedure Tbeatform.timeouteditChange(Sender: TObject);
 begin
   mainform.Beatimpuls.Timeout:=round(timeoutedit.value);
+end;
+
+procedure Tbeatform.CheckBox5MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  mainform.BeatImpuls.SendVolumeToDataIn:=Checkbox5.Checked;
+end;
+
+procedure Tbeatform.JvSpinEdit8Change(Sender: TObject);
+begin
+  mainform.BeatImpuls.SendVolumeToDataInChannel:=round(JvSpinEdit8.value);
 end;
 
 end.

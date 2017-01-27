@@ -1,0 +1,16 @@
+
+MediaCenter Server Logfile:
+-----------------------------------------
+07:26:43, 14.08.2010 MediaCenter Server erfolgreich gestartet.
+07:29:51, 14.08.2010 Client Connected (localhost, 127.0.0.1)
+07:29:51, 14.08.2010 Exception: Asynchroner Socket-Fehler 10049 (ESocketError), TClientWinSocket, 
+07:29:52, 14.08.2010 Received CMD: 0, Data1: 0, Data2: 0, Text: C:\PHOENIXstudios Projekte\Urmel aus dem Eis\Urmel_Seite.avi
+07:29:53, 14.08.2010 Received CMD: 1, Data1: 0, Data2: 0, Text: 
+07:30:14, 14.08.2010 Client Disconnected (localhost, 127.0.0.1)
+
+Video Window LogFile:
+-----------------------------------------
+
+
+
+MediaCenter Server erfolgreich beendet.

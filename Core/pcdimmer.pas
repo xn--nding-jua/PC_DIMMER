@@ -54,7 +54,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=483;
+  actualprojectversion=484;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -4029,12 +4029,14 @@ begin
     FFTDataIn[i].Faktor:=255;
   end;
   BeatImpuls.Active:=false;
-  BeatImpuls.Channel:=1;
+  BeatImpuls.Channel:=400;
   BeatImpuls.OnValue:=255;
   BeatImpuls.OffValue:=0;
   BeatImpuls.SceneOnBeatLost:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
   BeatImpuls.SceneOnBeatStart:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
   BeatImpuls.Timeout:=5;
+  BeatImpuls.SendVolumeToDataIn:=false;
+  BeatImpuls.SendVolumeToDataInChannel:=401;
 
   ShortCutChecker.Enabled:=true;
 
@@ -5492,6 +5494,8 @@ begin
     Filestream.WriteBuffer(mainform.BeatImpuls.SceneOnBeatLost,sizeof(mainform.BeatImpuls.SceneOnBeatLost));
     Filestream.WriteBuffer(mainform.BeatImpuls.SceneOnBeatStart,sizeof(mainform.BeatImpuls.SceneOnBeatStart));
     Filestream.WriteBuffer(mainform.BeatImpuls.Timeout,sizeof(mainform.BeatImpuls.Timeout));
+    Filestream.WriteBuffer(mainform.BeatImpuls.SendVolumeToDataIn,sizeof(mainform.BeatImpuls.SendVolumeToDataIn));
+    Filestream.WriteBuffer(mainform.BeatImpuls.SendVolumeToDataInChannel,sizeof(mainform.BeatImpuls.SendVolumeToDataInChannel));
 // Ende BeatImpuls speichern
 // Geräteselektionen speichern
     Count:=length(DeviceSelectedIDs);
@@ -8435,15 +8439,22 @@ begin
         BeatImpuls.SceneOnBeatStart:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
         BeatImpuls.Timeout:=5;
       end;
+      if projektprogrammversionint>=484 then
+      begin
+        Filestream.ReadBuffer(mainform.BeatImpuls.SendVolumeToDataIn,sizeof(mainform.BeatImpuls.SendVolumeToDataIn));
+        Filestream.ReadBuffer(mainform.BeatImpuls.SendVolumeToDataInChannel,sizeof(mainform.BeatImpuls.SendVolumeToDataInChannel));
+      end;
     end else
     begin
       BeatImpuls.Active:=false;
-      BeatImpuls.Channel:=1;
+      BeatImpuls.Channel:=400;
       BeatImpuls.OnValue:=255;
       BeatImpuls.OffValue:=0;
       BeatImpuls.SceneOnBeatLost:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
       BeatImpuls.SceneOnBeatStart:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
       BeatImpuls.Timeout:=5;
+      BeatImpuls.SendVolumeToDataIn:=false;
+      BeatImpuls.SendVolumeToDataInChannel:=401;
     end;
 // Ende BeatImpuls
 // Geräteselektionen laden
@@ -11075,6 +11086,11 @@ begin
       begin
         beatform.vu_meter_micin.Percent := Round(100*AudioTempMax/32768);
 
+        if BeatImpuls.SendVolumeToDataIn then
+        begin
+          mainform.ExecuteDataInEvent(BeatImpuls.SendVolumeToDataInChannel, round(255*AudioTempMax/32768));
+        end;
+
         if beatform.Timer1.enabled then
         begin
           for i:=0 to length(beatform._BeatBuffer)-2 do
@@ -11629,6 +11645,8 @@ procedure TMainform.ExecuteDataInEvent(address, endvalue:integer);
 var
   i,j:integer;
 begin
+  if (address<1) or (address>8192) then exit;
+
   data_in_channels[address]:=endvalue;
 
   if DataInEventfrm.showing then

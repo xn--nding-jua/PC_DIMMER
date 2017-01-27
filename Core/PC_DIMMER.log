@@ -1,0 +1,104 @@
+[0] [07:14:21] [15.12.2015] PC_DIMMER Version 5.4.0 Build 4616  starting up...
+[1] [07:14:21] [15.12.2015] ----------------------------------------------------------------------------
+[2] [07:14:21] [15.12.2015] INIT: Workingdirectory: "C:\Cloud\Programmieren\Delphi\PC_DIMMER\Core\"
+[3] [07:14:21] [15.12.2015] INIT: Using Windows 10.0 Build 10586 Frontend.
+[4] [07:14:21] [15.12.2015] INIT: Reading Registryvalues... - OK
+[5] [07:14:21] [15.12.2015] INIT: Reading Configuration...
+[6] [07:14:21] [15.12.2015] INIT: Reading Configurationfile successful...
+
+[8] [07:14:21] [15.12.2015] PLUGIN: Listing all I/O-Plugins...
+[9] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin ArtNet.dll
+[10] [07:14:21] [15.12.2015] PLUGIN: Found Programplugin BPM-Connect.dll
+[11] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin Cinetix_USBDMX512.dll
+[12] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin Cypress_USB2DMX.dll
+[13] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin DasLight_Siudi12.dll
+[14] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin DasLight_Siudi568.dll
+[15] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin discolitez.dll
+[16] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin dmx4all_interface.dll
+[17] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin dmxchaser128.dll
+[18] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin dmxcontrol_bridge.dll
+[19] [07:14:21] [15.12.2015] PLUGIN: Found Programplugin DMXRecorder.dll
+[20] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin dmx_de_interface.dll
+[21] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin dworkindmx1.dll
+[22] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin dworkindmxpro2.dll
+[23] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin elektor_momolight.dll
+[24] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin elektor_oksidizer_dmx.dll
+[25] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin enttec_opendmx_hp.dll
+[26] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin enttec_prodmx.dll
+[27] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin enttec_promk2_dmx.dll
+[28] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin eurolitedmx_hp.dll
+[29] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin eurolite_dmx512_pro.dll
+[30] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin genio.dll
+[31] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin gus_usb_vl344_hp.dll
+[32] [07:14:21] [15.12.2015] PLUGIN: Found Programplugin IK Textbuch.dll
+[33] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin kwllighting.dll
+[34] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin LiLan.dll
+[35] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin minidmx.dll
+[36] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin minilumax.dll
+[37] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin monacordmx_510.dll
+[38] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin monacordmx_60_120.dll
+[39] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin nodleu1_interface.dll
+[40] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin oksid_dmx31.dll
+[41] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin Parallelport.dll
+[42] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin pc_dimmer_com.dll
+[43] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin pc_dimmer_com_32.dll
+[44] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin pc_dimmer_dmx512_interface.dll
+[45] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin pc_dimmer_lan.dll
+[46] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin PeperoniLights.dll
+[47] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin Showjockey_USBDMX512.dll
+[48] [07:14:21] [15.12.2015] PLUGIN: Found Programplugin SoftScanner.dll
+[49] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin soundlight_usbdmxone.dll
+[50] [07:14:21] [15.12.2015] PLUGIN: Found Programplugin temperaturregler.dll
+[51] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin Tratek_232DMX.dll
+[52] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin uDMX_interface.dll
+[53] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin Velleman_k8055.dll
+[54] [07:14:21] [15.12.2015] PLUGIN: Found Outputplugin Velleman_k8062.dll
+[55] [07:14:21] [15.12.2015] PLUGIN: Found 41 Outputplugin(s)...
+[56] [07:14:21] [15.12.2015] PLUGIN: Found 5 Programplugin(s)...
+
+[58] [07:14:21] [15.12.2015] INIT: Starting Audiodevices...
+[59] [07:14:21] [15.12.2015] Bass.dll in Version 2.4.9.0 found (minimum version: 2.4). - OK
+[60] [07:14:21] [15.12.2015] Bassfx.dll in Version 2.4.7.1 found. - OK
+[61] [07:14:21] [15.12.2015] Bassmix.dll in Version 2.4.6.0 found. - OK
+[62] [07:14:21] [15.12.2015] Initializing BASS-System... - OK
+[63] [07:14:22] [15.12.2015] INIT: Starting PC_DIMMER Desktop...
+[64] [07:14:22] [15.12.2015] AUDIO: Setting up Audio-Input...
+[65] [07:14:25] [15.12.2015] INIT: Found handle. PC_DIMMER Desktop is starting...
+
+[67] [07:14:25] [15.12.2015] PLUGIN: Try to activate outputplugin "dmx_de_interface.dll"... - OK
+
+[69] [07:14:25] [15.12.2015] PLUGIN: Try to activate inputplugin "BPM-Connect.dll"... - OK
+[70] [07:14:25] [15.12.2015] PLUGIN: Try to activate inputplugin "DMXRecorder.dll"... - OK
+[71] [07:14:25] [15.12.2015] PLUGIN: Try to activate inputplugin "IK Textbuch.dll"... - OK
+[72] [07:14:25] [15.12.2015] PLUGIN: Try to activate inputplugin "SoftScanner.dll"... - OK
+[73] [07:14:25] [15.12.2015] PLUGIN: Try to activate inputplugin "temperaturregler.dll"... - OK
+[74] [07:14:26] [15.12.2015] PLUGIN: Sending values to all Programplugins... - OK
+
+[76] [07:14:26] [15.12.2015] INIT: Starting Timer: Dimmerkernel - OK
+[77] [07:14:26] [15.12.2015] INIT: Starting Joystickcontrol - OK
+[78] [07:14:26] [15.12.2015] INIT: Starting MIDI-Input... - OK
+[79] [07:14:26] [15.12.2015] INIT: Starting MIDI-Output... - OK
+[80] [07:14:26] [15.12.2015] INIT: Starting Thread: AccuControl - OK
+[81] [07:14:26] [15.12.2015] INIT: Starting Timer: MIDI-Timecodeplayer - OK
+[82] [07:14:27] [15.12.2015] FILE: Searching for files to load... - No Files found
+[83] [07:14:27] [15.12.2015] ----------------------------------------------------------------------------
+[84] [07:14:27] [15.12.2015] INIT: Starting up was successful, now showing the desktop...
+
+
+[87] [07:14:39] [15.12.2015] ----------------------------------------------------------------------------
+[88] [07:14:39] [15.12.2015] SHUTDOWN: Closing Timers... - OK
+[89] [07:14:39] [15.12.2015] SHUTDOWN: Sending Close-Message...
+[90] [07:14:39] [15.12.2015] SHUTDOWN: Deactivating Input-Plugins...
+[91] [07:14:39] [15.12.2015] SHUTDOWN: Deactivating Plugin BPM-Connect.dll - OK
+[92] [07:14:39] [15.12.2015] SHUTDOWN: Deactivating Plugin DMXRecorder.dll - OK
+[93] [07:14:39] [15.12.2015] SHUTDOWN: Deactivating Plugin IK Textbuch.dll - OK
+[94] [07:14:39] [15.12.2015] SHUTDOWN: Deactivating Plugin SoftScanner.dll - OK
+[95] [07:14:39] [15.12.2015] SHUTDOWN: Deactivating Plugin temperaturregler.dll - OK
+[96] [07:14:39] [15.12.2015] SHUTDOWN: -----------------------------------
+[97] [07:14:39] [15.12.2015] SHUTDOWN: Deactivating Output-Plugins...
+[98] [07:14:39] [15.12.2015] SHUTDOWN: Deactivating Plugin dmx_de_interface.dll - OK
+[99] [07:14:40] [15.12.2015] SHUTDOWN: ----------------------------------- - OK
+[100] [07:14:40] [15.12.2015] SHUTDOWN: Writing Configurationsfile... - OK
+[101] [07:14:40] [15.12.2015] SHUTDOWN: Freeing DLLs...OutputDLLs...ProgramDLLs... - OK
+[102] [07:14:40] [15.12.2015] ----------------------------------------------------------------------------
+[103] [07:14:40] [15.12.2015] PC_DIMMER closed successfully - Goodbye :D

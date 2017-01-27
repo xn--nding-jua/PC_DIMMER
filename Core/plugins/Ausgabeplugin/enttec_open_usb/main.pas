@@ -11,8 +11,15 @@ type
   TCallback = procedure(address,startvalue,endvalue,fadetime:integer);stdcall;
   TCallbackEvent = procedure(address,endvalue:integer);stdcall;
 
+  // Interface-Thread definieren
+  TInterfaceThread = class(TThread)
+  protected
+    procedure Execute; override;
+  public
+    StopLoop:boolean;
+    constructor create;
+  end;
   Tmainform = class(TForm)
-    DMXTimer: TCHHighResTimer;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     Label14: TLabel;
@@ -31,7 +38,6 @@ type
     Button4: TButton;
     LastErrorLbl: TLabel;
     procedure FormCreate(Sender: TObject);
-    procedure DMXTimerTimer(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure JvSpinEdit1Change(Sender: TObject);
     procedure deviceselectionlistChange(Sender: TObject);
@@ -45,15 +51,16 @@ type
     device_connected:Word;
     device_num:integer;
     DMXoutOK:boolean;
+    InterfaceThread: TInterfaceThread;
   public
     { Public-Deklarationen }
   	device_handle:THANDLE;//DWORD;
     issending:boolean;
-    NewDataForOutput:boolean;
 
     LastErrorString:string;
 
     DMXOutputBuffer:array[1..512] of byte; // DMX-Startbyte, 512 Datenbytes
+    SendInterval:integer;
 
     RefreshDLLValues:TCallback;
     RefreshDLLEvent:TCallbackEvent;
@@ -62,11 +69,13 @@ type
   	function FTDI_ListDevices:integer;
 	  procedure FTDI_ClosePort;
   	procedure FTDI_PurgeBuffer;
-	procedure FTDI_Reload;
+	  procedure FTDI_Reload;
 
     procedure ConnectToInterface;
     procedure ReconnectInterface;
     procedure DisconnectInterface;
+    procedure StartThread;
+    procedure StopThread;
 
     procedure CheckFTDIStatus(ftStatus:integer);
   end;
@@ -77,6 +86,61 @@ var
 implementation
 
 {$R *.dfm}
+//-----------------------------------------------------
+constructor TInterfaceThread.Create;
+begin
+  inherited create(false);
+  StopLoop:=false;
+  Priority := tpNormal;
+  FreeOnTerminate := true;
+end;
+
+procedure TInterfaceThread.Execute;
+var
+  bytes_written:DWORD;
+  StartCode:byte;
+begin
+  inherited;
+
+  repeat
+    // Send DMX Data
+    FT_ResetDevice(mainform.device_handle);
+    FT_SetDivisor(mainform.device_handle, 12); // set Baudrate
+    FT_SetDataCharacteristics(mainform.device_handle, FT_DATA_BITS_8, FT_STOP_BITS_2, FT_PARITY_NONE);
+    FT_SetFlowControl(mainform.device_handle, FT_FLOW_NONE, 0, 0);
+    FT_ClrRts(mainform.device_handle);
+    FT_Purge(mainform.device_handle, FT_PURGE_TX);
+    FT_Purge(mainform.device_handle, FT_PURGE_RX);
+
+    FT_SetBreakOn(mainform.device_handle);
+    FT_SetBreakOff(mainform.device_handle);
+
+    FT_Write(mainform.device_handle,@StartCode,1,@bytes_written);
+    FT_Write(mainform.device_handle,@mainform.DMXOutputBuffer,sizeof(mainform.DMXOutputBuffer),@bytes_written);
+
+    mainform.DMXOutOK:=(bytes_written = sizeof(mainform.DMXOutputBuffer));
+    
+    sleep(50);
+  until StopLoop;
+  Terminate;
+end;
+//-----------------------------------------------------
+
+procedure Tmainform.StartThread;
+begin
+  InterfaceThread:=TInterfaceThread.create;
+end;
+
+procedure Tmainform.StopThread;
+begin
+  InterfaceThread.StopLoop:=true;
+  WaitForSingleObject(InterfaceThread.Handle, 4000);
+
+  if not InterfaceThread.Terminated then
+    InterfaceThread.Terminate;
+  InterfaceThread.Free;
+end;
+
 
 function GetModulePath : String;
 var
@@ -263,7 +327,7 @@ begin
 	        if not LReg.ValueExists('Refreshrate') then
 	          LReg.WriteInteger('Refreshrate',50);
 	        JvSpinEdit1.value:=LReg.ReadInteger('Refreshrate');
-          DMXTimer.Interval:=round(JvSpinEdit1.value);
+          SendInterval:=round(JvSpinEdit1.value);
 	      end;
  			end;
     end;
@@ -273,47 +337,11 @@ begin
 
   issending:=false;
 
-  NewDataForOutput:=true;
-
 {
   // FTDI resetten
   FT_Reload(1027, 24577); // VID:0403, PID:6001
   FT_Rescan();
 }
-end;
-
-procedure Tmainform.DMXTimerTimer(Sender: TObject);
-var
-  bytes_written:DWORD;
-  StartCode:byte;
-begin
-  // Send DMX Data
-  if (device_connected>0) then
-  begin
-    FT_ResetDevice(device_handle);
-    FT_SetDivisor(device_handle, 12); // set Baudrate
-    FT_SetDataCharacteristics(device_handle, FT_DATA_BITS_8, FT_STOP_BITS_2, FT_PARITY_NONE);
-    FT_SetFlowControl(device_handle, FT_FLOW_NONE, 0, 0);
-    FT_ClrRts(device_handle);
-    FT_Purge(device_handle, FT_PURGE_TX);
-    FT_Purge(device_handle, FT_PURGE_RX);
-
-    FT_SetBreakOn(device_handle);
-    FT_SetBreakOff(device_handle);
-
-    FT_Write(device_handle,@StartCode,1,@bytes_written);
-    FT_Write(device_handle,@DMXOutputBuffer,sizeof(DMXOutputBuffer),@bytes_written);
-
-    if (bytes_written <> sizeof(DMXOutputBuffer)) then
-    begin
-      LastErrorString:='Error Sending DMX-Data to Interface';
-      DMXOutOK:=false;
-    end else
-    begin
-      NewDataForOutput:=false;
-      DMXOutOK:=true;
-    end;
-  end;
 end;
 
 procedure Tmainform.ConnectToInterface;
@@ -353,13 +381,13 @@ begin
     connectedlbl.Visible:=device_connected<>0;
     disconnectedlbl.Visible:=(device_connected=0);
   end;
-  DMXTimer.Enabled:=true;
+  StartThread;
 end;
 
 procedure Tmainform.DisconnectInterface;
 begin
   LastErrorString:='';
-  DMXTimer.Enabled:=false;
+  StopThread;
   memo1.lines.add('Interface disconnected.');
   device_connected:=0;
 
@@ -384,7 +412,7 @@ end;
 
 procedure Tmainform.JvSpinEdit1Change(Sender: TObject);
 begin
-  DMXTimer.Interval:=round(JvSpinEdit1.Value);
+  SendInterval:=round(JvSpinEdit1.Value);
 end;
 
 procedure Tmainform.deviceselectionlistChange(Sender: TObject);

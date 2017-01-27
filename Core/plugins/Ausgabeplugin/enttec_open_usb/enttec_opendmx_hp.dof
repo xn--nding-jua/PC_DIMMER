@@ -105,15 +105,11 @@ HostApplication=C:\Cloud\Programmieren\Delphi\PC_DIMMER\Plugintester\PC_DIMMER_P
 Launcher=
 UseLauncher=0
 DebugCWD=
-[Language]
-ActiveLang=
-ProjectLang=
-RootDir=
 [Version Info]
 IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=5
-MinorVer=0
+MinorVer=1
 Release=0
 Build=0
 Debug=0
@@ -126,14 +122,16 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=Enttec OpenDMX
-FileVersion=5.0.0.0
+FileVersion=5.1.0.0
 InternalName=
-LegalCopyright=(c) 2016 by Dr.-Ing. Christian Nöding
+LegalCopyright=(c) 2017 by Dr.-Ing. Christian Nöding
 LegalTrademarks=
 OriginalFilename=
 ProductName=
-ProductVersion=5.0.0.0
+ProductVersion=5.1.0.0
 Comments=http://www.pcdimmer.de
+[Excluded Packages]
+C:\Program Files (x86)\DevExpress VCL\Library\Delphi7\dcldxDBXServerModeD7.bpl=dbExpress Data Source for ExpressDataController Server Mode by Developer Express Inc.
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;

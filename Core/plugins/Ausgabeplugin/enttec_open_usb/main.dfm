@@ -166,13 +166,6 @@ object mainform: Tmainform
     TabOrder = 4
     OnClick = Button2Click
   end
-  object DMXTimer: TCHHighResTimer
-    OnTimer = DMXTimerTimer
-    Interval = 50
-    Accuracy = 0
-    Enabled = False
-    Left = 280
-  end
   object SlowTimer: TTimer
     OnTimer = SlowTimerTimer
     Left = 312

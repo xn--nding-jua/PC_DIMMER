@@ -56,7 +56,7 @@ end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v5.0');
+  Result := PChar('v5.1');
 end;
 
 procedure DLLConfigure;stdcall;
@@ -90,7 +90,6 @@ begin
       begin
         // Data1 = 1..512
         mainform.DMXOutputBuffer[Integer(Data1)]:=Integer(Data2);
-        mainform.NewDataForOutput:=true;
       end;
     end;
   end;
