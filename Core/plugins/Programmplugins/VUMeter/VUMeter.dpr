@@ -38,8 +38,20 @@ begin
 end;
 
 function DLLDestroy:boolean;stdcall;
+var
+  LReg:TRegistry;
 begin
   // DLLDeactivate is called during mainprogram shutdown or pluginreset
+
+  LReg:=TRegistry.Create;
+  LReg.RootKey:=HKEY_CURRENT_USER;
+  LReg.OpenKey('Software', True);
+  LReg.OpenKey('PHOENIXstudios', True);
+  LReg.OpenKey('PC_DIMMER', True);
+  LReg.OpenKey(ExtractFileName(mainform.GetModulePath2), True);
+  LReg.WriteBool('Showing Plugin', mainform.Showing);
+  LReg.CloseKey;
+  LReg.Free;
 
 	if mainform.showing then
     mainform.close;
@@ -131,89 +143,118 @@ end;
 
 procedure DLLSendMessage(MSG:Byte; Data1, Data2:Variant);stdcall;
 var
-  i, data, version:integer;
+  i, j, data, version:integer;
   Stream: TStream;
   filename:string;
+  ValueChanged:boolean;
 begin
   // called on every MSG-Event
   with mainform do
   case MSG of
     MSG_ACTUALCHANNELVALUE:
     begin
-      if Integer(Data1)=round(inputchannel.value) then
-        ProcessValue(Integer(Data2));
+      ValueChanged:=false;
+      for i:=0 to length(vuarray)-1 do
+      begin
+        if Integer(Data1)=round(vuarray[i].inputchannel) then
+        begin
+          vuarray[i].InputValue:=Integer(Data2);
+          ValueChanged:=true;
+        end;
+      end;
+      if ValueChanged then
+        ProcessValue;
     end;
     MSG_NEW:
     begin
+      setlength(VUArray, 1);
+      VUArray[0].InputChannel:=401;
+      setlength(VUArray[0].vumeter, 8);
+
       lampcount.value:=8;
-      setlength(vumeter, 8);
       inputchannel.Value:=401;
-      for i:=0 to length(vumeter)-1 do
+      for i:=0 to length(VUArray[0].vumeter)-1 do
       begin
-        vumeter[i].Channel:=i+1;
-        vumeter[i].Value:=0;
-        vumeter[i].UseAsRGB:=false;
+        VUArray[0].vumeter[i].Channel:=i+1;
+        VUArray[0].vumeter[i].Value:=0;
+        VUArray[0].vumeter[i].UseAsRGB:=false;
       end;
-      vumeter[0].Color:=clLime;
-      vumeter[1].Color:=clLime;
-      vumeter[2].Color:=clLime;
-      vumeter[3].Color:=clLime;
-      vumeter[4].Color:=clYellow;
-      vumeter[5].Color:=clYellow;
-      vumeter[6].Color:=clYellow;
-      vumeter[7].Color:=clRed;
-      ProcessValue(0);
+      VUArray[0].vumeter[0].Color:=clLime;
+      VUArray[0].vumeter[1].Color:=clLime;
+      VUArray[0].vumeter[2].Color:=clLime;
+      VUArray[0].vumeter[3].Color:=clLime;
+      VUArray[0].vumeter[4].Color:=clYellow;
+      VUArray[0].vumeter[5].Color:=clYellow;
+      VUArray[0].vumeter[6].Color:=clYellow;
+      VUArray[0].vumeter[7].Color:=clRed;
+      ProcessValue;
     end;
     MSG_OPEN:
     begin
       filename:=ExtractFileName(GetModulePath2);
       filename:='Plugin_'+copy(filename, 0, length(filename)-4)+'.dat';
-      
+
       if FileExists(string(Data1)+filename) then
       begin
         Stream:= TFileStream.Create(string(Data1)+filename, fmOpenRead);
         Stream.ReadBuffer(version, SizeOf(version));
-        Stream.ReadBuffer(data, SizeOf(data));
-        setlength(vumeter, data);
-        for i:=0 to length(vumeter)-1 do
+        if version>=2 then
+          Stream.ReadBuffer(data, SizeOf(data))
+        else
+          data:=1;
+        setlength(vuarray, data);
+        for i:=0 to length(vuarray)-1 do
         begin
-          Stream.ReadBuffer(vumeter[i].Channel, sizeof(vumeter[i].Channel));
-          Stream.ReadBuffer(vumeter[i].Color, sizeof(vumeter[i].Color));
-          if version>0 then
-            Stream.ReadBuffer(vumeter[i].UseAsRGB, sizeof(vumeter[i].UseAsRGB));
+          Stream.ReadBuffer(data, SizeOf(data));
+          setlength(vuarray[i].vumeter, data);
+          for j:=0 to length(vuarray[i].vumeter)-1 do
+          begin
+            Stream.ReadBuffer(vuarray[i].vumeter[j].Channel, sizeof(vuarray[i].vumeter[j].Channel));
+            Stream.ReadBuffer(vuarray[i].vumeter[j].Color, sizeof(vuarray[i].vumeter[j].Color));
+            if version>0 then
+              Stream.ReadBuffer(vuarray[i].vumeter[j].UseAsRGB, sizeof(vuarray[i].vumeter[j].UseAsRGB));
+          end;
+          Stream.ReadBuffer(data, sizeof(data));
+          vuarray[i].InputChannel:=data;
+          Stream.ReadBuffer(data, sizeof(data));
+          vuarray[i].IsActive:=(data=1);
         end;
-        Stream.ReadBuffer(data, sizeof(data));
-        inputchannel.value:=data;
-        Stream.ReadBuffer(data, sizeof(data));
-        usevumeter.Checked:=(data=1);
         Stream.Free;
       end;
-      lampcount.Value:=length(vumeter);
-      ProcessValue(0);
+      usevumeter.Checked:=vuarray[0].IsActive;
+      inputchannel.value:=vuarray[0].InputChannel;
+      lampcount.Value:=length(vuarray[0].vumeter);
+      ProcessValue;
     end;
     MSG_SAVE:
     begin
       filename:=ExtractFileName(GetModulePath2);
       filename:='Plugin_'+copy(filename, 0, length(filename)-4)+'.dat';
 
-      version:=1;
       Stream:= TFileStream.Create(string(Data1)+filename, fmCreate);
-      data:=length(vumeter);
+      version:=2;
       Stream.WriteBuffer(version, sizeof(version));
+      data:=length(VUArray);
       Stream.WriteBuffer(data, sizeof(data));
-      for i:=0 to length(vumeter)-1 do
+      for i:=0 to length(VUarray)-1 do
       begin
-        Stream.WriteBuffer(vumeter[i].Channel, sizeof(vumeter[i].Channel));
-        Stream.WriteBuffer(vumeter[i].Color, sizeof(vumeter[i].Color));
-        Stream.WriteBuffer(vumeter[i].UseAsRGB, sizeof(vumeter[i].UseAsRGB));
+        data:=length(vuarray[i].vumeter);
+        Stream.WriteBuffer(data, sizeof(data));
+        for j:=0 to length(vuarray[i].vumeter)-1 do
+        begin
+          Stream.WriteBuffer(vuarray[i].vumeter[j].Channel, sizeof(vuarray[i].vumeter[j].Channel));
+          Stream.WriteBuffer(vuarray[i].vumeter[j].Color, sizeof(vuarray[i].vumeter[j].Color));
+          Stream.WriteBuffer(vuarray[i].vumeter[j].UseAsRGB, sizeof(vuarray[i].vumeter[j].UseAsRGB));
+        end;
+        data:=round(vuarray[i].InputChannel);
+        Stream.WriteBuffer(data, sizeof(data));
+        if vuarray[i].IsActive then
+          data:=1
+        else
+          data:=0;
+        Stream.WriteBuffer(data, sizeof(data));
       end;
-      data:=round(inputchannel.value);
-      Stream.WriteBuffer(data, sizeof(data));
-      if usevumeter.checked then
-        data:=1
-      else
-        data:=0;
-      Stream.WriteBuffer(data, sizeof(data));
+
       Stream.Free;
     end;
   end;

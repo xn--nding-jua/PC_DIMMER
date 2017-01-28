@@ -201,6 +201,8 @@ begin
     end;
     MSG_EDITPLUGINSCENE:
     begin
+	  if (string(Data1)='{EB86EDF4-F750-420C-81D9-3023741988E8}') or
+	    (string(Data1)='{4950EE57-ACAC-4BB3-ACA6-9CBD4D9F1B56}') then
       Config.Show;
     end;
     MSG_STARTPLUGINSCENE:

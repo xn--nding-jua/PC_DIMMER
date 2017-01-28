@@ -21,33 +21,47 @@ type
     Value:double;
     UseAsRGB:boolean;
   end;
+  TVUArray = record
+    InputChannel: Integer;
+    InputValue: byte;
+    IsActive:boolean;
+    vumeter:array of TVUMeter;
+  end;
 
   Tmainform = class(TForm)
-    Button1: TButton;
-    Shape1: TShape;
-    Shape2: TShape;
-    Label3: TLabel;
-    inputchannel: TJvSpinEdit;
-    Label4: TLabel;
-    PaintBox1: TPaintBox;
-    Label1: TLabel;
-    lampcount: TJvSpinEdit;
-    changecount: TButton;
-    Shape3: TShape;
-    JvSpinEdit1: TJvSpinEdit;
-    Label5: TLabel;
-    Label6: TLabel;
     JvFullColorDialog1: TJvFullColorDialog;
-    Label7: TLabel;
-    Label8: TLabel;
-    usevumeter: TCheckBox;
-    Label9: TLabel;
-    CheckBox1: TCheckBox;
     PopupMenu1: TPopupMenu;
     Adressendurchnummerieren1: TMenuItem;
     AllealsRGBnutzen1: TMenuItem;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Shape1: TShape;
+    Shape2: TShape;
+    Label9: TLabel;
+    Button1: TButton;
+    PaintBox1: TPaintBox;
+    Label11: TLabel;
+    GroupBox1: TGroupBox;
+    changecount: TButton;
+    usevumeter: TCheckBox;
+    Label4: TLabel;
+    inputchannel: TJvSpinEdit;
+    Label1: TLabel;
+    lampcount: TJvSpinEdit;
+    Label10: TLabel;
+    JvSpinEdit2: TJvSpinEdit;
+    GroupBox2: TGroupBox;
+    CheckBox1: TCheckBox;
+    Label6: TLabel;
+    Shape3: TShape;
+    Label5: TLabel;
+    JvSpinEdit1: TJvSpinEdit;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Timer1: TTimer;
     procedure Button1Click(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure changecountClick(Sender: TObject);
     procedure Shape3MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -58,8 +72,14 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure AllealsRGBnutzen1Click(Sender: TObject);
     procedure Adressendurchnummerieren1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure FormHide(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private-Deklarationen }
+    SelectedRow:integer;
+    procedure RedrawVUMeter;
   public
     { Public-Deklarationen }
     SetDLLValues:TCallbackValues;
@@ -67,9 +87,9 @@ type
     SetDLLNames:TCallbackNames;
     GetDLLValue:TCallbackGetValue;
     SendMSG:TCallbackSendMessage;
-    vumeter:array of TVUMeter;
     SelectedChannel:integer;
-    procedure ProcessValue(Value: integer);
+    VUArray: array of TVUArray;
+    procedure ProcessValue;
     procedure TColor2RGB(const AColor: TColor; var AR, AG, AB: Byte);
     function RGB2TColor(const AR, AG, AB: Byte): Integer;
     function GetModulePath2:String;
@@ -118,127 +138,120 @@ begin
   close;
 end;
 
-procedure Tmainform.ProcessValue(Value: integer);
+procedure Tmainform.ProcessValue;
 var
-  i:integer;
-  boxwidth:integer;
+  i,j:integer;
   R,G,B:byte;
 begin
   // GUI aktualisieren (nur wenn sichtbar)
   if mainform.Showing then
   begin
     label9.visible:=false;
-    for i:=0 to length(vumeter)-1 do
+    for i:=0 to length(vuarray)-1 do
     begin
-      if round(inputchannel.Value) = vumeter[i].Channel then
+      for j:=0 to length(vuarray[i].vumeter)-1 do
       begin
-        label9.Visible:=true;
-        exit;
+        if round(vuarray[i].InputChannel) = vuarray[i].vumeter[j].Channel then
+        begin
+          label9.Visible:=true;
+          exit;
+        end;
       end;
     end;
   end;
 
   // Wert für jedes Element berechnen
-  for i:=0 to length(vumeter)-1 do
+  for i:=0 to length(vuarray)-1 do
   begin
-    vumeter[i].value:=round((value-(256/length(vumeter))*i)*length(vumeter));
-    if vumeter[i].value<0 then
-      vumeter[i].value:=0
-    else if vumeter[i].value>255 then
-      vumeter[i].value:=255;
+    for j:=0 to length(vuarray[i].vumeter)-1 do
+    begin
+      vuarray[i].vumeter[j].value:=round((vuarray[i].InputValue-(256/length(vuarray[i].vumeter))*j)*length(vuarray[i].vumeter));
+      if vuarray[i].vumeter[j].value<0 then
+        vuarray[i].vumeter[j].value:=0
+      else if vuarray[i].vumeter[j].value>255 then
+        vuarray[i].vumeter[j].value:=255;
+    end;
   end;
 
   // Werte an PC_DIMMER senden
-  if usevumeter.Checked then
+  for i:=0 to length(vuarray)-1 do
   begin
-    for i:=0 to length(vumeter)-1 do
+    if vuarray[i].IsActive then
     begin
-      if vumeter[i].UseAsRGB then
+      for j:=0 to length(vuarray[i].vumeter)-1 do
       begin
-        TColor2RGB(vumeter[i].Color, R, G, B);
-        SetDLLValues(vumeter[i].Channel, round(R*vumeter[i].Value/255), round(R*vumeter[i].Value/255), 0, 0);
-        SetDLLValues(vumeter[i].Channel+1, round(G*vumeter[i].Value/255), round(G*vumeter[i].Value/255), 0, 0);
-        SetDLLValues(vumeter[i].Channel+2, round(B*vumeter[i].Value/255), round(B*vumeter[i].Value/255), 0, 0);
-      end else
-      begin
-        SetDLLValues(vumeter[i].Channel, round(vumeter[i].Value), round(vumeter[i].Value), 0, 0);
+        if vuarray[i].vumeter[j].UseAsRGB then
+        begin
+          if (vuarray[i].vumeter[j].Channel>=1) and (vuarray[i].vumeter[j].Channel<=8192) then
+          begin
+            TColor2RGB(vuarray[i].vumeter[j].Color, R, G, B);
+            SetDLLValues(vuarray[i].vumeter[j].Channel, round(R*vuarray[i].vumeter[j].Value/255), round(R*vuarray[i].vumeter[j].Value/255), 0, 0);
+            SetDLLValues(vuarray[i].vumeter[j].Channel+1, round(G*vuarray[i].vumeter[j].Value/255), round(G*vuarray[i].vumeter[j].Value/255), 0, 0);
+            SetDLLValues(vuarray[i].vumeter[j].Channel+2, round(B*vuarray[i].vumeter[j].Value/255), round(B*vuarray[i].vumeter[j].Value/255), 0, 0);
+          end;
+        end else
+        begin
+          if (vuarray[i].vumeter[j].Channel>=1) and (vuarray[i].vumeter[j].Channel<=8192) then
+            SetDLLValues(vuarray[i].vumeter[j].Channel, round(vuarray[i].vumeter[j].Value), round(vuarray[i].vumeter[j].Value), 0, 0);
+        end;
       end;
     end;
   end;
-  
-  // GUI aktualisieren (nur wenn sichtbar)
-  if mainform.Showing then
-  begin
-    Label3.caption:=inttostr(Value);
 
-    Paintbox1.Canvas.Brush.Style:=bsSolid;
-    Paintbox1.Canvas.Pen.Style:=psSolid;
-
-    boxwidth:=round(Paintbox1.Width/length(vumeter));
-    for i:=0 to length(vumeter)-1 do
-    begin
-      TColor2RGB(vumeter[i].Color, R, G, B);
-
-      if vumeter[i].Value<92 then vumeter[i].Value:=92;
-
-      Paintbox1.Canvas.Brush.Color:=RGB2TColor(round(R*vumeter[i].Value/255), round(G*vumeter[i].Value/255), round(B*vumeter[i].Value/255));
-      Paintbox1.Canvas.Pen.Color:=Paintbox1.Canvas.Brush.Color;
-
-      Paintbox1.Canvas.Rectangle(boxwidth*i, 0, boxwidth*(i+1), Paintbox1.Height);
-    end;
-    Paintbox1.Canvas.Pen.Color:=clBlack;
-    for i:=0 to length(vumeter)-2 do
-    begin
-      Paintbox1.Canvas.MoveTo(boxwidth*(i+1), 0);
-      Paintbox1.Canvas.LineTo(boxwidth*(i+1), Paintbox1.Height);
-    end;
-  end;
-end;
-
-procedure Tmainform.FormCreate(Sender: TObject);
-var
-  i:integer;
-begin
-  setlength(vumeter, round(lampcount.value));
-  for i:=0 to length(vumeter)-1 do
-  begin
-    vumeter[i].Channel:=i+1;
-  end;
-  vumeter[0].Color:=clLime;
-  vumeter[1].Color:=clLime;
-  vumeter[2].Color:=clLime;
-  vumeter[3].Color:=clLime;
-  vumeter[4].Color:=clYellow;
-  vumeter[5].Color:=clYellow;
-  vumeter[6].Color:=clYellow;
-  vumeter[7].Color:=clRed;
+  RedrawVUMeter;
 end;
 
 procedure Tmainform.changecountClick(Sender: TObject);
 var
-  oldlength,i:integer;
+  oldlength, oldlength_rows,i,j:integer;
 begin
-  oldlength:=length(vumeter);
+  oldlength_rows:=length(vuarray);
+  setlength(vuarray, round(JvSpinEdit2.Value));
 
-  setlength(vumeter, round(lampcount.value));
-
-  if length(vumeter)>oldlength then
+  if (SelectedRow>-1) and (SelectedRow<length(vuarray)) then
   begin
-    for i:=oldlength to length(vumeter)-1 do
+    if length(vuarray[SelectedRow].vumeter)>oldlength_rows then
     begin
-      vumeter[i].Channel:=i+1;
-      vumeter[i].Color:=clWhite;
+      for i:=oldlength_rows to length(vuarray)-1 do
+      begin
+        vuarray[i].InputChannel:=401;
+        setlength(vuarray[i].vumeter, 8);
+        for j:=0 to length(vuarray[i].vumeter)-1 do
+        begin
+          vuarray[i].vumeter[j].Channel:=j+1;
+          vuarray[i].vumeter[j].Color:=clWhite;
+          vuarray[i].vumeter[j].UseAsRGB:=false;
+        end;
+      end;
+    end;
+
+    oldlength:=length(vuarray[SelectedRow].vumeter);
+    setlength(vuarray[SelectedRow].vumeter, round(lampcount.value));
+
+    vuarray[SelectedRow].IsActive:=usevumeter.Checked;
+    vuarray[SelectedRow].InputChannel:=round(inputchannel.Value);
+
+    if length(vuarray[SelectedRow].vumeter)>oldlength then
+    begin
+      for i:=oldlength to length(vuarray[SelectedRow].vumeter)-1 do
+      begin
+        vuarray[SelectedRow].vumeter[i].Channel:=i+1;
+        vuarray[SelectedRow].vumeter[i].Color:=clWhite;
+      end;
     end;
   end;
+  ProcessValue;
 end;
 
 procedure Tmainform.Shape3MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  if (SelectedChannel>-1) and (SelectedChannel<length(vumeter)) and JvFullColorDialog1.Execute then
+  if (SelectedRow>-1) and (SelectedRow<length(vuarray)) and
+    (SelectedChannel>-1) and (SelectedChannel<length(vuarray[SelectedRow].vumeter)) and
+    JvFullColorDialog1.Execute then
   begin
-    vumeter[SelectedChannel].Color:=JvFullColorDialog1.Color;
-    shape3.Brush.Color:=vumeter[SelectedChannel].Color;
+    vuarray[SelectedRow].vumeter[SelectedChannel].Color:=JvFullColorDialog1.Color;
+    shape3.Brush.Color:=vuarray[SelectedRow].vumeter[SelectedChannel].Color;
   end;
 end;
 
@@ -247,34 +260,50 @@ procedure Tmainform.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
 begin
   if Button=mbLeft then
   begin
-    SelectedChannel:=trunc((X/Paintbox1.Width)*length(vumeter));
-    label8.caption:=inttostr(SelectedChannel+1);
+    SelectedRow:=trunc((Y/Paintbox1.Height)*length(vuarray));
 
-    if (SelectedChannel>-1) and (SelectedChannel<length(vumeter)) then
+    if SelectedRow>=length(vuarray) then
+      SelectedRow:=length(vuarray)-1;
+
+    if (SelectedRow>-1) and (SelectedRow<length(vuarray)) then
     begin
-      shape3.Brush.Color:=vumeter[SelectedChannel].Color;
-      jvspinedit1.Value:=vumeter[SelectedChannel].Channel;
-      checkbox1.Checked:=vumeter[SelectedChannel].UseAsRGB;
-      jvspinedit1.SetFocus;
-      jvspinedit1.SelectAll;
+      label3.caption:=inttostr(SelectedRow+1);
+
+      SelectedChannel:=trunc((X/Paintbox1.Width)*length(vuarray[SelectedRow].vumeter));
+      label8.caption:=inttostr(SelectedChannel+1);
+
+      usevumeter.Checked:=vuarray[SelectedRow].IsActive;
+      inputchannel.Value:=vuarray[SelectedRow].InputChannel;
+      lampcount.Value:=length(vuarray[SelectedRow].vumeter);
+
+      if (SelectedChannel>-1) and (SelectedChannel<length(vuarray[SelectedRow].vumeter)) then
+      begin
+        shape3.Brush.Color:=vuarray[SelectedRow].vumeter[SelectedChannel].Color;
+        jvspinedit1.Value:=vuarray[SelectedRow].vumeter[SelectedChannel].Channel;
+        checkbox1.Checked:=vuarray[SelectedRow].vumeter[SelectedChannel].UseAsRGB;
+        jvspinedit1.SetFocus;
+        jvspinedit1.SelectAll;
+      end;
     end;
   end;
 end;
 
 procedure Tmainform.JvSpinEdit1Change(Sender: TObject);
 begin
-  if (SelectedChannel>-1) and (SelectedChannel<length(vumeter)) then
+  if (SelectedRow>-1) and (SelectedRow<length(vuarray)) and
+   (SelectedChannel>-1) and (SelectedChannel<length(vuarray[SelectedRow].vumeter)) then
   begin
-    vumeter[SelectedChannel].Channel:=round(jvspinedit1.Value);
+    vuarray[SelectedRow].vumeter[SelectedChannel].Channel:=round(jvspinedit1.Value);
   end;
 end;
 
 procedure Tmainform.CheckBox1MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  if (SelectedChannel>-1) and (SelectedChannel<length(vumeter)) then
+  if (SelectedRow>-1) and (SelectedRow<length(vuarray)) and
+   (SelectedChannel>-1) and (SelectedChannel<length(vuarray[SelectedRow].vumeter)) then
   begin
-    vumeter[SelectedChannel].UseAsRGB:=checkbox1.Checked;
+    vuarray[SelectedRow].vumeter[SelectedChannel].UseAsRGB:=checkbox1.Checked;
   end;
 end;
 
@@ -282,9 +311,12 @@ procedure Tmainform.AllealsRGBnutzen1Click(Sender: TObject);
 var
   i:integer;
 begin
-  for i:=0 to length(vumeter)-1 do
+  if (SelectedRow>-1) and (SelectedRow<length(vuarray)) then
   begin
-    vumeter[i].UseAsRGB:=true;
+    for i:=0 to length(vuarray[SelectedRow].vumeter)-1 do
+    begin
+      vuarray[SelectedRow].vumeter[i].UseAsRGB:=true;
+    end;
   end;
 end;
 
@@ -292,12 +324,77 @@ procedure Tmainform.Adressendurchnummerieren1Click(Sender: TObject);
 var
   i, Space:integer;
 begin
-  Space:=strtoint(InputBox('Auto-Adressierung', 'Bitte geben Sie die Kanalzahl eines einzelnen Gerätes an, damit die Abstände der Startadressen berechnet werden kann (bei Generic-Dimmern 1, RGB-Lampen 3, etc.)', '3'));
-
-  for i:=0 to length(vumeter)-1 do
+  if (SelectedRow>-1) and (SelectedRow<length(vuarray)) then
   begin
-    vumeter[i].Channel:=i+i*(Space-1)+1;
+    Space:=strtoint(InputBox('Auto-Adressierung', 'Bitte geben Sie die Gesamt-Kanalzahl eines einzelnen Gerätes an, damit die Abstände der Startadressen berechnet werden kann (bei Generic-Dimmern 1, RGB-Lampen 3, etc.)', '3'));
+
+    for i:=0 to length(vuarray[SelectedRow].vumeter)-1 do
+    begin
+      vuarray[SelectedRow].vumeter[i].Channel:=i+i*(Space-1)+1;
+    end;
   end;
+end;
+
+procedure Tmainform.FormShow(Sender: TObject);
+begin
+  RedrawVUMeter;
+  Timer1.Enabled:=true;
+end;
+
+procedure Tmainform.RedrawVUMeter;
+var
+  i, j, boxwidth:integer;
+  R,G,B:byte;
+begin
+  // GUI aktualisieren (nur wenn sichtbar)
+  if mainform.Showing then
+  begin
+    Paintbox1.Canvas.Brush.Style:=bsSolid;
+    Paintbox1.Canvas.Pen.Style:=psSolid;
+
+    for i:=0 to length(vuarray)-1 do
+    begin
+      boxwidth:=round(Paintbox1.Width/length(vuarray[i].vumeter));
+      for j:=0 to length(vuarray[i].vumeter)-1 do
+      begin
+        TColor2RGB(vuarray[i].vumeter[j].Color, R, G, B);
+
+        if vuarray[i].vumeter[j].Value<92 then vuarray[i].vumeter[j].Value:=92;
+
+        Paintbox1.Canvas.Brush.Color:=RGB2TColor(round(R*vuarray[i].vumeter[j].Value/255), round(G*vuarray[i].vumeter[j].Value/255), round(B*vuarray[i].vumeter[j].Value/255));
+        Paintbox1.Canvas.Pen.Color:=Paintbox1.Canvas.Brush.Color;
+
+        Paintbox1.Canvas.Rectangle(boxwidth*j, round(i*Paintbox1.Height/length(vuarray)), boxwidth*(j+1), round((i+1)*Paintbox1.Height/length(vuarray)));
+      end;
+    end;
+
+    // Striche zeichnen
+    Paintbox1.Canvas.Pen.Color:=clBlack;
+    for i:=0 to length(vuarray)-1 do
+    begin
+      boxwidth:=round(Paintbox1.Width/length(vuarray[i].vumeter));
+      for j:=0 to length(vuarray[i].vumeter)-2 do
+      begin
+        Paintbox1.Canvas.MoveTo(boxwidth*(j+1), round(i*Paintbox1.Height/length(vuarray)));
+        Paintbox1.Canvas.LineTo(boxwidth*(j+1), round((i+1)*Paintbox1.Height/length(vuarray)));
+      end;
+    end;
+  end;
+end;
+
+procedure Tmainform.Timer1Timer(Sender: TObject);
+begin
+  RedrawVUMeter;
+end;
+
+procedure Tmainform.FormHide(Sender: TObject);
+begin
+  Timer1.Enabled:=false;
+end;
+
+procedure Tmainform.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Timer1.Enabled:=false;
 end;
 
 end.

@@ -1,14 +1,13 @@
 object mainform: Tmainform
   Left = 537
-  Top = 146
+  Top = 145
+  Width = 594
+  Height = 389
   HorzScrollBar.Smooth = True
   HorzScrollBar.Tracking = True
   VertScrollBar.Smooth = True
   VertScrollBar.Tracking = True
-  BorderStyle = bsSingle
   Caption = 'VU-Meter'
-  ClientHeight = 184
-  ClientWidth = 610
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -152,189 +151,260 @@ object mainform: Tmainform
     0000FFFFC000FFFFC000FFFFC000FFFFC000FFFFC000FFFFC000FFFFC181}
   OldCreateOrder = False
   Position = poMainFormCenter
-  OnCreate = FormCreate
+  OnClose = FormClose
+  OnHide = FormHide
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Shape1: TShape
-    Left = 0
-    Top = 145
-    Width = 610
-    Height = 1
-    Align = alBottom
-  end
-  object Shape2: TShape
-    Left = 0
-    Top = 146
-    Width = 610
-    Height = 38
-    Align = alBottom
-    Pen.Style = psClear
-  end
-  object Label3: TLabel
-    Left = 8
-    Top = 108
-    Width = 19
-    Height = 36
-    Caption = '0'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -31
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object Label4: TLabel
-    Left = 144
-    Top = 11
-    Width = 122
-    Height = 13
-    Caption = 'Eingangsdaten auf Kanal:'
-  end
   object PaintBox1: TPaintBox
-    Left = 8
-    Top = 40
-    Width = 593
-    Height = 65
+    Left = 0
+    Top = 169
+    Width = 578
+    Height = 135
+    Align = alClient
     PopupMenu = PopupMenu1
     OnMouseUp = PaintBox1MouseUp
   end
-  object Label1: TLabel
-    Left = 352
-    Top = 11
-    Width = 91
-    Height = 13
-    Caption = 'Anzahl an Lampen:'
-  end
-  object Shape3: TShape
-    Left = 424
-    Top = 112
-    Width = 57
-    Height = 25
-    OnMouseUp = Shape3MouseUp
-  end
-  object Label5: TLabel
-    Left = 496
-    Top = 112
-    Width = 41
-    Height = 13
-    Caption = 'Adresse:'
-  end
-  object Label6: TLabel
-    Left = 384
-    Top = 112
-    Width = 30
-    Height = 13
-    Caption = 'Farbe:'
-  end
-  object Label7: TLabel
-    Left = 120
-    Top = 112
-    Width = 81
-    Height = 13
-    Caption = 'Gew'#228'hlter Kanal:'
-  end
-  object Label8: TLabel
-    Left = 208
-    Top = 112
-    Width = 6
-    Height = 13
-    Caption = '1'
-  end
-  object Label9: TLabel
-    Left = 136
-    Top = 152
-    Width = 319
-    Height = 24
-    Caption = 'WARNUNG: ENDLOSSCHLEIFE!!!'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clRed
-    Font.Height = -19
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsBold]
-    ParentFont = False
-    Transparent = True
-    Visible = False
-  end
-  object Button1: TButton
-    Left = 8
-    Top = 152
-    Width = 113
-    Height = 25
-    Caption = 'Schlie'#223'en'
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 578
+    Height = 169
+    Align = alTop
+    BevelOuter = bvNone
     TabOrder = 0
-    OnClick = Button1Click
+    object Label11: TLabel
+      Left = 8
+      Top = 8
+      Width = 492
+      Height = 13
+      Caption = 
+        'Bitte gew'#252'nschte Reihe und Spalte mit Maus ausw'#228'hlen... weitere ' +
+        'Optionen mit der rechten Maustaste...'
+    end
+    object GroupBox1: TGroupBox
+      Left = 8
+      Top = 32
+      Width = 345
+      Height = 129
+      Caption = ' Einstellungen f'#252'r gew'#228'hlte Zeile '
+      TabOrder = 0
+      object Label4: TLabel
+        Left = 104
+        Top = 43
+        Width = 121
+        Height = 13
+        Caption = 'Eingangswerte auf Kanal:'
+      end
+      object Label1: TLabel
+        Left = 240
+        Top = 43
+        Width = 91
+        Height = 13
+        Caption = 'Anzahl an Lampen:'
+      end
+      object Label10: TLabel
+        Left = 8
+        Top = 43
+        Width = 83
+        Height = 13
+        Caption = 'Anzahl VU-Meter:'
+      end
+      object Label2: TLabel
+        Left = 240
+        Top = 19
+        Width = 79
+        Height = 13
+        Caption = 'Gew'#228'hlte Reihe:'
+      end
+      object Label3: TLabel
+        Left = 328
+        Top = 19
+        Width = 6
+        Height = 13
+        Caption = '1'
+      end
+      object changecount: TButton
+        Left = 8
+        Top = 96
+        Width = 329
+        Height = 25
+        Caption = #196'nderungen '#252'bernehmen'
+        TabOrder = 0
+        OnClick = changecountClick
+      end
+      object usevumeter: TCheckBox
+        Left = 8
+        Top = 18
+        Width = 225
+        Height = 17
+        Caption = 'Gew'#228'hlte Reihe als Kanalwerte ausgeben'
+        TabOrder = 1
+      end
+      object inputchannel: TJvSpinEdit
+        Left = 104
+        Top = 64
+        Width = 57
+        Height = 21
+        MaxValue = 8192.000000000000000000
+        MinValue = 1.000000000000000000
+        Value = 401.000000000000000000
+        TabOrder = 2
+      end
+      object lampcount: TJvSpinEdit
+        Left = 240
+        Top = 64
+        Width = 57
+        Height = 21
+        MaxValue = 64.000000000000000000
+        MinValue = 1.000000000000000000
+        Value = 8.000000000000000000
+        TabOrder = 3
+      end
+      object JvSpinEdit2: TJvSpinEdit
+        Left = 8
+        Top = 64
+        Width = 57
+        Height = 21
+        MaxValue = 64.000000000000000000
+        MinValue = 1.000000000000000000
+        Value = 1.000000000000000000
+        TabOrder = 4
+      end
+    end
+    object GroupBox2: TGroupBox
+      Left = 360
+      Top = 32
+      Width = 209
+      Height = 129
+      Caption = ' Einstellungen f'#252'r gew'#228'hltes Element '
+      TabOrder = 1
+      object Label6: TLabel
+        Left = 8
+        Top = 40
+        Width = 30
+        Height = 13
+        Caption = 'Farbe:'
+      end
+      object Shape3: TShape
+        Left = 8
+        Top = 56
+        Width = 57
+        Height = 25
+        OnMouseUp = Shape3MouseUp
+      end
+      object Label5: TLabel
+        Left = 80
+        Top = 40
+        Width = 41
+        Height = 13
+        Caption = 'Adresse:'
+      end
+      object Label7: TLabel
+        Left = 8
+        Top = 19
+        Width = 94
+        Height = 13
+        Caption = 'Gew'#228'hltes Element:'
+      end
+      object Label8: TLabel
+        Left = 112
+        Top = 19
+        Width = 6
+        Height = 13
+        Caption = '1'
+      end
+      object CheckBox1: TCheckBox
+        Left = 8
+        Top = 95
+        Width = 129
+        Height = 17
+        Caption = 'Als RGB-Kanal nutzen'
+        TabOrder = 0
+        OnMouseUp = CheckBox1MouseUp
+      end
+      object JvSpinEdit1: TJvSpinEdit
+        Left = 80
+        Top = 56
+        Width = 57
+        Height = 21
+        MaxValue = 8192.000000000000000000
+        MinValue = 1.000000000000000000
+        Value = 1.000000000000000000
+        TabOrder = 1
+        OnChange = JvSpinEdit1Change
+      end
+    end
   end
-  object inputchannel: TJvSpinEdit
-    Left = 272
-    Top = 8
-    Width = 73
-    Height = 21
-    MaxValue = 8192.000000000000000000
-    MinValue = 1.000000000000000000
-    Value = 401.000000000000000000
+  object Panel2: TPanel
+    Left = 0
+    Top = 304
+    Width = 578
+    Height = 46
+    Align = alBottom
+    BevelOuter = bvNone
     TabOrder = 1
-  end
-  object lampcount: TJvSpinEdit
-    Left = 448
-    Top = 8
-    Width = 49
-    Height = 21
-    MaxValue = 64.000000000000000000
-    MinValue = 1.000000000000000000
-    Value = 8.000000000000000000
-    TabOrder = 2
-  end
-  object changecount: TButton
-    Left = 504
-    Top = 8
-    Width = 97
-    Height = 25
-    Caption = 'Anzahl '#228'ndern'
-    TabOrder = 3
-    OnClick = changecountClick
-  end
-  object JvSpinEdit1: TJvSpinEdit
-    Left = 544
-    Top = 112
-    Width = 57
-    Height = 21
-    MaxValue = 8192.000000000000000000
-    MinValue = 1.000000000000000000
-    Value = 1.000000000000000000
-    TabOrder = 4
-    OnChange = JvSpinEdit1Change
-  end
-  object usevumeter: TCheckBox
-    Left = 8
-    Top = 8
-    Width = 129
-    Height = 17
-    Caption = 'VU Meter verwenden'
-    TabOrder = 5
-  end
-  object CheckBox1: TCheckBox
-    Left = 240
-    Top = 111
-    Width = 137
-    Height = 17
-    Caption = 'Als RGB-Kanal nutzen'
-    TabOrder = 6
-    OnMouseUp = CheckBox1MouseUp
+    object Shape1: TShape
+      Left = 0
+      Top = 7
+      Width = 578
+      Height = 1
+      Align = alBottom
+    end
+    object Shape2: TShape
+      Left = 0
+      Top = 8
+      Width = 578
+      Height = 38
+      Align = alBottom
+      Pen.Style = psClear
+    end
+    object Label9: TLabel
+      Left = 136
+      Top = 17
+      Width = 319
+      Height = 24
+      Caption = 'WARNUNG: ENDLOSSCHLEIFE!!!'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -19
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Transparent = True
+      Visible = False
+    end
+    object Button1: TButton
+      Left = 8
+      Top = 16
+      Width = 113
+      Height = 25
+      Caption = 'Schlie'#223'en'
+      TabOrder = 0
+      OnClick = Button1Click
+    end
   end
   object JvFullColorDialog1: TJvFullColorDialog
-    Left = 448
-    Top = 112
+    Left = 376
+    Top = 184
   end
   object PopupMenu1: TPopupMenu
-    Left = 240
-    Top = 56
+    Left = 408
+    Top = 184
     object Adressendurchnummerieren1: TMenuItem
-      Caption = 'Adressen durchnummerieren'
+      Caption = 'Adressen der Zeile durchnummerieren'
       OnClick = Adressendurchnummerieren1Click
     end
     object AllealsRGBnutzen1: TMenuItem
-      Caption = 'Alle als RGB nutzen'
+      Caption = 'Gesamte Zeile als RGB nutzen'
       OnClick = AllealsRGBnutzen1Click
     end
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 150
+    OnTimer = Timer1Timer
+    Left = 16
+    Top = 176
   end
 end
