@@ -235,7 +235,7 @@ type
     { Public-Deklarationen }
     aktualisierungsintervall:integer;
 
-    MouseOnDevice, MouseOnDeviceHover, MouseOnBuehnenansichtdevice, MouseOnDeviceCopy, MouseOnLabel, MouseOnNumber, MouseOnBuehnenansichtNumber, MouseOnProgress, MouseOnBuehnenansichtProgress, MouseOnBuehnenansichtColor:integer;
+    MouseOnDevice, MouseOnDeviceHover, MouseOnBuehnenansichtdevice, MouseOnDeviceCopy, MouseOnLabel, MouseOnNumber, MouseOnBuehnenansichtNumber, MouseOnBuehnenansichtLabel, MouseOnProgress, MouseOnBuehnenansichtProgress, MouseOnBuehnenansichtColor:integer;
     MouseOnDeviceID:TGUID;
     LastMouseOverHighlightDevice:TLastMouseOverHighlightDevice;
     MouseDownPoint,MouseUpPoint:TPoint;
@@ -257,6 +257,7 @@ type
     function ClickOnLabel(X,Y:integer):integer;
     function ClickOnNumber(X,Y:integer):integer;
     function ClickOnBuehnenansichtNumber(X,Y:integer):integer;
+    function ClickOnBuehnenansichtLabel(X,Y:integer):integer;
     function ClickOnProgress(X,Y:integer):integer;
     function ClickOnBuehnenansichtProgress(X,Y:integer):integer;
     function ClickOnBuehnenansichtColor(X,Y:integer):integer;
@@ -932,6 +933,9 @@ begin
   end else if ClickOnBuehnenansichtNumber(X,Y)>-1 then
   begin
     paintbox1.PopupMenu:=nil;
+  end else if ClickOnBuehnenansichtLabel(X,Y)>-1 then
+  begin
+    paintbox1.PopupMenu:=nil;
   end else if ClickOnBuehnenansichtColor(X,Y)>-1 then
   begin
     paintbox1.PopupMenu:=nil;
@@ -1116,8 +1120,8 @@ begin
         begin
           if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[MouseOnDevice].ID)) then
           begin
-            mainform.Devices[m].left[MouseOnDeviceCopy]:=X-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixXPosition; // TODO
-            mainform.Devices[m].top[MouseOnDeviceCopy]:=Y-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixYPosition; // TODO
+            mainform.Devices[m].left[MouseOnDeviceCopy]:=X-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixXPosition;
+            mainform.Devices[m].top[MouseOnDeviceCopy]:=Y-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixYPosition;
           end;
         end;
 
@@ -1172,6 +1176,8 @@ begin
     if (Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]) then
     begin
       // Linke Maustaste
+      RedrawPictures:=true;
+
       if (mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].selected=false) then
       begin // einzelnes Gerätebild verschieben
         // Sender KanalBild
@@ -1249,6 +1255,8 @@ begin
   end else if MouseOnNumber>-1 then
   begin
   end else if MouseOnBuehnenansichtNumber>-1 then
+  begin
+  end else if MouseOnBuehnenansichtLabel>-1 then
   begin
   end else
   begin
@@ -1610,6 +1618,16 @@ begin
   	  	mainform.buehnenansichtdevices[MouseOnBuehnenansichtNumber].channel:=oldvalue;
   	  end;
     end;
+  end else if MouseOnBuehnenansichtLabel>-1 then
+  begin
+    if not mainform.UserAccessGranted(1) then exit;
+
+    paintbox1.PopupMenu:=nil;
+    if Button=mbRight then
+    begin
+    	// Kanalname ändern
+      Kanalnamenndern1Click(Kanalnamenndern1);
+    end;
   end else
   begin
     DeviceSelectedTimer.enabled:=false;
@@ -1896,6 +1914,7 @@ begin
       mainform.buehnenansichtdevices[LastBuehnenansichtdevice].picture:=OpenDialog1.Filename;
     end;
     opendialog1.Options:=[ofEnableSizing];
+    RedrawPictures:=true;
   end;
 end;
 
@@ -2697,6 +2716,7 @@ begin
   MouseOnProgress:=-1;
   MouseOnBuehnenansichtProgress:=-1;
   MouseOnBuehnenansichtNumber:=-1;
+  MouseOnBuehnenansichtLabel:=-1;
   MouseOnBuehnenansichtColor:=-1;
 
   result:=position;
@@ -2732,6 +2752,7 @@ begin
   MouseOnProgress:=-1;
   MouseOnBuehnenansichtProgress:=-1;
   MouseOnBuehnenansichtNumber:=-1;
+  MouseOnBuehnenansichtLabel:=-1;
   MouseOnBuehnenansichtColor:=-1;
 
   result:=position;
@@ -2775,6 +2796,7 @@ begin
   MouseOnProgress:=-1;
   MouseOnBuehnenansichtProgress:=-1;
   MouseOnBuehnenansichtNumber:=-1;
+  MouseOnBuehnenansichtLabel:=-1;
   MouseOnBuehnenansichtColor:=-1;
 
   result:=position;
@@ -2820,6 +2842,7 @@ begin
   MouseOnProgress:=position;
   MouseOnBuehnenansichtProgress:=-1;
   MouseOnBuehnenansichtNumber:=-1;
+  MouseOnBuehnenansichtLabel:=-1;
   MouseOnBuehnenansichtColor:=-1;
 
   result:=position;
@@ -2850,6 +2873,7 @@ begin
     end;
   end;
 
+  LastBuehnenansichtDevice:=position;
   MouseOnBuehnenansichtdevice:=-1;
   MouseOnDevice:=-1;
   MouseOnDeviceHover:=-1;
@@ -2859,6 +2883,7 @@ begin
   MouseOnProgress:=-1;
   MouseOnBuehnenansichtProgress:=position;
   MouseOnBuehnenansichtNumber:=-1;
+  MouseOnBuehnenansichtLabel:=-1;
   MouseOnBuehnenansichtColor:=-1;
 
   result:=position;
@@ -2902,6 +2927,7 @@ begin
   MouseOnBuehnenansichtdevice:=-1;
   MouseOnBuehnenansichtProgress:=-1;
   MouseOnBuehnenansichtNumber:=-1;
+  MouseOnBuehnenansichtLabel:=-1;
   MouseOnBuehnenansichtColor:=-1;
 
   result:=position;
@@ -2929,6 +2955,7 @@ begin
     end;
   end;
 
+  LastBuehnenansichtDevice:=position;
   MouseOnDevice:=-1;
   MouseOnDeviceHover:=-1;
   MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
@@ -2938,6 +2965,45 @@ begin
   MouseOnBuehnenansichtdevice:=-1;
   MouseOnBuehnenansichtProgress:=-1;
   MouseOnBuehnenansichtNumber:=position;
+  MouseOnBuehnenansichtLabel:=-1;
+  MouseOnBuehnenansichtColor:=-1;
+
+  result:=position;
+end;
+
+function Tgrafischebuehnenansicht.ClickOnBuehnenansichtLabel(X,Y:integer):integer;
+var
+  i,position:integer;
+begin
+  position:=-1;
+  MouseOnDeviceCopy:=-1;
+
+  for i:=0 to length(mainform.buehnenansichtdevices)-1 do
+  begin
+    if mainform.buehnenansichtdevices[i].bank=BankSelect.Itemindex then
+    begin
+      // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
+  		if (mainform.buehnenansichtdevices[i].left<=X)
+      and ((mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize)>=X)
+      and ((mainform.buehnenansichtdevices[i].Top+mainform.buehnenansichtdevices[i].picturesize+1+8+8)<=Y)
+      and ((mainform.buehnenansichtdevices[i].Top+mainform.buehnenansichtdevices[i].picturesize+9+8+8+8)>=Y) then  //TODO
+      begin
+        position:=i;
+      end;
+    end;
+  end;
+
+  LastBuehnenansichtDevice:=position;
+  MouseOnDevice:=-1;
+  MouseOnDeviceHover:=-1;
+  MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+  MouseOnLabel:=-1;
+  MouseOnNumber:=-1;
+  MouseOnProgress:=-1;
+  MouseOnBuehnenansichtdevice:=-1;
+  MouseOnBuehnenansichtProgress:=-1;
+  MouseOnBuehnenansichtNumber:=-1;
+  MouseOnBuehnenansichtLabel:=position;
   MouseOnBuehnenansichtColor:=-1;
 
   result:=position;
@@ -2964,6 +3030,7 @@ begin
     end;
   end;
 
+  LastBuehnenansichtDevice:=position;
   MouseOnDevice:=-1;
   MouseOnDeviceHover:=-1;
   MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
@@ -2973,6 +3040,7 @@ begin
   MouseOnBuehnenansichtdevice:=-1;
   MouseOnBuehnenansichtProgress:=-1;
   MouseOnBuehnenansichtNumber:=-1;
+  MouseOnBuehnenansichtLabel:=-1;
   MouseOnBuehnenansichtColor:=position;
 
   result:=position;
@@ -3604,11 +3672,11 @@ begin
     else
       _Buffer.Font.Color:=clBlack;
     _Buffer.Pen.Style:=psClear;
-    _Buffer.TextOut(mainform.buehnenansichtdevices[i].left,mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize-8,inttostr(mainform.buehnenansichtdevices[i].channel));
+    _Buffer.TextOut(mainform.buehnenansichtdevices[i].left,mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize,inttostr(mainform.buehnenansichtdevices[i].channel));
 
     // Dimmerbar anzeigen
     Dimmerwert:=mainform.channel_value[mainform.buehnenansichtdevices[i].channel];
-    offset:=2;
+    offset:=2+8;
 
     // Umrandung zeichnen
     _Buffer.Brush.Color:=ClMedGray;
@@ -3648,6 +3716,23 @@ begin
     _Buffer.Pen.Color:=$00008000;
     _Buffer.MoveTo(mainform.buehnenansichtdevices[i].left+1, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+7);
     _Buffer.LineTo(round(mainform.buehnenansichtdevices[i].left+1+((mainform.buehnenansichtdevices[i].picturesize-2)*(Dimmerwert/255))), mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset+7);
+
+    // Wert in Prozent anzeigen
+    _Buffer.Font.Size:=7;
+    _Buffer.Font.Name:='Arial';
+    _Buffer.Brush.Style:=bsClear;
+    _Buffer.Pen.Style:=psClear;
+    if mainform.buehnenansichtdevices[i].selected then
+      _Buffer.Font.Color:=clRed
+    else
+      _Buffer.Font.Color:=clBlack;
+    _Buffer.TextOut(mainform.buehnenansichtdevices[i].left+mainform.buehnenansichtdevices[i].picturesize+3, mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset, mainform.levelstr(Dimmerwert));
+
+    offset:=2+8+2+8;
+    // Namen anzeigen
+    if checkbox1.checked then
+      _Buffer.TextOut(mainform.buehnenansichtdevices[i].left,mainform.buehnenansichtdevices[i].top+mainform.buehnenansichtdevices[i].picturesize+offset,mainform.data.Names[mainform.buehnenansichtdevices[i].channel]);
+    _Buffer.Font.Color:=clBlack;
 
 {
     // Grün
