@@ -1914,7 +1914,10 @@ begin
       mainform.buehnenansichtdevices[LastBuehnenansichtdevice].picture:=OpenDialog1.Filename;
     end;
     opendialog1.Options:=[ofEnableSizing];
+
+	  dorefresh:=true;
     RedrawPictures:=true;
+  	RefreshTimerTimer(sender);
   end;
 end;
 
