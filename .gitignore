@@ -11,8 +11,6 @@
 *.dres
 *.rsm
 *.tds
-*.dcu
-*.lib
 
 PC_DIMMER.dof
 
