@@ -1,7 +1,7 @@
 object effektsequenzer: Teffektsequenzer
-  Left = 622
-  Top = 124
-  Width = 690
+  Left = 628
+  Top = 110
+  Width = 701
   Height = 600
   Caption = 'Effektsequenzer'
   Color = clBtnFace
@@ -61,7 +61,7 @@ object effektsequenzer: Teffektsequenzer
   object Panel3: TPanel
     Left = 0
     Top = 0
-    Width = 392
+    Width = 403
     Height = 561
     Align = alClient
     BevelOuter = bvNone
@@ -69,7 +69,7 @@ object effektsequenzer: Teffektsequenzer
     object Panel2: TPanel
       Left = 0
       Top = 320
-      Width = 392
+      Width = 403
       Height = 241
       Align = alBottom
       BevelOuter = bvNone
@@ -1314,11 +1314,15 @@ object effektsequenzer: Teffektsequenzer
     object VST: TVirtualStringTree
       Left = 0
       Top = 0
-      Width = 392
+      Width = 403
       Height = 295
       Align = alClient
       Colors.UnfocusedSelectionColor = clInactiveBorder
       Colors.UnfocusedSelectionBorderColor = clInactiveBorder
+      DragMode = dmAutomatic
+      DragOperations = [doLink]
+      DragType = dtVCL
+      DrawSelectionMode = smBlendedRectangle
       EditDelay = 500
       Header.AutoSizeIndex = 0
       Header.DefaultHeight = 17
@@ -1334,15 +1338,17 @@ object effektsequenzer: Teffektsequenzer
       TabOrder = 1
       TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScroll, toAutoScrollOnExpand, toAutoTristateTracking, toAutoDeleteMovedNodes]
       TreeOptions.MiscOptions = [toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
-      TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages]
-      TreeOptions.SelectionOptions = [toExtendedFocus, toFullRowSelect, toMultiSelect, toSimpleDrawSelection]
+      TreeOptions.PaintOptions = [toShowBackground, toShowButtons, toShowDropmark, toShowRoot, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toUseBlendedSelection]
+      TreeOptions.SelectionOptions = [toExtendedFocus, toFullRowSelect, toMultiSelect]
       OnChange = VSTChange
       OnClick = VSTClick
       OnCompareNodes = VSTCompareNodes
       OnDblClick = VSTDblClick
+      OnEndDrag = VSTEndDrag
       OnGetText = VSTGetText
       OnPaintText = VSTPaintText
       OnGetImageIndex = VSTGetImageIndex
+      OnMouseDown = VSTMouseDown
       Columns = <
         item
           Position = 0
@@ -1363,7 +1369,7 @@ object effektsequenzer: Teffektsequenzer
     object Panel4: TPanel
       Left = 0
       Top = 295
-      Width = 392
+      Width = 403
       Height = 25
       Align = alBottom
       BevelOuter = bvNone
@@ -1371,7 +1377,7 @@ object effektsequenzer: Teffektsequenzer
       object TabControl1: TTabControl
         Left = 0
         Top = 0
-        Width = 312
+        Width = 323
         Height = 25
         Align = alClient
         PopupMenu = PopupMenu2
@@ -1383,7 +1389,7 @@ object effektsequenzer: Teffektsequenzer
         OnChange = TabControl1Change
       end
       object Panel5: TPanel
-        Left = 312
+        Left = 323
         Top = 0
         Width = 80
         Height = 25
@@ -1765,7 +1771,7 @@ object effektsequenzer: Teffektsequenzer
     end
   end
   object Panel1: TPanel
-    Left = 392
+    Left = 403
     Top = 0
     Width = 282
     Height = 561

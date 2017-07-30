@@ -410,6 +410,8 @@ type
     procedure ScrolltimelineCheckboxMouseUp(Sender: TObject;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure ScrollbarRefreshTimerTimer(Sender: TObject);
+    procedure waveformDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
   private
     { Private-Deklarationen }
     NoAudiofile:boolean;
@@ -419,7 +421,6 @@ type
     FileStream:TFileStream;
     x1,y1,x2,y2:integer;
     mousedownposition:integer;
-    mouseoverlayer,mouseovereffect:integer;
     destinationlayer:integer;
     copyeffecttothelayer:boolean;
     destinationposition:single;
@@ -437,7 +438,6 @@ type
     LastStartOfRectangle,LastEndOfRectangle,LastRow:integer;
     _scaling : float;
     _scrollbpp:dword;
-    _mousedwn : integer;
     _mousepos : integer;
     _dragtimeline : boolean;
     _wavebufL_min : array of smallint;
@@ -458,12 +458,14 @@ type
     _decodechan : HSTREAM;
     _audioeffektlayer:byte;
     _Buffer:TBitmap32;
+    _mousedwn : integer;
     waveformscaling:extended;
     effektvorlaufzeit,effektnachlaufzeit,effektsynchrozeit:integer;
     bpmrefreshperiod:double;
     bpmvalue:float;
     bpmscanlength:integer;
     activelayer:array[0..7] of boolean;
+    mouseoverlayer,mouseovereffect:integer;
     maxaudioeffekte:array[1..maxaudioeffektlayers] of integer;
     _effektaudioeffektpassed : array[1..maxaudioeffektlayers] of array of boolean;
     _stereowaveform : boolean;
@@ -479,6 +481,7 @@ type
     procedure DrawAudioeffekte;
     procedure RecordAudioeffekt(fadetime: Integer); overload;
     procedure RecordAudioeffekt(ID: TGUID; StopScene:boolean); overload;
+    procedure RecordAudioeffekt(ID: TGUID; StopScene:boolean; Layer: integer; IgnoreRecordMode: boolean); overload;
     procedure ScanPeaks(decoder: HSTREAM);
     procedure DrawSpectrum(_Buffer:TCanvas);
     procedure DrawTimeline(_Buffer:TCanvas);
@@ -499,7 +502,7 @@ implementation
 
 uses PCDIMMER, Optionen, devicescenefrm, geraetesteuerungfrm, progressscreen,
   videoscreenfrm, videoscreensynchronisierenfrm, layerbezeichnungenfrm,
-  beatfrm, audioeffektplayerstretchfrm;
+  beatfrm, audioeffektplayerstretchfrm, effektsequenzerfrm;
 
 {$R *.dfm}
 
@@ -2850,7 +2853,7 @@ begin
     //RightMouse
     if Button = mbRight then
     begin
-      _mousedwn := 2;
+      _mousedwn:=2;
       _mousepos:=X;
       if (waveform.Cursor=crSizeWE) then
       begin
@@ -2914,7 +2917,7 @@ begin
     //LeftMouse
     if Button = mbLeft then
     begin
-  	  _mousedwn := 1;
+  	  _mousedwn:=1;
       _mousepos:=X;
 
   	  if (_audioeffektlayer>0)then
@@ -2967,11 +2970,10 @@ begin
   begin
     if ((effekteein.Checked)) then
     begin
-      if (_mousedwn=0) then
+      if (mouseovereffect=-1) then
       begin
+        // only allow changing of layer, when no effect is possibly moved
         mouseoverlayer:=-1;
-        mouseovereffect:=-1;
-
         if layerbox.ItemIndex=0 then
         begin
           for i:=1 to maxaudioeffektlayers do
@@ -2983,6 +2985,12 @@ begin
         begin
           mouseoverlayer:=layerbox.ItemIndex;
         end;
+      end;
+
+      
+      if (_mousedwn=0) then
+      begin
+        mouseovereffect:=-1;
 
         if (mouseoverlayer>0) and (mouseovereffect=-1) and (y>waveform.height div 11 *3) then
         begin
@@ -5215,6 +5223,38 @@ begin
   recordeffect:=false;
 end;
 
+procedure Taudioeffektplayerform.RecordAudioeffekt(ID: TGUID; StopScene:boolean; Layer: integer; IgnoreRecordMode: boolean);
+var
+  j:integer;
+begin
+  recordeffect:=true;
+
+  if (((not IgnoreRecordMode) and RecordModus1.Checked)) or IgnoreRecordMode then
+  begin
+		j:=maxaudioeffekte[Layer]-1;
+
+		// Effektarrays um 1 erhöhen
+		setlength(mainform.Effektaudiodatei_record.layer[Layer].effekt,length(mainform.Effektaudiodatei_record.layer[Layer].effekt)+1);
+		setlength(_effektaudioeffektpassed[Layer],length(_effektaudioeffektpassed[Layer])+1);
+		maxaudioeffekte[Layer]:=maxaudioeffekte[Layer]+1;
+		j:=j+1;
+
+    mainform.Effektaudiodatei_record.layer[Layer].effekt[j].audioeffektposition := BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE));
+
+    mainform.Effektaudiodatei_record.layer[Layer].effekt[j].ID:=ID;
+    mainform.Effektaudiodatei_record.layer[Layer].effekt[j].UseIDScene:=true;
+    mainform.Effektaudiodatei_record.layer[Layer].effekt[j].StopScene:=StopScene;
+
+    if length(mainform.Effektaudiodatei_record.layer[Layer].effekt)>1 then
+      EffektSort(Low(mainform.Effektaudiodatei_record.layer[Layer].effekt),High(mainform.Effektaudiodatei_record.layer[Layer].effekt), Layer);
+    layerboxchange(nil);
+    if effektliste.RowCount = 2 then
+      check_audioeffektbuttons();
+  end;
+
+  recordeffect:=false;
+end;
+
 procedure Taudioeffektplayerform.FormShow(Sender: TObject);
 var
 	LReg:TRegistry;
@@ -7188,6 +7228,21 @@ procedure Taudioeffektplayerform.ScrollbarRefreshTimerTimer(
 begin
   if (_scroll<=waveform_scrollbar.Max) and (BASS_ChannelIsActive(_chan[0]) = BASS_ACTIVE_PLAYING) then
     waveform_scrollbar.position:=_scroll;
+end;
+
+procedure Taudioeffektplayerform.waveformDragOver(Sender, Source: TObject;
+  X, Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+  if ((Source=szenenverwaltung_formarray[0].VST) or (Source=effektsequenzer.VST)) then
+  begin
+    _mousedwn:=2;
+    mouseovereffect:=-1;
+    _dragtimeline:=false;
+
+    waveformMouseMove(waveform, [ssLeft], X, Y);
+
+    Accept:=true;
+  end;
 end;
 
 end.

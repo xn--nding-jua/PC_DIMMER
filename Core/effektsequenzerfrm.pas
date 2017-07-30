@@ -235,6 +235,9 @@ type
     procedure editstartscenebtnClick(Sender: TObject);
     procedure removestartscenebtnClick(Sender: TObject);
     procedure PngBitBtn3Click(Sender: TObject);
+    procedure VSTMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure VSTEndDrag(Sender, Target: TObject; X, Y: Integer);
   private
     { Private-Deklarationen }
     ExpandedNodes:array of boolean;
@@ -265,7 +268,7 @@ implementation
 
 uses PCDIMMER, kontrollpanelform, insscene, devicescenefrm,
   lauflichtassistentfrm, geraetesteuerungfrm,
-  matrixeditorfrm, addcolorandgobotoeffectfrm;
+  matrixeditorfrm, addcolorandgobotoeffectfrm, audioeffektplayerfrm;
 
 {$R *.dfm}
 
@@ -729,20 +732,20 @@ begin
       begin
         if length(mainform.Effektsequenzereffekte)>0 then
         begin
-        if (length(mainform.Effektsequenzereffekte[Data^.Effektnummer].Effektschritte)>1) and (Data^.Position>0) then
-          movestepupbtn.Enabled:=true
-        else
-          movestepupbtn.Enabled:=false;
+          if (length(mainform.Effektsequenzereffekte[Data^.Effektnummer].Effektschritte)>1) and (Data^.Position>0) then
+            movestepupbtn.Enabled:=true
+          else
+            movestepupbtn.Enabled:=false;
 
-        if (length(mainform.Effektsequenzereffekte[Data^.Effektnummer].Effektschritte)>1) and (Data^.Position<length(mainform.Effektsequenzereffekte[Data^.Effektnummer].Effektschritte)-1) then
-          movestepdownbtn.Enabled:=true
-        else
-          movestepdownbtn.Enabled:=false;
+          if (length(mainform.Effektsequenzereffekte[Data^.Effektnummer].Effektschritte)>1) and (Data^.Position<length(mainform.Effektsequenzereffekte[Data^.Effektnummer].Effektschritte)-1) then
+            movestepdownbtn.Enabled:=true
+          else
+            movestepdownbtn.Enabled:=false;
 
-        if Data^.Position<length(mainform.Effektsequenzereffekte[Data^.Effektnummer].Effektschritte) then
-          deletestepbtn.Enabled:=true
-        else
-          deletestepbtn.Enabled:=false;
+          if Data^.Position<length(mainform.Effektsequenzereffekte[Data^.Effektnummer].Effektschritte) then
+            deletestepbtn.Enabled:=true
+          else
+            deletestepbtn.Enabled:=false;
         end;
 
         deleteeffectbtn.Enabled:=true;
@@ -3893,6 +3896,45 @@ begin
 
   // noch die Form kaputt machen
   addcolorandgobotoeffectform.Free;
+end;
+
+procedure Teffektsequenzer.VSTMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  if (Button = mbLeft) then
+  begin
+    VST.BeginDrag(False);
+  end;
+end;
+
+procedure Teffektsequenzer.VSTEndDrag(Sender, Target: TObject; X,
+  Y: Integer);
+var
+  i, mouseoverlayer:integer;
+  Data: PTreeData;
+begin
+  if not mainform.UserAccessGranted(2) then exit;
+
+  if (VST.SelectedCount=0) then exit;
+
+  Data:=VST.GetNodeData(VST.FocusedNode);
+
+  if (Target=audioeffektplayerform.waveform) and (VST.SelectedCount>0) then
+  begin
+    // Call add-scene function within the audioeffectplayer
+
+    if (Assigned(Data) and (audioeffektplayerform.mouseoverlayer>0)) then
+    begin
+      if Data^.NodeType=1 then
+      begin
+        audioeffektplayerform.RecordAudioeffekt(Data^.ID, false, audioeffektplayerform.mouseoverlayer, true);
+      end else
+      begin
+        audioeffektplayerform.RecordAudioeffekt(Data^.ID, false, audioeffektplayerform.mouseoverlayer, true);
+      end;
+    end;
+    audioeffektplayerform._mousedwn:=0;
+  end;
 end;
 
 end.

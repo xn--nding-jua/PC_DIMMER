@@ -6,7 +6,11 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, CPDrv, ExtCtrls, Registry, Mask, JvExMask,
   JvSpin, JvExControls, JvSwitch, ComCtrls, JvSimScope, JvLED, gnugettext,
-  messagesystem, JvChart, pngimage;
+  messagesystem, JvChart, pngimage, IdHttp, DECCipher, DECHash, DECFmt,
+  DECRandom;
+
+const
+  blowfishscramblekey = 'rejnbfui34w87fr243hf8bv8734g38zbf873cb48';
 
 type
   TCallbackValues = procedure(address,startvalue,endvalue,fadetime,delay:integer);stdcall;
@@ -17,7 +21,7 @@ type
 
   TConfig = class(TForm)
     comport: TCommPortDriver;
-    SekundenTimer: TTimer;
+    ServiceTimer: TTimer;
     RegisterPluginCommands: TTimer;
     Panel2: TPanel;
     GroupBox1: TGroupBox;
@@ -96,6 +100,13 @@ type
     DemoData: TTimer;
     Button3: TButton;
     Button4: TButton;
+    Label20: TLabel;
+    Label21: TLabel;
+    temp4lbl: TLabel;
+    mean2lbl: TLabel;
+    mean3lbl: TLabel;
+    mean4lbl: TLabel;
+    Label35: TLabel;
     procedure comportReceiveData(Sender: TObject; DataPtr: Pointer;
       DataSize: Cardinal);
     procedure ActivateCOMPort(portnumber, baudrate: integer);
@@ -103,7 +114,7 @@ type
     procedure tempmaxChange(Sender: TObject);
     procedure temponOn(Sender: TObject);
     procedure temponOff(Sender: TObject);
-    procedure SekundenTimerTimer(Sender: TObject);
+    procedure ServiceTimerTimer(Sender: TObject);
     procedure FormHide(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure Button1Click(Sender: TObject);
@@ -123,12 +134,14 @@ type
 
     t_amb:Single;
     Nachtabsenkung:integer;
-    TempVor15Minuten:Single;
+    TempVorXMinuten:Single;
+    ServiceTimerCounter:integer;
     FuenfzehnminutenCounter:Word;
     Temp2msb, Temp2lsb, Temp3msb, Temp3lsb:byte;
-    CurrentTemp, CurrentTemp2, CurrentTemp3:array[0..59] of Single;
-    CurrentTempMean, CurrentTemp2Mean, CurrentTemp3Mean:single;
-    CurrentTempMeanIndex, CurrentTemp2MeanIndex, CurrentTemp3MeanIndex:integer;
+    CurrentTemp, CurrentTemp2, CurrentTemp3, CurrentTemp4:array[0..4] of Single;
+    CurrentTempNonZeroCount, CurrentTemp2NonZeroCount, CurrentTemp3NonZeroCount, CurrentTemp4NonZeroCount:integer;
+    CurrentTempMean, CurrentTemp2Mean, CurrentTemp3Mean,CurrentTemp4Mean:single;
+    CurrentTempMeanIndex, CurrentTemp2MeanIndex, CurrentTemp3MeanIndex, CurrentTemp4MeanIndex:integer;
     RegelungNeuGestartet:Boolean;
     Heizbetrieb:Boolean;
     Strompreis, Kilowattstunden:Single;
@@ -142,6 +155,7 @@ type
     GetDLLValue:TCallbackGetValue;
     SendMSG:TCallbackSendMessage;
 
+    setup_autoconnect:boolean;
     setup_mixmsblsb:boolean;
     setup_datain_temp, setup_datain_min, setup_datain_mean, setup_datain_max, setup_datain_heateron:double;
     setup_scale:double;
@@ -151,6 +165,9 @@ type
     setup_deltattime:double;
     setup_temp2msb, setup_temp2lsb, setup_temp3msb, setup_temp3lsb:double;
     setup_temp2text, setup_temp3text:string;
+    setup_http_url, setup_http_user, setup_http_password:string;
+    setup_http_startstring, setup_http_endstring, setup_http_description: string;
+    setup_http_activated:boolean;
 
     function CalcMaximum:Single;
     function CalcMinimum:Single;
@@ -158,6 +175,7 @@ type
     function RoundToByte(Temperatur: Single):Byte;
     procedure StartUp;
     procedure SavePng(Bitmap: TBitmap; Destination:string);
+    function GetHTTPTemperature:double;
   end;
 
 var
@@ -220,6 +238,36 @@ begin
   result:=LBuffer;
 end;
 
+// Code for HTTP-Sensor
+function GetURLAsString(const aURL, Username, Password: string): string;
+var
+  lHTTP: TIdHTTP;
+begin
+  lHTTP := TIdHTTP.Create;
+  lHTTP.Request.Clear;
+  lHTTP.ReadTimeout:=500;
+  lHTTP.Request.BasicAuthentication:= true;
+  lHTTP.Request.Username := Username;
+  lHTTP.Request.Password := Password;
+  try
+    Result := lHTTP.Get(aURL);
+  finally
+    lHTTP.Free;
+  end;
+end;
+
+function TConfig.GetHTTPTemperature:double;
+var
+  website:string;
+  temperature:string;
+begin
+  website:=GetURLAsString(setup_http_url, setup_http_user, setup_http_password);
+
+  temperature:=copy(website, pos(setup_http_startstring, website)+length(setup_http_startstring), 10);
+  temperature:=copy(temperature, 1, pos(setup_http_endstring, temperature)-1);
+  result:=strtofloat(temperature);
+end;
+
 procedure TConfig.comportReceiveData(Sender: TObject; DataPtr: Pointer;
   DataSize: Cardinal);
 var
@@ -272,9 +320,11 @@ begin
       end;
       t_amb:=((t_amb_temp/2047)*200)-50;
 
-      if TempVor15Minuten=-1000 then
-        TempVor15Minuten:=t_amb;
-      SekundenTimer.Enabled:=true;
+      tempcurrentlbl.caption:=floattostrf(t_amb, ffFixed, 5, 1)+'°C';
+
+      if TempVorXMinuten=-1000 then
+        TempVorXMinuten:=t_amb;
+      ServiceTimer.Enabled:=true;
     end;
   except
   end;
@@ -378,7 +428,7 @@ begin
   result:=Mean;
 end;
 
-procedure TConfig.SekundenTimerTimer(Sender: TObject);
+procedure TConfig.ServiceTimerTimer(Sender: TObject);
 var
   ReglerTemperaturWert:Single;
   TempMinVal, TempMeanVal, TempMaxVal:Single;
@@ -391,287 +441,348 @@ var
 
   displaymax, displaymin:double;
 
-  t_amb2, t_amb3:double;
+  t_amb2, t_amb3, t_amb4:double;
 begin
+  // ServiceTimer wird jede Sekunden aufgerufen
   try
-    // Aktuellen Temperaturwert in Ringbuffer für Mittelwert schreiben
-    CurrentTempMeanIndex:=CurrentTempMeanIndex+1;
-    if CurrentTempMeanIndex>=length(CurrentTemp) then
-        CurrentTempMeanIndex:=0;
-    CurrentTemp2MeanIndex:=CurrentTemp2MeanIndex+1;
-    if CurrentTemp2MeanIndex>=length(CurrentTemp2) then
-      CurrentTemp2MeanIndex:=0;
-    CurrentTemp3MeanIndex:=CurrentTemp3MeanIndex+1;
-    if CurrentTemp3MeanIndex>=length(CurrentTemp3) then
-      CurrentTemp3MeanIndex:=0;
 
-    // Temperaturen für Sensor 2 und 3 abrufen
-    temp2msb:=GetDLLValue(round(setup_temp2msb));
-    temp2lsb:=GetDLLValue(round(setup_temp2lsb));
-    temp3msb:=GetDLLValue(round(setup_temp3msb));
-    temp3lsb:=GetDLLValue(round(setup_temp3lsb));
-    t_amb2:=(((temp2msb shl 8)+temp2lsb)-550)/10;
-    t_amb3:=(((temp3msb shl 8)+temp3lsb)-550)/10;
-
-    if (GrowingIndex=0) then
-    begin
-      // Startup
-      for i:=0 to length(CurrentTemp)-1 do
-      begin
-        CurrentTemp[i]:=t_amb;
-        CurrentTemp2[i]:=t_amb2;
-        CurrentTemp3[i]:=t_amb3;
-      end;
-    end else
-    begin
-      // Normalbetrieb
-      CurrentTemp[CurrentTempMeanIndex]:=t_amb;
-      CurrentTemp2[CurrentTemp2MeanIndex]:=t_amb2;
-      CurrentTemp3[CurrentTemp3MeanIndex]:=t_amb3;
-    end;
-
-    // Mittelwert über 60 Sekunden bilden
-    CurrentTempMean:=0;
-    CurrentTemp2Mean:=0;
-    CurrentTemp3Mean:=0;
-    for i:=0 to length(CurrentTemp)-1 do
-    begin
-      CurrentTempMean:=CurrentTempMean+CurrentTemp[i];
-      CurrentTemp2Mean:=CurrentTemp2Mean+CurrentTemp2[i];
-      CurrentTemp3Mean:=CurrentTemp3Mean+CurrentTemp3[i];
-    end;
-    CurrentTempMean:=CurrentTempMean/length(CurrentTemp);
-    CurrentTemp2Mean:=CurrentTemp2Mean/length(CurrentTemp2);
-    CurrentTemp3Mean:=CurrentTemp3Mean/length(CurrentTemp3);
-
-    // Jede Minute Mittelwert der Temperatur in Scope schreiben
-    if (CurrentTempMeanIndex=0) or (GrowingIndex<2) then
-    begin
-      chart.Data.Timestamp[GrowingIndex]:=now;
-      chart.Data.Value[0, GrowingIndex]:=CurrentTempMean;
-      chart.Data.Value[1, GrowingIndex]:=(tempsoll.value+Nachtabsenkung+tempmax.value);
-      chart.Data.Value[2, GrowingIndex]:=(tempsoll.value+Nachtabsenkung+tempmin.value);
-      chart.Data.Value[3, GrowingIndex]:=CurrentTemp2Mean;
-      chart.Data.Value[4, GrowingIndex]:=CurrentTemp3Mean;
-      GrowingIndex:=GrowingIndex+1;
-    end;
-
-    TempMinVal:=CalcMinimum;
-    TempMeanVal:=CalcMean;
-    TempMaxVal:=CalcMaximum;
-
-    if chart.Data.ValueCount>10 then
-    begin
-      OverallMin:=200;
-      OverallMax:=-200;
-      for i:=10 to chart.data.ValueCount-1 do
-      begin
-        if chart.Data.Value[0, i]<OverallMin then
-          OverallMin:=chart.Data.Value[0, GrowingIndex-1];
-        if chart.Data.Value[0, i]>OverallMax then
-          OverallMax:=chart.Data.Value[0, GrowingIndex-1];
-      end;
-    end else
-    begin
-      OverallMin:=-10;
-      OverallMax:=35;
-    end;
-
-    displaymax:=(tempsoll.value+Nachtabsenkung+tempmax.value);
-    if (tempsoll.value+Nachtabsenkung+tempmin.value)>displaymax then
-      displaymax:=(tempsoll.value+Nachtabsenkung+tempmin.value);
-    if OverallMax>displaymax then
-      displaymax:=OverallMax;
-
-    displaymin:=(tempsoll.value+Nachtabsenkung+tempmax.value);
-    if (tempsoll.value+Nachtabsenkung+tempmin.value)<displaymin then
-      displaymin:=(tempsoll.value+Nachtabsenkung+tempmin.value);
-    if OverallMin<displaymin then
-      displaymin:=OverallMin;
-
-    chart.Options.PrimaryYAxis.YMax:=round(trunc(displaymax/5)+0.99)*5;
-    chart.Options.PrimaryYAxis.YMin:=round(trunc(displaymin/5)-0.99)*5;
-    chart.Options.PrimaryYAxis.YDivisions:=trunc((chart.Options.PrimaryYAxis.YMax / 5) + (abs(chart.Options.PrimaryYAxis.YMin) / 5));
-
-    // Temperatur in Label anzeigen
+    ServiceTimerCounter:=ServiceTimerCounter+1;
     if config.Showing then
     begin
-      tempcurrentlbl.caption:=floattostrf(t_amb, ffFixed, 5, 1)+'°C';
-      tempminlbl.Caption:=floattostrf(TempMinVal, ffFixed, 5, 1)+'°C';
-      tempmeanlbl.Caption:=floattostrf(TempMeanVal, ffFixed, 5, 1)+'°C';
-      tempmaxlbl.Caption:=floattostrf(TempMaxVal, ffFixed, 5, 1)+'°C';
-
-      temp2lbl.caption:=floattostrf(CurrentTemp2Mean, ffFixed, 5, 1)+'°C';
-      temp3lbl.caption:=floattostrf(CurrentTemp3Mean, ffFixed, 5, 1)+'°C';
+      label35.caption:=inttostr(round(60-ServiceTimerCounter))+'s';
     end;
 
-    // Aktuelle Temperatur als Kanalwert an PC_DIMMER senden
-    if round(setup_datain_temp)>0 then
-      SetDLLEvent(round(setup_datain_temp), RoundToByte(t_amb));
-    // Minimale Temperatur als Kanalwert an PC_DIMMER senden
-    if round(setup_datain_min)>0 then
-      SetDLLEvent(round(setup_datain_min), RoundToByte(TempMinVal));
-    // Mittelwert der Temperatur als Kanalwert an PC_DIMMER senden
-    if round(setup_datain_mean)>0 then
-      SetDLLEvent(round(setup_datain_mean), RoundToByte(TempMeanVal));
-    // Maximale Temperatur als Kanalwert an PC_DIMMER senden
-    if round(setup_datain_max)>0 then
-      SetDLLEvent(round(setup_datain_max), RoundToByte(TempMaxVal));
-
-    if tempon.StateOn then
+    if ServiceTimerCounter>59 then
     begin
-      // Mittelwert oder Aktueller Wert als Referenz
-      if CheckBox1.Checked then
-        ReglerTemperaturWert:=TempMeanVal
-      else
-        ReglerTemperaturWert:=t_amb;
+      // 60 Sekunden sind um
+      ServiceTimerCounter:=0;
 
-      // Nachtabsenkung
-      if Checkbox2.Checked then
+      // Temperaturen für Sensor 2 und 3 abrufen
+      temp2msb:=GetDLLValue(round(setup_temp2msb));
+      temp2lsb:=GetDLLValue(round(setup_temp2lsb));
+      temp3msb:=GetDLLValue(round(setup_temp3msb));
+      temp3lsb:=GetDLLValue(round(setup_temp3lsb));
+      t_amb2:=(((temp2msb shl 8)+temp2lsb)-550)/10;
+      t_amb3:=(((temp3msb shl 8)+temp3lsb)-550)/10;
+
+      // Temperatur für HTTP-Sensor abrufen
+      if setup_http_activated then
       begin
-        Tagesminuten:=strtoint(copy(TimeToStr(now), 1, 2))*60; // Stunden zu Minuten
-        Tagesminuten:=Tagesminuten+strtoint(copy(TimeToStr(now), 4, 2)); // Minuten
+        t_amb4:=GetHTTPTemperature
+      end else
+      begin
+        t_amb4:=0;
+      end;
 
-        // Nachtabsenkung zwischen 22:30 = 1350 und 05:00 = 300
-        if (Tagesminuten>=((absenkung_h_startedit.value*60)+absenkung_min_startedit.value)) or (Tagesminuten<=((absenkung_h_stopedit.value*60)+absenkung_min_stopedit.value)) then
+      if (GrowingIndex=0) then
+      begin
+        // Startup
+        CurrentTempMeanIndex:=length(CurrentTemp);
+        CurrentTemp2MeanIndex:=length(CurrentTemp2);
+        CurrentTemp3MeanIndex:=length(CurrentTemp3);
+        CurrentTemp4MeanIndex:=length(CurrentTemp4);
+
+        // Startup
+        for i:=0 to length(CurrentTemp)-1 do
         begin
-          nachtabsled.Status:=true;
-          Nachtabsenkung:=round(absenkung_temp.value); // 7°C weniger als Solltemperatur
+          CurrentTemp[i]:=t_amb;
+          CurrentTemp2[i]:=t_amb2;
+          CurrentTemp3[i]:=t_amb3;
+          CurrentTemp4[i]:=t_amb4;
+        end;
+      end else
+      begin
+        // Aktuellen Temperaturwert in Ringbuffer für Mittelwert schreiben (5 Werte alle 60s = 5 Minuten)
+        CurrentTempMeanIndex:=CurrentTempMeanIndex+1;
+        if CurrentTempMeanIndex>=length(CurrentTemp) then
+            CurrentTempMeanIndex:=0;
+        CurrentTemp2MeanIndex:=CurrentTemp2MeanIndex+1;
+        if CurrentTemp2MeanIndex>=length(CurrentTemp2) then
+          CurrentTemp2MeanIndex:=0;
+        CurrentTemp3MeanIndex:=CurrentTemp3MeanIndex+1;
+        if CurrentTemp3MeanIndex>=length(CurrentTemp3) then
+          CurrentTemp3MeanIndex:=0;
+        CurrentTemp4MeanIndex:=CurrentTemp4MeanIndex+1;
+        if CurrentTemp4MeanIndex>=length(CurrentTemp4) then
+          CurrentTemp4MeanIndex:=0;
+
+        // Normalbetrieb
+        CurrentTemp[CurrentTempMeanIndex]:=t_amb;
+        CurrentTemp2[CurrentTemp2MeanIndex]:=t_amb2;
+        CurrentTemp3[CurrentTemp3MeanIndex]:=t_amb3;
+        CurrentTemp4[CurrentTemp4MeanIndex]:=t_amb4;
+      end;
+
+      // Mittelwert über 60 Sekunden bilden
+      CurrentTempMean:=0;
+      CurrentTemp2Mean:=0;
+      CurrentTemp3Mean:=0;
+      CurrentTemp4Mean:=0;
+      CurrentTempNonZeroCount:=0;
+      CurrentTemp2NonZeroCount:=0;
+      CurrentTemp3NonZeroCount:=0;
+      CurrentTemp4NonZeroCount:=0;
+      for i:=0 to length(CurrentTemp)-1 do
+      begin
+        if CurrentTemp[i]<>0 then
+        begin
+          CurrentTempMean:=CurrentTempMean+CurrentTemp[i];
+          CurrentTempNonZeroCount:=CurrentTempNonZeroCount+1;
+        end;
+        if CurrentTemp2[i]<>0 then
+        begin
+          CurrentTemp2Mean:=CurrentTemp2Mean+CurrentTemp2[i];
+          CurrentTemp2NonZeroCount:=CurrentTemp2NonZeroCount+1;
+        end;
+        if CurrentTemp3[i]<>0 then
+        begin
+          CurrentTemp3Mean:=CurrentTemp3Mean+CurrentTemp3[i];
+          CurrentTemp3NonZeroCount:=CurrentTemp3NonZeroCount+1;
+        end;
+        if CurrentTemp4[i]<>0 then
+        begin
+          CurrentTemp4Mean:=CurrentTemp4Mean+CurrentTemp4[i];
+          CurrentTemp4NonZeroCount:=CurrentTemp4NonZeroCount+1;
+        end;
+      end;
+      if CurrentTempNonZeroCount>0 then
+        CurrentTempMean:=CurrentTempMean/CurrentTempNonZeroCount;
+      if CurrentTemp2NonZeroCount>0 then
+        CurrentTemp2Mean:=CurrentTemp2Mean/CurrentTemp2NonZeroCount;
+      if CurrentTemp3NonZeroCount>0 then
+        CurrentTemp3Mean:=CurrentTemp3Mean/CurrentTemp3NonZeroCount;
+      if CurrentTemp4NonZeroCount>0 then
+        CurrentTemp4Mean:=CurrentTemp4Mean/CurrentTemp4NonZeroCount;
+
+      // Alle 5 Minuten (also bei CurrentTempMeanIndex=0) Mittelwert der Temperatur in Scope schreiben
+      if (CurrentTempMeanIndex=0) or (GrowingIndex<2) then
+      begin
+        chart.Data.Timestamp[GrowingIndex]:=now;
+        chart.Data.Value[0, GrowingIndex]:=CurrentTempMean;
+        chart.Data.Value[1, GrowingIndex]:=(tempsoll.value+Nachtabsenkung+tempmax.value);
+        chart.Data.Value[2, GrowingIndex]:=(tempsoll.value+Nachtabsenkung+tempmin.value);
+        chart.Data.Value[3, GrowingIndex]:=CurrentTemp2Mean;
+        chart.Data.Value[4, GrowingIndex]:=CurrentTemp3Mean;
+        chart.Data.Value[5, GrowingIndex]:=CurrentTemp4Mean;
+        GrowingIndex:=GrowingIndex+1;
+      end;
+
+      TempMinVal:=CalcMinimum;
+      TempMeanVal:=CalcMean;
+      TempMaxVal:=CalcMaximum;
+
+      if GrowingIndex>5 then
+      begin
+        OverallMin:=200;
+        OverallMax:=-200;
+        for i:=5 to GrowingIndex-1 do
+        begin
+          if chart.Data.Value[0, i]<OverallMin then
+            OverallMin:=chart.Data.Value[0, i];
+          if chart.Data.Value[0, i]>OverallMax then
+            OverallMax:=chart.Data.Value[0, i];
+        end;
+      end else
+      begin
+        OverallMin:=-10;
+        OverallMax:=35;
+      end;
+
+      displaymax:=(tempsoll.value+Nachtabsenkung+tempmax.value);
+      if (tempsoll.value+Nachtabsenkung+tempmin.value)>displaymax then
+        displaymax:=(tempsoll.value+Nachtabsenkung+tempmin.value);
+      if OverallMax>displaymax then
+        displaymax:=OverallMax;
+
+      displaymin:=(tempsoll.value+Nachtabsenkung+tempmax.value);
+      if (tempsoll.value+Nachtabsenkung+tempmin.value)<displaymin then
+        displaymin:=(tempsoll.value+Nachtabsenkung+tempmin.value);
+      if OverallMin<displaymin then
+        displaymin:=OverallMin;
+
+      chart.Options.PrimaryYAxis.YMax:=round(trunc(displaymax/5)+0.99)*5;
+      chart.Options.PrimaryYAxis.YMin:=round(trunc(displaymin/5)-0.99)*5;
+      chart.Options.PrimaryYAxis.YDivisions:=trunc((chart.Options.PrimaryYAxis.YMax / 5) + (abs(chart.Options.PrimaryYAxis.YMin) / 5));
+
+      // Temperatur in Label anzeigen
+      if config.Showing then
+      begin
+        tempminlbl.Caption:=floattostrf(TempMinVal, ffFixed, 5, 1)+'°C';
+        tempmeanlbl.Caption:=floattostrf(TempMeanVal, ffFixed, 5, 1)+'°C';
+        tempmaxlbl.Caption:=floattostrf(TempMaxVal, ffFixed, 5, 1)+'°C';
+
+        temp2lbl.caption:=floattostrf(CurrentTemp2Mean, ffFixed, 5, 1)+'°C';
+        temp3lbl.caption:=floattostrf(CurrentTemp3Mean, ffFixed, 5, 1)+'°C';
+        temp4lbl.caption:=floattostrf(CurrentTemp4Mean, ffFixed, 5, 1)+'°C';
+
+        mean2lbl.Caption:=inttostr(trunc(CurrentTemp2[0]))+' '+inttostr(trunc(CurrentTemp2[1]))+' '+inttostr(trunc(CurrentTemp2[2]))+' '+inttostr(trunc(CurrentTemp2[3]))+' '+inttostr(trunc(CurrentTemp2[4]));
+        mean3lbl.Caption:=inttostr(trunc(CurrentTemp3[0]))+' '+inttostr(trunc(CurrentTemp3[1]))+' '+inttostr(trunc(CurrentTemp3[2]))+' '+inttostr(trunc(CurrentTemp3[3]))+' '+inttostr(trunc(CurrentTemp3[4]));
+        mean4lbl.Caption:=inttostr(trunc(CurrentTemp4[0]))+' '+inttostr(trunc(CurrentTemp4[1]))+' '+inttostr(trunc(CurrentTemp4[2]))+' '+inttostr(trunc(CurrentTemp4[3]))+' '+inttostr(trunc(CurrentTemp4[4]));
+      end;
+
+      // Aktuelle Temperatur als Kanalwert an PC_DIMMER senden
+      if round(setup_datain_temp)>0 then
+        SetDLLEvent(round(setup_datain_temp), RoundToByte(t_amb));
+      // Minimale Temperatur als Kanalwert an PC_DIMMER senden
+      if round(setup_datain_min)>0 then
+        SetDLLEvent(round(setup_datain_min), RoundToByte(TempMinVal));
+      // Mittelwert der Temperatur als Kanalwert an PC_DIMMER senden
+      if round(setup_datain_mean)>0 then
+        SetDLLEvent(round(setup_datain_mean), RoundToByte(TempMeanVal));
+      // Maximale Temperatur als Kanalwert an PC_DIMMER senden
+      if round(setup_datain_max)>0 then
+        SetDLLEvent(round(setup_datain_max), RoundToByte(TempMaxVal));
+
+      if tempon.StateOn then
+      begin
+        // Mittelwert oder Aktueller Wert als Referenz
+        if CheckBox1.Checked then
+          ReglerTemperaturWert:=TempMeanVal
+        else
+          ReglerTemperaturWert:=t_amb;
+
+        // Nachtabsenkung
+        if Checkbox2.Checked then
+        begin
+          Tagesminuten:=strtoint(copy(TimeToStr(now), 1, 2))*60; // Stunden zu Minuten
+          Tagesminuten:=Tagesminuten+strtoint(copy(TimeToStr(now), 4, 2)); // Minuten
+
+          // Nachtabsenkung zwischen 22:30 = 1350 und 05:00 = 300
+          if (Tagesminuten>=((absenkung_h_startedit.value*60)+absenkung_min_startedit.value)) or (Tagesminuten<=((absenkung_h_stopedit.value*60)+absenkung_min_stopedit.value)) then
+          begin
+            nachtabsled.Status:=true;
+            Nachtabsenkung:=round(absenkung_temp.value); // 7°C weniger als Solltemperatur
+          end else
+          begin
+            nachtabsled.Status:=false;
+            Nachtabsenkung:=0; // keine Absenkung
+          end;
         end else
         begin
           nachtabsled.Status:=false;
           Nachtabsenkung:=0; // keine Absenkung
         end;
-      end else
-      begin
-        nachtabsled.Status:=false;
-        Nachtabsenkung:=0; // keine Absenkung
-      end;
 
-      if ReglerTemperaturWert>(tempsoll.value+Nachtabsenkung+tempmax.Value) then
-      begin
-        // Zu Warm -> Ausschalten
-        if round(setup_datain_heateron)>0 then
-          SetDLLEvent(round(setup_datain_heateron), 0);
-        Heizbetrieb:=false;
-        heizenled.active:=false;
-        heizenled.status:=false;
-        label14.Caption:=_('Heizung aus');
-        label14.Font.Color:=clBlack;
-      end;
-      tempokled.Status:=(ReglerTemperaturWert>(tempsoll.value+Nachtabsenkung+tempmax.Value));
-
-      if ReglerTemperaturWert<(tempsoll.value+Nachtabsenkung+tempmin.Value) then
-      begin
-        // Zu Kalt -> Einschalten
-        if round(setup_datain_heateron)>0 then
-          SetDLLEvent(round(setup_datain_heateron), 255);
-        Heizbetrieb:=true;
-        heizenled.active:=true;
-        label14.Caption:=_('Heizung ein');
-        label14.Font.Color:=clRed;
-      end;
-
-      if (ReglerTemperaturWert>(tempsoll.value+Nachtabsenkung+tempmin.Value)) and (ReglerTemperaturWert<(tempsoll.value+Nachtabsenkung+tempmax.Value)) then
-      begin
-        // Temperatur im Hysteresebereich
-        if RegelungNeuGestartet then
+        if ReglerTemperaturWert>(tempsoll.value+Nachtabsenkung+tempmax.Value) then
         begin
-          // Aufheizen, da Sollwert noch nicht erreicht und Regelung gerade eingeschaltet
-          RegelungNeuGestartet:=false;
+          // Zu Warm -> Ausschalten
+          if round(setup_datain_heateron)>0 then
+            SetDLLEvent(round(setup_datain_heateron), 0);
+          Heizbetrieb:=false;
+          heizenled.active:=false;
+          heizenled.status:=false;
+          label14.Caption:=_('Heizung aus');
+          label14.Font.Color:=clBlack;
+        end;
+        tempokled.Status:=(ReglerTemperaturWert>(tempsoll.value+Nachtabsenkung+tempmax.Value));
+
+        if ReglerTemperaturWert<(tempsoll.value+Nachtabsenkung+tempmin.Value) then
+        begin
+          // Zu Kalt -> Einschalten
           if round(setup_datain_heateron)>0 then
             SetDLLEvent(round(setup_datain_heateron), 255);
           Heizbetrieb:=true;
           heizenled.active:=true;
           label14.Caption:=_('Heizung ein');
           label14.Font.Color:=clRed;
-          hystereseled.status:=false;
-        end else
+        end;
+
+        if (ReglerTemperaturWert>(tempsoll.value+Nachtabsenkung+tempmin.Value)) and (ReglerTemperaturWert<(tempsoll.value+Nachtabsenkung+tempmax.Value)) then
         begin
-          // -> nichts ändern (Hysteresebetrieb)
-          if Heizbetrieb then
+          // Temperatur im Hysteresebereich
+          if RegelungNeuGestartet then
           begin
-            // Im Begriff des Aufheizens
+            // Aufheizen, da Sollwert noch nicht erreicht und Regelung gerade eingeschaltet
+            RegelungNeuGestartet:=false;
+            if round(setup_datain_heateron)>0 then
+              SetDLLEvent(round(setup_datain_heateron), 255);
+            Heizbetrieb:=true;
+            heizenled.active:=true;
             label14.Caption:=_('Heizung ein');
             label14.Font.Color:=clRed;
             hystereseled.status:=false;
           end else
           begin
-            label14.Caption:=_('Heizung aus (Hysterese)');
-            label14.Font.Color:=clGreen;
-            hystereseled.status:=true;
+            // -> nichts ändern (Hysteresebetrieb)
+            if Heizbetrieb then
+            begin
+              // Im Begriff des Aufheizens
+              label14.Caption:=_('Heizung ein');
+              label14.Font.Color:=clRed;
+              hystereseled.status:=false;
+            end else
+            begin
+              label14.Caption:=_('Heizung aus (Hysterese)');
+              label14.Font.Color:=clGreen;
+              hystereseled.status:=true;
+            end;
           end;
+        end else
+        begin
+          hystereseled.status:=false;
         end;
       end else
       begin
+        // Regelung ausgeschaltet
+        if round(setup_datain_heateron)>0 then
+          SetDLLEvent(round(setup_datain_heateron), 0);
+        Heizbetrieb:=false;
+        tempokled.Status:=false;
         hystereseled.status:=false;
+        heizenled.active:=false;
+        heizenled.status:=false;
       end;
-    end else
-    begin
-      // Regelung ausgeschaltet
-      if round(setup_datain_heateron)>0 then
-        SetDLLEvent(round(setup_datain_heateron), 0);
-      Heizbetrieb:=false;
-      tempokled.Status:=false;
-      hystereseled.status:=false;
-      heizenled.active:=false;
-      heizenled.status:=false;
-    end;
 
-    // Berechnung von Delta-T alle 15 Minuten
-    inc(FuenfzehnminutenCounter);
-    if FuenfzehnminutenCounter>=round(setup_deltattime*60) then
-    begin
-      // 15 Minuten sind um
-      FuenfzehnminutenCounter:=0;
-
-      if TempVor15Minuten>-1000 then
+      // Berechnung von Delta-T alle x Minuten
+      inc(FuenfzehnminutenCounter);
+      if FuenfzehnminutenCounter>=round(setup_deltattime) then
       begin
-        // Temperaturänderung anzeigen
-        deltatemplbl.caption:=floattostrf((t_amb-TempVor15Minuten), ffFixed, 5, 1)+'°C';
-        if (t_amb-TempVor15Minuten)>0 then
-        begin
-          deltatemplbl.Font.Color:=clGreen;
-        end else if (t_amb-TempVor15Minuten)<0 then
-        begin
-          deltatemplbl.Font.Color:=clRed;
-        end else
-        begin
-          deltatemplbl.Font.Color:=clBlack;
-        end;
+        // x Minuten sind um
+        FuenfzehnminutenCounter:=0;
 
-        // Zeit bis zum Erreichen des Sollwertes anzeigen
-        //if ((t_amb-TempVor15Minuten)/15)>0 then
+        if TempVorXMinuten>-1000 then
         begin
-          ZeitBisSollwert:=(tempsoll.value-t_amb)/abs((t_amb-TempVor15Minuten)/15); // Zeit in Minuten bis Sollwert erreicht wird
-          if ZeitBisSollwert<0 then
+          // Temperaturänderung anzeigen
+          deltatemplbl.caption:=floattostrf((t_amb-TempVorXMinuten), ffFixed, 5, 1)+'°C';
+          if (t_amb-TempVorXMinuten)>0 then
           begin
-            TimeToSollwertLbl.caption:='...';
+            deltatemplbl.Font.Color:=clGreen;
+          end else if (t_amb-TempVorXMinuten)<0 then
+          begin
+            deltatemplbl.Font.Color:=clRed;
           end else
           begin
-            ZeitBisSollwert_h:=trunc(ZeitBisSollwert/60);
-            ZeitBisSollwert_min:=round(ZeitBisSollwert-(60*ZeitBisSollwert_h));
-            TimeToSollwertLbl.caption:=inttostr(ZeitBisSollwert_h)+'h '+inttostr(ZeitBisSollwert_min)+'min'
+            deltatemplbl.Font.Color:=clBlack;
           end;
-{
-        end else
-        begin
-          TimeToSollwertLbl.caption:='...';
-}
+
+          // Zeit bis zum Erreichen des Sollwertes anzeigen
+          begin
+            ZeitBisSollwert:=(tempsoll.value-t_amb)/((t_amb-TempVorXMinuten)/round(setup_deltattime)); // Zeit in Minuten bis Sollwert erreicht wird
+            if ZeitBisSollwert<0 then
+            begin
+              TimeToSollwertLbl.caption:='...';
+            end else
+            begin
+              ZeitBisSollwert_h:=trunc(ZeitBisSollwert/60);
+              ZeitBisSollwert_min:=round(ZeitBisSollwert-(60*ZeitBisSollwert_h));
+              TimeToSollwertLbl.caption:=inttostr(ZeitBisSollwert_h)+'h '+inttostr(ZeitBisSollwert_min)+'min'
+            end;
+          end;
         end;
+        // Temperaturwerte und Kosten in CSV-Datei speichern
+        Memo1.Lines.Add(DateToStr(now)+';'+TimeToStr(now)+';'+
+          floattostrf(t_amb, ffFixed, 5, 1)+';'+
+          floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+';'+
+          floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+';'+
+          floattostrf(config.CurrentTemp4Mean, ffFixed, 5, 1)+';'+
+          floattostrf((t_amb-TempVorXMinuten), ffFixed, 5, 1)+';'+
+          floattostrf(Kilowattstunden+((setup_installedpower/1000)*(1/3600)), ffFixed, 5, 6)+';'+
+          floattostrf(Kilowattstunden+((setup_installedpower/1000)*(1/3600))*(setup_priceperkwh/100), ffFixed, 5, 6));
+
+        TempVorXMinuten:=t_amb;
       end;
-      // Temperaturwerte und Kosten in CSV-Datei speichern
-      Memo1.Lines.Add(DateToStr(now)+';'+TimeToStr(now)+';'+
-        floattostrf(t_amb, ffFixed, 5, 1)+';'+
-        floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+';'+
-        floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+';'+
-        floattostrf((t_amb-TempVor15Minuten), ffFixed, 5, 1)+';'+
-        floattostrf(Kilowattstunden+((setup_installedpower/1000)*(1/3600)), ffFixed, 5, 6)+';'+
-        floattostrf(Kilowattstunden+((setup_installedpower/1000)*(1/3600))*(setup_priceperkwh/100), ffFixed, 5, 6));
-
-      TempVor15Minuten:=t_amb;
     end;
-
+    
     // Berechnen des Strompreises
     if Heizbetrieb then
     begin
@@ -721,6 +832,7 @@ begin
     	    LReg.WriteInteger('Baudrate',baudrate);
 
           // Generelle Einstellungen
+          LReg.WriteBool('AutoConnectComPort', setup_autoconnect);
           LReg.WriteBool('Vertausche L und H', setup_mixmsblsb);
           LReg.WriteBool('Regler ein', tempon.StateOn);
 
@@ -756,6 +868,23 @@ begin
           LReg.WriteInteger('Installierte elektrische Leistung', round(setup_installedpower));
           LReg.WriteFloat('Preis pro kWh', setup_priceperkwh);
           LReg.WriteFloat('Zeit für Delta T', setup_deltattime);
+
+          // HTTP-Sensor-Einstellungen
+          LReg.WriteString('HTTP_Url', setup_http_url);
+          LReg.WriteString('HTTP_User', setup_http_user);
+
+          with TCipher_Blowfish.Create do
+          try
+            Init(blowfishscramblekey);
+            LReg.WriteString('HTTP_Password', EncodeBinary(setup_http_password, TFormat_Copy));
+          finally
+            Free;
+          end;
+
+          LReg.WriteString('HTTP_Startstring', setup_http_startstring);
+          LReg.WriteString('HTTP_Endstring', setup_http_endstring);
+          LReg.WriteBool('HTTP_Active', setup_http_activated);
+          LReg.WriteString('HTTP_Description', setup_http_description);
 
           // Verzeichnis für Dateien speichern
           LReg.WriteString('Datafolder', setup_logdirectory);
@@ -889,6 +1018,7 @@ begin
 
   setupform.portchange.Visible:=(setupform.portchange.Items.Count>0);
 
+  setupform.autoconnectcheckbox.Checked:=setup_autoconnect;
   setupform.checkbox2.Checked:=setup_mixmsblsb;
   setupform.datainchtemp.value:=setup_datain_temp;
   setupform.datainchmin.value:=setup_datain_min;
@@ -906,6 +1036,13 @@ begin
   setupform.temp3_lsb.Value:=setup_temp3lsb;
   setupform.temp2labeledit.text:=setup_temp2text;
   setupform.temp3labeledit.Text:=setup_temp3text;
+  setupform.httpurledit.Text:=setup_http_url;
+  setupform.httpuseredit.text:=setup_http_user;
+  setupform.httppasswordedit.Text:=setup_http_password;
+  setupform.httpstartstringedit.Text:=setup_http_startstring;
+  setupform.httpendstringedit.text:=setup_http_endstring;
+  setupform.usehttptempcheckbox.Checked:=setup_http_activated;
+  setupform.httpdescriptionedit.Text:=setup_http_description;
 
   setupform.ShowModal;
 
@@ -924,6 +1061,7 @@ begin
   Label4.Caption:='('+setupform.Temp3LabelEdit.Text+')';
   Label6.Caption:='('+inttostr(round(setupform.TimeForDeltaTEdit.Value))+'min)';
 
+  setup_autoconnect:=setupform.autoconnectcheckbox.Checked;
   setup_mixmsblsb:=setupform.checkbox2.Checked;
   setup_datain_temp:=setupform.datainchtemp.value;
   setup_datain_min:=setupform.datainchmin.value;
@@ -941,6 +1079,13 @@ begin
   setup_temp3lsb:=setupform.temp3_lsb.Value;
   setup_temp2text:=setupform.temp2labeledit.text;
   setup_temp3text:=setupform.temp3labeledit.Text;
+  setup_http_url:=setupform.httpurledit.Text;
+  setup_http_user:=setupform.httpuseredit.text;
+  setup_http_password:=setupform.httppasswordedit.Text;
+  setup_http_startstring:=setupform.httpstartstringedit.Text;
+  setup_http_endstring:=setupform.httpendstringedit.text;
+  setup_http_activated:=setupform.usehttptempcheckbox.Checked;
+  setup_http_description:=setupform.httpdescriptionedit.Text;
 
   Application.ProcessMessages;
   sleep(150);
@@ -979,7 +1124,7 @@ begin
   Shutdown:=false;
   RegelungNeuGestartet:=false;
   Heizbetrieb:=false;
-  TempVor15Minuten:=-1000;
+  TempVorXMinuten:=-1000;
 
   comportnumber:=2;
   baudrate:=115200;
@@ -1009,6 +1154,8 @@ begin
 	        baudrate:=LReg.ReadInteger('Baudrate');
 
           // Generelle Einstellungen
+	        if LReg.ValueExists('AutoConnectComPort') then
+            setup_autoconnect:=LReg.ReadBool('AutoConnectComPort');
 	        if LReg.ValueExists('Vertausche L und H') then
             setup_mixmsblsb:=LReg.ReadBool('Vertausche L und H');
 	        if LReg.ValueExists('Regler ein') then
@@ -1084,6 +1231,31 @@ begin
             setup_deltattime:=15;
           end;
 
+          // HTTP-Sensor-Einstellungen
+          if LReg.ValueExists('HTTP_Url') then
+            setup_http_url:=LReg.ReadString('HTTP_Url');
+          if LReg.ValueExists('HTTP_User') then
+            setup_http_user:=LReg.ReadString('HTTP_User');
+          if LReg.ValueExists('HTTP_Password') then
+          begin
+            setup_http_password:=LReg.ReadString('HTTP_Password');
+            with TCipher_Blowfish.Create do
+            try
+              Init(blowfishscramblekey);
+              setup_http_password := DecodeBinary(setup_http_password, TFormat_Copy);
+            finally
+              Free;
+            end;
+          end;
+          if LReg.ValueExists('HTTP_Startstring') then
+            setup_http_startstring:=LReg.ReadString('HTTP_Startstring');
+          if LReg.ValueExists('HTTP_Endstring') then
+            setup_http_endstring:=LReg.ReadString('HTTP_Endstring');
+          if LReg.ValueExists('HTTP_Active') then
+            setup_http_activated:=LReg.ReadBool('HTTP_Active');
+          if LReg.ValueExists('HTTP_Description') then
+            setup_http_description:=LReg.ReadString('HTTP_Description');
+
           // Verzeichnis für Dateien
           if LReg.ValueExists('Datafolder') then
             setup_logdirectory:=LReg.ReadString('Datafolder');
@@ -1095,16 +1267,17 @@ begin
   LReg.Free;
 
   Memo1.Lines.Clear;
-  Memo1.Lines.Add(_('Datum; Uhrzeit; Temperatur 1 [°C]; Temperatur 2 [°C]; Temperatur 3 [°C]; Delta-Temp [°C]; Verbrauch [kWh]; Kosten [€]'));
+  Memo1.Lines.Add(_('Datum; Uhrzeit; Temperatur 1 [°C]; Temperatur 2 [°C]; Temperatur 3 [°C]; Temperatur 4 [°C]; Delta-Temp [°C]; Verbrauch [kWh]; Kosten [€]'));
 
   Label3.Caption:='('+setup_temp2text+')';
   Label4.Caption:='('+setup_temp3text+')';
   Label6.Caption:='('+inttostr(round(setup_deltattime))+'min)';
+  Label21.Caption:='('+setup_http_description+')';
 
 
   // Chart vorbereiten
 //  chart.Options.PenValueLabels[0]:=true;
-  chart.Options.PenCount:=5;
+  chart.Options.PenCount:=6;
   chart.Options.PenUnit.Clear;
 
   chart.Options.PenColor[0]:=clblack;
@@ -1126,14 +1299,24 @@ begin
   chart.Options.PenColor[4]:=clteal;
   chart.Options.PenUnit.Add('°C');
 
+  chart.Options.PenValueLabels[5]:=false;
+  chart.Options.PenColor[5]:=clfuchsia;
+  chart.Options.PenUnit.Add('°C');
+
   chart.Options.PenLineWidth:=2;
   chart.Options.XAxisDateTimeMode:=true;
   chart.Options.XAxisDateTimeFormat:='hh:mm:ss';
   chart.Options.XAxisDivisionMarkers:=true;
-  chart.Options.XAxisValuesPerDivision:=5;
+  chart.Options.XAxisValuesPerDivision:=3; // 3 Werte pro Div @ 5Min pro Sample -> 15 Minuten pro Div
 
   chart.Options.AxisFont.Name:='Calibri';
   chart.Options.AxisFont.Size:=8;
+
+  if setup_autoconnect then
+  begin
+    // Automatisch mit letzten Comport und Baudrate verbinden
+    ActivateCOMPort(comportnumber, baudrate);
+  end;
 end;
 
 procedure TConfig.RegisterPluginCommandsTimer(Sender: TObject);
@@ -1147,8 +1330,8 @@ end;
 procedure TConfig.TestCaseBtnClick(Sender: TObject);
 begin
   DemoData.Enabled:=true;
-  SekundenTimer.Enabled:=true;
-  SekundenTimer.Interval:=75;
+  ServiceTimer.Enabled:=true;
+  ServiceTimer.Interval:=1;
   FuenfzehnminutenCounter:=round(setup_deltattime*60)-20;
 end;
 
@@ -1162,8 +1345,8 @@ begin
     t_amb:=t_amb-10;
 }
 
-  if TempVor15Minuten=-1000 then
-    TempVor15Minuten:=t_amb;
+  if TempVorXMinuten=-1000 then
+    TempVorXMinuten:=t_amb;
 end;
 
 procedure TConfig.SavePng(Bitmap: TBitmap; Destination:string);

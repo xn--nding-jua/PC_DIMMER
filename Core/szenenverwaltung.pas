@@ -141,6 +141,9 @@ type
     procedure Edit1KeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure PresetSzene1Click(Sender: TObject);
+    procedure VSTEndDrag(Sender, Target: TObject; X, Y: Integer);
+    procedure VSTMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private-Deklarationen }
     NewGUID: TGUID;
@@ -168,7 +171,8 @@ implementation
 uses PCDIMMER, bewegungsszeneneditor, insscene, audioszeneeditorform,
   kompositionsszeneeditorform, geraetesteuerungfrm, preseteditorform,
   devicescenefrm, geraeteremovedfrm, autoszenefrm, effektsequenzerfrm,
-  befehleditorform2, mediacenterfrm, presetsceneeditorform;
+  befehleditorform2, mediacenterfrm, presetsceneeditorform,
+  audioeffektplayerfrm;
 
 {$R *.dfm}
 
@@ -5186,6 +5190,34 @@ begin
 
     // noch schnell die Einträge alphabetisch sortieren
     VST.Sort(VSTRootNodes[10], 0, sdAscending);
+  end;
+end;
+
+procedure Tszenenverwaltungform.VSTEndDrag(Sender, Target: TObject; X,
+  Y: Integer);
+var
+  Data: PTreeData;
+begin
+  if not mainform.UserAccessGranted(2) then exit;
+
+  if (Target=audioeffektplayerform.waveform) and (VST.SelectedCount>0) then
+  begin
+    // Call add-scene function within the audioeffectplayer
+    Data:=VST.GetNodeData(VST.FocusedNode);
+    if Assigned(Data) and (not Data^.IsRootNode) and (audioeffektplayerform.mouseoverlayer>0) then
+    begin
+      audioeffektplayerform.RecordAudioeffekt(Data^.ID, false, audioeffektplayerform.mouseoverlayer, true);
+    end;
+    audioeffektplayerform._mousedwn:=0;
+  end;
+end;
+
+procedure Tszenenverwaltungform.VSTMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  if (Button = mbLeft) then
+  begin
+    VST.BeginDrag(False);
   end;
 end;
 

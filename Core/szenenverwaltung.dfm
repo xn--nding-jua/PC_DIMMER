@@ -1,6 +1,6 @@
 object szenenverwaltungform: Tszenenverwaltungform
-  Left = 427
-  Top = 136
+  Left = 229
+  Top = 120
   Width = 530
   Height = 450
   Caption = 'Szenenverwaltung'
@@ -1379,6 +1379,8 @@ object szenenverwaltungform: Tszenenverwaltungform
     Align = alClient
     Colors.UnfocusedSelectionColor = clInactiveBorder
     Colors.UnfocusedSelectionBorderColor = clInactiveBorder
+    DragOperations = [doLink]
+    DragType = dtVCL
     DrawSelectionMode = smBlendedRectangle
     EditDelay = 500
     Header.AutoSizeIndex = 0
@@ -1401,9 +1403,11 @@ object szenenverwaltungform: Tszenenverwaltungform
     OnCompareNodes = VSTCompareNodes
     OnDblClick = EditBtnClick
     OnEditing = VSTEditing
+    OnEndDrag = VSTEndDrag
     OnGetText = VSTGetText
     OnPaintText = VSTPaintText
     OnGetImageIndex = VSTGetImageIndex
+    OnMouseDown = VSTMouseDown
     OnNewText = VSTNewText
     Columns = <
       item

@@ -1,7 +1,7 @@
 object Config: TConfig
-  Left = 1270
-  Top = 166
-  Width = 481
+  Left = 762
+  Top = 98
+  Width = 498
   Height = 451
   Caption = 'Konfiguration'
   Color = clBtnFace
@@ -18,7 +18,7 @@ object Config: TConfig
   object GroupBox3: TGroupBox
     Left = 8
     Top = 92
-    Width = 449
+    Width = 466
     Height = 271
     Align = alClient
     Caption = ' Interfaceeinstellungen '
@@ -26,7 +26,7 @@ object Config: TConfig
     object StringGrid1: TStringGrid
       Left = 10
       Top = 23
-      Width = 429
+      Width = 446
       Height = 145
       Align = alClient
       ColCount = 6
@@ -51,7 +51,7 @@ object Config: TConfig
     object Panel7: TPanel
       Left = 2
       Top = 168
-      Width = 445
+      Width = 462
       Height = 101
       Align = alBottom
       BevelOuter = bvNone
@@ -155,7 +155,7 @@ object Config: TConfig
       TabOrder = 2
     end
     object Panel9: TPanel
-      Left = 439
+      Left = 456
       Top = 23
       Width = 8
       Height = 145
@@ -166,7 +166,7 @@ object Config: TConfig
     object Panel10: TPanel
       Left = 2
       Top = 15
-      Width = 445
+      Width = 462
       Height = 8
       Align = alTop
       BevelOuter = bvNone
@@ -176,7 +176,7 @@ object Config: TConfig
   object Panel1: TPanel
     Left = 0
     Top = 371
-    Width = 465
+    Width = 482
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
@@ -184,7 +184,7 @@ object Config: TConfig
     object Shape2: TShape
       Left = 0
       Top = 1
-      Width = 465
+      Width = 482
       Height = 40
       Align = alClient
       Pen.Color = clWhite
@@ -192,7 +192,7 @@ object Config: TConfig
     object Shape3: TShape
       Left = 0
       Top = 0
-      Width = 465
+      Width = 482
       Height = 1
       Align = alTop
     end
@@ -241,7 +241,7 @@ object Config: TConfig
     TabOrder = 2
   end
   object Panel3: TPanel
-    Left = 457
+    Left = 474
     Top = 92
     Width = 8
     Height = 271
@@ -252,7 +252,7 @@ object Config: TConfig
   object Panel4: TPanel
     Left = 0
     Top = 0
-    Width = 465
+    Width = 482
     Height = 84
     Align = alTop
     BevelOuter = bvNone
@@ -260,7 +260,7 @@ object Config: TConfig
     object Image1: TImage
       Left = 0
       Top = 0
-      Width = 465
+      Width = 482
       Height = 84
       Align = alTop
       Picture.Data = {
@@ -1091,7 +1091,7 @@ object Config: TConfig
     object Shape1: TShape
       Left = 0
       Top = 83
-      Width = 465
+      Width = 482
       Height = 1
       Align = alBottom
     end
@@ -1099,7 +1099,7 @@ object Config: TConfig
   object Panel5: TPanel
     Left = 0
     Top = 84
-    Width = 465
+    Width = 482
     Height = 8
     Align = alTop
     BevelOuter = bvNone
@@ -1108,7 +1108,7 @@ object Config: TConfig
   object Panel6: TPanel
     Left = 0
     Top = 363
-    Width = 465
+    Width = 482
     Height = 8
     Align = alBottom
     BevelOuter = bvNone

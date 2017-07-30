@@ -70,7 +70,7 @@ begin
   config.chart.Options.AutoUpdateGraph:=false;
   if config.comport.Connected then
 		Config.comport.Disconnect;
-  Config.SekundenTimer.Enabled:=false;
+  Config.ServiceTimer.Enabled:=false;
 
   // Datei abspeichern
   if config.setup_logdirectory<>'' then
@@ -80,7 +80,8 @@ begin
       floattostrf(Config.t_amb, ffFixed, 5, 1)+';'+
       floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+';'+
       floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+';'+
-      floattostrf((Config.t_amb-Config.TempVor15Minuten), ffFixed, 5, 1)+';'+
+      floattostrf(config.CurrentTemp4Mean, ffFixed, 5, 1)+';'+
+      floattostrf((Config.t_amb-Config.TempVorXMinuten), ffFixed, 5, 1)+';'+
       floattostrf(Config.Kilowattstunden+((config.setup_installedpower/1000)*(1/3600)), ffFixed, 5, 6)+';'+
       floattostrf(Config.Kilowattstunden+((config.setup_installedpower/1000)*(1/3600))*(config.setup_priceperkwh/100), ffFixed, 5, 6));
 
@@ -133,7 +134,7 @@ end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v2.2');
+  Result := PChar('v2.4');
 end;
 
 function DLLGetResourceData(const ResName: PChar; Buffer: Pointer; var Length: Integer):boolean;stdcall;

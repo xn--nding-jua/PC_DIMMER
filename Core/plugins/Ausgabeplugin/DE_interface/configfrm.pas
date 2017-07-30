@@ -691,6 +691,9 @@ begin
 
   SearchForInterfaces;
   RefreshList;
+
+  RefreshSometimes:=true;
+  ScanTimer.Enabled:=true;
 end;
 
 procedure TConfig.CheckBox1MouseUp(Sender: TObject; Button: TMouseButton;

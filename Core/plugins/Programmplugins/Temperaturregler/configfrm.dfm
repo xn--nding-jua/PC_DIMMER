@@ -1,6 +1,6 @@
 object Config: TConfig
-  Left = 539
-  Top = 494
+  Left = 96
+  Top = 85
   Width = 1330
   Height = 497
   Caption = 'Temperaturregler'
@@ -156,10 +156,19 @@ object Config: TConfig
     Top = 9
     Width = 1000
     Height = 334
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
     Align = alClient
-    Options.XAxisValuesPerDivision = 0
+    Options.Title = 'Temperaturverlauf K4 Tonstudio'
+    Options.XAxisValuesPerDivision = 1
     Options.XAxisLabelAlignment = taLeftJustify
-    Options.XAxisDateTimeMode = False
+    Options.XAxisDateTimeMode = True
+    Options.XAxisDateTimeDivision = 1.000000000000000000
+    Options.XAxisDateTimeFormat = 'hh:mm:ss'
+    Options.DateTimeFormat = 'dd.MM.yyyy hh:mm:ss'
     Options.XOrigin = 0
     Options.YOrigin = 0
     Options.YStartOffset = 30
@@ -167,9 +176,11 @@ object Config: TConfig
     Options.PrimaryYAxis.YLegendDecimalPlaces = 0
     Options.SecondaryYAxis.YMax = 10.000000000000000000
     Options.SecondaryYAxis.YLegendDecimalPlaces = 0
+    Options.MouseEdit = False
     Options.MouseDragObjects = False
     Options.LegendRowCount = 0
     Options.AxisLineWidth = 3
+    Options.XValueCount = 1
     Options.HeaderFont.Charset = DEFAULT_CHARSET
     Options.HeaderFont.Color = clWindowText
     Options.HeaderFont.Height = -11
@@ -208,7 +219,7 @@ object Config: TConfig
       object Label2: TLabel
         Left = 8
         Top = 20
-        Width = 137
+        Width = 90
         Height = 13
         Alignment = taCenter
         AutoSize = False
@@ -223,22 +234,22 @@ object Config: TConfig
       object temp2lbl: TLabel
         Left = 8
         Top = 51
-        Width = 137
-        Height = 46
+        Width = 90
+        Height = 22
         Alignment = taCenter
         AutoSize = False
         Caption = '0,0'#176'C'
         Font.Charset = ANSI_CHARSET
         Font.Color = clOlive
-        Font.Height = -40
+        Font.Height = -19
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
       end
       object Label1: TLabel
-        Left = 144
+        Left = 104
         Top = 20
-        Width = 137
+        Width = 90
         Height = 13
         Alignment = taCenter
         AutoSize = False
@@ -251,16 +262,16 @@ object Config: TConfig
         ParentFont = False
       end
       object temp3lbl: TLabel
-        Left = 144
+        Left = 104
         Top = 51
-        Width = 137
-        Height = 46
+        Width = 90
+        Height = 22
         Alignment = taCenter
         AutoSize = False
         Caption = '0,0'#176'C'
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
-        Font.Height = -40
+        Font.Height = -19
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
@@ -268,20 +279,113 @@ object Config: TConfig
       object Label3: TLabel
         Left = 8
         Top = 34
-        Width = 137
+        Width = 90
         Height = 13
         Alignment = taCenter
         AutoSize = False
         Caption = '(Eingangst'#252'r)'
       end
       object Label4: TLabel
-        Left = 144
+        Left = 104
         Top = 34
-        Width = 137
+        Width = 90
         Height = 13
         Alignment = taCenter
         AutoSize = False
         Caption = '(Decke)'
+      end
+      object Label20: TLabel
+        Left = 192
+        Top = 20
+        Width = 90
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Temperatur 4:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label21: TLabel
+        Left = 192
+        Top = 34
+        Width = 90
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '(Studio 2)'
+      end
+      object temp4lbl: TLabel
+        Left = 192
+        Top = 51
+        Width = 90
+        Height = 22
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '0,0'#176'C'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clFuchsia
+        Font.Height = -19
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object mean2lbl: TLabel
+        Left = 8
+        Top = 80
+        Width = 88
+        Height = 14
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '0 0 0 0 0'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
+      end
+      object mean3lbl: TLabel
+        Left = 104
+        Top = 80
+        Width = 88
+        Height = 14
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '0 0 0 0 0'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
+      end
+      object mean4lbl: TLabel
+        Left = 192
+        Top = 80
+        Width = 88
+        Height = 14
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '0 0 0 0 0'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
+      end
+      object Label35: TLabel
+        Left = 256
+        Top = 0
+        Width = 25
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = '60s'
       end
     end
     object GroupBox2: TGroupBox
@@ -667,9 +771,9 @@ object Config: TConfig
         Caption = 'Nachtabs.'
       end
       object Label9: TLabel
-        Left = 152
+        Left = 160
         Top = 20
-        Width = 129
+        Width = 121
         Height = 13
         Alignment = taCenter
         AutoSize = False
@@ -960,11 +1064,11 @@ object Config: TConfig
     Left = 144
     Top = 8
   end
-  object SekundenTimer: TTimer
+  object ServiceTimer: TTimer
     Enabled = False
-    OnTimer = SekundenTimerTimer
-    Left = 872
-    Top = 40
+    OnTimer = ServiceTimerTimer
+    Left = 264
+    Top = 96
   end
   object RegisterPluginCommands: TTimer
     OnTimer = RegisterPluginCommandsTimer

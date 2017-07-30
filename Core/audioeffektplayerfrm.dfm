@@ -5,6 +5,7 @@ object audioeffektplayerform: Taudioeffektplayerform
   Height = 614
   Caption = 'Audioeffektplayer'
   Color = clBtnFace
+  DragMode = dmAutomatic
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -1884,6 +1885,7 @@ object audioeffektplayerform: Taudioeffektplayerform
           Color = clBtnFace
           ParentColor = False
           OnDblClick = waveformDblClick
+          OnDragOver = waveformDragOver
           OnMouseDown = waveformMouseDown
           OnMouseMove = waveformMouseMove
           OnMouseUp = waveformMouseUp

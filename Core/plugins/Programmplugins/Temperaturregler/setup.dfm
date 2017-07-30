@@ -1,9 +1,9 @@
 object setupform: Tsetupform
-  Left = 194
-  Top = 220
+  Left = 66
+  Top = 148
   BorderStyle = bsSingle
   Caption = 'Einstellungen'
-  ClientHeight = 337
+  ClientHeight = 369
   ClientWidth = 729
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -122,6 +122,14 @@ object setupform: Tsetupform
       Height = 17
       Caption = 'Vertausche L/H'
       TabOrder = 4
+    end
+    object autoconnectcheckbox: TCheckBox
+      Left = 200
+      Top = 85
+      Width = 145
+      Height = 17
+      Caption = 'Auto-Connect COM-Port'
+      TabOrder = 5
     end
   end
   object GroupBox2: TGroupBox
@@ -342,8 +350,8 @@ object setupform: Tsetupform
     end
   end
   object Button3: TButton
-    Left = 16
-    Top = 304
+    Left = 8
+    Top = 336
     Width = 75
     Height = 25
     Caption = 'OK'
@@ -449,6 +457,109 @@ object setupform: Tsetupform
       MinValue = 1.000000000000000000
       Value = 15.000000000000000000
       TabOrder = 2
+    end
+  end
+  object GroupBox6: TGroupBox
+    Left = 368
+    Top = 232
+    Width = 353
+    Height = 129
+    Caption = ' HTTP-Temperatursensoren '
+    TabOrder = 6
+    object Label5: TLabel
+      Left = 16
+      Top = 24
+      Width = 25
+      Height = 13
+      Caption = 'URL:'
+    end
+    object Label18: TLabel
+      Left = 144
+      Top = 24
+      Width = 71
+      Height = 13
+      Caption = 'Benutzername:'
+    end
+    object Label19: TLabel
+      Left = 232
+      Top = 24
+      Width = 46
+      Height = 13
+      Caption = 'Passwort:'
+    end
+    object Label20: TLabel
+      Left = 16
+      Top = 64
+      Width = 55
+      Height = 13
+      Caption = 'Start-String:'
+    end
+    object Label21: TLabel
+      Left = 144
+      Top = 64
+      Width = 52
+      Height = 13
+      Caption = 'End-String:'
+    end
+    object Label26: TLabel
+      Left = 232
+      Top = 64
+      Width = 65
+      Height = 13
+      Caption = 'Bezeichnung:'
+    end
+    object httpurledit: TEdit
+      Left = 16
+      Top = 40
+      Width = 121
+      Height = 21
+      TabOrder = 0
+      Text = 'http://'
+    end
+    object httpuseredit: TEdit
+      Left = 144
+      Top = 40
+      Width = 81
+      Height = 21
+      TabOrder = 1
+    end
+    object httppasswordedit: TEdit
+      Left = 232
+      Top = 40
+      Width = 97
+      Height = 21
+      PasswordChar = '*'
+      TabOrder = 2
+    end
+    object httpstartstringedit: TEdit
+      Left = 16
+      Top = 80
+      Width = 121
+      Height = 21
+      TabOrder = 3
+    end
+    object httpendstringedit: TEdit
+      Left = 144
+      Top = 80
+      Width = 81
+      Height = 21
+      TabOrder = 4
+    end
+    object usehttptempcheckbox: TCheckBox
+      Left = 16
+      Top = 104
+      Width = 129
+      Height = 17
+      Caption = 'Lese HTTP-Sensor'
+      TabOrder = 5
+    end
+    object httpdescriptionedit: TEdit
+      Left = 232
+      Top = 80
+      Width = 97
+      Height = 21
+      TabOrder = 6
+      Text = 'HTTP-Sensor'
     end
   end
 end
