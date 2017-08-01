@@ -33,9 +33,9 @@ object About: TAbout
   object Label5: TLabel
     Left = 8
     Top = 88
-    Width = 130
+    Width = 118
     Height = 13
-    Caption = 'christian.noeding@arcor.de'
+    Caption = 'http://www.pcdimmer.de'
   end
   object Label1: TLabel
     Left = 8
@@ -53,9 +53,9 @@ object About: TAbout
   object Label2: TLabel
     Left = 8
     Top = 24
-    Width = 133
+    Width = 200
     Height = 13
-    Caption = '(c) 2008 by Christian N'#246'ding'
+    Caption = '(c) 2008/2017 by Dr.-Ing. Christian N'#246'ding'
   end
   object Button1: TButton
     Left = 8

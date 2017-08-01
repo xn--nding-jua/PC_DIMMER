@@ -15,6 +15,8 @@ const
   err_BadValue=2;
   USBDEV_SHARED_VENDOR=5824;//0x16C0
   USBDEV_SHARED_PRODUCT=1500;//0x05DC
+  USBDEV_SHARED_VENDOR_B=1003;//0x03EB  // This is for china-copy of uDMX called D512
+  USBDEV_SHARED_PRODUCT_B=34952;//0x8888 // This is for china-copy of uDMX called D512
 
 type
   TCallbackValues = procedure(address,startvalue,endvalue,fadetime,delay:integer);stdcall;
@@ -216,13 +218,22 @@ begin
           end;
         end;
 
-        if (dev^.descriptor.idVendor=USBDEV_SHARED_VENDOR) and (dev^.descriptor.idProduct=USBDEV_SHARED_PRODUCT) and vendorok and deviceok then
+        if (vendorok and deviceok) and ((dev^.descriptor.idVendor=USBDEV_SHARED_VENDOR) and (dev^.descriptor.idProduct=USBDEV_SHARED_PRODUCT)) then
         begin
           uDMXDevice_Pointer:=dev;
           uDMXDevice_Handle:=udev;
-          statuslabel.Caption:='Verbunden...';
+          statuslabel.Caption:='Verbunden mit original uDMX...';
           statuslabel.Font.Color:=clGreen;
-        end;
+        end else if ((dev^.descriptor.idVendor=USBDEV_SHARED_VENDOR) and (dev^.descriptor.idProduct=USBDEV_SHARED_PRODUCT)) or
+          (dev^.descriptor.idVendor=USBDEV_SHARED_VENDOR_B) and (dev^.descriptor.idProduct=USBDEV_SHARED_PRODUCT_B) then
+    		begin
+          // VID und PID passen, obwohl Name und Vendor-String nicht passen
+          // Alternative VID und PID des China-Klons passen
+          uDMXDevice_Pointer:=dev;
+          uDMXDevice_Handle:=udev;
+          statuslabel.Caption:='Verbunden mit uDMX-kompatiblem Interface...';
+          statuslabel.Font.Color:=clGreen;
+    		end;
       end;
     end;
   end;

@@ -3,7 +3,7 @@ object Mainform: TMainform
   Top = 100
   BorderStyle = bsToolWindow
   Caption = 'Konfiguration'
-  ClientHeight = 209
+  ClientHeight = 217
   ClientWidth = 273
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Mainform: TMainform
   TextHeight = 13
   object Bevel1: TBevel
     Left = 0
-    Top = 168
+    Top = 176
     Width = 273
     Height = 9
     Shape = bsTopLine
@@ -40,9 +40,9 @@ object Mainform: TMainform
   object Label2: TLabel
     Left = 8
     Top = 24
-    Width = 133
+    Width = 200
     Height = 13
-    Caption = '(c) 2008 by Christian N'#246'ding'
+    Caption = '(c) 2008/2017 by Dr.-Ing. Christian N'#246'ding'
   end
   object Label3: TLabel
     Left = 8
@@ -60,14 +60,14 @@ object Mainform: TMainform
   end
   object Label5: TLabel
     Left = 8
-    Top = 112
+    Top = 104
     Width = 73
     Height = 13
     Caption = 'Interfacestatus:'
   end
   object statuslabel: TLabel
-    Left = 88
-    Top = 112
+    Left = 8
+    Top = 120
     Width = 107
     Height = 13
     Caption = 'Nicht verbunden...'
@@ -80,7 +80,7 @@ object Mainform: TMainform
   end
   object ConfigOK: TButton
     Left = 8
-    Top = 176
+    Top = 184
     Width = 75
     Height = 25
     Caption = 'OK'
@@ -89,7 +89,7 @@ object Mainform: TMainform
   end
   object Abbrechen: TButton
     Left = 88
-    Top = 176
+    Top = 184
     Width = 75
     Height = 25
     Caption = 'Abbrechen'
@@ -120,7 +120,7 @@ object Mainform: TMainform
   end
   object Button1: TButton
     Left = 8
-    Top = 136
+    Top = 144
     Width = 257
     Height = 25
     Caption = 'uDMX Interface suchen...'
