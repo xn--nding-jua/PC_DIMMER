@@ -225,7 +225,7 @@ begin
           statuslabel.Caption:='Verbunden mit original uDMX...';
           statuslabel.Font.Color:=clGreen;
         end else if ((dev^.descriptor.idVendor=USBDEV_SHARED_VENDOR) and (dev^.descriptor.idProduct=USBDEV_SHARED_PRODUCT)) or
-          (dev^.descriptor.idVendor=USBDEV_SHARED_VENDOR_B) and (dev^.descriptor.idProduct=USBDEV_SHARED_PRODUCT_B) then
+          ((dev^.descriptor.idVendor=USBDEV_SHARED_VENDOR_B) and (dev^.descriptor.idProduct=USBDEV_SHARED_PRODUCT_B)) then
     		begin
           // VID und PID passen, obwohl Name und Vendor-String nicht passen
           // Alternative VID und PID des China-Klons passen

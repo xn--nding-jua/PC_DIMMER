@@ -111,7 +111,7 @@ AutoIncBuild=1
 MajorVer=1
 MinorVer=1
 Release=0
-Build=27
+Build=29
 Debug=0
 PreRelease=0
 Special=0
@@ -122,7 +122,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios Remsfeld
 FileDescription=uDMX Interface (und kompatibel)
-FileVersion=1.1.0.27
+FileVersion=1.1.0.29
 InternalName=
 LegalCopyright=(c) 2008/2017 by Dr.-Ing. Christian Nöding
 LegalTrademarks=
