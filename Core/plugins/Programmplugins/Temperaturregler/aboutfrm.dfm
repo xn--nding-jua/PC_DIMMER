@@ -4,7 +4,7 @@ object About: TAbout
   BorderStyle = bsToolWindow
   Caption = 'Info...'
   ClientHeight = 153
-  ClientWidth = 281
+  ClientWidth = 304
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -32,16 +32,16 @@ object About: TAbout
   object Label2: TLabel
     Left = 8
     Top = 24
-    Width = 217
+    Width = 286
     Height = 13
-    Caption = 'ATtiny2313 Temperaturerfassung mit TSiC206'
+    Caption = 'TSiC306, DS18B20, HTTP- und DMX-Temperaturempf'#228'nger'
   end
   object Label3: TLabel
     Left = 8
     Top = 48
     Width = 250
     Height = 13
-    Caption = 'Copyrights (c) 2011-2017 by Dr.-Ing. Christian N'#246'ding'
+    Caption = 'Copyrights (c) 2011-2018 by Dr.-Ing. Christian N'#246'ding'
   end
   object Label4: TLabel
     Left = 8
@@ -53,7 +53,7 @@ object About: TAbout
   object Bevel1: TBevel
     Left = 0
     Top = 112
-    Width = 281
+    Width = 305
     Height = 9
     Shape = bsTopLine
   end

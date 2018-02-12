@@ -19,18 +19,26 @@ type
   TCallbackGetValue = function(address:integer):integer;stdcall;
   TCallbackSendMessage = procedure(MSG: Byte; Data1, Data2:Variant);stdcall;
 
+  TTempElement = record
+    Source:byte; // 0=offline, 1=uart, 2=http, 3=dmx
+    name:string[255];
+    http_setting:array[0..4] of string[255]; // url, nutzer, password, start-string, stop-string
+    dmx_setting:array[0..1] of word; // msb, lsb
+    percentage:single;
+    mean_max:byte;
+
+    TempSensorRawValue:single;
+    TempValues:array[0..14] of Single;
+    TempNonZeroCount:integer;
+    TempMean:single;
+    TempMeanIndex:integer;
+  end;
   TConfig = class(TForm)
     comport: TCommPortDriver;
     ServiceTimer: TTimer;
     RegisterPluginCommands: TTimer;
     Panel2: TPanel;
     GroupBox1: TGroupBox;
-    Label2: TLabel;
-    temp2lbl: TLabel;
-    Label1: TLabel;
-    temp3lbl: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
     GroupBox2: TGroupBox;
     Label5: TLabel;
     Label6: TLabel;
@@ -78,7 +86,6 @@ type
     tempsoll: TJvSpinEdit;
     tempmin: TJvSpinEdit;
     tempmax: TJvSpinEdit;
-    CheckBox1: TCheckBox;
     Button2: TButton;
     GroupBox7: TGroupBox;
     tempminlbl: TLabel;
@@ -96,17 +103,17 @@ type
     Label17: TLabel;
     Label18: TLabel;
     Label19: TLabel;
-    TestCaseBtn: TButton;
-    DemoData: TTimer;
     Button3: TButton;
     Button4: TButton;
-    Label20: TLabel;
-    Label21: TLabel;
-    temp4lbl: TLabel;
-    mean2lbl: TLabel;
-    mean3lbl: TLabel;
-    mean4lbl: TLabel;
-    Label35: TLabel;
+    ch1lbl: TLabel;
+    ch2lbl: TLabel;
+    ch3lbl: TLabel;
+    ch4lbl: TLabel;
+    ch8lbl: TLabel;
+    ch7lbl: TLabel;
+    ch6lbl: TLabel;
+    ch5lbl: TLabel;
+    label35: TLabel;
     procedure comportReceiveData(Sender: TObject; DataPtr: Pointer;
       DataSize: Cardinal);
     procedure ActivateCOMPort(portnumber, baudrate: integer);
@@ -120,28 +127,25 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure RegisterPluginCommandsTimer(Sender: TObject);
-    procedure TestCaseBtnClick(Sender: TObject);
-    procedure DemoDataTimer(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
   private
     { Private-Deklarationen }
+    function EncryptPwd(Pwd: string):string;
+    function DecryptPwd(Pwd: string):string;
   public
     { Public-Deklarationen }
     comportnumber:integer;
     baudrate:integer;
     Shutdown:boolean;
 
-    t_amb:Single;
+    TempElements:array[0..7] of TTempElement;
+    t_amb:single;
+
     Nachtabsenkung:integer;
     TempVorXMinuten:Single;
     ServiceTimerCounter:integer;
     FuenfzehnminutenCounter:Word;
-    Temp2msb, Temp2lsb, Temp3msb, Temp3lsb:byte;
-    CurrentTemp, CurrentTemp2, CurrentTemp3, CurrentTemp4:array[0..4] of Single;
-    CurrentTempNonZeroCount, CurrentTemp2NonZeroCount, CurrentTemp3NonZeroCount, CurrentTemp4NonZeroCount:integer;
-    CurrentTempMean, CurrentTemp2Mean, CurrentTemp3Mean,CurrentTemp4Mean:single;
-    CurrentTempMeanIndex, CurrentTemp2MeanIndex, CurrentTemp3MeanIndex, CurrentTemp4MeanIndex:integer;
     RegelungNeuGestartet:Boolean;
     Heizbetrieb:Boolean;
     Strompreis, Kilowattstunden:Single;
@@ -163,11 +167,6 @@ type
     setup_installedpower:double;
     setup_priceperkwh:double;
     setup_deltattime:double;
-    setup_temp2msb, setup_temp2lsb, setup_temp3msb, setup_temp3lsb:double;
-    setup_temp2text, setup_temp3text:string;
-    setup_http_url, setup_http_user, setup_http_password:string;
-    setup_http_startstring, setup_http_endstring, setup_http_description: string;
-    setup_http_activated:boolean;
 
     function CalcMaximum:Single;
     function CalcMinimum:Single;
@@ -175,7 +174,7 @@ type
     function RoundToByte(Temperatur: Single):Byte;
     procedure StartUp;
     procedure SavePng(Bitmap: TBitmap; Destination:string);
-    function GetHTTPTemperature:double;
+    function GetHTTPTemperature(channel: integer):double;
   end;
 
 var
@@ -246,9 +245,14 @@ begin
   lHTTP := TIdHTTP.Create;
   lHTTP.Request.Clear;
   lHTTP.ReadTimeout:=500;
-  lHTTP.Request.BasicAuthentication:= true;
-  lHTTP.Request.Username := Username;
-  lHTTP.Request.Password := Password;
+
+  if (Username<>'') and (Password<>'') then
+  begin
+    lHTTP.Request.BasicAuthentication:= true;
+    lHTTP.Request.Username := Username;
+    lHTTP.Request.Password := Password;
+  end;
+
   try
     Result := lHTTP.Get(aURL);
   finally
@@ -256,15 +260,15 @@ begin
   end;
 end;
 
-function TConfig.GetHTTPTemperature:double;
+function TConfig.GetHTTPTemperature(channel: integer):double;
 var
   website:string;
   temperature:string;
 begin
-  website:=GetURLAsString(setup_http_url, setup_http_user, setup_http_password);
+  website:=GetURLAsString(TempElements[channel].http_setting[0], TempElements[channel].http_setting[1], DecryptPwd(TempElements[channel].http_setting[2]));
 
-  temperature:=copy(website, pos(setup_http_startstring, website)+length(setup_http_startstring), 10);
-  temperature:=copy(temperature, 1, pos(setup_http_endstring, temperature)-1);
+  temperature:=copy(website, pos(TempElements[channel].http_setting[3], website)+length(TempElements[channel].http_setting[3]), 10);
+  temperature:=copy(temperature, 1, pos(TempElements[channel].http_setting[4], temperature)-1);
   result:=strtofloat(temperature);
 end;
 
@@ -273,7 +277,7 @@ procedure TConfig.comportReceiveData(Sender: TObject; DataPtr: Pointer;
 var
   i: integer;
   s, ss: string;
-  t_amb_temp:single;
+  t_uart_temp:single;
 begin
   try
     // Convert incoming data into a string
@@ -311,20 +315,19 @@ begin
 
       if setup_mixmsblsb then
       begin
-        t_amb_temp:=integer(ss[1]) shl 8;
-        t_amb_temp:=t_amb_temp+integer(ss[2]);
+        t_uart_temp:=integer(ss[1]) shl 8;
+        t_uart_temp:=t_uart_temp+integer(ss[2]);
       end else
       begin
-        t_amb_temp:=integer(ss[2]) shl 8;
-        t_amb_temp:=t_amb_temp+integer(ss[1]);
+        t_uart_temp:=integer(ss[2]) shl 8;
+        t_uart_temp:=t_uart_temp+integer(ss[1]);
       end;
-      t_amb:=((t_amb_temp/2047)*200)-50;
 
-      tempcurrentlbl.caption:=floattostrf(t_amb, ffFixed, 5, 1)+'°C';
-
-      if TempVorXMinuten=-1000 then
-        TempVorXMinuten:=t_amb;
-      ServiceTimer.Enabled:=true;
+      for i:=0 to length(TempElements)-1 do
+      begin
+        if TempElements[i].Source=1 then
+          TempElements[i].TempSensorRawValue:=((t_uart_temp/2047)*200)-50;
+      end;
     end;
   except
   end;
@@ -437,15 +440,12 @@ var
   ZeitBisSollwert:Single;
   ZeitBisSollwert_h, ZeitBisSollwert_min: integer;
 
-  i:integer;
+  i,j:integer;
 
   displaymax, displaymin:double;
-
-  t_amb2, t_amb3, t_amb4:double;
 begin
   // ServiceTimer wird jede Sekunden aufgerufen
   try
-
     ServiceTimerCounter:=ServiceTimerCounter+1;
     if config.Showing then
     begin
@@ -457,115 +457,86 @@ begin
       // 60 Sekunden sind um
       ServiceTimerCounter:=0;
 
-      // Temperaturen für Sensor 2 und 3 abrufen
-      temp2msb:=GetDLLValue(round(setup_temp2msb));
-      temp2lsb:=GetDLLValue(round(setup_temp2lsb));
-      temp3msb:=GetDLLValue(round(setup_temp3msb));
-      temp3lsb:=GetDLLValue(round(setup_temp3lsb));
-      t_amb2:=(((temp2msb shl 8)+temp2lsb)-550)/10;
-      t_amb3:=(((temp3msb shl 8)+temp3lsb)-550)/10;
-
-      // Temperatur für HTTP-Sensor abrufen
-      if setup_http_activated then
+      for i:=0 to length(TempElements)-1 do
       begin
-        t_amb4:=GetHTTPTemperature
-      end else
-      begin
-        t_amb4:=0;
+        // UART-Werte (Source=1) werden direkt in UART-Empfangsroutine eingetragen
+        if TempElements[i].Source=0 then
+        begin
+          // Offline
+          TempElements[i].TempSensorRawValue:=0;
+        end else if TempElements[i].Source=2 then
+        begin
+          // HTTP-Werte
+          TempElements[i].TempSensorRawValue:=GetHTTPTemperature(i);
+        end else if TempElements[i].Source=3 then
+        begin
+          // DMX-Werte
+          TempElements[i].TempSensorRawValue:=(((GetDLLValue(TempElements[i].dmx_setting[0]) shl 8)+GetDLLValue(TempElements[i].dmx_setting[1]))-550)/10;
+        end;
       end;
 
       if (GrowingIndex=0) then
       begin
         // Startup
-        CurrentTempMeanIndex:=length(CurrentTemp);
-        CurrentTemp2MeanIndex:=length(CurrentTemp2);
-        CurrentTemp3MeanIndex:=length(CurrentTemp3);
-        CurrentTemp4MeanIndex:=length(CurrentTemp4);
-
-        // Startup
-        for i:=0 to length(CurrentTemp)-1 do
+        for i:=0 to length(TempElements)-1 do
         begin
-          CurrentTemp[i]:=t_amb;
-          CurrentTemp2[i]:=t_amb2;
-          CurrentTemp3[i]:=t_amb3;
-          CurrentTemp4[i]:=t_amb4;
+          TempElements[i].TempMeanIndex:=TempElements[i].mean_max;
+
+          for j:=0 to length(TempElements[i].TempValues)-1 do
+          begin
+            TempElements[i].TempValues[j]:=TempElements[i].TempSensorRawValue; // flood the whole array with the first read value
+          end;
         end;
       end else
       begin
-        // Aktuellen Temperaturwert in Ringbuffer für Mittelwert schreiben (5 Werte alle 60s = 5 Minuten)
-        CurrentTempMeanIndex:=CurrentTempMeanIndex+1;
-        if CurrentTempMeanIndex>=length(CurrentTemp) then
-            CurrentTempMeanIndex:=0;
-        CurrentTemp2MeanIndex:=CurrentTemp2MeanIndex+1;
-        if CurrentTemp2MeanIndex>=length(CurrentTemp2) then
-          CurrentTemp2MeanIndex:=0;
-        CurrentTemp3MeanIndex:=CurrentTemp3MeanIndex+1;
-        if CurrentTemp3MeanIndex>=length(CurrentTemp3) then
-          CurrentTemp3MeanIndex:=0;
-        CurrentTemp4MeanIndex:=CurrentTemp4MeanIndex+1;
-        if CurrentTemp4MeanIndex>=length(CurrentTemp4) then
-          CurrentTemp4MeanIndex:=0;
-
         // Normalbetrieb
-        CurrentTemp[CurrentTempMeanIndex]:=t_amb;
-        CurrentTemp2[CurrentTemp2MeanIndex]:=t_amb2;
-        CurrentTemp3[CurrentTemp3MeanIndex]:=t_amb3;
-        CurrentTemp4[CurrentTemp4MeanIndex]:=t_amb4;
+
+        // Aktuellen Temperaturwert in Ringbuffer für Mittelwert schreiben (1..15 Werte alle 60s = 1..15 Minuten)
+        for i:=0 to length(TempElements)-1 do
+        begin
+          TempElements[i].TempMeanIndex:=TempElements[i].TempMeanIndex+1;
+          if TempElements[i].TempMeanIndex>=TempElements[i].mean_max then
+            TempElements[i].TempMeanIndex:=0;
+
+          TempElements[i].TempValues[TempElements[i].TempMeanIndex]:=TempElements[i].TempSensorRawValue; // 0 .. MeanMax-1
+        end;
       end;
 
-      // Mittelwert über 60 Sekunden bilden
-      CurrentTempMean:=0;
-      CurrentTemp2Mean:=0;
-      CurrentTemp3Mean:=0;
-      CurrentTemp4Mean:=0;
-      CurrentTempNonZeroCount:=0;
-      CurrentTemp2NonZeroCount:=0;
-      CurrentTemp3NonZeroCount:=0;
-      CurrentTemp4NonZeroCount:=0;
-      for i:=0 to length(CurrentTemp)-1 do
+      for i:=0 to length(TempElements)-1 do
       begin
-        if CurrentTemp[i]<>0 then
+        // Mittelwert über alle Messwerte bilden
+        TempElements[i].TempMean:=0;
+        TempElements[i].TempNonZeroCount:=0;
+        for j:=0 to TempElements[i].mean_max-1 do
         begin
-          CurrentTempMean:=CurrentTempMean+CurrentTemp[i];
-          CurrentTempNonZeroCount:=CurrentTempNonZeroCount+1;
+          if TempElements[i].TempValues[j]<>0 then
+          begin
+            TempElements[i].TempMean:=TempElements[i].TempMean+TempElements[i].TempValues[j];
+            TempElements[i].TempNonZeroCount:=TempElements[i].TempNonZeroCount+1;
+          end;
         end;
-        if CurrentTemp2[i]<>0 then
-        begin
-          CurrentTemp2Mean:=CurrentTemp2Mean+CurrentTemp2[i];
-          CurrentTemp2NonZeroCount:=CurrentTemp2NonZeroCount+1;
-        end;
-        if CurrentTemp3[i]<>0 then
-        begin
-          CurrentTemp3Mean:=CurrentTemp3Mean+CurrentTemp3[i];
-          CurrentTemp3NonZeroCount:=CurrentTemp3NonZeroCount+1;
-        end;
-        if CurrentTemp4[i]<>0 then
-        begin
-          CurrentTemp4Mean:=CurrentTemp4Mean+CurrentTemp4[i];
-          CurrentTemp4NonZeroCount:=CurrentTemp4NonZeroCount+1;
-        end;
-      end;
-      if CurrentTempNonZeroCount>0 then
-        CurrentTempMean:=CurrentTempMean/CurrentTempNonZeroCount;
-      if CurrentTemp2NonZeroCount>0 then
-        CurrentTemp2Mean:=CurrentTemp2Mean/CurrentTemp2NonZeroCount;
-      if CurrentTemp3NonZeroCount>0 then
-        CurrentTemp3Mean:=CurrentTemp3Mean/CurrentTemp3NonZeroCount;
-      if CurrentTemp4NonZeroCount>0 then
-        CurrentTemp4Mean:=CurrentTemp4Mean/CurrentTemp4NonZeroCount;
 
-      // Alle 5 Minuten (also bei CurrentTempMeanIndex=0) Mittelwert der Temperatur in Scope schreiben
-      if (CurrentTempMeanIndex=0) or (GrowingIndex<2) then
-      begin
-        chart.Data.Timestamp[GrowingIndex]:=now;
-        chart.Data.Value[0, GrowingIndex]:=CurrentTempMean;
-        chart.Data.Value[1, GrowingIndex]:=(tempsoll.value+Nachtabsenkung+tempmax.value);
-        chart.Data.Value[2, GrowingIndex]:=(tempsoll.value+Nachtabsenkung+tempmin.value);
-        chart.Data.Value[3, GrowingIndex]:=CurrentTemp2Mean;
-        chart.Data.Value[4, GrowingIndex]:=CurrentTemp3Mean;
-        chart.Data.Value[5, GrowingIndex]:=CurrentTemp4Mean;
-        GrowingIndex:=GrowingIndex+1;
+        if TempElements[i].TempNonZeroCount>0 then
+          TempElements[i].TempMean:=TempElements[i].TempMean/TempElements[i].TempNonZeroCount;
       end;
+
+      t_amb:=0;
+      for i:=0 to length(TempElements)-1 do
+      begin
+        t_amb:=t_amb+(TempElements[i].TempMean*TempElements[i].percentage);
+      end;
+
+      // Temperaturen in Scope schreiben
+      chart.Data.Timestamp[GrowingIndex]:=now;
+      chart.Data.Value[0, GrowingIndex]:=t_amb;
+      chart.Data.Value[1, GrowingIndex]:=(tempsoll.value+Nachtabsenkung+tempmax.value);
+      chart.Data.Value[2, GrowingIndex]:=(tempsoll.value+Nachtabsenkung+tempmin.value);
+      chart.Data.Value[3, GrowingIndex]:=TempElements[0].TempMean;
+      chart.Data.Value[4, GrowingIndex]:=TempElements[1].TempMean;
+      chart.Data.Value[5, GrowingIndex]:=TempElements[2].TempMean;
+      chart.Data.Value[6, GrowingIndex]:=TempElements[3].TempMean;
+      chart.Data.Value[7, GrowingIndex]:=TempElements[4].TempMean;
+      GrowingIndex:=GrowingIndex+1;
 
       TempMinVal:=CalcMinimum;
       TempMeanVal:=CalcMean;
@@ -607,17 +578,15 @@ begin
       // Temperatur in Label anzeigen
       if config.Showing then
       begin
+        tempcurrentlbl.Caption:=floattostrf(t_amb, ffFixed, 5, 1)+'°C';
         tempminlbl.Caption:=floattostrf(TempMinVal, ffFixed, 5, 1)+'°C';
         tempmeanlbl.Caption:=floattostrf(TempMeanVal, ffFixed, 5, 1)+'°C';
         tempmaxlbl.Caption:=floattostrf(TempMaxVal, ffFixed, 5, 1)+'°C';
 
-        temp2lbl.caption:=floattostrf(CurrentTemp2Mean, ffFixed, 5, 1)+'°C';
-        temp3lbl.caption:=floattostrf(CurrentTemp3Mean, ffFixed, 5, 1)+'°C';
-        temp4lbl.caption:=floattostrf(CurrentTemp4Mean, ffFixed, 5, 1)+'°C';
-
-        mean2lbl.Caption:=inttostr(trunc(CurrentTemp2[0]))+' '+inttostr(trunc(CurrentTemp2[1]))+' '+inttostr(trunc(CurrentTemp2[2]))+' '+inttostr(trunc(CurrentTemp2[3]))+' '+inttostr(trunc(CurrentTemp2[4]));
-        mean3lbl.Caption:=inttostr(trunc(CurrentTemp3[0]))+' '+inttostr(trunc(CurrentTemp3[1]))+' '+inttostr(trunc(CurrentTemp3[2]))+' '+inttostr(trunc(CurrentTemp3[3]))+' '+inttostr(trunc(CurrentTemp3[4]));
-        mean4lbl.Caption:=inttostr(trunc(CurrentTemp4[0]))+' '+inttostr(trunc(CurrentTemp4[1]))+' '+inttostr(trunc(CurrentTemp4[2]))+' '+inttostr(trunc(CurrentTemp4[3]))+' '+inttostr(trunc(CurrentTemp4[4]));
+        for i:=0 to 7 do
+        begin
+          TLabel(FindComponent('ch'+inttostr(i+1)+'lbl')).Caption:=TempElements[i].name+': '+floattostrf(TempElements[i].TempSensorRawValue, ffFixed, 5, 1)+'°C / '+floattostrf(TempElements[i].TempMean, ffFixed, 5, 1)+'°C';
+        end;
       end;
 
       // Aktuelle Temperatur als Kanalwert an PC_DIMMER senden
@@ -633,13 +602,10 @@ begin
       if round(setup_datain_max)>0 then
         SetDLLEvent(round(setup_datain_max), RoundToByte(TempMaxVal));
 
+
       if tempon.StateOn then
       begin
-        // Mittelwert oder Aktueller Wert als Referenz
-        if CheckBox1.Checked then
-          ReglerTemperaturWert:=TempMeanVal
-        else
-          ReglerTemperaturWert:=t_amb;
+        ReglerTemperaturWert:=t_amb; // Alternativ TempMeanVal, oder eine der anderen Tempeaturen: TempElements[...].TempMean
 
         // Nachtabsenkung
         if Checkbox2.Checked then
@@ -733,6 +699,7 @@ begin
         heizenled.status:=false;
       end;
 
+
       // Berechnung von Delta-T alle x Minuten
       inc(FuenfzehnminutenCounter);
       if FuenfzehnminutenCounter>=round(setup_deltattime) then
@@ -772,17 +739,17 @@ begin
         // Temperaturwerte und Kosten in CSV-Datei speichern
         Memo1.Lines.Add(DateToStr(now)+';'+TimeToStr(now)+';'+
           floattostrf(t_amb, ffFixed, 5, 1)+';'+
-          floattostrf(config.CurrentTemp2Mean, ffFixed, 5, 1)+';'+
-          floattostrf(config.CurrentTemp3Mean, ffFixed, 5, 1)+';'+
-          floattostrf(config.CurrentTemp4Mean, ffFixed, 5, 1)+';'+
+          floattostrf(config.TempElements[0].TempMean, ffFixed, 5, 1)+';'+
+          floattostrf(config.TempElements[1].TempMean, ffFixed, 5, 1)+';'+
+          floattostrf(config.TempElements[2].TempMean, ffFixed, 5, 1)+';'+
           floattostrf((t_amb-TempVorXMinuten), ffFixed, 5, 1)+';'+
           floattostrf(Kilowattstunden+((setup_installedpower/1000)*(1/3600)), ffFixed, 5, 6)+';'+
           floattostrf(Kilowattstunden+((setup_installedpower/1000)*(1/3600))*(setup_priceperkwh/100), ffFixed, 5, 6));
 
         TempVorXMinuten:=t_amb;
       end;
-    end;
-    
+    end; // End of 60s timer
+
     // Berechnen des Strompreises
     if Heizbetrieb then
     begin
@@ -811,6 +778,7 @@ end;
 procedure TConfig.FormHide(Sender: TObject);
 var
   LReg:TRegistry;
+  i:integer;
 begin
   LReg := TRegistry.Create;
   LReg.RootKey:=HKEY_CURRENT_USER;
@@ -838,7 +806,6 @@ begin
 
           // Temperatureinstellungen
           LReg.WriteFloat('Temperatursollwert', tempsoll.Value);
-          LReg.WriteBool('Verwende Mittelwert als Referenz', Checkbox1.Checked);
           LReg.WriteFloat('Einschaltschwelle', tempmin.Value);
           LReg.WriteFloat('Ausschaltschwelle', tempmax.Value);
 
@@ -857,37 +824,34 @@ begin
           LReg.WriteInteger('ChMax', round(setup_datain_max));
           LReg.WriteInteger('ChHeizungEin', round(setup_datain_heateron));
           LReg.WriteFloat('Skalierungsfaktor', setup_scale);
-          LReg.WriteInteger('Temp2LSB', round(setup_temp2lsb));
-          LReg.WriteInteger('Temp2MSB', round(setup_temp2msb));
-          LReg.WriteInteger('Temp3LSB', round(setup_temp3lsb));
-          LReg.WriteInteger('Temp3MSB', round(setup_temp3msb));
-          LReg.WriteString('Temp2Label', setup_temp2text);
-          LReg.WriteString('Temp3Label', setup_temp3text);
 
           // Sonstige Einstellungen
           LReg.WriteInteger('Installierte elektrische Leistung', round(setup_installedpower));
           LReg.WriteFloat('Preis pro kWh', setup_priceperkwh);
           LReg.WriteFloat('Zeit für Delta T', setup_deltattime);
 
-          // HTTP-Sensor-Einstellungen
-          LReg.WriteString('HTTP_Url', setup_http_url);
-          LReg.WriteString('HTTP_User', setup_http_user);
-
-          with TCipher_Blowfish.Create do
-          try
-            Init(blowfishscramblekey);
-            LReg.WriteString('HTTP_Password', EncodeBinary(setup_http_password, TFormat_Copy));
-          finally
-            Free;
-          end;
-
-          LReg.WriteString('HTTP_Startstring', setup_http_startstring);
-          LReg.WriteString('HTTP_Endstring', setup_http_endstring);
-          LReg.WriteBool('HTTP_Active', setup_http_activated);
-          LReg.WriteString('HTTP_Description', setup_http_description);
-
           // Verzeichnis für Dateien speichern
           LReg.WriteString('Datafolder', setup_logdirectory);
+
+          // Sensor-Einstellungen
+          for i:=0 to length(TempElements)-1 do
+          begin
+            LReg.CloseKey;
+            if LReg.OpenKey('Software\PHOENIXstudios\PC_DIMMER\'+ExtractFileName(GetModulePath)+'\TempElement'+inttostr(i+1), true) then
+            begin
+              LReg.WriteInteger('Source', TempElements[i].Source);
+              LReg.WriteString('Name', TempElements[i].Name);
+              LReg.WriteString('HTTP1', TempElements[i].http_setting[0]);
+              LReg.WriteString('HTTP2', TempElements[i].http_setting[1]);
+              LReg.WriteString('HTTP3', TempElements[i].http_setting[2]);
+              LReg.WriteString('HTTP4', TempElements[i].http_setting[3]);
+              LReg.WriteString('HTTP5', TempElements[i].http_setting[4]);
+              LReg.WriteInteger('DMX1', TempElements[i].dmx_setting[0]);
+              LReg.WriteInteger('DMX2', TempElements[i].dmx_setting[1]);
+              LReg.WriteFloat('Percentage', TempElements[i].percentage);
+              LReg.WriteInteger('MeanMax', TempElements[i].mean_max);
+            end;
+          end;
         end;
       end;
     end;
@@ -924,6 +888,7 @@ var
   PortName: string;
   DeviceDescription: string;
   Bus: string;
+  i:integer;
 
 
   temp:string;
@@ -1030,19 +995,20 @@ begin
   setupform.MaxInstalledPowerEdit.Value:=setup_installedpower;
   setupform.PricePerkWhEdit.Value:=setup_priceperkwh;
   setupform.TimeForDeltaTEdit.Value:=setup_deltattime;
-  setupform.temp2_msb.Value:=setup_temp2msb;
-  setupform.temp2_lsb.Value:=setup_temp2lsb;
-  setupform.temp3_msb.Value:=setup_temp3msb;
-  setupform.temp3_lsb.Value:=setup_temp3lsb;
-  setupform.temp2labeledit.text:=setup_temp2text;
-  setupform.temp3labeledit.Text:=setup_temp3text;
-  setupform.httpurledit.Text:=setup_http_url;
-  setupform.httpuseredit.text:=setup_http_user;
-  setupform.httppasswordedit.Text:=setup_http_password;
-  setupform.httpstartstringedit.Text:=setup_http_startstring;
-  setupform.httpendstringedit.text:=setup_http_endstring;
-  setupform.usehttptempcheckbox.Checked:=setup_http_activated;
-  setupform.httpdescriptionedit.Text:=setup_http_description;
+  for i:=0 to length(TempElements)-1 do
+  begin
+    TCombobox(setupform.FindComponent('ch'+inttostr(i+1)+'_src')).ItemIndex:=TempElements[i].Source;
+    TJvSpinEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_msb')).Value:=TempElements[i].dmx_setting[0];
+    TJvSpinEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_lsb')).Value:=TempElements[i].dmx_setting[1];
+    TEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_url')).Text:=TempElements[i].http_setting[0];
+    TEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_usr')).Text:=TempElements[i].http_setting[1];
+    TEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_pwd')).Text:=DecryptPwd(TempElements[i].http_setting[2]);
+    TEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_start')).Text:=TempElements[i].http_setting[3];
+    TEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_stop')).Text:=TempElements[i].http_setting[4];
+    TJvSpinEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_percent')).Value:=round(TempElements[i].percentage*100);
+    TJvSpinEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_mean')).Value:=TempElements[i].mean_max;
+    TEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_name')).Text:=TempElements[i].name;
+  end;
 
   setupform.ShowModal;
 
@@ -1057,8 +1023,6 @@ begin
   end;
 
 
-  Label3.Caption:='('+setupform.Temp2LabelEdit.Text+')';
-  Label4.Caption:='('+setupform.Temp3LabelEdit.Text+')';
   Label6.Caption:='('+inttostr(round(setupform.TimeForDeltaTEdit.Value))+'min)';
 
   setup_autoconnect:=setupform.autoconnectcheckbox.Checked;
@@ -1073,19 +1037,23 @@ begin
   setup_installedpower:=setupform.MaxInstalledPowerEdit.Value;
   setup_priceperkwh:=setupform.PricePerkWhEdit.Value;
   setup_deltattime:=setupform.TimeForDeltaTEdit.Value;
-  setup_temp2msb:=setupform.temp2_msb.Value;
-  setup_temp2lsb:=setupform.temp2_lsb.Value;
-  setup_temp3msb:=setupform.temp3_msb.Value;
-  setup_temp3lsb:=setupform.temp3_lsb.Value;
-  setup_temp2text:=setupform.temp2labeledit.text;
-  setup_temp3text:=setupform.temp3labeledit.Text;
-  setup_http_url:=setupform.httpurledit.Text;
-  setup_http_user:=setupform.httpuseredit.text;
-  setup_http_password:=setupform.httppasswordedit.Text;
-  setup_http_startstring:=setupform.httpstartstringedit.Text;
-  setup_http_endstring:=setupform.httpendstringedit.text;
-  setup_http_activated:=setupform.usehttptempcheckbox.Checked;
-  setup_http_description:=setupform.httpdescriptionedit.Text;
+  for i:=0 to length(TempElements)-1 do
+  begin
+    TempElements[i].Source:=TCombobox(setupform.FindComponent('ch'+inttostr(i+1)+'_src')).ItemIndex;
+    TempElements[i].dmx_setting[0]:=round(TJvSpinEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_msb')).Value);
+    TempElements[i].dmx_setting[1]:=round(TJvSpinEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_lsb')).Value);
+    TempElements[i].http_setting[0]:=TEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_url')).Text;
+    TempElements[i].http_setting[1]:=TEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_usr')).Text;
+    TempElements[i].http_setting[2]:=EncryptPwd(TEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_pwd')).Text);
+    TempElements[i].http_setting[3]:=TEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_start')).Text;
+    TempElements[i].http_setting[4]:=TEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_stop')).Text;
+    TempElements[i].percentage:=TJvSpinEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_percent')).Value/100;
+    TempElements[i].mean_max:=round(TJvSpinEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_mean')).Value);
+    TempElements[i].name:=TEdit(setupform.FindComponent('ch'+inttostr(i+1)+'_name')).Text;
+
+    if TempElements[i].Source=0 then
+      TempElements[i].percentage:=0;
+  end;
 
   Application.ProcessMessages;
   sleep(150);
@@ -1120,6 +1088,7 @@ end;
 procedure TConfig.StartUp;
 var
   LReg:TRegistry;
+  i:integer;
 begin
   Shutdown:=false;
   RegelungNeuGestartet:=false;
@@ -1160,8 +1129,6 @@ begin
             setup_mixmsblsb:=LReg.ReadBool('Vertausche L und H');
 	        if LReg.ValueExists('Regler ein') then
             tempon.StateOn:=LReg.ReadBool('Regler ein');
-            if LReg.ValueExists('Verwende Mittelwert als Referenz') then
-              Checkbox1.Checked:=LReg.ReadBool('Verwende Mittelwert als Referenz');
 
           try
             // Temperatureinstellungen
@@ -1205,18 +1172,6 @@ begin
             setup_datain_max:=LReg.ReadInteger('ChMax');
 	        if LReg.ValueExists('ChHeizungEin') then
             setup_datain_heateron:=LReg.ReadInteger('ChHeizungEin');
-	        if LReg.ValueExists('Temp2LSB') then
-            setup_temp2lsb:=LReg.ReadInteger('Temp2LSB');
-	        if LReg.ValueExists('Temp2MSB') then
-            setup_temp2msb:=LReg.ReadInteger('Temp2MSB');
-	        if LReg.ValueExists('Temp3LSB') then
-            setup_temp3lsb:=LReg.ReadInteger('Temp3LSB');
-	        if LReg.ValueExists('Temp3MSB') then
-            setup_temp3msb:=LReg.ReadInteger('Temp3MSB');
-	        if LReg.ValueExists('Temp2Label') then
-            setup_temp2text:=LReg.ReadString('Temp2Label');
-	        if LReg.ValueExists('Temp3Label') then
-            setup_temp3text:=LReg.ReadString('Temp3Label');
 
           // Sonstige Einstellungen
 	        if LReg.ValueExists('Installierte elektrische Leistung') then
@@ -1231,34 +1186,40 @@ begin
             setup_deltattime:=15;
           end;
 
-          // HTTP-Sensor-Einstellungen
-          if LReg.ValueExists('HTTP_Url') then
-            setup_http_url:=LReg.ReadString('HTTP_Url');
-          if LReg.ValueExists('HTTP_User') then
-            setup_http_user:=LReg.ReadString('HTTP_User');
-          if LReg.ValueExists('HTTP_Password') then
-          begin
-            setup_http_password:=LReg.ReadString('HTTP_Password');
-            with TCipher_Blowfish.Create do
-            try
-              Init(blowfishscramblekey);
-              setup_http_password := DecodeBinary(setup_http_password, TFormat_Copy);
-            finally
-              Free;
-            end;
-          end;
-          if LReg.ValueExists('HTTP_Startstring') then
-            setup_http_startstring:=LReg.ReadString('HTTP_Startstring');
-          if LReg.ValueExists('HTTP_Endstring') then
-            setup_http_endstring:=LReg.ReadString('HTTP_Endstring');
-          if LReg.ValueExists('HTTP_Active') then
-            setup_http_activated:=LReg.ReadBool('HTTP_Active');
-          if LReg.ValueExists('HTTP_Description') then
-            setup_http_description:=LReg.ReadString('HTTP_Description');
-
           // Verzeichnis für Dateien
           if LReg.ValueExists('Datafolder') then
             setup_logdirectory:=LReg.ReadString('Datafolder');
+
+          // Sensor-Einstellungen
+          for i:=0 to length(TempElements)-1 do
+          begin
+            LReg.CloseKey;
+            if LReg.OpenKey('Software\PHOENIXstudios\PC_DIMMER\'+ExtractFileName(GetModulePath)+'\TempElement'+inttostr(i+1), true) then
+            begin
+              if LReg.ValueExists('Source') then
+                TempElements[i].Source:=LReg.ReadInteger('Source');
+              if LReg.ValueExists('Name') then
+                TempElements[i].Name:=LReg.ReadString('Name');
+              if LReg.ValueExists('HTTP1') then
+                TempElements[i].http_setting[0]:=LReg.ReadString('HTTP1');
+              if LReg.ValueExists('HTTP2') then
+                TempElements[i].http_setting[1]:=LReg.ReadString('HTTP2');
+              if LReg.ValueExists('HTTP3') then
+                TempElements[i].http_setting[2]:=LReg.ReadString('HTTP3');
+              if LReg.ValueExists('HTTP4') then
+                TempElements[i].http_setting[3]:=LReg.ReadString('HTTP4');
+              if LReg.ValueExists('HTTP5') then
+                TempElements[i].http_setting[4]:=LReg.ReadString('HTTP5');
+              if LReg.ValueExists('DMX1') then
+                TempElements[i].dmx_setting[0]:=LReg.ReadInteger('DMX1');
+              if LReg.ValueExists('DMX2') then
+                TempElements[i].dmx_setting[1]:=LReg.ReadInteger('DMX2');
+              if LReg.ValueExists('Percentage') then
+                TempElements[i].percentage:=LReg.ReadFloat('Percentage');
+              if LReg.ValueExists('MeanMax') then
+                TempElements[i].mean_max:=LReg.ReadInteger('MeanMax');
+            end;
+          end;
 	      end;
  			end;
     end;
@@ -1269,15 +1230,12 @@ begin
   Memo1.Lines.Clear;
   Memo1.Lines.Add(_('Datum; Uhrzeit; Temperatur 1 [°C]; Temperatur 2 [°C]; Temperatur 3 [°C]; Temperatur 4 [°C]; Delta-Temp [°C]; Verbrauch [kWh]; Kosten [€]'));
 
-  Label3.Caption:='('+setup_temp2text+')';
-  Label4.Caption:='('+setup_temp3text+')';
   Label6.Caption:='('+inttostr(round(setup_deltattime))+'min)';
-  Label21.Caption:='('+setup_http_description+')';
 
 
   // Chart vorbereiten
 //  chart.Options.PenValueLabels[0]:=true;
-  chart.Options.PenCount:=6;
+  chart.Options.PenCount:=8;
   chart.Options.PenUnit.Clear;
 
   chart.Options.PenColor[0]:=clblack;
@@ -1292,22 +1250,30 @@ begin
   chart.Options.PenUnit.Add('°C');
 
   chart.Options.PenValueLabels[3]:=false;
-  chart.Options.PenColor[3]:=clolive;
+  chart.Options.PenColor[3]:=clfuchsia;
   chart.Options.PenUnit.Add('°C');
 
   chart.Options.PenValueLabels[4]:=false;
-  chart.Options.PenColor[4]:=clteal;
+  chart.Options.PenColor[4]:=clolive;
   chart.Options.PenUnit.Add('°C');
 
   chart.Options.PenValueLabels[5]:=false;
-  chart.Options.PenColor[5]:=clfuchsia;
+  chart.Options.PenColor[5]:=clteal;
+  chart.Options.PenUnit.Add('°C');
+
+  chart.Options.PenValueLabels[6]:=false;
+  chart.Options.PenColor[6]:=clMaroon;
+  chart.Options.PenUnit.Add('°C');
+
+  chart.Options.PenValueLabels[7]:=false;
+  chart.Options.PenColor[7]:=clgray;
   chart.Options.PenUnit.Add('°C');
 
   chart.Options.PenLineWidth:=2;
   chart.Options.XAxisDateTimeMode:=true;
   chart.Options.XAxisDateTimeFormat:='hh:mm:ss';
   chart.Options.XAxisDivisionMarkers:=true;
-  chart.Options.XAxisValuesPerDivision:=3; // 3 Werte pro Div @ 5Min pro Sample -> 15 Minuten pro Div
+  chart.Options.XAxisValuesPerDivision:=15; // 15 Werte pro Div @ 1Min pro Sample -> 15 Minuten pro Div
 
   chart.Options.AxisFont.Name:='Calibri';
   chart.Options.AxisFont.Size:=8;
@@ -1317,6 +1283,9 @@ begin
     // Automatisch mit letzten Comport und Baudrate verbinden
     ActivateCOMPort(comportnumber, baudrate);
   end;
+
+  ServiceTimerCounter:=58;
+  ServiceTimer.Enabled:=true;
 end;
 
 procedure TConfig.RegisterPluginCommandsTimer(Sender: TObject);
@@ -1325,28 +1294,6 @@ begin
 
   SendMSG(MSG_CREATEPLUGINSCENE, '{EB86EDF4-F750-420C-81D9-3023741988E8}', 'Temperaturregler: Ein');
   SendMSG(MSG_CREATEPLUGINSCENE, '{4950EE57-ACAC-4BB3-ACA6-9CBD4D9F1B56}', 'Temperaturregler: Aus');
-end;
-
-procedure TConfig.TestCaseBtnClick(Sender: TObject);
-begin
-  DemoData.Enabled:=true;
-  ServiceTimer.Enabled:=true;
-  ServiceTimer.Interval:=1;
-  FuenfzehnminutenCounter:=round(setup_deltattime*60)-20;
-end;
-
-procedure TConfig.DemoDataTimer(Sender: TObject);
-begin
-  t_amb:=(random(256)/256)*30;
-
-{
-  t_amb:=t_amb+0.1;
-  if t_amb>30 then
-    t_amb:=t_amb-10;
-}
-
-  if TempVorXMinuten=-1000 then
-    TempVorXMinuten:=t_amb;
 end;
 
 procedure TConfig.SavePng(Bitmap: TBitmap; Destination:string);
@@ -1371,6 +1318,31 @@ end;
 procedure TConfig.Button4Click(Sender: TObject);
 begin
   comport.Disconnect;
+end;
+
+function TConfig.EncryptPwd(Pwd: string):string;
+begin
+  result:='';
+  with TCipher_Blowfish.Create do
+  try
+    Init(blowfishscramblekey);
+    result:=EncodeBinary(Pwd, TFormat_Copy);
+  finally
+    Free;
+  end;
+end;
+
+function TConfig.DecryptPwd(Pwd: string):string;
+begin
+  result:='';
+
+  with TCipher_Blowfish.Create do
+  try
+    Init(blowfishscramblekey);
+    result:=DecodeBinary(Pwd, TFormat_Copy);
+  finally
+    Free;
+  end;
 end;
 
 end.
