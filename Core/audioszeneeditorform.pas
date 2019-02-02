@@ -197,11 +197,11 @@ type
     chanselect:array[0..7] of boolean;
 
     TempChan, TempMixChan:HSTREAM;
-    matrix1:array[0..7] of float;
-    matrix2:array[0..7] of array[0..1] of float;
-    matrix4:array[0..7] of array[0..3] of float;
-    matrix6:array[0..7] of array[0..5] of float;
-    matrix8:array[0..7] of array[0..7] of float;
+    matrix1:array[0..7] of single;
+    matrix2:array[0..7] of array[0..1] of single;
+    matrix4:array[0..7] of array[0..3] of single;
+    matrix6:array[0..7] of array[0..5] of single;
+    matrix8:array[0..7] of array[0..7] of single;
     chancount:integer;
     procedure RefreshMatrix;
   public
@@ -636,8 +636,8 @@ end;
 procedure Taudioszeneneditor.PaintBox1MouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 var
-  valuex:array[0..7] of float;
-  valuey:array[0..7] of float;
+  valuex:array[0..7] of single;
+  valuey:array[0..7] of single;
 var
   i:integer;
 begin

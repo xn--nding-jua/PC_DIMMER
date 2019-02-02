@@ -1,6 +1,6 @@
 object Config: TConfig
-  Left = 193
-  Top = 144
+  Left = 111
+  Top = 162
   Width = 1330
   Height = 497
   Caption = 'Temperaturregler'
@@ -678,9 +678,9 @@ object Config: TConfig
       object Label24: TLabel
         Left = 32
         Top = 72
-        Width = 49
+        Width = 54
         Height = 13
-        Caption = 'Nachtabs.'
+        Caption = 'Absenkung'
       end
       object Label9: TLabel
         Left = 160
@@ -689,7 +689,7 @@ object Config: TConfig
         Height = 13
         Alignment = taCenter
         AutoSize = False
-        Caption = 'Aktuelle Temperatur:'
+        Caption = 'Aktuelle Temperatur'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
@@ -698,7 +698,7 @@ object Config: TConfig
         ParentFont = False
       end
       object tempon: TJvSwitch
-        Left = 88
+        Left = 96
         Top = 24
         Width = 65
         Height = 60
@@ -722,7 +722,7 @@ object Config: TConfig
         Top = 224
         Width = 273
         Height = 65
-        Caption = ' Nachtabsenkung '
+        Caption = ' Absenkung '
         TabOrder = 2
         object Label25: TLabel
           Left = 218
@@ -772,9 +772,9 @@ object Config: TConfig
         object CheckBox2: TCheckBox
           Left = 8
           Top = 16
-          Width = 129
+          Width = 97
           Height = 17
-          Caption = 'Nachtabsenkung ein'
+          Caption = 'Absenkung ein'
           TabOrder = 0
         end
         object absenkung_h_startedit: TJvSpinEdit

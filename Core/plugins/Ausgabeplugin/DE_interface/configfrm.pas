@@ -55,6 +55,7 @@ type
     saveconfigbtn: TButton;
     CheckBox2: TCheckBox;
     ScanTimer: TCHHighResTimer;
+    StartupTimer: TTimer;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure StringGrid1GetEditMask(Sender: TObject; ACol, ARow: Integer;
@@ -75,6 +76,7 @@ type
     procedure ConfigOKClick(Sender: TObject);
     procedure CheckBox1MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure StartupTimerTimer(Sender: TObject);
   private
     { Private-Deklarationen }
     RefreshSometimes:boolean;
@@ -694,12 +696,20 @@ begin
 
   RefreshSometimes:=true;
   ScanTimer.Enabled:=true;
+
+  StartupTimer.enabled:=true;
 end;
 
 procedure TConfig.CheckBox1MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   RefreshSometimesTimer.Enabled:=Checkbox1.Checked;
+end;
+
+procedure TConfig.StartupTimerTimer(Sender: TObject);
+begin
+  RefreshSometimes:=true;
+  StartupTimer.enabled:=false;
 end;
 
 end.

@@ -1135,4 +1135,11 @@ object Config: TConfig
     Left = 432
     Top = 48
   end
+  object StartupTimer: TTimer
+    Enabled = False
+    Interval = 15000
+    OnTimer = StartupTimerTimer
+    Left = 368
+    Top = 92
+  end
 end

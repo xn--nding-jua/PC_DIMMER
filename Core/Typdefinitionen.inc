@@ -100,11 +100,11 @@
     Volume:Single;
     FadeinTime:Cardinal;
     FadeoutTime:Cardinal;
-    matrix1:array[0..7] of float;
-    matrix2:array[0..7] of array[0..1] of float;
-    matrix4:array[0..7] of array[0..3] of float;
-    matrix6:array[0..7] of array[0..5] of float;
-    matrix:array[0..7] of array[0..7] of float;
+    matrix1:array[0..7] of single;
+    matrix2:array[0..7] of array[0..1] of single;
+    matrix4:array[0..7] of array[0..3] of single;
+    matrix6:array[0..7] of array[0..5] of single;
+    matrix:array[0..7] of array[0..7] of single;
     Kanalsettings:array[0..7] of byte;
     Category:string[255];
   end;

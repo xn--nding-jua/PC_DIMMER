@@ -105,17 +105,13 @@ HostApplication=
 Launcher=
 UseLauncher=0
 DebugCWD=
-[Language]
-ActiveLang=
-ProjectLang=
-RootDir=
 [Version Info]
 IncludeVerInfo=1
 AutoIncBuild=1
 MajorVer=1
 MinorVer=3
 Release=0
-Build=175
+Build=195
 Debug=0
 PreRelease=0
 Special=0
@@ -126,11 +122,13 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PC_DIMMER MediaCenter Server
 FileDescription=
-FileVersion=1.3.0.175
+FileVersion=1.3.0.195
 InternalName=
-LegalCopyright=(c) 2008-2015 Christian Nöding
+LegalCopyright=(c) 2008-2015/2018 Dr.-Ing. Christian Nöding
 LegalTrademarks=
 OriginalFilename=
 ProductName=MediaCenter Server
 ProductVersion=1.3.0.0
 Comments=http://www.pcdimmer.de
+[Excluded Packages]
+C:\Program Files (x86)\DevExpress VCL\Library\Delphi7\dcldxDBXServerModeD7.bpl=dbExpress Data Source for ExpressDataController Server Mode by Developer Express Inc.

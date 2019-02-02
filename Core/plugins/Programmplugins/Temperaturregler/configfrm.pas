@@ -241,10 +241,15 @@ end;
 function GetURLAsString(const aURL, Username, Password: string): string;
 var
   lHTTP: TIdHTTP;
+  webpage:string;
 begin
+  webpage:='';
+
   lHTTP := TIdHTTP.Create;
   lHTTP.Request.Clear;
-  lHTTP.ReadTimeout:=500;
+  lHTTP.ReadTimeout:=5000;
+  lHTTP.RedirectMaximum:=15;
+  lHTTP.HandleRedirects:=true;
 
   if (Username<>'') and (Password<>'') then
   begin
@@ -254,10 +259,12 @@ begin
   end;
 
   try
-    Result := lHTTP.Get(aURL);
+    webpage:=lHTTP.Get(aURL);
   finally
     lHTTP.Free;
   end;
+
+  Result:=webpage;
 end;
 
 function TConfig.GetHTTPTemperature(channel: integer):double;
@@ -267,9 +274,22 @@ var
 begin
   website:=GetURLAsString(TempElements[channel].http_setting[0], TempElements[channel].http_setting[1], DecryptPwd(TempElements[channel].http_setting[2]));
 
-  temperature:=copy(website, pos(TempElements[channel].http_setting[3], website)+length(TempElements[channel].http_setting[3]), 10);
-  temperature:=copy(temperature, 1, pos(TempElements[channel].http_setting[4], temperature)-1);
-  result:=strtofloat(temperature);
+  if website<>'' then
+  begin
+    temperature:=copy(website, pos(TempElements[channel].http_setting[3], website)+length(TempElements[channel].http_setting[3]), 10);
+    temperature:=copy(temperature, 1, pos(TempElements[channel].http_setting[4], temperature)-1);
+
+    temperature:=stringreplace(temperature, '.', ',', []);
+
+    try
+      result:=strtofloat(temperature);
+    except
+      result:=-999.9;
+    end;
+  end else
+  begin
+    result:=-999.9;
+  end;
 end;
 
 procedure TConfig.comportReceiveData(Sender: TObject; DataPtr: Pointer;
@@ -436,6 +456,7 @@ var
   ReglerTemperaturWert:Single;
   TempMinVal, TempMeanVal, TempMaxVal:Single;
   Tagesminuten:Word;
+  HttpTemperature:double;
 
   ZeitBisSollwert:Single;
   ZeitBisSollwert_h, ZeitBisSollwert_min: integer;
@@ -467,7 +488,9 @@ begin
         end else if TempElements[i].Source=2 then
         begin
           // HTTP-Werte
-          TempElements[i].TempSensorRawValue:=GetHTTPTemperature(i);
+          HttpTemperature:=GetHTTPTemperature(i);
+          if HttpTemperature>-999.9 then
+            TempElements[i].TempSensorRawValue:=HttpTemperature;
         end else if TempElements[i].Source=3 then
         begin
           // DMX-Werte

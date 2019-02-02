@@ -3910,7 +3910,6 @@ end;
 procedure Teffektsequenzer.VSTEndDrag(Sender, Target: TObject; X,
   Y: Integer);
 var
-  i, mouseoverlayer:integer;
   Data: PTreeData;
 begin
   if not mainform.UserAccessGranted(2) then exit;

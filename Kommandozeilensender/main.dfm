@@ -1,8 +1,8 @@
 object Form1: TForm1
-  Left = 926
-  Top = 125
+  Left = 426
+  Top = 157
   BorderStyle = bsSingle
-  ClientHeight = 100
+  ClientHeight = 264
   ClientWidth = 500
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,8 +19,8 @@ object Form1: TForm1
     Left = 0
     Top = 0
     Width = 500
-    Height = 100
-    Align = alClient
+    Height = 101
+    Align = alTop
     Pen.Style = psClear
   end
   object Image1: TImage
@@ -409,7 +409,7 @@ object Form1: TForm1
   object Label1: TLabel
     Left = 124
     Top = 8
-    Width = 313
+    Width = 311
     Height = 24
     Caption = 'PC_DIMMER CommandlineTool'
     Font.Charset = ANSI_CHARSET
@@ -458,6 +458,15 @@ object Form1: TForm1
     ParentFont = False
     Transparent = True
     Visible = False
+  end
+  object Memo1: TMemo
+    Left = 0
+    Top = 101
+    Width = 500
+    Height = 163
+    Align = alClient
+    BorderStyle = bsNone
+    TabOrder = 0
   end
   object Timer1: TTimer
     Enabled = False

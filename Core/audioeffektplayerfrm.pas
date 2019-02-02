@@ -393,7 +393,7 @@ type
     procedure RunAllPreviousEffectsBtnOffClick(Sender: TObject);
     procedure RunAllPreviousEffectsBtnClick(Sender: TObject);
     procedure DecodingBPM(newStream: Boolean; startSec, endSec: DOUBLE);
-    function GetNewBPM(hBPM: DWORD): FLOAT;
+    function GetNewBPM(hBPM: DWORD): single;
     procedure bpmviewClick(Sender: TObject);
     procedure chkBPMCallbackClick(Sender: TObject);
     procedure BPMScanlnge1Click(Sender: TObject);
@@ -431,12 +431,12 @@ type
     LastPosition:Double;
 
     hBPM: DWORD;               // decoding bpm handle
-    orgBPM: FLOAT;             // original bpm
+    orgBPM: single;             // original bpm
     info: BASS_CHANNELINFO;
     BPMstart,BPMstop:double;
 
     LastStartOfRectangle,LastEndOfRectangle,LastRow:integer;
-    _scaling : float;
+    _scaling : single;
     _scrollbpp:dword;
     _mousepos : integer;
     _dragtimeline : boolean;
@@ -462,7 +462,7 @@ type
     waveformscaling:extended;
     effektvorlaufzeit,effektnachlaufzeit,effektsynchrozeit:integer;
     bpmrefreshperiod:double;
-    bpmvalue:float;
+    bpmvalue:single;
     bpmscanlength:integer;
     activelayer:array[0..7] of boolean;
     mouseoverlayer,mouseovereffect:integer;
@@ -511,7 +511,7 @@ uses PCDIMMER, Optionen, devicescenefrm, geraetesteuerungfrm, progressscreen,
  ------------------------------------------}
 
 // get the bpm after period of time
-procedure GetBPM_Callback(handle: DWORD; bpm: FLOAT; user: DWORD); stdcall;
+procedure GetBPM_Callback(handle: DWORD; bpm: single; user: DWORD); stdcall;
 var
   tmp: DWORD;
 begin
@@ -524,7 +524,7 @@ begin
 end;
 
 // get the bpm process detection in percents of a decoding channel
-procedure GetBPM_Process(chan: DWORD; percent: FLOAT); stdcall;
+procedure GetBPM_Process(chan: DWORD; percent: single); stdcall;
 begin
   // update the progress bar
   audioeffektplayerform.bpmprogress.position := round(percent);
@@ -3907,9 +3907,8 @@ begin
     if (BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE)>0) and (not StopEffektaudio.Enabled) then
       StopEffektaudio.Enabled:=true;
 
-    //TODO: ggfs. Zurückspulen ganz deaktivieren
     // Am Ende zurückspulen              // BASS_FX_TempoGetRateRatio(_chan[0])
-    if (CurrentPosition>=(BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetLength(_chan[0], BASS_POS_BYTE))-0.1)) or (LastPosition>CurrentPosition) then //    if BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE)>=(BASS_ChannelGetLength(_chan[0], BASS_POS_BYTE)-20000) then
+    if (CurrentPosition>=(BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetLength(_chan[0], BASS_POS_BYTE))-1.0)) or (LastPosition>CurrentPosition) then //    if BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE)>=(BASS_ChannelGetLength(_chan[0], BASS_POS_BYTE)-20000) then
     begin
       BASS_ChannelStop(_chan[0]);
       BASS_ChannelStop(_chan[1]);
@@ -6930,7 +6929,7 @@ begin
   bpmview.Caption := FormatFloat('###.##', GetNewBPM(hBPM))+' BPM';
 end;
 
-function Taudioeffektplayerform.GetNewBPM(hBPM: DWORD): FLOAT;
+function Taudioeffektplayerform.GetNewBPM(hBPM: DWORD): single;
 begin
   bpmvalue:=BASS_FX_BPM_Translate(hBPM, BASS_FX_TempoGetRateRatio(_chan[0]) * 100, BASS_FX_BPM_TRAN_PERCENT2);
   if bpmvalue>300 then bpmvalue:=60;

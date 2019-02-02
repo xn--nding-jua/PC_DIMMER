@@ -1,10 +1,10 @@
 object mainform: Tmainform
-  Left = 390
-  Top = 107
+  Left = 527
+  Top = 147
   Cursor = -1
   BorderIcons = []
   BorderStyle = bsNone
-  Caption = 'PC_DIMMER2010 Mediacenter Server'
+  Caption = 'PC_DIMMER Mediacenter Server'
   ClientHeight = 272
   ClientWidth = 441
   Color = clBlack
@@ -61,7 +61,7 @@ object mainform: Tmainform
     Left = 0
     Top = 0
     Width = 441
-    Height = 272
+    Height = 144
     Cursor = -1
     Align = alClient
     Proportional = True
@@ -72,7 +72,7 @@ object mainform: Tmainform
     Left = 0
     Top = 0
     Width = 441
-    Height = 272
+    Height = 144
     Cursor = -1
     FullScreenTopMost = True
     Mode = vmVMR
@@ -93,11 +93,13 @@ object mainform: Tmainform
     FilterGraph = FilterGraph1
   end
   object Memo1: TMemo
-    Left = 256
-    Top = 80
-    Width = 169
-    Height = 49
+    Left = 0
+    Top = 144
+    Width = 441
+    Height = 128
     Cursor = -1
+    Align = alBottom
+    ScrollBars = ssVertical
     TabOrder = 2
     Visible = False
   end

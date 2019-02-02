@@ -1300,7 +1300,7 @@ uses
   videoscreensynchronisierenfrm, ambilight, pmm, touchscreenfrm,
   ddfeditorassistant, dynguifrm, audiomanagerfrm, ProgressScreenSmallFrm,
   presetsceneeditorform, adddevicefrm, pcdUtils, pcdRegistry,
-  nodecontrolfrm, opensourcefrm, usermgmtfrm, changeuserfrm;
+  nodecontrolfrm, usermgmtfrm, changeuserfrm;
 
 {$R *.DFM}
 
@@ -2127,7 +2127,7 @@ begin
     end;
     AutoBackupTimer.Enabled := AutoBackupCounterMax > 0;
     TerminalPort := LReg.ReadWriteInt('Terminal IP Port', 10160);
-    MediaCenterPort := LReg.ReadWriteInt('MediaCenter IP Port', 10153);
+    MediaCenterPort := LReg.ReadWriteInt('MediaCenter IP Port', 10154);
     CheckUpdatesOnStartup := LReg.ReadWriteBool('Check updates on Startup', true);
     QuitWithoutConfirmation := LReg.ReadWriteBool('Do not ask for exit', false);
     UseAutoAmberCalculation := LReg.ReadWriteBool('AutoAmberCalculation', false);
@@ -3366,9 +3366,6 @@ begin
     presetsceneeditor.close;
   if nodecontrolform.showing then
     nodecontrolform.close;
-  if opensourceform.showing then
-    opensourceform.close;
-
 
   // WORKAROUND FOR MEVP
   // 3D Visualizer schlieﬂen und freigeben
@@ -3719,7 +3716,6 @@ begin
   audiomanagerform.free;
   presetsceneeditor.free;
   nodecontrolform.free;
-  opensourceform.free;
   usermgmtform.free;
 
   // Finito :)
@@ -12823,6 +12819,7 @@ begin
   // Timecodeplayer starten
   SplashAddText(_('Starte MIDI-Timecodeplayer...'));
   RefreshSplashText;
+  setlength(TimeCodePlayerBank,1);
 
   DebugAdd('INIT: Starting Timer: MIDI-Timecodeplayer');
   timecodeplayerform.GetMIDITimecodeTimer.Enabled:=true;
@@ -13370,22 +13367,6 @@ begin
     tippoftheday.BringToFront;
   end;
 
-  LReg := TPCDRegistry.Create;
-  if LReg.OpenRegKey('') then
-  begin
-    if not LReg.ReadWriteBool('OpenSourceMsgDisplayed', false) then
-    begin
-      opensourceform.ShowModal;
-      if opensourceform.ModalResult=mrOK then
-      begin
-        LReg.WriteBool('OpenSourceMsgDisplayed', true);
-      end;
-    end;
-  end;
-  LReg.CloseKey;
-  LReg.Free;
-
-  
   DebugAdd('INIT: Login user ' + StartupUser + '...');
   
   // Login as set StartupUser
@@ -26775,7 +26756,6 @@ begin
   ReTranslateComponent(winlircform);
   ReTranslateComponent(picturechangeform);
   ReTranslateComponent(nodecontrolform);
-  ReTranslateComponent(opensourceform);
   ReTranslateComponent(usermgmtform);
 
   // Plugins neu initiieren

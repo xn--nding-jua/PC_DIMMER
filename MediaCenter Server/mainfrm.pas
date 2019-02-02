@@ -325,7 +325,7 @@ begin
   screen.Cursor:=crNone;
 
 //  UdpSocket.Open;
-  
+
   Timer1.Enabled:=true;
 end;
 

@@ -122,12 +122,10 @@ begin
   for i:=0 to midieventfrm.midiindevicelist.items.count-1 do
     Combobox1.Items.Add(midieventfrm.midiindevicelist.items[i]);
   Combobox1.Items.Add(_('MediaCenter Timecode'));
-
-  if Combobox1.Items.Count>0 then
-    Combobox1.Itemindex:=0;
+  Combobox1.Itemindex:=0;
 
   Timer1.Enabled:=true;
-  Timer2.Enabled:=(Combobox1.Items.Count>0);
+  Timer2.Enabled:=true;
 
   StringGrid1.Cells[0, 0]:=_('Position');
   StringGrid1.Cells[1, 0]:=_('Zeit');
@@ -222,8 +220,8 @@ end;
 procedure Ttimecodeplayerform.FormCreate(Sender: TObject);
 begin
   TranslateComponent(self);
-  CurrentTimecodeSource:=-1;
-  CurrentTimecodeBank:=-1;
+  CurrentTimecodeSource:=0;
+  CurrentTimecodeBank:=0;
 end;
 
 procedure Ttimecodeplayerform.CreateParams(var Params:TCreateParams);

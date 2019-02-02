@@ -445,7 +445,10 @@ object mediacenterform: Tmediacenterform
       'Audiodatei pausieren'
       'Audiodate stoppen'
       'Audioposition setzen'
-      'Audiolautst'#228'rke setzen')
+      'Audiolautst'#228'rke setzen'
+      '-'
+      'Timecodesenden aktivieren (TCP)'
+      'Timecodesenden deaktivieren (TCP)')
   end
   object GroupBox1: TGroupBox
     Left = 8

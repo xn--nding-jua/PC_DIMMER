@@ -18,6 +18,7 @@ type
     Label4: TLabel;
     idclient: TIdTCPClient;
     Label5: TLabel;
+    Memo1: TMemo;
     procedure Timer1Timer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -36,7 +37,7 @@ implementation
 
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
-  if paramcount <> 3 then begin close; exit; end;
+  if ((paramcount<3) or (paramcount>4)) then begin close; exit; end;
 
   Timer1.Enabled:=false;
   form1.Refresh;
@@ -47,6 +48,9 @@ begin
 
     if idclient.Socket.ReadLn=befehl then
     begin
+      if (paramcount=4) and (paramstr(4)='/a') then
+        memo1.Text:=idclient.Socket.readLn;
+
       label5.Visible:=true;
       idclient.Disconnect;
     end else
@@ -55,6 +59,9 @@ begin
 
       if idclient.Socket.ReadLn=befehl then
       begin
+        if (paramcount=4) and (paramstr(4)='/a') then
+          memo1.Text:=idclient.Socket.readLn;
+
         label5.Visible:=true;
         idclient.Disconnect;
       end else
@@ -63,6 +70,9 @@ begin
 
         if idclient.Socket.ReadLn=befehl then
         begin
+          if (paramcount=4) and (paramstr(4)='/a') then
+            memo1.Text:=idclient.Socket.readLn;
+
           label5.Visible:=true;
           idclient.Disconnect;
         end else
@@ -75,12 +85,14 @@ begin
   end;
 
   idclient.Disconnect;
-  close;
+
+  if not ((paramcount=4) and (paramstr(4)='/a')) then
+    close;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  if paramcount <> 3 then
+  if ((paramcount<3) or (paramcount>4)) then
   begin
     showmessage('Bitte das Programm mit folgenden Parametern starten (Beispiel siehe unten):'+#13#10#13#10+
     '"C:\...\PC_DIMMER_CMD.exe" IP Port "Befehl"'+#13#10#13#10#13#10+

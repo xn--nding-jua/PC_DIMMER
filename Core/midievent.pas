@@ -672,13 +672,15 @@ end;
 
 procedure Tmidieventfrm.SpeedButton1Click(Sender: TObject);
 var
-  i,j,Count,Count2:integer;
+  i,j,FileVersion,Count,Count2:integer;
 //  FileStream:TFileStream;
 begin
   with mainform do
 	if SaveDialog1.Execute then
   begin
     Filestream:=TFileStream.Create(SaveDialog1.FileName, fmCreate);
+	FileVersion:=mainform.currentprojectversion;
+    Filestream.WriteBuffer(FileVersion,sizeof(FileVersion));
     Count:=length(MidiEventArray);
     Filestream.WriteBuffer(Count,sizeof(Count));
     for i:=0 to Count-1 do
