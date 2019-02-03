@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\kls200.png">
+ <information id="PC_DIMMER">
+ <name>CLMPAR1 Master</name>
+ <vendor>Cameo</vendor>
+ <author>Peter</author>
+ <description>Steuereinheit des CLMPAR1 (Kanal 1-3)</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Modus" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="DIMMER" fade="yes" type="dimmer"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="SHUTTER" fade="yes" type="shutter"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" />
+ <shutter OpenValue="0" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="1" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="148" LeftMaxValue="231" OffValue="0" RightMinValue="147" RightMaxValue="64" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="148" LeftMaxValue="231" OffValue="0" RightMinValue="147" RightMaxValue="64" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="235" height="250">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="Combobox1" top="95" left="5" width="220" height="21" action="SPECIAL1change">
+   <item caption="Blackout" value="0" valueend="-1" picture="" />
+   <item caption="RGB-Steuerung" value="0" valueend="-1" picture="" />
+   <item caption="Rot" value="0" valueend="-1" picture="" />
+   <item caption="Gelb" value="0" valueend="-1" picture="" />
+   <item caption="Grün" value="0" valueend="-1" picture="" />
+   <item caption="Cyan" value="0" valueend="-1" picture="" />
+   <item caption="Blau" value="0" valueend="-1" picture="" />
+   <item caption="Violett" value="0" valueend="-1" picture="" />
+   <item caption="White" value="0" valueend="-1" picture="" />
+   <item caption="Dream" value="0" valueend="-1" picture="" />
+   <item caption="Meteor" value="0" valueend="-1" picture="" />
+   <item caption="Fade" value="0" valueend="-1" picture="" />
+   <item caption="Change" value="0" valueend="-1" picture="" />
+   <item caption="Flow 1" value="0" valueend="-1" picture="" />
+   <item caption="Flow 2" value="0" valueend="-1" picture="" />
+   <item caption="Flow 3" value="0" valueend="-1" picture="" />
+   <item caption="Flow 4" value="0" valueend="-1" picture="" />
+   <item caption="Flow 5" value="0" valueend="-1" picture="" />
+   <item caption="Flow 6" value="0" valueend="-1" picture="" />
+   <item caption="Flow 7" value="0" valueend="-1" picture="" />
+   <item caption="Flow 8" value="0" valueend="-1" picture="" />
+   <item caption="Flow 9" value="0" valueend="-1" picture="" />
+   <item caption="Musiksteuerung" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <slider name="DIMMERslider1" top="140" left="10" width="215" height="15" action="DIMMERchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SHUTTERslider2" top="176" left="8" width="217" height="17" action="SHUTTERchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="SPECIAL1lbl0" top="80" left="8" width="32" height="13" caption="Modus"/>
+  <label name="DIMMERlbl" top="120" left="8" width="44" height="13" caption="DIMMER"/>
+  <label name="SHUTTERlbl" top="160" left="8" width="52" height="13" caption="SHUTTER"/>
+  <label name="Dimlbl" top="120" left="205" width="14" height="13" caption="0%"/>
+  <label name="Shlbl" top="160" left="205" width="14" height="13" caption="0%"/>
+  <progressbar name="Progressbar1" top="118" left="55" width="150" height="20" startvalue="0" endvalue="255" default="0"/>
+  <button name="Button1" top="195" left="5" width="75" height="25" action="PRE" caption="PRE"/>
+  <button name="Button2_650" top="220" left="5" width="75" height="25" action="Strob_OFF" caption="Strob off"/>
+  <button name="Button3_43" top="220" left="80" width="75" height="25" action="Strob_ON" caption="Strob on"/>
+  <button name="Button4_432" top="195" left="80" width="75" height="25" action="RGB" caption="RGB"/>
+  <button name="Button5_225" top="195" left="155" width="75" height="25" action="DIMmmer" caption="DIM FULL ON"/>
+  <button name="Button" top="220" left="155" width="75" height="25" action="Blackout" caption="Blackout"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure SPECIAL1change;
+  procedure DIMMERchange;
+  procedure SHUTTERchange;
+  procedure PRE;
+  procedure Blackout;
+  procedure RGB;
+  procedure DIMmmer;
+  procedure Strob_ON;
+  procedure Strob_OFF;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        value:=get_channel('SPECIAL1');
+        case value of
+          0..10: combobox1.itemindex:=0;
+          11..21: combobox1.itemindex:=1;
+          22..32: combobox1.itemindex:=2;
+          33..43: combobox1.itemindex:=3;
+          44..54: combobox1.itemindex:=4;
+          55..65: combobox1.itemindex:=5;
+          66..76: combobox1.itemindex:=6;
+          77..87: combobox1.itemindex:=7;
+          88..98: combobox1.itemindex:=8;
+          99..109: combobox1.itemindex:=9;
+          110..120: combobox1.itemindex:=10;
+          121..131: combobox1.itemindex:=11;
+          132..142: combobox1.itemindex:=12;
+          143..153: combobox1.itemindex:=13;
+          154..164: combobox1.itemindex:=14;
+          165..175: combobox1.itemindex:=15;
+          176..186: combobox1.itemindex:=16;
+          187..197: combobox1.itemindex:=17;
+          198..208: combobox1.itemindex:=18;
+          209..219: combobox1.itemindex:=19;
+          220..230: combobox1.itemindex:=20;
+          231..241: combobox1.itemindex:=21;
+          242..255: combobox1.itemindex:=22;
+        end;
+      end;
+      1:
+      begin
+        DIMMERslider1.position:=get_channel('DIMMER');
+        Dimlbl.caption:=levelstr(DIMMERslider1.position);
+        Progressbar1.Position:=get_channel('Dimmer');
+        value:=get_channel('Dimmer');
+      end;
+      2:
+      begin
+        SHUTTERslider2.position:=get_channel('SHUTTER');
+        shlbl.caption:=levelstr(SHUTTERslider2.position);
+        value:=get_channel('Shutter');
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure SPECIAL1change;
+	begin
+    case combobox1.itemindex of
+      0: set_channel('special1', -1, 0, 0);
+      1: set_channel('special1', -1, 11, 0);
+      2: set_channel('special1', -1, 22, 0);
+      3: set_channel('special1', -1, 33, 0);
+      4: set_channel('special1', -1, 44, 0);
+      5: set_channel('special1', -1, 55, 0);
+      6: set_channel('specail1', -1, 66, 0);
+      7: set_channel('special1', -1, 77, 0);
+      8: set_channel('special1', -1, 88, 0);
+      9: set_channel('special1', -1, 99, 0);
+      10: set_channel('special1', -1, 110, 0);
+      11: set_channel('special1', -1, 121, 0);
+      12: set_channel('special1', -1, 132, 0);
+      13: set_channel('special1', -1, 143, 0);
+      14: set_channel('special1', -1, 154, 0);
+      15: set_channel('special1', -1, 165, 0);
+      16: set_channel('special1', -1, 176, 0);
+      17: set_channel('special1', -1, 187, 0);
+      18: set_channel('special1', -1, 198, 0);
+      19: set_channel('special1', -1, 209, 0);
+      20: set_channel('special1', -1, 220, 0);
+      21: set_channel('special1', -1, 231, 0);
+      22: set_channel('special1', -1, 242, 0);
+    end;
+	end;
+  procedure DIMMERchange;
+  begin
+    set_channel('DIMMER',DIMMERslider1.position,DIMMERslider1.position,0);
+    Dimlbl.caption:=levelstr(DimmerSlider1.position);
+  end;
+  procedure SHUTTERchange;
+  begin
+    set_channel('SHUTTER',SHUTTERslider2.position,SHUTTERslider2.position,0);
+    Shlbl.caption:=levelstr(ShutterSlider2.position);
+  end;
+  procedure PRE;
+begin
+	set_channel('Special1', -1, 15, 0);
+	set_channel('Dimmer', -1, 255, 0);
+end;
+  procedure Blackout;
+begin
+	set_channel('Special1', -1, 0, 0);
+	set_channel('Dimmer', -1, 0, 0);
+	set_channel('Shutter', -1, 0, 0);
+end;
+  procedure RGB;
+begin
+	set_channel('Special1', -1, 15, 0);
+end;
+  procedure DIMmmer;
+begin
+	set_channel('Dimmer', -1, 255, 0);
+end;
+  procedure Strob_ON;
+begin
+	set_channel('Shutter', -1, 255, 0);
+end;
+  procedure Strob_OFF;
+begin
+	set_channel('Shutter', -1, 0, 0);
+end;
+  end.
+ </code>
+</device>
