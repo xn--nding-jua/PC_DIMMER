@@ -1,6 +1,6 @@
 object audioeffektplayerform: Taudioeffektplayerform
-  Left = 512
-  Top = 147
+  Left = 355
+  Top = 145
   Width = 1024
   Height = 614
   Caption = 'Audioeffektplayer'

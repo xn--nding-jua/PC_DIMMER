@@ -3878,7 +3878,7 @@ end;
 procedure Taudioeffektplayerform.audioeffektplaytimerTimer(
   Sender: TObject);
 var
-	i,j,t: integer;
+	t: integer;
   h,min,s,ms:string;
   CurrentPosition:Double;
 begin
@@ -3904,37 +3904,13 @@ begin
     if length(ms)=2 then ms:='0'+ms;
     AudioeffektplayerTimeLabel.Caption:= h+'h '+min+'min '+s+'s '+ms+'ms';
 
-    if (BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE)>0) and (not StopEffektaudio.Enabled) then
-      StopEffektaudio.Enabled:=true;
+    //if (BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE)>0) and (not StopEffektaudio.Enabled) then
+    //  StopEffektaudio.Enabled:=true;
 
-    // Am Ende zurückspulen              // BASS_FX_TempoGetRateRatio(_chan[0])
-    if (CurrentPosition>=(BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetLength(_chan[0], BASS_POS_BYTE))-1.0)) or (LastPosition>CurrentPosition) then //    if BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE)>=(BASS_ChannelGetLength(_chan[0], BASS_POS_BYTE)-20000) then
+    // Am Ende stoppen
+    if (CurrentPosition>=(BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetLength(_chan[0], BASS_POS_BYTE))-0.5)) or (LastPosition>CurrentPosition) then //    if BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE)>=(BASS_ChannelGetLength(_chan[0], BASS_POS_BYTE)-20000) then
     begin
-      BASS_ChannelStop(_chan[0]);
-      BASS_ChannelStop(_chan[1]);
-      BASS_ChannelStop(_chan[2]);
-      BASS_ChannelStop(_chan[3]);
-
-      BASS_ChannelSetPosition(_chan[0],BASS_ChannelSeconds2Bytes(_chan[0], 0), BASS_POS_BYTE);
-      BASS_ChannelSetPosition(_chan[1],BASS_ChannelSeconds2Bytes(_chan[0], 0), BASS_POS_BYTE);
-      BASS_ChannelSetPosition(_chan[2],BASS_ChannelSeconds2Bytes(_chan[0], 0), BASS_POS_BYTE);
-      BASS_ChannelSetPosition(_chan[3],BASS_ChannelSeconds2Bytes(_chan[0], 0), BASS_POS_BYTE);
-      LastPosition:=BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE));
-
-      BASS_ChannelStop(_chan[0]);
-      BASS_ChannelStop(_chan[1]);
-      BASS_ChannelStop(_chan[2]);
-      BASS_ChannelStop(_chan[3]);
-
-      for j:=1 to maxaudioeffektlayers do
-	    begin
-        for i:=0 to maxaudioeffekte[j]-1 do
-		    	_effektaudioeffektpassed[j][i]:=false;
-      end;
-
-      PlayEffektaudio.Enabled:=true;
-      PauseEffektaudio.Enabled:=false;
-      StopEffektaudio.Enabled:=false;
+      StopEffektaudioClick(nil);
     end;
 
     // Aktuelle Position abspeichern:
