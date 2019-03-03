@@ -14,26 +14,14 @@ type
   pRGBTripleArray = ^TRGBTripleArray; // Pointer auf TRGBTripleArray
 
   Tscannersynchronisationform = class(TForm)
-    Paintbox1: TPaintBox;
-    Label1: TLabel;
-    Bevel1: TBevel;
-    Button2: TButton;
-    Button3: TButton;
     Panel1: TPanel;
     JvGradient1: TJvGradient;
     Image1: TImage;
     Label34: TLabel;
     Label35: TLabel;
-    Label3: TLabel;
-    Shape1: TShape;
-    Shape2: TShape;
-    Label17: TLabel;
-    Label18: TLabel;
-    AntialiasingCombobox: TComboBox;
     InfoBtn: TPngBitBtn;
-    ActualSyncEdit: TComboBox;
-    Label2: TLabel;
-    Bevel2: TBevel;
+    RefreshPaintboxTimer: TTimer;
+    Panel2: TPanel;
     Label4: TLabel;
     Bevel3: TBevel;
     Label5: TLabel;
@@ -49,9 +37,7 @@ type
     Label15: TLabel;
     Label16: TLabel;
     Label33: TLabel;
-    PaintBox2: TPaintBox;
     ResetPositions: TButton;
-    PreviewCheckbox: TCheckBox;
     lox: TJvSpinEdit;
     loy: TJvSpinEdit;
     rox: TJvSpinEdit;
@@ -62,8 +48,29 @@ type
     ruy: TJvSpinEdit;
     CalibrationPointsOutOfBounds: TCheckBox;
     ComboBox1: TComboBox;
+    Panel3: TPanel;
+    Shape1: TShape;
+    Shape2: TShape;
+    Label18: TLabel;
+    Button2: TButton;
+    Button3: TButton;
+    Panel4: TPanel;
+    Paintbox1: TPaintBox;
+    PaintBox2: TPaintBox;
+    Panel5: TPanel;
+    Label17: TLabel;
+    ActualSyncEdit: TComboBox;
     Button1: TButton;
-    RefreshPaintboxTimer: TTimer;
+    Label3: TLabel;
+    AntialiasingCombobox: TComboBox;
+    Panel6: TPanel;
+    PreviewCheckbox: TCheckBox;
+    Bevel2: TBevel;
+    Label2: TLabel;
+    Bevel1: TBevel;
+    Label1: TLabel;
+    copybtn: TButton;
+    pastebtn: TButton;
     procedure FormCreate(Sender: TObject);
     procedure PaintBox2MouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
@@ -96,10 +103,14 @@ type
     procedure Button1Click(Sender: TObject);
     procedure ActualSyncEditSelect(Sender: TObject);
     procedure CreateParams(var Params:TCreateParams);override;
+    procedure FormResize(Sender: TObject);
+    procedure copybtnClick(Sender: TObject);
+    procedure pastebtnClick(Sender: TObject);
   private
     { Private declarations }
-    _Buffer,_BufferAntialiased:TBitmap;
+    _Buffer,_BufferAntialiased, _Buffer2,_Buffer2Antialiased:TBitmap;
     A,B,C,D,P:TPoint;
+    CopyA,CopyB,CopyC,CopyD:TPoint;
     Pb:TPoint;
     Abok,Bbok,Cbok,Dbok,Pok:boolean;
     antialiasvalue:byte;
@@ -129,6 +140,18 @@ begin
       P2 := _Buffer.ScanLine[2*y+1];
       P3 := _BufferAntialiased.ScanLine[y];
       for x := 0 to _BufferAntialiased.Width-1 do
+      begin
+        P3[x*3] := (P1[2*3*x]+P1[2*3*x+3]+P2[2*3*x]+P2[2*3*x+3]) div 4;
+        P3[x*3+1] := (P1[2*3*x+1]+P1[2*3*x+4]+P2[2*3*x+1]+P2[2*3*x+4]) div 4;
+        P3[x*3+2] := (P1[2*3*x+2]+P1[2*3*x+5]+P2[2*3*x+2]+P2[2*3*x+5]) div 4;
+      end;
+    end;
+    for y := 0 to _Buffer2Antialiased.Height-1 do
+    begin
+      P1 := _Buffer2.ScanLine[2*y];
+      P2 := _Buffer2.ScanLine[2*y+1];
+      P3 := _Buffer2Antialiased.ScanLine[y];
+      for x := 0 to _Buffer2Antialiased.Width-1 do
       begin
         P3[x*3] := (P1[2*3*x]+P1[2*3*x+3]+P2[2*3*x]+P2[2*3*x+3]) div 4;
         P3[x*3+1] := (P1[2*3*x+1]+P1[2*3*x+4]+P2[2*3*x+1]+P2[2*3*x+4]) div 4;
@@ -165,6 +188,29 @@ begin
                         P4[4*3*x+2]+P4[4*3*x+5]+P4[4*3*x+8]+P4[4*3*x+11]) div 16;
         end;
       end;
+      for y := 0 to _Buffer2Antialiased.Height-1 do
+      begin
+        P1 := _Buffer2.ScanLine[4*y];
+        P2 := _Buffer2.ScanLine[4*y+1];
+        P3 := _Buffer2.ScanLine[4*y+2];
+        P4 := _Buffer2.ScanLine[4*y+3];
+        P5 := _Buffer2Antialiased.ScanLine[y];
+        for x := 0 to _Buffer2Antialiased.Width-1 do
+        begin
+          P5[x*3] := (P1[4*3*x]+P1[4*3*x+3]+P1[4*3*x+6]+P1[4*3*x+9]+
+                      P2[4*3*x]+P2[4*3*x+3]+P2[4*3*x+6]+P2[4*3*x+9]+
+                      P3[4*3*x]+P3[4*3*x+3]+P3[4*3*x+6]+P3[4*3*x+9]+
+                      P4[4*3*x]+P4[4*3*x+3]+P4[4*3*x+6]+P4[4*3*x+9]) div 16;
+          P5[x*3+1] := (P1[4*3*x+1]+P1[4*3*x+4]+P1[4*3*x+7]+P1[4*3*x+10]+
+                        P2[4*3*x+1]+P2[4*3*x+4]+P2[4*3*x+7]+P2[4*3*x+10]+
+                        P3[4*3*x+1]+P3[4*3*x+4]+P3[4*3*x+7]+P3[4*3*x+10]+
+                        P4[4*3*x+1]+P4[4*3*x+4]+P4[4*3*x+7]+P4[4*3*x+10]) div 16;
+          P5[x*3+2] := (P1[4*3*x+2]+P1[4*3*x+5]+P1[4*3*x+8]+P1[4*3*x+11]+
+                        P2[4*3*x+2]+P2[4*3*x+5]+P2[4*3*x+8]+P2[4*3*x+11]+
+                        P3[4*3*x+2]+P3[4*3*x+5]+P3[4*3*x+8]+P3[4*3*x+11]+
+                        P4[4*3*x+2]+P4[4*3*x+5]+P4[4*3*x+8]+P4[4*3*x+11]) div 16;
+        end;
+      end;
 end;
 
 procedure Tscannersynchronisationform.FormCreate(Sender: TObject);
@@ -181,6 +227,16 @@ begin
   _BufferAntialiased.PixelFormat := pf24bit;
   _BufferAntialiased.Width := Paintbox1.Width;
   _BufferAntialiased.Height := Paintbox1.Height;
+
+  _Buffer2:=TBitmap.Create;
+  _Buffer2.PixelFormat := pf24bit;
+  _Buffer2.Width:=4*Paintbox2.Width;
+  _Buffer2.Height:=4*Paintbox2.Height;
+
+  _Buffer2Antialiased := TBitmap.Create;
+  _Buffer2Antialiased.PixelFormat := pf24bit;
+  _Buffer2Antialiased.Width := Paintbox1.Width;
+  _Buffer2Antialiased.Height := Paintbox1.Height;
 
   P.x:=127;
   P.y:=127;
@@ -214,57 +270,57 @@ procedure Tscannersynchronisationform.PaintBox2MouseMove(Sender: TObject; Shift:
 begin
 //  if (Shift=[ssLeft]) then
   begin
-    if ((X<=255) and (X>=0)) or CalibrationPointsOutOfBounds.Checked then
+    if ((X<=Paintbox2.Width) and (X>=0)) or CalibrationPointsOutOfBounds.Checked then
     begin
       if Abok then
       begin
-        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x:=X;
-        lox.Value:=X;
+        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x:=trunc((X/Paintbox2.Width)*255);
+        lox.Value:=trunc((X/Paintbox2.Width)*255);
         geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'PAN',mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x,mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x,0);
       end;
       if Bbok then
       begin
-        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x:=X;
-        rox.Value:=X;
+        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x:=trunc((X/Paintbox2.Width)*255);
+        rox.Value:=trunc((X/Paintbox2.Width)*255);
         geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'PAN',mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x,mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x,0);
       end;
       if Cbok then
       begin
-        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x:=X;
-        rux.Value:=X;
+        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x:=trunc((X/Paintbox2.Width)*255);
+        rux.Value:=trunc((X/Paintbox2.Width)*255);
         geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'PAN',mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x,mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x,0);
       end;
       if Dbok then
       begin
-        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x:=X;
-        lux.Value:=X;
+        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x:=trunc((X/Paintbox2.Width)*255);
+        lux.Value:=trunc((X/Paintbox2.Width)*255);
         geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'PAN',mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x,mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x,0);
       end;
     end;
-    if ((Y<=255) and (Y>=0)) or CalibrationPointsOutOfBounds.Checked then
+    if ((Y<=Paintbox2.Width) and (Y>=0)) or CalibrationPointsOutOfBounds.Checked then
     begin
       if Abok then
       begin
-        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y:=Y;
-        loy.Value:=Y;
+        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y:=trunc((Y/Paintbox2.Height)*255);
+        loy.Value:=trunc((Y/Paintbox2.Height)*255);
         geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'TILT',mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y,mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y,0);
       end;
       if Bbok then
       begin
-        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y:=Y;
-        roy.Value:=Y;
+        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y:=trunc((Y/Paintbox2.Height)*255);
+        roy.Value:=trunc((Y/Paintbox2.Height)*255);
         geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'TILT',mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y,mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y,0);
       end;
       if Cbok then
       begin
-        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y:=Y;
-        ruy.Value:=Y;
+        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y:=trunc((Y/Paintbox2.Height)*255);
+        ruy.Value:=trunc((Y/Paintbox2.Height)*255);
         geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'TILT',mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y,mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y,0);
       end;
       if Dbok then
       begin
-        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y:=Y;
-        luy.Value:=Y;
+        mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y:=trunc((Y/Paintbox2.Height)*255);
+        luy.Value:=trunc((Y/Paintbox2.Height)*255);
         geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'TILT',mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y,mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y,0);
       end;
     end;
@@ -272,6 +328,22 @@ begin
 end;
 
 procedure Tscannersynchronisationform.RefreshPaintboxTimerTimer(Sender: TObject);
+  function ScaleX1(X:integer):integer;
+  begin
+    result:=trunc((X/255)*Paintbox1.Width);
+  end;
+  function ScaleY1(Y:integer):integer;
+  begin
+    result:=trunc((Y/255)*Paintbox1.Height);
+  end;
+  function ScaleX2(X:integer):integer;
+  begin
+    result:=trunc((X/255)*Paintbox2.Width);
+  end;
+  function ScaleY2(Y:integer):integer;
+  begin
+    result:=trunc((Y/255)*Paintbox2.Height);
+  end;
 var
   P01x,P01y:single;
   Ab4,Bb4,Cb4,Db4:TPoint;
@@ -287,7 +359,7 @@ begin
       _Buffer.Canvas.Pen.Color:=clBlack;
       _Buffer.Canvas.Brush.Color:=clBlack;
       // Punkt P zeichnen
-      _Buffer.Canvas.Ellipse(P.x*antialiasvalue-10*antialiasvalue,P.y*antialiasvalue-10*antialiasvalue,P.x*antialiasvalue+10*antialiasvalue,P.y*antialiasvalue+10*antialiasvalue);
+      _Buffer.Canvas.Ellipse(ScaleX1(P.x*antialiasvalue)-10*antialiasvalue,ScaleY1(P.y*antialiasvalue)-10*antialiasvalue,ScaleX1(P.x*antialiasvalue)+10*antialiasvalue,ScaleY1(P.y*antialiasvalue)+10*antialiasvalue);
       BitBlt(Paintbox1.Canvas.Handle,0,0,_Buffer.Width,_Buffer.Height,_Buffer.Canvas.Handle,0,0,SrcCopy);
     end;
     2:
@@ -298,7 +370,7 @@ begin
       _Buffer.Canvas.Pen.Color:=clBlack;
       _Buffer.Canvas.Brush.Color:=clBlack;
       // Punkt P zeichnen
-      _Buffer.Canvas.Ellipse(P.x*antialiasvalue-10*antialiasvalue,P.y*antialiasvalue-10*antialiasvalue,P.x*antialiasvalue+10*antialiasvalue,P.y*antialiasvalue+10*antialiasvalue);
+      _Buffer.Canvas.Ellipse(ScaleX1(P.x*antialiasvalue)-10*antialiasvalue,ScaleY1(P.y*antialiasvalue)-10*antialiasvalue,ScaleX1(P.x*antialiasvalue)+10*antialiasvalue,ScaleY1(P.y*antialiasvalue)+10*antialiasvalue);
       Antialiasing4x; // Grafik noch ein wenig Glätten
       BitBlt(Paintbox1.Canvas.Handle,0,0,_BufferAntialiased.Width,_BufferAntialiased.Height,_BufferAntialiased.Canvas.Handle,0,0,SrcCopy);
     end;
@@ -310,7 +382,7 @@ begin
       _Buffer.Canvas.Pen.Color:=clBlack;
       _Buffer.Canvas.Brush.Color:=clBlack;
       // Punkt P zeichnen
-      _Buffer.Canvas.Ellipse(P.x*antialiasvalue-10*antialiasvalue,P.y*antialiasvalue-10*antialiasvalue,P.x*antialiasvalue+10*antialiasvalue,P.y*antialiasvalue+10*antialiasvalue);
+      _Buffer.Canvas.Ellipse(ScaleX1(P.x*antialiasvalue)-10*antialiasvalue,ScaleY1(P.y*antialiasvalue)-10*antialiasvalue,ScaleX1(P.x*antialiasvalue)+10*antialiasvalue,ScaleY1(P.y*antialiasvalue)+10*antialiasvalue);
       Antialiasing16x;
       BitBlt(Paintbox1.Canvas.Handle,0,0,_BufferAntialiased.Width,_BufferAntialiased.Height,_BufferAntialiased.Canvas.Handle,0,0,SrcCopy);
     end;
@@ -327,93 +399,93 @@ begin
     case antialiasvalue of
       1:
       begin
-        _Buffer.Canvas.Brush.Color:=clInactiveCaption;
-        _Buffer.Canvas.Pen.Color:=clBlack;
-        _Buffer.Canvas.Rectangle(0,0,_Buffer.Width div 4,_Buffer.Height div 4);
-        _Buffer.Canvas.Brush.Color:=clBtnFace;
-        _Buffer.Canvas.Pen.Color:=clBlack;
-        _Buffer.Canvas.Brush.Color:=clBtnFace;
-        _Buffer.Canvas.Brush.Style:=bsSolid;
+        _Buffer2.Canvas.Brush.Color:=clInactiveCaption;
+        _Buffer2.Canvas.Pen.Color:=clBlack;
+        _Buffer2.Canvas.Rectangle(0,0,_Buffer2.Width div 4,_Buffer2.Height div 4);
+        _Buffer2.Canvas.Brush.Color:=clBtnFace;
+        _Buffer2.Canvas.Pen.Color:=clBlack;
+        _Buffer2.Canvas.Brush.Color:=clBtnFace;
+        _Buffer2.Canvas.Brush.Style:=bsSolid;
       end;
       2:
       begin
-        _Buffer.Canvas.Brush.Color:=clInactiveCaption;
-        _Buffer.Canvas.Pen.Color:=clBlack;
-        _Buffer.Canvas.Rectangle(0,0,_Buffer.Width div 2,_Buffer.Height div 2);
-        _Buffer.Canvas.Brush.Color:=clBtnFace;
-        _Buffer.Canvas.Pen.Color:=clBlack;
-        _Buffer.Canvas.Brush.Color:=clBtnFace;
-        _Buffer.Canvas.Brush.Style:=bsSolid;
+        _Buffer2.Canvas.Brush.Color:=clInactiveCaption;
+        _Buffer2.Canvas.Pen.Color:=clBlack;
+        _Buffer2.Canvas.Rectangle(0,0,_Buffer2.Width div 2,_Buffer2.Height div 2);
+        _Buffer2.Canvas.Brush.Color:=clBtnFace;
+        _Buffer2.Canvas.Pen.Color:=clBlack;
+        _Buffer2.Canvas.Brush.Color:=clBtnFace;
+        _Buffer2.Canvas.Brush.Style:=bsSolid;
       end;
       4:
       begin
-        _Buffer.Canvas.Brush.Color:=clInactiveCaption;
-        _Buffer.Canvas.Pen.Color:=clBlack;
-        _Buffer.Canvas.Rectangle(0,0,_Buffer.Width,_Buffer.Height);
-        _Buffer.Canvas.Brush.Color:=clBtnFace;
-        _Buffer.Canvas.Pen.Color:=clBlack;
-        _Buffer.Canvas.Brush.Color:=clBtnFace;
-        _Buffer.Canvas.Brush.Style:=bsSolid;
+        _Buffer2.Canvas.Brush.Color:=clInactiveCaption;
+        _Buffer2.Canvas.Pen.Color:=clBlack;
+        _Buffer2.Canvas.Rectangle(0,0,_Buffer2.Width,_Buffer2.Height);
+        _Buffer2.Canvas.Brush.Color:=clBtnFace;
+        _Buffer2.Canvas.Pen.Color:=clBlack;
+        _Buffer2.Canvas.Brush.Color:=clBtnFace;
+        _Buffer2.Canvas.Brush.Style:=bsSolid;
       end;
     end;
 
-    Ab4.x:=mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x*antialiasvalue;
-    Ab4.y:=mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y*antialiasvalue;
-    Bb4.x:=mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x*antialiasvalue;
-    Bb4.y:=mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y*antialiasvalue;
-    Cb4.x:=mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x*antialiasvalue;
-    Cb4.y:=mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y*antialiasvalue;
-    Db4.x:=mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x*antialiasvalue;
-    Db4.y:=mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y*antialiasvalue;
+    Ab4.x:=ScaleX2(mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x*antialiasvalue);
+    Ab4.y:=ScaleY2(mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y*antialiasvalue);
+    Bb4.x:=ScaleX2(mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x*antialiasvalue);
+    Bb4.y:=ScaleY2(mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y*antialiasvalue);
+    Cb4.x:=ScaleX2(mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x*antialiasvalue);
+    Cb4.y:=ScaleY2(mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y*antialiasvalue);
+    Db4.x:=ScaleX2(mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x*antialiasvalue);
+    Db4.y:=ScaleY2(mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y*antialiasvalue);
 
-    _Buffer.Canvas.Polygon([Ab4,Bb4,Cb4,Db4]);
-    _Buffer.Canvas.MoveTo(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y);
-    _Buffer.Canvas.LineTo(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y);
-    _Buffer.Canvas.LineTo(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y);
-    _Buffer.Canvas.LineTo(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y);
-    _Buffer.Canvas.LineTo(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y);
+    _Buffer2.Canvas.Polygon([Ab4,Bb4,Cb4,Db4]);
+    _Buffer2.Canvas.MoveTo(ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x),ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y));
+    _Buffer2.Canvas.LineTo(ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x),ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y));
+    _Buffer2.Canvas.LineTo(ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x),ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y));
+    _Buffer2.Canvas.LineTo(ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x),ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y));
+    _Buffer2.Canvas.LineTo(ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x),ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y));
 
-    _Buffer.Canvas.Pen.Color:=clBlack;
-    _Buffer.Canvas.Brush.Style:=bsSolid;
-    _Buffer.Canvas.Brush.Color:=clRed;
+    _Buffer2.Canvas.Pen.Color:=clBlack;
+    _Buffer2.Canvas.Brush.Style:=bsSolid;
+    _Buffer2.Canvas.Brush.Color:=clRed;
     // Punkt Ab zeichnen
-    _Buffer.Canvas.Rectangle(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x-antialiasvalue*5,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y-antialiasvalue*5,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x+antialiasvalue*5,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y+antialiasvalue*5);
+    _Buffer2.Canvas.Rectangle(ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x)-antialiasvalue*5,ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y)-antialiasvalue*5,ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x)+antialiasvalue*5,ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y)+antialiasvalue*5);
     // Punkt Bb zeichnen
-    _Buffer.Canvas.Rectangle(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x-antialiasvalue*5,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y-antialiasvalue*5,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x+antialiasvalue*5,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y+antialiasvalue*5);
+    _Buffer2.Canvas.Rectangle(ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x)-antialiasvalue*5,ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y)-antialiasvalue*5,ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x)+antialiasvalue*5,ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y)+antialiasvalue*5);
     // Punkt Cb zeichnen
-    _Buffer.Canvas.Rectangle(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x-antialiasvalue*5,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y-antialiasvalue*5,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x+antialiasvalue*5,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y+antialiasvalue*5);
+    _Buffer2.Canvas.Rectangle(ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x)-antialiasvalue*5,ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y)-antialiasvalue*5,ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x)+antialiasvalue*5,ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y)+antialiasvalue*5);
     // Punkt Db zeichnen
-    _Buffer.Canvas.Rectangle(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x-antialiasvalue*5,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y-antialiasvalue*5,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x+antialiasvalue*5,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y+antialiasvalue*5);
+    _Buffer2.Canvas.Rectangle(ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x)-antialiasvalue*5,ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y)-antialiasvalue*5,ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x)+antialiasvalue*5,ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y)+antialiasvalue*5);
     // Punkt Pb zeichnen
     if Pb.x>255 then Pb.x:=255;
     if Pb.x<0 then Pb.x:=0;
     if Pb.y>255 then Pb.y:=255;
     if Pb.y<0 then Pb.y:=0;
-    _Buffer.Canvas.Brush.Color:=clBlack;
-    _Buffer.Canvas.Ellipse(antialiasvalue*PB.x-antialiasvalue*5,antialiasvalue*PB.y-antialiasvalue*5,antialiasvalue*PB.x+antialiasvalue*5,antialiasvalue*PB.y+antialiasvalue*5);
+    _Buffer2.Canvas.Brush.Color:=clBlack;
+    _Buffer2.Canvas.Ellipse(ScaleX2(antialiasvalue*PB.x)-antialiasvalue*5,ScaleY2(antialiasvalue*PB.y)-antialiasvalue*5,ScaleX2(antialiasvalue*PB.x)+antialiasvalue*5,ScaleY2(antialiasvalue*PB.y)+antialiasvalue*5);
 
-    _Buffer.Canvas.Brush.Style:=bsClear;
-    _Buffer.Canvas.Font.Size:=10*antialiasvalue;
-    _Buffer.Canvas.Font.Name:='Arial';
-    _Buffer.Canvas.TextOut(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x+5*antialiasvalue,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y+5*antialiasvalue,'LO');
-    _Buffer.Canvas.TextOut(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x-25*antialiasvalue,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y+5*antialiasvalue,'RO');
-    _Buffer.Canvas.TextOut(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x-25*antialiasvalue,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y-18*antialiasvalue,'RU');
-    _Buffer.Canvas.TextOut(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x+5*antialiasvalue,antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y-18*antialiasvalue,'LU');
+    _Buffer2.Canvas.Brush.Style:=bsClear;
+    _Buffer2.Canvas.Font.Size:=10*antialiasvalue;
+    _Buffer2.Canvas.Font.Name:='Arial';
+    _Buffer2.Canvas.TextOut(ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x)+5*antialiasvalue,ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y)+5*antialiasvalue,'LO');
+    _Buffer2.Canvas.TextOut(ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x)-25*antialiasvalue,ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y)+5*antialiasvalue,'RO');
+    _Buffer2.Canvas.TextOut(ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x)-25*antialiasvalue,ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y)-18*antialiasvalue,'RU');
+    _Buffer2.Canvas.TextOut(ScaleX2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x)+5*antialiasvalue,ScaleY2(antialiasvalue*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y)-18*antialiasvalue,'LU');
 
     case antialiasvalue of
       1:
       begin
-        BitBlt(Paintbox2.Canvas.Handle,0,0,_Buffer.Width,_Buffer.Height,_Buffer.Canvas.Handle,0,0,SrcCopy);
+        BitBlt(Paintbox2.Canvas.Handle,0,0,_Buffer2.Width,_Buffer2.Height,_Buffer2.Canvas.Handle,0,0,SrcCopy);
       end;
       2:
       begin
         Antialiasing4x; // Grafik noch ein wenig Glätten
-        BitBlt(Paintbox2.Canvas.Handle,0,0,_BufferAntialiased.Width,_BufferAntialiased.Height,_BufferAntialiased.Canvas.Handle,0,0,SrcCopy);
+        BitBlt(Paintbox2.Canvas.Handle,0,0,_Buffer2Antialiased.Width,_Buffer2Antialiased.Height,_Buffer2Antialiased.Canvas.Handle,0,0,SrcCopy);
       end;
       4:
       begin
         Antialiasing16x;
-        BitBlt(Paintbox2.Canvas.Handle,0,0,_BufferAntialiased.Width,_BufferAntialiased.Height,_BufferAntialiased.Canvas.Handle,0,0,SrcCopy);
+        BitBlt(Paintbox2.Canvas.Handle,0,0,_Buffer2Antialiased.Width,_Buffer2Antialiased.Height,_Buffer2Antialiased.Canvas.Handle,0,0,SrcCopy);
       end;
     end;
   end;
@@ -422,31 +494,26 @@ end;
 procedure Tscannersynchronisationform.Paintbox1MouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 var
-  valuex,valuey:byte;
-  P01x, P01y:single;
+  P01x, P01y, valuex,valuey:single;
 begin
   if Shift=[ssLeft] then
   begin
-    if (X<=255) and (X>=0) then
-      P.x:=X;
-    if (Y<=255) and (Y>=0) then
-      P.y:=Y;
+    if (X<=Paintbox1.Width) and (X>=0) then
+      P.x:=round((X/Paintbox1.Width)*255);
+    if (Y<=Paintbox1.Height) and (Y>=0) then
+      P.y:=round((Y/Paintbox1.Height)*255);
 
     if PreviewCheckbox.Checked then
     begin
-      P01x:=P.x/255;
-      P01y:=P.y/255;
-      valuex:=trunc((1-P01x)*(1-P01y)*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x+(1-P01x)*P01y*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x+P01x*(1-P01y)*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x+P01x*P01y*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x);
-      valuey:=trunc((1-P01x)*(1-P01y)*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y+(1-P01x)*P01y*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y+P01x*(1-P01y)*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y+P01x*P01y*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y);
+      P01x:=(X/Paintbox1.Width);
+      P01y:=(Y/Paintbox1.Height);
+      valuex:=((1-P01x)*(1-P01y)*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x+(1-P01x)*P01y*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x+P01x*(1-P01y)*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x+P01x*P01y*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x);
+      valuey:=((1-P01x)*(1-P01y)*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y+(1-P01x)*P01y*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y+P01x*(1-P01y)*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y+P01x*P01y*mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y);
 
-{
-      if valuex>255 then valuex:=255;
-      if valuex<0 then valuex:=0;
-      if valuey>255 then valuey:=255;
-      if valuey<0 then valuey:=0;
-}
-      geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'PAN',valuex,valuex,0);
-      geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'TILT',valuey,valuey,0);
+      geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'PAN',trunc(valuex),trunc(valuex),0);
+      geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'PANFINE',trunc(frac(valuex)*256),trunc(frac(valuex)*256),0);
+      geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'TILT',trunc(valuey),trunc(valuey),0);
+      geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'TILTFINE',trunc(frac(valuey)*256),trunc(frac(valuey)*256),0);
     end else
     begin
       geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'PAN',P.x,P.x,0);
@@ -457,9 +524,15 @@ end;
 
 procedure Tscannersynchronisationform.Paintbox1MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
+var
+  NewX, NewY:integer;
 begin
   RefreshPaintboxTimer.Interval:=50;
-  if (X>P.x-5) and (X<P.x+5) and (Y>P.y-5) and (Y<P.y+5) then
+
+  NewX:=trunc((X/Paintbox1.Width)*255);
+  NewY:=trunc((Y/Paintbox1.Height)*255);
+
+  if (NewX>P.x-5) and (NewX<P.x+5) and (NewY>P.y-5) and (NewY<P.y+5) then
   begin
     Pok:=true;
     exit;
@@ -468,33 +541,38 @@ end;
 
 procedure Tscannersynchronisationform.PaintBox2MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
+var
+  NewX, NewY:integer;
 begin
   RefreshPaintboxTimer.Interval:=50;
 
-    Abok:=false;
-    Bbok:=false;
-    Cbok:=false;
-    Dbok:=false;
-    if (X>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x-5) and (X<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x+5) and (Y>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y-5) and (Y<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y+5) then
-    begin
-      Abok:=true;
-      exit;
-    end;
-    if (X>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x-5) and (X<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x+5) and (Y>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y-5) and (Y<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y+5) then
-    begin
-      Bbok:=true;
-      exit;
-    end;
-    if (X>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x-5) and (X<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x+5) and (Y>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y-5) and (Y<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y+5) then
-    begin
-      Cbok:=true;
-      exit;
-    end;
-    if (X>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x-5) and (X<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x+5) and (Y>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y-5) and (Y<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y+5) then
-    begin
-      Dbok:=true;
-      exit;
-    end;
+  NewX:=trunc((X/Paintbox2.Width)*255);
+  NewY:=trunc((Y/Paintbox2.Height)*255);
+
+  Abok:=false;
+  Bbok:=false;
+  Cbok:=false;
+  Dbok:=false;
+  if (NewX>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x-5) and (NewX<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.x+5) and (NewY>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y-5) and (NewY<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointA.y+5) then
+  begin
+    Abok:=true;
+    exit;
+  end;
+  if (NewX>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x-5) and (NewX<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.x+5) and (NewY>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y-5) and (NewY<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointB.y+5) then
+  begin
+    Bbok:=true;
+    exit;
+  end;
+  if (NewX>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x-5) and (NewX<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.x+5) and (NewY>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y-5) and (NewY<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointC.y+5) then
+  begin
+    Cbok:=true;
+    exit;
+  end;
+  if (NewX>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x-5) and (NewX<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x+5) and (NewY>mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y-5) and (NewY<mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.y+5) then
+  begin
+    Dbok:=true;
+    exit;
+  end;
 end;
 
 procedure Tscannersynchronisationform.PaintBox2MouseUp(Sender: TObject; Button: TMouseButton;
@@ -807,6 +885,43 @@ begin
       self.ParentWindow := GetDesktopWindow;
     end;
   end;
+end;
+
+procedure Tscannersynchronisationform.FormResize(Sender: TObject);
+begin
+  _Buffer.Width:=4*Paintbox1.Width;
+  _Buffer.Height:=4*Paintbox1.Height;
+  _BufferAntialiased.Width := Paintbox1.Width;
+  _BufferAntialiased.Height := Paintbox1.Height;
+
+  _Buffer2.Width:=4*Paintbox2.Width;
+  _Buffer2.Height:=4*Paintbox2.Height;
+  _Buffer2Antialiased.Width := Paintbox2.Width;
+  _Buffer2Antialiased.Height := Paintbox2.Height;
+end;
+
+procedure Tscannersynchronisationform.copybtnClick(Sender: TObject);
+begin
+  CopyA.x:=round(lox.value);
+  CopyA.y:=round(loy.value);
+  CopyB.x:=round(rox.value);
+  CopyB.y:=round(roy.value);
+  CopyC.x:=round(lux.value);
+  CopyC.y:=round(luy.value);
+  CopyD.x:=round(rux.value);
+  CopyD.y:=round(ruy.value);
+end;
+
+procedure Tscannersynchronisationform.pastebtnClick(Sender: TObject);
+begin
+  lox.value:=CopyA.X;
+  loy.Value:=CopyA.Y;
+  rox.value:=CopyB.X;
+  roy.Value:=CopyB.Y;
+  lux.value:=CopyC.X;
+  luy.Value:=CopyC.Y;
+  rux.value:=CopyD.X;
+  ruy.Value:=CopyD.Y;
 end;
 
 end.

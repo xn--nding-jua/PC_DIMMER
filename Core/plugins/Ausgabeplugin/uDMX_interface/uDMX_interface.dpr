@@ -37,12 +37,12 @@ end;
 
 function DLLGetName:PChar;stdcall;
 begin
-  Result := PChar('uDMX Interface (und kompatibel)');
+  Result := PChar('uDMX Interface und kompatibel (z.B. LIXADA)');
 end;
 
 function DLLGetVersion:PChar;stdcall;
 begin
-  Result := PChar('v1.1');
+  Result := PChar('v1.2');
 end;
 
 procedure DLLConfigure;stdcall;

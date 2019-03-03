@@ -49,6 +49,7 @@ type
     { Private-Deklarationen }
     uDMXDevice_Pointer:pusb_device;
     uDMXDevice_Handle:pusb_dev_handle;
+    usbcontrolmsgresult:integer;
   public
     { Public-Deklarationen }
     SetDLLValues:TCallbackValues;
@@ -94,7 +95,15 @@ begin
     sendvalues:=false;
 //    ChannelsSet(maxchans, 1, @Channelvalue);
     if Assigned(uDMXDevice_Handle) then
-      usb_control_msg(uDMXDevice_Handle, USB_TYPE_VENDOR OR USB_RECIP_DEVICE OR USB_ENDPOINT_OUT, cmd_SetChannelRange, maxchans, 0, Channelvalues, maxchans, 5000);
+    begin
+      usbcontrolmsgresult:=usb_control_msg(uDMXDevice_Handle, USB_TYPE_VENDOR OR USB_RECIP_DEVICE OR USB_ENDPOINT_OUT, cmd_SetChannelRange, maxchans, 0, Channelvalues, maxchans, 500);
+
+      if (usbcontrolmsgresult<0) then
+      begin
+        // if there is a problem in communication, search for the interface and reestablish the connection
+        SucheUDMXDevice;
+      end;
+    end;
   end;
 end;
 
@@ -190,6 +199,8 @@ begin
 
   vendorok:=false;
   deviceok:=false;
+  uDMXDevice_Pointer:=nil;
+  uDMXDevice_Handle:=nil;
 
   if Assigned(bus) then
   begin

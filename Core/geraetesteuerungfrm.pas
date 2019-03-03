@@ -3654,7 +3654,7 @@ begin
     for i:=0 to 16 do
       mainform.ScannerSyncTempArray[i]:=mainform.devices[scannersynchronisationform.aktuellesgeraet].ScannerCalibrations[i];
 
-    // Scannerkalibrierungen auf 0 setzen
+    // Scannerkalibrierungen auf 0 setzen (Für Vorschau wird innerhalb des Fensters neue kalibrierte Werte für PAN, TILT und FINE-Kanäle berechnet)
     for i:=0 to 16 do
     begin
       mainform.devices[scannersynchronisationform.aktuellesgeraet].ScannerCalibrations[i].PointA.X:=0;

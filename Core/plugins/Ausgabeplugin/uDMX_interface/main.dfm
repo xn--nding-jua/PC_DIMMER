@@ -40,9 +40,9 @@ object Mainform: TMainform
   object Label2: TLabel
     Left = 8
     Top = 24
-    Width = 200
+    Width = 198
     Height = 13
-    Caption = '(c) 2008/2017 by Dr.-Ing. Christian N'#246'ding'
+    Caption = '(c) 2008-2019 by Dr.-Ing. Christian N'#246'ding'
   end
   object Label3: TLabel
     Left = 8

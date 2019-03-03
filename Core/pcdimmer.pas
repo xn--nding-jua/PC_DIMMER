@@ -2833,9 +2833,8 @@ procedure TMainform.SendMSG(MSG:Byte; Data1, Data2:Variant);
 var
 	i,j,k,m,tempvalue:integer;
   useCalibrationValue:boolean;
-  valuex,valuey,panchan,tiltchan,Value:integer;
-  P01x,P01y:single;
-  P:TPoint;
+  panchan,tiltchan, panfinechan, tiltfinechan, Value:integer;
+  valuex,valuey, P01x,P01y, Px, Py:single;
   virtualdimmerfaktor:single;
 begin
   if IsFreezeMode then exit;
@@ -2933,48 +2932,54 @@ begin
                 geraetesteuerung.set_channel(devices[k].ID, 'y', -1, geraetesteuerung.get_channel(devices[k].ID, 'y'), 0);
               end;
             end;
-          end else if ((devices[k].kanaltyp[tempvalue]='pan') or (devices[k].kanaltyp[tempvalue]='tilt')) then
+          end else if ((devices[k].kanaltyp[tempvalue]='pan') or (devices[k].kanaltyp[tempvalue]='panfine') or (devices[k].kanaltyp[tempvalue]='tilt') or (devices[k].kanaltyp[tempvalue]='tiltfine')) then
           begin
-            // Gerät nutzt bei aktuellem Kanal PAN oder TILT
-            if (devices[k].kanaltyp[tempvalue]='pan') then
-            begin // falls aktueller Kanal PAN
-              panchan:=tempvalue;
-              for m:=0 to devices[k].MaxChan-1 do
-              begin
-                if (lowercase(devices[k].kanaltyp[m])='tilt') then
-                  tiltchan:=m;
-              end;
+            // Gerät nutzt bei aktuellem Kanal PAN(fine) oder TILT(fine)
+            // finde Kanäle für PAN, PANFINE, TILT und TILTFINE
+            panfinechan:=-1;
+            tiltfinechan:=-1;
+            for m:=0 to devices[k].MaxChan-1 do
+            begin
+              if (lowercase(devices[k].kanaltyp[m])='pan') then
+                panchan:=m;
+              if (lowercase(devices[k].kanaltyp[m])='panfine') then
+                panfinechan:=m;
+              if (lowercase(devices[k].kanaltyp[m])='tilt') then
+                tiltchan:=m;
+              if (lowercase(devices[k].kanaltyp[m])='tiltfine') then
+                tiltfinechan:=m;
             end;
 
-            if (devices[k].kanaltyp[tempvalue]='tilt') then
-            begin // falls aktueller Kanal TILT
-              tiltchan:=tempvalue;
-              for m:=0 to devices[k].MaxChan-1 do
-              begin
-                if (lowercase(devices[k].kanaltyp[m])='pan') then
-                  panchan:=m;
-              end;
+            if (panfinechan>-1) and (tiltfinechan>-1) then
+            begin
+              // Fine-Kanäle sind vorhanden
+              // Punkt mit 16-Bit X/Y-Koordinaten erzeugen
+              Px:=data.ch[devices[k].Startaddress+panchan]+(data.ch[devices[k].Startaddress+panfinechan]/256);
+              Py:=data.ch[devices[k].Startaddress+tiltchan]+(data.ch[devices[k].Startaddress+tiltfinechan]/256);
+            end else
+            begin
+              // keine Fine-Kanäle vorhanden
+              // Punkt mit 8-Bit X/Y-Koordinaten erzeugen
+              Px:=data.ch[devices[k].Startaddress+panchan];
+              Py:=data.ch[devices[k].Startaddress+tiltchan];
             end;
-
-            P.x:=data.ch[devices[k].Startaddress+panchan];
-            P.y:=data.ch[devices[k].Startaddress+tiltchan];
             if not devices[k].invertpan then
-              P.X:=maxres-P.x;
+              PX:=maxres-Px;
             if not devices[k].inverttilt then
-              P.Y:=maxres-P.Y;
+              PY:=maxres-PY;
 
             if (devices[k].typeofscannercalibration>0) then
             begin
               // Gerätekalibrierung dauerhaft anwenden
               // bilineare Interpolation durchführen
-              P01x:=P.x/maxres;
-              P01y:=P.y/maxres;
-              valuex:=trunc((1-P01x)*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointA.x+(1-P01x)*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointD.x+P01x*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointB.x+P01x*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointC.x);
-              valuey:=trunc((1-P01x)*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointA.y+(1-P01x)*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointD.y+P01x*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointB.y+P01x*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointC.y);
+              P01x:=Px/maxres;
+              P01y:=Py/maxres;
+              valuex:=((1-P01x)*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointA.x+(1-P01x)*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointD.x+P01x*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointB.x+P01x*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointC.x);
+              valuey:=((1-P01x)*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointA.y+(1-P01x)*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointD.y+P01x*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointB.y+P01x*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointC.y);
             end else
             begin
-              valuex:=P.x;
-              valuey:=P.y;
+              valuex:=(Px);
+              valuey:=(Py);
             end;
 
             if valuex>maxres then valuex:=maxres;
@@ -2983,22 +2988,14 @@ begin
             if valuey<0 then valuey:=0;
 
             if (lowercase(devices[k].kanaltyp[tempvalue])='pan') then
-              Value:=valuex;
+              Value:=trunc(valuex);
+            if (lowercase(devices[k].kanaltyp[tempvalue])='panfine') then
+              Value:=trunc(frac(valuex)*256);
             if (lowercase(devices[k].kanaltyp[tempvalue])='tilt') then
-              Value:=valuey;
+              Value:=trunc(valuey);
+            if (lowercase(devices[k].kanaltyp[tempvalue])='tiltfine') then
+              Value:=trunc(frac(valuey)*256);
 
-            useCalibrationValue:=true;
-          end else if (devices[k].kanaltyp[tempvalue]='panfine') then
-          begin
-            value:=data.ch[devices[k].Startaddress+tempvalue];
-            if not devices[k].invertpan then
-              value:=maxres-value;
-            useCalibrationValue:=true;
-          end else if (devices[k].kanaltyp[tempvalue]='tiltfine') then
-          begin
-            value:=data.ch[devices[k].Startaddress+tempvalue];
-            if not devices[k].inverttilt then
-              value:=maxres-value;
             useCalibrationValue:=true;
           end;
           break;

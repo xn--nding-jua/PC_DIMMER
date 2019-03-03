@@ -1,11 +1,10 @@
 object scannersynchronisationform: Tscannersynchronisationform
-  Left = 238
-  Top = 218
-  BorderIcons = [biSystemMenu]
-  BorderStyle = bsSingle
+  Left = 264
+  Top = 196
+  Width = 731
+  Height = 467
+  BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'Scannerkalibrierung'
-  ClientHeight = 427
-  ClientWidth = 713
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -152,235 +151,23 @@ object scannersynchronisationform: Tscannersynchronisationform
   OnCreate = FormCreate
   OnHide = FormHide
   OnKeyUp = FormKeyUp
+  OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Paintbox1: TPaintBox
-    Left = 8
-    Top = 80
-    Width = 256
-    Height = 256
-    OnMouseDown = Paintbox1MouseDown
-    OnMouseMove = Paintbox1MouseMove
-    OnMouseUp = Paintbox1MouseUp
-  end
-  object Label1: TLabel
-    Left = 8
-    Top = 64
-    Width = 35
-    Height = 13
-    Caption = 'Original'
-  end
-  object Bevel1: TBevel
-    Left = 48
-    Top = 72
-    Width = 217
-    Height = 9
-    Shape = bsTopLine
-  end
-  object Shape1: TShape
-    Left = 0
-    Top = 386
-    Width = 713
-    Height = 41
-    Align = alBottom
-    Pen.Style = psClear
-  end
-  object Shape2: TShape
-    Left = 0
-    Top = 385
-    Width = 697
-    Height = 1
-    Brush.Color = clBlack
-  end
-  object Label3: TLabel
-    Left = 280
-    Top = 344
-    Width = 84
-    Height = 13
-    Caption = 'Ansichtsoptionen:'
-    Visible = False
-  end
-  object Label17: TLabel
-    Left = 8
-    Top = 344
-    Width = 90
-    Height = 13
-    Caption = 'Art der Anpassung:'
-  end
-  object Label18: TLabel
-    Left = 184
-    Top = 394
-    Width = 474
-    Height = 26
-    Caption = 
-      'Die Scannerkalibrierung erlaubt das Einstellen der Bewegungsachs' +
-      'en. Es kann eine verdrehte Aufh'#228'ngung zur B'#252'hne kompensiert oder' +
-      ' die Bewegungen auf die B'#252'hnenma'#223'e beschr'#228'nkt werden.'
-    Transparent = True
-    WordWrap = True
-  end
-  object Label2: TLabel
-    Left = 272
-    Top = 64
-    Width = 41
-    Height = 13
-    Caption = 'Korrigiert'
-  end
-  object Bevel2: TBevel
-    Left = 320
-    Top = 72
-    Width = 129
-    Height = 9
-    Shape = bsTopLine
-  end
-  object Label4: TLabel
-    Left = 536
-    Top = 64
-    Width = 34
-    Height = 13
-    Caption = 'Punkte'
-  end
-  object Bevel3: TBevel
-    Left = 576
-    Top = 72
-    Width = 113
-    Height = 9
-    Shape = bsTopLine
-  end
-  object Label5: TLabel
-    Left = 536
-    Top = 128
-    Width = 57
-    Height = 13
-    Caption = 'Links Oben:'
-  end
-  object Label6: TLabel
-    Left = 616
-    Top = 128
-    Width = 66
-    Height = 13
-    Caption = 'Rechts Oben:'
-  end
-  object Label7: TLabel
-    Left = 616
-    Top = 280
-    Width = 69
-    Height = 13
-    Caption = 'Rechts Unten:'
-  end
-  object Label8: TLabel
-    Left = 536
-    Top = 280
-    Width = 60
-    Height = 13
-    Caption = 'Links Unten:'
-  end
-  object Label9: TLabel
-    Left = 536
-    Top = 148
-    Width = 7
-    Height = 13
-    Caption = 'X'
-  end
-  object Label10: TLabel
-    Left = 536
-    Top = 172
-    Width = 7
-    Height = 13
-    Caption = 'Y'
-  end
-  object Label11: TLabel
-    Left = 536
-    Top = 236
-    Width = 7
-    Height = 13
-    Caption = 'X'
-  end
-  object Label12: TLabel
-    Left = 536
-    Top = 260
-    Width = 7
-    Height = 13
-    Caption = 'Y'
-  end
-  object Label13: TLabel
-    Left = 616
-    Top = 236
-    Width = 7
-    Height = 13
-    Caption = 'X'
-  end
-  object Label14: TLabel
-    Left = 616
-    Top = 260
-    Width = 7
-    Height = 13
-    Caption = 'Y'
-  end
-  object Label15: TLabel
-    Left = 616
-    Top = 148
-    Width = 7
-    Height = 13
-    Caption = 'X'
-  end
-  object Label16: TLabel
-    Left = 616
-    Top = 172
-    Width = 7
-    Height = 13
-    Caption = 'Y'
-  end
-  object Label33: TLabel
-    Left = 536
-    Top = 80
-    Width = 86
-    Height = 13
-    Caption = 'Punkte anpassen:'
-  end
-  object PaintBox2: TPaintBox
-    Left = 273
-    Top = 80
-    Width = 256
-    Height = 256
-    OnMouseDown = PaintBox2MouseDown
-    OnMouseMove = PaintBox2MouseMove
-    OnMouseUp = PaintBox2MouseUp
-  end
-  object Button2: TButton
-    Left = 16
-    Top = 396
-    Width = 75
-    Height = 25
-    Caption = 'OK'
-    ModalResult = 1
-    TabOrder = 0
-    OnClick = Button2Click
-  end
-  object Button3: TButton
-    Left = 96
-    Top = 396
-    Width = 75
-    Height = 25
-    Caption = 'Abbrechen'
-    ModalResult = 2
-    TabOrder = 1
-    OnClick = Button3Click
-  end
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 713
+    Width = 715
     Height = 57
     Align = alTop
     BevelOuter = bvNone
     Color = clWhite
-    TabOrder = 2
+    TabOrder = 0
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 713
+      Width = 715
       Height = 57
       Style = grVertical
       StartColor = clWhite
@@ -608,9 +395,11 @@ object scannersynchronisationform: Tscannersynchronisationform
     object Label35: TLabel
       Left = 72
       Top = 32
-      Width = 290
+      Width = 430
       Height = 13
-      Caption = 'Erm'#246'glicht das Synchronisieren mehrerer Bewegtscheinwerfer'
+      Caption = 
+        'Erm'#246'glicht das Begrenzen, Feinjustieren und Synchronisieren mehr' +
+        'erer Bewegtscheinwerfer'
       Transparent = True
     end
     object InfoBtn: TPngBitBtn
@@ -721,194 +510,473 @@ object scannersynchronisationform: Tscannersynchronisationform
         E04FC017E1F0E6E17662C17A0000000049454E44AE426082}
     end
   end
-  object AntialiasingCombobox: TComboBox
-    Left = 376
-    Top = 340
-    Width = 139
-    Height = 21
-    Style = csDropDownList
-    ItemHeight = 13
-    ItemIndex = 0
+  object Panel2: TPanel
+    Left = 546
+    Top = 57
+    Width = 169
+    Height = 330
+    Align = alRight
+    BevelOuter = bvNone
+    TabOrder = 1
+    object Label4: TLabel
+      Left = 8
+      Top = 8
+      Width = 34
+      Height = 13
+      Caption = 'Punkte'
+    end
+    object Bevel3: TBevel
+      Left = 48
+      Top = 16
+      Width = 113
+      Height = 9
+      Shape = bsTopLine
+    end
+    object Label5: TLabel
+      Left = 8
+      Top = 72
+      Width = 57
+      Height = 13
+      Caption = 'Links Oben:'
+    end
+    object Label6: TLabel
+      Left = 88
+      Top = 72
+      Width = 66
+      Height = 13
+      Caption = 'Rechts Oben:'
+    end
+    object Label7: TLabel
+      Left = 88
+      Top = 224
+      Width = 69
+      Height = 13
+      Caption = 'Rechts Unten:'
+    end
+    object Label8: TLabel
+      Left = 8
+      Top = 224
+      Width = 60
+      Height = 13
+      Caption = 'Links Unten:'
+    end
+    object Label9: TLabel
+      Left = 8
+      Top = 92
+      Width = 7
+      Height = 13
+      Caption = 'X'
+    end
+    object Label10: TLabel
+      Left = 8
+      Top = 116
+      Width = 7
+      Height = 13
+      Caption = 'Y'
+    end
+    object Label11: TLabel
+      Left = 8
+      Top = 180
+      Width = 7
+      Height = 13
+      Caption = 'X'
+    end
+    object Label12: TLabel
+      Left = 8
+      Top = 204
+      Width = 7
+      Height = 13
+      Caption = 'Y'
+    end
+    object Label13: TLabel
+      Left = 88
+      Top = 180
+      Width = 7
+      Height = 13
+      Caption = 'X'
+    end
+    object Label14: TLabel
+      Left = 88
+      Top = 204
+      Width = 7
+      Height = 13
+      Caption = 'Y'
+    end
+    object Label15: TLabel
+      Left = 88
+      Top = 92
+      Width = 7
+      Height = 13
+      Caption = 'X'
+    end
+    object Label16: TLabel
+      Left = 88
+      Top = 116
+      Width = 7
+      Height = 13
+      Caption = 'Y'
+    end
+    object Label33: TLabel
+      Left = 8
+      Top = 24
+      Width = 86
+      Height = 13
+      Caption = 'Punkte anpassen:'
+    end
+    object ResetPositions: TButton
+      Left = 16
+      Top = 144
+      Width = 145
+      Height = 25
+      Caption = 'Reset'
+      TabOrder = 0
+      OnClick = ResetPositionsClick
+    end
+    object lox: TJvSpinEdit
+      Left = 24
+      Top = 88
+      Width = 49
+      Height = 21
+      MaxValue = 255.000000000000000000
+      Value = 64.000000000000000000
+      TabOrder = 1
+      OnChange = loxChange
+    end
+    object loy: TJvSpinEdit
+      Left = 24
+      Top = 112
+      Width = 49
+      Height = 21
+      MaxValue = 255.000000000000000000
+      Value = 64.000000000000000000
+      TabOrder = 2
+      OnChange = loxChange
+    end
+    object rox: TJvSpinEdit
+      Left = 104
+      Top = 88
+      Width = 49
+      Height = 21
+      MaxValue = 255.000000000000000000
+      Value = 196.000000000000000000
+      TabOrder = 3
+      OnChange = loxChange
+    end
+    object roy: TJvSpinEdit
+      Left = 104
+      Top = 112
+      Width = 49
+      Height = 21
+      MaxValue = 255.000000000000000000
+      Value = 64.000000000000000000
+      TabOrder = 4
+      OnChange = loxChange
+    end
+    object lux: TJvSpinEdit
+      Left = 24
+      Top = 176
+      Width = 49
+      Height = 21
+      MaxValue = 255.000000000000000000
+      Value = 64.000000000000000000
+      TabOrder = 5
+      OnChange = loxChange
+    end
+    object luy: TJvSpinEdit
+      Left = 24
+      Top = 200
+      Width = 49
+      Height = 21
+      MaxValue = 255.000000000000000000
+      Value = 196.000000000000000000
+      TabOrder = 6
+      OnChange = loxChange
+    end
+    object rux: TJvSpinEdit
+      Left = 104
+      Top = 176
+      Width = 49
+      Height = 21
+      MaxValue = 255.000000000000000000
+      Value = 196.000000000000000000
+      TabOrder = 7
+      OnChange = loxChange
+    end
+    object ruy: TJvSpinEdit
+      Left = 104
+      Top = 200
+      Width = 49
+      Height = 21
+      MaxValue = 255.000000000000000000
+      Value = 196.000000000000000000
+      TabOrder = 8
+      OnChange = loxChange
+    end
+    object CalibrationPointsOutOfBounds: TCheckBox
+      Left = 8
+      Top = 280
+      Width = 145
+      Height = 33
+      Caption = 'Kalibrierpunkte au'#223'erhalb des Randes erlauben'
+      TabOrder = 9
+      WordWrap = True
+      OnMouseUp = CalibrationPointsOutOfBoundsMouseUp
+    end
+    object ComboBox1: TComboBox
+      Left = 8
+      Top = 40
+      Width = 145
+      Height = 21
+      Style = csDropDownList
+      ItemHeight = 13
+      ItemIndex = 0
+      TabOrder = 10
+      Text = 'Bitte ausw'#228'hlen'
+      OnChange = ComboBox1Change
+      Items.Strings = (
+        'Bitte ausw'#228'hlen'
+        'Halbe Gr'#246#223'e'
+        'Doppelte Gr'#246#223'e'
+        '90'#176' nach Rechts'
+        '180'#176
+        '90'#176' nach Links'
+        'Horizontal Spiegeln'
+        'Vertikal Spiegeln')
+    end
+    object copybtn: TButton
+      Left = 8
+      Top = 248
+      Width = 75
+      Height = 25
+      Caption = 'Kopieren'
+      TabOrder = 11
+      OnClick = copybtnClick
+    end
+    object pastebtn: TButton
+      Left = 88
+      Top = 248
+      Width = 75
+      Height = 25
+      Caption = 'Einf'#252'gen'
+      TabOrder = 12
+      OnClick = pastebtnClick
+    end
+  end
+  object Panel3: TPanel
+    Left = 0
+    Top = 387
+    Width = 715
+    Height = 41
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 2
+    object Shape1: TShape
+      Left = 0
+      Top = 1
+      Width = 715
+      Height = 40
+      Align = alClient
+      Pen.Style = psClear
+    end
+    object Shape2: TShape
+      Left = 0
+      Top = 0
+      Width = 715
+      Height = 1
+      Align = alTop
+      Brush.Color = clBlack
+    end
+    object Label18: TLabel
+      Left = 176
+      Top = 7
+      Width = 474
+      Height = 26
+      Caption = 
+        'Die Scannerkalibrierung erlaubt das Einstellen der Bewegungsachs' +
+        'en. Es kann eine verdrehte Aufh'#228'ngung zur B'#252'hne kompensiert oder' +
+        ' die Bewegungen auf die B'#252'hnenma'#223'e beschr'#228'nkt werden.'
+      Transparent = True
+      WordWrap = True
+    end
+    object Button2: TButton
+      Left = 8
+      Top = 8
+      Width = 75
+      Height = 25
+      Caption = 'OK'
+      ModalResult = 1
+      TabOrder = 0
+      OnClick = Button2Click
+    end
+    object Button3: TButton
+      Left = 88
+      Top = 8
+      Width = 75
+      Height = 25
+      Caption = 'Abbrechen'
+      ModalResult = 2
+      TabOrder = 1
+      OnClick = Button3Click
+    end
+  end
+  object Panel4: TPanel
+    Left = 0
+    Top = 57
+    Width = 546
+    Height = 330
+    Align = alClient
+    BevelOuter = bvNone
     TabOrder = 3
-    Text = 'Kein Antialiasing'
-    OnChange = AntialiasingComboboxChange
-    Items.Strings = (
-      'Kein Antialiasing'
-      '4x Antialiasing'
-      '16x Antialiasing')
-  end
-  object ActualSyncEdit: TComboBox
-    Left = 8
-    Top = 360
-    Width = 145
-    Height = 21
-    Style = csDropDownList
-    DropDownCount = 17
-    ItemHeight = 13
-    ItemIndex = 0
-    TabOrder = 4
-    Text = 'Deaktiviert'
-    OnSelect = ActualSyncEditSelect
-    Items.Strings = (
-      'Deaktiviert'
-      '1'
-      '2'
-      '3'
-      '4'
-      '5'
-      '6'
-      '7'
-      '8'
-      '9'
-      '10'
-      '11'
-      '12'
-      '13'
-      '14'
-      '15'
-      '16')
-  end
-  object ResetPositions: TButton
-    Left = 544
-    Top = 200
-    Width = 145
-    Height = 25
-    Caption = 'Reset'
-    TabOrder = 5
-    OnClick = ResetPositionsClick
-  end
-  object PreviewCheckbox: TCheckBox
-    Left = 456
-    Top = 64
-    Width = 73
-    Height = 14
-    Hint = 'Wendet die Kalibrierung direkt auf den aktuellen Scanner an'
-    Caption = 'Vorschau'
-    Checked = True
-    ParentShowHint = False
-    ShowHint = True
-    State = cbChecked
-    TabOrder = 6
-  end
-  object lox: TJvSpinEdit
-    Left = 552
-    Top = 144
-    Width = 49
-    Height = 21
-    MaxValue = 255.000000000000000000
-    Value = 64.000000000000000000
-    TabOrder = 7
-    OnChange = loxChange
-  end
-  object loy: TJvSpinEdit
-    Left = 552
-    Top = 168
-    Width = 49
-    Height = 21
-    MaxValue = 255.000000000000000000
-    Value = 64.000000000000000000
-    TabOrder = 8
-    OnChange = loxChange
-  end
-  object rox: TJvSpinEdit
-    Left = 632
-    Top = 144
-    Width = 49
-    Height = 21
-    MaxValue = 255.000000000000000000
-    Value = 196.000000000000000000
-    TabOrder = 9
-    OnChange = loxChange
-  end
-  object roy: TJvSpinEdit
-    Left = 632
-    Top = 168
-    Width = 49
-    Height = 21
-    MaxValue = 255.000000000000000000
-    Value = 64.000000000000000000
-    TabOrder = 10
-    OnChange = loxChange
-  end
-  object lux: TJvSpinEdit
-    Left = 552
-    Top = 232
-    Width = 49
-    Height = 21
-    MaxValue = 255.000000000000000000
-    Value = 64.000000000000000000
-    TabOrder = 11
-    OnChange = loxChange
-  end
-  object luy: TJvSpinEdit
-    Left = 552
-    Top = 256
-    Width = 49
-    Height = 21
-    MaxValue = 255.000000000000000000
-    Value = 196.000000000000000000
-    TabOrder = 12
-    OnChange = loxChange
-  end
-  object rux: TJvSpinEdit
-    Left = 632
-    Top = 232
-    Width = 49
-    Height = 21
-    MaxValue = 255.000000000000000000
-    Value = 196.000000000000000000
-    TabOrder = 13
-    OnChange = loxChange
-  end
-  object ruy: TJvSpinEdit
-    Left = 632
-    Top = 256
-    Width = 49
-    Height = 21
-    MaxValue = 255.000000000000000000
-    Value = 196.000000000000000000
-    TabOrder = 14
-    OnChange = loxChange
-  end
-  object CalibrationPointsOutOfBounds: TCheckBox
-    Left = 536
-    Top = 304
-    Width = 145
-    Height = 33
-    Caption = 'Kalibrierpunkte au'#223'erhalb des Randes erlauben'
-    TabOrder = 15
-    WordWrap = True
-    OnMouseUp = CalibrationPointsOutOfBoundsMouseUp
-  end
-  object ComboBox1: TComboBox
-    Left = 536
-    Top = 96
-    Width = 145
-    Height = 21
-    Style = csDropDownList
-    ItemHeight = 13
-    ItemIndex = 0
-    TabOrder = 16
-    Text = 'Bitte ausw'#228'hlen'
-    OnChange = ComboBox1Change
-    Items.Strings = (
-      'Bitte ausw'#228'hlen'
-      'Halbe Gr'#246#223'e'
-      'Doppelte Gr'#246#223'e'
-      '90'#176' nach Rechts'
-      '180'#176
-      '90'#176' nach Links'
-      'Horizontal Spiegeln'
-      'Vertikal Spiegeln')
-  end
-  object Button1: TButton
-    Left = 160
-    Top = 360
-    Width = 105
-    Height = 21
-    Caption = 'Umbenennen'
-    TabOrder = 17
-    OnClick = Button1Click
+    object Paintbox1: TPaintBox
+      Left = 0
+      Top = 25
+      Width = 256
+      Height = 250
+      Align = alLeft
+      OnMouseDown = Paintbox1MouseDown
+      OnMouseMove = Paintbox1MouseMove
+      OnMouseUp = Paintbox1MouseUp
+    end
+    object PaintBox2: TPaintBox
+      Left = 256
+      Top = 25
+      Width = 290
+      Height = 250
+      Align = alClient
+      OnMouseDown = PaintBox2MouseDown
+      OnMouseMove = PaintBox2MouseMove
+      OnMouseUp = PaintBox2MouseUp
+    end
+    object Panel5: TPanel
+      Left = 0
+      Top = 275
+      Width = 546
+      Height = 55
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 0
+      object Label17: TLabel
+        Left = 8
+        Top = 10
+        Width = 91
+        Height = 13
+        Caption = 'Aktive Kalibrierung:'
+      end
+      object Label3: TLabel
+        Left = 272
+        Top = 10
+        Width = 84
+        Height = 13
+        Caption = 'Ansichtsoptionen:'
+        Visible = False
+      end
+      object ActualSyncEdit: TComboBox
+        Left = 8
+        Top = 26
+        Width = 145
+        Height = 21
+        Style = csDropDownList
+        DropDownCount = 17
+        ItemHeight = 13
+        ItemIndex = 0
+        TabOrder = 0
+        Text = 'Deaktiviert'
+        OnSelect = ActualSyncEditSelect
+        Items.Strings = (
+          'Deaktiviert'
+          '1'
+          '2'
+          '3'
+          '4'
+          '5'
+          '6'
+          '7'
+          '8'
+          '9'
+          '10'
+          '11'
+          '12'
+          '13'
+          '14'
+          '15'
+          '16')
+      end
+      object Button1: TButton
+        Left = 160
+        Top = 26
+        Width = 105
+        Height = 21
+        Caption = 'Umbenennen'
+        TabOrder = 1
+        OnClick = Button1Click
+      end
+      object AntialiasingCombobox: TComboBox
+        Left = 272
+        Top = 26
+        Width = 139
+        Height = 21
+        Style = csDropDownList
+        ItemHeight = 13
+        ItemIndex = 0
+        TabOrder = 2
+        Text = 'Kein Antialiasing'
+        OnChange = AntialiasingComboboxChange
+        Items.Strings = (
+          'Kein Antialiasing'
+          '4x Antialiasing'
+          '16x Antialiasing')
+      end
+    end
+    object Panel6: TPanel
+      Left = 0
+      Top = 0
+      Width = 546
+      Height = 25
+      Align = alTop
+      BevelOuter = bvNone
+      TabOrder = 1
+      object Bevel2: TBevel
+        Left = 312
+        Top = 16
+        Width = 129
+        Height = 9
+        Shape = bsTopLine
+      end
+      object Label2: TLabel
+        Left = 264
+        Top = 8
+        Width = 40
+        Height = 13
+        Caption = 'Kalibriert'
+      end
+      object Bevel1: TBevel
+        Left = 48
+        Top = 16
+        Width = 209
+        Height = 9
+        Shape = bsTopLine
+      end
+      object Label1: TLabel
+        Left = 8
+        Top = 8
+        Width = 35
+        Height = 13
+        Caption = 'Original'
+      end
+      object PreviewCheckbox: TCheckBox
+        Left = 448
+        Top = 8
+        Width = 73
+        Height = 14
+        Hint = 'Wendet die Kalibrierung direkt auf den aktuellen Scanner an'
+        Caption = 'Vorschau'
+        Checked = True
+        ParentShowHint = False
+        ShowHint = True
+        State = cbChecked
+        TabOrder = 0
+      end
+    end
   end
   object RefreshPaintboxTimer: TTimer
     Enabled = False
