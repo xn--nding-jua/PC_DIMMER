@@ -2990,11 +2990,11 @@ begin
             if (lowercase(devices[k].kanaltyp[tempvalue])='pan') then
               Value:=trunc(valuex);
             if (lowercase(devices[k].kanaltyp[tempvalue])='panfine') then
-              Value:=trunc(frac(valuex)*256);
+              Value:=trunc(frac(valuex)*255);
             if (lowercase(devices[k].kanaltyp[tempvalue])='tilt') then
               Value:=trunc(valuey);
             if (lowercase(devices[k].kanaltyp[tempvalue])='tiltfine') then
-              Value:=trunc(frac(valuey)*256);
+              Value:=trunc(frac(valuey)*255);
 
             useCalibrationValue:=true;
           end;

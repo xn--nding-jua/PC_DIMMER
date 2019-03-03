@@ -1,6 +1,6 @@
 object sidebarform: Tsidebarform
-  Left = 998
-  Top = 118
+  Left = 1105
+  Top = 122
   AlphaBlendValue = 215
   BorderIcons = []
   BorderStyle = bsNone
@@ -1909,9 +1909,12 @@ object sidebarform: Tsidebarform
     Top = 133
     Width = 49
     Height = 21
+    Hint = 'Zoom'
     MaxValue = 127.000000000000000000
     MinValue = 1.000000000000000000
     Value = 32.000000000000000000
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 11
   end
   object strobebar: TScrollBar

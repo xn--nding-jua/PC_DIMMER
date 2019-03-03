@@ -71,6 +71,7 @@ type
     Label1: TLabel;
     copybtn: TButton;
     pastebtn: TButton;
+    Splitter1: TSplitter;
     procedure FormCreate(Sender: TObject);
     procedure PaintBox2MouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
@@ -106,6 +107,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure copybtnClick(Sender: TObject);
     procedure pastebtnClick(Sender: TObject);
+    procedure Splitter1Moved(Sender: TObject);
   private
     { Private declarations }
     _Buffer,_BufferAntialiased, _Buffer2,_Buffer2Antialiased:TBitmap;
@@ -297,7 +299,7 @@ begin
         geraetesteuerung.set_channel(mainform.devices[aktuellesgeraet].ID,'PAN',mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x,mainform.ScannerSyncTempArray[ActualSyncEdit.itemindex].PointD.x,0);
       end;
     end;
-    if ((Y<=Paintbox2.Width) and (Y>=0)) or CalibrationPointsOutOfBounds.Checked then
+    if ((Y<=Paintbox2.Height) and (Y>=0)) or CalibrationPointsOutOfBounds.Checked then
     begin
       if Abok then
       begin
@@ -733,6 +735,28 @@ begin
   ruy.CheckMaxValue:=not CalibrationPointsOutOfBounds.Checked;
   lux.CheckMaxValue:=not CalibrationPointsOutOfBounds.Checked;
   luy.CheckMaxValue:=not CalibrationPointsOutOfBounds.Checked;
+
+  if CalibrationPointsOutOfBounds.Checked then
+  begin
+    lox.MaxValue:=1024;
+    loy.MaxValue:=1024;
+    rox.MaxValue:=1024;
+    roy.MaxValue:=1024;
+    rux.MaxValue:=1024;
+    ruy.MaxValue:=1024;
+    lux.MaxValue:=1024;
+    luy.MaxValue:=1024;
+  end else
+  begin
+    lox.MaxValue:=255;
+    loy.MaxValue:=255;
+    rox.MaxValue:=255;
+    roy.MaxValue:=255;
+    rux.MaxValue:=255;
+    ruy.MaxValue:=255;
+    lux.MaxValue:=255;
+    luy.MaxValue:=255;
+  end;
 end;
 
 procedure Tscannersynchronisationform.FormKeyUp(Sender: TObject;
@@ -922,6 +946,11 @@ begin
   luy.Value:=CopyC.Y;
   rux.value:=CopyD.X;
   ruy.Value:=CopyD.Y;
+end;
+
+procedure Tscannersynchronisationform.Splitter1Moved(Sender: TObject);
+begin
+  scannersynchronisationform.OnResize(nil);
 end;
 
 end.

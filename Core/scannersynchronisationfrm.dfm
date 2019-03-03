@@ -1,6 +1,6 @@
 object scannersynchronisationform: Tscannersynchronisationform
-  Left = 264
-  Top = 196
+  Left = 569
+  Top = 268
   Width = 731
   Height = 467
   BorderIcons = [biSystemMenu, biMaximize]
@@ -381,9 +381,9 @@ object scannersynchronisationform: Tscannersynchronisationform
     object Label34: TLabel
       Left = 72
       Top = 8
-      Width = 190
+      Width = 199
       Height = 22
-      Caption = 'Scannerkalibrierung'
+      Caption = 'Positionskalibrierung'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -19
@@ -789,12 +789,12 @@ object scannersynchronisationform: Tscannersynchronisationform
     object Label18: TLabel
       Left = 176
       Top = 7
-      Width = 474
-      Height = 26
+      Width = 521
+      Height = 39
       Caption = 
-        'Die Scannerkalibrierung erlaubt das Einstellen der Bewegungsachs' +
-        'en. Es kann eine verdrehte Aufh'#228'ngung zur B'#252'hne kompensiert oder' +
-        ' die Bewegungen auf die B'#252'hnenma'#223'e beschr'#228'nkt werden.'
+        'Die Positionskalibrierung erlaubt das Einstellen der Bewegungsac' +
+        'hsen. Es kann eine verdrehte Aufh'#228'ngung zur B'#252'hne kompensiert od' +
+        'er die Bewegungen auf die B'#252'hnenma'#223'e beschr'#228'nkt werden.'
       Transparent = True
       WordWrap = True
     end
@@ -838,14 +838,20 @@ object scannersynchronisationform: Tscannersynchronisationform
       OnMouseUp = Paintbox1MouseUp
     end
     object PaintBox2: TPaintBox
-      Left = 256
+      Left = 259
       Top = 25
-      Width = 290
+      Width = 287
       Height = 250
       Align = alClient
       OnMouseDown = PaintBox2MouseDown
       OnMouseMove = PaintBox2MouseMove
       OnMouseUp = PaintBox2MouseUp
+    end
+    object Splitter1: TSplitter
+      Left = 256
+      Top = 25
+      Height = 250
+      OnMoved = Splitter1Moved
     end
     object Panel5: TPanel
       Left = 0

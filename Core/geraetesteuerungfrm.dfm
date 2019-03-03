@@ -2232,8 +2232,13 @@ object geraetesteuerung: Tgeraetesteuerung
         Top = 16
         Width = 88
         Height = 17
+        Hint = 
+          'Bitte nutzen Sie bei Problemen mit dieser Option die Positionska' +
+          'librierung, um zu invertieren'
         Caption = 'Invertiere Pan'
         Enabled = False
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 3
         OnMouseUp = panmirrorMouseUp
       end
@@ -2242,8 +2247,13 @@ object geraetesteuerung: Tgeraetesteuerung
         Top = 34
         Width = 88
         Height = 17
+        Hint = 
+          'Bitte nutzen Sie bei Problemen mit dieser Option die Positionska' +
+          'librierung, um zu invertieren'
         Caption = 'Invertiere Tilt'
         Enabled = False
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 4
         OnMouseUp = tiltmirrorMouseUp
       end
