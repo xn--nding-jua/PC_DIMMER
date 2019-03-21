@@ -2490,17 +2490,18 @@ end;
 
 procedure TMainform.Senddata(address,startvalue,endvalue,fadetime:integer; delay:integer);
 var
-  i,j,k,valuex,valuey,oldstartvalue,oldendvalue:integer;
+  i,j,k,m,oldstartvalue,oldendvalue:integer;
   newname:string[255];
   useCalibrationValue:boolean;
   startvalue_Calibrated,endvalue_Calibrated:integer;
   P01x,P01y:single;
-  P:TPoint;
+  Px,Py,valuex,valuey:double;
   SetStartValue:boolean;
   DimmerChannel:TDimmerKernelChannel;
   IsPanTiltChannel: boolean;
   FineChannel:Word;
   virtualdimmerfaktor:single;
+  panchan, tiltchan, panfinechan, tiltfinechan:integer;
 begin
   // hier ist 255=aus und 0=100%
   IsPanTiltChannel:=false;
@@ -2611,107 +2612,168 @@ begin
             // Filterfunktionen für Pan, Tilt, Dimmer und Farbkanäle RGBA
             // !! Achtung weitere Filterfunktion findet in der Funktion .senddata statt!!
 
-            // prüfen, ob ein Gerät den zu ändernden Kanal als PAN oder TILT nutzt
-            if ((devices[k].kanaltyp[address-devices[k].Startaddress]='pan') or (devices[k].kanaltyp[address-devices[k].Startaddress]='tilt')) then
+            // prüfen, ob ein Gerät den zu ändernden Kanal als PAN(fine) oder TILT(fine) nutzt
+            if ((devices[k].kanaltyp[address-devices[k].Startaddress]='pan') or (devices[k].kanaltyp[address-devices[k].Startaddress]='panfine') or (devices[k].kanaltyp[address-devices[k].Startaddress]='tilt') or (devices[k].kanaltyp[address-devices[k].Startaddress]='tiltfine')) then
             begin
-              // Gerät nutzt auf aktuellem Kanal PAN oder TILT
+              // Gerät nutzt bei aktuellem Kanal PAN(fine) oder TILT(fine)
+              // finde Kanäle für PAN, PANFINE, TILT und TILTFINE
+              panfinechan:=-1;
+              tiltfinechan:=-1;
+              for m:=0 to devices[k].MaxChan-1 do
+              begin
+                if (lowercase(devices[k].kanaltyp[m])='pan') then
+                  panchan:=m;
+                if (lowercase(devices[k].kanaltyp[m])='tilt') then
+                  tiltchan:=m;
+                if (lowercase(devices[k].kanaltyp[m])='panfine') then
+                  panfinechan:=m;
+                if (lowercase(devices[k].kanaltyp[m])='tiltfine') then
+                  tiltfinechan:=m;
+              end;
+
               if (devices[k].kanaltyp[address-devices[k].Startaddress]='pan') then
               begin // falls aktueller Kanal PAN
                 mainform.devices[k].Panstartvalue:=startvalue;
                 mainform.devices[k].Panendvalue:=endvalue;
-
-                // Fine-Kanal suchen
                 IsPanTiltChannel:=true;
-                for i:=0 to length(devices[k].kanaltyp)-1 do
-                begin
-                  if lowercase(devices[k].kanaltyp[i])='panfine' then
-                  begin
-                    FineChannel:=devices[k].Startaddress+i;
-                    break;
-                  end;
-                end;
+                if panfinechan>-1 then
+                  FineChannel:=devices[k].Startaddress+panfinechan;
               end;
 
               if (devices[k].kanaltyp[address-devices[k].Startaddress]='tilt') then
               begin // falls aktueller Kanal TILT
                 mainform.devices[k].Tiltstartvalue:=startvalue;
                 mainform.devices[k].Tiltendvalue:=endvalue;
-
-                // Fine-Kanal suchen
                 IsPanTiltChannel:=true;
-                for i:=0 to length(devices[k].kanaltyp)-1 do
-                begin
-                  if lowercase(devices[k].kanaltyp[i])='tiltfine' then
-                  begin
-                    FineChannel:=devices[k].Startaddress+i;
-                    break;
-                  end;
-                end;
+                if tiltfinechan>-1 then
+                  FineChannel:=devices[k].Startaddress+tiltfinechan;
+              end;
+
+              if (devices[k].kanaltyp[address-devices[k].Startaddress]='panfine') then
+              begin // falls aktueller Kanal PANFINE
+                mainform.devices[k].PanFinestartvalue:=startvalue;
+                mainform.devices[k].PanFineendvalue:=endvalue;
+                IsPanTiltChannel:=false;
+              end;
+
+              if (devices[k].kanaltyp[address-devices[k].Startaddress]='tiltfine') then
+              begin // falls aktueller Kanal TILTFINE
+                mainform.devices[k].TiltFinestartvalue:=startvalue;
+                mainform.devices[k].TiltFineendvalue:=endvalue;
+                IsPanTiltChannel:=false;
               end;
 
               // Startwert berechnen
-              P.x:=FilterWithDimmcurve(address,devices[k].PanStartvalue);
-              P.y:=FilterWithDimmcurve(address,devices[k].TiltStartvalue);
-              if not devices[k].invertpan then
-                P.X:=maxres-P.x;
-              if not devices[k].inverttilt then
-                P.Y:=maxres-P.Y;
+              if (panfinechan>-1) and (tiltfinechan>-1) then
+              begin
+                // Fine-Kanäle sind vorhanden
+                // Punkt mit 16-Bit X/Y-Koordinaten erzeugen
+                Px:=devices[k].PanStartvalue+(devices[k].PanFineStartvalue/(maxres+1));
+                Py:=devices[k].TiltStartvalue+(devices[k].TiltFineStartvalue/(maxres+1));
+              end else
+              begin
+                // keine Fine-Kanäle vorhanden
+                // Punkt mit 8-Bit X/Y-Koordinaten erzeugen
+                Px:=devices[k].PanStartvalue;
+                Py:=devices[k].TiltStartvalue;
+              end;
 
               if (devices[k].typeofscannercalibration>0) then
               begin
                 // Gerätekalibrierung dauerhaft anwenden
                 // bilineare Interpolation durchführen
-                P01x:=P.x/maxres;
-                P01y:=P.y/maxres;               
+                P01x:=Px/(maxres);
+                P01y:=Py/(maxres);
                 valuex:=trunc((1-P01x)*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointA.x+(1-P01x)*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointD.x+P01x*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointB.x+P01x*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointC.x);
                 valuey:=trunc((1-P01x)*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointA.y+(1-P01x)*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointD.y+P01x*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointB.y+P01x*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointC.y);
               end else
               begin
-                valuex:=P.x;
-                valuey:=P.y;
+                valuex:=Px;
+                valuey:=Py;
               end;
 
-              if valuex>maxres then valuex:=maxres;
-              if valuex<0 then valuex:=0;
-              if valuey>maxres then valuey:=maxres;
-              if valuey<0 then valuey:=0;
-
-              if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='pan') then
-                startvalue_Calibrated:=valuex;
-              if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='tilt') then
-                startvalue_Calibrated:=valuey;
+              if not devices[k].invertpan then
+              begin
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='pan') then
+                  startvalue_Calibrated:=trunc(valuex);
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='panfine') then
+                  startvalue_Calibrated:=trunc(frac(valuex)*(maxres+1));
+              end else
+              begin
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='pan') then
+                  startvalue_Calibrated:=maxres-trunc(valuex);
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='panfine') then
+                  startvalue_Calibrated:=maxres-trunc(frac(valuex)*(maxres+1));
+              end;
+              if not devices[k].inverttilt then
+              begin
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='tilt') then
+                  startvalue_Calibrated:=trunc(valuey);
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='tiltfine') then
+                  startvalue_Calibrated:=trunc(frac(valuey)*(maxres+1));
+              end else
+              begin
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='tilt') then
+                  startvalue_Calibrated:=maxres-trunc(valuey);
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='tiltfine') then
+                  startvalue_Calibrated:=maxres-trunc(frac(valuey)*(maxres+1));
+              end;
 
               // Endwert berechnen
-              P.x:=FilterWithDimmcurve(address,devices[k].PanEndvalue);
-              P.y:=FilterWithDimmcurve(address,devices[k].TiltEndvalue);
-              if not devices[k].invertpan then
-                P.X:=maxres-P.x;
-              if not devices[k].inverttilt then
-                P.Y:=maxres-P.Y;
+              if (panfinechan>-1) and (tiltfinechan>-1) then
+              begin
+                // Fine-Kanäle sind vorhanden
+                // Punkt mit 16-Bit X/Y-Koordinaten erzeugen
+                Px:=devices[k].PanEndvalue+(devices[k].PanFineEndvalue/(maxres+1));
+                Py:=devices[k].TiltEndvalue+(devices[k].TiltFineEndvalue/(maxres+1));
+              end else
+              begin
+                // keine Fine-Kanäle vorhanden
+                // Punkt mit 8-Bit X/Y-Koordinaten erzeugen
+                Px:=devices[k].PanEndvalue;
+                Py:=devices[k].TiltEndvalue;
+              end;
 
               if (devices[k].typeofscannercalibration>0) then
               begin
                 // Gerätekalibrierung dauerhaft anwenden
                 // bilineare Interpolation durchführen
-                P01x:=P.x/maxres;
-                P01y:=P.y/maxres;
+                P01x:=Px/(maxres+1);
+                P01y:=Py/(maxres+1);
                 valuex:=trunc((1-P01x)*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointA.x+(1-P01x)*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointD.x+P01x*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointB.x+P01x*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointC.x);
                 valuey:=trunc((1-P01x)*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointA.y+(1-P01x)*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointD.y+P01x*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointB.y+P01x*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointC.y);
               end else
               begin
-                valuex:=P.x;
-                valuey:=P.y;
+                valuex:=Px;
+                valuey:=Py;
               end;
 
-              if valuex>maxres then valuex:=maxres;
-              if valuex<0 then valuex:=0;
-              if valuey>maxres then valuey:=maxres;
-              if valuey<0 then valuey:=0;
-
-              if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='pan') then
-                endvalue_Calibrated:=valuex;
-              if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='tilt') then
-                endvalue_Calibrated:=valuey;
+              if not devices[k].invertpan then
+              begin
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='pan') then
+                  endvalue_Calibrated:=trunc(valuex);
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='panfine') then
+                  endvalue_Calibrated:=trunc(frac(valuex)*(maxres+1));
+              end else
+              begin
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='pan') then
+                  endvalue_Calibrated:=maxres-trunc(valuex);
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='panfine') then
+                  endvalue_Calibrated:=maxres-trunc(frac(valuex)*(maxres+1));
+              end;
+              if not devices[k].inverttilt then
+              begin
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='tilt') then
+                  endvalue_Calibrated:=trunc(valuey);
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='tiltfine') then
+                  endvalue_Calibrated:=trunc(frac(valuey)*(maxres+1));
+              end else
+              begin
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='tilt') then
+                  endvalue_Calibrated:=maxres-trunc(valuey);
+                if (lowercase(devices[k].kanaltyp[address-devices[k].Startaddress])='tiltfine') then
+                  endvalue_Calibrated:=maxres-trunc(frac(valuey)*(maxres+1));
+              end;
 
               useCalibrationValue:=true;
             end;
@@ -2942,10 +3004,10 @@ begin
             begin
               if (lowercase(devices[k].kanaltyp[m])='pan') then
                 panchan:=m;
-              if (lowercase(devices[k].kanaltyp[m])='panfine') then
-                panfinechan:=m;
               if (lowercase(devices[k].kanaltyp[m])='tilt') then
                 tiltchan:=m;
+              if (lowercase(devices[k].kanaltyp[m])='panfine') then
+                panfinechan:=m;
               if (lowercase(devices[k].kanaltyp[m])='tiltfine') then
                 tiltfinechan:=m;
             end;
@@ -2954,19 +3016,15 @@ begin
             begin
               // Fine-Kanäle sind vorhanden
               // Punkt mit 16-Bit X/Y-Koordinaten erzeugen
-              Px:=data.ch[devices[k].Startaddress+panchan]+(data.ch[devices[k].Startaddress+panfinechan]/256);
-              Py:=data.ch[devices[k].Startaddress+tiltchan]+(data.ch[devices[k].Startaddress+tiltfinechan]/256);
+              Px:=(maxres+(maxres/(maxres+1)))-(data.ch[devices[k].Startaddress+panchan]+(data.ch[devices[k].Startaddress+panfinechan]/(maxres+1)));
+              Py:=(maxres+(maxres/(maxres+1)))-(data.ch[devices[k].Startaddress+tiltchan]+(data.ch[devices[k].Startaddress+tiltfinechan]/(maxres+1)));
             end else
             begin
               // keine Fine-Kanäle vorhanden
               // Punkt mit 8-Bit X/Y-Koordinaten erzeugen
-              Px:=data.ch[devices[k].Startaddress+panchan];
-              Py:=data.ch[devices[k].Startaddress+tiltchan];
+              Px:=maxres-data.ch[devices[k].Startaddress+panchan];
+              Py:=maxres-data.ch[devices[k].Startaddress+tiltchan];
             end;
-            if not devices[k].invertpan then
-              PX:=maxres-Px;
-            if not devices[k].inverttilt then
-              PY:=maxres-PY;
 
             if (devices[k].typeofscannercalibration>0) then
             begin
@@ -2978,23 +3036,36 @@ begin
               valuey:=((1-P01x)*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointA.y+(1-P01x)*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointD.y+P01x*(1-P01y)*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointB.y+P01x*P01y*mainform.devices[k].ScannerCalibrations[mainform.devices[k].typeofscannercalibration].PointC.y);
             end else
             begin
-              valuex:=(Px);
-              valuey:=(Py);
+              valuex:=Px;
+              valuey:=Py;
             end;
 
-            if valuex>maxres then valuex:=maxres;
-            if valuex<0 then valuex:=0;
-            if valuey>maxres then valuey:=maxres;
-            if valuey<0 then valuey:=0;
-
-            if (lowercase(devices[k].kanaltyp[tempvalue])='pan') then
-              Value:=trunc(valuex);
-            if (lowercase(devices[k].kanaltyp[tempvalue])='panfine') then
-              Value:=trunc(frac(valuex)*255);
-            if (lowercase(devices[k].kanaltyp[tempvalue])='tilt') then
-              Value:=trunc(valuey);
-            if (lowercase(devices[k].kanaltyp[tempvalue])='tiltfine') then
-              Value:=trunc(frac(valuey)*255);
+            if not devices[k].invertpan then
+            begin
+              if (lowercase(devices[k].kanaltyp[tempvalue])='pan') then
+                Value:=trunc(valuex);
+              if (lowercase(devices[k].kanaltyp[tempvalue])='panfine') then
+                Value:=trunc(frac(valuex)*(maxres+1));
+            end else
+            begin
+              if (lowercase(devices[k].kanaltyp[tempvalue])='pan') then
+                Value:=maxres-trunc(valuex);
+              if (lowercase(devices[k].kanaltyp[tempvalue])='panfine') then
+                Value:=maxres-trunc(frac(valuex)*(maxres+1));
+            end;
+            if not devices[k].inverttilt then
+            begin
+              if (lowercase(devices[k].kanaltyp[tempvalue])='tilt') then
+                Value:=trunc(valuey);
+              if (lowercase(devices[k].kanaltyp[tempvalue])='tiltfine') then
+                Value:=trunc(frac(valuey)*(maxres+1));
+            end else
+            begin
+              if (lowercase(devices[k].kanaltyp[tempvalue])='tilt') then
+                Value:=maxres-trunc(valuey);
+              if (lowercase(devices[k].kanaltyp[tempvalue])='tiltfine') then
+                Value:=maxres-trunc(frac(valuey)*(maxres+1));
+            end;
 
             useCalibrationValue:=true;
           end;
@@ -10197,9 +10268,15 @@ begin
                   end;
                 end;
                 // Nun die neuen Dimmerwerte setzen
-                channel_value_highresolution[pDimmerKernelChannel.channel]:=channel_value[pDimmerKernelChannel.channel]*257;
+                if pDimmerKernelChannel.IsPanTiltChannel and (pDimmerKernelChannel.FineChannel>0) then
+                  channel_value_highresolution[pDimmerKernelChannel.channel]:=channel_value[pDimmerKernelChannel.channel]*257+channel_value[pDimmerKernelChannel.FineChannel]
+                else
+                  channel_value_highresolution[pDimmerKernelChannel.channel]:=channel_value[pDimmerKernelChannel.channel]*257;
                 channel_endvalue[pDimmerKernelChannel.channel]:=pDimmerKernelChannel.channel_endvalue;
-                pDimmerKernelChannel.channel_steps := round(Abs(channel_value[pDimmerKernelChannel.channel] - pDimmerKernelChannel.channel_endvalue))*257;
+                if pDimmerKernelChannel.IsPanTiltChannel and (pDimmerKernelChannel.FineChannel>0) then
+                  pDimmerKernelChannel.channel_steps := round(Abs((channel_value[pDimmerKernelChannel.channel]*257)+channel_value[pDimmerKernelChannel.FineChannel] - (pDimmerKernelChannel.channel_endvalue*257)))
+                else
+                  pDimmerKernelChannel.channel_steps := round(Abs((channel_value[pDimmerKernelChannel.channel]*257) - (pDimmerKernelChannel.channel_endvalue*257)));
 
                 if pDimmerKernelChannel.IsDelayedChan then
                 begin
@@ -10380,10 +10457,10 @@ begin
                 end;
 
                 // Fine-Kanal, sofern vorhanden, setzen
-                if pDimmerKernelChannel.IsPanTiltChannel then
+                if pDimmerKernelChannel.IsPanTiltChannel and (pDimmerKernelChannel.FineChannel>0) then
                 begin
                   tempvalue1:=pDimmerKernelChannel.FineChannel;
-                  tempvalue2:=trunc(frac(channel_value_highresolution_filtered/257)*255);
+                  tempvalue2:=trunc(frac(channel_value_highresolution_filtered/257)*256);
                   if channel_value[tempvalue1]<>tempvalue2 then
                   begin
                     channel_value[tempvalue1]:=tempvalue2;
@@ -16757,8 +16834,8 @@ end;
 procedure TMainform.StartDeviceScene(ID: TGUID; NoFadetime, NoDelay:boolean; Intensity: Byte; Fadetime:integer);
 var
   i,j,k,m,PositionInDeviceArray, PositionInGroupArray:integer;
-  pan,tilt:boolean;
-  panchan,tiltchan:integer;
+  pan,tilt,panfine,tiltfine:boolean;
+  panchan,tiltchan,panfinechan, tiltfinechan:integer;
   ChannelFadetime, ChannelDelay, ChannelValue:integer;
   Faktor:single;
 begin
@@ -16777,8 +16854,12 @@ begin
     begin
       panchan:=0;
       tiltchan:=0;
+      panfinechan:=0;
+      tiltfinechan:=0;
       pan:=false;
       tilt:=false;
+      panfine:=false;
+      tiltfine:=false;
 
       PositionInDeviceArray:=-1;
       PositionInGroupArray:=-1;
@@ -16810,10 +16891,20 @@ begin
             pan:=true;
             panchan:=k;
           end;
+          if (lowercase(devices[PositionInDeviceArray].kanaltyp[k])='panfine') and (devicescenes[i].Devices[j].ChanActive[k]) then
+          begin
+            panfine:=true;
+            panfinechan:=k;
+          end;
           if (lowercase(devices[PositionInDeviceArray].kanaltyp[k])='tilt') and (devicescenes[i].Devices[j].ChanActive[k]) then
           begin
             tilt:=true;
             tiltchan:=k;
+          end;
+          if (lowercase(devices[PositionInDeviceArray].kanaltyp[k])='tiltfine') and (devicescenes[i].Devices[j].ChanActive[k]) then
+          begin
+            tiltfine:=true;
+            tiltfinechan:=k;
           end;
         end;
 
@@ -16827,6 +16918,16 @@ begin
               mainform.devices[PositionInDeviceArray].PanEndvalue:=devicescenes[i].Devices[j].ChanValue[panchan];
               mainform.devices[PositionInDeviceArray].TiltStartvalue:=geraetesteuerung.get_channel(devicescenes[i].Devices[j].ID,'tilt');
               mainform.devices[PositionInDeviceArray].TiltEndvalue:=devicescenes[i].Devices[j].ChanValue[tiltchan];
+              if panfine then
+              begin
+                mainform.devices[PositionInDeviceArray].PanFineStartvalue:=geraetesteuerung.get_channel(devicescenes[i].Devices[j].ID,'panfine');
+                mainform.devices[PositionInDeviceArray].PanFineEndvalue:=devicescenes[i].Devices[j].ChanValue[panfinechan];
+              end;
+              if tiltfine then
+              begin
+                mainform.devices[PositionInDeviceArray].TiltFineStartvalue:=geraetesteuerung.get_channel(devicescenes[i].Devices[j].ID,'tiltfine');
+                mainform.devices[PositionInDeviceArray].TiltFineEndvalue:=devicescenes[i].Devices[j].ChanValue[tiltfinechan];
+              end;
 
               channelvalue_temp[devices[PositionInDeviceArray].Startaddress+k]:=channel_value[devices[PositionInDeviceArray].Startaddress+k];
 
@@ -17049,7 +17150,7 @@ end;
 procedure TMainform.StopDeviceScene(ID: TGUID);
 var
   i,j,k,m,PositionInDeviceArray:integer;
-  pan,tilt:boolean;
+  pan,tilt,panfine,tiltfine:boolean;
 begin
   PositionInDeviceArray:=0;
 
@@ -17061,10 +17162,10 @@ begin
   begin // Geräteszene gefunden
     for j:=0 to length(devicescenes[i].Devices)-1 do
     begin
-//      panchan:=0;
-//      tiltchan:=0;
       pan:=false;
       tilt:=false;
+      panfine:=false;
+      tiltfine:=false;
 
       for m:=0 to length(devices)-1 do
         if IsEqualGUID(devices[m].ID,devicescenes[i].Devices[j].ID) then
@@ -17078,12 +17179,18 @@ begin
         if (devicescenes[i].Devices[j].ChanActive[k]) and (lowercase(devices[PositionInDeviceArray].kanaltyp[k])='pan') then
         begin
           pan:=true;
-//          panchan:=k;
         end;
         if (devicescenes[i].Devices[j].ChanActive[k]) and (lowercase(devices[PositionInDeviceArray].kanaltyp[k])='tilt') then
         begin
           tilt:=true;
-//          tiltchan:=k;
+        end;
+        if (devicescenes[i].Devices[j].ChanActive[k]) and (lowercase(devices[PositionInDeviceArray].kanaltyp[k])='panfine') then
+        begin
+          panfine:=true;
+        end;
+        if (devicescenes[i].Devices[j].ChanActive[k]) and (lowercase(devices[PositionInDeviceArray].kanaltyp[k])='tiltfine') then
+        begin
+          tiltfine:=true;
         end;
       end;
 
@@ -17097,6 +17204,17 @@ begin
             mainform.devices[PositionInDeviceArray].PanEndvalue:=geraetesteuerung.get_channel(devicescenes[i].Devices[j].ID,'pan');
             mainform.devices[PositionInDeviceArray].TiltStartvalue:=geraetesteuerung.get_channel(devicescenes[i].Devices[j].ID,'tilt');
             mainform.devices[PositionInDeviceArray].TiltEndvalue:=geraetesteuerung.get_channel(devicescenes[i].Devices[j].ID,'tilt');
+            if panfine then
+            begin
+              mainform.devices[PositionInDeviceArray].PanFineStartvalue:=geraetesteuerung.get_channel(devicescenes[i].Devices[j].ID,'panfine');
+              mainform.devices[PositionInDeviceArray].PanFineEndvalue:=geraetesteuerung.get_channel(devicescenes[i].Devices[j].ID,'panfine');
+            end;
+
+            if tiltfine then
+            begin
+              mainform.devices[PositionInDeviceArray].TiltFineStartvalue:=geraetesteuerung.get_channel(devicescenes[i].Devices[j].ID,'tiltfine');
+              mainform.devices[PositionInDeviceArray].TiltFineEndvalue:=geraetesteuerung.get_channel(devicescenes[i].Devices[j].ID,'tiltfine');
+            end;
 
             channelvalue_temp[devices[PositionInDeviceArray].Startaddress+k]:=channel_value[devices[PositionInDeviceArray].Startaddress+k];
             geraetesteuerung.set_channel(devicescenes[i].Devices[j].ID,devices[PositionInDeviceArray].kanaltyp[k],geraetesteuerung.get_channel(devicescenes[i].Devices[j].ID,devices[PositionInDeviceArray].kanaltyp[k]),geraetesteuerung.get_channel(devicescenes[i].Devices[j].ID,devices[PositionInDeviceArray].kanaltyp[k]),0);
@@ -17286,8 +17404,8 @@ end;
 procedure TMainform.StartEffektstep(ID: TGUID; Schrittnummer:Word);
 var
   i,j,k,l,blendzeit,PositionInDeviceArray,PositionInGroupArray:integer;
-  pan,tilt:boolean;
-  panchan,tiltchan:integer;
+  pan,tilt,panfine,tiltfine:boolean;
+  panchan,tiltchan,panfinechan,tiltfinechan:integer;
   ChannelFadetime, ChannelDelay, ChannelValue:integer;
 begin
   // Effektschritt ausführen
@@ -17322,8 +17440,12 @@ begin
           begin
             panchan:=0;
             tiltchan:=0;
+            panfinechan:=0;
+            tiltfinechan:=0;
             pan:=false;
             tilt:=false;
+            panfine:=false;
+            tiltfine:=false;
 
             PositionInDeviceArray:=-1;
             PositionInGroupArray:=-1;
@@ -17359,6 +17481,16 @@ begin
                   tilt:=true;
                   tiltchan:=k;
                 end;
+                if (lowercase(mainform.devices[PositionInDeviceArray].kanaltyp[l])='panfine') and (effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanActive[l]) then
+                begin
+                  panfine:=true;
+                  panfinechan:=k;
+                end;
+                if (lowercase(mainform.devices[PositionInDeviceArray].kanaltyp[l])='tiltfine') and (effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanActive[l]) then
+                begin
+                  tiltfine:=true;
+                  tiltfinechan:=k;
+                end;
               end;
 
               for l:=0 to length(effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanActive)-1 do
@@ -17371,6 +17503,16 @@ begin
                     mainform.devices[PositionInDeviceArray].PanEndvalue:=effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanValue[panchan];
                     mainform.devices[PositionInDeviceArray].TiltStartvalue:=geraetesteuerung.get_channel(effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ID,'tilt');
                     mainform.devices[PositionInDeviceArray].TiltEndvalue:=effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanValue[tiltchan];
+                    if panfine then
+                    begin
+                      mainform.devices[PositionInDeviceArray].PanFineStartvalue:=geraetesteuerung.get_channel(effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ID,'panfine');
+                      mainform.devices[PositionInDeviceArray].PanFineEndvalue:=effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanValue[panfinechan];
+                    end;
+                    if tiltfine then
+                    begin
+                      mainform.devices[PositionInDeviceArray].TiltFineStartvalue:=geraetesteuerung.get_channel(effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ID,'tiltfine');
+                      mainform.devices[PositionInDeviceArray].TiltFineEndvalue:=effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanValue[tiltfinechan];
+                    end;
 
                     if effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanFadetime[l]=-1 then
                     begin
@@ -17503,6 +17645,16 @@ begin
                   tilt:=true;
                   tiltchan:=k;
                 end;
+                if (lowercase(Devices[PositionInDeviceArray].kanaltyp[l])='panfine') and (effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanActive[l]) then
+                begin
+                  panfine:=true;
+                  panfinechan:=k;
+                end;
+                if (lowercase(Devices[PositionInDeviceArray].kanaltyp[l])='tiltfine') and (effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanActive[l]) then
+                begin
+                  tiltfine:=true;
+                  tiltfinechan:=k;
+                end;
               end;
 
               for l:=0 to length(effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanActive)-1 do
@@ -17515,6 +17667,16 @@ begin
                     mainform.devices[PositionInDeviceArray].PanEndvalue:=effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanValue[panchan];
                     mainform.devices[PositionInDeviceArray].TiltStartvalue:=geraetesteuerung.get_channel(effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ID,'tilt');
                     mainform.devices[PositionInDeviceArray].TiltEndvalue:=effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanValue[tiltchan];
+                    if panfine then
+                    begin
+                      mainform.devices[PositionInDeviceArray].PanFineStartvalue:=geraetesteuerung.get_channel(effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ID,'panfine');
+                      mainform.devices[PositionInDeviceArray].PanFineEndvalue:=effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanValue[panfinechan];
+                    end;
+                    if tiltfine then
+                    begin
+                      mainform.devices[PositionInDeviceArray].TiltFineStartvalue:=geraetesteuerung.get_channel(effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ID,'tiltfine');
+                      mainform.devices[PositionInDeviceArray].TiltFineEndvalue:=effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanValue[tiltfinechan];
+                    end;
 
                     channelvalue_temp[devices[PositionInDeviceArray].Startaddress+k]:=channel_value[devices[PositionInDeviceArray].Startaddress+k];
                     if effektsequenzereffekte[i].Effektschritte[Schrittnummer].Devices[k].ChanFadetime[l]=-1 then

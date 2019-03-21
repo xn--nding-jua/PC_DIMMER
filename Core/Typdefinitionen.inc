@@ -375,9 +375,13 @@
     typeofscannercalibration:byte;
 
     PanStartvalue:integer;
+    PanFineStartvalue:integer;
     TiltStartvalue:integer;
+    TiltFineStartvalue:integer;
     PanEndvalue:integer;
+    PanFineEndvalue:integer;
     TiltEndvalue:integer;
+    TiltFineEndvalue:integer;
     CalibrationpointA:TPoint;
     CalibrationpointB:TPoint;
     CalibrationpointC:TPoint;
