@@ -245,7 +245,7 @@ object masterform: Tmasterform
   object Label10: TLabel
     Left = 200
     Top = 8
-    Width = 32
+    Width = 40
     Height = 26
     Alignment = taCenter
     Caption = 'Nebel Master'
