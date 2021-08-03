@@ -35,7 +35,6 @@ type
     Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
-    Button1: TButton;
     Label13: TLabel;
     Label14: TLabel;
     Bevel1: TBevel;
@@ -65,18 +64,11 @@ type
     beschreibung: TLabel;
     Label26: TLabel;
     typ: TLabel;
-    Bevel3: TBevel;
     GroupBox4: TGroupBox;
     portchange: TComboBox;
     baudratechange: TComboBox;
     Label16: TLabel;
     Label27: TLabel;
-    Label28: TLabel;
-    Label29: TLabel;
-    ScrollBar9: TScrollBar;
-    Bevel4: TBevel;
-    Label30: TLabel;
-    Label31: TLabel;
     Button2: TButton;
     kanal1: TLabel;
     Label33: TLabel;
@@ -101,6 +93,17 @@ type
     Edit5: TEdit;
     Label41: TLabel;
     Label42: TLabel;
+    Label29: TLabel;
+    Button1: TButton;
+    Label28: TLabel;
+    Bevel3: TBevel;
+    Label43: TLabel;
+    pd5_checkbox: TCheckBox;
+    pd6_checkbox: TCheckBox;
+    Bevel4: TBevel;
+    Label30: TLabel;
+    Label31: TLabel;
+    ScrollBar9: TScrollBar;
     procedure DLLSenddata(address, startvalue, endvalue, fadetime: integer);
     procedure Button8Click(Sender: TObject);
     procedure ScrollBar1Change(Sender: TObject);
@@ -225,6 +228,12 @@ begin
   b:=0;
   b:=b or stp;
   rs232frame[1]:=b;                           {zweite Byte in Puffer schreiben}
+
+  // zusätzliche GPIOs schalten, sofern Option gewählt
+  if pd5_checkbox.Checked then
+    rs232frame[1]:=rs232frame[1]+32;  // 0b0x100000
+  if pd6_checkbox.Checked then
+    rs232frame[1]:=rs232frame[1]+64;  // 0b01x00000
 
 // Fadezeiten in Byte 3..5 senden
   t1:=(lo(timestep) and $7F);
@@ -404,22 +413,21 @@ var
 
   LReg:TRegistry;
   serialport, regbaudrate:integer;
-  TestHandle : integer;
+  TestHandle, i : integer;
 begin
   // these API conversions are loaded dynamically by default
   LoadSetupApi;
   LoadConfigManagerApi;
 
-comport.Disconnect;
-
   // enumerate all serial devices (COM port devices)
     SerialGUID := GUID_DEVINTERFACE_COMPORT;
-//    SerialGUID := GUID_DEVINTERFACE_SERENUM_BUS_ENUMERATOR;
+  // SerialGUID := GUID_DEVINTERFACE_SERENUM_BUS_ENUMERATOR;
   PnPHandle := SetupDiGetClassDevs(@SerialGUID, nil, 0, DIGCF_PRESENT or DIGCF_DEVICEINTERFACE);
   if PnPHandle = Pointer(INVALID_HANDLE_VALUE) then
     Exit;
   portchange.Items.BeginUpdate;
   portchange.Items.Clear;
+
   Devn := 0;
   repeat
     DeviceInterfaceData.cbSize := SizeOf(TSPDeviceInterfaceData);
@@ -468,8 +476,8 @@ comport.Disconnect;
   SetupDiDestroyDeviceInfoList(PnPHandle);
   portchange.Items.EndUpdate;
 
-{
-// COM-Ports von 1 bis 16 abklappern
+  {
+  // COM-Ports von 1 bis 16 abklappern
 	portchange.Clear;
 	for i:=1 to 16 do
 	begin
@@ -480,7 +488,7 @@ comport.Disconnect;
 	    CloseHandle(TestHandle);
 	  end;
 	end;
-}
+  }
 
   LReg := TRegistry.Create;
   LReg.RootKey:=HKEY_LOCAL_MACHINE;
@@ -512,7 +520,7 @@ comport.Disconnect;
   ActivateCOMPort(serialport);
   portchange.Visible:=(portchange.Items.Count>0);
   portchangeSelect(Sender);
-
+  
 {
   portchange.ItemIndex:=0;
   for i:=1 to 16 do
@@ -542,12 +550,9 @@ procedure TForm1.ScrollBar9Change(Sender: TObject);
 var
 	i:integer;
 begin
-	device:=scrollbar9.Position;
-
-    if device<=127 then
-      Label42.caption:='Startadresse '+inttostr(device+1)+' ändern'
-    else
-      Label42.caption:='Startadresse '+inttostr(128)+' ändern';
+  Label31.Caption:='Gerät '+inttostr(scrollbar9.Position+1);
+  Label42.caption:='Gerät '+inttostr(scrollbar9.Position+1)+' ändern';
+	device:=scrollbar9.Position*8;
 
   for i:=1 to 8 do
   begin
@@ -561,7 +566,6 @@ begin
 			TLabel(FindComponent('Label'+inttostr(32+i))).Caption:='-';
     end;
   end;
-  Label31.Caption:='Kanal '+inttostr(device+1);
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
@@ -569,7 +573,7 @@ var
 	rs232frame:array[0..5] of byte;
 begin
 	rs232frame[0]:=127+((device+1));
-	rs232frame[1]:=4;
+	rs232frame[1]:=4; //0b00000100
 	rs232frame[2]:=0;
 	rs232frame[3]:=0;
 	rs232frame[4]:=0;
@@ -582,7 +586,7 @@ var
 	rs232frame:array[0..5] of byte;
 begin
 	rs232frame[0]:=127+((device+1));
-	rs232frame[1]:=8;
+	rs232frame[1]:=8; //0b00001000
 	rs232frame[2]:=0;
 	rs232frame[3]:=0;
 	rs232frame[4]:=0;
@@ -595,7 +599,7 @@ var
 	rs232frame:array[0..5] of byte;
 begin
 	rs232frame[0]:=127+((device+1));
-	rs232frame[1]:=16;
+	rs232frame[1]:=16; // 0b00010000
 	rs232frame[2]:=0;
 	rs232frame[3]:=0;
 	rs232frame[4]:=0;

@@ -8,7 +8,7 @@ uses
   JvComponent, JvZlibMultiple, JvExExtCtrls, Printers, JvOfficeColorPanel,
   jpeg, JvComponentBase, JvExtComponent, JvPanel, JvAppStorage,
   JvAppXMLStorage, ddfwindowfrm, PngBitBtn, Grids, pcdutils,
-  JvExMask, JvSpin, gnugettext, pngimage, Math, GR32;
+  JvExMask, JvSpin, gnugettext, Math, GR32, pngimage;
 
 const
   {$I GlobaleKonstanten.inc}

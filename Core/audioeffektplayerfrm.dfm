@@ -176,11 +176,6 @@ object audioeffektplayerform: Taudioeffektplayerform
         Height = 29
         Caption = '80 Hz'
         Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
       end
       object JvLabel2: TJvLabel
         Left = 24
@@ -189,11 +184,6 @@ object audioeffektplayerform: Taudioeffektplayerform
         Height = 35
         Caption = '125 Hz'
         Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
       end
       object JvLabel3: TJvLabel
         Left = 40
@@ -202,11 +192,6 @@ object audioeffektplayerform: Taudioeffektplayerform
         Height = 35
         Caption = '180 Hz'
         Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
       end
       object JvLabel4: TJvLabel
         Left = 56
@@ -215,11 +200,6 @@ object audioeffektplayerform: Taudioeffektplayerform
         Height = 35
         Caption = '300 Hz'
         Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
       end
       object JvLabel5: TJvLabel
         Left = 120
@@ -228,11 +208,6 @@ object audioeffektplayerform: Taudioeffektplayerform
         Height = 41
         Caption = '3000 Hz'
         Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
       end
       object JvLabel6: TJvLabel
         Left = 72
@@ -241,11 +216,6 @@ object audioeffektplayerform: Taudioeffektplayerform
         Height = 35
         Caption = '600 Hz'
         Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
       end
       object JvLabel7: TJvLabel
         Left = 88
@@ -254,11 +224,6 @@ object audioeffektplayerform: Taudioeffektplayerform
         Height = 41
         Caption = '1000 Hz'
         Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
       end
       object JvLabel8: TJvLabel
         Left = 104
@@ -267,11 +232,6 @@ object audioeffektplayerform: Taudioeffektplayerform
         Height = 41
         Caption = '2000 Hz'
         Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
       end
       object JvLabel10: TJvLabel
         Left = 136
@@ -280,11 +240,6 @@ object audioeffektplayerform: Taudioeffektplayerform
         Height = 41
         Caption = '5000 Hz'
         Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
       end
       object JvLabel11: TJvLabel
         Left = 152
@@ -293,11 +248,6 @@ object audioeffektplayerform: Taudioeffektplayerform
         Height = 41
         Caption = '8000 Hz'
         Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
       end
       object JvLabel12: TJvLabel
         Left = 168
@@ -306,11 +256,6 @@ object audioeffektplayerform: Taudioeffektplayerform
         Height = 47
         Caption = '16000 Hz'
         Angle = 90
-        HotTrackFont.Charset = DEFAULT_CHARSET
-        HotTrackFont.Color = clWindowText
-        HotTrackFont.Height = -11
-        HotTrackFont.Name = 'MS Sans Serif'
-        HotTrackFont.Style = []
       end
       object equalizer_progressbar0: TProgressBar
         Left = 8
@@ -4195,7 +4140,7 @@ object audioeffektplayerform: Taudioeffektplayerform
         'Layer 8')
       CapSelectAll = '&Select all'
       CapDeSelectAll = '&Deselect all'
-      NoFocusColor = clWindow
+      CapInvertAll = '&Invert all'
       DropDownLines = 8
       TabOrder = 12
       OnChange = LayerComboboxChange

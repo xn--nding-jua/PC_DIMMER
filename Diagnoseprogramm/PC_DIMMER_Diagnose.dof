@@ -105,17 +105,13 @@ HostApplication=
 Launcher=
 UseLauncher=0
 DebugCWD=
-[Language]
-ActiveLang=
-ProjectLang=
-RootDir=C:\Programme\Borland\Delphi7\Bin\
 [Version Info]
 IncludeVerInfo=1
 AutoIncBuild=1
-MajorVer=4
+MajorVer=5
 MinorVer=0
 Release=0
-Build=2
+Build=5
 Debug=0
 PreRelease=0
 Special=0
@@ -126,18 +122,16 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PHOENIXstudios
 FileDescription=Setup-/Diagnoseprogramm
-FileVersion=4.0.0.2
+FileVersion=5.0.0.5
 InternalName=
-LegalCopyright=(c) 2008 Christian Nöding
+LegalCopyright=(c) 2008/2020 Dr.-Ing. Christian Nöding
 LegalTrademarks=
 OriginalFilename=
 ProductName=
-ProductVersion=4.0.0.0
+ProductVersion=5.0.0.0
 Comments=http://www.pcdimmer.de
 [Excluded Packages]
-c:\programme\borland\delphi7\Bin\dclindy70.bpl=Internet Direct (Indy) für Delphi 7 Eigenschafts- und Komponenten-Editoren
-C:\Programme\Developer Express Inc\Library\Delphi7\dxLayoutControldxEditAdaptersD7.bpl=ExpressLayoutControl Adapters for ExpressEditors Library by Developer Express Inc.
-C:\Programme\Developer Express Inc\Library\Delphi7\dclcxSchedulerGridD7.bpl=ExpressScheduler 3 connection to ExpressQuantumGrid by Developer Express Inc.
+C:\Program Files (x86)\DevExpress VCL\Library\Delphi7\dcldxDBXServerModeD7.bpl=dbExpress Data Source for ExpressDataController Server Mode by Developer Express Inc.
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;

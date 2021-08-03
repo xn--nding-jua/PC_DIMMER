@@ -647,11 +647,11 @@ begin
   audioeffektfilenamebox.Text:=audioeffektfilenamebox.Items.Strings[0];
 	layerbox.ItemIndex:=0;
   layerboxchange(nil);
-  for i:=1 to maxaudioeffektlayers do
+  for i:=0 to (maxaudioeffektlayers-1) do
   begin
     LayerCombobox.Checked[i]:=true;
 //    LayerCombobox.ItemEnabled[i]:=true;
-  	activelayer[i-1]:=true;
+  	activelayer[i]:=true;
   end;
 
   LReg := TRegistry.Create;
