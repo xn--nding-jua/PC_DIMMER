@@ -927,7 +927,7 @@ begin
   SerialGUID := GUID_DEVINTERFACE_COMPORT;
 //  SerialGUID := GUID_DEVINTERFACE_SERENUM_BUS_ENUMERATOR;
   PnPHandle := SetupDiGetClassDevs(@SerialGUID, nil, 0, DIGCF_PRESENT or DIGCF_DEVICEINTERFACE);
-  if PnPHandle = Pointer(INVALID_HANDLE_VALUE) then
+  if PnPHandle = INVALID_HANDLE_VALUE then   // Pointer()
     Exit;
 
   setupform.portchange.Items.BeginUpdate;
