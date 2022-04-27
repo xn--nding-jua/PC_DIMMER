@@ -944,3 +944,9 @@
     Password:string[255];
     AccessLevel:integer;
   end;
+
+  TXTouchDevice = record
+    ID:TGUID;
+    IsDevice:boolean;
+    ChannelsToDisplay:Byte;
+  end;

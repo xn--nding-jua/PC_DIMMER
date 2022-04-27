@@ -1,7 +1,7 @@
 {*********************************************************************************}
 {**                                                                             **}
 {**  PHOENIXstudios PC_DIMMER                                                   **}
-{**  Copyrights (c) 2004-2016 by PHOENIXstudios Remsfeld                        **}
+{**  Copyrights (c) 2004-2022 by PHOENIXstudios Remsfeld                        **}
 {**                                                                             **}
 {**  Author: Dr.-Ing. Christian Nöding, info@pcdimmer.de                        **}
 {**  Co-Author: Martin Mikula (2012-2013)                                       **}
@@ -54,7 +54,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=484;
+  actualprojectversion=485;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -570,6 +570,7 @@ type
     dxBarLargeButton8: TdxBarLargeButton;
     TrackBar3: TTrackBar;
     Label15: TLabel;
+    dxBarLargeButton9: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -847,6 +848,7 @@ type
     procedure dxBarButton7Click(Sender: TObject);
     procedure dxBarLargeButton8Click(Sender: TObject);
     procedure TrackBar3Change(Sender: TObject);
+    procedure dxBarLargeButton9Click(Sender: TObject);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -1110,6 +1112,7 @@ type
     Cuelistbank:array of TCuelistbank;
     TimeCodePlayerBank:array of TTimeCodePlayer;
     IREvent:array of TIREvent;
+    XTouchDevices:array of TXTouchDevice;
     // Szenenbibliothek
     EinfacheSzenen : array of TEinfacheSzene;
     DeviceScenes: array of TDeviceScene;
@@ -1300,7 +1303,7 @@ uses
   videoscreensynchronisierenfrm, ambilight, pmm, touchscreenfrm,
   ddfeditorassistant, dynguifrm, audiomanagerfrm, ProgressScreenSmallFrm,
   presetsceneeditorform, adddevicefrm, pcdUtils, pcdRegistry,
-  nodecontrolfrm, usermgmtfrm, changeuserfrm;
+  nodecontrolfrm, usermgmtfrm, changeuserfrm, xtouchcontrolfrm;
 
 {$R *.DFM}
 
@@ -3434,6 +3437,8 @@ begin
     presetsceneeditor.close;
   if nodecontrolform.showing then
     nodecontrolform.close;
+  if xtouchcontrolform.showing then
+    xtouchcontrolform.close;
 
   // WORKAROUND FOR MEVP
   // 3D Visualizer schließen und freigeben
@@ -3785,6 +3790,7 @@ begin
   presetsceneeditor.free;
   nodecontrolform.free;
   usermgmtform.free;
+  xtouchcontrolform.Free;
 
   // Finito :)
 
@@ -4085,6 +4091,7 @@ begin
   nodecontrolform.MSGNew;
   joystickform.MSGNew;
   beatform.MSGNew;
+  xtouchcontrolform.MSGNew;
 
   for i:=0 to 31 do
   begin
@@ -5698,6 +5705,17 @@ begin
     end;
   end;
 // Ende NodeControl
+// XTouchControl speichern
+  inprogress.filename.Caption:=_('Schreibe Datei... XTouchControl');
+  inprogress.Refresh;
+  Count:=length(mainform.XTouchDevices);
+  Filestream.WriteBuffer(Count,sizeof(Count));
+  for i:=0 to Count-1 do
+  begin
+    Filestream.WriteBuffer(mainform.XTouchDevices[i].ID,sizeof(mainform.XTouchDevices[i].ID));
+  end;
+// Ende XTouchControl
+
   inprogress.filename.Caption:=_('Schreibe Datei...');
   inprogress.Refresh;
   FileStream.Free;
@@ -5838,6 +5856,7 @@ begin
   textbuchform.MSGNew;
   joystickform.MSGNew;
   beatform.MSGNew;
+  xtouchcontrolform.MSGNew;
 
   if not OnlyProject then
   begin
@@ -8702,6 +8721,27 @@ begin
       end;
     end;
 // Ende NodeControl
+// XTouchControl laden
+    if projektprogrammversionint>=485 then
+    begin
+      if not startingup then
+      begin
+        inprogress.filename.Caption:=_('Lese Daten ein... XTouchControl');
+        inprogress.Refresh;
+      end else
+      begin
+        SplashCaptioninfo(_('Lese Daten ein...XTouchControl'));
+        RefreshSplashText;
+      end;
+
+      Filestream.ReadBuffer(Count,sizeof(Count));
+      setlength(mainform.XTouchDevices, Count);
+      for i:=0 to Count-1 do
+      begin
+        Filestream.ReadBuffer(mainform.XTouchDevices[i].ID,sizeof(mainform.XTouchDevices[i].ID));
+      end;
+    end;
+// Ende XTouchControl
   end;
 
 	if not startingup then
@@ -8948,6 +8988,17 @@ begin
       RefreshSplashText;
     end;
     nodecontrolform.MSGOpen;
+
+    if not startingup then
+    begin
+      inprogress.filename.Caption:=_('Sende Öffnen-Befehl...XTouchControl');
+      inprogress.Refresh;
+    end else
+    begin
+      SplashCaptioninfo(_('Sende Öffnen-Befehl... XTouchControl'));
+      RefreshSplashText;
+    end;
+    xtouchcontrolform.MSGOpen;
 
     if not startingup then
     begin
@@ -12970,6 +13021,14 @@ begin
         ambilightform.Button2.Caption:=_('Ambilight ausschalten');
       end;
     end;
+
+    // XTouchControl aktivieren, sofern beim letzten mal aktiv
+    if LReg.ReadWriteBool('XTouchControl active', false) then
+    begin
+      xtouchcontrolform.xtouchserver.Active:=true;
+      xtouchcontrolform.activebtn.Caption:=_('Ausschalten');
+    end;
+
     LReg.CloseKey;
   end;
   LReg.Free;
@@ -19947,6 +20006,9 @@ begin
   nodecontrolform.Left:=0;
   nodecontrolform.ClientWidth:=761;
   nodecontrolform.ClientHeight:=546;
+
+  xtouchcontrolform.Top:=0;
+  xtouchcontrolform.Left:=0;
 end;
 
 procedure TMainform.AutobackuptimerTimer(Sender: TObject);
@@ -26916,6 +26978,7 @@ begin
   ReTranslateComponent(picturechangeform);
   ReTranslateComponent(nodecontrolform);
   ReTranslateComponent(usermgmtform);
+  ReTranslateComponent(xtouchcontrolform);
 
   // Plugins neu initiieren
   mainform.Pluginsreaktivieren1Click(nil);
@@ -27433,6 +27496,8 @@ begin
       midieventfrm.close;
     if winlircform.showing then
       winlircform.close;
+    if xtouchcontrolform.Showing then
+      xtouchcontrolform.Close;
   end;
 
 
@@ -27469,6 +27534,18 @@ procedure TMainform.TrackBar3Change(Sender: TObject);
 begin
   grafischebuehnenansicht.Trackbar2.Position:=Trackbar3.Position;
   grafischebuehnenansicht.Trackbar2Change(nil);
+end;
+
+procedure TMainform.dxBarLargeButton9Click(Sender: TObject);
+begin
+  if not UserAccessGranted(2) then exit;
+
+  if xtouchcontrolform.Showing then
+    xtouchcontrolform.BringToFront
+  else
+  begin
+    xtouchcontrolform.Show;
+  end;
 end;
 
 end.

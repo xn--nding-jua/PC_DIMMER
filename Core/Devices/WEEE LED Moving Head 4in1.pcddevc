@@ -1,0 +1,1130 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\Washer.png">
+ <information id="PC_DIMMER">
+ <name>4in1 LED Moving Head</name>
+ <vendor>WEEE</vendor>
+ <author>Peter</author>
+ <description>4in1 LED Moving Washer</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="PAN" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="TILT" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="PANFINE" fade="yes" type="panfine"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="TILTFINE" fade="yes" type="tiltfine"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="P/T Speed" fade="yes" type="Special1"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="DIMMER" fade="yes" type="dimmer"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Strob" fade="yes" type="shutter"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="R" fade="yes" type="r"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="G" fade="yes" type="g"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="B" fade="yes" type="b"/>
+  <function channel="10" minvalue="0" maxvalue="255" name="W" fade="yes" type="w"/>
+  <function channel="11" minvalue="0" maxvalue="255" name="Colorchoose" fade="yes" type="Special2"/>
+  <function channel="12" minvalue="0" maxvalue="255" name="Macro" fade="yes" type="special3"/>
+  <function channel="13" minvalue="0" maxvalue="255" name="Macro Speed >" fade="yes" type="special4"/>
+  <function channel="14" minvalue="0" maxvalue="255" name="Auto/Sound/Reset Mode" fade="yes" type="special5"/>
+  <function channel="15" minvalue="0" maxvalue="255" name="ZOOM" fade="yes" type="zoom"/>
+  <function channel="16" minvalue="0" maxvalue="255" name="Invert" fade="yes" type="special6"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" ch8="-1" ch9="-1" ch10="-1" ch11="-1" ch12="-1" ch13="-1" ch14="-1" ch15="-1" ch16="-1" />
+ <shutter OpenValue="0" CloseValue="0" ChannelName="special10"/>
+ <strobe OffValue="0" MinValue="1" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="470" height="576">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <colorpicker top="260" left="310" />
+  <edit name="Redset" top="40" left="90" width="30" height="17" text="0" action="setR"/>  
+  <edit name="Greset" top="57" left="90" width="30" height="17" text="0" action="setG"/>
+  <edit name="Bluset" top="74" left="90" width="30" height="17" text="0" action="setB"/>
+  <edit name="Whiset" top="40" left="155" width="30" height="17" text="0" action="setW"/>
+  <edit name="Dimset" top="219" left="195" width="30" height="17" text="0" action="setDIM"/>
+  <edit name="Shset" top="285" left="195" width="30" height="17" text="0" action="setshu"/>
+  <position top="8" left="233" height="226" width="226" />
+  <slider name="PANFINEslider2" top="96" left="5" width="220" height="17" action="PANFINEchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="TILTFINEslider3" top="136" left="5" width="220" height="17" action="TILTFINEchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Special1slider4" top="176" left="5" width="220" height="17" action="Special1change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DIMMERslider5" top="241" left="5" width="220" height="17" action="DIMMERchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Shutterslider1" top="305" left="5" width="220" height="17" action="Shutterchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="RSlider" top="335" left="15" width="175" height="17" action="RChange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="GSlider" top="355" left="15" width="175" height="17" action="GChange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="BSlider" top="375" left="15" width="175" height="17" action="BChange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="WSlider" top="395" left="15" width="175" height="17" action="WChange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Colorchooseslider" top="425" left="115" width="310" height="17" action="Colorchoose1" startvalue="0" endvalue="38" default="0"/>
+  <slider name="Zoom" top="243" left="260" width="185" height="17" action="Zoom" startvalue="0" endvalue="127" default="0"/>
+  <slider name="Macrospeed" top="468" left="130" width="180" height="17" action="Macrospeed" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Zoom1" top="530" left="100" width="180" height="17" action="Zoom1" startvalue="0" endvalue="127" default="0"/>
+  <slider name="Zoom2" top="550" left="100" width="180" height="17" action="Zoom2" startvalue="127" endvalue="255" default="0"/>
+  <dropdown name="Combobox2" top="467" left="5" width="80" height="21" action="Macro">
+   <item caption="Normal" value="0" valueend="-1" picture="" />
+   <item caption="1" value="0" valueend="-1" picture="" />
+   <item caption="2" value="0" valueend="-1" picture="" />
+   <item caption="3" value="0" valueend="-1" picture="" />
+   <item caption="4" value="0" valueend="-1" picture="" />
+   <item caption="5" value="0" valueend="-1" picture="" />
+   <item caption="6" value="0" valueend="-1" picture="" />
+   <item caption="7" value="0" valueend="-1" picture="" />
+   <item caption="8" value="0" valueend="-1" picture="" />
+   <item caption="9" value="0" valueend="-1" picture="" />
+   <item caption="10" value="0" valueend="-1" picture="" />
+   <item caption="11" value="0" valueend="-1" picture="" />
+   <item caption="12" value="0" valueend="-1" picture="" />
+   <item caption="S2Strob" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox3" top="500" left="100" width="180" height="21" action="Sound">
+   <item caption="Keine Funktion" value="0" valueend="-1" picture="" />
+   <item caption="Auto Running" value="0" valueend="-1" picture="" />
+   <item caption="Sound2Light" value="0" valueend="-1" picture="" />
+   <item caption="Reset" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Colorchoosebox" top="423" left="30" width="80" height="21" action="Colorchoose">
+   <item caption="Aus" value="0" valueend="-1" picture="" />
+   <item caption="R+G++" value="1" valueend="-1" picture="" />
+   <item caption="R+B++" value="21" valueend="-1" picture="" />
+   <item caption="G+R++" value="41" valueend="-1" picture="" />
+   <item caption="G+B++" value="61" valueend="-1" picture="" />
+   <item caption="B+G++" value="81" valueend="-1" picture="" />
+   <item caption="R+G+B++" value="101" valueend="-1" picture="" />
+   <item caption="R+B+G++" value="121" valueend="-1" picture="" />
+   <item caption="B+G+R++" value="141" valueend="-1" picture="" />
+   <item caption="R+B+G++" value="161" valueend="-1" picture="" />
+   <item caption="R+B+G+2" value="181" valueend="-1" picture="" />
+   <item caption="B+G+R++" value="201" valueend="-1" picture="" />
+   <item caption="R+B+G++" value="221" valueend="-1" picture="" />
+  </dropdown>
+  <options name="Invert" top="450" left="380" width="90" height="105" action="Invert" caption="Invert">
+   <item caption="No" value="0" valueend="-1" picture="" />
+   <item caption="X-Achse" value="0" valueend="-1" picture="" />
+   <item caption="Y-Achse" value="0" valueend="-1" picture="" />
+   <item caption="XY-Achsen" value="0" valueend="-1" picture="" />
+  </options>
+  <label name="PANFINElbl2" top="80" left="5" width="50" height="13" caption="PAN 16bit"/>
+  <label name="TILTFINElbl3" top="120" left="5" width="50" height="13" caption="TILT 16bit"/>
+  <label name="PANFINElbl3" top="80" left="205" width="15" height="13" caption="0"/>
+  <label name="TILTFINElbl4" top="120" left="205" width="15" height="13" caption="0"/>
+  <label name="Special1lbl1" top="160" left="5" width="50" height="13" caption="P/T Speed"/>
+  <label name="Special1lbl2" top="160" left="205" width="15" height="13" caption="0"/>
+  <label name="DIMMERlbl5" top="202" left="5" width="44" height="13" caption="Dimmer"/>
+  <label name="DIMMERlbl1" top="202" left="197" width="15" height="13" caption="0"/>    
+  <label name="Shutterlbl1" top="268" left="197" width="15" height="13" caption="0"/>    
+  <label name="Shutterlbl" top="268" left="5" width="50" height="13" caption="Strob"/>
+  <label name="Rlbln" top="43" left="80" width="15" height="13" caption="R"/>
+  <label name="Glbln" top="60" left="80" width="15" height="13" caption="G"/>
+  <label name="Blbln" top="77" left="80" width="15" height="13" caption="B"/>
+  <label name="Wlbln" top="43" left="142" width="15" height="13" caption="W"/>
+  <label name="Rlbl0" top="43" left="120" width="15" height="13" caption="0"/>
+  <label name="Glbl0" top="60" left="120" width="15" height="13" caption="0"/>
+  <label name="Blbl0" top="77" left="120" width="15" height="13" caption="0"/>
+  <label name="Wlbl0" top="43" left="185" width="15" height="13" caption="0"/>
+  <label name="R1lbl" top="338" left="5" width="15" height="13" caption="R"/>
+  <label name="G1lbl" top="358" left="5" width="15" height="13" caption="G"/>
+  <label name="B1lbl" top="378" left="5" width="15" height="13" caption="B"/>
+  <label name="W1lbl" top="398" left="3" width="15" height="13" caption="W"/>
+  <label name="Rlbl1" top="338" left="190" width="15" height="13" caption="0"/>
+  <label name="Glbl1" top="358" left="190" width="15" height="13" caption="0"/>
+  <label name="Blbl1" top="378" left="190" width="15" height="13" caption="0"/>
+  <label name="Wlbl1" top="398" left="190" width="15" height="13" caption="0"/>
+  <label name="Colorvalue" top="427" left="450" width="20" height="13" caption="0"/>
+  <label name="Zoomlbl" top="243" left="230" width="35" height="13" caption="Zoom"/>
+  <label name="Zoom1lbl" top="533" left="5" width="35" height="13" caption="Zoom Position"/>
+  <label name="Zoom2lbl" top="553" left="5" width="35" height="13" caption="Zoom Wechsel"/>
+  <label name="Zoomvaluelbl" top="243" left="450" width="20" height="13" caption="0"/>
+  <label name="Zoomvalue1lbl" top="543" left="285" width="20" height="13" caption="0"/>
+  <label name="Macrolbl" top="450" left="5" width="40" height="13" caption="Macro"/>  
+  <label name="Macro0lbl" top="470" left="345" width="25" height="13" caption="0"/>
+  <label name="Colorchange" top="427" left="5" width="25" height="13" caption="Color"/>
+  <label name="SoundAutoModus" top="503" left="5" width="70" height="13" caption="Sound/Auto Modus"/>
+  <button name="Dimmer0" top="218" left="5" width="30" height="23" action="Dimmeroff" caption="Off"/>
+  <button name="Dimmer6" top="218" left="35" width="30" height="23" action="Dimmer2" caption="6%"/>
+  <button name="Dimmer25" top="218" left="65" width="35" height="23" action="Dimmerquarter" caption="25%"/>
+  <button name="Dimmer50" top="218" left="100" width="30" height="23" action="Dimhalf" caption="50%"/>
+  <button name="Dimmer75" top="218" left="130" width="30" height="23" action="Dimmerthreequarter" caption="75%"/>
+  <button name="ONOFButton1" top="218" left="160" width="35" height="23" action="DimmerOnOff" caption="FullON"/>
+	<button name="Shutteroff" top="285" left="5" width="30" height="20" action="Shutteroff" caption="Off"/>
+	<button name="Shutterquarter" top="285" left="35" width="40" height="20" action="Shutterquarter" caption="25%"/>
+	<button name="Shutterhalf" top="285" left="75" width="40" height="20" action="Shutterhalf" caption="50%"/>
+	<button name="Shutterthrequarter" top="285" left="115" width="40" height="20" action="Shutterthreequarter" caption="75%"/>
+	<button name="Shutterfull" top="285" left="155" width="40" height="20" action="Shutterfull" caption="100%"/>
+	<button name="SwitchColorPickerBtn" top="395" left="310" width="150" height="25" action="SwitchColorPicker" caption="Andere Farbauswahl"/>
+  <button name="RButton" top="335" left="270" width="37" height="20" action="ROnOf" caption="R On"/>
+  <button name="GButton" top="355" left="270" width="37" height="20" action="GOnOf" caption="G On"/>
+  <button name="BButton" top="375" left="270" width="37" height="20" action="BOnOf" caption="B On"/>
+  <button name="WButton" top="395" left="270" width="37" height="20" action="WOnOf" caption="W On"/>
+  <button name="Colorhelp" top="423" left="430" width="20" height="21" action="Colorhelp" caption="0"/>
+  <button name="L" top="263" left="230" width="70" height="23" action="L" caption="60°"/>
+  <button name="M" top="286" left="230" width="70" height="23" action="M" caption="37,5°"/>
+  <button name="S" top="309" left="230" width="70" height="23" action="S" caption="15°"/>
+  <button name="Macrozero" top="466" left="85" width="35" height="23" action="Macrozero" caption="0"/>
+  <button name="Macrospeed0" top="466" left="310" width="35" height="23" action="Macro0" caption="0"/>
+  <checkbox name="Checkbox1" top="60" left="142" width="65" height="20" caption="White kill?" action="Whitekill" checked="true"/>
+  <checkbox name="Checkbox2" top="77" left="142" width="65" height="20" caption="Dimmer" action="DIM" checked="False"/>
+  <progressbar name="Progressbar1" top="198" left="42" width="153" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar2" top="265" left="35" width="160" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar3" top="335" left="210" width="60" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar4" top="355" left="210" width="60" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar5" top="375" left="210" width="60" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar6" top="395" left="210" width="60" height="20" startvalue="0" endvalue="255" default="0"/>
+	</form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure PANFINEchange;
+  procedure TILTFINEchange;
+  procedure SPECIAL1change;
+  procedure DIMMERchange;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure SwitchColorPicker;
+  procedure SPECIAL2change;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value,wert:integer;
+    r,phi,temp:Double;
+    vr,vg,vb:Byte;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        if usemhcontrol.checked then
+        begin
+          // Moving-Head-Steuerung
+          temp:=get_channel('tilt')+(get_channel('tiltfine')/256);
+          case round(temp) of
+            0..127: r:=((127-temp)/127);
+            128..255: r:=((temp-128)/127);
+          end;
+          phi:=(get_channel('pan')+(get_channel('panfine')/256))/255*6.283185307179586476925286766559;	//(X/255)*PI
+          PositionXY.Left:=round(r*sin(phi)*(Fadenkreuz.Width/2)+(Fadenkreuz.Width/2)-(PositionXY.Width div 2));
+          PositionXY.Top:=round(r*cos(phi)*(Fadenkreuz.Height/2)+(Fadenkreuz.Height/2)-(PositionXY.Width div 2));
+        end else
+        begin
+          // Scanner-Steuerung
+          PositionXY.Left:=round(Fadenkreuz.Width * (get_channel('pan')+get_channel('panfine')/256)/255)-(PositionXY.Width div 2);
+          PositionXY.Top:=round(Fadenkreuz.Height * (get_channel('tilt')+get_channel('tiltfine')/256)/255)-(PositionXY.Height div 2);
+        end;
+      end;
+      1:
+      begin
+        if usemhcontrol.checked then
+        begin
+          // Moving-Head-Steuerung
+          temp:=get_channel('tilt')+(get_channel('tiltfine')/256);
+          case round(temp) of
+            0..127: r:=((127-temp)/127);
+            128..255: r:=((temp-128)/127);
+          end;
+          phi:=(get_channel('pan')+(get_channel('panfine')/256))/255*6.283185307179586476925286766559;	//(X/255)*PI
+          PositionXY.Left:=round(r*sin(phi)*(Fadenkreuz.Width/2)+(Fadenkreuz.Width/2)-(PositionXY.Width div 2));
+          PositionXY.Top:=round(r*cos(phi)*(Fadenkreuz.Height/2)+(Fadenkreuz.Height/2)-(PositionXY.Width div 2));
+        end else
+        begin
+          // Scanner-Steuerung
+          PositionXY.Left:=round(Fadenkreuz.Width * (get_channel('pan')+get_channel('panfine')/256)/255)-(PositionXY.Width div 2);
+          PositionXY.Top:=round(Fadenkreuz.Height * (get_channel('tilt')+get_channel('tiltfine')/256)/255)-(PositionXY.Height div 2);
+        end;
+      end;
+      2:
+      begin
+        PANFINEslider2.position:=get_channel('PANFINE');
+        PANFINElbl3.caption:=get_channel('PANFINE');
+      end;
+      3:
+      begin
+        TILTFINEslider3.position:=get_channel('TILTFINE');
+        TILTFINElbl4.caption:=get_channel('TILTFINE');
+      end;
+      4:
+      begin
+        SPECIAL1slider4.position:=get_channel('SPECIAL1');
+        Special1lbl2.caption:=get_channel('SPECIAL1');
+      end;
+      5:
+      begin
+        DIMMERslider5.position:=get_channel('DIMMER');
+        Progressbar1.position:=get_channel('DIMMER');
+        Dimmerlbl1.caption:=get_channel('DIMMER');
+        DIMset.text:=get_channel('DIMMER');
+        value:=get_channel('Dimmer');
+        if value = 255 then
+					ONOFButton1.caption:='Off'
+				else
+					ONOFButton1.caption:='On';
+      end;
+      6:
+      begin
+				Shutterslider1.position:=get_channel('Shutter');
+				Progressbar2.position:=get_channel('Shutter');
+        SHset.text:=get_channel('Shutter');
+        SHutterlbl1.caption:=get_channel('Shutter');
+      end;
+      7:
+      begin
+        Rlbl0.caption:=get_channel('R');
+        Rlbl1.caption:=get_channel('R');
+        Redset.text:=get_channel('R');
+        RSlider.position:=get_channel('R');
+        Progressbar3.position:=get_channel('R');
+        value:=get_channel('R');
+				if value = 255 then
+					RButton.caption:='R Off'
+				else
+					RButton.caption:='R On'
+      end;
+      8:
+      begin
+        Glbl0.caption:=get_channel('G');
+        Glbl1.caption:=get_channel('G');
+        Greset.text:=get_channel('G');
+        GSlider.position:=get_channel('G');
+        Progressbar4.position:=get_channel('G');
+        value:=get_channel('G');
+				if value = 255 then
+					GButton.caption:='G Off'
+				else
+					GButton.caption:='G On'
+      end;
+      9:
+      begin
+        Blbl0.caption:=get_channel('B');
+        Blbl1.caption:=get_channel('B');
+        Bluset.text:=get_channel('B');
+        BSlider.position:=get_channel('B');
+        Progressbar5.position:=get_channel('B');
+        value:=get_channel('B');
+				if value = 255 then
+					BButton.caption:='B Off'
+				else
+					BButton.caption:='B On'
+      end;
+      10:
+      begin
+        Wlbl0.caption:=get_channel('W');
+        Wlbl1.caption:=get_channel('W');
+        Whiset.text:=get_channel('W');
+        WSlider.position:=get_channel('W');
+        Progressbar6.position:=get_channel('W');
+        value:=get_channel('W');
+				if value = 255 then
+					WButton.caption:='W Off'
+				else
+					WButton.caption:='W On';
+      end;
+      11:
+      begin
+				colorvalue.caption:=get_channel('Special2');
+				value:=get_channel('Special2');
+				wert:=get_channel('Special2');
+				if not dontrefresh then
+					case wert of
+						0:
+							begin
+								Colorchoosebox.itemindex:=0;
+								Colorchooseslider.position:= Wert;
+							end;
+						1..19:
+							begin
+								Colorchoosebox.itemindex:=1;
+								ColorchooseSlider.position:= (Wert-1)*40/19;
+							end;
+						20..39:
+							begin
+								Colorchoosebox.itemindex:=2;
+								ColorchooseSlider.position:= (Wert-20)*2;
+							end;
+						40..59:
+							begin
+								Colorchoosebox.itemindex:=3;
+								ColorchooseSlider.position:= (Wert-40)*2;
+							end;
+						60..79:
+							begin
+								Colorchoosebox.itemindex:=4;
+								ColorchooseSlider.position:= (Wert-60)*2;
+							end;
+						80..99:
+							begin
+								Colorchoosebox.itemindex:=5;
+								ColorchooseSlider.position:= (Wert-80)*2;
+							end;
+						100..119:
+							begin
+								Colorchoosebox.itemindex:=6;
+								ColorchooseSlider.position:= (Wert-100)*2;
+							end;
+						120..139:
+							begin
+								Colorchoosebox.itemindex:=7;
+								ColorchooseSlider.position:= (Wert-120)*2;
+							end;
+						140..159:
+							begin
+								Colorchoosebox.itemindex:=8;
+								ColorchooseSlider.position:= (Wert-140)*2;
+							end;
+						160..179:
+							begin
+								Colorchoosebox.itemindex:=9;
+								ColorchooseSlider.position:= (Wert-160)*2;
+							end;
+						180..199:
+							begin
+								Colorchoosebox.itemindex:=10;
+								ColorchooseSlider.position:= (Wert-180)*2;
+							end;
+						200..219:
+							begin
+								Colorchoosebox.itemindex:=11;
+								ColorchooseSlider.position:= (Wert-200)*2;
+							end;
+						220..255:
+							begin
+								Colorchoosebox.itemindex:=12;
+								ColorchooseSlider.position:= (Wert-220)*13/12;
+							end;
+					end;
+			end;
+      12:
+      begin
+				value:=get_channel('Special3');
+				case value of
+          0..59: combobox2.itemindex:=0;
+          60..69: combobox2.itemindex:=1;
+					70..79: combobox2.itemindex:=2;
+          80..89: combobox2.itemindex:=3;
+          90..99: combobox2.itemindex:=4;
+          100..109: combobox2.itemindex:=5;
+          110..119: combobox2.itemindex:=6;
+          120..129: combobox2.itemindex:=7;
+          130..139: combobox2.itemindex:=8;
+          140..149: combobox2.itemindex:=9;
+          150..159: combobox2.itemindex:=10;
+          160..169: combobox2.itemindex:=11;
+          170..179: combobox2.itemindex:=12;
+          180..255: combobox2.itemindex:=13;
+				end;
+			end;
+      13:
+      begin
+				macrospeed.position:=get_channel('Special4');
+				Macro0lbl.caption:=get_channel('Special4');
+      end;
+      14:
+      begin
+				value:=get_channel('Special5');
+				case value of
+          0..64: Combobox3.itemindex:=0;
+          65..128: Combobox3.itemindex:=1;
+          129..192: Combobox3.itemindex:=2;
+          193..255: Combobox3.itemindex:=3;
+        end;
+      end;
+      15:
+      begin
+				zoom.position:=get_channel('Zoom');
+				zoom1.position:=get_channel('Zoom');
+				zoom2.position:=get_channel('Zoom');
+				Zoomvaluelbl.caption:=get_channel('Zoom');
+				Zoomvalue1lbl.caption:=get_channel('Zoom');
+      end;
+      16:
+      begin
+				value:=get_channel('Special6');
+				case value of
+          0..64: Invert.itemindex:=0;
+          65..128: Invert.itemindex:=1;
+          129..192: Invert.itemindex:=2;
+          193..255: Invert.itemindex:=3;
+        end;
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+		var
+			phi,r,x,y:Double;
+			pan, tilt, panfine, tiltfine:Double;
+		begin
+			if usemhcontrol.checked then
+			begin
+				// Moving-Head-Steuerung (Polarkoordinaten)
+				x:=((PositionXY.Left+(PositionXY.Width div 2)-(fadenkreuz.Width/2))/fadenkreuz.Width)*2;	//-1..0..1
+				y:=((PositionXY.Top+(PositionXY.Height div 2)-(fadenkreuz.Width/2))/fadenkreuz.Height)*2;	//-1..0..1
+				r:=sqrt(x*x+y*y);
+	
+				if (r>0) then
+				begin
+					if (y>=0) then
+						phi:=arccos(x/r)
+					else
+						phi:=6.283185307179586476925286766559-arccos(x/r);
+					end 
+				else
+					phi:=64;
+		
+					r:=128-((r/2)*255);
+					phi:=(phi/6.283185307179586476925286766559)*255;
+					if 64>=phi then
+						phi:=phi+191
+					else
+						phi:=phi-64;
+	
+						pan:=255-phi;
+						tilt:=255-r;
+					end else
+						begin
+							// Scannersteuerung (Kartesische Koordinaten)
+							pan:=((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255;
+							tilt:=((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255;
+						end;
+
+					// Ausgabe
+					if panmirror.checked then
+					begin
+						set_channel('pan',trunc(255-pan),trunc(255-pan),0);
+						dontrefresh:=true;
+						set_channel('panfine',trunc(frac(255-pan)*255),trunc(frac(255-pan)*255),0);
+					end	else
+					begin
+						set_channel('pan',trunc(pan),trunc(pan),0);
+						dontrefresh:=true;
+						set_channel('panfine',trunc(frac(pan)*255),trunc(frac(pan)*255),0);
+					end;
+				if tiltmirror.checked then
+	begin
+		set_channel('tilt',trunc(255-tilt),trunc(255-tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(255-tilt)*255),trunc(frac(255-tilt)*255),0);
+	end	else
+	begin
+		set_channel('tilt',trunc(tilt),trunc(tilt),0);
+		set_channel('tiltfine',trunc(frac(tilt)*255),trunc(frac(tilt)*255),0);
+	end;
+  end;
+  procedure PANFINEchange;
+		begin
+			set_channel('PANFINE',-1,PANFINEslider2.position,0);
+		end;
+  procedure TILTFINEchange;
+		begin
+			set_channel('TILTFINE',-1,TILTFINEslider3.position,0);
+		end;
+  procedure SPECIAL1change;
+		begin
+			set_channel('Special1',-1,SPECIAL1slider4.position,0);
+		end;
+  procedure DIMMERchange;
+		begin
+			set_channel('DIMMER',-1,DIMMERslider5.position,0);
+		end;
+	procedure Dimmeroff;
+		begin
+			set_channel('Dimmer',-1,0,0);
+		end;
+	procedure Dimmerquarter;
+		begin
+			set_channel('Dimmer',-1,64,0);
+		end;
+	procedure Dimhalf;
+		begin
+			set_channel('Dimmer',-1,128,0);
+		end;
+	procedure Dimmerthreequarter;
+		begin
+			set_channel('Dimmer', -1, 191, 0);
+		end;
+	procedure Shutteroff;
+		begin
+			set_channel('Shutter',-1,0,0);
+		end;
+	procedure Shutterquarter;
+		begin
+			set_channel('Shutter',-1,64,0);
+		end;
+	procedure Shutterhalf;
+		begin
+			set_channel('Shutter',-1,128,0);
+		end;
+	procedure Shutterthreequarter;
+		begin
+			set_channel('Shutter', -1, 191, 0);
+		end;
+	procedure Shutterfull;
+		begin
+			set_channel('Shutter', -1, 255, 0);
+		end;
+  procedure ColorPickerChange(R, G, B: Byte);
+		begin
+			set_channel('Special2',-1,0,0);
+			set_channel('r',-1,r,0);
+			set_channel('g',-1,g,0);
+			set_channel('b',-1,b,0);
+			set_channel('c',-1,255-r,0);
+			set_channel('m',-1,255-g,0);
+			set_channel('y',-1,255-b,0);
+			if (R=G) and (G=B) then 
+					set_channel('W',-1,R,0);
+			if checkbox1.checked = true then begin
+				set_channel('W',-1,0,0);
+				if (R=G) and (G=B) then 
+					set_channel('W',-1,R,0)
+				else 
+					set_channel('W',-1,0,0); end;
+			if (checkbox2.checked = true) then
+				set_channel('Dimmer',-1,255,0);
+		end;
+  procedure SwitchColorPicker;
+		begin
+			if colorpicker.visible then
+			begin
+				colorpicker.visible:=false;
+				colorpicker2.visible:=true;
+			end else
+			begin
+				colorpicker.visible:=true;
+				colorpicker2.visible:=false;
+			end;
+		end;
+  procedure Dimmerspecial;
+		begin
+			case combobox1.itemindex of
+				0: set_channel('Dimmer', -1, 0, 0);
+				1: set_channel('Dimmer', -1, 64, 0);
+				2: set_channel('Dimmer', -1, 128, 0);
+				3: set_channel('Dimmer', -1, 192, 0);
+				4: set_channel('Dimmer', -1, 255, 0);
+			end;
+		end;
+	procedure DimmerOnOff;
+		var
+			ValueDim:integer;
+		begin
+			valueDim:=get_channel('Dimmer');
+			if valueDim = 255 then
+				set_channel('Dimmer',-1,0,0)
+			else
+				set_channel('Dimmer',-1,255,0);
+		end;
+	procedure Shutterchange;
+		begin
+			set_channel('Shutter',Shutterslider1.position,Shutterslider1.position,0);
+		end;
+	procedure Shutteroff;
+		begin
+			set_channel('Shutter',-1,0,0);
+		end;
+	procedure RChange;
+		var 
+			vr,vg,vb:byte;
+		begin
+			set_channel('Special2',-1,0,0);
+			set_channel('R',RSlider.position,RSlider.position,0);
+			vR:=get_channel('R');
+			vG:=get_channel('G');
+			vb:=get_channel('b');
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+			if (checkbox2.checked = true) then
+				set_channel('Dimmer',-1,255,0);
+		end;
+	procedure GChange;
+		var 
+			vr,vg,vb:byte;
+		begin
+			set_channel('Special2',-1,0,0);
+			set_channel('G',GSlider.position,GSlider.position,0);
+			vR:=get_channel('R');
+			vG:=get_channel('G');
+			vb:=get_channel('b');
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+			if (checkbox2.checked = true) then
+				set_channel('Dimmer',-1,255,0);
+		end;
+	procedure BChange;
+		var 
+			vr,vg,vb:byte;
+		begin
+			set_channel('Special2',-1,0,0);
+			set_channel('B',BSlider.position,BSlider.position,0);
+			vR:=get_channel('R');
+			vG:=get_channel('G');
+			vb:=get_channel('b');
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+			if (checkbox2.checked = true) then
+				set_channel('Dimmer',-1,255,0);
+		end;	
+	procedure WChange;
+		begin
+			set_channel('Special2',-1,0,0);
+			set_channel('W',WSlider.position,WSlider.position,0);
+			if (checkbox2.checked = true) then
+				set_channel('Dimmer',-1,255,0);
+		end;	
+	procedure ROnOf;
+		var
+			valueR:Integer;
+			vr,vg,vb:byte;
+		begin
+		valueR:=get_channel('R');
+			if valueR = 255 then
+				begin 
+					set_channel('Special2',-1,0,0);
+					set_channel('R',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Special2',-1,0,0);
+					set_channel('R',-1,255,0);
+				end;
+			vR:=get_channel('R');
+			vG:=get_channel('G');
+			vb:=get_channel('b');
+			if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+			if (checkbox2.checked = true) then
+				set_channel('Dimmer',-1,255,0);
+		end;
+	procedure GOnOf;
+		var
+			valueG:Integer;
+			vr,vg,vb:byte;
+		begin
+		valueG:=get_channel('G');
+			if valueG = 255 then
+				begin
+					set_channel('Special2',-1,0,0);	
+					set_channel('G',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Special2',-1,0,0);
+					set_channel('G',-1,255,0);
+				end;
+			vR:=get_channel('R');
+			vG:=get_channel('G');
+			vb:=get_channel('b');
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+			if (checkbox2.checked = true) then
+				set_channel('Dimmer',-1,255,0);
+		end;
+	procedure BOnOf;
+		var
+			valueB:Integer;
+			vr,vg,vb:byte;
+		begin
+		valueB:=get_channel('B');
+			if valueB = 255 then
+				begin
+					set_channel('Special2',-1,0,0);	
+					set_channel('B',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Special2',-1,0,0);
+					set_channel('B',-1,255,0);
+				end;
+			vR:=get_channel('R');
+			vG:=get_channel('G');
+			vb:=get_channel('b');
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+			if (checkbox2.checked = true) then
+				set_channel('Dimmer',-1,255,0);
+		end;
+	procedure WOnOf;
+		var
+			valueW:Integer;
+		begin
+		valueW:=get_channel('W');
+			if valueW = 255 then
+				begin
+					set_channel('Special2',-1,0,0);	
+					set_channel('W',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Special2',-1,0,0);
+					set_channel('W',-1,255,0);
+				end;
+			if (checkbox2.checked = true) then
+				set_channel('Dimmer',-1,255,0);
+		end;
+	procedure Colorhelp;
+		begin
+			set_channel('Special2',-1,0,0);
+		end;
+  procedure Macro;
+		begin
+			case combobox2.itemindex of
+				0: set_channel('Special3', -1, 0, 0);
+				1: set_channel('Special3', -1, 60, 0);
+				2: set_channel('Special3', -1, 70, 0);
+				3: set_channel('Special3', -1, 80, 0);
+				4: set_channel('Special3', -1, 90, 0);
+				5: set_channel('Special3', -1, 100, 0);
+				6: set_channel('Special3', -1, 110, 0);
+				7: set_channel('Special3', -1, 120, 0);
+				8: set_channel('Special3', -1, 130, 0);
+				9: set_channel('Special3', -1, 140, 0);
+				10: set_channel('Special3', -1, 150, 0);
+				11: set_channel('Special3', -1, 160, 0);
+				12: set_channel('Special3', -1, 170, 0);
+				13: set_channel('Special3', -1, 180, 0);
+			end;
+		end;
+	procedure Macrozero;
+		begin
+			set_channel('Special3',-1,0,0);
+		end;
+	procedure Macrospeed;
+		begin
+			set_channel('Special4',Macrospeed.position,Macrospeed.position,0);
+		end;
+	procedure Macro0;
+		begin
+			set_channel('Special4',-1,0,0);
+		end;
+	procedure Zoom;
+		begin
+			set_channel('Zoom',zoom.position,zoom.position,0);
+		end;
+	procedure Zoom1;
+		begin
+			set_channel('Zoom',zoom1.position,zoom1.position,0);
+		end;
+	procedure Zoom2;
+		begin
+			set_channel('Zoom',zoom2.position,zoom2.position,0);
+		end;
+	procedure L;
+		begin
+			set_channel('Zoom',-1,0,0);
+		end;
+	procedure M;
+		begin
+			set_channel('Zoom',-1,64,0);
+		end;
+	procedure S;
+		begin
+			set_channel('Zoom',-1,127,0);
+		end;
+	procedure Invert;
+		begin
+			case Invert.itemindex of
+				0: set_channel('Special6', -1, 0, 0);
+				1: set_channel('Special6', -1, 100, 0);
+				2: set_channel('Special6', -1, 150, 0);
+				3: set_channel('Special6', -1, 250, 0);
+			end;
+		end;
+	procedure Sound;
+		begin
+			case Combobox3.itemindex of
+				0: set_channel('Special5', -1, 0, 0);
+				1: set_channel('Special5', -1, 100, 0);
+				2: set_channel('Special5', -1, 150, 0);
+				3: set_channel('Special5', -1, 250, 0);
+			end;
+		end;
+  procedure Colorchoose;
+  begin
+		case Colorchoosebox.itemindex of
+			0: set_channel('Special2',-1,0,0);
+			1:
+			begin
+				ColorchooseSlider.position:=0;
+				set_channel('Special2',1+round(ColorchooseSlider.position/40*19),1+round(ColorchooseSlider.position/40*19),0);
+			end;
+			2:
+			begin
+				ColorchooseSlider.position:=0;
+				set_channel('Special2',20+round(ColorchooseSlider.position/2),20+round(ColorchooseSlider.position/21),0);
+			end;
+			3:
+			begin
+				ColorchooseSlider.position:=0;
+				set_channel('Special2',40+round(ColorchooseSlider.position/2),40+round(ColorchooseSlider.position/2),0);
+			end;
+			4:
+			begin
+				ColorchooseSlider.position:=0;
+				set_channel('Special2',60+round(ColorchooseSlider.position/2),60+round(ColorchooseSlider.position/2),0);
+			end;
+			5:
+			begin
+				ColorchooseSlider.position:=0;
+				set_channel('Special2',80+round(ColorchooseSlider.position/2),80+round(ColorchooseSlider.position/2),0);
+			end;
+			6:
+			begin
+				ColorchooseSlider.position:=0;
+				set_channel('Special2',100+round(ColorchooseSlider.position/2),100+round(ColorchooseSlider.position/2),0);
+			end;
+			7:
+			begin
+				ColorchooseSlider.position:=0;
+				set_channel('Special2',120+round(ColorchooseSlider.position/2),120+round(ColorchooseSlider.position/2),0);
+			end;
+			8:
+			begin
+				ColorchooseSlider.position:=0;
+				set_channel('Special2',140+round(ColorchooseSlider.position/2),140+round(ColorchooseSlider.position/2),0);
+			end;
+			9:
+			begin
+				ColorchooseSlider.position:=0;
+				set_channel('Special2',160+round(ColorchooseSlider.position/2),160+round(ColorchooseSlider.position/2),0);
+			end;
+			10:
+			begin
+				ColorchooseSlider.position:=0;
+				set_channel('Special2',180+round(ColorchooseSlider.position/2),180+round(ColorchooseSlider.position/2),0);
+			end;
+			11:
+			begin
+				ColorchooseSlider.position:=0;
+				set_channel('Special2',200+round(ColorchooseSlider.position/2),200+round(ColorchooseSlider.position/2),0);
+			end;
+			12:
+			begin
+				ColorchooseSlider.position:=0;
+				set_channel('Special2',220+round(ColorchooseSlider.position/39*37),220+round(ColorchooseSlider.position/39*37),0);
+			end;
+		end;
+  end;
+  procedure Colorchoose1;
+  begin
+		case Colorchoosebox.itemindex of
+			0: set_channel('Special2',-1,0,0);
+			1:
+			begin
+				set_channel('Special2',1+round(ColorchooseSlider.position/40*19),1+round(ColorchooseSlider.position/40*19),0);
+			end;
+			2:
+			begin
+				set_channel('Special2',20+round(ColorchooseSlider.position/2),20+round(ColorchooseSlider.position/2),0);
+			end;
+			3:
+			begin
+				set_channel('Special2',40+round(ColorchooseSlider.position/2),40+round(ColorchooseSlider.position/2),0);
+			end;
+			4:
+			begin
+				set_channel('Special2',60+round(ColorchooseSlider.position/2),60+round(ColorchooseSlider.position/2),0);
+			end;
+			5:
+			begin
+				set_channel('Special2',80+round(ColorchooseSlider.position/2),80+round(ColorchooseSlider.position/2),0);
+			end;
+			6:
+			begin
+				set_channel('Special2',100+round(ColorchooseSlider.position/2),100+round(ColorchooseSlider.position/2),0);
+			end;
+			7:
+			begin
+				set_channel('Special2',120+round(ColorchooseSlider.position/2),120+round(ColorchooseSlider.position/2),0);
+			end;
+			8:
+			begin
+				set_channel('Special2',140+round(ColorchooseSlider.position/2),140+round(ColorchooseSlider.position/2),0);
+			end;
+			9:
+			begin
+				set_channel('Special2',160+round(ColorchooseSlider.position/2),160+round(ColorchooseSlider.position/2),0);
+			end;
+			10:
+			begin
+				set_channel('Special2',180+round(ColorchooseSlider.position/2),180+round(ColorchooseSlider.position/2),0);
+			end;
+			11:
+			begin
+				set_channel('Special2',200+round(ColorchooseSlider.position/2),200+round(ColorchooseSlider.position/2),0);
+			end;
+			12:
+			begin
+				set_channel('Special2',220+round(ColorchooseSlider.position/39*37),220+round(ColorchooseSlider.position/39*37),0);
+			end;
+		end;
+  end;
+	procedure setR;
+		var
+			valueRed:Integer;
+			vr,vg,vb,vdim:byte;
+		begin
+      valueRed:=strtoint(Redset.text);
+			if valueRed>=255 then
+				set_channel('R',-1,255,0,0)
+			else
+				set_channel('R',-1,valueRed,0,0);
+			vr:=get_channel('R');
+			vg:=get_channel('G');
+			vb:=get_channel('B');
+			vdim:=get_channel('Dimmer');
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+			if (checkbox2.checked = true) then
+				set_channel('Dimmer',-1,255,0);
+		end;
+	procedure setG;
+		var
+			valueGre:Integer;
+			vr,vg,vb,vdim:byte;
+		begin
+      valueGre:=strtoint(Greset.text);
+			if valueGre>=255 then
+				set_channel('G',-1,255,0,0)
+			else
+				set_channel('G',-1,valueGre,0,0);
+			vr:=get_channel('R');
+			vg:=get_channel('G');
+			vb:=get_channel('B');
+			vdim:=get_channel('Dimmer');
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+			if (checkbox2.checked = true) then
+				set_channel('Dimmer',-1,255,0);
+		end;
+	procedure setB;
+		var
+			valueBlu:Integer;
+			vr,vg,vb,vdim:byte;
+		begin
+      valueBlu:=strtoint(Bluset.text);
+			if valueBlu>=255 then
+				set_channel('B',-1,255,0,0)
+			else
+				set_channel('B',-1,valueBlu,0,0);
+			vr:=get_channel('R');
+			vg:=get_channel('G');
+			vb:=get_channel('B');
+			vdim:=get_channel('Dimmer');
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+			if (checkbox2.checked = true) then
+				set_channel('Dimmer',-1,255,0);
+		end;
+	procedure setW;
+		var
+			valueWhi:Integer;
+			vr,vg,vb,vdim:byte;
+		begin
+			vr:=get_channel('R');
+			vg:=get_channel('G');
+			vb:=get_channel('B');
+			vdim:=get_channel('Dimmer');
+      valueWhi:=strtoint(Whiset.text);
+			if valueWhi>=255 then
+				set_channel('W',-1,255,0,0)
+			else
+				set_channel('W',-1,valueWhi,0,0);
+			if (checkbox2.checked = true) then
+				set_channel('Dimmer',-1,255,0);
+		end;
+	procedure setDim;
+		var
+			valueDim:Integer;
+		begin
+      valueDIM:=strtoint(DIMset.text);
+			if valueDIM>=255 then
+				set_channel('Dimmer',-1,255,0,0)
+			else
+      set_channel('Dimmer',-1,valueDim,0,0);
+		end;
+	procedure setShu;
+		var
+			valueSh:Integer;
+		begin
+      valueSh:=strtoint(Shset.text);
+			if valuesh>=255 then
+				set_channel('Shutter',-1,255,0,0)
+			else
+      set_channel('Shutter',-1,valueSh,0,0);
+		end;
+	procedure Whitekill;
+		begin
+		end;	
+	procedure DIM;
+		begin
+		end;
+	procedure Dimmer2;
+    begin
+      set_channel('Dimmer',-1,15,0,0);
+    end;
+  end.
+ </code>
+</device>

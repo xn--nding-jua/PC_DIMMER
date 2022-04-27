@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\strahler.png">
+ <information id="PC_DIMMER">
+ <name>300Watt Spot</name>
+ <vendor>Unbekannt</vendor>
+ <author>Peter</author>
+ <description>Spot</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="DIMMER" fade="yes" type="dimmer"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="10" MaxValue="249" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="233" height="145">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <slider name="dimmerslider0" top="96" left="8" width="217" height="17" action="dimmerchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="dimmerlbl0" top="80" left="8" width="44" height="13" caption="DIMMER"/>
+  <label name="Dimmerlbl" top="80" left="205" width="14" height="13" caption="0%"/>
+  <progressbar name="Progressbar1" top="80" left="55" width="150" height="15" startvalue="0" endvalue="255" default="0"/>
+  <button name="Button1_714" top="115" left="5" width="75" height="25" action="Blackout" caption="Blackout"/>
+  <button name="Button2_566" top="115" left="155" width="75" height="25" action="FullOn" caption="Full On"/>
+  <button name="Button3_964" top="115" left="80" width="75" height="25" action="Half" caption="50%/128"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure dimmerchange;
+  procedure Blackout;
+  procedure FullOn;
+  procedure Half;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        dimmerslider0.position:=get_channel('dimmer');
+        Progressbar1.position:=get_channel('DIMMER');
+        Dimmerlbl.caption:=levelstr(dimmerslider0.position);
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure dimmerchange;
+  begin
+    set_channel('dimmer',dimmerslider0.position,dimmerslider0.position,0);
+  end;
+  procedure Blackout;
+begin
+	set_channel('Dimmer', -1, 0, 0);
+end;
+  procedure FullOn;
+begin
+	set_channel('Dimmer', -1, 255, 0);
+end;
+  procedure Half;
+begin
+	set_channel('DImmer', -1, 128, 0);
+end;
+  end.
+ </code>
+</device>

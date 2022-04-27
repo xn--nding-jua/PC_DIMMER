@@ -9,7 +9,7 @@
  <channels>
   <function channel="0" minvalue="0" maxvalue="255" name="Intensity" fade="yes" type="dimmer"/>
  </channels>
- <initvalues 0="-1" />
+ <initvalues ch0="-1" />
  <form width="200" height="140">
   <deviceimage top="8" left="8" width="64" height="64"/>
   <devicename top="24" left="80"/>

@@ -20,7 +20,7 @@
   <function channel="10" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
   <function channel="11" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
  </channels>
- <initvalues 0="-1" 1="-1" 2="-1" 3="-1" 4="-1" 5="-1" 6="-1" 7="127" 8="127" 9="-1" 10="128" 11="128" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="127" ch8="127" ch9="-1" ch10="128" ch11="128" />
  <colors>
   <color name="White-->Blue111" value="0" valueend="15" r="255" g="255" b="255" />
   <color name="Blue111-->Red301" value="16" valueend="31" r="64" g="64" b="255" />

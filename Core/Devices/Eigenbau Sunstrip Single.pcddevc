@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\PowerStick.png">
+ <information id="PC_DIMMER">
+ <name>Powerstick Single</name>
+ <vendor>Eigenbau</vendor>
+ <author>Peter</author>
+ <description>Toms Lichtbar Einzelkanal</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="DIMMER" fade="yes" type="DIMMER"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" ch8="-1" ch9="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="230" height="160">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="Combobox1" top="132" left="40" width="145" height="21" action="Dimmerspecial1">
+   <item caption="Blackout" value="0" valueend="-1" picture="" />
+   <item caption="Untere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="50% " value="0" valueend="-1" picture="" />
+   <item caption="Obere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="Full On" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <slider name="DimmerSlider1" top="110" left="5" width="220" height="15" action="DIMMER1change" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar1" top="85" left="5" width="190" height="20" startvalue="0" endvalue="255" default="0"/>
+  <label name="DIMMERlbl1" top="89" left="195" width="15" height="20" caption="0%"/>
+  <label name="DIMMERlbla" top="67" left="5" width="35" height="13" caption="DIMMER 1"/> 
+  <button name="Button01" top="131" left="5" width="35" height="23" action="Dimmer1_off" caption="Off"/>
+  <button name="Button11" top="131" left="185" width="40" height="23" action="FULL_ON1" caption="Full-On"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    value:integer;
+    r,phi,temp:Double;
+  begin
+		if not DontRefresh then
+    case channel of
+      0:
+      begin
+				Dimmerslider1.position:=get_channel('DIMMER');
+				Progressbar1.position:=get_channel('DIMMER');
+        Dimmerlbl1.caption:=get_channel('DIMMER');
+        value:=get_channel('DIMMER');
+        case value of
+          0: combobox1.itemindex:=0;
+          1..127: combobox1.itemindex:=1;
+          128: combobox1.itemindex:=2;
+          129..254: combobox1.itemindex:=3;
+          255: combobox1.itemindex:=4;
+        end;
+			end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure DIMMER1change;
+  begin
+    set_channel('DIMMER',DimmerSlider1.Position,DimmerSlider1.Position,0);
+ 	end;
+ 	procedure Dimmerspecial1;
+	begin
+    case combobox1.itemindex of
+      0: set_channel('DIMMER', -1, 0, 0);
+      1: set_channel('DIMMER', -1, 64, 0);
+      2: set_channel('DIMMER', -1, 128, 0);
+      3: set_channel('DIMMER', -1, 192, 0);
+      4: set_channel('DIMMER', -1, 255, 0);
+    end;
+  end;
+  procedure Dimmer1_off;
+	begin
+		set_channel('DIMMER', -1, 0, 0);
+	end;
+  procedure FULL_ON1;
+	begin
+		set_channel('DIMMER', -1, 255, 0);
+	end;
+  end.
+ </code>
+</device>

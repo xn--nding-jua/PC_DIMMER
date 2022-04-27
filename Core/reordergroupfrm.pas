@@ -668,6 +668,7 @@ begin
 
   if (Grouplistbox.itemindex>-1) and (grouplistbox.itemindex<length(mainform.devicegroups)) then
   begin
+    adddevicetogroupform.DeviceAndGroupMode:=false;
     adddevicetogroupform.showmodal;
 
     if adddevicetogroupform.modalresult=mrOK then

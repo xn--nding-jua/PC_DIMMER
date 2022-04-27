@@ -442,6 +442,7 @@ type
     procedure set_group(GroupID: TGUID; channel:string; startvalue, endvalue, fadetime:integer);overload;
     procedure set_group(GroupID: TGUID; channel:string; startvalue, endvalue, fadetime, delay:integer);overload;
     function get_channel(DeviceID: TGUID; channel:string):integer;
+    function get_group(GroupID: TGUID; channel:string):integer;
 
     procedure set_color(DeviceID: TGUID; R, G, B:byte; Fadetime, Delay:Integer; Mode:Byte=7);overload;
     procedure set_color(DeviceID: TGUID; R, G, B:byte; A,W:integer; Fadetime, Delay:Integer; Mode:Byte=7);overload;
@@ -2503,8 +2504,6 @@ var
 begin
   if fadetime<-1 then
     fadetime:=Random(abs(fadetime));
-  if delay<0 then
-    delay:=Random(abs(delay));
 
   aktuellesgeraet:=GetDevicePositionInDeviceArray(@DeviceID);
 
@@ -2514,6 +2513,9 @@ begin
     set_group(DeviceID,channel,startvalue,endvalue,fadetime,delay);
     exit; // exit wenn Gruppen-ID
   end;
+
+  if delay<0 then
+    delay:=Random(abs(delay));
 
   endvalue_new:=endvalue;
 
@@ -2737,6 +2739,40 @@ begin
   end;
 end;
 
+function Tgeraetesteuerung.get_group(GroupID: TGUID; channel:string):integer;
+var
+  i,k:integer;
+  GroupIndex,DeviceIndex,IntegratedValue,DeviceCount:integer;
+begin
+  GroupIndex:=GetGroupPositionInGroupArray(GroupID);
+
+  if (GroupIndex>=0) and (GroupIndex<length(mainform.DeviceGroups)) then
+  begin
+    IntegratedValue:=0;
+    DeviceCount:=0;
+    for i:=0 to length(mainform.DeviceGroups[GroupIndex].IDs)-1 do
+    begin
+      DeviceIndex:=GetDevicePositionInDeviceArray(@mainform.DeviceGroups[GroupIndex].IDs[i]);
+
+      if (DeviceIndex>=0) and (DeviceIndex<length(mainform.Devices)) then
+      for k:=0 to mainform.Devices[DeviceIndex].MaxChan-1 do
+      begin
+        if lowercase(mainform.Devices[DeviceIndex].kanaltyp[k])=lowercase(channel) then
+        begin
+          IntegratedValue:=IntegratedValue+(maxres-mainform.data.ch[mainform.Devices[DeviceIndex].Startaddress+k]);
+          inc(DeviceCount);
+          break;
+        end;
+      end;
+    end;
+
+    result:=round(IntegratedValue/DeviceCount);
+  end else
+  begin
+    result:=0;
+  end;
+end;
+
 function Tgeraetesteuerung.channel(channel:integer):Integer;
 begin
   Result:=maxres-mainform.data.ch[channel];
@@ -2880,7 +2916,7 @@ var
   text,h,min,s,ms:string;
   BefehleNode,KompositionsszeneNode,TastencodeNode,JoystickeventNode,MidiEventArrayNode,DataInEventArrayNode:TTreeNode;
   DevicePresetsNode,DeviceGroupsNode,DeviceScenesNode,AudioeffektplayerNode,EffekteNode,BewegungsszenenNode:TTreeNode;
-  SubmasterNode:TTreeNode;
+  SubmasterNode,XTouchControlNode:TTreeNode;
 begin
   LockWindow(Treeview.Handle);
 
@@ -2900,6 +2936,7 @@ begin
   EffekteNode:=nil;
   BewegungsszenenNode:=nil;
   SubmasterNode:=nil;
+  XTouchControlNode:=nil;
 
   //ProgressScreenSmall.Label1.Caption:='Geräteverbindungen suchen...';
   //ProgressScreenSmall.Label2.Caption:='Es werden sämtliche Verbindungen zu diesem Gerät gesucht.';
@@ -3243,6 +3280,22 @@ begin
     end;
   end;
   // Ende Submaster
+  // XTouchControl
+  for i:=0 to length(mainform.XTouchDevices)-1 do
+  begin
+    if IsEqualGUID(mainform.XTouchDevices[i].ID,ID) then
+    begin
+      if XTouchControlNode=nil then
+      begin
+        XTouchControlNode:=Treeview.Items.Add(nil, _('XTouchControl'));
+        XTouchControlNode.ImageIndex:=26;
+        XTouchControlNode.SelectedIndex:=26;
+      end;
+      Treeview.Items.AddChild(XTouchControlNode,'XTouchControl');
+      deviceinuse:=true;
+    end;
+  end;
+  // Ende XTouchControl
 
   //ProgressScreenSmall.Hide;
 

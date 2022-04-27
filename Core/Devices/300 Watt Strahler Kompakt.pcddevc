@@ -1,0 +1,770 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\strahler.png">
+ <information id="PC_DIMMER">
+ <name>Lichtbar</name>
+ <vendor>Unbekannt</vendor>
+ <author>Peter</author>
+ <description>Lichtbar mit W,Y,R,G,B,W</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="W" fade="yes" type="w"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Yellow" fade="yes" type="Yellow"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="R" fade="yes" type="r"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="G" fade="yes" type="g"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="B" fade="yes" type="b"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="450" height="400">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorpicker top="80" left="10" />
+  
+  <edit name="Wset" top="10" left="405" width="25" height="15" text="0" action="Wset"/>  
+  <edit name="Yset" top="90" left="405" width="25" height="15" text="0" action="Yset"/>  
+  <edit name="Rset" top="170" left="405" width="25" height="15" text="0" action="Rset"/>  
+  <edit name="Gset" top="250" left="405" width="25" height="15" text="0" action="Gset"/>  
+  <edit name="Bset" top="330" left="405" width="25" height="15" text="0" action="Bset"/>  
+  
+  <checkbox name="Checkbox1" top="250" left="10" width="65" height="20" caption="White kill?" action="Whitekill" checked="false"/>
+  <checkbox name="Checkbox2" top="250" left="80" width="80" height="20" caption="Yellow kill?" action="Yellowkill" checked="false"/>
+  
+  <slider name="Wslider" top="50" left="210" width="220" height="20" action="Wchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Yslider" top="130" left="210" width="220" height="20" action="Ychange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Rslider" top="210" left="210" width="220" height="20" action="Rchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Gslider" top="290" left="210" width="220" height="20" action="Gchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="Bslider" top="370" left="210" width="220" height="20" action="Bchange" startvalue="0" endvalue="255" default="0"/>
+  
+  <progressbar name="Progressbar1" top="10" left="225" width="180" height="21" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar2" top="90" left="225" width="180" height="21" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar3" top="170" left="225" width="180" height="21" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar4" top="250" left="225" width="180" height="21" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar5" top="330" left="225" width="180" height="21" startvalue="0" endvalue="255" default="0"/>
+  
+  <label name="Wlbl" top="14" left="210" width="10" height="13" caption="W"/>  
+  <label name="Ylbl" top="94" left="210" width="10" height="13" caption="Y"/>
+  <label name="Rlbl" top="174" left="210" width="10" height="13" caption="R"/>
+  <label name="Glbl" top="254" left="210" width="10" height="13" caption="G"/>
+  <label name="Blbl" top="334" left="210" width="10" height="13" caption="B"/>
+  
+  <button name="Woff" top="31" left="209" width="40" height="19" action="Woff" caption="Off"/>
+  <button name="Yoff" top="111" left="209" width="40" height="19" action="Yoff" caption="Off"/>
+  <button name="Roff" top="191" left="209" width="40" height="19" action="Roff" caption="Off"/>
+  <button name="Goff" top="271" left="209" width="40" height="19" action="Goff" caption="Off"/>
+  <button name="Boff" top="351" left="209" width="40" height="19" action="Boff" caption="Off"/>
+  
+  <button name="Wq" top="31" left="249" width="40" height="19" action="Wq" caption="25%"/>
+  <button name="Yq" top="111" left="249" width="40" height="19" action="Yq" caption="25%"/>
+  <button name="Rq" top="191" left="249" width="40" height="19" action="Rq" caption="25%"/>
+  <button name="Gq" top="271" left="249" width="40" height="19" action="Gq" caption="25%"/>
+  <button name="Bq" top="351" left="249" width="40" height="19" action="Bq" caption="25%"/>
+  
+  <button name="Wh" top="31" left="289" width="50" height="19" action="Wh" caption="50%"/>
+  <button name="Yh" top="111" left="289" width="50" height="19" action="Yh" caption="50%"/>
+  <button name="Rh" top="191" left="289" width="50" height="19" action="Rh" caption="50%"/>
+  <button name="Gh" top="271" left="289" width="50" height="19" action="Gh" caption="50%"/>
+  <button name="Bh" top="351" left="289" width="50" height="19" action="Bh" caption="50%"/>
+  
+  <button name="Wt" top="31" left="339" width="42" height="19" action="Wt" caption="75%"/>
+  <button name="Yt" top="111" left="339" width="42" height="19" action="Yt" caption="75%"/>
+  <button name="Rt" top="191" left="339" width="42" height="19" action="Rt" caption="75%"/>
+  <button name="Gt" top="271" left="339" width="42" height="19" action="Gt" caption="75%"/>
+  <button name="Bt" top="351" left="339" width="42" height="19" action="Bt" caption="75%"/>
+  
+  <button name="WButton" top="31" left="381" width="50" height="19" action="WOnOf" caption="W On"/>
+  <button name="YButton" top="111" left="381" width="50" height="19" action="YOnOf" caption="Y On"/>
+  <button name="RButton" top="191" left="381" width="50" height="19" action="ROnOf" caption="R On"/>
+  <button name="GButton" top="271" left="381" width="50" height="19" action="GOnOf" caption="G On"/>
+  <button name="BButton" top="351" left="381" width="50" height="19" action="BOnOf" caption="B On"/>
+  
+  <button name="Button2_196" top="275" left="10" width="50" height="30" action="Dark" caption="Dark"/>
+  <button name="Button3_488" top="275" left="60" width="50" height="30" action="Half" caption="50%"/>
+  <button name="Button4_522" top="275" left="110" width="50" height="30" action="White" caption="White"/>
+  <button name="Button5_884" top="305" left="10" width="50" height="30" action="Red" caption="Red"/>
+  <button name="Button6_574" top="305" left="60" width="50" height="30" action="Yel" caption="Yellow"/>
+  <button name="Button7_197" top="305" left="110" width="50" height="30" action="Orange" caption="Orange"/>
+  <button name="Button8_342" top="335" left="10" width="50" height="30" action="Green" caption="Green"/>
+  <button name="Button9_342" top="335" left="60" width="50" height="30" action="Cyan" caption="Cyan"/>  
+  <button name="Button9_291" top="365" left="10" width="50" height="30" action="Blue" caption="Blue"/>
+  <button name="Button10_701" top="365" left="60" width="50" height="30" action="Violett" caption="Violett"/>
+  <button name="Button11_701" top="335" left="110" width="50" height="60" action="FullOn" caption="Full-On"/>
+  
+  <button name="SwitchColorPickerBtn" top="215" left="11" width="150" height="25" action="SwitchColorPicker" caption="Andere Farbauswahl"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure Wchange;
+  procedure YELLOWchange;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure SwitchColorPicker;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Re,G,B,W,Y: Integer;
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        Wset.text:=get_channel('W');
+        WSlider.position:=get_channel('W');
+        Progressbar1.position:=get_channel('W');
+        value:=get_channel('W');
+				if value = 255 then
+					WButton.caption:='W Off'
+				else
+					WButton.caption:='W On';
+        Re:=get_channel('R');
+        G:=get_channel('G');
+        B:=get_channel('B');
+        W:=get_channel('W');
+        Y:=get_channel('Yellow');
+        if (Re=255) and (G=255) then 
+					begin
+          if (B=255) and (W=255) then 
+						begin
+							if Y=255 then
+								Button11_701.caption:='Blackoff' 
+							else 
+								Button11_701.caption:='Full On'; 
+						end 
+					else 
+							Button11_701.caption:='Full On'; 
+					end 
+        else 
+					Button11_701.caption:='Full On';
+      end;
+      1:
+      begin
+        Yset.text:=get_channel('Yellow');
+        YSlider.position:=get_channel('Yellow');
+        Progressbar2.position:=get_channel('Yellow');
+        value:=get_channel('Yellow');
+				if value = 255 then
+					YButton.caption:='Y Off'
+				else
+					YButton.caption:='Y On';
+        Re:=get_channel('R');
+        G:=get_channel('G');
+        B:=get_channel('B');
+        W:=get_channel('W');
+        Y:=get_channel('Yellow');
+        if (Re=255) and (G=255) then 
+					begin
+          if (B=255) and (W=255) then 
+						begin
+							if Y=255 then
+								Button11_701.caption:='Blackoff' 
+							else 
+								Button11_701.caption:='Full On'; 
+						end 
+					else 
+							Button11_701.caption:='Full On'; 
+					end 
+        else 
+					Button11_701.caption:='Full On';
+      end;
+      2:
+      begin
+        Rset.text:=get_channel('R');
+        RSlider.position:=get_channel('R');
+        Progressbar3.position:=get_channel('R');
+        value:=get_channel('R');
+				if value = 255 then
+					RButton.caption:='R Off'
+				else
+					RButton.caption:='R On';
+        Re:=get_channel('R');
+        G:=get_channel('G');
+        B:=get_channel('B');
+        W:=get_channel('W');
+        Y:=get_channel('Yellow');
+        if (Re=255) and (G=255) then 
+					begin
+          if (B=255) and (W=255) then 
+						begin
+							if Y=255 then
+								Button11_701.caption:='Blackoff' 
+							else 
+								Button11_701.caption:='Full On'; 
+						end 
+					else 
+							Button11_701.caption:='Full On'; 
+					end 
+        else 
+					Button11_701.caption:='Full On';
+      end;
+      3:
+      begin
+        Gset.text:=get_channel('G');
+        GSlider.position:=get_channel('G');
+        Progressbar4.position:=get_channel('G');
+        value:=get_channel('G');
+				if value = 255 then
+					GButton.caption:='G Off'
+				else
+					GButton.caption:='G On';
+        Re:=get_channel('R');
+        G:=get_channel('G');
+        B:=get_channel('B');
+        W:=get_channel('W');
+        Y:=get_channel('Yellow');
+        if (Re=255) and (G=255) then 
+					begin
+          if (B=255) and (W=255) then 
+						begin
+							if Y=255 then
+								Button11_701.caption:='Blackoff' 
+							else 
+								Button11_701.caption:='Full On'; 
+						end 
+					else 
+							Button11_701.caption:='Full On'; 
+					end 
+        else 
+					Button11_701.caption:='Full On';
+      end;
+      4:
+      begin
+        Bset.text:=get_channel('B');
+        BSlider.position:=get_channel('B');
+        Progressbar5.position:=get_channel('B');
+        value:=get_channel('B');
+				if value = 255 then
+					BButton.caption:='B Off'
+				else
+					BButton.caption:='B On';
+        Re:=get_channel('R');
+        G:=get_channel('G');
+        B:=get_channel('B');
+        W:=get_channel('W');
+        Y:=get_channel('Yellow');
+        if (Re=255) and (G=255) then 
+					begin
+          if (B=255) and (W=255) then 
+						begin
+							if Y=255 then
+								Button11_701.caption:='Blackoff' 
+							else 
+								Button11_701.caption:='Full On'; 
+						end 
+					else 
+							Button11_701.caption:='Full On'; 
+					end 
+        else 
+					Button11_701.caption:='Full On'; 
+        end;
+      end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure Wchange;
+  begin
+    set_channel('W',-1,Wslider.position,0);
+  end;
+  procedure Ychange;
+  begin
+    set_channel('Yellow',-1,Yslider.position,0);
+  end;
+  procedure Rchange;
+  begin
+    set_channel('R',-1,Rslider.position,0);
+  end;
+  procedure Gchange;
+  begin
+    set_channel('G',-1,Gslider.position,0);
+  end;
+  procedure Bchange;
+  begin
+    set_channel('B',-1,Bslider.position,0);
+  end;
+  procedure ColorPickerChange(R, G, B: Byte);
+  begin
+    set_channel('r',-1,r,0);
+    set_channel('g',-1,g,0);
+    set_channel('b',-1,b,0);
+    set_channel('c',-1,255-r,0);
+    set_channel('m',-1,255-g,0);
+    set_channel('Y',-1,255-b,0);
+			if (R=G) and (G=B) then 
+					set_channel('W',-1,R,0);
+			if checkbox1.checked = true then begin
+				begin
+          set_channel('W',-1,0,0);
+        end;
+				if (R=G) and (G=B) then 
+					set_channel('W',-1,R,0)
+				else 
+					set_channel('W',-1,0,0); end;
+		if checkbox2.checked=false then
+			set_channel('Yellow',-1,0,0);
+		if (R=G) and (B=0) then
+			set_channel('Yellow',-1,R,0)
+		else 
+			begin
+				if Checkbox2.checked=false then
+				set_channel('Yellow',-1,0,0);
+			end;
+		if (R=G) and (G=B) then begin 
+			if R=0 then
+				set_channel('Yellow',-1,0,0); end;
+  end;
+  procedure SwitchColorPicker;
+  begin
+    if colorpicker.visible then
+    begin
+      colorpicker.visible:=false;
+      colorpicker2.visible:=true;
+    end else
+    begin
+      colorpicker.visible:=true;
+      colorpicker2.visible:=false;
+    end;
+  end;
+	procedure ROnOf;
+		var
+			valueR:Integer;
+			vr,vg,vb:byte;
+		begin
+		valueR:=get_channel('R');
+			if valueR = 255 then
+				begin 
+					set_channel('R',-1,0,0);
+				end
+			else
+				begin
+					set_channel('R',-1,255,0);
+				end;
+			vR:=get_channel('R');
+			vG:=get_channel('G');
+			vb:=get_channel('b');
+			if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+		end;
+	procedure GOnOf;
+		var
+			valueG:Integer;
+			vr,vg,vb:byte;
+		begin
+		valueG:=get_channel('G');
+			if valueG = 255 then
+				begin
+					set_channel('G',-1,0,0);
+				end
+			else
+				begin
+					set_channel('G',-1,255,0);
+				end;
+			vR:=get_channel('R');
+			vG:=get_channel('G');
+			vb:=get_channel('b');
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+		end;
+	procedure BOnOf;
+		var
+			valueB:Integer;
+			vr,vg,vb:byte;
+		begin
+		valueB:=get_channel('B');
+			if valueB = 255 then
+				begin
+					set_channel('B',-1,0,0);
+				end
+			else
+				begin
+					set_channel('B',-1,255,0);
+				end;
+			vR:=get_channel('R');
+			vG:=get_channel('G');
+			vb:=get_channel('b');
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+		end;
+	procedure WOnOf;
+		var
+			valueW:Integer;
+		begin
+		valueW:=get_channel('W');
+			if valueW = 255 then
+				begin
+					set_channel('W',-1,0,0);
+				end
+			else
+				begin
+					set_channel('W',-1,255,0);
+				end;
+    end;
+	procedure YOnOf;
+		var
+			valueY:Integer;
+		begin
+		valueY:=get_channel('Yellow');
+			if valueY = 255 then
+				begin
+					set_channel('Yellow',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Yellow',-1,255,0);
+				end;
+    end;
+	procedure Rset;
+		var
+			valueRed:Integer;
+			vr,vg,vb,vdim:byte;
+		begin
+      valueRed:=strtoint(Rset.text);
+			if valueRed>=255 then
+				set_channel('R',-1,255,0,0)
+			else
+				set_channel('R',-1,valueRed,0,0);
+			vr:=get_channel('R');
+			vg:=get_channel('G');
+			vb:=get_channel('B');
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+		end;
+	procedure Gset;
+		var
+			valueGre:Integer;
+			vr,vg,vb,vdim:byte;
+		begin
+      valueGre:=strtoint(Gset.text);
+			if valueGre>=255 then
+				set_channel('G',-1,255,0,0)
+			else
+				set_channel('G',-1,valueGre,0,0);
+			vr:=get_channel('R');
+			vg:=get_channel('G');
+			vb:=get_channel('B');
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then begin
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+				else 
+					set_channel('W',-1,0,0); end;
+		end;
+	procedure Bset;
+		var
+			valueBlu:Integer;
+			vr,vg,vb,vdim:byte;
+		begin
+      valueBlu:=strtoint(Bset.text);
+			if valueBlu>=255 then
+				set_channel('B',-1,255,0,0)
+			else
+				set_channel('B',-1,valueBlu,0,0);
+			vr:=get_channel('R');
+			vg:=get_channel('G');
+			vb:=get_channel('B');
+				if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0);
+			if checkbox1.checked = true then 
+			begin
+      if (vR=vG) and (vG=vB) then 
+					set_channel('W',-1,vR,0)
+			else 
+					set_channel('W',-1,0,0);
+			end;
+		end;
+	procedure Wset;
+		var
+			valueWhi:Integer;
+			vr,vg,vb:byte;
+		begin
+			vr:=get_channel('R');
+			vg:=get_channel('G');
+			vb:=get_channel('B');
+      valueWhi:=strtoint(Wset.text);
+			if valueWhi>=255 then
+				set_channel('W',-1,255,0,0)
+			else
+				set_channel('W',-1,valueWhi,0,0);
+		end;
+	procedure Yset;
+		var
+			valueY:Integer;
+			vr,vg,vb,vdim:byte;
+		begin
+			vr:=get_channel('R');
+			vg:=get_channel('G');
+			vb:=get_channel('B');
+      valueY:=strtoint(Yset.text);
+			if valueY >=255 then
+				set_channel('Yellow',-1,255,0,0)
+			else
+				set_channel('Yellow',-1,valueY,0,0);
+		end;
+	procedure Whitekill;
+		begin
+		end;	
+	procedure Yellowkill;
+		begin
+			if checkbox2.checked=true then
+				Checkbox2.caption:='Kill Yellow'
+			else
+				Checkbox2.caption:='No Kill';
+		end;	
+	procedure Woff;
+    begin
+      set_channel('W',-1,0,0);
+    end;
+	procedure Yoff;
+    begin
+      set_channel('Yellow',-1,0,0);
+    end;
+	procedure Roff;
+    begin
+      set_channel('R',-1,0,0);
+    end;
+	procedure Goff;
+    begin
+      set_channel('G',-1,0,0);
+    end;
+	procedure Boff;
+    begin
+      set_channel('B',-1,0,0);
+    end;
+	procedure Wq;
+    begin
+      set_channel('W',-1,64,0);
+    end;
+	procedure Yq;
+    begin
+      set_channel('Yellow',-1,64,0);
+    end;
+	procedure Rq;
+    begin
+      set_channel('R',-1,64,0);
+    end;
+	procedure Gq;
+    begin
+      set_channel('G',-1,64,0);
+    end;
+	procedure Bq;
+    begin
+      set_channel('B',-1,64,0);
+    end;
+	procedure Wh;
+    begin
+      set_channel('W',-1,128,0);
+    end;
+	procedure Yh;
+    begin
+      set_channel('Yellow',-1,128,0);
+    end;
+	procedure Rh;
+    begin
+      set_channel('R',-1,128,0);
+    end;
+	procedure Gh;
+    begin
+      set_channel('G',-1,128,0);
+    end;
+	procedure Bh;
+    begin
+      set_channel('B',-1,128,0);
+    end;
+	procedure Wt;
+    begin
+      set_channel('W',-1,191,0);
+    end;
+	procedure Yt;
+    begin
+      set_channel('Yellow',-1,191,0);
+    end;
+	procedure Rt;
+    begin
+      set_channel('R',-1,191,0);
+    end;
+	procedure Gt;
+    begin
+      set_channel('G',-1,191,0);
+    end;
+	procedure Bt;
+    begin
+      set_channel('B',-1,191,0);
+    end;
+  procedure Dark;
+begin
+  set_channel('W', -1, 0, 0);
+  set_channel('Yellow',-1,0,0);
+	set_channel('R', -1, 0, 0);
+	set_channel('G', -1, 0, 0);
+	set_channel('B', -1, 0, 0);
+end;
+  procedure Half;
+begin
+  set_channel('W', -1, 128, 0);
+  set_channel('Yellow',-1,0,0);
+	set_channel('R', -1, 128, 0);
+	set_channel('G', -1, 128, 0);
+	set_channel('B', -1, 128, 0);
+end;
+  procedure White;
+begin
+  set_channel('W', -1, 255, 0);
+  set_channel('Yellow',-1,0,0);
+	set_channel('R', -1, 255, 0);
+	set_channel('G', -1, 255, 0);
+	set_channel('B', -1, 255, 0);
+end;
+  procedure Red;
+begin
+  set_channel('W', -1, 0, 0);
+  set_channel('Yellow',-1,0,0);
+	set_channel('R', -1, 255, 0);
+	set_channel('G', -1, 0, 0);
+	set_channel('B', -1, 0, 0);
+end;
+  procedure Yel;
+begin
+  set_channel('W', -1, 0, 0);
+  set_channel('Yellow',-1,255,0);
+	set_channel('R', -1, 255, 0);
+	set_channel('G', -1, 255, 0);
+	set_channel('B', -1, 0, 0);
+end;
+  procedure Green;
+begin
+  set_channel('W', -1, 0, 0);
+  set_channel('Yellow',-1,0,0);
+	set_channel('R', -1, 0, 0);
+	set_channel('G', -1, 255, 0);
+	set_channel('B', -1, 0, 0);
+end;
+  procedure Orange;
+begin
+  set_channel('W', -1, 0, 0);
+  set_channel('Yellow',-1,128,0);
+	set_channel('R', -1, 255, 0);
+	set_channel('G', -1, 30, 0);
+	set_channel('B', -1, 0, 0);
+end;
+  procedure Blue;
+begin
+  set_channel('W', -1, 0, 0);
+  set_channel('Yellow',-1,0,0);
+	set_channel('R', -1, 0, 0);
+	set_channel('G', -1, 0, 0);
+	set_channel('B', -1, 255, 0);
+end;
+  procedure Violett;
+begin
+  set_channel('W', -1, 0, 0);
+  set_channel('Yellow',-1,0,0);
+	set_channel('R', -1, 255, 0);
+	set_channel('G', -1, 0, 0);
+	set_channel('B', -1, 255, 0);
+end;
+  procedure Cyan;
+begin
+  set_channel('W', -1, 0, 0);
+  set_channel('Yellow',-1,0,0);
+	set_channel('R', -1, 0, 0);
+	set_channel('G', -1, 255, 0);
+	set_channel('B', -1, 255, 0);
+end;
+  procedure FullOn;
+  var 
+    R,G,B,W,Y: Integer;
+  begin
+    R:=get_channel('R');
+    G:=get_channel('G');
+    B:=get_channel('B');
+    W:=get_channel('W');
+    Y:=get_channel('Yellow');
+    if (R=255) and (G=255) then 
+			begin
+			if (B=255) and (W=255) then 
+				begin
+				if Y=255 then 
+					begin
+					set_channel('W', -1, 0, 0);
+					set_channel('Yellow',-1,0,0);
+					set_channel('R', -1, 0, 0);
+					set_channel('G', -1, 0, 0);
+					set_channel('B', -1, 0, 0);  
+					end
+				else 
+					begin
+					set_channel('W', -1, 255, 0);
+					set_channel('Yellow',-1,255,0);
+					set_channel('R', -1, 255, 0);
+					set_channel('G', -1, 255, 0);
+					set_channel('B', -1, 255, 0);  
+					end; 
+				end
+			else 
+				begin
+				set_channel('W', -1, 255, 0);
+				set_channel('Yellow',-1,255,0);
+				set_channel('R', -1, 255, 0);
+				set_channel('G', -1, 255, 0);
+				set_channel('B', -1, 255, 0);  
+				end; 
+			end
+		else begin
+      set_channel('W', -1, 255, 0);
+      set_channel('Yellow',-1,255,0);
+      set_channel('R', -1, 255, 0);
+      set_channel('G', -1, 255, 0);
+      set_channel('B', -1, 255, 0);  end;
+    end;
+  end.
+ </code>
+</device>

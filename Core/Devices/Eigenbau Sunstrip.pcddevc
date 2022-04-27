@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\PowerStick.png">
+ <information id="PC_DIMMER">
+ <name>Powerstick</name>
+ <vendor>Eigenbau</vendor>
+ <author>Peter</author>
+ <description>Toms Lichtbar</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="DIMMER1" fade="yes" type="dimmer1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="DIMMER2" fade="yes" type="dimmer2"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="DIMMER3" fade="yes" type="dimmer3"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="DIMMER4" fade="yes" type="dimmer4"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="DIMMER5" fade="yes" type="dimmer5"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="DIMMER6" fade="yes" type="dimmer6"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="DIMMER7" fade="yes" type="dimmer7"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="DIMMER8" fade="yes" type="dimmer8"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="DIMMER9" fade="yes" type="dimmer9"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="DIMMER0" fade="yes" type="dimmer0"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" ch8="-1" ch9="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="460" height="425">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="Combobox1" top="117" left="40" width="145" height="21" action="Dimmerspecial1">
+   <item caption="Blackout" value="0" valueend="-1" picture="" />
+   <item caption="Untere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="50% " value="0" valueend="-1" picture="" />
+   <item caption="Obere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="Full On" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox2" top="187" left="40" width="145" height="21" action="Dimmerspecial2">
+   <item caption="Blackout" value="0" valueend="-1" picture="" />
+   <item caption="Untere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="50% " value="0" valueend="-1" picture="" />
+   <item caption="Obere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="Full On" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox3" top="257" left="40" width="145" height="21" action="Dimmerspecial3">
+   <item caption="Blackout" value="0" valueend="-1" picture="" />
+   <item caption="Untere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="50% " value="0" valueend="-1" picture="" />
+   <item caption="Obere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="Full On" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox4" top="327" left="40" width="145" height="21" action="Dimmerspecial4">
+   <item caption="Blackout" value="0" valueend="-1" picture="" />
+   <item caption="Untere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="50% " value="0" valueend="-1" picture="" />
+   <item caption="Obere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="Full On" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox5" top="397" left="40" width="145" height="21" action="Dimmerspecial5">
+   <item caption="Blackout" value="0" valueend="-1" picture="" />
+   <item caption="Untere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="50% " value="0" valueend="-1" picture="" />
+   <item caption="Obere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="Full On" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox6" top="117" left="270" width="145" height="21" action="Dimmerspecial6">
+   <item caption="Blackout" value="0" valueend="-1" picture="" />
+   <item caption="Untere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="50% " value="0" valueend="-1" picture="" />
+   <item caption="Obere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="Full On" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox7" top="187" left="270" width="145" height="21" action="Dimmerspecial7">
+   <item caption="Blackout" value="0" valueend="-1" picture="" />
+   <item caption="Untere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="50% " value="0" valueend="-1" picture="" />
+   <item caption="Obere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="Full On" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox8" top="257" left="270" width="145" height="21" action="Dimmerspecial8">
+   <item caption="Blackout" value="0" valueend="-1" picture="" />
+   <item caption="Untere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="50% " value="0" valueend="-1" picture="" />
+   <item caption="Obere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="Full On" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox9" top="327" left="270" width="145" height="21" action="Dimmerspecial9">
+   <item caption="Blackout" value="0" valueend="-1" picture="" />
+   <item caption="Untere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="50% " value="0" valueend="-1" picture="" />
+   <item caption="Obere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="Full On" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox0" top="397" left="270" width="145" height="21" action="Dimmerspecial0">
+   <item caption="Blackout" value="0" valueend="-1" picture="" />
+   <item caption="Untere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="50% " value="0" valueend="-1" picture="" />
+   <item caption="Obere Hälfte" value="0" valueend="-1" picture="" />
+   <item caption="Full On" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <slider name="DimmerSlider1" top="100" left="5" width="220" height="15" action="DIMMER1change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DimmerSlider2" top="170" left="5" width="220" height="15" action="DIMMER2change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DimmerSlider3" top="240" left="5" width="220" height="15" action="DIMMER3change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DimmerSlider4" top="310" left="5" width="220" height="15" action="DIMMER4change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DimmerSlider5" top="380" left="5" width="220" height="15" action="DIMMER5change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DimmerSlider6" top="100" left="235" width="220" height="15" action="DIMMER6change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DimmerSlider7" top="170" left="235" width="220" height="15" action="DIMMER7change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DimmerSlider8" top="240" left="235" width="220" height="15" action="DIMMER8change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DimmerSlider9" top="310" left="235" width="220" height="15" action="DIMMER9change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DimmerSlider0" top="380" left="235" width="220" height="15" action="DIMMER0change" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar1" top="80" left="5" width="190" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar2" top="150" left="5" width="190" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar3" top="220" left="5" width="190" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar4" top="290" left="5" width="190" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar5" top="360" left="5" width="190" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar6" top="80" left="235" width="190" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar7" top="150" left="235" width="190" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar8" top="220" left="235" width="190" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar9" top="290" left="235" width="190" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar0" top="360" left="235" width="190" height="20" startvalue="0" endvalue="255" default="0"/>
+  <label name="DIMMERlbl1" top="84" left="195" width="15" height="20" caption="0%"/>
+  <label name="DIMMERlbl2" top="154" left="195" width="15" height="20" caption="0%"/>
+  <label name="DIMMERlbl3" top="224" left="195" width="15" height="20" caption="0%"/>
+  <label name="DIMMERlbl4" top="294" left="195" width="15" height="20" caption="0%"/>
+  <label name="DIMMERlbl5" top="364" left="195" width="15" height="20" caption="0%"/>
+  <label name="DIMMERlbl6" top="84" left="425" width="15" height="20" caption="0%"/>
+  <label name="DIMMERlbl7" top="154" left="425" width="15" height="20" caption="0%"/>
+  <label name="DIMMERlbl8" top="224" left="425" width="15" height="20" caption="0%"/>
+  <label name="DIMMERlbl9" top="294" left="425" width="15" height="20" caption="0%"/>
+  <label name="DIMMERlbl0" top="364" left="425" width="15" height="20" caption="0%"/> 
+  <label name="DIMMERlbla" top="67" left="5" width="35" height="13" caption="DIMMER 1"/> 
+  <label name="DIMMERlblb" top="137" left="5" width="35" height="13" caption="DIMMER 2"/> 
+  <label name="DIMMERlblc" top="207" left="5" width="35" height="13" caption="DIMMER 3"/> 
+  <label name="DIMMERlbld" top="277" left="5" width="35" height="13" caption="DIMMER 4"/> 
+  <label name="DIMMERlble" top="347" left="5" width="35" height="13" caption="DIMMER 5"/>
+  <label name="DIMMERlblf" top="67" left="235" width="35" height="13" caption="DIMMER 6"/>
+  <label name="DIMMERlblg" top="137" left="235" width="35" height="13" caption="DIMMER 7"/>
+  <label name="DIMMERlblh" top="207" left="235" width="35" height="13" caption="DIMMER 8"/>
+  <label name="DIMMERlbli" top="277" left="235" width="35" height="13" caption="DIMMER 9"/>
+  <label name="DIMMERlblj" top="347" left="235" width="35" height="13" caption="DIMMER 10"/>
+  <button name="Button01" top="116" left="5" width="35" height="23" action="Dimmer1_off" caption="Off"/>
+  <button name="Button02" top="186" left="5" width="35" height="23" action="Dimmer2_off" caption="Off"/>
+  <button name="Button03" top="256" left="5" width="35" height="23" action="Dimmer3_off" caption="Off"/>
+  <button name="Button04" top="326" left="5" width="35" height="23" action="Dimmer4_off" caption="Off"/>
+  <button name="Button05" top="396" left="5" width="35" height="23" action="Dimmer5_off" caption="Off"/>
+  <button name="Button06" top="116" left="235" width="35" height="23" action="Dimmer6_off" caption="Off"/>
+  <button name="Button07" top="186" left="235" width="35" height="23" action="Dimmer7_off" caption="Off"/>
+  <button name="Button08" top="256" left="235" width="35" height="23" action="Dimmer8_off" caption="Off"/>
+  <button name="Button09" top="326" left="235" width="35" height="23" action="Dimmer9_off" caption="Off"/>
+  <button name="Button10" top="396" left="235" width="35" height="23" action="Dimmer0_off" caption="Off"/>
+  <button name="Button11" top="116" left="185" width="40" height="23" action="FULL_ON1" caption="Full-On"/>
+  <button name="Button12" top="186" left="185" width="40" height="23" action="FULL_ON2" caption="Full-On"/>
+  <button name="Button13" top="256" left="185" width="40" height="23" action="FULL_ON3" caption="Full-On"/>
+  <button name="Button14" top="326" left="185" width="40" height="23" action="FULL_ON4" caption="Full-On"/>
+  <button name="Button15" top="396" left="185" width="40" height="23" action="FULL_ON5" caption="Full-On"/>
+  <button name="Button16" top="116" left="415" width="40" height="23" action="FULL_ON6" caption="Full-On"/>
+  <button name="Button17" top="186" left="415" width="40" height="23" action="FULL_ON7" caption="Full-On"/>
+  <button name="Button18" top="256" left="415" width="40" height="23" action="FULL_ON8" caption="Full-On"/>
+  <button name="Button19" top="326" left="415" width="40" height="23" action="FULL_ON9" caption="Full-On"/>
+  <button name="Button20" top="396" left="415" width="40" height="23" action="FULL_ON0" caption="Full-On"/>
+	<button name="Button21" top="10" left="355" width="50" height="30" action="AtoJ" caption="1->10"/>  
+  <button name="Button22" top="10" left="405" width="50" height="30" action="JtoA" caption="10->1"/>    
+  <button name="FullOnalle" top="10" left="235" width="60" height="40" action="All_On" caption="Full-On Alle"/>  
+  <button name="Blackoutalle" top="10" left="295" width="60" height="40" action="All_off" caption="Off Alle"/>  
+	<button name="Button23" top="40" left="355" width="50" height="30" action="AtoJ2" caption="Direct"/>  
+  <button name="Button24" top="40" left="405" width="50" height="30" action="JtoA2" caption="Direct"/>   
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    value:integer;
+    r,phi,temp:Double;
+  begin
+		if not DontRefresh then
+    case channel of
+      0:
+      begin
+				Dimmerslider1.position:=get_channel('DIMMER1');
+				Progressbar1.position:=get_channel('DIMMER1');
+        Dimmerlbl1.caption:=get_channel('DIMMER1');
+        value:=get_channel('Dimmer1');
+        case value of
+          0: combobox1.itemindex:=0;
+          1..127: combobox1.itemindex:=1;
+          128: combobox1.itemindex:=2;
+          129..254: combobox1.itemindex:=3;
+          255: combobox1.itemindex:=4;
+        end;
+			end;
+			1:
+			begin
+				DIMMERslider2.position:=get_channel('DIMMER2');
+				Progressbar2.position:=get_channel('DIMMER2');
+        Dimmerlbl2.caption:=get_channel('DIMMER2');
+        value:=get_channel('Dimmer2');
+        case value of
+          0: combobox2.itemindex:=0;
+          1..127: combobox2.itemindex:=1;
+          128: combobox2.itemindex:=2;
+          129..254: combobox2.itemindex:=3;
+          255: combobox2.itemindex:=4;
+        end;
+			end;
+			2:
+			begin
+				DIMMERslider3.position:=get_channel('DIMMER3');
+				Progressbar3.position:=get_channel('DIMMER3');
+        Dimmerlbl3.caption:=get_channel('DIMMER3');
+        value:=get_channel('Dimmer3');
+        case value of
+          0: combobox3.itemindex:=0;
+          1..127: combobox3.itemindex:=1;
+          128: combobox3.itemindex:=2;
+          129..254: combobox3.itemindex:=3;
+          255: combobox3.itemindex:=4;
+        end;
+			end;
+			3:
+			begin
+				DIMMERslider4.position:=get_channel('DIMMER4');
+				Progressbar4.position:=get_channel('DIMMER4');
+        Dimmerlbl4.caption:=get_channel('DIMMER4');
+        value:=get_channel('Dimmer4');
+        case value of
+          0: combobox4.itemindex:=0;
+          1..127: combobox4.itemindex:=1;
+          128: combobox4.itemindex:=2;
+          129..254: combobox4.itemindex:=3;
+          255: combobox4.itemindex:=4;
+        end;
+			end;
+			4:
+			begin
+				DIMMERslider5.position:=get_channel('DIMMER5');
+				Progressbar5.position:=get_channel('DIMMER5');
+        Dimmerlbl5.caption:=get_channel('DIMMER5');
+        value:=get_channel('Dimmer5');
+        case value of
+          0: combobox5.itemindex:=0;
+          1..127: combobox5.itemindex:=1;
+          128: combobox5.itemindex:=2;
+          129..254: combobox5.itemindex:=3;
+          255: combobox5.itemindex:=4;
+        end;
+			end;
+			5:
+			begin
+				DIMMERslider6.position:=get_channel('DIMMER6');
+				Progressbar6.position:=get_channel('DIMMER6');
+        Dimmerlbl6.caption:=get_channel('DIMMER6');
+        value:=get_channel('Dimmer6');
+        case value of
+          0: combobox6.itemindex:=0;
+          1..127: combobox6.itemindex:=1;
+          128: combobox6.itemindex:=2;
+          129..254: combobox6.itemindex:=3;
+          255: combobox6.itemindex:=4;
+        end;
+			end;
+			6:
+			begin
+				DIMMERslider7.position:=get_channel('DIMMER7');
+				Progressbar7.position:=get_channel('DIMMER7');
+        Dimmerlbl7.caption:=get_channel('DIMMER7');
+        value:=get_channel('Dimmer7');
+        case value of
+          0: combobox7.itemindex:=0;
+          1..127: combobox7.itemindex:=1;
+          128: combobox7.itemindex:=2;
+          129..254: combobox7.itemindex:=3;
+          255: combobox7.itemindex:=4;
+        end;
+			end;
+			7:
+			begin
+				DIMMERslider8.position:=get_channel('DIMMER8');
+				Progressbar8.position:=get_channel('DIMMER8');
+        Dimmerlbl8.caption:=get_channel('DIMMER8');
+        value:=get_channel('Dimmer8');
+        case value of
+          0: combobox8.itemindex:=0;
+          1..127: combobox8.itemindex:=1;
+          128: combobox8.itemindex:=2;
+          129..254: combobox8.itemindex:=3;
+          255: combobox8.itemindex:=4;
+        end;
+			end;
+			8:
+			begin
+				DIMMERslider9.position:=get_channel('DIMMER9');
+				Progressbar9.position:=get_channel('DIMMER9');
+        Dimmerlbl9.caption:=get_channel('DIMMER9');
+        value:=get_channel('Dimmer9');
+        case value of
+          0: combobox9.itemindex:=0;
+          1..127: combobox9.itemindex:=1;
+          128: combobox9.itemindex:=2;
+          129..254: combobox9.itemindex:=3;
+          255: combobox9.itemindex:=4;
+        end;
+      end;
+			9:
+			begin
+				DIMMERslider0.position:=get_channel('DIMMER0');
+				Progressbar0.position:=get_channel('DIMMER0');
+        Dimmerlbl0.caption:=get_channel('DIMMER0');
+        value:=get_channel('Dimmer0');
+        case value of
+          0: combobox0.itemindex:=0;
+          1..127: combobox0.itemindex:=1;
+          128: combobox0.itemindex:=2;
+          129..254: combobox0.itemindex:=3;
+          255: combobox0.itemindex:=4;
+        end;
+	    end; 
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure DIMMER1change;
+  begin
+    set_channel('DIMMER1',DimmerSlider1.Position,DimmerSlider1.Position,0);
+ 	end;
+  procedure DIMMER2change;
+  begin
+    set_channel('DIMMER2',DimmerSlider2.Position,DimmerSlider2.Position,0);
+ 	end;
+  procedure DIMMER3change;
+  begin
+    set_channel('DIMMER3',DimmerSlider3.Position,DimmerSlider3.Position,0);
+ 	end;
+  procedure DIMMER4change;
+  begin
+    set_channel('DIMMER4',DimmerSlider4.Position,DimmerSlider4.Position,0);
+ 	end;
+  procedure DIMMER5change;
+  begin
+    set_channel('DIMMER5',DimmerSlider5.Position,DimmerSlider5.Position,0);
+ 	end;
+  procedure DIMMER6change;
+  begin
+    set_channel('DIMMER6',DimmerSlider6.Position,DimmerSlider6.Position,0);
+ 	end;
+  procedure DIMMER7change;
+  begin
+    set_channel('DIMMER7',DimmerSlider7.Position,DimmerSlider7.Position,0);
+ 	end;
+  procedure DIMMER8change;
+  begin
+    set_channel('DIMMER8',DimmerSlider8.Position,DimmerSlider8.Position,0);
+ 	end;
+  procedure DIMMER9change;
+  begin
+    set_channel('DIMMER9',DimmerSlider9.Position,DimmerSlider9.Position,0);
+ 	end;
+  procedure DIMMER0change;
+  begin
+    set_channel('DIMMER0',DimmerSlider0.Position,DimmerSlider0.Position,0);
+ 	end;
+ 	procedure Dimmerspecial1;
+	begin
+    case combobox1.itemindex of
+      0: set_channel('Dimmer1', -1, 0, 0);
+      1: set_channel('Dimmer1', -1, 64, 0);
+      2: set_channel('Dimmer1', -1, 128, 0);
+      3: set_channel('Dimmer1', -1, 192, 0);
+      4: set_channel('Dimmer1', -1, 255, 0);
+    end;
+  end;
+  procedure Dimmerspecial2;
+	begin
+    case combobox2.itemindex of
+      0: set_channel('Dimmer2', -1, 0, 0);
+      1: set_channel('Dimmer2', -1, 64, 0);
+      2: set_channel('Dimmer2', -1, 128, 0);
+      3: set_channel('Dimmer2', -1, 192, 0);
+      4: set_channel('Dimmer2', -1, 255, 0);
+    end;
+  end;
+  procedure Dimmerspecial3;
+	begin
+    case combobox3.itemindex of
+      0: set_channel('Dimmer3', -1, 0, 0);
+      1: set_channel('Dimmer3', -1, 64, 0);
+      2: set_channel('Dimmer3', -1, 128, 0);
+      3: set_channel('Dimmer3', -1, 192, 0);
+      4: set_channel('Dimmer3', -1, 255, 0);
+    end;
+  end;
+  procedure Dimmerspecial4;
+	begin
+    case combobox4.itemindex of
+      0: set_channel('Dimmer4', -1, 0, 0);
+      1: set_channel('Dimmer4', -1, 64, 0);
+      2: set_channel('Dimmer4', -1, 128, 0);
+      3: set_channel('Dimmer4', -1, 192, 0);
+      4: set_channel('Dimmer4', -1, 255, 0);
+    end;
+  end;
+  procedure Dimmerspecial5;
+	begin
+    case combobox5.itemindex of
+      0: set_channel('Dimmer5', -1, 0, 0);
+      1: set_channel('Dimmer5', -1, 64, 0);
+      2: set_channel('Dimmer5', -1, 128, 0);
+      3: set_channel('Dimmer5', -1, 192, 0);
+      4: set_channel('Dimmer5', -1, 255, 0);
+    end;
+  end;
+ 	procedure Dimmerspecial6;
+	begin
+    case combobox6.itemindex of
+      0: set_channel('Dimmer6', -1, 0, 0);
+      1: set_channel('Dimmer6', -1, 64, 0);
+      2: set_channel('Dimmer6', -1, 128, 0);
+      3: set_channel('Dimmer6', -1, 192, 0);
+      4: set_channel('Dimmer6', -1, 255, 0);
+    end;
+  end;
+ 	procedure Dimmerspecial7;
+	begin
+    case combobox7.itemindex of
+      0: set_channel('Dimmer7', -1, 0, 0);
+      1: set_channel('Dimmer7', -1, 64, 0);
+      2: set_channel('Dimmer7', -1, 128, 0);
+      3: set_channel('Dimmer7', -1, 192, 0);
+      4: set_channel('Dimmer7', -1, 255, 0);
+    end;
+  end;
+ 	procedure Dimmerspecial8;
+	begin
+    case combobox8.itemindex of
+      0: set_channel('Dimmer8', -1, 0, 0);
+      1: set_channel('Dimmer8', -1, 64, 0);
+      2: set_channel('Dimmer8', -1, 128, 0);
+      3: set_channel('Dimmer8', -1, 192, 0);
+      4: set_channel('Dimmer8', -1, 255, 0);
+    end;
+  end;
+ 	procedure Dimmerspecial9;
+	begin
+    case combobox9.itemindex of
+      0: set_channel('Dimmer9', -1, 0, 0);
+      1: set_channel('Dimmer9', -1, 64, 0);
+      2: set_channel('Dimmer9', -1, 128, 0);
+      3: set_channel('Dimmer9', -1, 192, 0);
+      4: set_channel('Dimmer9', -1, 255, 0);
+    end;
+  end;
+ 	procedure Dimmerspecial0;
+	begin
+    case combobox0.itemindex of
+      0: set_channel('Dimmer0', -1, 0, 0);
+      1: set_channel('Dimmer0', -1, 64, 0);
+      2: set_channel('Dimmer0', -1, 128, 0);
+      3: set_channel('Dimmer0', -1, 192, 0);
+      4: set_channel('Dimmer0', -1, 255, 0);
+    end;
+  end;
+  procedure Dimmer1_off;
+	begin
+		set_channel('Dimmer1', -1, 0, 0);
+	end;
+  procedure Dimmer2_off;
+	begin
+		set_channel('Dimmer2', -1, 0, 0);
+	end;
+  procedure Dimmer3_off;
+	begin
+		set_channel('Dimmer3', -1, 0, 0);
+	end;
+  procedure Dimmer4_off;
+	begin
+		set_channel('Dimmer4', -1, 0, 0);
+	end;
+  procedure Dimmer5_off;
+	begin
+		set_channel('Dimmer5', -1, 0, 0);
+	end;
+  procedure Dimmer6_off;
+	begin
+		set_channel('Dimmer6', -1, 0, 0);
+	end;
+  procedure Dimmer7_off;
+	begin
+		set_channel('Dimmer7', -1, 0, 0);
+	end;
+  procedure Dimmer8_off;
+	begin
+		set_channel('Dimmer8', -1, 0, 0);
+	end;
+  procedure Dimmer9_off;
+	begin
+		set_channel('Dimmer9', -1, 0, 0);
+	end;
+  procedure Dimmer0_off;
+	begin
+		set_channel('Dimmer0', -1, 0, 0);
+	end;
+  procedure FULL_ON1;
+	begin
+		set_channel('Dimmer1', -1, 255, 0);
+	end;
+  procedure FULL_ON2;
+	begin
+		set_channel('Dimmer2', -1, 255, 0);
+	end;
+  procedure FULL_ON3;
+	begin
+		set_channel('Dimmer3', -1, 255, 0);
+	end;
+  procedure FULL_ON4;
+	begin
+		set_channel('Dimmer4', -1, 255, 0);
+	end;
+  procedure FULL_ON5;
+	begin
+		set_channel('Dimmer5', -1, 255, 0);
+	end;
+  procedure FULL_ON6;
+	begin
+		set_channel('Dimmer6', -1, 255, 0);
+	end;
+  procedure FULL_ON7;
+	begin
+		set_channel('Dimmer7', -1, 255, 0);
+	end;
+  procedure FULL_ON8;
+	begin
+		set_channel('Dimmer8', -1, 255, 0);
+	end;
+  procedure FULL_ON9;
+	begin
+		set_channel('Dimmer9', -1, 255, 0);
+	end;
+  procedure FULL_ON0;
+	begin
+		set_channel('Dimmer0', -1, 255, 0);
+	end;
+	procedure All_On;
+	begin
+		set_channel('Dimmer1',-1,255,0,0);
+		set_channel('Dimmer2',-1,255,0,0);
+		set_channel('Dimmer3',-1,255,0,0);
+		set_channel('Dimmer4',-1,255,0,0);
+		set_channel('Dimmer5',-1,255,0,0);
+		set_channel('Dimmer6',-1,255,0,0);
+		set_channel('Dimmer7',-1,255,0,0);
+		set_channel('Dimmer8',-1,255,0,0);
+		set_channel('Dimmer9',-1,255,0,0);
+		set_channel('Dimmer0',-1,255,0,0);
+	end;
+	procedure All_off;
+	begin
+		set_channel('Dimmer1',-1,0,0,0);
+		set_channel('Dimmer2',-1,0,0,0);
+		set_channel('Dimmer3',-1,0,0,0);
+		set_channel('Dimmer4',-1,0,0,0);
+		set_channel('Dimmer5',-1,0,0,0);
+		set_channel('Dimmer6',-1,0,0,0);
+		set_channel('Dimmer7',-1,0,0,0);
+		set_channel('Dimmer8',-1,0,0,0);
+		set_channel('Dimmer9',-1,0,0,0);
+		set_channel('Dimmer0',-1,0,0,0);
+	end;
+	procedure AtoJ;
+	begin
+		set_channel('Dimmer1',-1,255,1000,0000);
+		set_channel('Dimmer2',-1,255,1000,1000);
+		set_channel('Dimmer3',-1,255,1000,2000);
+		set_channel('Dimmer4',-1,255,1000,3000);
+		set_channel('Dimmer5',-1,255,1000,4000);
+		set_channel('Dimmer6',-1,255,1000,5000);
+		set_channel('Dimmer7',-1,255,1000,6000);
+		set_channel('Dimmer8',-1,255,1000,7000);
+		set_channel('Dimmer9',-1,255,1000,8000);
+		set_channel('Dimmer0',-1,255,1000,9000);
+		set_channel('Dimmer1',-1,0,1000,10000);
+		set_channel('Dimmer2',-1,0,1000,11000);
+		set_channel('Dimmer3',-1,0,1000,12000);
+		set_channel('Dimmer4',-1,0,1000,13000);
+		set_channel('Dimmer5',-1,0,1000,14000);
+		set_channel('Dimmer6',-1,0,1000,15000);
+		set_channel('Dimmer7',-1,0,1000,16000);
+		set_channel('Dimmer8',-1,0,1000,17000);
+		set_channel('Dimmer9',-1,0,1000,18000);
+		set_channel('Dimmer0',-1,0,1000,19000);
+	end;
+	procedure JtoA;
+	begin
+		set_channel('Dimmer0',-1,255,1000,0000);
+		set_channel('Dimmer9',-1,255,1000,1000);
+		set_channel('Dimmer8',-1,255,1000,2000);
+		set_channel('Dimmer7',-1,255,1000,3000);
+		set_channel('Dimmer6',-1,255,1000,4000);
+		set_channel('Dimmer5',-1,255,1000,5000);
+		set_channel('Dimmer4',-1,255,1000,6000);
+		set_channel('Dimmer3',-1,255,1000,7000);
+		set_channel('Dimmer2',-1,255,1000,8000);
+		set_channel('Dimmer1',-1,255,1000,9000);
+		set_channel('Dimmer0',-1,0,1000,10000);
+		set_channel('Dimmer9',-1,0,1000,11000);
+		set_channel('Dimmer8',-1,0,1000,12000);
+		set_channel('Dimmer7',-1,0,1000,13000);
+		set_channel('Dimmer6',-1,0,1000,14000);
+		set_channel('Dimmer5',-1,0,1000,15000);
+		set_channel('Dimmer4',-1,0,1000,16000);
+		set_channel('Dimmer3',-1,0,1000,17000);
+		set_channel('Dimmer2',-1,0,1000,18000);
+		set_channel('Dimmer1',-1,0,1000,19000);
+	end;
+	procedure AtoJ2;
+	begin
+		set_channel('Dimmer1',-1,255,1000,0000);
+		set_channel('Dimmer2',-1,255,1000,1000);
+		set_channel('Dimmer3',-1,255,1000,2000);
+		set_channel('Dimmer4',-1,255,1000,3000);
+		set_channel('Dimmer5',-1,255,1000,4000);
+		set_channel('Dimmer6',-1,255,1000,5000);
+		set_channel('Dimmer7',-1,255,1000,6000);
+		set_channel('Dimmer8',-1,255,1000,7000);
+		set_channel('Dimmer9',-1,255,1000,8000);
+		set_channel('Dimmer0',-1,255,1000,9000);
+		set_channel('Dimmer1',-1,0,1000,2000);
+		set_channel('Dimmer2',-1,0,1000,3000);
+		set_channel('Dimmer3',-1,0,1000,4000);
+		set_channel('Dimmer4',-1,0,1000,5000);
+		set_channel('Dimmer5',-1,0,1000,6000);
+		set_channel('Dimmer6',-1,0,1000,7000);
+		set_channel('Dimmer7',-1,0,1000,8000);
+		set_channel('Dimmer8',-1,0,1000,9000);
+		set_channel('Dimmer9',-1,0,1000,10000);
+		set_channel('Dimmer0',-1,0,1000,11000);
+	end;
+	procedure JtoA2;
+	begin
+		set_channel('Dimmer0',-1,255,1000,0000);
+		set_channel('Dimmer9',-1,255,1000,1000);
+		set_channel('Dimmer8',-1,255,1000,2000);
+		set_channel('Dimmer7',-1,255,1000,3000);
+		set_channel('Dimmer6',-1,255,1000,4000);
+		set_channel('Dimmer5',-1,255,1000,5000);
+		set_channel('Dimmer4',-1,255,1000,6000);
+		set_channel('Dimmer3',-1,255,1000,7000);
+		set_channel('Dimmer2',-1,255,1000,8000);
+		set_channel('Dimmer1',-1,255,1000,9000);
+		set_channel('Dimmer0',-1,0,1000,2000);
+		set_channel('Dimmer9',-1,0,1000,3000);
+		set_channel('Dimmer8',-1,0,1000,4000);
+		set_channel('Dimmer7',-1,0,1000,5000);
+		set_channel('Dimmer6',-1,0,1000,6000);
+		set_channel('Dimmer5',-1,0,1000,7000);
+		set_channel('Dimmer4',-1,0,1000,8000);
+		set_channel('Dimmer3',-1,0,1000,9000);
+		set_channel('Dimmer2',-1,0,1000,10000);
+		set_channel('Dimmer1',-1,0,1000,11000);
+	end;
+  end.
+ </code>
+</device>

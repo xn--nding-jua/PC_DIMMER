@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\ledpar64.png">
+ <information id="PC_DIMMER">
+ <name>RGBVD Scheinwerfer</name>
+ <vendor>Generic</vendor>
+ <author>Christian Nöding</author>
+ <description>Kanäle: R,G,B,VirtualDimmer</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="VIRTUALRGBADIMMER" fade="yes" type="virtualrgbadimmer"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" />
+ <shutter OpenValue="32" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="32" MinValue="64" MaxValue="95" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="191" LeftMaxValue="128" OffValue="192" RightMinValue="193" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="180" height="270">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="16" left="80"/>
+  <deviceadress top="32" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorpicker top="80" left="17" />
+  <edit name="fadezeit" top="238" left="58" width="40" height="21" text="3000" action="fadezeitchange"/>
+  <checkbox name="usefadezeit" top="240" left="116" width="100" height="17" caption="Faden" action="usefadezeitchange" checked="false"/>
+  <label name="label1" top="240" left="8" width="43" height="13" caption="Zeit [ms]:"/>
+  <button name="changecolorpicker" top="210" left="8" width="160" height="21" action="onchangecolorpicker" caption="Wechsle Farbwahlbox"/>
+ </form>
+ <code>
+  unit RGBLamp;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure onchangecolorpicker;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure fadezeitchange;
+  procedure usefadezeitchange;
+
+  implementation
+
+
+
+  procedure InitDevice(Device: String);
+    begin
+      // bitte hier die eigene Funktion eintragen
+    end;
+  procedure FormShow;
+    begin
+      usefadezeit.checked:=true;
+    end;
+  procedure onchangecolorpicker;
+    begin
+      if colorpicker.visible then
+      begin
+        colorpicker.visible:=false;
+        colorpicker2.visible:=true;
+      end else
+      begin
+        colorpicker.visible:=true;
+        colorpicker2.visible:=false;
+      end;
+    end;
+  procedure FormRefresh(channel:Integer);
+    var
+      red,green,blue:byte;
+      modusposition:integer;
+      wahr:integer;
+    begin
+      case channel of
+      0..2:
+      begin
+        red:=get_channel('r');
+        green:=get_channel('g');
+        blue:=get_channel('b');
+//        colorpicker2.SelectedColor:=red + green shl 8 + blue shl 16;
+      end;
+      end;
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure ColorPickerChange(R, G, B: Byte);
+    var
+      zeit:integer;
+//      red,green,blue:byte;
+    begin
+      if usefadezeit.checked then
+        zeit:=strtoint(fadezeit.text)
+      else
+        zeit:=0;
+
+//        red:=colorpicker.selectedcolor and $FF;
+//        green := (colorpicker.selectedcolor shr 8) and $FF;
+//        blue := (colorpicker.selectedcolor shr 16) and $FF;
+        set_channel('r',-1,r,zeit);
+        set_channel('g',-1,g,zeit);
+        set_channel('b',-1,b,zeit);
+    end;
+  procedure fadezeitchange;
+    begin
+    end;
+  procedure usefadezeitchange;
+    begin
+    end;
+  end.
+ </code>
+</device>

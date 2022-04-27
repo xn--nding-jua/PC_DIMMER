@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\deckenlampe2.png">
+ <information id="PC_DIMMER">
+ <name>Stage Tri-LED Bar (Control)</name>
+ <vendor>Stairville</vendor>
+ <author>Max Pabel</author>
+ <description>Stairville Stage Tri-LED Bar 14-Kanal Modus (Hauptsteuerung)</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Strobe" fade="no" type="shutter"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Master" fade="yes" type="dimmer"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="0" ch1="0" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="dimmer"/>
+ <strobe OffValue="0" MinValue="10" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="230" height="200">
+  <deviceimage top="10" left="10" width="64" height="64"/>
+  <devicename top="55" left="80"/>
+  <deviceadress top="39" left="80"/>
+  <slider name="SHUTTERslider0" top="96" left="6" width="217" height="17" action="SHUTTERchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="DIMMERslider1" top="136" left="6" width="217" height="17" action="DIMMERchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="SHUTTERlbl0" top="80" left="8" width="31" height="13" caption="Strobe"/>
+  <label name="DIMMERlbl1" top="120" left="8" width="32" height="13" caption="Master"/>
+  <label name="Heading" top="10" left="81" width="133" height="13" caption="Stairville Stage TRI - Control"/>
+  <button name="Master_On" top="162" left="19" width="50" height="30" action="Switch_On" caption="Ein"/>
+  <button name="Strobe_Reset" top="162" left="128" width="80" height="30" action="Strobe_Off" caption="Strobe Aus"/>
+  <button name="Switch_Off" top="162" left="73" width="50" height="30" action="Switch_Off" caption="Aus"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure OPTIONchange;
+  procedure DIMMERchange;
+  procedure SHUTTERchange;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure Switch_On;
+  procedure Strobe_Off;
+  procedure Switch_Off;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        SHUTTERslider0.position:=get_channel('SHUTTER');
+      end;
+      1:
+      begin
+        DIMMERslider1.position:=get_channel('DIMMER');
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure OPTIONchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('OPTION',-1,OPTIONslider0.position,0);
+  end;
+  procedure SHUTTERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SHUTTER',-1,SHUTTERslider0.position,0);
+  end;
+  procedure DIMMERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('DIMMER',-1,DIMMERslider1.position,0);
+  end;
+  procedure ColorPickerChange(R, G, B: Byte);
+  begin
+    set_color('r','g','b',0,0);
+  end;
+  procedure Switch_On;
+  begin
+    set_channel('DIMMER',-1,255,0,0);
+  end;
+  procedure Strobe_Off;
+begin
+ set_channel('SHUTTER',-1,0,0,0);
+end;
+  procedure Switch_Off;
+begin
+set_channel('DIMMER',-1,0,0,0);
+end;
+  end.
+ </code>
+</device>

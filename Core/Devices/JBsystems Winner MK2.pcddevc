@@ -13,7 +13,7 @@
   <function channel="3" minvalue="0" maxvalue="255" name="Pan" fade="yes" type="pan"/>
   <function channel="4" minvalue="0" maxvalue="255" name="Tilt" fade="yes" type="tilt"/>
  </channels>
- <initvalues 0="0" 1="0" 2="0" 3="127" 4="127" />
+ <initvalues ch0="0" ch1="0" ch2="0" ch3="127" ch4="127" />
  <colors>
   <color name="White" value="0" valueend="11" r="255" g="255" b="255" />
   <color name="Geen" value="11" valueend="21" r="0" g="128" b="0" />

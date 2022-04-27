@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\nebelmaschine.png">
+ <information id="PC_DIMMER">
+ <name>N10 4er Set</name>
+ <vendor>Eurolite</vendor>
+ <author>Peter</author>
+ <description>Nebelmaschinen 4erSet</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Nebel 1" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Nebel 2" fade="yes" type="special2"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Nebel 3" fade="yes" type="special3"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Nebel 4" fade="yes" type="special4"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="235" height="380">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <line name="Line6_223" top="258" left="0" width="235" height="60"/>
+  <line name="Line7_697" top="198" left="0" width="235" height="60"/>
+  <line name="Line9_544" top="78" left="0" width="235" height="60"/>
+  <line name="Line10_983" top="318" left="0" width="235" height="62"/>
+  <line name="Line11_251" top="138" left="0" width="235" height="60"/>
+  <label name="Label6_900" top="80" left="5" width="35" height="15" caption="Nebel 1"/>
+  <label name="Label7_804" top="140" left="5" width="75" height="15" caption="Nebel 2"/>
+  <label name="Label8_101" top="200" left="5" width="37" height="13" caption="Nebel 3"/>
+  <label name="Label9_10" top="260" left="5" width="37" height="13" caption="Nebel 4"/>
+  <label name="Label10_237" top="320" left="5" width="115" height="15" caption="Alle"/>
+  <button name="Button1_927" top="95" left="5" width="45" height="40" action="A_off" caption="Off"/>
+  <button name="Button2_801" top="95" left="50" width="45" height="40" action="A_3000" caption="3 s"/>
+  <button name="Button3_793" top="95" left="95" width="45" height="40" action="A_5000" caption="5 s"/>
+  <button name="Button4_285" top="95" left="140" width="45" height="40" action="A_10000" caption="10 s"/>
+  <button name="Button5_136" top="95" left="185" width="45" height="40" action="A_dauer" caption="Dauer"/>
+  <button name="Button6_610" top="155" left="5" width="45" height="40" action="B_off" caption="Off"/>
+  <button name="Button7_531" top="155" left="50" width="45" height="40" action="B_3000" caption="3 s"/>
+  <button name="Button8_464" top="155" left="95" width="45" height="40" action="B_5000" caption="5 s"/>
+  <button name="Button9_565" top="155" left="140" width="45" height="40" action="B_10000" caption="10 s"/>
+  <button name="Button10_485" top="155" left="185" width="45" height="40" action="B_Dauer" caption="Dauer"/>
+  <button name="Button11_474" top="215" left="5" width="45" height="40" action="C_Off" caption="Off"/>
+  <button name="Button12_213" top="215" left="50" width="45" height="40" action="C_3000" caption="3 s"/>
+  <button name="Button13_227" top="215" left="95" width="45" height="40" action="C_5000" caption="5 s"/>
+  <button name="Button14_882" top="215" left="140" width="45" height="40" action="C_10000" caption="10 s"/>
+  <button name="Button15_255" top="215" left="185" width="45" height="40" action="C_Dauer" caption="Dauer"/>
+  <button name="Button16_691" top="275" left="5" width="45" height="40" action="D_Off" caption="Off"/>
+  <button name="Button17_913" top="275" left="50" width="45" height="40" action="D_3000" caption="3 s"/>
+  <button name="Button18_31" top="275" left="95" width="45" height="40" action="D_5000" caption="5 s"/>
+  <button name="Button19_740" top="275" left="140" width="45" height="40" action="D_10000" caption="10 s"/>
+  <button name="Button20_638" top="275" left="185" width="45" height="40" action="D_Dauer" caption="Dauer"/>
+  <button name="Button21_749" top="335" left="5" width="45" height="40" action="Alle_Off" caption="Alle Off"/>
+  <button name="Button22_924" top="335" left="50" width="45" height="40" action="Alle_3000" caption="3 s"/>
+  <button name="Button23_624" top="335" left="95" width="45" height="40" action="Alle_5000" caption="5 s"/>
+  <button name="Button24_133" top="335" left="140" width="45" height="40" action="Alle_10000" caption="10 s"/>
+  <button name="Button25_283" top="335" left="185" width="45" height="40" action="Alle_Dauer" caption="Dauer"/>
+	<progressbar name="Progressbar1" top="80" left="50" width="90" height="15" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar2" top="140" left="50" width="90" height="15" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar3" top="200" left="50" width="90" height="15" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar4" top="260" left="50" width="90" height="15" startvalue="0" endvalue="255" default="0"/>
+  <checkbox name="Checkbox1" top="78" left="145" width="90" height="15" caption="Nebeln" action="Nebel1" checked="false"/>
+  <checkbox name="Checkbox2" top="138" left="145" width="90" height="15" caption="Nebeln" action="Nebel2" checked="false"/>
+  <checkbox name="Checkbox3" top="198" left="145" width="90" height="15" caption="Nebeln" action="Nebel3" checked="false"/>
+  <checkbox name="Checkbox4" top="258" left="145" width="90" height="15" caption="Nebeln" action="Nebel4" checked="false"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure A_dauer;
+  procedure B_Dauer;
+  procedure C_Dauer;
+  procedure D_Dauer;
+  procedure A_3000;
+  procedure A_5000;
+  procedure A_10000;
+  procedure A_off;
+  procedure B_3000;
+  procedure B_5000;
+  procedure B_10000;
+  procedure B_off;
+  procedure C_3000;
+  procedure C_5000;
+  procedure C_10000;
+  procedure C_Off;
+  procedure D_3000;
+  procedure D_5000;
+  procedure D_10000;
+  procedure D_Off;
+  procedure Alle_Off;
+  procedure Alle_3000;
+  procedure Alle_5000;
+  procedure Alle_10000;
+  procedure Alle_Dauer;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        Progressbar1.position:=get_channel('Special1');        
+        value:=get_channel('Special1');
+        case value of
+					0..126: Checkbox1.checked:=false;
+					127..255: Checkbox1.checked:=true;
+				end;		  
+      end;
+      1:
+      begin
+        Progressbar2.position:=get_channel('Special2');  
+        value:=get_channel('Special2');
+        case value of
+					0..126: Checkbox2.checked:=false;
+					127..255: Checkbox2.checked:=true;
+				end;             
+      end;
+      2:
+      begin
+        Progressbar3.position:=get_channel('Special3');  
+        value:=get_channel('Special3');
+        case value of
+					0..126: Checkbox3.checked:=false;
+					127..255: Checkbox3.checked:=true;
+				end;              
+      end;
+      3:
+      begin
+        Progressbar4.position:=get_channel('Special4');
+        value:=get_channel('Special4');
+        case value of
+					0..126: Checkbox4.checked:=false;
+					127..255: Checkbox4.checked:=true;
+				end;               
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure A_dauer;
+  begin
+		set_channel('SPECIAL1',-1,255,0);
+  end;
+  procedure B_Dauer;
+  begin
+		set_channel('SPECIAL2',-1,255,0);
+  end;
+  procedure C_Dauer;
+  begin
+		set_channel('SPECIAL3',-1,255,0);
+  end;
+  procedure D_Dauer;
+  begin
+		set_channel('SPECIAL4',-1,255,0);
+  end;
+  procedure A_3000;
+  begin
+		set_channel('SPECIAL1',-1,255,0);
+		set_channel('Special1',-1,0,0,3000);
+  end;
+  procedure A_5000;
+  begin
+		set_channel('SPECIAL1',-1,255,0);
+		set_channel('Special1',-1,0,0,5000);
+  end;
+  procedure A_10000;
+  begin
+		set_channel('SPECIAL1',-1,255,0);
+		set_channel('Special1',-1,0,0,10000);
+  end;
+  procedure A_off;
+  begin
+		set_channel('SPECIAL1',-1,0,0);
+  end;
+  procedure B_3000;
+  begin
+		set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL2',-1,0,0,3000);
+  end;
+  procedure B_5000;
+  begin
+		set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL2',-1,0,0,5000);
+  end;
+  procedure B_10000;
+  begin
+		set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL2',-1,0,0,10000);
+  end;
+  procedure B_off;
+  begin
+		set_channel('SPECIAL2',-1,0,0);
+  end;
+  procedure C_3000;
+  begin
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL3',-1,0,0,3000);
+  end;
+  procedure C_5000;
+  begin
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL3',-1,0,0,5000);
+  end;
+  procedure C_10000;
+  begin
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL3',-1,0,0,10000);
+  end;
+  procedure C_Off;
+  begin
+		set_channel('SPECIAL3',-1,0,0);
+  end;
+  procedure D_3000;
+  begin
+		set_channel('SPECIAL4',-1,255,0);
+		set_channel('SPECIAL4',-1,0,0,3000);
+  end;
+  procedure D_5000;
+  begin
+		set_channel('SPECIAL4',-1,255,0);
+		set_channel('SPECIAL4',-1,0,0,5000);
+  end;
+  procedure D_10000;
+  begin
+		set_channel('SPECIAL4',-1,255,0);
+		set_channel('SPECIAL4',-1,0,0,10000);
+  end;
+  procedure D_Off;
+  begin
+		set_channel('SPECIAL4',-1,0,0);
+  end;
+  procedure Alle_Off;
+  begin
+		set_channel('SPECIAL1',-1,0,0);
+		set_channel('SPECIAL2',-1,0,0);
+		set_channel('SPECIAL3',-1,0,0);
+		set_channel('SPECIAL4',-1,0,0);
+  end;
+  procedure Alle_3000;
+	begin
+		set_channel('SPECIAL1',-1,255,0);
+ 	 set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL4',-1,255,0);
+		set_channel('SPECIAL1',-1,0,0,3000);
+		set_channel('SPECIAL2',-1,0,0,3000);
+		set_channel('SPECIAL3',-1,0,0,3000);
+		set_channel('SPECIAL4',-1,0,0,3000);
+	end;
+  procedure Alle_5000;
+	begin
+		set_channel('SPECIAL1',-1,255,0);
+  	set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL4',-1,255,0);
+		set_channel('SPECIAL1',-1,0,0,5000);
+		set_channel('SPECIAL2',-1,0,0,5000);
+		set_channel('SPECIAL3',-1,0,0,5000);
+		set_channel('SPECIAL4',-1,0,0,5000);
+	end;
+  procedure Alle_10000;
+	begin
+		set_channel('SPECIAL1',-1,255,0);
+		set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL4',-1,255,0);
+		set_channel('SPECIAL1',-1,0,0,10000);
+		set_channel('SPECIAL2',-1,0,0,10000);
+		set_channel('SPECIAL3',-1,0,0,10000);
+		set_channel('SPECIAL4',-1,0,0,10000);
+	end;
+  procedure Alle_Dauer;
+	begin
+		set_channel('SPECIAL1',-1,255,0);
+	  set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL4',-1,255,0);
+	end;
+	procedure Nebel1;
+		begin
+			if checkbox1.checked = false then
+				begin 
+					set_channel('Special1',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Special1',-1,255,0);
+				end;
+		end;
+	procedure Nebel2;
+		begin
+			if checkbox2.checked = false then
+				begin 
+					set_channel('Special2',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Special2',-1,255,0);
+				end;
+		end;
+	procedure Nebel3;
+		begin
+			if checkbox3.checked = false then
+				begin 
+					set_channel('Special3',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Special3',-1,255,0);
+				end;
+		end;
+	procedure Nebel4;
+		begin
+			if checkbox4.checked = false then
+				begin 
+					set_channel('Special4',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Special4',-1,255,0); 
+				end;
+		end;
+  end.
+ </code>
+</device>

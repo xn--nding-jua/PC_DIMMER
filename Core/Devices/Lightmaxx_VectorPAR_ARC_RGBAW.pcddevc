@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\ledpar64.png">
+ <information id="PC_DIMMER">
+ <name>Vector Silent PAR ARC</name>
+ <vendor>LightmaXX</vendor>
+ <author>Christian Nöding</author>
+ <description>18x15W RGBWA - 9-Kanal-Modus</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Helligkeit" fade="yes" type="dimmer"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Weiß" fade="yes" type="w"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Amber" fade="yes" type="a"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Strobe" fade="yes" type="shutter"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Farben" fade="yes" type="special1"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Geschwindigkeit" fade="yes" type="speed"/>
+ </channels>
+ <amber UseAmberMixing="no" AmberMixingCompensateRG="no" AmberMixingCompensateBlue="no" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="255" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="0" ch7="0" ch8="0" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="dimmer"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="255" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <fog OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="360" height="300">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="16" left="80"/>
+  <deviceadress top="32" left="80"/>
+  <devicedipswitch top="50" left="70"/>
+  <colorpicker top="90" left="10" />
+  <edit name="fadezeit" top="270" left="10" width="40" height="21" text="3000" action=""/>
+  <checkbox name="usefadezeit" top="270" left="60" width="50" height="17" caption="Faden" action="" checked="false"/>
+  <slider name="dimmerslider" top="150" left="190" width="160" height="20" action="dimmersliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="stroboslider" top="190" left="190" width="160" height="20" action="strobosliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="whiteslider" top="50" left="190" width="160" height="20" action="whitesliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="amberslider" top="100" left="190" width="160" height="20" action="ambersliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="macroslider" top="230" left="190" width="160" height="20" action="macrosliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="macrospeedslider" top="270" left="190" width="160" height="20" action="macrospeedsliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="label1" top="255" left="10" width="43" height="13" caption="Zeit [ms]:"/>
+  <label name="label4" top="130" left="190" width="40" height="10" caption="Dimmer:"/>
+  <label name="Label3" top="170" left="190" width="60" height="10" caption="Stroboskop:"/>
+  <label name="Label4_96" top="30" left="190" width="30" height="10" caption="Weiß:"/>
+  <label name="Label5_404" top="80" left="190" width="30" height="10" caption="Amber:"/>
+  <label name="Label7_856" top="210" left="190" width="40" height="10" caption="Makros:"/>
+  <label name="Label7_857" top="250" left="190" width="70" height="10" caption="Makro-Speed:"/>
+  <button name="changecolorpicker" top="230" left="10" width="160" height="20" action="onchangecolorpicker" caption="Wechsle Farbwahlbox"/>
+ </form>
+ <code>
+  unit LEDPar64;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure onchangecolorpicker;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure dimmersliderchange;
+  procedure strobosliderchange;
+  procedure whitesliderchange;
+  procedure ambersliderchange;
+  procedure macrosliderchange;
+  procedure macrospeedsliderchange;
+
+  implementation
+
+    var
+      dontrefresh:boolean;
+      refreshcolorpicker:boolean;
+
+  procedure InitDevice(Device: String);
+    begin
+      // bitte hier die eigene Funktion eintragen
+    end;
+  procedure FormShow;
+	begin
+	  usefadezeit.checked:=true;
+	end;
+  procedure onchangecolorpicker;
+    begin
+      if not refreshcolorpicker then
+      begin
+				if colorpicker.visible then
+	      begin
+	        colorpicker.visible:=false;
+	        colorpicker2.visible:=true;
+	      end else
+	      begin
+	        colorpicker.visible:=true;
+	        colorpicker2.visible:=false;
+	      end;
+	    end;
+    end;
+  procedure FormRefresh(channel:Integer);
+    var
+      wert:integer;
+      red, green, blue:byte;
+      mycolor, mycolorr, mycolorg, mycolorb:integer;
+    begin
+      case channel of
+      0:
+      begin
+				if not dontrefresh then
+					dimmerslider.position:=get_channel('dimmer');
+      end;
+      1..3:
+      begin
+      	refreshcolorpicker:=true;
+        red:=get_channel('r');
+        green:=get_channel('g');
+        blue:=get_channel('b');
+				mycolorr:=red;
+				mycolorg:=green*256;
+				mycolorb:=blue*256*256;		
+				mycolor:=mycolorr+mycolorg+mycolorb;
+				colorpicker2.selectedcolor:=mycolor;
+        refreshcolorpicker:=false;
+      end;
+      4:
+      begin
+				if not dontrefresh then
+	        whiteslider.position:=get_channel('w');      
+      end;
+      5:
+      begin
+				if not dontrefresh then
+	        amberslider.position:=get_channel('a');      
+      end;
+      6:
+      begin
+      	wert:=get_channel('shutter');
+      	if not dontrefresh then
+			stroboslider.position:=wert;
+      end;
+      7:
+			begin
+      	wert:=get_channel('special1');
+      	if not dontrefresh then
+      		macroslider.position:=wert;
+      end;
+      8:
+			begin
+      	wert:=get_channel('speed');
+      	if not dontrefresh then
+      		macrospeedslider.position:=wert;
+      end;
+	  end;
+      dontrefresh:=false;
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure ColorPickerChange(R, G, B: Byte);
+    var
+      zeit:integer;
+    begin
+      if usefadezeit.checked then
+        zeit:=strtoint(fadezeit.text)
+      else
+        zeit:=0;
+
+        dontrefresh:=true;
+        set_channel('r',-1,r,zeit);
+        dontrefresh:=true;
+        set_channel('g',-1,g,zeit);
+        dontrefresh:=true;
+        set_channel('b',-1,b,zeit);
+    end;
+  procedure dimmersliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('DIMMER',-1,dimmerslider.position,0,0);
+  end;
+  procedure strobosliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('shutter',-1,stroboslider.position,0,0);
+  end;
+  procedure whitesliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('w',-1,whiteslider.position,0,0);
+  end;
+  procedure ambersliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('a',-1,amberslider.position,0,0);
+  end;
+  procedure macrosliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('special1',-1,macroslider.position,0,0);
+  end;
+  procedure macrospeedsliderchange;
+  begin
+    dontrefresh:=true;
+    set_channel('speed',-1,macrospeedslider.position,0,0);
+  end;
+  end.
+ </code>
+</device>
