@@ -46,7 +46,7 @@
   DeviceChannelNames[44]:='Y';
   DeviceChannelNames[45]:='UV';
   DeviceChannelNames[46]:='FOG';
-  // VIRTUALRGBADIMMER ist virtueller Dimmerkanal für RGBAW-Geräte
+  // VIRTUALRGBDIMMER, VIRTUALRGBAWDIMMER, VIRTUALRGBAWDIMMER ist virtueller Dimmerkanal für RGBAW-Geräte
 
   // Befehlssystem klarmachen
   setlength(Befehlssystem, 16);

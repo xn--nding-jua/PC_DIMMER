@@ -54,7 +54,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=485;
+  actualprojectversion=486;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -652,6 +652,8 @@ type
     procedure Effektschaltvorgang(WelcherEffekt:Integer; Sender: TObject);
     procedure StartPreset(ID: TGUID);
     procedure StartPresetScene(ID: TGUID);
+    procedure StartCodeScene(ID: TGUID);
+    procedure StopCodeScene(ID: TGUID);
     procedure StartAutoszene(ID: TGUID; NoFadetime, NoDelay:boolean; Fadetime:integer);
     procedure StopAutoszene(ID: TGUID);
     procedure StartMediaCenterSzene(ID: TGUID);
@@ -1134,6 +1136,7 @@ type
     pmmlights:array of TGUID;
     PartyMuckenModul:array of TPartyMuckenModul;
     PresetScenes: array of TPresetScene;
+    CodeScenes: array of TCodeScene;
     NodeControlSets: array of TNodeControlSet;
     UserAccounts: array of TUserAccount;
     CurrentUser, StartupUser: String;
@@ -5715,6 +5718,22 @@ begin
     Filestream.WriteBuffer(mainform.XTouchDevices[i].ID,sizeof(mainform.XTouchDevices[i].ID));
   end;
 // Ende XTouchControl
+// CodeSzenen speichern
+  inprogress.filename.Caption:=_('Schreibe Datei... Code-Szenen');
+  inprogress.Refresh;
+  Count:=length(mainform.CodeScenes);
+  Filestream.WriteBuffer(Count,sizeof(Count));
+  for i:=0 to Count-1 do
+  begin
+    Filestream.WriteBuffer(mainform.CodeScenes[i].ID,sizeof(mainform.CodeScenes[i].ID));
+    Filestream.WriteBuffer(mainform.CodeScenes[i].Name,sizeof(mainform.CodeScenes[i].Name));
+    Filestream.WriteBuffer(mainform.CodeScenes[i].Beschreibung,sizeof(mainform.CodeScenes[i].Beschreibung));
+    Filestream.WriteBuffer(mainform.CodeScenes[i].Category,sizeof(mainform.CodeScenes[i].Category));
+    Count2:=length(mainform.CodeScenes[i].Code);
+    Filestream.WriteBuffer(Count,sizeof(Count));
+    Filestream.WriteBuffer(Pointer(mainform.CodeScenes[i].Code)^,length(mainform.CodeScenes[i].Code));
+  end;
+// Ende CodeScenes
 
   inprogress.filename.Caption:=_('Schreibe Datei...');
   inprogress.Refresh;
@@ -8742,6 +8761,33 @@ begin
       end;
     end;
 // Ende XTouchControl
+// CodeScene laden
+    if projektprogrammversionint>=486 then
+    begin
+      if not startingup then
+      begin
+        inprogress.filename.Caption:=_('Lese Daten ein... Code-Szenen');
+        inprogress.Refresh;
+      end else
+      begin
+        SplashCaptioninfo(_('Lese Daten ein...Code-Szenen'));
+        RefreshSplashText;
+      end;
+
+      Filestream.ReadBuffer(Count,sizeof(Count));
+      setlength(mainform.CodeScenes,Count);
+      for i:=0 to Count-1 do
+      begin
+        Filestream.ReadBuffer(mainform.CodeScenes[i].ID,sizeof(mainform.CodeScenes[i].ID));
+        Filestream.ReadBuffer(mainform.CodeScenes[i].Name,sizeof(mainform.CodeScenes[i].Name));
+        Filestream.ReadBuffer(mainform.CodeScenes[i].Beschreibung,sizeof(mainform.CodeScenes[i].Beschreibung));
+        Filestream.ReadBuffer(CodeScenes[i].Category,sizeof(CodeScenes[i].Category));
+        Filestream.ReadBuffer(Count2,sizeof(Count2));
+        setlength(mainform.CodeScenes[i].Code,Count2);
+        Filestream.ReadBuffer(Pointer(mainform.CodeScenes[i].Code)^, Count2);
+      end;
+    end;
+// Ende CodeScene
   end;
 
 	if not startingup then
@@ -16688,6 +16734,34 @@ begin
   end;
 end;
 
+procedure TMainform.StartCodeScene(ID: TGUID);
+var
+  i:integer;
+begin
+  for i:=0 to length(CodeScenes)-1 do
+  begin
+    if IsEqualGUID(ID,CodeScenes[i].ID) then
+    begin // richtige Codescene gefunden
+      kontrollpanel.RunDelphiCode(CodeScenes[i].Code, 'StartScene');
+      break;
+    end;
+  end;
+end;
+
+procedure TMainform.StopCodeScene(ID: TGUID);
+var
+  i:integer;
+begin
+  for i:=0 to length(CodeScenes)-1 do
+  begin
+    if IsEqualGUID(ID,CodeScenes[i].ID) then
+    begin // richtige Codescene gefunden
+      kontrollpanel.RunDelphiCode(CodeScenes[i].Code, 'StopScene');
+      break;
+    end;
+  end;
+end;
+
 procedure TMainform.StartAutoszene(ID: TGUID; NoFadetime, NoDelay:boolean; Fadetime:integer);
 var
   i,j:integer;
@@ -18807,10 +18881,38 @@ begin
         mainform.PresetScenes[j].TiltFine:=presetsceneeditor.tiltfineval;
 
         mainform.PresetScenes[j].Gobo:=presetsceneeditor.selectedgobo;
-
       end;
       break;
     end;
+  end;
+
+  // CodeSzenen
+  for j:=0 to length(CodeScenes)-1 do
+  begin
+    codeeditorform.nameedit.Text:=mainform.CodeScenes[j].Name;
+    codeeditorform.descriptionedit.Text:=mainform.CodeScenes[j].Beschreibung;
+    codeeditorform.Memo1.Lines.Clear;
+    //codeeditorform.Memo1.Lines.Add(CodeScenes[j].Code);
+    codeeditorform.Memo1.Text:=CodeScenes[j].Code;
+
+    codeeditorform.Panel3.Visible:=true;
+    codeeditorform.MouseDown.Visible:=false;
+    codeeditorform.MouseUp.Visible:=false;
+
+    codeeditorform.ShowModal;
+
+    if codeeditorform.ModalResult=mrOK then
+    begin
+      mainform.CodeScenes[j].Name:=codeeditorform.nameedit.Text;
+      mainform.CodeScenes[j].Beschreibung:=codeeditorform.descriptionedit.Text;
+      mainform.CodeScenes[j].Code:=codeeditorform.Memo1.Text;//codeeditorform.Memo1.Lines.Text;
+    end;
+
+    codeeditorform.Panel3.Visible:=false;
+    codeeditorform.MouseDown.Visible:=true;
+    codeeditorform.MouseUp.Visible:=true;
+
+    break;
   end;
 
   // Plugin Szene
@@ -19062,6 +19164,19 @@ begin
     end;
   end;
 
+  // Codeszenen
+  if not nop then
+  for j:=0 to length(codescenes)-1 do
+  begin
+    if IsEqualGUID(codescenes[j].ID,ID) then
+    begin
+      StartCodeScene(codescenes[j].ID);
+      scenefound:=true;
+      nop:=true;
+      break;
+    end;
+  end;
+
   // Plugin Szenen
   if not nop then
   for j:=0 to length(PluginSzenen)-1 do
@@ -19221,6 +19336,18 @@ begin
   begin
     if IsEqualGUID(PresetScenes[j].ID,ID) then
     begin
+      scenefound:=true;
+      nop:=true;
+      break;
+    end;
+  end;
+  // Code-Szenen
+  if not nop then
+  for j:=0 to length(CodeScenes)-1 do
+  begin
+    if IsEqualGUID(CodeScenes[j].ID,ID) then
+    begin
+      StopCodeScene(CodeScenes[j].ID);
       scenefound:=true;
       nop:=true;
       break;
@@ -19439,13 +19566,24 @@ begin
       break;
     end;
   end;
+  // Codeszenen
+  if not nop then
+  for j:=0 to length(codescenes)-1 do
+  begin
+    if IsEqualGUID(codescenes[j].ID,ID) then
+    begin
+      scenefound:=11;
+      nop:=true;
+      break;
+    end;
+  end;
   // Plugin Szenen
   if not nop then
   for j:=0 to length(PluginSzenen)-1 do
   begin
     if IsEqualGUID(PluginSzenen[j].ID,ID) then
     begin
-      scenefound:=11;
+      scenefound:=12;
 //        nop:=true;
       break;
     end;
@@ -21752,6 +21890,21 @@ begin
         break;
       end;
     end;
+    // Codeszenen
+    if scenetype=-1 then
+    for j:=0 to length(mainform.codescenes)-1 do
+    begin
+      if IsEqualGUID(mainform.codescenes[j].ID,ID) then
+      begin
+        Name:=mainform.codescenes[j].Name; // Name
+        Beschreibung:=mainform.codescenes[j].Beschreibung;
+        t:=0;
+        Blendzeit:=MillisecondsToTimeShort(t);
+        Typ:=_('Codeszene');
+        scenetype:=11;
+        break;
+      end;
+    end;
     // Plugin
     if scenetype=-1 then
     for j:=0 to length(mainform.PluginSzenen)-1 do
@@ -21762,7 +21915,7 @@ begin
         Beschreibung:='';
         Blendzeit:='-';
         Typ:=_('Plugin Szene');
-//        scenetype:=11;
+//        scenetype:=12;
         break;
       end;
     end;
@@ -21908,13 +22061,23 @@ begin
         break;
       end;
     end;
+    // Codeszenen
+    if typ=-1 then
+    for j:=0 to length(mainform.CodeScenes)-1 do
+    begin
+      if IsEqualGUID(mainform.CodeScenes[j].ID,ID) then
+      begin
+        typ:=11;
+        break;
+      end;
+    end;
     // PluginSzenen
     if typ=-1 then
     for j:=0 to length(mainform.PluginSzenen)-1 do
     begin
       if IsEqualGUID(mainform.PluginSzenen[j].ID,ID) then
       begin
-        typ:=11;
+        typ:=12;
         break;
       end;
     end;
@@ -22047,7 +22210,18 @@ begin
       if IsEqualGUID(mainform.PresetScenes[j].ID,ID) then
       begin
         typ:=10;
-        mainform.Devicepresets[j].Category:=Cat;
+        mainform.PresetScenes[j].Category:=Cat;
+        break;
+      end;
+    end;
+    // Codeszenen
+    if typ=-1 then
+    for j:=0 to length(mainform.CodeScenes)-1 do
+    begin
+      if IsEqualGUID(mainform.CodeScenes[j].ID,ID) then
+      begin
+        typ:=11;
+        mainform.CodeScenes[j].Category:=Cat;
         break;
       end;
     end;
@@ -22057,7 +22231,7 @@ begin
     begin
       if IsEqualGUID(mainform.PluginSzenen[j].ID,ID) then
       begin
-//        typ:=11;
+//        typ:=12;
         mainform.PluginSzenen[j].Category:=Cat;
         break;
       end;
@@ -22214,6 +22388,17 @@ begin
       if IsEqualGUID(ID, presetscenes[i].ID) then
       begin
         text:=presetscenes[i].Name;
+        break;
+      end;
+    end;
+  end;
+  if text='' then
+  begin
+    for i:=0 to length(codescenes)-1 do
+    begin
+      if IsEqualGUID(ID, codescenes[i].ID) then
+      begin
+        text:=codescenes[i].Name;
         break;
       end;
     end;
@@ -23549,6 +23734,14 @@ begin
           end;
         end; // Presetszene
         11:
+        begin
+          temp:=temp+inttostr(length(codescenes));
+          for i:=0 to length(codescenes)-1 do
+          begin
+            temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(codescenes[i].Name)+','+GUIDtoString(codescenes[i].ID);
+          end;
+        end; // Codeszenen
+        12:
         begin
           temp:=temp+inttostr(length(PluginSzenen));
           for i:=0 to length(PluginSzenen)-1 do
@@ -26113,7 +26306,7 @@ begin
       ShowText:=_('Installierte Geräte:')+' '+inttostr(length(mainform.devices));
       _MainformPreBuffer.Canvas.TextOut(_MainformPreBuffer.Width-_MainformPreBuffer.Canvas.TextWidth(ShowText)-16, 10, ShowText);
       // Anzahl der Szenen
-      i:=length(mainform.EinfacheSzenen)+length(mainform.devicescenes)+length(mainform.Audioszenen)+length(mainform.Bewegungsszenen)+length(mainform.Autoszenen)+length(mainform.MediaCenterSzenen)+length(mainform.DevicePresets)+length(mainform.presetscenes)+length(mainform.PluginSzenen);
+      i:=length(mainform.EinfacheSzenen)+length(mainform.devicescenes)+length(mainform.Audioszenen)+length(mainform.Bewegungsszenen)+length(mainform.Autoszenen)+length(mainform.MediaCenterSzenen)+length(mainform.DevicePresets)+length(mainform.presetscenes)+length(mainform.codescenes)+length(mainform.PluginSzenen);
       ShowText:=_('Erstellte Szenen:')+' '+inttostr(i);
       _MainformPreBuffer.Canvas.TextOut(_MainformPreBuffer.Width-_MainformPreBuffer.Canvas.TextWidth(ShowText)-16, 25, ShowText);
       // Dimmerkernelzeit

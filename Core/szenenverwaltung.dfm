@@ -1,8 +1,8 @@
 object szenenverwaltungform: Tszenenverwaltungform
   Left = 501
   Top = 144
-  Width = 530
-  Height = 450
+  Width = 582
+  Height = 488
   Caption = 'Szenenverwaltung'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -59,15 +59,15 @@ object szenenverwaltungform: Tszenenverwaltungform
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
-    Left = 294
+    Left = 346
     Top = 90
-    Height = 224
+    Height = 262
     Align = alRight
   end
   object Panel1: TPanel
     Left = 0
-    Top = 314
-    Width = 514
+    Top = 352
+    Width = 566
     Height = 97
     Align = alBottom
     BevelOuter = bvNone
@@ -346,6 +346,7 @@ object szenenverwaltungform: Tszenenverwaltungform
       ParentShowHint = False
       ShowHint = True
       TabOrder = 4
+      OnClick = EditBtnClick
       PngImage.Data = {
         89504E470D0A1A0A0000000D49484452000000140000001408060000008D891D
         0D000000097048597300000B1300000B1301009A9C1800000A4D694343505068
@@ -1143,7 +1144,7 @@ object szenenverwaltungform: Tszenenverwaltungform
   object Panel2: TPanel
     Left = 0
     Top = 57
-    Width = 514
+    Width = 566
     Height = 33
     Align = alTop
     BevelOuter = bvNone
@@ -1203,10 +1204,10 @@ object szenenverwaltungform: Tszenenverwaltungform
     end
   end
   object TreeView2: TTreeView
-    Left = 297
+    Left = 349
     Top = 90
     Width = 217
-    Height = 224
+    Height = 262
     Hint = 'Zeigt die Verwendungsorte der aktuellen Szene an'
     Align = alRight
     Images = MainForm.PngImageList1
@@ -1218,7 +1219,7 @@ object szenenverwaltungform: Tszenenverwaltungform
   object Panel3: TPanel
     Left = 0
     Top = 0
-    Width = 514
+    Width = 566
     Height = 57
     Align = alTop
     BevelOuter = bvNone
@@ -1227,7 +1228,7 @@ object szenenverwaltungform: Tszenenverwaltungform
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 514
+      Width = 566
       Height = 57
       Style = grVertical
       StartColor = clWhite
@@ -1373,8 +1374,8 @@ object szenenverwaltungform: Tszenenverwaltungform
   object VST: TVirtualStringTree
     Left = 0
     Top = 90
-    Width = 294
-    Height = 224
+    Width = 346
+    Height = 262
     Align = alClient
     Colors.UnfocusedSelectionColor = clInactiveBorder
     Colors.UnfocusedSelectionBorderColor = clInactiveBorder
@@ -1482,6 +1483,11 @@ object szenenverwaltungform: Tszenenverwaltungform
       Caption = 'Preset-Szene'
       ImageIndex = 91
       OnClick = PresetSzene1Click
+    end
+    object CodeSzene1: TMenuItem
+      Caption = 'Code-Szene'
+      ImageIndex = 83
+      OnClick = CodeSzene1Click
     end
   end
   object OpenDialog1: TOpenDialog

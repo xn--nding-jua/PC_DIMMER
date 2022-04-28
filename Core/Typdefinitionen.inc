@@ -919,6 +919,14 @@
     GoboRot2:Byte;
   end;
 
+  TCodeScene = record
+    ID:TGUID;
+    Name:string[255];
+    Beschreibung:string[255];
+    Category: string[255];
+    Code: String;
+  end;
+
   TNodeControlNode = record
     ID:TGUID;
     Name:string[255];

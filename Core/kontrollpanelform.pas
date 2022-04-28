@@ -212,7 +212,6 @@ type
     { Private-Deklarationen }
     buttonstyle:byte;
     cut:boolean;
-    argumente:TJvInterpreterArgs;
     Counter:byte;
 
     _Buffer:TBitmap32;
@@ -222,6 +221,7 @@ type
     MouseDown,OldOffset:TPoint;
     LastColRows:TPoint;
     Extrahighlight:integer;
+    ScriptInterpreterArgs:TJvInterpreterArgs;
 
     //f_ptFirst:TPoint;
     //f_dwArguments:Int64;     //saved T/G dw arguments
@@ -269,6 +269,7 @@ type
     procedure CollectButtonInfo;
     procedure RedrawPanel;
     procedure RedrawMainformPanel;
+    procedure RunDelphiCode(Code: String; CallFuncName: String);
   end;
 
 procedure LockWindow(const Handle: HWND);
@@ -1230,7 +1231,7 @@ begin
 	OverBtn.Y:=0;
 	OverBtn.X:=0;
 
-  argumente:=TJvInterpreterArgs.Create;
+  ScriptInterpreterArgs:=TJvInterpreterArgs.Create;
 
   // Initialisiere Touch-Interface, sofern möglich
   LoadTouchGestureAPI; // sofern verfügbar
@@ -2488,8 +2489,8 @@ begin
             listbox.Items.LoadFromFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas');
             ScriptInterpreter.Pas:=listbox.Items;
             ScriptInterpreter.Compile;
-            argumente.Count:=0;
-            ScriptInterpreter.CallFunction('ButtonMouseDown',argumente, []);
+            ScriptInterpreterArgs.Count:=0;
+            ScriptInterpreter.CallFunction('ButtonMouseDown',ScriptInterpreterArgs, []);
           end;
         end;
       end;
@@ -2613,8 +2614,8 @@ begin
           listbox.Items.LoadFromFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas');
           ScriptInterpreter.Pas:=listbox.Items;
           ScriptInterpreter.Compile;
-          argumente.Count:=0;
-          ScriptInterpreter.CallFunction('ButtonMouseUp',argumente, []);
+          ScriptInterpreterArgs.Count:=0;
+          ScriptInterpreter.CallFunction('ButtonMouseUp',ScriptInterpreterArgs, []);
         end;
       end;
       end;
@@ -3721,6 +3722,15 @@ begin
   end;
   for i:=0 to length(mainform.kontrollpanelbuttons[SelectedBtn.Y])-1 do
     ResetButton(i, SelectedBtn.Y);
+end;
+
+procedure Tkontrollpanel.RunDelphiCode(Code: String; CallFuncName: String);
+begin
+  ScriptInterpreter.Pas.Clear;
+  ScriptInterpreter.Pas.Text:=Code;
+  ScriptInterpreter.Compile;
+  ScriptInterpreterArgs.Count:=0;
+  ScriptInterpreter.CallFunction(CallFuncName, ScriptInterpreterArgs, []);
 end;
 
 end.

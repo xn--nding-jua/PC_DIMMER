@@ -22,6 +22,13 @@ type
     Memo2: TMemo;
     Splitter1: TSplitter;
     Button3: TButton;
+    Panel3: TPanel;
+    StartSceneTest: TPngBitBtn;
+    StopSceneTest: TPngBitBtn;
+    nameedit: TEdit;
+    descriptionedit: TEdit;
+    Label1: TLabel;
+    Label2: TLabel;
     procedure ScriptInterpreterGetValue(Sender: TObject;
       Identifier: String; var Value: Variant; Args: TJvInterpreterArgs;
       var Done: Boolean);
@@ -338,6 +345,10 @@ begin
       ScriptInterpreter.CallFunction('ButtonMouseDown',argumente, []);
     if Sender=MouseUp then
       ScriptInterpreter.CallFunction('ButtonMouseUp',argumente, []);
+    if Sender=StartSceneTest then
+      ScriptInterpreter.CallFunction('StartScene',argumente, []);
+    if Sender=StopSceneTest then
+      ScriptInterpreter.CallFunction('StopScene',argumente, []);
   except
     compileerrorform.listbox1.items.clear;
     compileerrorform.listbox1.Items:=memo1.Lines;
