@@ -81,6 +81,17 @@ type
     Label2: TLabel;
     activebtn: TButton;
     Panel2: TPanel;
+    Label3: TLabel;
+    showdimmercheckbox: TCheckBox;
+    showrcheckbox: TCheckBox;
+    showgcheckbox: TCheckBox;
+    showbcheckbox: TCheckBox;
+    showacheckbox: TCheckBox;
+    showwcheckbox: TCheckBox;
+    showuvcheckbox: TCheckBox;
+    showfogcheckbox: TCheckBox;
+    showpantiltcheckbox: TCheckBox;
+    showshuttercheckbox: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure activebtnClick(Sender: TObject);
@@ -244,6 +255,16 @@ begin
         begin
           LReg.WriteBool('UseDataIn', Checkbox1.checked);
           LReg.WriteInteger('DataInOffset', round(datainstartedit.Value));
+          LReg.WriteBool('ShowDimmer', showdimmercheckbox.checked);
+          LReg.WriteBool('ShowR', showrcheckbox.checked);
+          LReg.WriteBool('ShowG', showgcheckbox.checked);
+          LReg.WriteBool('ShowB', showbcheckbox.checked);
+          LReg.WriteBool('ShowW', showwcheckbox.checked);
+          LReg.WriteBool('ShowA', showacheckbox.checked);
+          LReg.WriteBool('ShowUV', showuvcheckbox.checked);
+          LReg.WriteBool('ShowShutter', showshuttercheckbox.checked);
+          LReg.WriteBool('ShowPanTilt', showpantiltcheckbox.checked);
+          LReg.WriteBool('ShowFog', showfogcheckbox.checked);
         end;
       end;
     end;
@@ -284,6 +305,26 @@ begin
             datainstartedit.value:=LReg.ReadInteger('DataInOffset');
             DataInOffset:=round(datainstartedit.Value);
           end;
+          if LReg.ValueExists('ShowDimmer') then
+            showdimmercheckbox.checked:=LReg.ReadBool('ShowDimmer');
+          if LReg.ValueExists('ShowR') then
+            showrcheckbox.checked:=LReg.ReadBool('ShowR');
+          if LReg.ValueExists('ShowG') then
+            showgcheckbox.checked:=LReg.ReadBool('ShowG');
+          if LReg.ValueExists('ShowB') then
+            showbcheckbox.checked:=LReg.ReadBool('ShowB');
+          if LReg.ValueExists('ShowW') then
+            showwcheckbox.checked:=LReg.ReadBool('ShowW');
+          if LReg.ValueExists('ShowA') then
+            showacheckbox.checked:=LReg.ReadBool('ShowA');
+          if LReg.ValueExists('ShowUV') then
+            showuvcheckbox.checked:=LReg.ReadBool('ShowUV');
+          if LReg.ValueExists('ShowShutter') then
+            showshuttercheckbox.checked:=LReg.ReadBool('ShowShutter');
+          if LReg.ValueExists('ShowPanTilt') then
+            showpantiltcheckbox.checked:=LReg.ReadBool('ShowPanTilt');
+          if LReg.ValueExists('ShowFog') then
+            showfogcheckbox.checked:=LReg.ReadBool('ShowFog');
         end;
       end;
     end;
@@ -643,7 +684,7 @@ begin
             end;
 
             // Reihenfolge: Dimmer, R, G, B, W, A, UV, SHUTTER, PAN, TILT, FOG
-            if mainform.devices[DeviceIndex].hasDimmer and not ChannelTypeIsDone[0] then
+            if mainform.devices[DeviceIndex].hasDimmer and not ChannelTypeIsDone[0] and showdimmercheckbox.Checked then
             begin
               ChannelTypeIsDone[0]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
@@ -667,7 +708,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.devices[DeviceIndex].hasRGB and not ChannelTypeIsDone[1] then
+            if mainform.devices[DeviceIndex].hasRGB and not ChannelTypeIsDone[1] and showrcheckbox.Checked then
             begin
               ChannelTypeIsDone[1]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
@@ -691,7 +732,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.devices[DeviceIndex].hasRGB and not ChannelTypeIsDone[2] then
+            if mainform.devices[DeviceIndex].hasRGB and not ChannelTypeIsDone[2] and showgcheckbox.Checked then
             begin
               ChannelTypeIsDone[2]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
@@ -715,7 +756,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.devices[DeviceIndex].hasRGB and not ChannelTypeIsDone[3] then
+            if mainform.devices[DeviceIndex].hasRGB and not ChannelTypeIsDone[3] and showbcheckbox.Checked then
             begin
               ChannelTypeIsDone[3]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
@@ -739,7 +780,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.devices[DeviceIndex].hasWhite and not ChannelTypeIsDone[4] then
+            if mainform.devices[DeviceIndex].hasWhite and not ChannelTypeIsDone[4] and showwcheckbox.Checked then
             begin
               ChannelTypeIsDone[4]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
@@ -763,7 +804,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.devices[DeviceIndex].hasAmber and not ChannelTypeIsDone[5] then
+            if mainform.devices[DeviceIndex].hasAmber and not ChannelTypeIsDone[5] and showacheckbox.Checked then
             begin
               ChannelTypeIsDone[5]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
@@ -787,7 +828,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.devices[DeviceIndex].hasUV and not ChannelTypeIsDone[6] then
+            if mainform.devices[DeviceIndex].hasUV and not ChannelTypeIsDone[6] and showuvcheckbox.Checked then
             begin
               ChannelTypeIsDone[6]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
@@ -811,7 +852,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.devices[DeviceIndex].hasShutter and not ChannelTypeIsDone[7] then
+            if mainform.devices[DeviceIndex].hasShutter and not ChannelTypeIsDone[7] and showshuttercheckbox.Checked then
             begin
               ChannelTypeIsDone[7]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
@@ -835,7 +876,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.devices[DeviceIndex].hasFog and not ChannelTypeIsDone[8] then
+            if mainform.devices[DeviceIndex].hasFog and not ChannelTypeIsDone[8] and showfogcheckbox.Checked then
             begin
               ChannelTypeIsDone[8]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
@@ -859,7 +900,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.devices[DeviceIndex].hasPANTILT and not ChannelTypeIsDone[9] then
+            if mainform.devices[DeviceIndex].hasPANTILT and not ChannelTypeIsDone[9] and showpantiltcheckbox.Checked then
             begin
               ChannelTypeIsDone[9]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
@@ -883,7 +924,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.devices[DeviceIndex].hasPANTILT and not ChannelTypeIsDone[10] then
+            if mainform.devices[DeviceIndex].hasPANTILT and not ChannelTypeIsDone[10] and showpantiltcheckbox.Checked then
             begin
               ChannelTypeIsDone[10]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
@@ -957,7 +998,7 @@ begin
             end;
 
             // Reihenfolge: Dimmer, R, G, B, W, A, UV, SHUTTER, PAN, TILT, FOG
-            if mainform.DeviceGroups[GroupIndex].HasChanType[19] and not ChannelTypeIsDone[0] then
+            if mainform.DeviceGroups[GroupIndex].HasChanType[19] and not ChannelTypeIsDone[0] and showdimmercheckbox.Checked then
             begin
               ChannelTypeIsDone[0]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
@@ -981,7 +1022,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.DeviceGroups[GroupIndex].HasChanType[14] and not ChannelTypeIsDone[1] then
+            if mainform.DeviceGroups[GroupIndex].HasChanType[14] and not ChannelTypeIsDone[1] and showrcheckbox.Checked then
             begin
               ChannelTypeIsDone[1]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
@@ -1005,7 +1046,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.DeviceGroups[GroupIndex].HasChanType[15] and not ChannelTypeIsDone[2] then
+            if mainform.DeviceGroups[GroupIndex].HasChanType[15] and not ChannelTypeIsDone[2] and showgcheckbox.Checked then
             begin
               ChannelTypeIsDone[2]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
@@ -1029,7 +1070,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.DeviceGroups[GroupIndex].HasChanType[16] and not ChannelTypeIsDone[3] then
+            if mainform.DeviceGroups[GroupIndex].HasChanType[16] and not ChannelTypeIsDone[3] and showbcheckbox.Checked then
             begin
               ChannelTypeIsDone[3]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
@@ -1053,7 +1094,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.DeviceGroups[GroupIndex].HasChanType[40] and not ChannelTypeIsDone[4] then
+            if mainform.DeviceGroups[GroupIndex].HasChanType[40] and not ChannelTypeIsDone[4] and showwcheckbox.Checked then
             begin
               ChannelTypeIsDone[4]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
@@ -1077,7 +1118,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.DeviceGroups[GroupIndex].HasChanType[41] and not ChannelTypeIsDone[5] then
+            if mainform.DeviceGroups[GroupIndex].HasChanType[41] and not ChannelTypeIsDone[5] and showacheckbox.Checked then
             begin
               ChannelTypeIsDone[5]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
@@ -1101,7 +1142,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.DeviceGroups[GroupIndex].HasChanType[45] and not ChannelTypeIsDone[6] then
+            if mainform.DeviceGroups[GroupIndex].HasChanType[45] and not ChannelTypeIsDone[6] and showuvcheckbox.Checked then
             begin
               ChannelTypeIsDone[6]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
@@ -1125,7 +1166,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.DeviceGroups[GroupIndex].HasChanType[18] and not ChannelTypeIsDone[7] then
+            if mainform.DeviceGroups[GroupIndex].HasChanType[18] and not ChannelTypeIsDone[7] and showshuttercheckbox.Checked then
             begin
               ChannelTypeIsDone[7]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
@@ -1149,7 +1190,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.DeviceGroups[GroupIndex].HasChanType[46] and not ChannelTypeIsDone[8] then
+            if mainform.DeviceGroups[GroupIndex].HasChanType[46] and not ChannelTypeIsDone[8] and showfogcheckbox.Checked then
             begin
               ChannelTypeIsDone[8]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
@@ -1173,7 +1214,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.DeviceGroups[GroupIndex].HasChanType[0] and not ChannelTypeIsDone[9] then
+            if mainform.DeviceGroups[GroupIndex].HasChanType[0] and not ChannelTypeIsDone[9] and showpantiltcheckbox.Checked then
             begin
               ChannelTypeIsDone[9]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
@@ -1197,7 +1238,7 @@ begin
               inc(XTouchChannelCounter);
               continue;
             end;
-            if mainform.DeviceGroups[GroupIndex].HasChanType[1] and not ChannelTypeIsDone[10] then
+            if mainform.DeviceGroups[GroupIndex].HasChanType[1] and not ChannelTypeIsDone[10] and showpantiltcheckbox.Checked then
             begin
               ChannelTypeIsDone[10]:=true;
               XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;

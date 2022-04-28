@@ -1,8 +1,8 @@
 object xtouchcontrolform: Txtouchcontrolform
-  Left = 520
-  Top = 102
+  Left = 322
+  Top = 154
   Width = 615
-  Height = 364
+  Height = 460
   Caption = 'X-Touch Einstellungen'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object xtouchcontrolform: Txtouchcontrolform
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 252
+    Top = 348
     Width = 599
     Height = 73
     Align = alBottom
@@ -522,7 +522,7 @@ object xtouchcontrolform: Txtouchcontrolform
     Left = 8
     Top = 8
     Width = 355
-    Height = 244
+    Height = 340
     Align = alClient
     Caption = ' Ger'#228'te oder Gruppen f'#252'r Steuerung mittels XTouch/XCtl '
     TabOrder = 1
@@ -530,7 +530,7 @@ object xtouchcontrolform: Txtouchcontrolform
       Left = 10
       Top = 15
       Width = 335
-      Height = 219
+      Height = 315
       Align = alClient
       ItemHeight = 13
       TabOrder = 0
@@ -539,7 +539,7 @@ object xtouchcontrolform: Txtouchcontrolform
       Left = 2
       Top = 15
       Width = 8
-      Height = 219
+      Height = 315
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 1
@@ -548,14 +548,14 @@ object xtouchcontrolform: Txtouchcontrolform
       Left = 345
       Top = 15
       Width = 8
-      Height = 219
+      Height = 315
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 2
     end
     object Panel7: TPanel
       Left = 2
-      Top = 234
+      Top = 330
       Width = 351
       Height = 8
       Align = alBottom
@@ -567,7 +567,7 @@ object xtouchcontrolform: Txtouchcontrolform
     Left = 0
     Top = 8
     Width = 8
-    Height = 244
+    Height = 340
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 2
@@ -576,7 +576,7 @@ object xtouchcontrolform: Txtouchcontrolform
     Left = 363
     Top = 8
     Width = 236
-    Height = 244
+    Height = 340
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
@@ -584,7 +584,7 @@ object xtouchcontrolform: Txtouchcontrolform
       Left = 8
       Top = 0
       Width = 220
-      Height = 244
+      Height = 340
       Align = alClient
       Caption = ' Einstellungen '
       TabOrder = 0
@@ -601,6 +601,13 @@ object xtouchcontrolform: Txtouchcontrolform
         Width = 69
         Height = 13
         Caption = 'Data-In-Offset:'
+      end
+      object Label3: TLabel
+        Left = 8
+        Top = 248
+        Width = 106
+        Height = 13
+        Caption = 'Anzuzeigende Kan'#228'le:'
       end
       object resetbtn: TButton
         Left = 8
@@ -647,12 +654,106 @@ object xtouchcontrolform: Txtouchcontrolform
         TabOrder = 4
         OnClick = activebtnClick
       end
+      object showdimmercheckbox: TCheckBox
+        Left = 8
+        Top = 264
+        Width = 65
+        Height = 17
+        Caption = 'DIMMER'
+        Checked = True
+        State = cbChecked
+        TabOrder = 5
+      end
+      object showrcheckbox: TCheckBox
+        Left = 96
+        Top = 264
+        Width = 41
+        Height = 17
+        Caption = 'R'
+        Checked = True
+        State = cbChecked
+        TabOrder = 6
+      end
+      object showgcheckbox: TCheckBox
+        Left = 96
+        Top = 280
+        Width = 41
+        Height = 17
+        Caption = 'G'
+        Checked = True
+        State = cbChecked
+        TabOrder = 7
+      end
+      object showbcheckbox: TCheckBox
+        Left = 96
+        Top = 296
+        Width = 41
+        Height = 17
+        Caption = 'B'
+        Checked = True
+        State = cbChecked
+        TabOrder = 8
+      end
+      object showacheckbox: TCheckBox
+        Left = 152
+        Top = 280
+        Width = 41
+        Height = 17
+        Caption = 'A'
+        Checked = True
+        State = cbChecked
+        TabOrder = 9
+      end
+      object showwcheckbox: TCheckBox
+        Left = 152
+        Top = 264
+        Width = 41
+        Height = 17
+        Caption = 'W'
+        Checked = True
+        State = cbChecked
+        TabOrder = 10
+      end
+      object showuvcheckbox: TCheckBox
+        Left = 152
+        Top = 296
+        Width = 41
+        Height = 17
+        Caption = 'UV'
+        TabOrder = 11
+      end
+      object showfogcheckbox: TCheckBox
+        Left = 8
+        Top = 312
+        Width = 65
+        Height = 17
+        Caption = 'FOG'
+        Checked = True
+        State = cbChecked
+        TabOrder = 12
+      end
+      object showpantiltcheckbox: TCheckBox
+        Left = 8
+        Top = 296
+        Width = 81
+        Height = 17
+        Caption = 'PAN/TILT'
+        TabOrder = 13
+      end
+      object showshuttercheckbox: TCheckBox
+        Left = 8
+        Top = 280
+        Width = 81
+        Height = 17
+        Caption = 'SHUTTER'
+        TabOrder = 14
+      end
     end
     object Panel8: TPanel
       Left = 0
       Top = 0
       Width = 8
-      Height = 244
+      Height = 340
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 1
@@ -661,7 +762,7 @@ object xtouchcontrolform: Txtouchcontrolform
       Left = 228
       Top = 0
       Width = 8
-      Height = 244
+      Height = 340
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 2
