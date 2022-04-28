@@ -1343,7 +1343,6 @@ object effektsequenzer: Teffektsequenzer
       OnChange = VSTChange
       OnClick = VSTClick
       OnCompareNodes = VSTCompareNodes
-      OnDblClick = VSTDblClick
       OnEndDrag = VSTEndDrag
       OnGetText = VSTGetText
       OnPaintText = VSTPaintText

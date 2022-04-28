@@ -82,7 +82,6 @@ type
     procedure Audioszene1Click(Sender: TObject);
     procedure Bewegungsszene1Click(Sender: TObject);
     procedure Befehle1Click(Sender: TObject);
-    procedure EditBtnClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure DeleteBtnClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -555,29 +554,6 @@ begin
 
   befehlseditor_array2[length(befehlseditor_array2)-1].Free;
   setlength(befehlseditor_array2,length(befehlseditor_array2)-1);
-end;
-
-procedure Tszenenverwaltungform.EditBtnClick(Sender: TObject);
-var
-  Data: PTreeData;
-begin
-  if not mainform.UserAccessGranted(2) then exit;
-
-  if VST.SelectedCount=0 then exit;
-
-  Data:=VST.GetNodeData(VST.FocusedNode);
-
-  if Assigned(Data) and (not Data^.IsRootNode) then
-  begin
-    mainform.EditScene(Data^.ID);
-
-    Data:=VST.GetNodeData(VST.FocusedNode);
-    Data^.Caption:=mainform.GetSceneInfo2(Data^.ID, 'name');
-    Data^.Beschreibung:=mainform.GetSceneInfo2(Data^.ID, 'desc');
-    Data^.Fadetime:=mainform.GetSceneInfo2(Data^.ID, 'time');
-    positionselection:=Data^.ID;
-    VST.Refresh;
-  end;
 end;
 
 procedure Tszenenverwaltungform.FormShow(Sender: TObject);
@@ -5214,8 +5190,30 @@ end;
 
 procedure Tszenenverwaltungform.VSTMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  Data: PTreeData;
 begin
-  if (Button = mbLeft) then
+  if Shift=[ssLeft, ssDouble] then
+  begin
+    if not mainform.UserAccessGranted(2) then exit;
+    if VST.SelectedCount=0 then exit;
+
+    Data:=VST.GetNodeData(VST.FocusedNode);
+
+    if Assigned(Data) and (not Data^.IsRootNode) then
+    begin
+      mainform.EditScene(Data^.ID);
+
+      Data:=VST.GetNodeData(VST.FocusedNode);
+      Data^.Caption:=mainform.GetSceneInfo2(Data^.ID, 'name');
+      Data^.Beschreibung:=mainform.GetSceneInfo2(Data^.ID, 'desc');
+      Data^.Fadetime:=mainform.GetSceneInfo2(Data^.ID, 'time');
+      positionselection:=Data^.ID;
+      VST.Refresh;
+    end;
+  end;
+
+  if (Shift=[ssLeft]) and (Button=mbLeft) then
   begin
     VST.BeginDrag(False);
   end;

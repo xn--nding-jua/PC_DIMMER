@@ -1,6 +1,6 @@
 object szenenverwaltungform: Tszenenverwaltungform
-  Left = 229
-  Top = 120
+  Left = 501
+  Top = 144
   Width = 530
   Height = 450
   Caption = 'Szenenverwaltung'
@@ -346,7 +346,6 @@ object szenenverwaltungform: Tszenenverwaltungform
       ParentShowHint = False
       ShowHint = True
       TabOrder = 4
-      OnClick = EditBtnClick
       PngImage.Data = {
         89504E470D0A1A0A0000000D49484452000000140000001408060000008D891D
         0D000000097048597300000B1300000B1301009A9C1800000A4D694343505068
@@ -1401,7 +1400,6 @@ object szenenverwaltungform: Tszenenverwaltungform
     TreeOptions.SelectionOptions = [toExtendedFocus, toFullRowSelect, toMultiSelect, toSimpleDrawSelection]
     OnChange = VSTChange
     OnCompareNodes = VSTCompareNodes
-    OnDblClick = EditBtnClick
     OnEditing = VSTEditing
     OnEndDrag = VSTEndDrag
     OnGetText = VSTGetText
