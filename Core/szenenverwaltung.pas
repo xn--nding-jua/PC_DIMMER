@@ -5385,9 +5385,13 @@ begin
   codeeditorform.descriptionedit.Text:='';
   codeeditorform.Memo1.Text:='unit CodeScene;'+#13#10+
   'interface'+#13#10+
+  'procedure InitScene;'+#13#10+
   'procedure StartScene;'+#13#10+
   'procedure StopScene;'+#13#10+
   'implementation'+#13#10#13#10+
+  'procedure InitScene;'+#13#10+
+  'begin'+#13#10+
+  'end;'+#13#10#13#10+
   'procedure StartScene;'+#13#10+
   'begin'+#13#10+
   'end;'+#13#10#13#10+

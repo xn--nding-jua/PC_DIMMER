@@ -34,27 +34,28 @@ uses
   audioszeneeditorform, befehleditorform2, Tastenabfragefrm, buehnenansicht,
   {deviceformprototypfrm,} editdatainevent, datainevent,
   // fremde Units
-  spectrum_vis, osc_vis, CommonTypes, Bass, BASS_AC3, Basscd, BASSmix, Bass_fx,
+  GR32, spectrum_vis, osc_vis, CommonTypes, Bass, BASS_AC3, Basscd, BASSmix, Bass_fx,
   JvComponent, JvZlibMultiple, AudioIO, antTaskbarIcon, IAeverProgressBar,
   CPDrv, PowerButton, JvSimScope, MidiIn, MidiType, Monprocs, JvBaseDlg,
-  JclDebug, JvInterpreter, JvInterpreter_all, JvComponentBase,
+  JclDebug, JvInterpreter, JvInterpreter_all, JvComponentBase, pngimage,
   PngImageList, PngBitBtn, JvThreadTimer, uMultimediaTimer, Mask, JvExMask,
   JvSpin, JvProgressBar, JvXPProgressBar, JvExControls, JvWaitingGradient,
   JvExExtCtrls, JvExtComponent, JvCaptionPanel, JvSpecialProgress, JclSysInfo,
   JvAppStorage, JvAppXMLStorage, IdBaseComponent, IdComponent, MidiOut,
-  DECUtil, DECCipher, DECHash, DECFmt, DECRandom, GR32, IdTCPConnection,
+  DECUtil, DECCipher, DECHash, DECFmt, DECRandom, IdTCPConnection,
   IdTCPClient, pcdHTTPServer, IdHTTPServer, JvComputerInfoEx, PowerButton1, gnugettext,
-  ScktComp, TB2ToolWindow, pngimage, UdpSockUtil, CSVUtils, IdTCPServer,
+  ScktComp, TB2ToolWindow, UdpSockUtil, CSVUtils, IdTCPServer,
   Tokentools, dxBar, dxSkinsCore, dxStatusBar, dxRibbonStatusBar, cxClasses,
   dxRibbonForm, dxRibbon, cxControls, dxBarExtItems, JvPanel, JvColorBox,
   JvOfficeColorPanel, JvColorButton, cxStyles, dxGDIPlusClasses, SHDocVw,
   graphutil, IdCustomTCPServer, IdCustomHTTPServer, idContext, VistaAltFixUnit2,
   SVATimer, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, pcdMEVP,
-  dxRibbonSkins, dxBarApplicationMenu, D7GesturesHeader, jpeg;
+  dxRibbonSkins, dxBarApplicationMenu, D7GesturesHeader, jpeg,
+  JvHidControllerClass, Hid;
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=486;
+  actualprojectversion=487;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -571,6 +572,7 @@ type
     TrackBar3: TTrackBar;
     Label15: TLabel;
     dxBarLargeButton9: TdxBarLargeButton;
+    dxBarLargeButton10: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -652,8 +654,7 @@ type
     procedure Effektschaltvorgang(WelcherEffekt:Integer; Sender: TObject);
     procedure StartPreset(ID: TGUID);
     procedure StartPresetScene(ID: TGUID);
-    procedure StartCodeScene(ID: TGUID);
-    procedure StopCodeScene(ID: TGUID);
+    procedure ExecuteCodeScene(ID: TGUID; Command: String);
     procedure StartAutoszene(ID: TGUID; NoFadetime, NoDelay:boolean; Fadetime:integer);
     procedure StopAutoszene(ID: TGUID);
     procedure StartMediaCenterSzene(ID: TGUID);
@@ -851,6 +852,15 @@ type
     procedure dxBarLargeButton8Click(Sender: TObject);
     procedure TrackBar3Change(Sender: TObject);
     procedure dxBarLargeButton9Click(Sender: TObject);
+    procedure dxBarLargeButton10Click(Sender: TObject);
+    procedure HidCtlDeviceCreateError(
+      Controller: TJvHidDeviceController; PnPInfo: TJvHidPnPInfo;
+      var Handled, RetryCreate: Boolean);
+    procedure HidCtlDeviceChange(Sender: TObject);
+    function HidCtlEnumerate(HidDev: TJvHidDevice;
+      const Idx: Integer): Boolean;
+    procedure HidCtlDeviceData(HidDev: TJvHidDevice; ReportID: Byte;
+      const Data: Pointer; Size: Word);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -1115,6 +1125,8 @@ type
     TimeCodePlayerBank:array of TTimeCodePlayer;
     IREvent:array of TIREvent;
     XTouchDevices:array of TXTouchDevice;
+    ElgatoStreamDeckArray:array of TElgatoStreamDeck;
+    ElgatoStreamSerials:array of string;
     // Szenenbibliothek
     EinfacheSzenen : array of TEinfacheSzene;
     DeviceScenes: array of TDeviceScene;
@@ -1178,6 +1190,7 @@ type
     EffektsequenzerTabs:array of string[255];
 
     accuThread: TAccuThread;
+    HidCtl:TJvHidDeviceController;
 
     // WORKAROUND FOR MEVP
     MEVPDLL:THandle;
@@ -1306,7 +1319,8 @@ uses
   videoscreensynchronisierenfrm, ambilight, pmm, touchscreenfrm,
   ddfeditorassistant, dynguifrm, audiomanagerfrm, ProgressScreenSmallFrm,
   presetsceneeditorform, adddevicefrm, pcdUtils, pcdRegistry,
-  nodecontrolfrm, usermgmtfrm, changeuserfrm, xtouchcontrolfrm;
+  nodecontrolfrm, usermgmtfrm, changeuserfrm, xtouchcontrolfrm,
+  elgatostreamdeckfrm;
 
 {$R *.DFM}
 
@@ -3442,6 +3456,8 @@ begin
     nodecontrolform.close;
   if xtouchcontrolform.showing then
     xtouchcontrolform.close;
+  if elgatostreamdeckform.showing then
+    elgatostreamdeckform.close;
 
   // WORKAROUND FOR MEVP
   // 3D Visualizer schließen und freigeben
@@ -3794,6 +3810,7 @@ begin
   nodecontrolform.free;
   usermgmtform.free;
   xtouchcontrolform.Free;
+  elgatostreamdeckform.Free;
 
   // Finito :)
 
@@ -4095,6 +4112,7 @@ begin
   joystickform.MSGNew;
   beatform.MSGNew;
   xtouchcontrolform.MSGNew;
+  elgatostreamdeckform.MSGNew;
 
   for i:=0 to 31 do
   begin
@@ -5734,6 +5752,27 @@ begin
     Filestream.WriteBuffer(Pointer(mainform.CodeScenes[i].Code)^,length(mainform.CodeScenes[i].Code));
   end;
 // Ende CodeScenes
+// StreamDeck speichern
+  inprogress.filename.Caption:=_('Schreibe Datei... StreamDeck');
+  inprogress.Refresh;
+  Count:=length(mainform.ElgatoStreamDeckArray);
+  Filestream.WriteBuffer(Count,sizeof(Count));
+  for i:=0 to Count-1 do
+  begin
+    Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Serial,sizeof(mainform.ElgatoStreamDeckArray[i].Serial));
+    Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].ButtonCount,sizeof(mainform.ElgatoStreamDeckArray[i].ButtonCount));
+    Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Brightness,sizeof(mainform.ElgatoStreamDeckArray[i].Brightness));
+    Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton,sizeof(mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton));
+    for j:=0 to 31 do
+    begin
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].ButtonType,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].ButtonType));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelX,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelX));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel));
+    end;
+  end;
+// Ende StreamDeck
 
   inprogress.filename.Caption:=_('Schreibe Datei...');
   inprogress.Refresh;
@@ -5876,6 +5915,7 @@ begin
   joystickform.MSGNew;
   beatform.MSGNew;
   xtouchcontrolform.MSGNew;
+  elgatostreamdeckform.MSGNew;
 
   if not OnlyProject then
   begin
@@ -6323,24 +6363,24 @@ begin
     RefreshSplashText;
   end;
 
-          	  Filestream.ReadBuffer(Count,sizeof(Count));
-              setlength(Figuren,Count);
-              for i:=0 to Count-1 do
-              begin
-            	  Filestream.ReadBuffer(Figuren[i].ID,sizeof(Figuren[i].ID));
-            	  Filestream.ReadBuffer(Figuren[i].name,sizeof(Figuren[i].name));
-            	  Filestream.ReadBuffer(Figuren[i].invertpan,sizeof(Figuren[i].invertpan));
-            	  Filestream.ReadBuffer(Figuren[i].inverttilt,sizeof(Figuren[i].inverttilt));
-            	  Filestream.ReadBuffer(Count2,sizeof(Count2));
-                setlength(Figuren[i].posx,Count2);
-                setlength(Figuren[i].posy,Count2);
-                for k:=0 to Count2-1 do
-                begin
-              	  Filestream.ReadBuffer(Figuren[i].posx[k],sizeof(Figuren[i].posx[k]));
-              	  Filestream.ReadBuffer(Figuren[i].posy[k],sizeof(Figuren[i].posy[k]));
-                end;
-            	  Filestream.ReadBuffer(Figuren[i].gesamtlaenge,sizeof(Figuren[i].gesamtlaenge));
-              end;
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(Figuren,Count);
+  for i:=0 to Count-1 do
+  begin
+    Filestream.ReadBuffer(Figuren[i].ID,sizeof(Figuren[i].ID));
+    Filestream.ReadBuffer(Figuren[i].name,sizeof(Figuren[i].name));
+    Filestream.ReadBuffer(Figuren[i].invertpan,sizeof(Figuren[i].invertpan));
+    Filestream.ReadBuffer(Figuren[i].inverttilt,sizeof(Figuren[i].inverttilt));
+    Filestream.ReadBuffer(Count2,sizeof(Count2));
+    setlength(Figuren[i].posx,Count2);
+    setlength(Figuren[i].posy,Count2);
+    for k:=0 to Count2-1 do
+    begin
+      Filestream.ReadBuffer(Figuren[i].posx[k],sizeof(Figuren[i].posx[k]));
+      Filestream.ReadBuffer(Figuren[i].posy[k],sizeof(Figuren[i].posy[k]));
+    end;
+    Filestream.ReadBuffer(Figuren[i].gesamtlaenge,sizeof(Figuren[i].gesamtlaenge));
+  end;
   // Ende Figurendaten
   // Einfache-, Bewegungs- und Audioszenen, sowie Befehle öffnen
 	if not startingup then
@@ -6353,287 +6393,287 @@ begin
     RefreshSplashText;
   end;
 
-     	  Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(Einfacheszenen,Count);
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(Einfacheszenen,Count);
 
-        if projektprogrammversionint<439 then
+  if projektprogrammversionint<439 then
+  begin
+    for i:=0 to Count-1 do
+    begin
+      Filestream.ReadBuffer(OldEinfacheszene,sizeof(OldEinfacheszene));
+      Einfacheszenen[i].ID:=OldEinfacheszene.ID;
+      Einfacheszenen[i].Name:=OldEinfacheszene.Name;
+      Einfacheszenen[i].Beschreibung:=OldEinfacheszene.Beschreibung;
+      Einfacheszenen[i].einblendzeit:=OldEinfacheszene.einblendzeit;
+      for j:=1 to chan do
+      begin
+        Einfacheszenen[i].kanal[j]:=OldEinfacheszene.kanal[j];
+        Einfacheszenen[i].kanalaktiv[j]:=OldEinfacheszene.kanalaktiv[j];
+      end;
+    end;
+  end else
+  begin
+    for i:=0 to Count-1 do
+    begin
+      Filestream.ReadBuffer(Einfacheszenen[i].ID,sizeof(Einfacheszenen[i].ID));
+      Filestream.ReadBuffer(Einfacheszenen[i].Name,sizeof(Einfacheszenen[i].Name));
+      Filestream.ReadBuffer(Einfacheszenen[i].Beschreibung,sizeof(Einfacheszenen[i].Beschreibung));
+      Filestream.ReadBuffer(Einfacheszenen[i].einblendzeit,sizeof(Einfacheszenen[i].einblendzeit));
+      Filestream.ReadBuffer(Einfacheszenen[i].kanal,sizeof(Einfacheszenen[i].kanal));
+      Filestream.ReadBuffer(Einfacheszenen[i].kanalaktiv,sizeof(Einfacheszenen[i].kanalaktiv));
+      Filestream.ReadBuffer(Einfacheszenen[i].Category,sizeof(Einfacheszenen[i].Category));
+    end;
+  end;
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(Audioszenen,Count);
+  setlength(AudioszenenCHAN,Count);
+
+  if projektprogrammversionint>=411 then
+  begin
+    for i:=0 to Count-1 do
+    begin
+      Filestream.ReadBuffer(Audioszenen[i].ID,sizeof(Audioszenen[i].ID));
+      Filestream.ReadBuffer(Audioszenen[i].Name,sizeof(Audioszenen[i].Name));
+      Filestream.ReadBuffer(Audioszenen[i].Beschreibung,sizeof(Audioszenen[i].Beschreibung));
+      Filestream.ReadBuffer(Audioszenen[i].Datei,sizeof(Audioszenen[i].Datei));
+      Filestream.ReadBuffer(Audioszenen[i].Dauer,sizeof(Audioszenen[i].Dauer));
+      Filestream.ReadBuffer(Audioszenen[i].Volume,sizeof(Audioszenen[i].Volume));
+      Filestream.ReadBuffer(Audioszenen[i].FadeinTime,sizeof(Audioszenen[i].FadeinTime));
+      Filestream.ReadBuffer(Audioszenen[i].FadeoutTime,sizeof(Audioszenen[i].FadeoutTime));
+      if projektprogrammversionint>=432 then
+      begin
+        Filestream.ReadBuffer(Audioszenen[i].matrix,sizeof(Audioszenen[i].matrix));
+        Filestream.ReadBuffer(Audioszenen[i].Kanalsettings,sizeof(Audioszenen[i].Kanalsettings));
+      end else
+      begin
+        Audioszenen[i].matrix[0][0]:=1;
+        Audioszenen[i].matrix[0][1]:=0;
+        Audioszenen[i].matrix[0][2]:=0;
+        Audioszenen[i].matrix[0][3]:=0;
+        Audioszenen[i].matrix[0][4]:=0;
+        Audioszenen[i].matrix[0][5]:=0;
+        Audioszenen[i].matrix[0][6]:=0;
+        Audioszenen[i].matrix[0][7]:=0;
+        Audioszenen[i].matrix[1][0]:=0;
+        Audioszenen[i].matrix[1][1]:=0;
+        Audioszenen[i].matrix[1][2]:=1;
+        Audioszenen[i].matrix[1][3]:=0;
+        Audioszenen[i].matrix[1][4]:=0;
+        Audioszenen[i].matrix[1][5]:=0;
+        Audioszenen[i].matrix[1][6]:=0;
+        Audioszenen[i].matrix[1][7]:=0;
+        Audioszenen[i].Kanalsettings[0]:=0;
+        Audioszenen[i].Kanalsettings[1]:=0;
+        Audioszenen[i].Kanalsettings[2]:=0;
+        Audioszenen[i].Kanalsettings[3]:=0;
+        Audioszenen[i].Kanalsettings[4]:=0;
+        Audioszenen[i].Kanalsettings[5]:=0;
+        Audioszenen[i].Kanalsettings[6]:=0;
+        Audioszenen[i].Kanalsettings[7]:=0;
+      end;
+      if projektprogrammversionint>=439 then
+        Filestream.ReadBuffer(Audioszenen[i].Category,sizeof(Audioszenen[i].Category));
+    end;
+  end else
+  begin
+    for i:=0 to Count-1 do
+    begin
+      Filestream.ReadBuffer(AudioszeneOld,sizeof(AudioszeneOld));
+
+      Audioszenen[i].ID:=AudioszeneOld.ID;
+      Audioszenen[i].Name:=AudioszeneOld.Name;
+      Audioszenen[i].Beschreibung:=AudioszeneOld.Beschreibung;
+      Audioszenen[i].Datei:=AudioszeneOld.Datei;
+      Audioszenen[i].Dauer:=AudioszeneOld.Dauer;
+      Audioszenen[i].Volume:=1;
+      Audioszenen[i].FadeinTime:=0;
+      Audioszenen[i].FadeoutTime:=0;
+
+      Audioszenen[i].matrix[0][0]:=1;
+      Audioszenen[i].matrix[0][1]:=0;
+      Audioszenen[i].matrix[0][2]:=0;
+      Audioszenen[i].matrix[0][3]:=0;
+      Audioszenen[i].matrix[0][4]:=0;
+      Audioszenen[i].matrix[0][5]:=0;
+      Audioszenen[i].matrix[0][6]:=0;
+      Audioszenen[i].matrix[0][7]:=0;
+      Audioszenen[i].matrix[1][0]:=0;
+      Audioszenen[i].matrix[1][1]:=0;
+      Audioszenen[i].matrix[1][2]:=1;
+      Audioszenen[i].matrix[1][3]:=0;
+      Audioszenen[i].matrix[1][4]:=0;
+      Audioszenen[i].matrix[1][5]:=0;
+      Audioszenen[i].matrix[1][6]:=0;
+      Audioszenen[i].matrix[1][7]:=0;
+      Audioszenen[i].Kanalsettings[0]:=0;
+      Audioszenen[i].Kanalsettings[1]:=0;
+      Audioszenen[i].Kanalsettings[2]:=0;
+      Audioszenen[i].Kanalsettings[3]:=0;
+      Audioszenen[i].Kanalsettings[4]:=0;
+      Audioszenen[i].Kanalsettings[5]:=0;
+      Audioszenen[i].Kanalsettings[6]:=0;
+      Audioszenen[i].Kanalsettings[7]:=0;
+    end;
+  end;
+
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(Bewegungsszenen,Count);
+  setlength(BewegungsszenenZeit,Count);
+  setlength(BewegungsszenenAktiv,Count);
+  for i:=0 to Count-1 do
+  begin
+    Filestream.ReadBuffer(Bewegungsszenen[i].ID,sizeof(Bewegungsszenen[i].ID));
+    Filestream.ReadBuffer(Bewegungsszenen[i].Name,sizeof(Bewegungsszenen[i].Name));
+    Filestream.ReadBuffer(Bewegungsszenen[i].Beschreibung,sizeof(Bewegungsszenen[i].Beschreibung));
+    if projektprogrammversionint>=428 then
+      Filestream.ReadBuffer(Bewegungsszenen[i].IsBeatControlled,sizeof(Bewegungsszenen[i].IsBeatControlled));
+    Filestream.ReadBuffer(Bewegungsszenen[i].figur,sizeof(Bewegungsszenen[i].figur));
+    Filestream.ReadBuffer(Bewegungsszenen[i].dauer,sizeof(Bewegungsszenen[i].dauer));
+    if projektprogrammversionint>=417 then
+      Filestream.ReadBuffer(Bewegungsszenen[i].DontFade,sizeof(Bewegungsszenen[i].DontFade));
+    Filestream.ReadBuffer(Bewegungsszenen[i].repeats,sizeof(Bewegungsszenen[i].repeats));
+    Filestream.ReadBuffer(Bewegungsszenen[i].identischespurgeschwidigkeit,sizeof(Bewegungsszenen[i].identischespurgeschwidigkeit));
+    Filestream.ReadBuffer(Bewegungsszenen[i].startpositionrelativ,sizeof(Bewegungsszenen[i].startpositionrelativ));
+    if projektprogrammversionint>=439 then
+      Filestream.ReadBuffer(Bewegungsszenen[i].Category,sizeof(Bewegungsszenen[i].Category));
+
+    Filestream.ReadBuffer(Count2,sizeof(Count2));
+    setlength(Bewegungsszenen[i].Devices,Count2);
+    setlength(BewegungsszenenZeit[i],Count2);
+    setlength(BewegungsszenenAktiv[i].Zeit,Count2);
+    setlength(BewegungsszenenAktiv[i].Repeats,Count2);
+    setlength(BewegungsszenenAktiv[i].Position,Count2);
+    for j:=0 to Count2-1 do
+    begin
+      Filestream.ReadBuffer(Bewegungsszenen[i].Devices[j].ID,sizeof(Bewegungsszenen[i].Devices[j].ID));
+
+      Filestream.ReadBuffer(Count3,sizeof(Count3));
+      setlength(Bewegungsszenen[i].Devices[j].DeviceChannel,Count3);
+      setlength(Bewegungsszenen[i].Devices[j].Szenen,Count3);
+      setlength(BewegungsszenenZeit[i][j],Count3);
+      setlength(BewegungsszenenAktiv[i].Zeit[j],Count3);
+      setlength(BewegungsszenenAktiv[i].Repeats[j],Count3);
+      setlength(BewegungsszenenAktiv[i].Position[j],Count3);
+      for k:=0 to Count3-1 do
+      begin
+        if projektprogrammversionint>=425 then
+          Filestream.ReadBuffer(Bewegungsszenen[i].Devices[j].DeviceChannel[k],sizeof(Bewegungsszenen[i].Devices[j].DeviceChannel[k]))
+        else
         begin
-          for i:=0 to Count-1 do
-          begin
-            Filestream.ReadBuffer(OldEinfacheszene,sizeof(OldEinfacheszene));
-            Einfacheszenen[i].ID:=OldEinfacheszene.ID;
-            Einfacheszenen[i].Name:=OldEinfacheszene.Name;
-            Einfacheszenen[i].Beschreibung:=OldEinfacheszene.Beschreibung;
-            Einfacheszenen[i].einblendzeit:=OldEinfacheszene.einblendzeit;
-            for j:=1 to chan do
-            begin
-              Einfacheszenen[i].kanal[j]:=OldEinfacheszene.kanal[j];
-              Einfacheszenen[i].kanalaktiv[j]:=OldEinfacheszene.kanalaktiv[j];
-            end;
-          end;
-        end else
-        begin
-          for i:=0 to Count-1 do
-          begin
-            Filestream.ReadBuffer(Einfacheszenen[i].ID,sizeof(Einfacheszenen[i].ID));
-            Filestream.ReadBuffer(Einfacheszenen[i].Name,sizeof(Einfacheszenen[i].Name));
-            Filestream.ReadBuffer(Einfacheszenen[i].Beschreibung,sizeof(Einfacheszenen[i].Beschreibung));
-            Filestream.ReadBuffer(Einfacheszenen[i].einblendzeit,sizeof(Einfacheszenen[i].einblendzeit));
-            Filestream.ReadBuffer(Einfacheszenen[i].kanal,sizeof(Einfacheszenen[i].kanal));
-            Filestream.ReadBuffer(Einfacheszenen[i].kanalaktiv,sizeof(Einfacheszenen[i].kanalaktiv));
-            Filestream.ReadBuffer(Einfacheszenen[i].Category,sizeof(Einfacheszenen[i].Category));
-          end;
-        end;
-     	  Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(Audioszenen,Count);
-        setlength(AudioszenenCHAN,Count);
-
-        if projektprogrammversionint>=411 then
-       	begin
-          for i:=0 to Count-1 do
-          begin
-            Filestream.ReadBuffer(Audioszenen[i].ID,sizeof(Audioszenen[i].ID));
-            Filestream.ReadBuffer(Audioszenen[i].Name,sizeof(Audioszenen[i].Name));
-            Filestream.ReadBuffer(Audioszenen[i].Beschreibung,sizeof(Audioszenen[i].Beschreibung));
-            Filestream.ReadBuffer(Audioszenen[i].Datei,sizeof(Audioszenen[i].Datei));
-            Filestream.ReadBuffer(Audioszenen[i].Dauer,sizeof(Audioszenen[i].Dauer));
-            Filestream.ReadBuffer(Audioszenen[i].Volume,sizeof(Audioszenen[i].Volume));
-            Filestream.ReadBuffer(Audioszenen[i].FadeinTime,sizeof(Audioszenen[i].FadeinTime));
-            Filestream.ReadBuffer(Audioszenen[i].FadeoutTime,sizeof(Audioszenen[i].FadeoutTime));
-            if projektprogrammversionint>=432 then
-            begin
-              Filestream.ReadBuffer(Audioszenen[i].matrix,sizeof(Audioszenen[i].matrix));
-              Filestream.ReadBuffer(Audioszenen[i].Kanalsettings,sizeof(Audioszenen[i].Kanalsettings));
-            end else
-            begin
-              Audioszenen[i].matrix[0][0]:=1;
-              Audioszenen[i].matrix[0][1]:=0;
-              Audioszenen[i].matrix[0][2]:=0;
-              Audioszenen[i].matrix[0][3]:=0;
-              Audioszenen[i].matrix[0][4]:=0;
-              Audioszenen[i].matrix[0][5]:=0;
-              Audioszenen[i].matrix[0][6]:=0;
-              Audioszenen[i].matrix[0][7]:=0;
-              Audioszenen[i].matrix[1][0]:=0;
-              Audioszenen[i].matrix[1][1]:=0;
-              Audioszenen[i].matrix[1][2]:=1;
-              Audioszenen[i].matrix[1][3]:=0;
-              Audioszenen[i].matrix[1][4]:=0;
-              Audioszenen[i].matrix[1][5]:=0;
-              Audioszenen[i].matrix[1][6]:=0;
-              Audioszenen[i].matrix[1][7]:=0;
-              Audioszenen[i].Kanalsettings[0]:=0;
-              Audioszenen[i].Kanalsettings[1]:=0;
-              Audioszenen[i].Kanalsettings[2]:=0;
-              Audioszenen[i].Kanalsettings[3]:=0;
-              Audioszenen[i].Kanalsettings[4]:=0;
-              Audioszenen[i].Kanalsettings[5]:=0;
-              Audioszenen[i].Kanalsettings[6]:=0;
-              Audioszenen[i].Kanalsettings[7]:=0;
-            end;
-            if projektprogrammversionint>=439 then
-              Filestream.ReadBuffer(Audioszenen[i].Category,sizeof(Audioszenen[i].Category));
-          end;
-        end else
-        begin
-          for i:=0 to Count-1 do
-          begin
-            Filestream.ReadBuffer(AudioszeneOld,sizeof(AudioszeneOld));
-
-            Audioszenen[i].ID:=AudioszeneOld.ID;
-            Audioszenen[i].Name:=AudioszeneOld.Name;
-            Audioszenen[i].Beschreibung:=AudioszeneOld.Beschreibung;
-            Audioszenen[i].Datei:=AudioszeneOld.Datei;
-            Audioszenen[i].Dauer:=AudioszeneOld.Dauer;
-            Audioszenen[i].Volume:=1;
-            Audioszenen[i].FadeinTime:=0;
-            Audioszenen[i].FadeoutTime:=0;
-
-            Audioszenen[i].matrix[0][0]:=1;
-            Audioszenen[i].matrix[0][1]:=0;
-            Audioszenen[i].matrix[0][2]:=0;
-            Audioszenen[i].matrix[0][3]:=0;
-            Audioszenen[i].matrix[0][4]:=0;
-            Audioszenen[i].matrix[0][5]:=0;
-            Audioszenen[i].matrix[0][6]:=0;
-            Audioszenen[i].matrix[0][7]:=0;
-            Audioszenen[i].matrix[1][0]:=0;
-            Audioszenen[i].matrix[1][1]:=0;
-            Audioszenen[i].matrix[1][2]:=1;
-            Audioszenen[i].matrix[1][3]:=0;
-            Audioszenen[i].matrix[1][4]:=0;
-            Audioszenen[i].matrix[1][5]:=0;
-            Audioszenen[i].matrix[1][6]:=0;
-            Audioszenen[i].matrix[1][7]:=0;
-            Audioszenen[i].Kanalsettings[0]:=0;
-            Audioszenen[i].Kanalsettings[1]:=0;
-            Audioszenen[i].Kanalsettings[2]:=0;
-            Audioszenen[i].Kanalsettings[3]:=0;
-            Audioszenen[i].Kanalsettings[4]:=0;
-            Audioszenen[i].Kanalsettings[5]:=0;
-            Audioszenen[i].Kanalsettings[6]:=0;
-            Audioszenen[i].Kanalsettings[7]:=0;
-          end;
-        end;
-
-     	  Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(Bewegungsszenen,Count);
-        setlength(BewegungsszenenZeit,Count);
-        setlength(BewegungsszenenAktiv,Count);
-        for i:=0 to Count-1 do
-        begin
-          Filestream.ReadBuffer(Bewegungsszenen[i].ID,sizeof(Bewegungsszenen[i].ID));
-          Filestream.ReadBuffer(Bewegungsszenen[i].Name,sizeof(Bewegungsszenen[i].Name));
-          Filestream.ReadBuffer(Bewegungsszenen[i].Beschreibung,sizeof(Bewegungsszenen[i].Beschreibung));
-          if projektprogrammversionint>=428 then
-            Filestream.ReadBuffer(Bewegungsszenen[i].IsBeatControlled,sizeof(Bewegungsszenen[i].IsBeatControlled));
-          Filestream.ReadBuffer(Bewegungsszenen[i].figur,sizeof(Bewegungsszenen[i].figur));
-          Filestream.ReadBuffer(Bewegungsszenen[i].dauer,sizeof(Bewegungsszenen[i].dauer));
-          if projektprogrammversionint>=417 then
-            Filestream.ReadBuffer(Bewegungsszenen[i].DontFade,sizeof(Bewegungsszenen[i].DontFade));
-          Filestream.ReadBuffer(Bewegungsszenen[i].repeats,sizeof(Bewegungsszenen[i].repeats));
-          Filestream.ReadBuffer(Bewegungsszenen[i].identischespurgeschwidigkeit,sizeof(Bewegungsszenen[i].identischespurgeschwidigkeit));
-          Filestream.ReadBuffer(Bewegungsszenen[i].startpositionrelativ,sizeof(Bewegungsszenen[i].startpositionrelativ));
-          if projektprogrammversionint>=439 then
-            Filestream.ReadBuffer(Bewegungsszenen[i].Category,sizeof(Bewegungsszenen[i].Category));
-
-     	    Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(Bewegungsszenen[i].Devices,Count2);
-          setlength(BewegungsszenenZeit[i],Count2);
-          setlength(BewegungsszenenAktiv[i].Zeit,Count2);
-          setlength(BewegungsszenenAktiv[i].Repeats,Count2);
-          setlength(BewegungsszenenAktiv[i].Position,Count2);
-          for j:=0 to Count2-1 do
-          begin
-            Filestream.ReadBuffer(Bewegungsszenen[i].Devices[j].ID,sizeof(Bewegungsszenen[i].Devices[j].ID));
-
-            Filestream.ReadBuffer(Count3,sizeof(Count3));
-            setlength(Bewegungsszenen[i].Devices[j].DeviceChannel,Count3);
-            setlength(Bewegungsszenen[i].Devices[j].Szenen,Count3);
-            setlength(BewegungsszenenZeit[i][j],Count3);
-            setlength(BewegungsszenenAktiv[i].Zeit[j],Count3);
-            setlength(BewegungsszenenAktiv[i].Repeats[j],Count3);
-            setlength(BewegungsszenenAktiv[i].Position[j],Count3);
-            for k:=0 to Count3-1 do
-            begin
-              if projektprogrammversionint>=425 then
-                Filestream.ReadBuffer(Bewegungsszenen[i].Devices[j].DeviceChannel[k],sizeof(Bewegungsszenen[i].Devices[j].DeviceChannel[k]))
-              else
-              begin
-                Filestream.ReadBuffer(tempchannel_pre425,sizeof(tempchannel_pre425));
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].ChanActive:=tempchannel_pre425.ChanActive;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].invertx:=tempchannel_pre425.invertx;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].inverty:=tempchannel_pre425.inverty;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].mittelpunktx:=tempchannel_pre425.mittelpunktx;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].mittelpunkty:=tempchannel_pre425.mittelpunkty;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].scalex:=tempchannel_pre425.scalex;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].scaley:=tempchannel_pre425.scaley;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].x:=tempchannel_pre425.x;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].y:=tempchannel_pre425.y;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].mixXY:=tempchannel_pre425.mixXY;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].offset:=tempchannel_pre425.offset;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].delay:=0;
-              end;
-
-
-              Filestream.ReadBuffer(Count4,sizeof(Count4));
-              setlength(Bewegungsszenen[i].Devices[j].Szenen[k],Count4);
-              for l:=0 to Count4-1 do
-              begin
-                Filestream.ReadBuffer(Bewegungsszenen[i].Devices[j].Szenen[k][l],sizeof(Bewegungsszenen[i].Devices[j].Szenen[k][l]));
-              end;
-            end;
-          end;
+          Filestream.ReadBuffer(tempchannel_pre425,sizeof(tempchannel_pre425));
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].ChanActive:=tempchannel_pre425.ChanActive;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].invertx:=tempchannel_pre425.invertx;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].inverty:=tempchannel_pre425.inverty;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].mittelpunktx:=tempchannel_pre425.mittelpunktx;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].mittelpunkty:=tempchannel_pre425.mittelpunkty;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].scalex:=tempchannel_pre425.scalex;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].scaley:=tempchannel_pre425.scaley;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].x:=tempchannel_pre425.x;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].y:=tempchannel_pre425.y;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].mixXY:=tempchannel_pre425.mixXY;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].offset:=tempchannel_pre425.offset;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].delay:=0;
         end;
 
-        if projektprogrammversionint>=418 then
+
+        Filestream.ReadBuffer(Count4,sizeof(Count4));
+        setlength(Bewegungsszenen[i].Devices[j].Szenen[k],Count4);
+        for l:=0 to Count4-1 do
         begin
-       	  Filestream.ReadBuffer(Count,sizeof(Count));
-          setlength(Befehle2,Count);
-          for i:=0 to Count-1 do
-        	begin
-            Filestream.ReadBuffer(Befehle2[i].ID,sizeof(Befehle2[i].ID));
-            Filestream.ReadBuffer(Befehle2[i].Typ,sizeof(Befehle2[i].Typ));
-            Filestream.ReadBuffer(Befehle2[i].Name,sizeof(Befehle2[i].Name));
-            Filestream.ReadBuffer(Befehle2[i].Beschreibung,sizeof(Befehle2[i].Beschreibung));
-            Filestream.ReadBuffer(Befehle2[i].OnValue,sizeof(Befehle2[i].OnValue));
-            if projektprogrammversionint>=456 then
-              Filestream.ReadBuffer(Befehle2[i].SwitchValue,sizeof(Befehle2[i].SwitchValue))
-            else
-              Befehle2[i].SwitchValue:=Befehle2[i].OnValue;
-            if projektprogrammversionint>=462 then
-              Filestream.ReadBuffer(Befehle2[i].InvertSwitchValue,sizeof(Befehle2[i].InvertSwitchValue));
-            Filestream.ReadBuffer(Befehle2[i].OffValue,sizeof(Befehle2[i].OffValue));
-            if projektprogrammversionint>=457 then
-              Filestream.ReadBuffer(Befehle2[i].ScaleValue,sizeof(Befehle2[i].ScaleValue));
-
-            if projektprogrammversionint>=438 then
-              Filestream.ReadBuffer(Befehle2[i].RunOnProjectLoad,sizeof(Befehle2[i].RunOnProjectLoad));
-            if projektprogrammversionint>=439 then
-              Filestream.ReadBuffer(Befehle2[i].Category,sizeof(Befehle2[i].Category));
-
-       	    Filestream.ReadBuffer(Count2,sizeof(Count2));
-            setlength(Befehle2[i].ArgInteger,Count2);
-            for j:=0 to Count2-1 do
-            begin
-              Filestream.ReadBuffer(Befehle2[i].ArgInteger[j],sizeof(Befehle2[i].ArgInteger[j]));
-            end;
-         	  Filestream.ReadBuffer(Count2,sizeof(Count2));
-            setlength(Befehle2[i].ArgString,Count2);
-            for j:=0 to Count2-1 do
-            begin
-              Filestream.ReadBuffer(Befehle2[i].ArgString[j],sizeof(Befehle2[i].ArgString[j]));
-            end;
-         	  Filestream.ReadBuffer(Count2,sizeof(Count2));
-            setlength(Befehle2[i].ArgGUID,Count2);
-            for j:=0 to Count2-1 do
-            begin
-              Filestream.ReadBuffer(Befehle2[i].ArgGUID[j],sizeof(Befehle2[i].ArgGUID[j]));
-            end;
-          end;
-        end else
-        begin
-          // Nur aus Kompatibilitätsgründen
-     	    Filestream.ReadBuffer(Count,sizeof(Count));
-          setlength(OldBefehle,Count);
-          for i:=0 to Count-1 do
-          begin
-            Filestream.ReadBuffer(OldBefehle[i],sizeof(OldBefehle[i]));
-          end;
-          ConvertBefehlToBefehl2;
+          Filestream.ReadBuffer(Bewegungsszenen[i].Devices[j].Szenen[k][l],sizeof(Bewegungsszenen[i].Devices[j].Szenen[k][l]));
         end;
+      end;
+    end;
+  end;
 
-     	  Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(Kompositionsszenen,Count);
-        for i:=0 to Count-1 do
-      	begin
-          Filestream.ReadBuffer(Kompositionsszenen[i].ID,sizeof(Kompositionsszenen[i].ID));
-          Filestream.ReadBuffer(Kompositionsszenen[i].Name,sizeof(Kompositionsszenen[i].Name));
-          Filestream.ReadBuffer(Kompositionsszenen[i].Beschreibung,sizeof(Kompositionsszenen[i].Beschreibung));
-          if projektprogrammversionint>=439 then
-            Filestream.ReadBuffer(Kompositionsszenen[i].Category,sizeof(Kompositionsszenen[i].Category));
+  if projektprogrammversionint>=418 then
+  begin
+    Filestream.ReadBuffer(Count,sizeof(Count));
+    setlength(Befehle2,Count);
+    for i:=0 to Count-1 do
+    begin
+      Filestream.ReadBuffer(Befehle2[i].ID,sizeof(Befehle2[i].ID));
+      Filestream.ReadBuffer(Befehle2[i].Typ,sizeof(Befehle2[i].Typ));
+      Filestream.ReadBuffer(Befehle2[i].Name,sizeof(Befehle2[i].Name));
+      Filestream.ReadBuffer(Befehle2[i].Beschreibung,sizeof(Befehle2[i].Beschreibung));
+      Filestream.ReadBuffer(Befehle2[i].OnValue,sizeof(Befehle2[i].OnValue));
+      if projektprogrammversionint>=456 then
+        Filestream.ReadBuffer(Befehle2[i].SwitchValue,sizeof(Befehle2[i].SwitchValue))
+      else
+        Befehle2[i].SwitchValue:=Befehle2[i].OnValue;
+      if projektprogrammversionint>=462 then
+        Filestream.ReadBuffer(Befehle2[i].InvertSwitchValue,sizeof(Befehle2[i].InvertSwitchValue));
+      Filestream.ReadBuffer(Befehle2[i].OffValue,sizeof(Befehle2[i].OffValue));
+      if projektprogrammversionint>=457 then
+        Filestream.ReadBuffer(Befehle2[i].ScaleValue,sizeof(Befehle2[i].ScaleValue));
 
-          Filestream.ReadBuffer(Count2, sizeof(Count2));
-          setlength(Kompositionsszenen[i].IDs,Count2);
-          setlength(Kompositionsszenen[i].StopScene,Count2);
-          for j:=0 to Count2-1 do
-          begin
-            Filestream.ReadBuffer(Kompositionsszenen[i].IDs[j],sizeof(Kompositionsszenen[i].IDs[j]));
-            if projektprogrammversionint>=454 then
-              Filestream.ReadBuffer(Kompositionsszenen[i].StopScene[j],sizeof(Kompositionsszenen[i].StopScene[j]));
-          end;
-        end;
+      if projektprogrammversionint>=438 then
+        Filestream.ReadBuffer(Befehle2[i].RunOnProjectLoad,sizeof(Befehle2[i].RunOnProjectLoad));
+      if projektprogrammversionint>=439 then
+        Filestream.ReadBuffer(Befehle2[i].Category,sizeof(Befehle2[i].Category));
 
-        FileStream.ReadBuffer(Count,sizeof(Count));
-        Setlength(SzenenablaufArray,Count);
-        for i:=0 to Count-1 do
-        begin
-          Filestream.ReadBuffer(text,sizeof(text));
-          FileStream.ReadBuffer(Count2,sizeof(Count2));
-          Setlength(SzenenablaufArray[i],Count2);
-          for j:=0 to Count2-1 do
-            FileStream.ReadBuffer(SzenenablaufArray[i][j],sizeof(SzenenablaufArray[i][j]));
-        end;
+      Filestream.ReadBuffer(Count2,sizeof(Count2));
+      setlength(Befehle2[i].ArgInteger,Count2);
+      for j:=0 to Count2-1 do
+      begin
+        Filestream.ReadBuffer(Befehle2[i].ArgInteger[j],sizeof(Befehle2[i].ArgInteger[j]));
+      end;
+      Filestream.ReadBuffer(Count2,sizeof(Count2));
+      setlength(Befehle2[i].ArgString,Count2);
+      for j:=0 to Count2-1 do
+      begin
+        Filestream.ReadBuffer(Befehle2[i].ArgString[j],sizeof(Befehle2[i].ArgString[j]));
+      end;
+      Filestream.ReadBuffer(Count2,sizeof(Count2));
+      setlength(Befehle2[i].ArgGUID,Count2);
+      for j:=0 to Count2-1 do
+      begin
+        Filestream.ReadBuffer(Befehle2[i].ArgGUID[j],sizeof(Befehle2[i].ArgGUID[j]));
+      end;
+    end;
+  end else
+  begin
+    // Nur aus Kompatibilitätsgründen
+    Filestream.ReadBuffer(Count,sizeof(Count));
+    setlength(OldBefehle,Count);
+    for i:=0 to Count-1 do
+    begin
+      Filestream.ReadBuffer(OldBefehle[i],sizeof(OldBefehle[i]));
+    end;
+    ConvertBefehlToBefehl2;
+  end;
+
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(Kompositionsszenen,Count);
+  for i:=0 to Count-1 do
+  begin
+    Filestream.ReadBuffer(Kompositionsszenen[i].ID,sizeof(Kompositionsszenen[i].ID));
+    Filestream.ReadBuffer(Kompositionsszenen[i].Name,sizeof(Kompositionsszenen[i].Name));
+    Filestream.ReadBuffer(Kompositionsszenen[i].Beschreibung,sizeof(Kompositionsszenen[i].Beschreibung));
+    if projektprogrammversionint>=439 then
+      Filestream.ReadBuffer(Kompositionsszenen[i].Category,sizeof(Kompositionsszenen[i].Category));
+
+    Filestream.ReadBuffer(Count2, sizeof(Count2));
+    setlength(Kompositionsszenen[i].IDs,Count2);
+    setlength(Kompositionsszenen[i].StopScene,Count2);
+    for j:=0 to Count2-1 do
+    begin
+      Filestream.ReadBuffer(Kompositionsszenen[i].IDs[j],sizeof(Kompositionsszenen[i].IDs[j]));
+      if projektprogrammversionint>=454 then
+        Filestream.ReadBuffer(Kompositionsszenen[i].StopScene[j],sizeof(Kompositionsszenen[i].StopScene[j]));
+    end;
+  end;
+
+  FileStream.ReadBuffer(Count,sizeof(Count));
+  Setlength(SzenenablaufArray,Count);
+  for i:=0 to Count-1 do
+  begin
+    Filestream.ReadBuffer(text,sizeof(text));
+    FileStream.ReadBuffer(Count2,sizeof(Count2));
+    Setlength(SzenenablaufArray[i],Count2);
+    for j:=0 to Count2-1 do
+      FileStream.ReadBuffer(SzenenablaufArray[i][j],sizeof(SzenenablaufArray[i][j]));
+  end;
   // Ende Szenenöffnen
 
     // Timeline öffnen
@@ -6647,25 +6687,25 @@ begin
     RefreshSplashText;
   end;
 
-    		Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(Effekttimeline,Count);
-        for i:=0 to Count-1 do
-      	begin
-        	Filestream.ReadBuffer(Effekttimeline[i].name,sizeof(Effekttimeline[i].name));
-        	Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(Effekttimeline[i].value,Count2);
-          for j:=0 to Count2-1 do
-          	Filestream.ReadBuffer(Effekttimeline[i].value[j],sizeof(Effekttimeline[i].value[j]));
-        	Filestream.ReadBuffer(Effekttimeline[i].checked,sizeof(Effekttimeline[i].checked));
-      	  Filestream.ReadBuffer(Effekttimeline[i].steps,sizeof(Effekttimeline[i].steps));
-        	Filestream.ReadBuffer(Effekttimeline[i].blendzeit,sizeof(Effekttimeline[i].blendzeit));
-      	  Filestream.ReadBuffer(Effekttimeline[i].blitzfunktion,sizeof(Effekttimeline[i].blitzfunktion));
-        	Filestream.ReadBuffer(Effekttimeline[i].blitzzeit,sizeof(Effekttimeline[i].blitzzeit));
-      	  Filestream.ReadBuffer(Effekttimeline[i].pendeln,sizeof(Effekttimeline[i].pendeln));
-        	Filestream.ReadBuffer(Effekttimeline[i].zufall,sizeof(Effekttimeline[i].zufall));
-        end;
-    // Ende Timeline öffnen
-    // Skripttimer öffnen
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(Effekttimeline,Count);
+  for i:=0 to Count-1 do
+  begin
+    Filestream.ReadBuffer(Effekttimeline[i].name,sizeof(Effekttimeline[i].name));
+    Filestream.ReadBuffer(Count2,sizeof(Count2));
+    setlength(Effekttimeline[i].value,Count2);
+    for j:=0 to Count2-1 do
+      Filestream.ReadBuffer(Effekttimeline[i].value[j],sizeof(Effekttimeline[i].value[j]));
+    Filestream.ReadBuffer(Effekttimeline[i].checked,sizeof(Effekttimeline[i].checked));
+    Filestream.ReadBuffer(Effekttimeline[i].steps,sizeof(Effekttimeline[i].steps));
+    Filestream.ReadBuffer(Effekttimeline[i].blendzeit,sizeof(Effekttimeline[i].blendzeit));
+    Filestream.ReadBuffer(Effekttimeline[i].blitzfunktion,sizeof(Effekttimeline[i].blitzfunktion));
+    Filestream.ReadBuffer(Effekttimeline[i].blitzzeit,sizeof(Effekttimeline[i].blitzzeit));
+    Filestream.ReadBuffer(Effekttimeline[i].pendeln,sizeof(Effekttimeline[i].pendeln));
+    Filestream.ReadBuffer(Effekttimeline[i].zufall,sizeof(Effekttimeline[i].zufall));
+  end;
+  // Ende Timeline öffnen
+  // Skripttimer öffnen
 	if not startingup then
   begin
 	  inprogress.filename.Caption:=_('Lese Daten ein... Skripttimer');
@@ -6676,35 +6716,35 @@ begin
     RefreshSplashText;
   end;
 
-    		Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(AblaufTimer,Count);
-        for i:=0 to Count-1 do
-      	begin
-          Filestream.ReadBuffer(AblaufTimer[i].Aktiviert,sizeof(AblaufTimer[i].Aktiviert));
-          Filestream.ReadBuffer(AblaufTimer[i].Name,sizeof(AblaufTimer[i].Name));
-          Filestream.ReadBuffer(AblaufTimer[i].Beschreibung,sizeof(AblaufTimer[i].Beschreibung));
-          Filestream.ReadBuffer(AblaufTimer[i].Datum,sizeof(AblaufTimer[i].Datum));
-          Filestream.ReadBuffer(AblaufTimer[i].Uhrzeit,sizeof(AblaufTimer[i].Uhrzeit));
-          Filestream.ReadBuffer(AblaufTimer[i].TimerTyp,sizeof(AblaufTimer[i].TimerTyp));
-          Filestream.ReadBuffer(AblaufTimer[i].Skriptdatei,sizeof(AblaufTimer[i].Skriptdatei));
-          Filestream.ReadBuffer(AblaufTimer[i].LoadTyp,sizeof(AblaufTimer[i].LoadTyp));
-          Filestream.ReadBuffer(AblaufTimer[i].LoadID,sizeof(AblaufTimer[i].LoadID));
-          if projektprogrammversionint>=482 then
-          begin
-            Filestream.ReadBuffer(AblaufTimer[i].Weekday,sizeof(AblaufTimer[i].Weekday));
-          end else
-          begin
-            AblaufTimer[i].Weekday[1]:=true;
-            AblaufTimer[i].Weekday[2]:=true;
-            AblaufTimer[i].Weekday[3]:=true;
-            AblaufTimer[i].Weekday[4]:=true;
-            AblaufTimer[i].Weekday[5]:=true;
-            AblaufTimer[i].Weekday[6]:=true;
-            AblaufTimer[i].Weekday[7]:=true;
-          end;
-        end;
-    // Ende Skripttimer öffnen
-    // Hotkeys öffnen
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(AblaufTimer,Count);
+  for i:=0 to Count-1 do
+  begin
+    Filestream.ReadBuffer(AblaufTimer[i].Aktiviert,sizeof(AblaufTimer[i].Aktiviert));
+    Filestream.ReadBuffer(AblaufTimer[i].Name,sizeof(AblaufTimer[i].Name));
+    Filestream.ReadBuffer(AblaufTimer[i].Beschreibung,sizeof(AblaufTimer[i].Beschreibung));
+    Filestream.ReadBuffer(AblaufTimer[i].Datum,sizeof(AblaufTimer[i].Datum));
+    Filestream.ReadBuffer(AblaufTimer[i].Uhrzeit,sizeof(AblaufTimer[i].Uhrzeit));
+    Filestream.ReadBuffer(AblaufTimer[i].TimerTyp,sizeof(AblaufTimer[i].TimerTyp));
+    Filestream.ReadBuffer(AblaufTimer[i].Skriptdatei,sizeof(AblaufTimer[i].Skriptdatei));
+    Filestream.ReadBuffer(AblaufTimer[i].LoadTyp,sizeof(AblaufTimer[i].LoadTyp));
+    Filestream.ReadBuffer(AblaufTimer[i].LoadID,sizeof(AblaufTimer[i].LoadID));
+    if projektprogrammversionint>=482 then
+    begin
+      Filestream.ReadBuffer(AblaufTimer[i].Weekday,sizeof(AblaufTimer[i].Weekday));
+    end else
+    begin
+      AblaufTimer[i].Weekday[1]:=true;
+      AblaufTimer[i].Weekday[2]:=true;
+      AblaufTimer[i].Weekday[3]:=true;
+      AblaufTimer[i].Weekday[4]:=true;
+      AblaufTimer[i].Weekday[5]:=true;
+      AblaufTimer[i].Weekday[6]:=true;
+      AblaufTimer[i].Weekday[7]:=true;
+    end;
+  end;
+  // Ende Skripttimer öffnen
+  // Hotkeys öffnen
 	if not startingup then
   begin
 	  inprogress.filename.Caption:=_('Lese Daten ein... Hotkeys');
@@ -6778,26 +6818,26 @@ begin
     ConvertHotkeysToHotkeys2;
   end;
 
-        if EnableHotKeys then
-        begin
-          for i:=0 to length(TastencodeArray)-1 do
-          begin
-            ShortCutToKey(TastencodeArray[i].Hotkey,Key,Shift);
-            ShiftNumber:=0;
-            if Shift=[ssAlt] then
-              ShiftNumber:=1
-            else if Shift=[ssCtrl] then
-              ShiftNumber:=ShiftNumber+2
-            else if Shift=[ssShift] then
-            begin
-              ShiftNumber:=ShiftNumber+4;
-            end;
-          end;
-        end;
+  if EnableHotKeys then
+  begin
+    for i:=0 to length(TastencodeArray)-1 do
+    begin
+      ShortCutToKey(TastencodeArray[i].Hotkey,Key,Shift);
+      ShiftNumber:=0;
+      if Shift=[ssAlt] then
+        ShiftNumber:=1
+      else if Shift=[ssCtrl] then
+        ShiftNumber:=ShiftNumber+2
+      else if Shift=[ssShift] then
+      begin
+        ShiftNumber:=ShiftNumber+4;
+      end;
+    end;
+  end;
 
-        ShortCutChecker.Enabled:=true;
-      // Ende Hotkey laden
-      // Nebelmaschineneinstellungen laden
+  ShortCutChecker.Enabled:=true;
+  // Ende Hotkey laden
+  // Nebelmaschineneinstellungen laden
     if not startingup then
     begin
       inprogress.filename.Caption:=_('Lese Daten ein... Nebelmaschine');
@@ -8788,6 +8828,38 @@ begin
       end;
     end;
 // Ende CodeScene
+// StreamDeck laden
+    if projektprogrammversionint>=486 then
+    begin
+      if not startingup then
+      begin
+        inprogress.filename.Caption:=_('Lese Daten ein... StreamDeck');
+        inprogress.Refresh;
+      end else
+      begin
+        SplashCaptioninfo(_('Lese Daten ein...StreamDeck'));
+        RefreshSplashText;
+      end;
+
+      Filestream.ReadBuffer(Count,sizeof(Count));
+      setlength(mainform.ElgatoStreamDeckArray,Count);
+      for i:=0 to Count-1 do
+      begin
+        Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Serial,sizeof(mainform.ElgatoStreamDeckArray[i].Serial));
+        Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].ButtonCount,sizeof(mainform.ElgatoStreamDeckArray[i].ButtonCount));
+        Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Brightness,sizeof(mainform.ElgatoStreamDeckArray[i].Brightness));
+        Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton,sizeof(mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton));
+        for j:=0 to 31 do
+        begin
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].ButtonType,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].ButtonType));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelX,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelX));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel));
+        end;
+      end;
+    end;
+// Ende StreamDeck
   end;
 
 	if not startingup then
@@ -9048,6 +9120,17 @@ begin
 
     if not startingup then
     begin
+      inprogress.filename.Caption:=_('Sende Öffnen-Befehl...StreamDeckControl');
+      inprogress.Refresh;
+    end else
+    begin
+      SplashCaptioninfo(_('Sende Öffnen-Befehl... StreamDeckControl'));
+      RefreshSplashText;
+    end;
+    elgatostreamdeckform.MSGOpen;
+
+    if not startingup then
+    begin
       inprogress.filename.Caption:=_('Aktualisiere Hauptprogramm');
       inprogress.ProgressBar1.Position:=90;
       inprogress.Refresh;
@@ -9238,6 +9321,21 @@ begin
   begin
     if Befehle2[i].RunOnProjectLoad then
       StartBefehl(Befehle2[i].ID);
+  end;
+
+  // Code-Szenen initialisieren
+  if not startingup then
+  begin
+    inprogress.filename.Caption:=_('Initialisiere Code-Szenen');
+    inprogress.Refresh;
+  end else
+  begin
+    SplashCaptioninfo(_('Initialisiere Code-Szenen'));
+    RefreshSplashText;
+  end;
+  for i:=0 to length(codescenes)-1 do
+  begin
+    ExecuteCodeScene(codescenes[i].ID, 'InitScene');
   end;
 
   if not startingup then
@@ -13075,6 +13173,14 @@ begin
       xtouchcontrolform.activebtn.Caption:=_('Ausschalten');
     end;
 
+    // Create HID-Functions for Elgato StreamDeck and maybe other devices
+    // putting this component on the GUI will create strange errors
+    // regarding "Device cannot be identified"
+    // so we will create it manually in code
+    HidCtl:=TJvHidDeviceController.Create(mainform, HidCtlDeviceCreateError, HidCtlDeviceChange);
+    HidCtl.OnEnumerate:=HidCtlEnumerate;
+    HidCtl.OnDeviceData:=HidCtlDeviceData;
+
     LReg.CloseKey;
   end;
   LReg.Free;
@@ -13409,6 +13515,7 @@ begin
   grafischebuehnenansicht.RefreshTimer.enabled:=true;
   grafischebuehnenansicht.dorefresh:=true;
   MainformScreenRefreshTimer.Enabled:=true;
+  ElgatoStreamDeckForm.ElgatoStreamDeckTimer.Enabled:=true;
 
   SplashProgress(1, 96, 100);
   SplashCaptioninfo(_('Abschließende Arbeiten'));
@@ -16734,7 +16841,7 @@ begin
   end;
 end;
 
-procedure TMainform.StartCodeScene(ID: TGUID);
+procedure TMainform.ExecuteCodeScene(ID: TGUID; Command: string);
 var
   i:integer;
 begin
@@ -16742,21 +16849,7 @@ begin
   begin
     if IsEqualGUID(ID,CodeScenes[i].ID) then
     begin // richtige Codescene gefunden
-      kontrollpanel.RunDelphiCode(CodeScenes[i].Code, 'StartScene');
-      break;
-    end;
-  end;
-end;
-
-procedure TMainform.StopCodeScene(ID: TGUID);
-var
-  i:integer;
-begin
-  for i:=0 to length(CodeScenes)-1 do
-  begin
-    if IsEqualGUID(ID,CodeScenes[i].ID) then
-    begin // richtige Codescene gefunden
-      kontrollpanel.RunDelphiCode(CodeScenes[i].Code, 'StopScene');
+      kontrollpanel.RunDelphiCode(CodeScenes[i].Code, Command);
       break;
     end;
   end;
@@ -19170,7 +19263,7 @@ begin
   begin
     if IsEqualGUID(codescenes[j].ID,ID) then
     begin
-      StartCodeScene(codescenes[j].ID);
+      ExecuteCodeScene(codescenes[j].ID, 'StartScene');
       scenefound:=true;
       nop:=true;
       break;
@@ -19347,7 +19440,7 @@ begin
   begin
     if IsEqualGUID(CodeScenes[j].ID,ID) then
     begin
-      StopCodeScene(CodeScenes[j].ID);
+      ExecuteCodeScene(CodeScenes[j].ID, 'StopScene');
       scenefound:=true;
       nop:=true;
       break;
@@ -20147,6 +20240,9 @@ begin
 
   xtouchcontrolform.Top:=0;
   xtouchcontrolform.Left:=0;
+
+  elgatostreamdeckform.Top:=0;
+  elgatostreamdeckform.Left:=0;
 end;
 
 procedure TMainform.AutobackuptimerTimer(Sender: TObject);
@@ -27172,6 +27268,7 @@ begin
   ReTranslateComponent(nodecontrolform);
   ReTranslateComponent(usermgmtform);
   ReTranslateComponent(xtouchcontrolform);
+  ReTranslateComponent(elgatostreamdeckform);
 
   // Plugins neu initiieren
   mainform.Pluginsreaktivieren1Click(nil);
@@ -27691,6 +27788,8 @@ begin
       winlircform.close;
     if xtouchcontrolform.Showing then
       xtouchcontrolform.Close;
+    if elgatostreamdeckform.Showing then
+      elgatostreamdeckform.Close;
   end;
 
 
@@ -27738,6 +27837,242 @@ begin
   else
   begin
     xtouchcontrolform.Show;
+  end;
+end;
+
+procedure TMainform.dxBarLargeButton10Click(Sender: TObject);
+begin
+  if not UserAccessGranted(2) then exit;
+
+  if elgatostreamdeckform.Showing then
+    elgatostreamdeckform.BringToFront
+  else
+  begin
+    elgatostreamdeckform.Show;
+  end;
+end;
+
+procedure Tmainform.HidCtlDeviceCreateError(
+  Controller: TJvHidDeviceController; PnPInfo: TJvHidPnPInfo; var Handled,
+  RetryCreate: Boolean);
+begin
+  Handled:=true;
+  RetryCreate:=false;
+  // TODO: handle errors if desired. For now: ignore error
+end;
+
+function Tmainform.HidCtlEnumerate(HidDev: TJvHidDevice;
+  const Idx: Integer): Boolean;
+var
+  i, btn, DeviceIndex, X, Y:integer;
+begin
+  if HidDev.Attributes.VendorID=$0FD9 then
+  begin
+    if (HidDev.Attributes.ProductID=$006C) or
+    (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or
+    (HidDev.Attributes.ProductID=$006D) or (HidDev.Attributes.ProductID=$0063) then
+    begin
+      // check if we already configured this device
+      DeviceIndex:=-1;
+      for i:=0 to length(ElgatoStreamDeckArray)-1 do
+      begin
+        if ElgatoStreamDeckArray[i].Serial=HidDev.SerialNumber then
+        begin
+          // device already in array
+          DeviceIndex:=i;
+          break;
+        end;
+      end;
+      if DeviceIndex=-1 then
+      begin
+        // this is a new device -> put it to new-device-combobox
+        setlength(ElgatoStreamDeckArray, length(ElgatoStreamDeckArray)+1);
+        DeviceIndex:=length(ElgatoStreamDeckArray)-1;
+
+        ElgatoStreamDeckArray[DeviceIndex].Brightness:=50; // set default brightness
+        ElgatoStreamDeckArray[DeviceIndex].UseAutoModeOnLastButton:=true;
+        ElgatoStreamDeckArray[DeviceIndex].CurrentButtonMode:=1;
+        for btn:=0 to 31 do
+        begin
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].ButtonType:=0;
+
+          if HidDev.Attributes.ProductID=$0063 then
+          begin
+            // 6 Buttons
+            X:=btn-trunc(btn/3)*3;
+            Y:=trunc(btn/3);
+          end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
+          begin
+            // 15 Buttons
+            X:=btn-trunc(btn/5)*5;
+            Y:=trunc(btn/5);
+          end else if HidDev.Attributes.ProductID=$006C then
+          begin
+            // 32 Buttons
+            X:=btn-trunc(btn/8)*8;
+            Y:=trunc(btn/8);
+          end;
+
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelX:=X+1;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelY:=Y+1;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].DataInChannel:=btn+1;
+        end;
+      end;
+
+      // connect this device
+      HidCtl.CheckOutByIndex(ElgatoStreamDeckArray[DeviceIndex].HidDevice, Idx);
+      // update ElgatoStreamDeckArray
+      ElgatoStreamDeckArray[DeviceIndex].Serial:=HidDev.SerialNumber;
+      ElgatoStreamDeckArray[DeviceIndex].Online:=true;
+
+      if HidDev.Attributes.ProductID=$006C then
+      begin
+        // it is a Stream Deck XL
+        // 32 buttons
+        ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=32;
+      end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
+      begin
+        // it is a Stream Deck or Stream Deck original v2 or Stream Deck MK2
+        // 15 buttons
+        ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=15;
+      end else if HidDev.Attributes.ProductID=$0063 then
+      begin
+        // it is a Stream Deck Mini
+        // 6 buttons
+        ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=6;
+      end;
+
+      // put this device to GUI
+      elgatostreamdeckform.devicelistbox.ItemIndex:=elgatostreamdeckform.devicelistbox.Items.Add(HidDev.VendorName+' '+HidDev.ProductName+' ['+HidDev.SerialNumber+']');
+      setlength(ElgatoStreamSerials, length(ElgatoStreamSerials)+1);
+      ElgatoStreamSerials[length(ElgatoStreamSerials)-1]:=HidDev.SerialNumber;
+
+      // set brightness
+      elgatostreamdeckform.SetBrightness(HidDev.SerialNumber, ElgatoStreamDeckArray[DeviceIndex].Brightness);
+    end;
+  end;
+
+  Result := True;
+end;
+
+procedure Tmainform.HidCtlDeviceChange(Sender: TObject);
+var
+  i: Integer;
+begin
+  // disconnect all devices and reconnect
+  for i:=0 to length(ElgatoStreamDeckArray)-1 do
+  begin
+    ElgatoStreamDeckArray[i].HidDevice.Free;
+    ElgatoStreamDeckArray[i].Online:=false;
+  end;
+  elgatostreamdeckform.devicelistbox.Clear;
+  setlength(ElgatoStreamSerials, 0);
+
+  // search for all connected devices
+  HidCtl.Enumerate;
+end;
+
+procedure Tmainform.HidCtlDeviceData(HidDev: TJvHidDevice; ReportID: Byte;
+  const Data: Pointer; Size: Word);
+var
+  Buffer: array of byte;
+  i,b, DeviceIndex:integer;
+  CurrentButtonMode:byte;
+begin
+  if HidDev.Attributes.VendorID=$0FD9 then
+  begin
+    // it is a product of Elgato (we should not be connected to other devices)
+    setlength(Buffer, Size);
+    Move(Data^, Pointer(Buffer)^, Size);
+
+    // search for this product serial in array
+    for i:=0 to length(ElgatoStreamDeckArray)-1 do
+    begin
+      if ElgatoStreamDeckArray[i].Serial=HidDev.SerialNumber then
+      begin
+        for b:=0 to ElgatoStreamDeckArray[i].ButtonCount-1 do
+        begin
+          if (mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton) then
+          begin
+            CurrentButtonMode:=mainform.ElgatoStreamDeckArray[i].CurrentButtonMode;
+          end else
+          begin
+            CurrentButtonMode:=ElgatoStreamDeckArray[i].Buttons[b].ButtonType;
+          end;
+
+          if (Buffer[3+b]=1) and not ElgatoStreamDeckArray[i].Buttons[b].Pressed then
+          begin
+            // button pressed
+            ElgatoStreamDeckArray[i].Buttons[b].Pressed:=true;
+
+            if (b=(ElgatoStreamDeckArray[i].ButtonCount-1)) and (mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton) then
+            begin
+              // we are at last button and we want to switch between modes
+              if mainform.ElgatoStreamDeckArray[i].CurrentButtonMode<3 then
+                mainform.ElgatoStreamDeckArray[i].CurrentButtonMode:=mainform.ElgatoStreamDeckArray[i].CurrentButtonMode+1
+              else
+                mainform.ElgatoStreamDeckArray[i].CurrentButtonMode:=1;
+            end else
+            begin
+              case CurrentButtonMode of
+                1: // 1=Kontrollpanel
+                begin
+                  kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(ElgatoStreamDeckArray[i].Buttons[b].KontrollpanelX-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(ElgatoStreamDeckArray[i].Buttons[b].KontrollpanelY-1)+(kontrollpanel.btnheight.Value / 2)));
+                  kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssLeft], trunc(kontrollpanel.btnwidth.Value*(ElgatoStreamDeckArray[i].Buttons[b].KontrollpanelX-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(ElgatoStreamDeckArray[i].Buttons[b].KontrollpanelY-1)+(kontrollpanel.btnheight.Value / 2)));
+                end;
+                2: // 2=DeviceOrGroupSelection
+                begin
+                  DeviceIndex:=geraetesteuerung.GetDevicePositionInDeviceArray(@ElgatoStreamDeckArray[i].Buttons[b].DeviceOrGroupID);
+                  if DeviceIndex>-1 then
+                  begin
+                    // it is a device -> deselect all devices and select only this device
+                    DeSelectAllDevices;
+                    deviceselected[geraetesteuerung.GetDevicePositionInDeviceArray(@ElgatoStreamDeckArray[i].Buttons[b].DeviceOrGroupID)]:=true;
+                  end else
+                  begin
+                    // it is a Groupd
+                    SelectDeviceGroup(ElgatoStreamDeckArray[i].Buttons[b].DeviceOrGroupID, false);
+                  end;
+                end;
+                3: // 3=DataIn
+                begin
+                  mainform.ExecuteDataInEvent(ElgatoStreamDeckArray[i].Buttons[b].DataInChannel, 255);
+                end;
+              end;
+            end;
+          end else if (Buffer[3+b]=0) and ElgatoStreamDeckArray[i].Buttons[b].Pressed then
+          begin
+            // button released
+            ElgatoStreamDeckArray[i].Buttons[b].Pressed:=false;
+
+            if (b=(ElgatoStreamDeckArray[i].ButtonCount-1)) and (mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton) then
+            begin
+              // we are at last button and we want to switch between modes
+              // nothing to do on release
+            end else
+            begin
+              case CurrentButtonMode of
+                1: // 1=Kontrollpanel
+                begin
+                  kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(ElgatoStreamDeckArray[i].Buttons[b].KontrollpanelX-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(ElgatoStreamDeckArray[i].Buttons[b].KontrollpanelY-1)+(kontrollpanel.btnheight.Value / 2)));
+                  kontrollpanel.PaintBox1MouseUp(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(ElgatoStreamDeckArray[i].Buttons[b].KontrollpanelX-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(ElgatoStreamDeckArray[i].Buttons[b].KontrollpanelY-1)+(kontrollpanel.btnheight.Value / 2)));
+                end;
+                2: // 2=DeviceOrGroupSelection
+                begin
+                  // do nothing on release
+                end;
+                3: // 3=DataIn
+                begin
+                  mainform.ExecuteDataInEvent(ElgatoStreamDeckArray[i].Buttons[b].DataInChannel, 0);
+                end;
+              end;
+            end;
+          end;
+        end;
+
+        break;
+      end;
+    end;
   end;
 end;
 

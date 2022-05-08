@@ -925,6 +925,9 @@
     Beschreibung:string[255];
     Category: string[255];
     Code: String;
+    GlobalVariables:array of Variant;
+    ScriptInterpreter: TJvInterpreterProgram;
+    ScriptInterpreterArgs: TJvInterpreterArgs;
   end;
 
   TNodeControlNode = record
@@ -957,4 +960,22 @@
     ID:TGUID;
     IsDevice:boolean;
     ChannelsToDisplay:Byte;
+  end;
+
+  TElgatoStreamDeckButton = record
+    Pressed:boolean;
+    ButtonType:byte; // 0=undefined, 1=Kontrollpanel, 2=SelectDeviceOrGroup, 3=DataIn
+    KontrollpanelX, KontrollpanelY:integer;
+    DeviceOrGroupID:TGUID;
+    DataInChannel:Word;
+  end;
+  TElgatoStreamDeck = record
+    HidDevice:TJvHidDevice;
+    Online:boolean;
+    Serial:string[64];
+    ButtonCount:byte;
+    Brightness:Byte;
+    UseAutoModeOnLastButton:boolean;
+    CurrentButtonMode:byte;
+    Buttons:array[0..31] of TElgatoStreamDeckButton;
   end;

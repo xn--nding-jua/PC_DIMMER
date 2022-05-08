@@ -11,7 +11,7 @@ uses
   JvColorBox, JvColorButton, HSLColorPicker, JvInterpreter, JvCombobox,
   JvColorCombo, mbXPImageComboBox, ImgList, PngImageList, JvExMask,
   JvSpin, HexaColorPicker, gnugettext, pngimage, TB2Item, TB2Dock,
-  TB2Toolbar, GR32, VirtualTrees, ShellApi;
+  TB2Toolbar, GR32, VirtualTrees, ShellApi, pcdUtils;
 
 const
   {$I GlobaleKonstanten.inc}
@@ -463,6 +463,7 @@ type
     function get_dimmer(DeviceID: TGUID):integer;
     function get_strobe(DeviceID: TGUID):integer;
     function get_shutter(DeviceID: TGUID):integer;
+    function get_color(DeviceID: TGUID):TColor;
 
     function GetMatrixDeviceStartAddress(MasterDeviceID:TGUID; MatrixXPosition, MatrixYPosition:byte):integer;
     procedure ChangeDeviceStartaddress(ID: TGUID; NewStartaddress:Word);
@@ -7962,6 +7963,247 @@ begin
     result:=-1
   else
     result:=128;
+end;
+
+function Tgeraetesteuerung.get_color(DeviceID: TGUID):TColor;
+var
+  DeviceIndex, l:integer;
+  AmberR,AmberG,AmberB,Amber,White,UV:byte;
+	R,G,B,R2,G2,B2,R3,G3,B3:byte;
+  RGB, RGB3, shuttervalue:integer;
+  Dimmerwert,Farbradwert,Farbradwert2:byte;
+  DeviceColor:TColor;
+begin
+  DeviceIndex:=GetDevicePositionInDeviceArray(@DeviceID);
+
+  if DeviceIndex<0 then
+  begin
+    result:=clBlack;
+    exit;
+  end;
+
+  if mainform.devices[DeviceIndex].hasRGB then
+  begin
+    // RGB
+    if mainform.devices[DeviceIndex].hasDIMMER then
+    begin
+      Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[DeviceIndex].ID);
+      AmberR:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'R');
+      AmberG:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'G');
+      AmberB:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'B');
+      Amber:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'A');
+      White:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'W');
+      UV:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'UV');
+
+      if mainform.devices[DeviceIndex].hasAmber then
+      begin
+        geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[DeviceIndex].AmberRatioR, mainform.devices[DeviceIndex].AmberRatioG, mainform.devices[DeviceIndex].AmberMixingCompensateRG, mainform.devices[DeviceIndex].AmberMixingCompensateBlue, White, UV, R, G, B);
+        DeviceColor:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
+      end else
+      begin
+        geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, 0, 128, 128, false, false, White, UV, R, G, B);
+        DeviceColor:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
+//            DeviceColor:=RGB2TColor(round(AmberR*(Dimmerwert/255)),round(AmberG*(Dimmerwert/255)),round(AmberB*(Dimmerwert/255)));
+      end;
+    end else
+    begin
+      // kein Dimmer im Gerät
+      AmberR:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'R');
+      AmberG:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'G');
+      AmberB:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'B');
+      Amber:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'A');
+      White:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'W');
+      UV:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'UV');
+
+      if mainform.devices[DeviceIndex].hasAmber then
+      begin
+        geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[DeviceIndex].AmberRatioR, mainform.devices[DeviceIndex].AmberRatioG, mainform.devices[DeviceIndex].AmberMixingCompensateRG, mainform.devices[DeviceIndex].AmberMixingCompensateBlue, White, UV, R, G, B);
+        DeviceColor:=RGB2TColor(R, G, B);
+      end else
+      begin
+        geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, 0, 128, 128, false, false, White, UV, R, G, B);
+        DeviceColor:=RGB2TColor(R, G, B);
+      end;
+    end;
+  end else if mainform.devices[DeviceIndex].hasCMY then
+  begin
+    // CMY
+    if mainform.devices[DeviceIndex].hasDIMMER then
+    begin
+      Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[DeviceIndex].ID);
+      AmberR:=255-geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'C');
+      AmberG:=255-geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'M');
+      AmberB:=255-geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'Y');
+      Amber:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'A');
+      White:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'W');
+      UV:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'UV');
+
+      if mainform.devices[DeviceIndex].hasAmber then
+      begin
+        geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[DeviceIndex].AmberRatioR, mainform.devices[DeviceIndex].AmberRatioG, mainform.devices[DeviceIndex].AmberMixingCompensateRG, mainform.devices[DeviceIndex].AmberMixingCompensateBlue, White, UV, R, G, B);
+        DeviceColor:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
+      end else
+      begin
+        geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, 0, 128, 128, false, false, White, UV, R, G, B);
+        DeviceColor:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
+//            DeviceColor:=RGB2TColor(round(AmberR*(Dimmerwert/255)),round(AmberG*(Dimmerwert/255)),round(AmberB*(Dimmerwert/255)));
+      end;
+    end else
+    begin
+      // kein Dimmer im Gerät
+      AmberR:=255-geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'C');
+      AmberG:=255-geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'M');
+      AmberB:=255-geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'Y');
+      Amber:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'A');
+      White:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'W');
+      UV:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'UV');
+
+      if mainform.devices[DeviceIndex].hasAmber then
+      begin
+        geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[DeviceIndex].AmberRatioR, mainform.devices[DeviceIndex].AmberRatioG, mainform.devices[DeviceIndex].AmberMixingCompensateRG, mainform.devices[DeviceIndex].AmberMixingCompensateBlue, White, UV, R, G, B);
+        DeviceColor:=RGB2TColor(R, G, B);
+      end else
+      begin
+        geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, 0, 128, 128, false, false, White, UV, R, G, B);
+        DeviceColor:=RGB2TColor(R, G, B);
+//            DeviceColor:=RGB2TColor(AmberR,AmberG,AmberB);
+      end;
+    end;
+  end else if (mainform.devices[DeviceIndex].hasColor or mainform.devices[DeviceIndex].hasColor2) then
+  begin
+    if (mainform.devices[DeviceIndex].hasColor and mainform.devices[DeviceIndex].hasColor2) then
+    begin
+      // COLOR1 & COLOR2
+      Farbradwert:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'COLOR1');
+      Farbradwert2:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'COLOR2');
+
+      for l:=0 to length(mainform.devices[DeviceIndex].colorlevels)-1 do
+      begin
+        if (mainform.devices[DeviceIndex].colorlevels[l]<=Farbradwert) and
+          (mainform.devices[DeviceIndex].colorendlevels[l]>=Farbradwert) then
+        begin
+//              RGB:=ColorToRGB(mainform.devices[DeviceIndex].colors[l]);
+          TColor2RGB(mainform.devices[DeviceIndex].colors[l], R, G, B);
+          break;
+        end;
+      end;
+      for l:=0 to length(mainform.devices[DeviceIndex].colorlevels2)-1 do
+      begin
+        if (mainform.devices[DeviceIndex].colorlevels2[l]<=Farbradwert2) and
+          (mainform.devices[DeviceIndex].colorendlevels2[l]>=Farbradwert2) then
+        begin
+//              RGB2:=ColorToRGB(mainform.devices[DeviceIndex].colors2[l]);
+          TColor2RGB(mainform.devices[DeviceIndex].colors2[l], R2, G2, B2);
+          break;
+        end;
+      end;
+
+      R3:=round((R/255)*(R2/255)*255);
+      G3:=round((G/255)*(G2/255)*255);
+      B3:=round((B/255)*(B2/255)*255);
+      RGB3:=RGB2TColor(R3,G3,B3);
+
+      if mainform.devices[DeviceIndex].hasDimmer then
+      begin
+        Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[DeviceIndex].ID);
+
+        DeviceColor:=RGB2TColor(round(R3*Dimmerwert/255),round(G3*Dimmerwert/255),round(B3*Dimmerwert/255));
+      end else
+      begin
+        DeviceColor:=RGB3;
+      end;
+    end else if mainform.devices[DeviceIndex].hasColor then
+    begin
+      // COLOR1
+      Farbradwert:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'COLOR1');
+
+      for l:=0 to length(mainform.devices[DeviceIndex].colorlevels)-1 do
+      begin
+        if (mainform.devices[DeviceIndex].colorlevels[l]<=Farbradwert) and
+          (mainform.devices[DeviceIndex].colorendlevels[l]>=Farbradwert) then
+        begin
+          if mainform.devices[DeviceIndex].hasDimmer then
+          begin
+            Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[DeviceIndex].ID);
+
+            RGB:=ColorToRGB(mainform.devices[DeviceIndex].colors[l]);
+            R:=round(GetRValue(RGB)*Dimmerwert / 255);
+            G:=round(GetGValue(RGB)*Dimmerwert / 255);
+            B:=round(GetBValue(RGB)*Dimmerwert / 255);
+
+            DeviceColor:=RGB2TColor(R,G,B);
+          end else
+          begin
+            DeviceColor:=mainform.devices[DeviceIndex].colors[l];
+          end;
+          break;
+        end;
+      end;
+    end else
+    begin
+      // COLOR2
+      Farbradwert2:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'COLOR2');
+
+      for l:=0 to length(mainform.devices[DeviceIndex].colorlevels2)-1 do
+      begin
+        if (mainform.devices[DeviceIndex].colorlevels2[l]<=Farbradwert2) and
+          (mainform.devices[DeviceIndex].colorendlevels2[l]>=Farbradwert2) then
+        begin
+          if mainform.devices[DeviceIndex].hasDimmer then
+          begin
+            Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[DeviceIndex].ID);
+
+            RGB:=ColorToRGB(mainform.devices[DeviceIndex].colors2[l]);
+            R:=round(GetRValue(RGB)*Dimmerwert / 255);
+            G:=round(GetGValue(RGB)*Dimmerwert / 255);
+            B:=round(GetBValue(RGB)*Dimmerwert / 255);
+
+            DeviceColor:=RGB2TColor(R,G,B);
+          end else
+          begin
+            DeviceColor:=mainform.devices[DeviceIndex].colors2[l];
+          end;
+          break;
+        end;
+      end;
+    end;
+  end else
+  begin
+    // nur Farbfilter
+    if mainform.Devices[DeviceIndex].hasDimmer then
+    begin
+      Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[DeviceIndex].ID);
+      RGB:=ColorToRGB(mainform.devices[DeviceIndex].color);
+      R:=round(GetRValue(RGB)*Dimmerwert / 255);
+      G:=round(GetGValue(RGB)*Dimmerwert / 255);
+      B:=round(GetBValue(RGB)*Dimmerwert / 255);
+      DeviceColor:=RGB2TColor(R,G,B);
+    end else if mainform.Devices[DeviceIndex].hasFog then
+    begin
+      Dimmerwert:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID, 'FOG');
+      R:=Dimmerwert;
+      G:=Dimmerwert;
+      B:=Dimmerwert;
+      DeviceColor:=RGB2TColor(R,G,B);
+    end else
+    begin
+      DeviceColor:=mainform.devices[DeviceIndex].color;
+    end;
+  end;
+  if mainform.Devices[DeviceIndex].hasShutter then
+  begin
+    shuttervalue:=geraetesteuerung.get_shutter(mainform.devices[DeviceIndex].ID);
+    if (shuttervalue=0) or (shuttervalue=255) then
+    begin
+      TColor2RGB(DeviceColor, R, G, B);
+      R:=round(R*shuttervalue/255);
+      G:=round(G*shuttervalue/255);
+      B:=round(B*shuttervalue/255);
+      DeviceColor:=RGB2TColor(R, G, B);
+    end;
+  end;
+
+  Result:=DeviceColor;
 end;
 
 function Tgeraetesteuerung.GetMatrixDeviceStartAddress(MasterDeviceID:TGUID; MatrixXPosition, MatrixYPosition:byte):integer;

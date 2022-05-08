@@ -123,7 +123,8 @@ uses
   D7GesturesHeader in 'D7GesturesHeader.pas',
   usermgmtfrm in 'usermgmtfrm.pas' {usermgmtform},
   changeuserfrm in 'changeuserfrm.pas' {changeuserform},
-  xtouchcontrolfrm in 'xtouchcontrolfrm.pas' {xtouchcontrolform};
+  xtouchcontrolfrm in 'xtouchcontrolfrm.pas' {xtouchcontrolform},
+  elgatostreamdeckfrm in 'elgatostreamdeckfrm.pas' {elgatostreamdeckform};
 
 const
   sPC_DIMMERMutex = 'PC_DIMMER';
@@ -326,6 +327,8 @@ begin
     Application.CreateForm(Tchangeuserform, changeuserform);
     if showtext then mainform.SplashAddText(_('Erstelle XTouchControl-Form')); mainform.RefreshSplashText;
     Application.CreateForm(Txtouchcontrolform, xtouchcontrolform);
+    if showtext then mainform.SplashAddText(_('Erstelle ElgatoStreamDeck-Form')); mainform.RefreshSplashText;
+    Application.CreateForm(Telgatostreamdeckform, elgatostreamdeckform);
 
     // bitte neue Fenster im "OnClose"-Event des Hauptfensters zunächst schließen (wenn nötig) und dann "free"en!
 

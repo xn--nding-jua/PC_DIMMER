@@ -29,6 +29,7 @@ type
     descriptionedit: TEdit;
     Label1: TLabel;
     Label2: TLabel;
+    InitSceneTest: TPngBitBtn;
     procedure ScriptInterpreterGetValue(Sender: TObject;
       Identifier: String; var Value: Variant; Args: TJvInterpreterArgs;
       var Done: Boolean);
@@ -345,6 +346,8 @@ begin
       ScriptInterpreter.CallFunction('ButtonMouseDown',argumente, []);
     if Sender=MouseUp then
       ScriptInterpreter.CallFunction('ButtonMouseUp',argumente, []);
+    if Sender=InitSceneTest then
+      ScriptInterpreter.CallFunction('InitScene',argumente, []);
     if Sender=StartSceneTest then
       ScriptInterpreter.CallFunction('StartScene',argumente, []);
     if Sender=StopSceneTest then
