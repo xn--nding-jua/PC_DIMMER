@@ -925,9 +925,7 @@
     Beschreibung:string[255];
     Category: string[255];
     Code: String;
-    GlobalVariables:array of Variant;
-    ScriptInterpreter: TJvInterpreterProgram;
-    ScriptInterpreterArgs: TJvInterpreterArgs;
+    Variables:array of Variant;
   end;
 
   TNodeControlNode = record
@@ -968,6 +966,10 @@
     KontrollpanelX, KontrollpanelY:integer;
     DeviceOrGroupID:TGUID;
     DataInChannel:Word;
+    Befehl:TBefehl2;
+    UseHoldToChange:boolean;
+    Increment:integer;
+    CurrentValue:integer;
   end;
   TElgatoStreamDeck = record
     HidDevice:TJvHidDevice;

@@ -156,7 +156,7 @@
       SzenenData:=szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].VST.GetNodeData(szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].VST.FocusedNode);
 
       case SzenenData^.NodeType of
-        0..4,6..10:
+        0..4,6..11:
         begin
           AktuellerBefehl.ArgGUID[0]:=SzenenData^.ID;
         end;
@@ -209,7 +209,7 @@
       SzenenData:=szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].VST.GetNodeData(szenenverwaltung_formarray[length(szenenverwaltung_formarray)-1].VST.FocusedNode);
 
       case SzenenData^.NodeType of
-        0..4,6..10:
+        0..4,6..11:
         begin
           AktuellerBefehl.ArgGUID[0]:=SzenenData^.ID;
         end;

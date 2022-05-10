@@ -365,6 +365,11 @@ object codeeditorform: Tcodeeditorform
         '    starteffect(EffektID);'
         '// Einen Effekt stoppen'
         '    stopeffect(EffektID);'
+        '// Variablen speichern und laden'
+        '    set_var(1, 2);'
+        '    get_var(1, 2);'
+        '    set_globalvar(1, 2);'
+        '    get_globalvar(1, 2);'
         ''
         
           '// Als ID z.B.: SzenenID='#39'{93FC1B07-BC0F-4070-BD73-A1DE250BA2BA}' +
@@ -808,7 +813,6 @@ object codeeditorform: Tcodeeditorform
     end
   end
   object ScriptInterpreter: TJvInterpreterProgram
-    OnGetValue = ScriptInterpreterGetValue
     Left = 560
     Top = 8
   end

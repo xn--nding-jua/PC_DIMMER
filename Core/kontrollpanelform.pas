@@ -221,7 +221,6 @@ type
     MouseDown,OldOffset:TPoint;
     LastColRows:TPoint;
     Extrahighlight:integer;
-    ScriptInterpreterArgs:TJvInterpreterArgs;
 
     //f_ptFirst:TPoint;
     //f_dwArguments:Int64;     //saved T/G dw arguments
@@ -264,12 +263,14 @@ type
     flashingkey:Word;
     flashingshift:TShiftState;
     skriptisrunning:boolean;
+    ScriptInterpreterArgs:TJvInterpreterArgs;
+    ScriptInterpreterCallingCodeSceneID:TGUID;
     procedure OpenFile(filename: string);
     procedure StopButton(Col, Row:integer);
     procedure CollectButtonInfo;
     procedure RedrawPanel;
     procedure RedrawMainformPanel;
-    procedure RunDelphiCode(Code: String; CallFuncName: String);
+    function IsButtonActive(X, Y:integer):boolean;
   end;
 
 procedure LockWindow(const Handle: HWND);
@@ -528,6 +529,7 @@ begin
         listbox.Items.LoadFromFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(SelectedBtn.Y+1)+'x'+inttostr(SelectedBtn.X+1)+'.pas');
       if listbox.Items.Count=0 then
       begin
+        codeeditorform.Memo1.Lines.Clear;
         codeeditorform.Memo1.Lines.Add('unit ButtonCode;');
         codeeditorform.Memo1.Lines.Add('');
         codeeditorform.Memo1.Lines.Add('interface');
@@ -1728,113 +1730,126 @@ end;
 
 procedure Tkontrollpanel.CheckForActiveTimer(Sender: TObject);
 var
-  i,j,k:integer;
+  i,j:integer;
 begin
 	for i:=0 to length(mainform.kontrollpanelbuttons)-1 do
   begin
   	for j:=0 to length(mainform.kontrollpanelbuttons[i])-1 do
     begin
-      case mainform.kontrollpanelbuttons[i][j].Typ of
-      	1,4: // Objekt aus Szenenverwaltung
+      mainform.kontrollpanelbuttons[i][j].Active:=IsButtonActive(j, i);
+    end;
+  end;
+end;
+
+function Tkontrollpanel.IsButtonActive(X, Y:integer):boolean;
+var
+  k:integer;
+  ButtonActive:boolean;
+begin
+  ButtonActive:=false;
+  if (Y>=0) and (X>=0) and (Y<length(mainform.kontrollpanelbuttons)) and (X<length(mainform.kontrollpanelbuttons[Y])) then
+  begin
+    case mainform.kontrollpanelbuttons[Y][X].Typ of
+      1,4: // Objekt aus Szenenverwaltung
+      begin
+        // Audioszene
+        for k:=0 to length(mainform.AudioSzenen)-1 do
         begin
-          // Audioszene
-          for k:=0 to length(mainform.AudioSzenen)-1 do
+          if IsEqualGUID(mainform.AudioSzenen[k].ID,mainform.kontrollpanelbuttons[Y][X].ID) then
           begin
-            if IsEqualGUID(mainform.AudioSzenen[k].ID,mainform.kontrollpanelbuttons[i][j].ID) then
-            begin
-              if mainform.IsSceneActive(mainform.kontrollpanelbuttons[i][j].ID) then
-              begin          
-                case mainform.kontrollpanelbuttons[i][j].Typ of
-                  1:mainform.kontrollpanelbuttons[i][j].TypName:='[Audioszene]';
-                  4:mainform.kontrollpanelbuttons[i][j].TypName:='[Flash-Audio]';
-                end;
-                mainform.kontrollpanelbuttons[i][j].Active:=true;
-              end else
-              begin
-                case mainform.kontrollpanelbuttons[i][j].Typ of
-                  1:mainform.kontrollpanelbuttons[i][j].TypName:='Audioszene';
-                  4:mainform.kontrollpanelbuttons[i][j].TypName:='Flash-Audio';
-                end;
-                mainform.kontrollpanelbuttons[i][j].Active:=false;
+            if mainform.IsSceneActive(mainform.kontrollpanelbuttons[Y][X].ID) then
+            begin          
+              case mainform.kontrollpanelbuttons[Y][X].Typ of
+                1:mainform.kontrollpanelbuttons[Y][X].TypName:='[Audioszene]';
+                4:mainform.kontrollpanelbuttons[Y][X].TypName:='[Flash-Audio]';
               end;
-              break;
-            end;
-          end;
-          // Bewegungsszene
-          for k:=0 to length(mainform.Bewegungsszenen)-1 do
-          begin
-            if IsEqualGUID(mainform.Bewegungsszenen[k].ID,mainform.kontrollpanelbuttons[i][j].ID) then
+              ButtonActive:=true;
+            end else
             begin
-              if mainform.IsSceneActive(mainform.kontrollpanelbuttons[i][j].ID) then
-              begin
-                case mainform.kontrollpanelbuttons[i][j].Typ of
-                  1:mainform.kontrollpanelbuttons[i][j].TypName:='[Bewegungsszene]';
-                  4:mainform.kontrollpanelbuttons[i][j].TypName:='[Flash-Bewegung]';
-                end;
-                mainform.kontrollpanelbuttons[i][j].Active:=true;
-              end else
-              begin
-                case mainform.kontrollpanelbuttons[i][j].Typ of
-                  1:mainform.kontrollpanelbuttons[i][j].TypName:='Bewegungsszene';
-                  4:mainform.kontrollpanelbuttons[i][j].TypName:='Flash-Bewegung';
-                end;
-                mainform.kontrollpanelbuttons[i][j].Active:=false;
+              case mainform.kontrollpanelbuttons[Y][X].Typ of
+                1:mainform.kontrollpanelbuttons[Y][X].TypName:='Audioszene';
+                4:mainform.kontrollpanelbuttons[Y][X].TypName:='Flash-Audio';
               end;
-              break;
+              ButtonActive:=false;
             end;
-          end;
-          // Effekte
-          for k:=0 to length(mainform.effektsequenzereffekte)-1 do
-          begin
-            if IsEqualGUID(mainform.effektsequenzereffekte[k].ID,mainform.kontrollpanelbuttons[i][j].ID) then
-            begin
-              if mainform.IsSceneActive(mainform.kontrollpanelbuttons[i][j].ID) then
-              begin
-                case mainform.kontrollpanelbuttons[i][j].Typ of
-                  1:mainform.kontrollpanelbuttons[i][j].TypName:='[Effekt]';
-                  4:mainform.kontrollpanelbuttons[i][j].TypName:='[Flash-Effekt]';
-                end;
-                mainform.kontrollpanelbuttons[i][j].Active:=true;
-              end else
-              begin
-                case mainform.kontrollpanelbuttons[i][j].Typ of
-                  1:mainform.kontrollpanelbuttons[i][j].TypName:='Effekt';
-                  4:mainform.kontrollpanelbuttons[i][j].TypName:='Flash-Effekt';
-                end;
-                mainform.kontrollpanelbuttons[i][j].Active:=false;
-              end;
-              break;
-            end;
+            break;
           end;
         end;
-        3,6:
+        // Bewegungsszene
+        for k:=0 to length(mainform.Bewegungsszenen)-1 do
         begin
-          for k:=0 to length(mainform.Effektsequenzereffekte)-1 do
+          if IsEqualGUID(mainform.Bewegungsszenen[k].ID,mainform.kontrollpanelbuttons[Y][X].ID) then
           begin
-            if IsEqualGUID(mainform.Effektsequenzereffekte[k].ID,mainform.kontrollpanelbuttons[i][j].ID) then
+            if mainform.IsSceneActive(mainform.kontrollpanelbuttons[Y][X].ID) then
             begin
-              if mainform.IsSceneActive(mainform.kontrollpanelbuttons[i][j].ID) then
-              begin
-                case mainform.kontrollpanelbuttons[i][j].Typ of
-                  3:mainform.kontrollpanelbuttons[i][j].TypName:='[Effekt]';
-                  6:mainform.kontrollpanelbuttons[i][j].TypName:='[Flash-Effekt]';
-                end;
-                mainform.kontrollpanelbuttons[i][j].Active:=true;
-              end else
-              begin
-                case mainform.kontrollpanelbuttons[i][j].Typ of
-                  3:mainform.kontrollpanelbuttons[i][j].TypName:='Effekt';
-                  6:mainform.kontrollpanelbuttons[i][j].TypName:='Flash-Effekt';
-                end;
-                mainform.kontrollpanelbuttons[i][j].Active:=false;
+              case mainform.kontrollpanelbuttons[Y][X].Typ of
+                1:mainform.kontrollpanelbuttons[Y][X].TypName:='[Bewegungsszene]';
+                4:mainform.kontrollpanelbuttons[Y][X].TypName:='[Flash-Bewegung]';
               end;
-              break;
+              ButtonActive:=true;
+            end else
+            begin
+              case mainform.kontrollpanelbuttons[Y][X].Typ of
+                1:mainform.kontrollpanelbuttons[Y][X].TypName:='Bewegungsszene';
+                4:mainform.kontrollpanelbuttons[Y][X].TypName:='Flash-Bewegung';
+              end;
+              ButtonActive:=false;
             end;
+            break;
+          end;
+        end;
+        // Effekte
+        for k:=0 to length(mainform.effektsequenzereffekte)-1 do
+        begin
+          if IsEqualGUID(mainform.effektsequenzereffekte[k].ID,mainform.kontrollpanelbuttons[Y][X].ID) then
+          begin
+            if mainform.IsSceneActive(mainform.kontrollpanelbuttons[Y][X].ID) then
+            begin
+              case mainform.kontrollpanelbuttons[Y][X].Typ of
+                1:mainform.kontrollpanelbuttons[Y][X].TypName:='[Effekt]';
+                4:mainform.kontrollpanelbuttons[Y][X].TypName:='[Flash-Effekt]';
+              end;
+              ButtonActive:=true;
+            end else
+            begin
+              case mainform.kontrollpanelbuttons[Y][X].Typ of
+                1:mainform.kontrollpanelbuttons[Y][X].TypName:='Effekt';
+                4:mainform.kontrollpanelbuttons[Y][X].TypName:='Flash-Effekt';
+              end;
+              ButtonActive:=false;
+            end;
+            break;
+          end;
+        end;
+      end;
+      3,6:
+      begin
+        for k:=0 to length(mainform.Effektsequenzereffekte)-1 do
+        begin
+          if IsEqualGUID(mainform.Effektsequenzereffekte[k].ID,mainform.kontrollpanelbuttons[Y][X].ID) then
+          begin
+            if mainform.IsSceneActive(mainform.kontrollpanelbuttons[Y][X].ID) then
+            begin
+              case mainform.kontrollpanelbuttons[Y][X].Typ of
+                3:mainform.kontrollpanelbuttons[Y][X].TypName:='[Effekt]';
+                6:mainform.kontrollpanelbuttons[Y][X].TypName:='[Flash-Effekt]';
+              end;
+              ButtonActive:=true;
+            end else
+            begin
+              case mainform.kontrollpanelbuttons[Y][X].Typ of
+                3:mainform.kontrollpanelbuttons[Y][X].TypName:='Effekt';
+                6:mainform.kontrollpanelbuttons[Y][X].TypName:='Flash-Effekt';
+              end;
+              ButtonActive:=false;
+            end;
+            break;
           end;
         end;
       end;
     end;
   end;
+  result:=ButtonActive;
 end;
 
 procedure Tkontrollpanel.ScriptInterpreterGetValue(Sender: TObject;
@@ -1842,8 +1857,16 @@ procedure Tkontrollpanel.ScriptInterpreterGetValue(Sender: TObject;
   var Done: Boolean);
 var
   ID:TGUID;
+  i:integer;
 begin
-  if lowercase(Identifier)='set_absolutchannel' then
+  if lowercase(Identifier)='init_channel' then
+  begin
+    if args.Count=3 then
+      geraetesteuerung.set_channel(StringToGUID(args.values[0]),args.values[1],args.values[2],args.values[2],0);
+    done:=true;
+  end;
+
+  if (lowercase(Identifier)='set_absolutchannel') or (lowercase(Identifier)='set_absolutechannel') then
   begin
     if args.Count=4 then
     begin
@@ -1851,6 +1874,10 @@ begin
         mainform.Senddata(args.values[0],255-args.values[1],255-args.values[2],args.values[3]);
       if args.values[1]=-1 then
         mainform.Senddata(args.values[0],mainform.channel_value[Integer(args.values[0])],255-args.values[2],args.values[3]);
+    end;
+    if args.Count=5 then
+    begin
+      mainform.Senddata(args.values[0],maxres-args.values[1],maxres-args.values[2],args.values[3],args.values[4]);
     end;
     done:=true;
   end;
@@ -1902,6 +1929,15 @@ begin
     done:=true;
   end;
 
+  if lowercase(Identifier)='set_color' then
+  begin
+    if args.Count=6 then
+    begin
+      geraetesteuerung.set_color(StringToGUID(args.values[0]),args.values[1],args.values[2],args.values[3],args.values[4],args.values[5]);
+    end;
+    done:=true;
+  end;
+
   if (lowercase(Identifier)='get_absolutchannel') or (lowercase(Identifier)='get_absolutechannel') then
   begin
     Value:=255-mainform.data.ch[Integer(args.values[0])];
@@ -1909,12 +1945,96 @@ begin
     Done:=true;
   end;
 
+  if (lowercase(Identifier)='set_var') then
+  begin
+    for i:=0 to length(mainform.CodeScenes)-1 do
+    begin
+      if IsEqualGUID(mainform.CodeScenes[i].ID, ScriptInterpreterCallingCodeSceneID) then
+      begin
+        if args.values[0]>=length(mainform.CodeScenes[i].Variables) then
+          setlength(mainform.CodeScenes[i].Variables, Integer(args.values[0]));
+        mainform.CodeScenes[i].Variables[Integer(args.values[0])-1]:=args.values[1];
+        Done:=true;
+        break;
+      end;
+    end;
+  end;
+  if (lowercase(Identifier)='get_var') then
+  begin
+    for i:=0 to length(mainform.CodeScenes)-1 do
+    begin
+      if IsEqualGUID(mainform.CodeScenes[i].ID, ScriptInterpreterCallingCodeSceneID) then
+      begin
+        if args.values[0]>=length(mainform.CodeScenes[i].Variables) then
+          setlength(mainform.CodeScenes[i].Variables, Integer(args.values[0]));
+        Value:=mainform.CodeScenes[i].Variables[Integer(args.values[0])-1];
+        args.HasResult:=true;
+        Done:=true;
+        break;
+      end;
+    end;
+  end;
+  if (lowercase(Identifier)='set_globalvar') then
+  begin
+    if args.values[0]>=length(mainform.GlobalVariables) then
+      setlength(mainform.GlobalVariables, Integer(args.values[0]));
+    mainform.GlobalVariables[Integer(args.values[0])-1]:=args.values[1];
+    Done:=true;
+  end;
+  if (lowercase(Identifier)='get_globalvar') then
+  begin
+    if args.values[0]>=length(mainform.GlobalVariables) then
+      setlength(mainform.GlobalVariables, Integer(args.values[0]));
+    Value:=mainform.GlobalVariables[Integer(args.values[0])-1];
+    args.HasResult:=true;
+    Done:=true;
+  end;
+
   if lowercase(Identifier)='get_channel' then
+  if args.Count=2 then
   begin
     ID:=StringToGUID(args.values[0]);
     Value:=geraetesteuerung.get_channel(mainform.Devices[geraetesteuerung.GetDevicePositionInDeviceArray(@ID)].ID,args.values[1]);
     args.HasResult:=true;
     Done:=true;
+  end;
+
+  if lowercase(Identifier)='get_panelbuttoncolor' then
+  if args.Count=2 then
+  begin
+    if (args.values[0]>0) and (args.values[1]>0) and ((args.values[1]-1)<length(mainform.kontrollpanelbuttons)) and ((args.values[0]-1)<length(mainform.kontrollpanelbuttons[Integer(args.values[1])-1])) then
+    begin
+      Value:=mainform.kontrollpanelbuttons[Integer(args.values[1])-1][Integer(args.values[0])-1].Color;
+      args.HasResult:=true;
+      Done:=true;
+    end;
+  end;
+
+  if lowercase(Identifier)='sendmidi' then
+  begin
+    if args.Count=3 then
+    begin
+      mainform.SendMidi(args.values[0], args.values[1], args.values[2]);
+    end;
+    done:=true;
+  end;
+
+  if lowercase(Identifier)='senddatain' then
+  begin
+    if args.Count=2 then
+    begin
+      mainform.ExecuteDataInEvent(args.values[0], args.values[1]);
+    end;
+    done:=true;
+  end;
+
+  if lowercase(Identifier)='sendmessage' then
+  begin
+    if args.Count=3 then
+    begin
+      mainform.SendMSG(args.values[0], args.values[1], args.values[2]);
+    end;
+    done:=true;
   end;
 
   if lowercase(Identifier)='levelstr' then
@@ -1996,10 +2116,57 @@ begin
     done:=true;
   end;
 
+  if lowercase(Identifier)='sin' then
+  begin
+    Value:=sin(Extended(args.values[0]));
+    args.HasResult:=true;
+    Done:=true;
+  end;
+
+  if lowercase(Identifier)='cos' then
+  begin
+    Value:=cos(Extended(args.values[0]));
+    args.HasResult:=true;
+    Done:=true;
+  end;
+
+  if lowercase(Identifier)='arccos' then
+  begin
+    Value:=arccos(Extended(args.values[0]));
+    args.HasResult:=true;
+    Done:=true;
+  end;
+
+  if lowercase(Identifier)='degtorad' then
+  begin
+    Value:=degtorad(Extended(args.values[0]));
+    args.HasResult:=true;
+    Done:=true;
+  end;
+
+  if lowercase(Identifier)='radtodeg' then
+  begin
+    Value:=radtodeg(Extended(args.values[0]));
+    args.HasResult:=true;
+    Done:=true;
+  end;
+
+  if lowercase(Identifier)='frac' then
+  begin
+    Value:=frac(Extended(args.values[0]));
+    args.HasResult:=true;
+    Done:=true;
+  end;
+
   // Objekte zuweisen
   if lowercase(Identifier)='mainform' then
   begin
     Value := O2V(mainform);
+    Done := True;
+  end;
+  if lowercase(Identifier)='globalvariables' then
+  begin
+    Value := mainform.GlobalVariables;
     Done := True;
   end;
   if lowercase(Identifier)='kontrollpanel' then
@@ -3722,15 +3889,6 @@ begin
   end;
   for i:=0 to length(mainform.kontrollpanelbuttons[SelectedBtn.Y])-1 do
     ResetButton(i, SelectedBtn.Y);
-end;
-
-procedure Tkontrollpanel.RunDelphiCode(Code: String; CallFuncName: String);
-begin
-  ScriptInterpreter.Pas.Clear;
-  ScriptInterpreter.Pas.Text:=Code;
-  ScriptInterpreter.Compile;
-  ScriptInterpreterArgs.Count:=0;
-  ScriptInterpreter.CallFunction(CallFuncName, ScriptInterpreterArgs, []);
 end;
 
 end.

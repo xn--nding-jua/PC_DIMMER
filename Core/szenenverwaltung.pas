@@ -5414,6 +5414,7 @@ begin
     mainform.CodeScenes[length(mainform.CodeScenes)-1].Name:=codeeditorform.nameedit.Text;
     mainform.CodeScenes[length(mainform.CodeScenes)-1].Beschreibung:=codeeditorform.descriptionedit.Text;
     mainform.CodeScenes[length(mainform.CodeScenes)-1].Code:=codeeditorform.Memo1.Text;
+    mainform.InitCodeScene(mainform.CodeScenes[length(mainform.CodeScenes)-1].ID);
 
     TempNode:=VST.AddChild(VSTRootNodes[11]);
     Data:=VST.GetNodeData(TempNode);

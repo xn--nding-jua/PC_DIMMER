@@ -27,7 +27,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, JvComponentBase, JvHidControllerClass, Hid, jpeg,
-  ExtCtrls, gnugettext, Mask, JvExMask, JvSpin, pcdutils, GR32, pngimage;
+  ExtCtrls, gnugettext, Mask, JvExMask, JvSpin, pcdutils, GR32, pngimage,
+  befehleditorform2, Buttons, PngBitBtn;
 
 type
   TReport = packed record
@@ -45,7 +46,6 @@ type
     Button1: TButton;
     btnlabel: TLabel;
     btntype: TComboBox;
-    Label2: TLabel;
     Label4: TLabel;
     panelbtnx: TJvSpinEdit;
     Label5: TLabel;
@@ -56,6 +56,11 @@ type
     Label8: TLabel;
     datainchannel: TJvSpinEdit;
     selectmodecheckbox: TCheckBox;
+    Label9: TLabel;
+    useholdcheckbox: TCheckBox;
+    Label2: TLabel;
+    incrementedit: TJvSpinEdit;
+    editbtn: TPngBitBtn;
     procedure brightnessbarChange(Sender: TObject);
     procedure ElgatoStreamDeckTimerTimer(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -74,10 +79,18 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure devicelistboxKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure editbtnClick(Sender: TObject);
+    procedure useholdcheckboxMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure useholdcheckboxKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure incrementeditChange(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private-Deklarationen }
     SelectedDevice, SelectedButton:integer;
     pngobject:TPNGObject;
+    _Buffer: TBitmap;
     function SetKeyBitmap(Serial: string; KeyIndex:byte; Bitmap: TBitmap):integer;
   public
     { Public-Deklarationen }
@@ -330,16 +343,50 @@ procedure Telgatostreamdeckform.ElgatoStreamDeckTimerTimer(
   Sender: TObject);
 var
   dev, btn, x, y, DeviceIndex, i, l, k:integer;
-  _Buffer: TBitmap;
   ButtonPixels:byte;
   topval,leftval:integer;
   rect:TRect;
   Dimmerwert:integer;
   DrawEmptyButton:boolean;
   CurrentButtonMode:byte;
+  Text_PCD_Function, Text_Function, Text_Value:string;
+  Value:integer;
 begin
-  _Buffer:=TBitmap.Create;
+  // send values to DataIn or Befehl
+  for dev:=0 to length(mainform.ElgatoStreamDeckArray)-1 do
+  for btn:=0 to mainform.ElgatoStreamDeckArray[dev].ButtonCount-1 do
+  begin
+    if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Pressed and mainform.ElgatoStreamDeckArray[dev].Buttons[btn].UseHoldToChange then
+    begin
+      mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue:=mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue+mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Increment;
 
+      if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue>255 then
+        mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue:=255
+      else if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue<0 then
+        mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue:=0;
+
+      if (mainform.ElgatoStreamDeckArray[dev].UseAutoModeOnLastButton) then
+      begin
+        CurrentButtonMode:=mainform.ElgatoStreamDeckArray[dev].CurrentButtonMode;
+      end else
+      begin
+        CurrentButtonMode:=mainform.ElgatoStreamDeckArray[dev].Buttons[btn].ButtonType;
+      end;
+
+      case CurrentButtonMode of
+        3: // DataIn
+        begin
+          mainform.ExecuteDataInEvent(mainform.ElgatoStreamDeckArray[dev].Buttons[btn].DataInChannel, mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue);
+        end;
+        4: // Befehl
+        begin
+          mainform.StartBefehl(mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Befehl.ID, mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue);
+        end;
+      end;
+    end;
+  end;
+
+  // display values on buttons
   for dev:=0 to length(mainform.ElgatoStreamDeckArray)-1 do
   begin
     if mainform.ElgatoStreamDeckArray[dev].CurrentButtonMode=0 then
@@ -374,43 +421,44 @@ begin
       // check if we want to use Mode-switcher on last button -> if yes, show current mode on this button
       if (mainform.ElgatoStreamDeckArray[dev].UseAutoModeOnLastButton) and (btn=mainform.ElgatoStreamDeckArray[dev].ButtonCount-1) then
       begin
-        // show AutoMode-picture and current AutoMode
+        // show AutoMode-Button and current AutoMode
+        _Buffer.Canvas.Brush.Color:=clMaroon;
         _Buffer.Canvas.Brush.Style:=bsSolid;
         _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
 
         _Buffer.Canvas.Font.Color:=clWhite;
         _Buffer.Canvas.TextOut(0,0,TimeToStr(now));
-        _Buffer.Canvas.TextOut(0,12,'MODUS:');
         case mainform.ElgatoStreamDeckArray[dev].CurrentButtonMode of
           1:
           begin
-            _Buffer.Canvas.TextOut(0,24,'> '+_('Panels')+' <');
-            _Buffer.Canvas.TextOut(0,36,''+_('Geräte')+'');
-            _Buffer.Canvas.TextOut(0,48,''+_('Data-In')+'');
-            _Buffer.Canvas.TextOut(0,60,''+_('')+'');
+            _Buffer.Canvas.TextOut(0,18,'  > '+_('Panels')+' <');
+            _Buffer.Canvas.TextOut(0,30,'  '+_('Selektion')+'');
+            _Buffer.Canvas.TextOut(0,42,'  '+_('Data-In')+'');
+            _Buffer.Canvas.TextOut(0,54,'  '+_('Befehle')+'');
           end;
           2:
           begin
-            _Buffer.Canvas.TextOut(0,24,''+_('Panels')+'');
-            _Buffer.Canvas.TextOut(0,36,'> '+_('Geräte')+' <');
-            _Buffer.Canvas.TextOut(0,48,''+_('Data-In')+'');
-            _Buffer.Canvas.TextOut(0,60,''+_('')+'');
+            _Buffer.Canvas.TextOut(0,18,'  '+_('Panels')+'');
+            _Buffer.Canvas.TextOut(0,30,'  > '+_('Selektion')+' <');
+            _Buffer.Canvas.TextOut(0,42,'  '+_('Data-In')+'');
+            _Buffer.Canvas.TextOut(0,54,'  '+_('Befehle')+'');
           end;
           3:
           begin
-            _Buffer.Canvas.TextOut(0,24,''+_('Panels')+'');
-            _Buffer.Canvas.TextOut(0,36,''+_('Geräte')+'');
-            _Buffer.Canvas.TextOut(0,48,'> '+_('Data-In')+' <');
-            _Buffer.Canvas.TextOut(0,60,''+_('')+'');
+            _Buffer.Canvas.TextOut(0,18,'  '+_('Panels')+'');
+            _Buffer.Canvas.TextOut(0,30,'  '+_('Selektion')+'');
+            _Buffer.Canvas.TextOut(0,42,'  > '+_('Data-In')+' <');
+            _Buffer.Canvas.TextOut(0,54,'  '+_('Befehle')+'');
           end;
           4:
           begin
-            _Buffer.Canvas.TextOut(0,24,''+_('Panels')+'');
-            _Buffer.Canvas.TextOut(0,36,''+_('Geräte')+'');
-            _Buffer.Canvas.TextOut(0,48,''+_('Data-In')+'');
-            _Buffer.Canvas.TextOut(0,60,'> '+_('')+' <');
+            _Buffer.Canvas.TextOut(0,18,'  '+_('Panels')+'');
+            _Buffer.Canvas.TextOut(0,30,'  '+_('Selektion')+'');
+            _Buffer.Canvas.TextOut(0,42,'  '+_('Data-In')+'');
+            _Buffer.Canvas.TextOut(0,54,'  > '+_('Befehle')+' <');
           end;
         end;
+        _Buffer.Canvas.Brush.Color:=clNavy;
       end else
       begin
         case CurrentButtonMode of
@@ -660,8 +708,160 @@ begin
             _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
 
             _Buffer.Canvas.Font.Color:=clWhite;
-            _Buffer.Canvas.TextOut(0,0,'Data-In');
-            _Buffer.Canvas.TextOut(0,12,'Ch '+inttostr(mainform.ElgatoStreamDeckArray[dev].Buttons[btn].DataInChannel));
+
+            Dimmerwert:=mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue;
+            // Umrandung zeichnen
+            _Buffer.Canvas.Brush.Color:=ClMedGray;
+            _Buffer.Canvas.Pen.Style:=psSolid;
+            _Buffer.Canvas.Rectangle(0, 0, ButtonPixels, 10);
+
+            // Hintergrund zeichnen
+            _Buffer.Canvas.Pen.Color:=clSilver;
+            _Buffer.Canvas.MoveTo(0, 1);
+            _Buffer.Canvas.LineTo(ButtonPixels, 1);
+            _Buffer.Canvas.MoveTo(0, 2);
+            _Buffer.Canvas.LineTo(ButtonPixels, 2);
+            _Buffer.Canvas.Pen.Color:=clMedGray;
+            _Buffer.Canvas.MoveTo(0, 3);
+            _Buffer.Canvas.LineTo(ButtonPixels, 3);
+            _Buffer.Canvas.MoveTo(0, 4);
+            _Buffer.Canvas.LineTo(ButtonPixels, 4);
+            _Buffer.Canvas.Pen.Color:=clGray;
+            _Buffer.Canvas.MoveTo(0, 5);
+            _Buffer.Canvas.LineTo(ButtonPixels, 5);
+            _Buffer.Canvas.MoveTo(0, 6);
+            _Buffer.Canvas.LineTo(ButtonPixels, 6);
+            _Buffer.Canvas.Pen.Color:=clGray;
+            _Buffer.Canvas.MoveTo(0, 7);
+            _Buffer.Canvas.LineTo(ButtonPixels, 7);
+            _Buffer.Canvas.MoveTo(0, 8);
+            _Buffer.Canvas.LineTo(ButtonPixels, 8);
+            _Buffer.Canvas.Pen.Color:=clMedGray;
+            _Buffer.Canvas.MoveTo(0, 9);
+            _Buffer.Canvas.LineTo(ButtonPixels, 9);
+            // Füllung zeichnen
+            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,128);//$00FFFFFF;
+            _Buffer.Canvas.MoveTo(0, 1);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 1);
+            _Buffer.Canvas.MoveTo(0, 2);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 2);
+            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,192);//$00A4FFA4;
+            _Buffer.Canvas.MoveTo(0, 3);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 3);
+            _Buffer.Canvas.MoveTo(0, 4);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 4);
+            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,255);//$0000FF00;
+            _Buffer.Canvas.MoveTo(0, 5);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 5);
+            _Buffer.Canvas.MoveTo(0, 6);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 6);
+            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,96);//$0000B000;
+            _Buffer.Canvas.MoveTo(0, 7);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 7);
+            _Buffer.Canvas.MoveTo(0, 8);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 8);
+            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,64);//$00008000;
+            _Buffer.Canvas.MoveTo(0, 9);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 9);
+            _Buffer.Canvas.MoveTo(0, 10);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 10);
+
+            // Wert in Prozent anzeigen
+            _Buffer.Canvas.Brush.Style:=bsClear;
+            _Buffer.Canvas.Pen.Style:=psClear;
+            _Buffer.Canvas.Font.Color:=clWhite;
+            _Buffer.Canvas.TextOut(0,12,'DataIn '+inttostr(mainform.ElgatoStreamDeckArray[dev].Buttons[btn].DataInChannel)+'@'+mainform.levelstr(Dimmerwert));
+
+            if length(mainform.DataInEventArray)>0 then
+            for i:=0 to length(mainform.DataInEventArray)-1 do
+            begin
+              if (mainform.ElgatoStreamDeckArray[dev].Buttons[btn].DataInChannel=mainform.DataInEventArray[i].channel) then
+              begin
+                // we found one element. PC_DIMMER supports connections to multiple DataIn-channels, but we have limited space in display
+				        // so just display first connection
+                mainform.GetBefehlState(mainform.DataInEventArray[i].Befehl, Text_PCD_Function, Text_Function, Text_Value, Value);
+                _Buffer.Canvas.TextOut(0,24,Text_PCD_Function);
+                _Buffer.Canvas.TextOut(0,36,Text_Function);
+                _Buffer.Canvas.TextOut(0,48,Text_Value);
+
+                break;
+              end;
+            end;
+          end;
+          4: // 4=Befehl
+          begin
+            _Buffer.Canvas.Brush.Style:=bsSolid;
+            _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
+
+            _Buffer.Canvas.Font.Color:=clWhite;
+
+            Dimmerwert:=mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue;
+            // Umrandung zeichnen
+            _Buffer.Canvas.Brush.Color:=ClMedGray;
+            _Buffer.Canvas.Pen.Style:=psSolid;
+            _Buffer.Canvas.Rectangle(0, 0, ButtonPixels, 10);
+
+            // Hintergrund zeichnen
+            _Buffer.Canvas.Pen.Color:=clSilver;
+            _Buffer.Canvas.MoveTo(0, 1);
+            _Buffer.Canvas.LineTo(ButtonPixels, 1);
+            _Buffer.Canvas.MoveTo(0, 2);
+            _Buffer.Canvas.LineTo(ButtonPixels, 2);
+            _Buffer.Canvas.Pen.Color:=clMedGray;
+            _Buffer.Canvas.MoveTo(0, 3);
+            _Buffer.Canvas.LineTo(ButtonPixels, 3);
+            _Buffer.Canvas.MoveTo(0, 4);
+            _Buffer.Canvas.LineTo(ButtonPixels, 4);
+            _Buffer.Canvas.Pen.Color:=clGray;
+            _Buffer.Canvas.MoveTo(0, 5);
+            _Buffer.Canvas.LineTo(ButtonPixels, 5);
+            _Buffer.Canvas.MoveTo(0, 6);
+            _Buffer.Canvas.LineTo(ButtonPixels, 6);
+            _Buffer.Canvas.Pen.Color:=clGray;
+            _Buffer.Canvas.MoveTo(0, 7);
+            _Buffer.Canvas.LineTo(ButtonPixels, 7);
+            _Buffer.Canvas.MoveTo(0, 8);
+            _Buffer.Canvas.LineTo(ButtonPixels, 8);
+            _Buffer.Canvas.Pen.Color:=clMedGray;
+            _Buffer.Canvas.MoveTo(0, 9);
+            _Buffer.Canvas.LineTo(ButtonPixels, 9);
+            // Füllung zeichnen
+            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,128);//$00FFFFFF;
+            _Buffer.Canvas.MoveTo(0, 1);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 1);
+            _Buffer.Canvas.MoveTo(0, 2);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 2);
+            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,192);//$00A4FFA4;
+            _Buffer.Canvas.MoveTo(0, 3);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 3);
+            _Buffer.Canvas.MoveTo(0, 4);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 4);
+            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,255);//$0000FF00;
+            _Buffer.Canvas.MoveTo(0, 5);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 5);
+            _Buffer.Canvas.MoveTo(0, 6);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 6);
+            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,96);//$0000B000;
+            _Buffer.Canvas.MoveTo(0, 7);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 7);
+            _Buffer.Canvas.MoveTo(0, 8);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 8);
+            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,64);//$00008000;
+            _Buffer.Canvas.MoveTo(0, 9);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 9);
+            _Buffer.Canvas.MoveTo(0, 10);
+            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 10);
+
+            // Wert in Prozent anzeigen
+            _Buffer.Canvas.Brush.Style:=bsClear;
+            _Buffer.Canvas.Pen.Style:=psClear;
+            _Buffer.Canvas.Font.Color:=clWhite;
+            _Buffer.Canvas.TextOut(0,12,_('Befehl')+' @ '+mainform.levelstr(Dimmerwert));
+
+            mainform.GetBefehlState(mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Befehl, Text_PCD_Function, Text_Function, Text_Value, Value);
+            _Buffer.Canvas.TextOut(0,24,Text_PCD_Function);
+            _Buffer.Canvas.TextOut(0,36,Text_Function);
+            _Buffer.Canvas.TextOut(0,48,Text_Value);
           end;
         end;
       end;
@@ -702,8 +902,6 @@ begin
       SetKeyBitmap(mainform.ElgatoStreamDeckArray[dev].Serial, btn, _Buffer);
     end;
   end;
-
-  _Buffer.Free;
 end;
 
 procedure Telgatostreamdeckform.FormShow(Sender: TObject);
@@ -748,7 +946,7 @@ begin
     brightnessbar.Position:=mainform.ElgatoStreamDeckArray[DeviceIndex].Brightness;
     selectmodecheckbox.Checked:=mainform.ElgatoStreamDeckArray[DeviceIndex].UseAutoModeOnLastButton;
 
-    btnlabel.Caption:=_('Button ')+inttostr(SelectedButton+1);
+    btnlabel.Caption:=_('Funktion Button ')+inttostr(SelectedButton+1);
     btntype.ItemIndex:=mainform.ElgatoStreamDeckArray[DeviceIndex].Buttons[SelectedButton].ButtonType;
     if mainform.ElgatoStreamDeckArray[DeviceIndex].Buttons[SelectedButton].KontrollpanelX<1 then
       mainform.ElgatoStreamDeckArray[DeviceIndex].Buttons[SelectedButton].KontrollpanelX:=1;
@@ -759,6 +957,8 @@ begin
     if mainform.ElgatoStreamDeckArray[DeviceIndex].Buttons[SelectedButton].DataInChannel<1 then
       mainform.ElgatoStreamDeckArray[DeviceIndex].Buttons[SelectedButton].DataInChannel:=1;
     datainchannel.Value:=mainform.ElgatoStreamDeckArray[DeviceIndex].Buttons[SelectedButton].DataInChannel;
+    useholdcheckbox.Checked:=mainform.ElgatoStreamDeckArray[DeviceIndex].Buttons[SelectedButton].UseHoldToChange;
+    incrementedit.Value:=abs(mainform.ElgatoStreamDeckArray[DeviceIndex].Buttons[SelectedButton].Increment);
     deviceorgroupid.Items.Clear;
     for i:=0 to length(mainform.Devices)-1 do
     begin
@@ -788,6 +988,7 @@ procedure Telgatostreamdeckform.FormCreate(Sender: TObject);
 begin
   TranslateComponent(self);
   pngobject:=TPNGObject.Create;
+  _Buffer:=TBitmap.Create;
 end;
 
 procedure Telgatostreamdeckform.panelbtnxChange(Sender: TObject);
@@ -860,6 +1061,92 @@ begin
     brightnessbar.Position:=mainform.ElgatoStreamDeckArray[SelectedDevice].Brightness;
     selectmodecheckbox.Checked:=mainform.ElgatoStreamDeckArray[SelectedDevice].UseAutoModeOnLastButton;
   end;
+end;
+
+procedure Telgatostreamdeckform.editbtnClick(Sender: TObject);
+var
+  i:integer;
+begin
+  if SelectedDevice<length(mainform.ElgatoStreamDeckArray) then
+  begin
+    setlength(befehlseditor_array2,length(befehlseditor_array2)+1);
+    befehlseditor_array2[length(befehlseditor_array2)-1]:=Tbefehlseditor2.Create(self);
+    befehlseditor_array2[length(befehlseditor_array2)-1].CheckBox1.Visible:=false;
+    befehlseditor_array2[length(befehlseditor_array2)-1].ShowInputValueToo:=true;
+
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ID:=mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ID;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.Typ:=mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.Typ;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.Name:=mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.Name;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.Beschreibung:=mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.Beschreibung;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.OnValue:=mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.OnValue;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.SwitchValue:=mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.SwitchValue;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.InvertSwitchValue:=mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.InvertSwitchValue;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.OffValue:=mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.OffValue;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ScaleValue:=mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ScaleValue;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.RunOnProjectLoad:=mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.RunOnProjectLoad;
+
+    setlength(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgInteger,length(mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgInteger));
+    for i:=0 to length(mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgInteger)-1 do
+      befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgInteger[i]:=mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgInteger[i];
+    setlength(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgString,length(mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgString));
+    for i:=0 to length(mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgString)-1 do
+      befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgString[i]:=mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgString[i];
+    setlength(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgGUID,length(mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgGUID));
+    for i:=0 to length(mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgGUID)-1 do
+      befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgGUID[i]:=mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgGUID[i];
+
+    befehlseditor_array2[length(befehlseditor_array2)-1].ShowModal;
+
+    if befehlseditor_array2[length(befehlseditor_array2)-1].ModalResult=mrOK then
+    begin
+      mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.Typ:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.Typ;
+      mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.Name:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.Name;
+      mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.Beschreibung:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.Beschreibung;
+      mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.OnValue:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.OnValue;
+      mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.SwitchValue:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.SwitchValue;
+      mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.InvertSwitchValue:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.InvertSwitchValue;
+      mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.OffValue:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.OffValue;
+      mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ScaleValue:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ScaleValue;
+      mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.RunOnProjectLoad:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.RunOnProjectLoad;
+      setlength(mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgInteger,length(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgInteger));
+      for i:=0 to length(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgInteger)-1 do
+        mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgInteger[i]:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgInteger[i];
+      setlength(mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgString,length(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgString));
+      for i:=0 to length(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgString)-1 do
+        mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgString[i]:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgString[i];
+      setlength(mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgGUID,length(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgGUID));
+      for i:=0 to length(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgGUID)-1 do
+        mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Befehl.ArgGUID[i]:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgGUID[i];
+    end;
+
+    befehlseditor_array2[length(befehlseditor_array2)-1].Free;
+    setlength(befehlseditor_array2,length(befehlseditor_array2)-1);
+  end;
+end;
+
+procedure Telgatostreamdeckform.useholdcheckboxMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  if SelectedDevice<length(mainform.ElgatoStreamDeckArray) then
+    mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].UseHoldToChange:=useholdcheckbox.Checked;
+end;
+
+procedure Telgatostreamdeckform.useholdcheckboxKeyUp(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if SelectedDevice<length(mainform.ElgatoStreamDeckArray) then
+    mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].UseHoldToChange:=useholdcheckbox.Checked;
+end;
+
+procedure Telgatostreamdeckform.incrementeditChange(Sender: TObject);
+begin
+  if SelectedDevice<length(mainform.ElgatoStreamDeckArray) then
+    mainform.ElgatoStreamDeckArray[SelectedDevice].Buttons[SelectedButton].Increment:=round(incrementedit.value);
+end;
+
+procedure Telgatostreamdeckform.FormDestroy(Sender: TObject);
+begin
+  _Buffer.Free;
 end;
 
 end.

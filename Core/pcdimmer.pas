@@ -55,7 +55,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=487;
+  actualprojectversion=488;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -654,7 +654,6 @@ type
     procedure Effektschaltvorgang(WelcherEffekt:Integer; Sender: TObject);
     procedure StartPreset(ID: TGUID);
     procedure StartPresetScene(ID: TGUID);
-    procedure ExecuteCodeScene(ID: TGUID; Command: String);
     procedure StartAutoszene(ID: TGUID; NoFadetime, NoDelay:boolean; Fadetime:integer);
     procedure StopAutoszene(ID: TGUID);
     procedure StartMediaCenterSzene(ID: TGUID);
@@ -678,9 +677,6 @@ type
     procedure AutoFaderTimer(Sender: TObject);
     procedure BewegungsszenenTimerTimer(Sender: TObject);
     procedure TBItem20Click(Sender: TObject);
-    procedure ScriptInterpreterGetValue(Sender: TObject;
-      Identifier: String; var Value: Variant; Args: TJvInterpreterArgs;
-      var Done: Boolean);
     procedure TBItem13Click(Sender: TObject);
     procedure TBItem22Click(Sender: TObject);
     procedure TBItem23Click(Sender: TObject);
@@ -1149,6 +1145,7 @@ type
     PartyMuckenModul:array of TPartyMuckenModul;
     PresetScenes: array of TPresetScene;
     CodeScenes: array of TCodeScene;
+    GlobalVariables: array of Variant;
     NodeControlSets: array of TNodeControlSet;
     UserAccounts: array of TUserAccount;
     CurrentUser, StartupUser: String;
@@ -1211,9 +1208,12 @@ type
     procedure BlackoutDeviceScene(ID:TGUID; Fadetime:integer);
     function DoesSceneExists(ID:TGUID):boolean;
     procedure StopAllEffects;
+    procedure InitCodeScene(ID: TGUID);
+    procedure ExecuteCodeScene(ID: TGUID; Command: String);
 
     procedure StartBefehl(ID: TGUID); overload;
     procedure StartBefehl(ID: TGUID; Inputvalue: integer); overload;
+  	procedure GetBefehlState(AktuellerBefehl:TBefehl2; var Text_PCD_Function:string; var Text_Function:string; var Text_Value:string; var Value:integer);
 
     procedure ErrorPop(str: string);
     procedure Senddata(address, startvalue, endvalue, fadetime:integer);overload;
@@ -5770,6 +5770,27 @@ begin
       Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY));
       Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID));
       Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].UseHoldToChange,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].UseHoldToChange));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Increment,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Increment));
+
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.Typ,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.Typ));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OnValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OnValue));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.SwitchValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.SwitchValue));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.InvertSwitchValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.InvertSwitchValue));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OffValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OffValue));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ScaleValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ScaleValue));
+      Count2:=length(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for k:=0 to Count2-1 do
+        Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger[k]));
+      Count2:=length(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for k:=0 to Count2-1 do
+        Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString[k]));
+      Count2:=length(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for k:=0 to Count2-1 do
+        Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID[k]));
     end;
   end;
 // Ende StreamDeck
@@ -8856,6 +8877,30 @@ begin
           Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY));
           Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID));
           Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel));
+          if projektprogrammversionint>=488 then
+          begin
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].UseHoldToChange,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].UseHoldToChange));
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Increment,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Increment));
+
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.Typ,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.Typ));
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OnValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OnValue));
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.SwitchValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.SwitchValue));
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.InvertSwitchValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.InvertSwitchValue));
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OffValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OffValue));
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ScaleValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ScaleValue));
+            Filestream.ReadBuffer(Count2,sizeof(Count2));
+            setlength(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger,Count2);
+            for k:=0 to Count2-1 do
+              Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger[k]));
+            Filestream.ReadBuffer(Count2,sizeof(Count2));
+            setlength(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString,Count2);
+            for k:=0 to Count2-1 do
+              Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString[k]));
+            Filestream.ReadBuffer(Count2,sizeof(Count2));
+            setlength(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID,Count2);
+            for k:=0 to Count2-1 do
+              Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID[k]));
+          end;
         end;
       end;
     end;
@@ -9335,7 +9380,7 @@ begin
   end;
   for i:=0 to length(codescenes)-1 do
   begin
-    ExecuteCodeScene(codescenes[i].ID, 'InitScene');
+    InitCodeScene(codescenes[i].ID);
   end;
 
   if not startingup then
@@ -13539,10 +13584,12 @@ begin
   SplashCaptioninfo(_('Oberfläche aktualisieren...'));
   RefreshSplashText;
 
+  ScriptInterpreter.OnGetValue:=kontrollpanel.ScriptInterpreterGetValue;
+
   if not (LastSessionWasCorrupt or RestoreLastValues or startupwitholdscene) then
   begin
     DebugAdd('INIT: Initializing devices...');
-  
+
     SplashProgress(1, 98, 100);
     SplashCaptioninfo(_('Geräte initialisieren...'));
     RefreshSplashText;
@@ -14609,6 +14656,36 @@ begin
     end;
   end;
 
+  if IsEqualGUID(AktuellerBefehl.Typ, StringToGUID('{00000000-0000-0000-0000-000000000000}')) then
+  for i:=0 to length(mainform.ElgatoStreamDeckArray)-1 do
+  for k:=0 to length(mainform.ElgatoStreamDeckArray[i].Buttons)-1 do
+  begin
+    if IsEqualGUID(ID,mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ID) then
+    begin
+      AktuellerBefehl.Typ:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.Typ;
+      AktuellerBefehl.Name:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.Name;
+      AktuellerBefehl.Beschreibung:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.Beschreibung;
+      AktuellerBefehl.OnValue:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.OnValue;
+      AktuellerBefehl.SwitchValue:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.SwitchValue;
+      AktuellerBefehl.InvertSwitchValue:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.InvertSwitchValue;
+      AktuellerBefehl.OffValue:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.OffValue;
+      AktuellerBefehl.ScaleValue:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ScaleValue;
+
+      setlength(AktuellerBefehl.ArgInteger, length(mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgInteger));
+      for j:=0 to length(mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgInteger)-1 do
+        AktuellerBefehl.ArgInteger[j]:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgInteger[j];
+      setlength(AktuellerBefehl.ArgString, length(mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgString));
+      for j:=0 to length(mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgString)-1 do
+        AktuellerBefehl.ArgString[j]:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgString[j];
+      setlength(AktuellerBefehl.ArgGUID, length(mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgGUID));
+      for j:=0 to length(mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgGUID)-1 do
+        AktuellerBefehl.ArgGUID[j]:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgGUID[j];
+
+      LastEvent:='StreamDeck #'+inttostr(i+1)+'@Btn'+inttostr(k+1)+': '+inttostr(inputvalue);
+
+      break;
+    end;
+  end;
 
   if IsEqualGUID(AktuellerBefehl.Typ, StringToGUID('{00000000-0000-0000-0000-000000000000}')) then
   if IsEqualGUID(ID, StringToGUID('{46368186-DF3D-467A-9792-DAC6B03A21E3}')) then
@@ -16278,7 +16355,7 @@ begin
     begin // Button schalten
       kontrollpanel.OverBtn.X:=AktuellerBefehl.ArgInteger[1]-1;
       kontrollpanel.OverBtn.Y:=AktuellerBefehl.ArgInteger[0]-1;
-    
+
       //kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
       kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssLeft], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
       kontrollpanel.PaintBox1MouseUp(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
@@ -16562,6 +16639,13 @@ begin
   end;
 end;
 
+procedure Tmainform.GetBefehlState(AktuellerBefehl:TBefehl2; var Text_PCD_Function:string; var Text_Function:string; var Text_Value:string; var Value:integer);
+var
+  j:integer;
+begin
+  {$I GetBefehlState.inc}
+end;
+
 procedure Tmainform.ConvertBefehlToBefehl2;
 var
   i:integer;
@@ -16841,6 +16925,20 @@ begin
   end;
 end;
 
+procedure TMainform.InitCodeScene(ID: TGUID);
+var
+  i:integer;
+begin
+  for i:=0 to length(CodeScenes)-1 do
+  begin
+    if IsEqualGUID(ID,CodeScenes[i].ID) then
+    begin // richtige Codescene gefunden
+      ExecuteCodeScene(CodeScenes[i].ID, 'InitScene');
+      break;
+    end;
+  end;
+end;
+
 procedure TMainform.ExecuteCodeScene(ID: TGUID; Command: string);
 var
   i:integer;
@@ -16849,7 +16947,12 @@ begin
   begin
     if IsEqualGUID(ID,CodeScenes[i].ID) then
     begin // richtige Codescene gefunden
-      kontrollpanel.RunDelphiCode(CodeScenes[i].Code, Command);
+      kontrollpanel.ScriptInterpreterCallingCodeSceneID:=CodeScenes[i].ID;
+      kontrollpanel.ScriptInterpreter.Pas.Clear;
+      kontrollpanel.ScriptInterpreter.Pas.Text:=CodeScenes[i].Code;
+      kontrollpanel.ScriptInterpreter.Compile;
+      kontrollpanel.ScriptInterpreterArgs.Count:=0;
+      kontrollpanel.ScriptInterpreter.CallFunction(Command, kontrollpanel.ScriptInterpreterArgs, []);
       break;
     end;
   end;
@@ -18999,6 +19102,7 @@ begin
       mainform.CodeScenes[j].Name:=codeeditorform.nameedit.Text;
       mainform.CodeScenes[j].Beschreibung:=codeeditorform.descriptionedit.Text;
       mainform.CodeScenes[j].Code:=codeeditorform.Memo1.Text;//codeeditorform.Memo1.Lines.Text;
+      InitCodeScene(mainform.codescenes[j].ID);
     end;
 
     codeeditorform.Panel3.Visible:=false;
@@ -20395,129 +20499,6 @@ begin
   if not UserAccessGranted(2) then exit;
 
   ddfeditorform.show;
-end;
-
-procedure TMainform.ScriptInterpreterGetValue(Sender: TObject;
-  Identifier: String; var Value: Variant; Args: TJvInterpreterArgs;
-  var Done: Boolean);
-var
-  ID:TGUID;
-begin
-  if lowercase(Identifier)='init_channel' then
-  begin
-    if args.Count=3 then
-      geraetesteuerung.set_channel(StringToGUID(args.values[0]),args.values[1],args.values[2],args.values[2],0);
-    done:=true;
-  end;
-
-  if (lowercase(Identifier)='set_absolutchannel') or (lowercase(Identifier)='set_absolutechannel') then
-  begin
-    if args.Count=4 then
-    begin
-      mainform.Senddata(args.values[0],maxres-args.values[1],maxres-args.values[2],args.values[3]);
-    end;
-    if args.Count=5 then
-    begin
-      mainform.Senddata(args.values[0],maxres-args.values[1],maxres-args.values[2],args.values[3],args.values[4]);
-    end;
-    done:=true;
-  end;
-
-  if lowercase(Identifier)='set_pantilt' then
-  begin
-    if args.Count=6 then
-    begin
-      geraetesteuerung.set_pantilt(StringToGUID(args.values[0]),args.values[1],args.values[2],args.values[3],args.values[4],args.values[5]);
-    end;
-    done:=true;
-  end;
-
-  if lowercase(Identifier)='set_channel' then
-  begin
-    if args.Count=5 then
-    begin
-      geraetesteuerung.set_channel(StringToGUID(args.values[0]),args.values[1],args.values[2],args.values[3],args.values[4]);
-    end;
-    if args.Count=6 then
-    begin
-      geraetesteuerung.set_channel(StringToGUID(args.values[0]),args.values[1],args.values[2],args.values[3],args.values[4],args.values[5]);
-    end;
-    done:=true;
-  end;
-
-  if lowercase(Identifier)='set_color' then
-  begin
-    if args.Count=6 then
-    begin
-      geraetesteuerung.set_color(StringToGUID(args.values[0]),args.values[1],args.values[2],args.values[3],args.values[4],args.values[5]);
-    end;
-    done:=true;
-  end;
-
-  if (lowercase(Identifier)='get_absolutchannel') or (lowercase(Identifier)='get_absolutechannel') then
-  begin
-    Value:=maxres-mainform.data.ch[Integer(args.values[0])];
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='get_channel' then
-  if args.Count=2 then
-  begin
-    ID:=StringToGUID(args.values[0]);
-    Value:=geraetesteuerung.get_channel(mainform.Devices[geraetesteuerung.GetDevicePositionInDeviceArray(@ID)].ID,args.values[1]);
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='levelstr' then
-  begin
-    Value:=mainform.levelstr(args.values[0]);
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='sin' then
-  begin
-    Value:=sin(Extended(args.values[0]));
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='cos' then
-  begin
-    Value:=cos(Extended(args.values[0]));
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='arccos' then
-  begin
-    Value:=arccos(Extended(args.values[0]));
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='degtorad' then
-  begin
-    Value:=degtorad(Extended(args.values[0]));
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='radtodeg' then
-  begin
-    Value:=radtodeg(Extended(args.values[0]));
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='frac' then
-  begin
-    Value:=frac(Extended(args.values[0]));
-    args.HasResult:=true;
-    Done:=true;
-  end;
 end;
 
 procedure TMainform.TBItem13Click(Sender: TObject);
@@ -23741,110 +23722,110 @@ begin
 
       temp:='scenes ';
       case strtoint(value[0]) of
-        0:
+        0: // Einfache Szenen
         begin
           temp:=temp+inttostr(length(EinfacheSzenen));
           for i:=0 to length(EinfacheSzenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(EinfacheSzenen[i].Name)+','+GUIDtoString(EinfacheSzenen[i].ID);
           end;
-        end; // Einfache Szenen
-        1:
+        end;
+        1: // Geräteszenen
         begin
           temp:=temp+inttostr(length(DeviceScenes));
           for i:=0 to length(DeviceScenes)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(DeviceScenes[i].Name)+','+GUIDtoString(DeviceScenes[i].ID);
           end;
-        end; // Geräteszenen
-        2:
+        end;
+        2: // Audioszenen
         begin
           temp:=temp+inttostr(length(AudioSzenen));
           for i:=0 to length(AudioSzenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(AudioSzenen[i].Name)+','+GUIDtoString(AudioSzenen[i].ID);
           end;
-        end; // Audioszenen
-        3:
+        end;
+        3: // Bewegungsszenen
         begin
           temp:=temp+inttostr(length(BewegungsSzenen));
           for i:=0 to length(BewegungsSzenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(BewegungsSzenen[i].Name)+','+GUIDtoString(BewegungsSzenen[i].ID);
           end;
-        end; // Bewegungsszenen
-        4:
+        end;
+        4: // Befehle
         begin
           temp:=temp+inttostr(length(Befehle2));
           for i:=0 to length(Befehle2)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(Befehle2[i].Name)+','+GUIDtoString(Befehle2[i].ID);
           end;
-        end; // Befehle
-        5:
+        end;
+        5: // Kombinationsszenen
         begin
           temp:=temp+inttostr(length(Kompositionsszenen));
           for i:=0 to length(Kompositionsszenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(Kompositionsszenen[i].Name)+','+GUIDtoString(Kompositionsszenen[i].ID);
           end;
-        end; // Kombinationsszenen
-        6:
+        end;
+        6: // Presets
         begin
           temp:=temp+inttostr(length(DevicePresets));
           for i:=0 to length(DevicePresets)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(DevicePresets[i].Name)+','+GUIDtoString(DevicePresets[i].ID);
           end;
-        end; // Presets
-        7:
+        end;
+        7: // Automatikszenen
         begin
           temp:=temp+inttostr(length(Autoszenen));
           for i:=0 to length(Autoszenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(Autoszenen[i].Name)+','+GUIDtoString(Autoszenen[i].ID);
           end;
-        end; // Automatikszenen
-        8:
+        end;
+        8: // Effekte
         begin
           temp:=temp+inttostr(length(Effektsequenzereffekte));
           for i:=0 to length(Effektsequenzereffekte)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(Effektsequenzereffekte[i].Name)+','+GUIDtoString(Effektsequenzereffekte[i].ID);
           end;
-        end; // Effekte
-        9:
+        end;
+        9: // MediaCenter Szenen
         begin
           temp:=temp+inttostr(length(MediaCenterSzenen));
           for i:=0 to length(MediaCenterSzenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(MediaCenterSzenen[i].Name)+','+GUIDtoString(MediaCenterSzenen[i].ID);
           end;
-        end; // MediaCenter Szenen
-        10:
+        end;
+        10: // Presetszene
         begin
           temp:=temp+inttostr(length(presetscenes));
           for i:=0 to length(presetscenes)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(presetscenes[i].Name)+','+GUIDtoString(presetscenes[i].ID);
           end;
-        end; // Presetszene
-        11:
+        end;
+        11: // Codeszenen
         begin
           temp:=temp+inttostr(length(codescenes));
           for i:=0 to length(codescenes)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(codescenes[i].Name)+','+GUIDtoString(codescenes[i].ID);
           end;
-        end; // Codeszenen
-        12:
+        end;
+        12: // Pluginszenen
         begin
           temp:=temp+inttostr(length(PluginSzenen));
           for i:=0 to length(PluginSzenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(PluginSzenen[i].Name)+','+GUIDtoString(PluginSzenen[i].ID);
           end;
-        end; // Pluginszenen
+        end;
       end;
 
       AContext.Connection.Socket.WriteLn(temp);
@@ -27895,7 +27876,12 @@ begin
         for btn:=0 to 31 do
         begin
           ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].ButtonType:=0;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Increment:=15;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].CurrentValue:=0;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].UseHoldToChange:=true;
 
+          X:=0;
+          Y:=0;
           if HidDev.Attributes.ProductID=$0063 then
           begin
             // 6 Buttons
@@ -27916,6 +27902,11 @@ begin
           ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelX:=X+1;
           ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelY:=Y+1;
           ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].DataInChannel:=btn+1;
+          CreateGUID(ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.ID);
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.Name:='Button '+inttostr(btn+1)+'-Event';
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OnValue:=255;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.SwitchValue:=128;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OffValue:=0;
         end;
       end;
 
@@ -28008,12 +27999,23 @@ begin
             if (b=(ElgatoStreamDeckArray[i].ButtonCount-1)) and (mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton) then
             begin
               // we are at last button and we want to switch between modes
-              if mainform.ElgatoStreamDeckArray[i].CurrentButtonMode<3 then
+              if mainform.ElgatoStreamDeckArray[i].CurrentButtonMode<4 then
                 mainform.ElgatoStreamDeckArray[i].CurrentButtonMode:=mainform.ElgatoStreamDeckArray[i].CurrentButtonMode+1
               else
                 mainform.ElgatoStreamDeckArray[i].CurrentButtonMode:=1;
             end else
             begin
+              if ElgatoStreamDeckArray[i].Buttons[b].UseHoldToChange then
+              begin
+                if mainform.ElgatoStreamDeckArray[i].Buttons[b].CurrentValue=255 then
+                  mainform.ElgatoStreamDeckArray[i].Buttons[b].Increment:=-1*abs(mainform.ElgatoStreamDeckArray[i].Buttons[b].Increment)
+                else if mainform.ElgatoStreamDeckArray[i].Buttons[b].CurrentValue=0 then
+                  mainform.ElgatoStreamDeckArray[i].Buttons[b].Increment:=abs(mainform.ElgatoStreamDeckArray[i].Buttons[b].Increment);
+              end else
+              begin
+                mainform.ElgatoStreamDeckArray[i].Buttons[b].CurrentValue:=255;
+              end;
+
               case CurrentButtonMode of
                 1: // 1=Kontrollpanel
                 begin
@@ -28030,13 +28032,23 @@ begin
                     deviceselected[geraetesteuerung.GetDevicePositionInDeviceArray(@ElgatoStreamDeckArray[i].Buttons[b].DeviceOrGroupID)]:=true;
                   end else
                   begin
-                    // it is a Groupd
+                    // it is a Group
                     SelectDeviceGroup(ElgatoStreamDeckArray[i].Buttons[b].DeviceOrGroupID, false);
                   end;
                 end;
                 3: // 3=DataIn
                 begin
-                  mainform.ExecuteDataInEvent(ElgatoStreamDeckArray[i].Buttons[b].DataInChannel, 255);
+                  if not ElgatoStreamDeckArray[i].Buttons[b].UseHoldToChange then
+                  begin
+                    mainform.ExecuteDataInEvent(ElgatoStreamDeckArray[i].Buttons[b].DataInChannel, 255);
+                  end;
+                end;
+                4: // 4=Befehl
+                begin
+                  if not ElgatoStreamDeckArray[i].Buttons[b].UseHoldToChange then
+                  begin
+                    StartBefehl(ElgatoStreamDeckArray[i].Buttons[b].Befehl.ID, 255);
+                  end;
                 end;
               end;
             end;
@@ -28044,6 +28056,8 @@ begin
           begin
             // button released
             ElgatoStreamDeckArray[i].Buttons[b].Pressed:=false;
+            // change direction of value-change on each button-release
+            ElgatoStreamDeckArray[i].Buttons[b].Increment:=-1*ElgatoStreamDeckArray[i].Buttons[b].Increment;
 
             if (b=(ElgatoStreamDeckArray[i].ButtonCount-1)) and (mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton) then
             begin
@@ -28051,6 +28065,9 @@ begin
               // nothing to do on release
             end else
             begin
+              if not ElgatoStreamDeckArray[i].Buttons[b].UseHoldToChange then
+                mainform.ElgatoStreamDeckArray[i].Buttons[b].CurrentValue:=0;
+
               case CurrentButtonMode of
                 1: // 1=Kontrollpanel
                 begin
@@ -28063,7 +28080,13 @@ begin
                 end;
                 3: // 3=DataIn
                 begin
-                  mainform.ExecuteDataInEvent(ElgatoStreamDeckArray[i].Buttons[b].DataInChannel, 0);
+                  if not ElgatoStreamDeckArray[i].Buttons[b].UseHoldToChange then
+                    mainform.ExecuteDataInEvent(ElgatoStreamDeckArray[i].Buttons[b].DataInChannel, 0);
+                end;
+                4: // 4=Befehl
+                begin
+                  if not ElgatoStreamDeckArray[i].Buttons[b].UseHoldToChange then
+                    StartBefehl(ElgatoStreamDeckArray[i].Buttons[b].Befehl.ID, 0);
                 end;
               end;
             end;
