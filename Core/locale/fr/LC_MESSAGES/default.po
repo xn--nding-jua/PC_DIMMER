@@ -5,17 +5,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PC_DIMMER2008\n"
+"Project-Id-Version: PC_DIMMER\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-12-08 10:15+0100\n"
-"PO-Revision-Date: 2016-10-25 16:26+0100\n"
+"PO-Revision-Date: 2022-05-10 15:00+0200\n"
 "Last-Translator: Christian Nöding <christian@noeding-online.de>\n"
 "Language-Team: Noeding <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr_FR\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.8.6\n"
 
 #. AboutBox..Caption
 #. aboutform..Caption
@@ -877,39 +877,39 @@ msgstr ""
 #: buehnenansicht.dfm:2838 buehnenansicht.dfm:2843 cdplayerfrm.dfm:11
 #: cdplayerfrm.dfm:129 cdplayerfrm.dfm:142 clockfrm.dfm:12 clockfrm.dfm:88
 #: codeeditorfrm.dfm:11 colormanagerfrm.dfm:12 commandfrm.dfm:12
-#: commandfrm.dfm:28 commandfrm.dfm:40 compileerrorfrm.dfm:11
-#: cuelistfrm.dfm:11 cuelistfrm.dfm:1754 cuelistfrm.dfm:1810
-#: datainevent.dfm:11 datainevent.dfm:449 datainevent.dfm:462
-#: datainevent.dfm:475 datainevent.dfm:488 ddfeditorassistant.dfm:12
-#: ddfeditorfrm.dfm:11 ddfeditorfrm.dfm:223 ddfeditorfrm.dfm:380
-#: ddfeditorfrm.dfm:821 ddfeditorfrm.dfm:2740 ddfeditorfrm.dfm:3332
-#: ddfeditorfrm.dfm:4862 ddfeditorfrm.dfm:4876 ddfeditorfrm.dfm:4881
-#: ddfeditorfrm.dfm:4886 ddfwindowfrm.dfm:12 ddfwindowfrm.dfm:1609
-#: ddfwindowfrm.dfm:1624 ddfwindowfrm.dfm:1629 ddfwindowfrm.dfm:1634
-#: devicechannelselectionfrm.dfm:11 devicechannelselectionfrm.dfm:87
-#: devicechannelselectionfrm.dfm:107 devicechannelselectionfrm.dfm:269
-#: devicechannelselectionfrm.dfm:288 devicechannelselectionfrm.dfm:306
-#: devicechannelselectionfrm.dfm:324 devicechannelselectionfrm.dfm:362
-#: deviceformprototypfrm.dfm:11 devicelistfrm.dfm:11
-#: devicepicturechangefrm.dfm:12 devicepowerfrm.dfm:12 devicescenefrm.dfm:11
-#: devicescenefrm.dfm:607 devicescenefrm.dfm:664 devicescenefrm.dfm:680
-#: devicescenefrm.dfm:699 devicescenefrm.dfm:717 devicescenefrm.dfm:757
-#: devicescenefrm.dfm:770 devicescenefrm.dfm:930 dimmcurvefrm.dfm:12
-#: DimmerKernelQueue.dfm:11 druckenfrm.dfm:12 dxf_previewfrm.dfm:12
-#: dynguifrm.dfm:16 dynguifrm.dfm:234 dynguifrm.dfm:249 dynguifrm.dfm:351
-#: dynguifrm.dfm:366 dynguifrm.dfm:473 dynguifrm.dfm:488 dynguifrm.dfm:737
-#: dynguifrm.dfm:752 dynguifrm.dfm:826 dynguifrm.dfm:841 dynguifrm.dfm:996
-#: dynguifrm.dfm:1009 dynguifrm.dfm:1014 dynguifrm.dfm:1019 dynguifrm.dfm:1841
-#: dynguifrm.dfm:1856 editdatainevent.dfm:12 editdatainevent.dfm:53
-#: editdatainevent.dfm:66 editdatainevent.dfm:79 editdatainevent.dfm:92
-#: editdatainevent.dfm:129 editmidievent.dfm:12 editmidievent.dfm:52
-#: editmidievent.dfm:65 editmidievent.dfm:78 editmidievent.dfm:91
-#: editmidievent.dfm:104 editmidievent.dfm:117 editmidievent.dfm:154
-#: editmidievent.dfm:167 editskript.dfm:11 effektsequenzerfrm.dfm:11
-#: effektsequenzerfrm.dfm:1328 effekttimelinefrm.dfm:12 exceptionfrm.dfm:13
-#: exceptionfrm.dfm:76 faderpanelfrm.dfm:14 figureneditor.dfm:16
-#: firststepsfrm.dfm:12 firststepsfrm.dfm:8712 FrameChannelU.dfm:94
-#: FrameChannelU.dfm:603 geraeteremovedfrm.dfm:12 geraetesteuerungfrm.dfm:15
+#: commandfrm.dfm:28 commandfrm.dfm:40 compileerrorfrm.dfm:11 cuelistfrm.dfm:11
+#: cuelistfrm.dfm:1754 cuelistfrm.dfm:1810 datainevent.dfm:11
+#: datainevent.dfm:449 datainevent.dfm:462 datainevent.dfm:475
+#: datainevent.dfm:488 ddfeditorassistant.dfm:12 ddfeditorfrm.dfm:11
+#: ddfeditorfrm.dfm:223 ddfeditorfrm.dfm:380 ddfeditorfrm.dfm:821
+#: ddfeditorfrm.dfm:2740 ddfeditorfrm.dfm:3332 ddfeditorfrm.dfm:4862
+#: ddfeditorfrm.dfm:4876 ddfeditorfrm.dfm:4881 ddfeditorfrm.dfm:4886
+#: ddfwindowfrm.dfm:12 ddfwindowfrm.dfm:1609 ddfwindowfrm.dfm:1624
+#: ddfwindowfrm.dfm:1629 ddfwindowfrm.dfm:1634 devicechannelselectionfrm.dfm:11
+#: devicechannelselectionfrm.dfm:87 devicechannelselectionfrm.dfm:107
+#: devicechannelselectionfrm.dfm:269 devicechannelselectionfrm.dfm:288
+#: devicechannelselectionfrm.dfm:306 devicechannelselectionfrm.dfm:324
+#: devicechannelselectionfrm.dfm:362 deviceformprototypfrm.dfm:11
+#: devicelistfrm.dfm:11 devicepicturechangefrm.dfm:12 devicepowerfrm.dfm:12
+#: devicescenefrm.dfm:11 devicescenefrm.dfm:607 devicescenefrm.dfm:664
+#: devicescenefrm.dfm:680 devicescenefrm.dfm:699 devicescenefrm.dfm:717
+#: devicescenefrm.dfm:757 devicescenefrm.dfm:770 devicescenefrm.dfm:930
+#: dimmcurvefrm.dfm:12 DimmerKernelQueue.dfm:11 druckenfrm.dfm:12
+#: dxf_previewfrm.dfm:12 dynguifrm.dfm:16 dynguifrm.dfm:234 dynguifrm.dfm:249
+#: dynguifrm.dfm:351 dynguifrm.dfm:366 dynguifrm.dfm:473 dynguifrm.dfm:488
+#: dynguifrm.dfm:737 dynguifrm.dfm:752 dynguifrm.dfm:826 dynguifrm.dfm:841
+#: dynguifrm.dfm:996 dynguifrm.dfm:1009 dynguifrm.dfm:1014 dynguifrm.dfm:1019
+#: dynguifrm.dfm:1841 dynguifrm.dfm:1856 editdatainevent.dfm:12
+#: editdatainevent.dfm:53 editdatainevent.dfm:66 editdatainevent.dfm:79
+#: editdatainevent.dfm:92 editdatainevent.dfm:129 editmidievent.dfm:12
+#: editmidievent.dfm:52 editmidievent.dfm:65 editmidievent.dfm:78
+#: editmidievent.dfm:91 editmidievent.dfm:104 editmidievent.dfm:117
+#: editmidievent.dfm:154 editmidievent.dfm:167 editskript.dfm:11
+#: effektsequenzerfrm.dfm:11 effektsequenzerfrm.dfm:1328
+#: effekttimelinefrm.dfm:12 exceptionfrm.dfm:13 exceptionfrm.dfm:76
+#: faderpanelfrm.dfm:14 figureneditor.dfm:16 firststepsfrm.dfm:12
+#: firststepsfrm.dfm:8712 FrameChannelU.dfm:94 FrameChannelU.dfm:603
+#: geraeteremovedfrm.dfm:12 geraetesteuerungfrm.dfm:15
 #: geraetesteuerungfrm.dfm:811 geraetesteuerungfrm.dfm:831
 #: geraetesteuerungfrm.dfm:849 geraetesteuerungfrm.dfm:872
 #: geraetesteuerungfrm.dfm:1831 gpl.dfm:14 importfrm.dfm:11 insscene.dfm:12
@@ -941,16 +941,15 @@ msgstr ""
 #: matrixeditorfrm.dfm:11 matrixeditorfrm.dfm:266 matrixeditorfrm.dfm:280
 #: matrixeditorfrm.dfm:285 matrixeditorfrm.dfm:290 mediacenterfrm.dfm:13
 #: midievent.dfm:11 midievent.dfm:204 midievent.dfm:217 midievent.dfm:230
-#: midievent.dfm:243 midievent.dfm:256 midievent.dfm:269
-#: onlineupdatefrm.dfm:12 onlineupdatefrm.dfm:756 onlineupdatefrm.dfm:777
-#: onlineupdatefrm.dfm:790 onlineupdatefrm.dfm:812 Optionen.dfm:13
-#: Optionen.dfm:130 Optionen.dfm:203 Optionen.dfm:273 Optionen.dfm:331
-#: Optionen.dfm:615 Optionen.dfm:1021 Optionen.dfm:1219 Optionen.dfm:1250
-#: Optionen.dfm:1587 Optionen.dfm:1618 Optionen.dfm:1737 Optionen.dfm:1945
-#: Optionen.dfm:2035 ownmessagefrm.dfm:12 Pat.dfm:12 PCDIMMER.dfm:14
-#: PCDIMMER.dfm:345 PCDIMMER.dfm:378 PCDIMMER.dfm:850 PCDIMMER.dfm:2363
-#: PCDIMMER.dfm:2379 PCDIMMER.dfm:2384 PCDIMMER.dfm:2389
-#: picturechangefrm.dfm:11 pmm.dfm:13 preseteditorform.dfm:12
+#: midievent.dfm:243 midievent.dfm:256 midievent.dfm:269 onlineupdatefrm.dfm:12
+#: onlineupdatefrm.dfm:756 onlineupdatefrm.dfm:777 onlineupdatefrm.dfm:790
+#: onlineupdatefrm.dfm:812 Optionen.dfm:13 Optionen.dfm:130 Optionen.dfm:203
+#: Optionen.dfm:273 Optionen.dfm:331 Optionen.dfm:615 Optionen.dfm:1021
+#: Optionen.dfm:1219 Optionen.dfm:1250 Optionen.dfm:1587 Optionen.dfm:1618
+#: Optionen.dfm:1737 Optionen.dfm:1945 Optionen.dfm:2035 ownmessagefrm.dfm:12
+#: Pat.dfm:12 PCDIMMER.dfm:14 PCDIMMER.dfm:345 PCDIMMER.dfm:378
+#: PCDIMMER.dfm:850 PCDIMMER.dfm:2363 PCDIMMER.dfm:2379 PCDIMMER.dfm:2384
+#: PCDIMMER.dfm:2389 picturechangefrm.dfm:11 pmm.dfm:13 preseteditorform.dfm:12
 #: preseteditorform.dfm:192 preseteditorform.dfm:207 preseteditorform.dfm:212
 #: preseteditorform.dfm:217 preseteditorform.dfm:1612
 #: presetsceneeditorform.dfm:12 presetsceneeditorform.dfm:1206 presskey.dfm:16
@@ -1700,22 +1699,22 @@ msgstr ""
 #: befehleditorform2.dfm:577 bewegungsszeneneditor.dfm:1350
 #: codeeditorfrm.dfm:65 colormanagerfrm.dfm:553 datainevent.dfm:1152
 #: devicechannelselectionfrm.dfm:42 devicelistfrm.dfm:743
-#: devicepicturechangefrm.dfm:229 devicepowerfrm.dfm:334
-#: devicescenefrm.dfm:211 dimmcurvefrm.dfm:41 druckenfrm.dfm:94
-#: dxf_previewfrm.dfm:137 editdatainevent.dfm:164 editmidievent.dfm:278
-#: editskript.dfm:256 exceptionfrm.dfm:89 figureneditor.dfm:294 gpl.dfm:807
-#: importfrm.dfm:201 insscene.dfm:275 joysticksetupfrm.dfm:157
-#: kompositionsszeneeditorform.dfm:1117
-#: lauflichtassistentownpatternfrm.dfm:331 layerbezeichnungenfrm.dfm:127
-#: leistungssteuerungfrm.dfm:281 lockedfrm.dfm:1174 matrixeditorfrm.dfm:337
-#: mediacenterfrm.dfm:403 midievent.dfm:961 Optionen.dfm:1809
-#: ownmessagefrm.dfm:233 Pat.dfm:85 picturechangefrm.dfm:414 pmm.dfm:1277
-#: preseteditorform.dfm:1568 presetsceneeditorform.dfm:1061
-#: projekteigenschaftenfrm.dfm:140 projektverwaltungfrm.dfm:151
-#: protocol.dfm:49 recoveryfrm.dfm:407 reordergroupfrm.dfm:1075
-#: scannersynchronisationfrm.dfm:356 scenenotfoundfrm.dfm:396 SetNames.dfm:161
-#: skripttimer_edit.dfm:1269 szenenverwaltung.dfm:195 Tastenabfragefrm.dfm:968
-#: tippofthedayfrm.dfm:289 winlircfrm.dfm:155 MEVP-Files/snf/main.dfm:59
+#: devicepicturechangefrm.dfm:229 devicepowerfrm.dfm:334 devicescenefrm.dfm:211
+#: dimmcurvefrm.dfm:41 druckenfrm.dfm:94 dxf_previewfrm.dfm:137
+#: editdatainevent.dfm:164 editmidievent.dfm:278 editskript.dfm:256
+#: exceptionfrm.dfm:89 figureneditor.dfm:294 gpl.dfm:807 importfrm.dfm:201
+#: insscene.dfm:275 joysticksetupfrm.dfm:157
+#: kompositionsszeneeditorform.dfm:1117 lauflichtassistentownpatternfrm.dfm:331
+#: layerbezeichnungenfrm.dfm:127 leistungssteuerungfrm.dfm:281
+#: lockedfrm.dfm:1174 matrixeditorfrm.dfm:337 mediacenterfrm.dfm:403
+#: midievent.dfm:961 Optionen.dfm:1809 ownmessagefrm.dfm:233 Pat.dfm:85
+#: picturechangefrm.dfm:414 pmm.dfm:1277 preseteditorform.dfm:1568
+#: presetsceneeditorform.dfm:1061 projekteigenschaftenfrm.dfm:140
+#: projektverwaltungfrm.dfm:151 protocol.dfm:49 recoveryfrm.dfm:407
+#: reordergroupfrm.dfm:1075 scannersynchronisationfrm.dfm:356
+#: scenenotfoundfrm.dfm:396 SetNames.dfm:161 skripttimer_edit.dfm:1269
+#: szenenverwaltung.dfm:195 Tastenabfragefrm.dfm:968 tippofthedayfrm.dfm:289
+#: winlircfrm.dfm:155 MEVP-Files/snf/main.dfm:59
 #: plugins/Ausgabeplugin/_PluginSDK_Delphi7/aboutfrm.dfm:65
 #: plugins/Ausgabeplugin/_PluginSDK_Delphi7/main.dfm:75
 #: plugins/Ausgabeplugin/ArtNet/aboutfrm.dfm:349
@@ -2063,19 +2062,18 @@ msgstr ""
 #: audioszeneeditorform.dfm:862 autoszenefrm.dfm:569 befehleditorform2.dfm:843
 #: clockfrm.dfm:109 colormanagerfrm.dfm:861 cuelistfrm.dfm:206
 #: datainevent.dfm:1639 ddfeditorassistant.dfm:373 devicelistfrm.dfm:349
-#: devicepicturechangefrm.dfm:581 devicepowerfrm.dfm:315
-#: devicescenefrm.dfm:536 dimmcurvefrm.dfm:385 dynguifrm.dfm:148
-#: dynguifrm.dfm:320 dynguifrm.dfm:442 dynguifrm.dfm:531 dynguifrm.dfm:706
-#: dynguifrm.dfm:795 dynguifrm.dfm:939 dynguifrm.dfm:1154 dynguifrm.dfm:1810
-#: effekttimelinefrm.dfm:176 exceptionfrm.dfm:228 firststepsfrm.dfm:149
-#: firststepsfrm.dfm:7354 firststepsfrm.dfm:7642 firststepsfrm.dfm:8837
-#: geraeteremovedfrm.dfm:441 importfrm.dfm:156 insscene.dfm:778
-#: joystickfrm.dfm:865 kompositionsszeneeditorform.dfm:1066
-#: lauflichtassistentfrm.dfm:265 mediacenterfrm.dfm:375 midievent.dfm:1517
-#: onlineupdatefrm.dfm:903 ownmessagefrm.dfm:148 Pat.dfm:41
-#: picturechangefrm.dfm:371 preseteditorform.dfm:1906
-#: presetsceneeditorform.dfm:1445 presskey.dfm:42 progressscreen.dfm:411
-#: progressscreen.dfm:1227 progressscreen.dfm:1250
+#: devicepicturechangefrm.dfm:581 devicepowerfrm.dfm:315 devicescenefrm.dfm:536
+#: dimmcurvefrm.dfm:385 dynguifrm.dfm:148 dynguifrm.dfm:320 dynguifrm.dfm:442
+#: dynguifrm.dfm:531 dynguifrm.dfm:706 dynguifrm.dfm:795 dynguifrm.dfm:939
+#: dynguifrm.dfm:1154 dynguifrm.dfm:1810 effekttimelinefrm.dfm:176
+#: exceptionfrm.dfm:228 firststepsfrm.dfm:149 firststepsfrm.dfm:7354
+#: firststepsfrm.dfm:7642 firststepsfrm.dfm:8837 geraeteremovedfrm.dfm:441
+#: importfrm.dfm:156 insscene.dfm:778 joystickfrm.dfm:865
+#: kompositionsszeneeditorform.dfm:1066 lauflichtassistentfrm.dfm:265
+#: mediacenterfrm.dfm:375 midievent.dfm:1517 onlineupdatefrm.dfm:903
+#: ownmessagefrm.dfm:148 Pat.dfm:41 picturechangefrm.dfm:371
+#: preseteditorform.dfm:1906 presetsceneeditorform.dfm:1445 presskey.dfm:42
+#: progressscreen.dfm:411 progressscreen.dfm:1227 progressscreen.dfm:1250
 #: projektverwaltungfrm.dfm:478 recoveryfrm.dfm:386
 #: scannersynchronisationfrm.dfm:603 scenenotfoundfrm.dfm:377
 #: schedulerfrm.dfm:423 skripttimer_edit.dfm:1476 splashscreen2frm.dfm:713
@@ -2479,8 +2477,7 @@ msgstr ""
 #. ActionDlg..Notebook1....syncbutton2..Caption
 #. mainform..Panel1..sync_btn..Caption
 #: Action.dfm:469 plugins/Programmplugins/Alt/Kontrollpanel/action.dfm:468
-#: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:526
-#: pmm.pas:539
+#: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:526 pmm.pas:539
 msgid "Sync"
 msgstr ""
 
@@ -2669,10 +2666,10 @@ msgstr ""
 #: beatfrm.dfm:428 buehnenansicht.dfm:2507 commandfrm.dfm:24
 #: ddfeditorfrm.dfm:335 ddfeditorfrm.dfm:3283 devicechannelselectionfrm.dfm:83
 #: devicechannelselectionfrm.dfm:103 devicescenefrm.dfm:753
-#: devicescenefrm.dfm:766 effektsequenzerfrm.dfm:781
-#: effektsequenzerfrm.dfm:796 firststepsfrm.dfm:8752 firststepsfrm.dfm:8759
-#: firststepsfrm.dfm:8774 lauflichtassistentfrm.dfm:1031
-#: lauflichtassistentfrm.dfm:1038 lauflichtassistentownpatternfrm.dfm:79
+#: devicescenefrm.dfm:766 effektsequenzerfrm.dfm:781 effektsequenzerfrm.dfm:796
+#: firststepsfrm.dfm:8752 firststepsfrm.dfm:8759 firststepsfrm.dfm:8774
+#: lauflichtassistentfrm.dfm:1031 lauflichtassistentfrm.dfm:1038
+#: lauflichtassistentownpatternfrm.dfm:79
 #: lauflichtassistentownpatternfrm.dfm:93
 #: lauflichtassistentownpatternfrm.dfm:107
 #: lauflichtassistentownpatternfrm.dfm:121 matrixeditorfrm.dfm:86
@@ -2788,14 +2785,14 @@ msgstr ""
 #. lauflichtassistentownpatternform..Panel1..GroupBox1..Label4..Caption
 #. mediacenterform..Label2..Caption
 #. Tastenabfrage..Panel1..GroupBox2..Label2..Caption
-#: adddevicefrm.dfm:40 befehleditorform2.dfm:184
-#: bewegungsszeneneditor.dfm:1095 ddfeditorfrm.dfm:233 ddfeditorfrm.dfm:2757
-#: editdatainevent.dfm:189 editmidievent.dfm:303 effektsequenzerfrm.dfm:2545
+#: adddevicefrm.dfm:40 befehleditorform2.dfm:184 bewegungsszeneneditor.dfm:1095
+#: ddfeditorfrm.dfm:233 ddfeditorfrm.dfm:2757 editdatainevent.dfm:189
+#: editmidievent.dfm:303 effektsequenzerfrm.dfm:2545
 #: effektsequenzerfrm.dfm:3483 effekttimelinefrm.dfm:45
-#: effekttimelinefrm.dfm:73 effekttimelinefrm.dfm:101
-#: effekttimelinefrm.dfm:129 joysticksetupfrm.dfm:246
-#: kompositionsszeneeditorform.dfm:97 lauflichtassistentownpatternfrm.dfm:72
-#: mediacenterfrm.dfm:48 Tastenabfragefrm.dfm:1007
+#: effekttimelinefrm.dfm:73 effekttimelinefrm.dfm:101 effekttimelinefrm.dfm:129
+#: joysticksetupfrm.dfm:246 kompositionsszeneeditorform.dfm:97
+#: lauflichtassistentownpatternfrm.dfm:72 mediacenterfrm.dfm:48
+#: Tastenabfragefrm.dfm:1007
 msgid "Name:"
 msgstr ""
 
@@ -2921,13 +2918,12 @@ msgstr ""
 #: bewegungsszeneneditor.dfm:702 buehnenansicht.dfm:2891
 #: buehnenansicht.dfm:2914 buehnenansicht.dfm:2934 buehnenansicht.dfm:2947
 #: buehnenansicht.dfm:2971 clockfrm.dfm:136 devicechannelselectionfrm.dfm:284
-#: devicescenefrm.dfm:713 dynguifrm.dfm:245 dynguifrm.dfm:362
-#: dynguifrm.dfm:484 dynguifrm.dfm:748 dynguifrm.dfm:837 dynguifrm.dfm:1852
-#: editmidievent.dfm:229 faderpanelfrm.dfm:1502 faderpanelfrm.dfm:1509
-#: faderpanelfrm.dfm:1544 geraetesteuerungfrm.dfm:827
-#: kanaluebersichtfrm.dfm:220 kanaluebersichtfrm.dfm:231
-#: kontrollpanelform.dfm:1393 kontrollpanelform.dfm:1416
-#: lauflichtassistentownpatternfrm.dfm:474
+#: devicescenefrm.dfm:713 dynguifrm.dfm:245 dynguifrm.dfm:362 dynguifrm.dfm:484
+#: dynguifrm.dfm:748 dynguifrm.dfm:837 dynguifrm.dfm:1852 editmidievent.dfm:229
+#: faderpanelfrm.dfm:1502 faderpanelfrm.dfm:1509 faderpanelfrm.dfm:1544
+#: geraetesteuerungfrm.dfm:827 kanaluebersichtfrm.dfm:220
+#: kanaluebersichtfrm.dfm:231 kontrollpanelform.dfm:1393
+#: kontrollpanelform.dfm:1416 lauflichtassistentownpatternfrm.dfm:474
 #: lauflichtassistentownpatternfrm.dfm:487
 #: lauflichtassistentownpatternfrm.dfm:495 matrixeditorfrm.dfm:606
 #: matrixeditorfrm.dfm:619 matrixeditorfrm.dfm:627 mediacenterfrm.dfm:430
@@ -3066,8 +3062,7 @@ msgstr ""
 #. geraetesteuerung..Panel3..Panel5..plus..Hint
 #. szenenverwaltungform..Panel2..Button3..Hint
 #: adddevicefrm.dfm:1520 devicechannelselectionfrm.dfm:301
-#: devicescenefrm.dfm:659 geraetesteuerungfrm.dfm:844
-#: szenenverwaltung.dfm:1192
+#: devicescenefrm.dfm:659 geraetesteuerungfrm.dfm:844 szenenverwaltung.dfm:1192
 msgid "Klappt alle Elemente aus"
 msgstr ""
 
@@ -3105,8 +3100,7 @@ msgstr ""
 #. geraetesteuerung..Panel3..Panel5..minus..Hint
 #. szenenverwaltungform..Panel2..Button4..Hint
 #: adddevicefrm.dfm:1538 devicechannelselectionfrm.dfm:283
-#: devicescenefrm.dfm:712 geraetesteuerungfrm.dfm:826
-#: szenenverwaltung.dfm:1174
+#: devicescenefrm.dfm:712 geraetesteuerungfrm.dfm:826 szenenverwaltung.dfm:1174
 msgid "Klappt alle Elemente ein"
 msgstr ""
 
@@ -3529,13 +3523,12 @@ msgstr ""
 #. Config..Label3..Caption
 #. Mainform..Label9..Caption
 #. Mainform..Label10..Caption
-#: ambilight.dfm:3812 audioszeneeditorform.dfm:323
-#: audioszeneeditorform.dfm:351 befehleditorform.dfm:227
-#: befehleditorform2.dfm:273 editdatainevent.dfm:277 editmidievent.dfm:391
-#: joysticksetupfrm.dfm:334 mediacenterfrm.dfm:540 Optionen.dfm:849
-#: Optionen.dfm:856 Optionen.dfm:863 Optionen.dfm:870 Optionen.dfm:877
-#: Optionen.dfm:884 Optionen.dfm:891 Optionen.dfm:898 Optionen.dfm:905
-#: Tastenabfragefrm.dfm:1137
+#: ambilight.dfm:3812 audioszeneeditorform.dfm:323 audioszeneeditorform.dfm:351
+#: befehleditorform.dfm:227 befehleditorform2.dfm:273 editdatainevent.dfm:277
+#: editmidievent.dfm:391 joysticksetupfrm.dfm:334 mediacenterfrm.dfm:540
+#: Optionen.dfm:849 Optionen.dfm:856 Optionen.dfm:863 Optionen.dfm:870
+#: Optionen.dfm:877 Optionen.dfm:884 Optionen.dfm:891 Optionen.dfm:898
+#: Optionen.dfm:905 Tastenabfragefrm.dfm:1137
 #: plugins/Ausgabeplugin/enttec_open_usb_hippy/configfrm.dfm:52
 #: plugins/Ausgabeplugin/enttec_open_usb_hippy_(eurolite)/configfrm.dfm:52
 #: plugins/Ausgabeplugin/enttec_open_usb_hippy_(gus)/configfrm.dfm:52
@@ -4080,8 +4073,8 @@ msgstr ""
 #. kontrollpanel..TBDock1..TBToolbar1..Caption
 #. textbuchform..PageControl1..TabSheet2..TBDock1..TBToolbar1..Caption
 #. videoscreenform..TBDock1..TBToolbar1..Caption
-#: audioeffektplayerfrm.dfm:3519 kontrollpanelform.dfm:1218
-#: textbuchfrm.dfm:183 videoscreenfrm.dfm:691
+#: audioeffektplayerfrm.dfm:3519 kontrollpanelform.dfm:1218 textbuchfrm.dfm:183
+#: videoscreenfrm.dfm:691
 msgid "TBToolbar1"
 msgstr ""
 
@@ -5319,8 +5312,7 @@ msgstr ""
 #. Effekte
 #: befehleditorform.dfm:303 Channels_Commandsystem.inc:915
 #: geraetesteuerungfrm.pas:3026 geraetesteuerungfrm.pas:3041
-#: szenenverwaltung.pas:755 szenenverwaltung.pas:1273
-#: szenenverwaltung.pas:3868
+#: szenenverwaltung.pas:755 szenenverwaltung.pas:1273 szenenverwaltung.pas:3868
 msgid "Effekte"
 msgstr ""
 
@@ -5437,8 +5429,7 @@ msgstr ""
 #. editmidieventfrm..GroupBox2..Label9..Caption
 #. joysticksetupform..GroupBox2..Label9..Caption
 #. Tastenabfrage..Panel1..GroupBox2..Label3..Caption
-#: befehleditorform2.dfm:198 joysticksetupfrm.dfm:262
-#: Tastenabfragefrm.dfm:1023
+#: befehleditorform2.dfm:198 joysticksetupfrm.dfm:262 Tastenabfragefrm.dfm:1023
 msgid "Programmteil:"
 msgstr ""
 
@@ -5447,8 +5438,7 @@ msgstr ""
 #. editmidieventfrm..GroupBox2..Label10..Caption
 #. joysticksetupform..GroupBox2..Label10..Caption
 #. Tastenabfrage..Panel1..GroupBox2..Label5..Caption
-#: befehleditorform2.dfm:205 joysticksetupfrm.dfm:269
-#: Tastenabfragefrm.dfm:1030
+#: befehleditorform2.dfm:205 joysticksetupfrm.dfm:269 Tastenabfragefrm.dfm:1030
 msgid "Steuerung:"
 msgstr ""
 
@@ -5457,8 +5447,7 @@ msgstr ""
 #. editmidieventfrm..GroupBox2..Label11..Caption
 #. joysticksetupform..GroupBox2..Label11..Caption
 #. Tastenabfrage..Panel1..GroupBox2..Label10..Caption
-#: befehleditorform2.dfm:212 joysticksetupfrm.dfm:276
-#: Tastenabfragefrm.dfm:1037
+#: befehleditorform2.dfm:212 joysticksetupfrm.dfm:276 Tastenabfragefrm.dfm:1037
 msgid "Gerät/Gruppe/Effekt:"
 msgstr ""
 
@@ -5491,8 +5480,7 @@ msgstr ""
 #. editmidieventfrm..GroupBox2..Optionen3Box..Caption
 #. joysticksetupform..GroupBox2..Optionen3Box..Caption
 #. Tastenabfrage..Panel1..GroupBox2..Optionen3Box..Caption
-#: befehleditorform2.dfm:449 joysticksetupfrm.dfm:511
-#: Tastenabfragefrm.dfm:1314
+#: befehleditorform2.dfm:449 joysticksetupfrm.dfm:511 Tastenabfragefrm.dfm:1314
 msgid " Optionen 3 "
 msgstr ""
 
@@ -5501,8 +5489,7 @@ msgstr ""
 #. editmidieventfrm..GroupBox2..Optionen3Box..Arg3Label..Caption
 #. joysticksetupform..GroupBox2..Optionen3Box..Arg3Label..Caption
 #. Tastenabfrage..Panel1..GroupBox2..Optionen3Box..Arg3Label..Caption
-#: befehleditorform2.dfm:457 joysticksetupfrm.dfm:519
-#: Tastenabfragefrm.dfm:1322
+#: befehleditorform2.dfm:457 joysticksetupfrm.dfm:519 Tastenabfragefrm.dfm:1322
 msgid "Arg 3:"
 msgstr ""
 
@@ -5511,8 +5498,7 @@ msgstr ""
 #. editmidieventfrm..GroupBox2..ScaleValue..Caption
 #. joysticksetupform..GroupBox2..ScaleValue..Caption
 #. Tastenabfrage..Panel1..GroupBox2..ScaleValue..Caption
-#: befehleditorform2.dfm:553 joysticksetupfrm.dfm:602
-#: Tastenabfragefrm.dfm:1420
+#: befehleditorform2.dfm:553 joysticksetupfrm.dfm:602 Tastenabfragefrm.dfm:1420
 msgid "Skaliere Wert"
 msgstr ""
 
@@ -5557,9 +5543,9 @@ msgstr ""
 #. textbuchform..PngImageList1......Name
 #. touchscreenform..pnglist......Name
 #. USBViewForm..DeviceIcons......Name
-#: befehleditorform2.dfm:988 dynguifrm.dfm:1954
-#: leistungssteuerungfrm2.dfm:1516 PCDIMMER.dfm:6228 textbuchfrm.dfm:994
-#: touchscreenfrm.dfm:1739 USBViewMain.dfm:522
+#: befehleditorform2.dfm:988 dynguifrm.dfm:1954 leistungssteuerungfrm2.dfm:1516
+#: PCDIMMER.dfm:6228 textbuchfrm.dfm:994 touchscreenfrm.dfm:1739
+#: USBViewMain.dfm:522
 msgid "PngImage0"
 msgstr ""
 
@@ -5586,9 +5572,8 @@ msgstr ""
 #. textbuchform..PngImageList1......Name
 #. touchscreenform..pnglist......Name
 #. USBViewForm..DeviceIcons......Name
-#: befehleditorform2.dfm:1217 leistungssteuerungfrm2.dfm:2010
-#: PCDIMMER.dfm:6574 textbuchfrm.dfm:1492 touchscreenfrm.dfm:2095
-#: USBViewMain.dfm:485
+#: befehleditorform2.dfm:1217 leistungssteuerungfrm2.dfm:2010 PCDIMMER.dfm:6574
+#: textbuchfrm.dfm:1492 touchscreenfrm.dfm:2095 USBViewMain.dfm:485
 msgid "PngImage2"
 msgstr ""
 
@@ -5600,9 +5585,8 @@ msgstr ""
 #. textbuchform..PngImageList1......Name
 #. touchscreenform..pnglist......Name
 #. USBViewForm..DeviceIcons......Name
-#: befehleditorform2.dfm:1337 leistungssteuerungfrm2.dfm:2329
-#: PCDIMMER.dfm:6687 textbuchfrm.dfm:1298 touchscreenfrm.dfm:2297
-#: USBViewMain.dfm:655
+#: befehleditorform2.dfm:1337 leistungssteuerungfrm2.dfm:2329 PCDIMMER.dfm:6687
+#: textbuchfrm.dfm:1298 touchscreenfrm.dfm:2297 USBViewMain.dfm:655
 msgid "PngImage3"
 msgstr ""
 
@@ -6812,8 +6796,8 @@ msgstr ""
 #. codeeditorform..Panel2..Memo2......Lines.Strings
 #: codeeditorfrm.dfm:387
 msgid ""
-"    IntegerVariable:=StrToInt(InputBox"
-"('Überschrift','Hinweistext','Vorgabe'))"
+"    IntegerVariable:"
+"=StrToInt(InputBox('Überschrift','Hinweistext','Vorgabe'))"
 msgstr ""
 
 #. codeeditorform..Panel2..Memo2....Lines.Strings
@@ -7113,8 +7097,7 @@ msgstr ""
 #. insscenedlg..Caption
 #. timecodeplayerform..Panel1..editBtn..Hint
 #. insscenedlg..Caption
-#: cuelistfrm.dfm:1182
-#: plugins/Programmplugins/Alt/Kontrollpanel/insscene.dfm:5
+#: cuelistfrm.dfm:1182 plugins/Programmplugins/Alt/Kontrollpanel/insscene.dfm:5
 msgid "Szene bearbeiten"
 msgstr ""
 
@@ -8556,8 +8539,8 @@ msgstr ""
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..standardfunktionen......Items.Strings
 #: ddfeditorfrm.dfm:3688
 msgid ""
-"if messagedlg('Dies ist ein Abfragefenster',mtConfirmation,[mbYes,mbNo],0)"
-"=mrYes then ;"
+"if messagedlg('Dies ist ein Abfragefenster',mtConfirmation,[mbYes,"
+"mbNo],0)=mrYes then ;"
 msgstr ""
 
 #. ddfeditorform..PageControl1..TabSheet3..Panel2..PngBitBtn8..Caption
@@ -9194,8 +9177,8 @@ msgstr ""
 #. devicesceneform..Treeviewpanel..VST......WideText
 #. editdataineventfrm..GroupBox1..Label3..Caption
 #. Kanal des Befehls hinzufügen
-#: devicechannelselectionfrm.dfm:388 editdatainevent.dfm:62
-#: datainevent.pas:147 devicescenefrm.pas:1157
+#: devicechannelselectionfrm.dfm:388 editdatainevent.dfm:62 datainevent.pas:147
+#: devicescenefrm.pas:1157
 msgid "Wert"
 msgstr ""
 
@@ -10876,8 +10859,7 @@ msgstr ""
 #. effekttimelineform..GroupBox1..Label4..Caption
 #. effekttimelineform..GroupBox1..Label8..Caption
 #. effekttimelineform..GroupBox1..Label19..Caption
-#: effekttimelinefrm.dfm:59 effekttimelinefrm.dfm:115
-#: effekttimelinefrm.dfm:143
+#: effekttimelinefrm.dfm:59 effekttimelinefrm.dfm:115 effekttimelinefrm.dfm:143
 msgid "Zeit:"
 msgstr ""
 
@@ -10885,8 +10867,7 @@ msgstr ""
 #. effekttimelineform..GroupBox1..Label5..Caption
 #. effekttimelineform..GroupBox1..Label11..Caption
 #. effekttimelineform..GroupBox1..Label20..Caption
-#: effekttimelinefrm.dfm:66 effekttimelinefrm.dfm:122
-#: effekttimelinefrm.dfm:150
+#: effekttimelinefrm.dfm:66 effekttimelinefrm.dfm:122 effekttimelinefrm.dfm:150
 msgid "Delay:"
 msgstr ""
 
@@ -15858,8 +15839,7 @@ msgstr ""
 #. midieventfrm..Caption
 #. midieventfrm..Caption
 #. midieventfrm..Caption
-#: midievent.dfm:6
-#: plugins/Programmplugins/Alt/Geraetesteuerung/midievent.dfm:5
+#: midievent.dfm:6 plugins/Programmplugins/Alt/Geraetesteuerung/midievent.dfm:5
 #: plugins/Programmplugins/Alt/Kontrollpanel/midievent.dfm:5
 #: plugins/Programmplugins/Alt/Submaster/midievent.dfm:5
 msgid "MIDI-Control"
@@ -18645,8 +18625,7 @@ msgstr ""
 #. mainform..BitBtn1..Caption
 #. mainform..Panel1..MIDI..Caption
 #. mainform..BitBtn1..Caption
-#: PCDIMMER.dfm:24963
-#: plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:274
+#: PCDIMMER.dfm:24963 plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:274
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:324
 #: plugins/Programmplugins/Alt/Submaster/main.dfm:1490
 msgid "MIDI"
@@ -22821,8 +22800,7 @@ msgstr ""
 #: plugins/Ausgabeplugin/ArtNet/mainfrm.dfm:1465
 #: plugins/Ausgabeplugin/ArtNet/mainfrm.dfm:1484
 #: plugins/Ausgabeplugin/ArtNet/mainfrm.dfm:1503
-#: plugins/Ausgabeplugin/dmx4all/Testprogramm/main.dfm:4157
-#: datainevent.pas:153
+#: plugins/Ausgabeplugin/dmx4all/Testprogramm/main.dfm:4157 datainevent.pas:153
 msgid "Ein"
 msgstr ""
 
@@ -30049,8 +30027,8 @@ msgstr ""
 
 #: addfunctionfrm.pas:154
 msgid ""
-"{IntegerVariable}:=StrToInt(InputBox('Überschrift','Hinweistext',inttostr"
-"(123)));"
+"{IntegerVariable}:=StrToInt(InputBox('Überschrift','Hinweistext',"
+"inttostr(123)));"
 msgstr ""
 
 #: addfunctionfrm.pas:159

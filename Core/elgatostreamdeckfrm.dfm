@@ -14,7 +14,6 @@ object elgatostreamdeckform: Telgatostreamdeckform
   OldCreateOrder = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -31,13 +30,6 @@ object elgatostreamdeckform: Telgatostreamdeckform
     Height = 13
     Caption = 'Helligkeit:'
   end
-  object PaintBox1: TPaintBox
-    Left = 8
-    Top = 88
-    Width = 768
-    Height = 384
-    OnMouseUp = PaintBox1MouseUp
-  end
   object devicelistbox: TListBox
     Left = 8
     Top = 24
@@ -51,7 +43,7 @@ object elgatostreamdeckform: Telgatostreamdeckform
   object brightnessbar: TScrollBar
     Left = 368
     Top = 40
-    Width = 353
+    Width = 409
     Height = 17
     PageSize = 0
     Position = 50
@@ -350,11 +342,33 @@ object elgatostreamdeckform: Telgatostreamdeckform
     TabOrder = 4
     OnMouseUp = selectmodecheckboxMouseUp
   end
+  object Panel1: TPanel
+    Left = 8
+    Top = 88
+    Width = 769
+    Height = 385
+    BevelOuter = bvLowered
+    TabOrder = 5
+    object PaintBox1: TPaintBox
+      Left = 1
+      Top = 1
+      Width = 768
+      Height = 384
+      OnMouseUp = PaintBox1MouseUp
+    end
+  end
   object ElgatoStreamDeckTimer: TTimer
     Enabled = False
-    Interval = 100
+    Interval = 50
     OnTimer = ElgatoStreamDeckTimerTimer
     Left = 272
+    Top = 8
+  end
+  object ElgatoStreamDeckDisplayTimer: TTimer
+    Enabled = False
+    Interval = 250
+    OnTimer = ElgatoStreamDeckDisplayTimerTimer
+    Left = 304
     Top = 8
   end
 end

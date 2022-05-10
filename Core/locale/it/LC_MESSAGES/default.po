@@ -5,21 +5,20 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PC_DIMMER2008\n"
+"Project-Id-Version: PC_DIMMER\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-18 22:46+0200\n"
-"PO-Revision-Date: 2016-09-27 23:05+0100\n"
+"PO-Revision-Date: 2022-05-10 15:00+0200\n"
 "Last-Translator: Christian Nöding <christian@noeding-online.de>\n"
 "Language-Team: Zanotti Stefano <stefano@valdelriso.it>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Basepath: C:\\Programmieren\\Delphi\\230V 512 Kanal PC_DIMMER "
-"Source\n"
+"X-Poedit-Basepath: C:/Programmieren/Delphi/230V 512 Kanal PC_DIMMER Source\n"
 "Language: it_IT\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.8.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-SearchPath-0: C:\\Programmieren\\Delphi\\230V 512 Kanal PC_DIMMER "
+"X-Poedit-SearchPath-0: C:/Programmieren/Delphi/230V 512 Kanal PC_DIMMER "
 "Source\n"
 
 #. Form1..Caption
@@ -1298,8 +1297,7 @@ msgstr "DMX-Stream Decoder"
 #: PC_DIMMER2010_Source/DimmerKernelQueue.dfm:11
 #: PC_DIMMER2010_Source/druckenfrm.dfm:12
 #: PC_DIMMER2010_Source/dxf_previewfrm.dfm:12
-#: PC_DIMMER2010_Source/dynguifrm.dfm:16
-#: PC_DIMMER2010_Source/dynguifrm.dfm:234
+#: PC_DIMMER2010_Source/dynguifrm.dfm:16 PC_DIMMER2010_Source/dynguifrm.dfm:234
 #: PC_DIMMER2010_Source/dynguifrm.dfm:249
 #: PC_DIMMER2010_Source/dynguifrm.dfm:351
 #: PC_DIMMER2010_Source/dynguifrm.dfm:366
@@ -1391,8 +1389,7 @@ msgstr "DMX-Stream Decoder"
 #: PC_DIMMER2010_Source/matrixeditorfrm.dfm:285
 #: PC_DIMMER2010_Source/matrixeditorfrm.dfm:290
 #: PC_DIMMER2010_Source/mediacenterfrm.dfm:13
-#: PC_DIMMER2010_Source/midievent.dfm:11
-#: PC_DIMMER2010_Source/midievent.dfm:204
+#: PC_DIMMER2010_Source/midievent.dfm:11 PC_DIMMER2010_Source/midievent.dfm:204
 #: PC_DIMMER2010_Source/midievent.dfm:217
 #: PC_DIMMER2010_Source/midievent.dfm:230
 #: PC_DIMMER2010_Source/midievent.dfm:243
@@ -1420,8 +1417,7 @@ msgstr "DMX-Stream Decoder"
 #: PC_DIMMER2010_Source/PCDIMMER.dfm:2366
 #: PC_DIMMER2010_Source/PCDIMMER.dfm:2371
 #: PC_DIMMER2010_Source/PCDIMMER.dfm:2376
-#: PC_DIMMER2010_Source/picturechangefrm.dfm:11
-#: PC_DIMMER2010_Source/pmm.dfm:13
+#: PC_DIMMER2010_Source/picturechangefrm.dfm:11 PC_DIMMER2010_Source/pmm.dfm:13
 #: PC_DIMMER2010_Source/preseteditorform.dfm:12
 #: PC_DIMMER2010_Source/preseteditorform.dfm:192
 #: PC_DIMMER2010_Source/preseteditorform.dfm:207
@@ -1439,8 +1435,7 @@ msgstr "DMX-Stream Decoder"
 #: PC_DIMMER2010_Source/projektverwaltungfrm.dfm:37
 #: PC_DIMMER2010_Source/projektverwaltungfrm.dfm:60
 #: PC_DIMMER2010_Source/projektverwaltungfrm.dfm:102
-#: PC_DIMMER2010_Source/protocol.dfm:12
-#: PC_DIMMER2010_Source/recoveryfrm.dfm:12
+#: PC_DIMMER2010_Source/protocol.dfm:12 PC_DIMMER2010_Source/recoveryfrm.dfm:12
 #: PC_DIMMER2010_Source/recoveryfrm.dfm:51
 #: PC_DIMMER2010_Source/recoveryfrm.dfm:66
 #: PC_DIMMER2010_Source/recoveryfrm.dfm:81
@@ -2764,8 +2759,7 @@ msgstr "c:\\DemoA.dmxs"
 #. grafischebuehnenansicht..PopupMenu1..ffnen1..Caption
 #: DMXStream/DMXS_Transcode/dmxstranscode.dfm:38
 #: DMXStream/DMXS_Transcode/dmxstranscode.dfm:63
-#: PC_DIMMER2010_Source/buehnenansicht.dfm:2922
-#: PC_DIMMER2010_Source/Pat.dfm:67
+#: PC_DIMMER2010_Source/buehnenansicht.dfm:2922 PC_DIMMER2010_Source/Pat.dfm:67
 #: PC_DIMMER2010_Source/projektverwaltungfrm.dfm:536
 #: PC_DIMMER2010_Source/textbuchfrm.dfm:192
 #: PC_DIMMER2010_Source/plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2657
@@ -3006,15 +3000,13 @@ msgstr "Ambilight-Setup"
 
 #. ambilightform..GroupBox1..Caption
 #. ambilightform..GroupBox1..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1193
-#: PC_DIMMER2010_Source/ambilight.dfm:164
+#: PC_DIMMER2010_Ambilight/main.dfm:1193 PC_DIMMER2010_Source/ambilight.dfm:164
 msgid " Erkennungseinstellungen "
 msgstr " Capturesettings "
 
 #. ambilightform..GroupBox1..Label8..Caption
 #. ambilightform..GroupBox1..Label8..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1200
-#: PC_DIMMER2010_Source/ambilight.dfm:171
+#: PC_DIMMER2010_Ambilight/main.dfm:1200 PC_DIMMER2010_Source/ambilight.dfm:171
 msgid "Blenddämpfungsfaktor:"
 msgstr "Blenddampingfactor:"
 
@@ -3084,8 +3076,7 @@ msgstr "ms"
 
 #. ambilightform..GroupBox1..Label19..Caption
 #. ambilightform..GroupBox1..Label19..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1235
-#: PC_DIMMER2010_Source/ambilight.dfm:185
+#: PC_DIMMER2010_Ambilight/main.dfm:1235 PC_DIMMER2010_Source/ambilight.dfm:185
 msgid "Maximale Sättigung:"
 msgstr "Saturazione massima"
 
@@ -3112,31 +3103,27 @@ msgstr "%"
 
 #. ambilightform..GroupBox1..AutoSaturationCheck..Caption
 #. ambilightform..GroupBox1..AutoSaturationCheck..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1249
-#: PC_DIMMER2010_Source/ambilight.dfm:206
+#: PC_DIMMER2010_Ambilight/main.dfm:1249 PC_DIMMER2010_Source/ambilight.dfm:206
 msgid "Automatische Sättigung"
 msgstr "Auto-Saturazione"
 
 #. ambilightform..GroupBox1..fadingcheck..Caption
 #. ambilightform..GroupBox1..fadingcheck..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1260
-#: PC_DIMMER2010_Source/ambilight.dfm:217
+#: PC_DIMMER2010_Ambilight/main.dfm:1260 PC_DIMMER2010_Source/ambilight.dfm:217
 msgid "Weiche Übergänge"
 msgstr "Smooth transitions"
 
 #. ambilightform..GroupBox2..Caption
 #. ambilightform..GroupBox2..Caption
 #. audioszeneneditor..GroupBox3..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1314
-#: PC_DIMMER2010_Source/ambilight.dfm:249
+#: PC_DIMMER2010_Ambilight/main.dfm:1314 PC_DIMMER2010_Source/ambilight.dfm:249
 #: PC_DIMMER2010_Source/audioszeneeditorform.dfm:1900
 msgid " Vorschau "
 msgstr " Preview "
 
 #. ambilightform..GroupBox3..Caption
 #. ambilightform..GroupBox3..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1608
-#: PC_DIMMER2010_Source/ambilight.dfm:543
+#: PC_DIMMER2010_Ambilight/main.dfm:1608 PC_DIMMER2010_Source/ambilight.dfm:543
 msgid " Farbkorrektur "
 msgstr "Correzione colore"
 
@@ -3145,8 +3132,8 @@ msgstr "Correzione colore"
 #. pmmform..GroupBox3..redcheck..Caption
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
 #. Standard-Autoszenen erstellen
-#: PC_DIMMER2010_Ambilight/main.dfm:1617
-#: PC_DIMMER2010_Source/ambilight.dfm:552 PC_DIMMER2010_Source/pmm.dfm:1768
+#: PC_DIMMER2010_Ambilight/main.dfm:1617 PC_DIMMER2010_Source/ambilight.dfm:552
+#: PC_DIMMER2010_Source/pmm.dfm:1768
 #: PC_DIMMER2010_Source/plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:582
 #: PC_DIMMER2010_Source/PCDIMMER.PAS:4012
 msgid "Rot"
@@ -3156,8 +3143,8 @@ msgstr "Rosso"
 #. ambilightform..GroupBox3..Label2..Caption
 #. pmmform..GroupBox3..greencheck..Caption
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
-#: PC_DIMMER2010_Ambilight/main.dfm:1626
-#: PC_DIMMER2010_Source/ambilight.dfm:561 PC_DIMMER2010_Source/pmm.dfm:1778
+#: PC_DIMMER2010_Ambilight/main.dfm:1626 PC_DIMMER2010_Source/ambilight.dfm:561
+#: PC_DIMMER2010_Source/pmm.dfm:1778
 #: PC_DIMMER2010_Source/plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:585
 #: PC_DIMMER2010_Source/PCDIMMER.PAS:4022
 msgid "Grün"
@@ -3168,8 +3155,7 @@ msgstr "Verde"
 #. MainForm..dxBarManager1..BlueRibbonBtn..Caption
 #. pmmform..GroupBox3..bluecheck..Caption
 #. mainform..GroupBox3..DevSettings....ColorList....Items.Strings
-#: PC_DIMMER2010_Ambilight/main.dfm:1635
-#: PC_DIMMER2010_Source/ambilight.dfm:570
+#: PC_DIMMER2010_Ambilight/main.dfm:1635 PC_DIMMER2010_Source/ambilight.dfm:570
 #: PC_DIMMER2010_Source/PCDIMMER.dfm:29452 PC_DIMMER2010_Source/pmm.dfm:1786
 #: PC_DIMMER2010_Source/plugins/Programmplugins/Alt/Geraetesteuerung/main.dfm:587
 #: PC_DIMMER2010_Source/PCDIMMER.PAS:4032
@@ -3178,22 +3164,19 @@ msgstr "Blu"
 
 #. ambilightform..GroupBox3..Label4..Caption
 #. ambilightform..GroupBox3..Label4..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1644
-#: PC_DIMMER2010_Source/ambilight.dfm:579
+#: PC_DIMMER2010_Ambilight/main.dfm:1644 PC_DIMMER2010_Source/ambilight.dfm:579
 msgid "Hell."
 msgstr "Hue"
 
 #. ambilightform..GroupBox3..Label5..Caption
 #. ambilightform..GroupBox3..Label5..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1653
-#: PC_DIMMER2010_Source/ambilight.dfm:588
+#: PC_DIMMER2010_Ambilight/main.dfm:1653 PC_DIMMER2010_Source/ambilight.dfm:588
 msgid "Sätt."
 msgstr "Sat."
 
 #. ambilightform..GroupBox3..Label6..Caption
 #. ambilightform..GroupBox3..Label6..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1663
-#: PC_DIMMER2010_Source/ambilight.dfm:598
+#: PC_DIMMER2010_Ambilight/main.dfm:1663 PC_DIMMER2010_Source/ambilight.dfm:598
 msgid "Lum."
 msgstr "Lum."
 
@@ -3270,22 +3253,19 @@ msgstr "Reset Sliders"
 
 #. ambilightform..GroupBox4..Caption
 #. ambilightform..GroupBox4..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1810
-#: PC_DIMMER2010_Source/ambilight.dfm:736
+#: PC_DIMMER2010_Ambilight/main.dfm:1810 PC_DIMMER2010_Source/ambilight.dfm:736
 msgid " Positionseinstellungen und Korrekturen "
 msgstr " Settings for Position and Corrections "
 
 #. ambilightform..GroupBox4..Label7..Caption
 #. ambilightform..GroupBox4..Label7..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1819
-#: PC_DIMMER2010_Source/ambilight.dfm:745
+#: PC_DIMMER2010_Ambilight/main.dfm:1819 PC_DIMMER2010_Source/ambilight.dfm:745
 msgid "Genereller Pixelabstand vom Monitorrand:"
 msgstr "General distance to monitor-border:"
 
 #. ambilightform..GroupBox4..Label9..Caption
 #. ambilightform..GroupBox4..Label9..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1826
-#: PC_DIMMER2010_Source/ambilight.dfm:752
+#: PC_DIMMER2010_Ambilight/main.dfm:1826 PC_DIMMER2010_Source/ambilight.dfm:752
 msgid "Pixel jeweils links/rechts bzw. oben/unten"
 msgstr "Pixel to left/right or top/bottom"
 
@@ -3301,22 +3281,19 @@ msgstr "px"
 
 #. ambilightform..GroupBox4..Label10..Caption
 #. ambilightform..GroupBox4..Label10..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1849
-#: PC_DIMMER2010_Source/ambilight.dfm:775
+#: PC_DIMMER2010_Ambilight/main.dfm:1849 PC_DIMMER2010_Source/ambilight.dfm:775
 msgid "Erkennungsbereichsbreite:"
 msgstr "Capturewidth:"
 
 #. ambilightform..GroupBox4..compensate43..Caption
 #. ambilightform..GroupBox4..compensate43..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1856
-#: PC_DIMMER2010_Source/ambilight.dfm:782
+#: PC_DIMMER2010_Ambilight/main.dfm:1856 PC_DIMMER2010_Source/ambilight.dfm:782
 msgid "4:3 Balken auf 16:9 Monitoren kompensieren"
 msgstr "Remove 4:3 bars on 16:9 monitors"
 
 #. ambilightform..GroupBox4..compensate169..Caption
 #. ambilightform..GroupBox4..compensate169..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1882
-#: PC_DIMMER2010_Source/ambilight.dfm:808
+#: PC_DIMMER2010_Ambilight/main.dfm:1882 PC_DIMMER2010_Source/ambilight.dfm:808
 msgid "16:9 Balken auf 4:3 Monitoren kompensieren"
 msgstr "Remove 16:9 bars on 4:3 monitors"
 
@@ -3458,8 +3435,7 @@ msgstr "Further infos at http://www.pcdimmer.de"
 
 #. ambilightform..GroupBox6..Caption
 #. ambilightform..GroupBox6..Caption
-#: PC_DIMMER2010_Ambilight/main.dfm:1973
-#: PC_DIMMER2010_Source/ambilight.dfm:827
+#: PC_DIMMER2010_Ambilight/main.dfm:1973 PC_DIMMER2010_Source/ambilight.dfm:827
 msgid " Positionierung auf Monitor "
 msgstr "Posizione del monitor"
 
@@ -5028,8 +5004,8 @@ msgstr ""
 #: PC_DIMMER2010_DDFEditor/ddfeditorfrm.dfm:3291
 #: PC_DIMMER2010_Source/ddfeditorfrm.dfm:3688
 msgid ""
-"if messagedlg('Dies ist ein Abfragefenster',mtConfirmation,[mbYes,mbNo],0)"
-"=mrYes then ;"
+"if messagedlg('Dies ist ein Abfragefenster',mtConfirmation,[mbYes,"
+"mbNo],0)=mrYes then ;"
 msgstr ""
 "if messagedlg('This is a Yes/No window',mtConfirmation,[mbYes,mbNo],0)=mrYes "
 "then ;"
@@ -6492,8 +6468,7 @@ msgstr "128x128 Pixel"
 #: PC_DIMMER2010_Source/editskript.dfm:256
 #: PC_DIMMER2010_Source/exceptionfrm.dfm:89
 #: PC_DIMMER2010_Source/figureneditor.dfm:294 PC_DIMMER2010_Source/gpl.dfm:807
-#: PC_DIMMER2010_Source/importfrm.dfm:201
-#: PC_DIMMER2010_Source/insscene.dfm:275
+#: PC_DIMMER2010_Source/importfrm.dfm:201 PC_DIMMER2010_Source/insscene.dfm:275
 #: PC_DIMMER2010_Source/joysticksetupfrm.dfm:157
 #: PC_DIMMER2010_Source/kompositionsszeneeditorform.dfm:876
 #: PC_DIMMER2010_Source/lauflichtassistentownpatternfrm.dfm:331
@@ -6775,8 +6750,7 @@ msgstr "OK"
 #: PC_DIMMER2010_Source/editdatainevent.dfm:172
 #: PC_DIMMER2010_Source/editmidievent.dfm:287
 #: PC_DIMMER2010_Source/geraeteremovedfrm.dfm:100
-#: PC_DIMMER2010_Source/importfrm.dfm:210
-#: PC_DIMMER2010_Source/insscene.dfm:286
+#: PC_DIMMER2010_Source/importfrm.dfm:210 PC_DIMMER2010_Source/insscene.dfm:286
 #: PC_DIMMER2010_Source/kompositionsszeneeditorform.dfm:867
 #: PC_DIMMER2010_Source/lauflichtassistentfrm.dfm:1752
 #: PC_DIMMER2010_Source/layerbezeichnungenfrm.dfm:136
@@ -7005,8 +6979,7 @@ msgstr "Cambia Immagine dispositivo"
 #: PC_DIMMER2010_Source/firststepsfrm.dfm:7526
 #: PC_DIMMER2010_Source/firststepsfrm.dfm:8721
 #: PC_DIMMER2010_Source/geraeteremovedfrm.dfm:441
-#: PC_DIMMER2010_Source/importfrm.dfm:156
-#: PC_DIMMER2010_Source/insscene.dfm:778
+#: PC_DIMMER2010_Source/importfrm.dfm:156 PC_DIMMER2010_Source/insscene.dfm:778
 #: PC_DIMMER2010_Source/joystickfrm.dfm:864
 #: PC_DIMMER2010_Source/kompositionsszeneeditorform.dfm:825
 #: PC_DIMMER2010_Source/lauflichtassistentfrm.dfm:265
@@ -7849,8 +7822,7 @@ msgstr "255.255.255.255"
 
 #. Form1..Caption
 #. Form1..Label13..Caption
-#: PC_DIMMER2010_Plugintester/main.dfm:5
-#: PC_DIMMER2010_Plugintester/main.dfm:62
+#: PC_DIMMER2010_Plugintester/main.dfm:5 PC_DIMMER2010_Plugintester/main.dfm:62
 msgid "PC_DIMMER2012 Plugintester"
 msgstr "PC_DIMMER2012 Plugintester"
 
@@ -8826,8 +8798,7 @@ msgstr "Software"
 #. OptionenBox..Notebook1....Caption
 #. OptionenBox..Panel7..optionlabel2..Caption
 #: PC_DIMMER2010_SoftScanner_Source/AdSetupDlg.dfm:4663
-#: PC_DIMMER2010_Source/Optionen.dfm:302
-#: PC_DIMMER2010_Source/Optionen.dfm:1543
+#: PC_DIMMER2010_Source/Optionen.dfm:302 PC_DIMMER2010_Source/Optionen.dfm:1543
 msgid "Hardware"
 msgstr "Hardware:"
 
@@ -13670,11 +13641,11 @@ msgstr "// Eingabe von Werten:"
 #. codeeditorform..Panel2..Memo2......Lines.Strings
 #: PC_DIMMER2010_Source/codeeditorfrm.dfm:387
 msgid ""
-"    IntegerVariable:=StrToInt(InputBox"
-"('Überschrift','Hinweistext','Vorgabe'))"
+"    IntegerVariable:"
+"=StrToInt(InputBox('Überschrift','Hinweistext','Vorgabe'))"
 msgstr ""
-"    IntegerVariable:=StrToInt(InputBox"
-"('Überschrift','Hinweistext','Vorgabe'))"
+"    IntegerVariable:"
+"=StrToInt(InputBox('Überschrift','Hinweistext','Vorgabe'))"
 
 #. codeeditorform..Panel2..Memo2....Lines.Strings
 #: PC_DIMMER2010_Source/codeeditorfrm.dfm:389
@@ -13827,8 +13798,7 @@ msgstr "Linea di comando"
 
 #. commandform..Edit1..Text
 #. MainForm..dxRibbonStatusBar1..dxRibbonStatusBar1Container3..commandedit..Text
-#: PC_DIMMER2010_Source/commandfrm.dfm:44
-#: PC_DIMMER2010_Source/PCDIMMER.dfm:377
+#: PC_DIMMER2010_Source/commandfrm.dfm:44 PC_DIMMER2010_Source/PCDIMMER.dfm:377
 msgid "Kommando hier eingeben..."
 msgstr "Inserisci comando qui..."
 
@@ -13950,8 +13920,7 @@ msgstr "Aggiungi scena alla fine..."
 #. insscenedlg..Caption
 #. timecodeplayerform..Panel1..editBtn..Hint
 #. insscenedlg..Caption
-#: PC_DIMMER2010_Source/cuelistfrm.dfm:1182
-#: PC_DIMMER2010_Source/insscene.dfm:5
+#: PC_DIMMER2010_Source/cuelistfrm.dfm:1182 PC_DIMMER2010_Source/insscene.dfm:5
 #: PC_DIMMER2010_Source/timecodeplayerfrm.dfm:215
 #: PC_DIMMER2010_Source/plugins/Programmplugins/Alt/Kontrollpanel/insscene.dfm:5
 msgid "Szene bearbeiten"
@@ -15431,8 +15400,7 @@ msgstr "Redraw display"
 #. dynguiform..Caption
 #. MainForm..dxBarManager1..dxBarLargeButton5..Caption
 #. MainForm..dxBarManager1..dxBarLargeButton5..Hint
-#: PC_DIMMER2010_Source/dynguifrm.dfm:9
-#: PC_DIMMER2010_Source/PCDIMMER.dfm:32690
+#: PC_DIMMER2010_Source/dynguifrm.dfm:9 PC_DIMMER2010_Source/PCDIMMER.dfm:32690
 #: PC_DIMMER2010_Source/PCDIMMER.dfm:32692
 msgid "Dynamische Oberfläche"
 msgstr "Dynamic User Interface"
@@ -21481,8 +21449,7 @@ msgstr "*"
 
 #. masterform..Caption
 #. MainForm..dxBarManager1..MasterRibbonBtn..Caption
-#: PC_DIMMER2010_Source/masterfrm.dfm:6
-#: PC_DIMMER2010_Source/PCDIMMER.dfm:27874
+#: PC_DIMMER2010_Source/masterfrm.dfm:6 PC_DIMMER2010_Source/PCDIMMER.dfm:27874
 msgid "Master"
 msgstr "Master"
 
@@ -22101,8 +22068,7 @@ msgstr "Load ignored plugins on startup"
 
 #. OptionenBox..Notebook1....Caption
 #. OptionenBox..Panel7..optionlabel1..Caption
-#: PC_DIMMER2010_Source/Optionen.dfm:254
-#: PC_DIMMER2010_Source/Optionen.dfm:1633
+#: PC_DIMMER2010_Source/Optionen.dfm:254 PC_DIMMER2010_Source/Optionen.dfm:1633
 msgid "Startup"
 msgstr "Avvio"
 
@@ -22233,8 +22199,7 @@ msgstr "1ms=best quality, 50ms=best performance"
 
 #. OptionenBox..Notebook1....Caption
 #. OptionenBox..Panel7..optionlabel3..Caption
-#: PC_DIMMER2010_Source/Optionen.dfm:592
-#: PC_DIMMER2010_Source/Optionen.dfm:1555
+#: PC_DIMMER2010_Source/Optionen.dfm:592 PC_DIMMER2010_Source/Optionen.dfm:1555
 msgid "Allgemein"
 msgstr "Generale"
 
@@ -22615,8 +22580,7 @@ msgstr "Suono"
 #. OptionenBox..Panel7..optionlabel5..Caption
 #. MainForm..dxRibbon1..SonstigesRibbonTab..Caption
 #. MainForm..dxBarManager1..SonstigesRibbonGroup..Caption
-#: PC_DIMMER2010_Source/Optionen.dfm:1585
-#: PC_DIMMER2010_Source/PCDIMMER.dfm:264
+#: PC_DIMMER2010_Source/Optionen.dfm:1585 PC_DIMMER2010_Source/PCDIMMER.dfm:264
 #: PC_DIMMER2010_Source/PCDIMMER.dfm:18348
 msgid "Sonstiges"
 msgstr "Altro"
@@ -22631,8 +22595,7 @@ msgstr "Errore"
 #. OptionenBox..Panel7..optionlabel0..Caption
 #. MainForm..dxRibbon1..PluginRibbonTab..Caption
 #. MainForm..dxBarManager1..PluginsRibbonGroup..Caption
-#: PC_DIMMER2010_Source/Optionen.dfm:1645
-#: PC_DIMMER2010_Source/PCDIMMER.dfm:238
+#: PC_DIMMER2010_Source/Optionen.dfm:1645 PC_DIMMER2010_Source/PCDIMMER.dfm:238
 #: PC_DIMMER2010_Source/PCDIMMER.dfm:17882
 msgid "Plugins"
 msgstr "Plugins"
@@ -25497,8 +25460,7 @@ msgid "Keine dunklen Scheinwerfer erlauben"
 msgstr "Do not create black devices"
 
 #. pmmform..GroupBox3..usergbcheck..Caption
-#: PC_DIMMER2010_Source/pmm.dfm:1874
-#: PC_DIMMER2010_Source/devicelistfrm.pas:119
+#: PC_DIMMER2010_Source/pmm.dfm:1874 PC_DIMMER2010_Source/devicelistfrm.pas:119
 #: PC_DIMMER2010_Source/PCDIMMER.PAS:25885
 msgid "RGB"
 msgstr "RGB"

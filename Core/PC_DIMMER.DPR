@@ -180,7 +180,7 @@ begin
 }
   begin
     Application.CreateForm(Tmainform, mainform);
-  if showtext then mainform.SplashAddText(_('Erstelle Projektverwaltung')); mainform.RefreshSplashText;
+    if showtext then mainform.SplashAddText(_('Erstelle Projektverwaltung')); mainform.RefreshSplashText;
     Application.CreateForm(Tprojektverwaltung, projektverwaltung);
     if showtext then mainform.SplashAddText(_('Erstelle Beattool')); mainform.RefreshSplashText;
     Application.CreateForm(Tbeatform, beatform);

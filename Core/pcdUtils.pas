@@ -138,9 +138,15 @@ begin
 
   	  // MajorVersion = 7, 8 and 9 will not be released
 
-      if (OsVinfo.dwMajorVersion >=10) then
+      if (OsVinfo.dwMajorVersion = 10) then
       begin
-		    // Windows 10.0 will have MajorVersion = 10 and MinorVersion = x
+		    // Windows 10 and 11 will have MajorVersion = 10 and MinorVersion = 0
+        tempstring:='Windows 10/11';
+      end;
+
+      if (OsVinfo.dwMajorVersion >=11) then
+      begin
+		    // Windows 1x will have MajorVersion = 1x and MinorVersion = x
         tempstring:='Windows '+inttostr(OsVinfo.dwMajorVersion)+'.'+inttostr(OsVinfo.dwMinorVersion) + ' Build '+inttostr(OsVInfo.dwBuildNumber)
       end;
     end;

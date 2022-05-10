@@ -286,7 +286,7 @@
   	  28: TBItem13Click(nil); // Audioeffektplayer
   	  29: Leistungssteuerung1Click(nil); // Leistungssteuerung
   	  30: Gertesteuerung2Click(nil); // Gerätesteuerung
-  	  31: Bhnenansicht1Click(nil); // BÃ¼hnenansicht
+  	  31: Bühnenansicht1Click(nil); // Bühnenansicht
   	  32: Submaster1Click(nil); // Submaster
   	  33: Joysticksteuerung1Click(nil); // Joysticksteuerung
   	  34: ResetWindowPositionsClick(nil); // Fensterpositionen resetten
@@ -524,7 +524,7 @@
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[5].Steuerung[4].GUID) then
   begin // Bestimmtes Gerät auf Eingangswert
-    Text_Function:=_('Bühnenansichtgerät');
+    Text_Function:=mainform.Devices[geraetesteuerung.GetDevicePositionInDeviceArray(@AktuellerBefehl.ArgGUID[0])].Name;//_('Gerätegruppe');
     Text_Value:=DeviceChannelNames[AktuellerBefehl.ArgInteger[0]]+'@'+_('Wert');
     Value:=geraetesteuerung.get_channel(AktuellerBefehl.ArgGUID[0],DeviceChannelNames[AktuellerBefehl.ArgInteger[0]]);
     exit;

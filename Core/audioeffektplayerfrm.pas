@@ -1084,7 +1084,7 @@ begin
         for j:=1 to maxaudioeffektlayers do
         begin
       	  mainform.effektaudio_record[audioeffektfilenamebox.Items.Count-1].effektaudiodatei.layername[j]:='Layer '+inttostr(j);
-          LayerCombobox.Checked[j]:=true;
+          LayerCombobox.Checked[j-1]:=true;
 //          LayerCombobox.ItemEnabled[i]:=true;
           activelayer[j-1]:=true;
         end;
@@ -6898,8 +6898,9 @@ begin
     // Open file for bpm decoding detection
     hBPM := BASS_StreamCreateFile(FALSE, PChar(effektaudioeffektefilename), 0, 0, BASS_STREAM_DECODE);
   end;
-
-  orgBPM := BASS_FX_BPM_DecodeGet(hBPM, startSec, endSec, 0, BASS_FX_BPM_BKGRND Or BASS_FX_BPM_MULT2 Or BASS_FX_FREESOURCE, @GetBPM_Process);
+                                                                                                                                                   
+  orgBPM := BASS_FX_BPM_DecodeGet(hBPM, startSec, endSec, 0, BASS_FX_BPM_BKGRND Or BASS_FX_BPM_MULT2 Or BASS_FX_FREESOURCE, nil, @GetBPM_Process);
+          //BASS_FX_BPM_DecodeGet(hBPM, startSec, endSec, 0, BASS_FX_BPM_BKGRND Or BASS_FX_BPM_MULT2 Or BASS_FX_FREESOURCE, proc: BPMPROGRESSPROC; user: Pointer): Single;
 
   // don't bother to update the BPM view if it's zero
   bpmview.Caption := FormatFloat('###.##', GetNewBPM(hBPM))+' BPM';
@@ -6995,7 +6996,7 @@ begin
     bpmrefreshperiod:=10;
 
   if (chkBPMCallback.Checked) then
-    BASS_FX_BPM_CallbackSet(_chan[0], @GetBPM_Callback, bpmrefreshperiod, 0, BASS_FX_BPM_MULT2, 0)
+    BASS_FX_BPM_CallbackSet(_chan[0], @GetBPM_Callback, bpmrefreshperiod, 0, BASS_FX_BPM_MULT2, nil)
   else
     BASS_FX_BPM_Free(_chan[0]);
 

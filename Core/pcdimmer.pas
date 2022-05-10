@@ -573,6 +573,7 @@ type
     Label15: TLabel;
     dxBarLargeButton9: TdxBarLargeButton;
     dxBarLargeButton10: TdxBarLargeButton;
+    RibbonButtonPNGList: TPngImageList;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -2335,7 +2336,7 @@ begin
 
 // Audioplayer vorbereiten
 //  inttohex(BASS_GetVersion,8); //0x02040101
-  DebugAdd('Bass.dll in Version '+inttostr(strtoint(copy(inttohex(BASS_GetVersion,8),0,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_GetVersion,8),3,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_GetVersion,8),5,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_GetVersion,8),7,2)))+' found (minimum version: '+inttostr(strtoint(copy(inttohex(BASSVERSION,4),0,2)))+'.'+inttostr(strtoint(copy(inttohex(BASSVERSION,4),3,2)))+').');
+  DebugAdd('Bass.dll in Version '+copy(inttohex(BASS_GetVersion,8),0,2)+'.'+copy(inttohex(BASS_GetVersion,8),3,2)+'.'+copy(inttohex(BASS_GetVersion,8),5,2)+'.'+inttostr(strtoint(copy(inttohex(BASS_GetVersion,8),7,2)))+' found (minimum version: '+inttostr(strtoint(copy(inttohex(BASSVERSION,4),0,2)))+'.'+copy(inttohex(BASSVERSION,4),3,2)+').');
 
 	if (HIWORD(BASS_GetVersion) < BASSVERSION) then
 	begin
@@ -2346,9 +2347,9 @@ begin
   begin
     DebugAddToLine(' - OK');
   end;
-  DebugAdd('Bassfx.dll in Version '+inttostr(strtoint(copy(inttohex(BASS_FX_GetVersion,8),0,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_FX_GetVersion,8),3,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_FX_GetVersion,8),5,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_FX_GetVersion,8),7,2)))+' found.', false);
+  DebugAdd('Bassfx.dll in Version '+copy(inttohex(BASS_FX_GetVersion,8),0,2)+'.'+copy(inttohex(BASS_FX_GetVersion,8),3,2)+'.'+copy(inttohex(BASS_FX_GetVersion,8),5,2)+'.'+copy(inttohex(BASS_FX_GetVersion,8),7,2)+' found.', false);
  	DebugAddToLine(' - OK', false);
-  DebugAdd('Bassmix.dll in Version '+inttostr(strtoint(copy(inttohex(BASS_Mixer_GetVersion,8),0,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_Mixer_GetVersion,8),3,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_Mixer_GetVersion,8),5,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_Mixer_GetVersion,8),7,2)))+' found.', false);
+  DebugAdd('Bassmix.dll in Version '+copy(inttohex(BASS_Mixer_GetVersion,8),0,2)+'.'+copy(inttohex(BASS_Mixer_GetVersion,8),3,2)+'.'+copy(inttohex(BASS_Mixer_GetVersion,8),5,2)+'.'+copy(inttohex(BASS_Mixer_GetVersion,8),7,2)+' found.', false);
  	DebugAddToLine(' - OK', false);
   DebugAdd('Initializing BASS-System...');
 
@@ -3519,6 +3520,8 @@ begin
   MidiCallbackTimer.Enabled:=false;
   MainformScreenRefreshTimer.Enabled:=false;
   leistungssteuerungform2.Timer2.enabled:=false;
+  ElgatoStreamDeckForm.ElgatoStreamDeckTimer.Enabled:=true;
+  ElgatoStreamDeckForm.ElgatoStreamDeckDisplayTimer.Enabled:=true;
 
   DebugAddToLine(' - OK', false);
   DebugAdd('SHUTDOWN: Sending Close-Message...');
@@ -12763,6 +12766,8 @@ var
   ergebnisse:Variant;
   Wnd: hWnd;
   P: TdxPNGImage;
+  lpng: TdxPNGImage;
+  PngStream: TStream;
 
   // Funktionen für Bild-Laden aus Plugins
   DLLGetResourceData:function(const ResName: PChar; Buffer: Pointer; var Length: Integer):boolean;stdcall;
@@ -12783,6 +12788,32 @@ begin
   // Konstanten für Ribbon setzen, damit Ribbons nicht bei Doppelklick verschwinden
   dxribbon.dxRibbonOwnerMinimalWidth:=0;
   dxribbon.dxRibbonOwnerMinimalHeight:=0;
+
+
+  // PNG-Workaround for Delphi 7: put PNG-images to dxBarLargeButton from PNGList
+  PNGStream:=TMemoryStream.Create;
+  lpng:=TdxPNGImage.Create;
+  dxBarLargeButton9.HotGlyph.PixelFormat:=pf32bit;
+  dxBarLargeButton9.HotGlyph.TransparentMode:=tmFixed;
+  RibbonButtonPNGList.PngImages.Items[0].PngImage.SaveToStream(PNGStream);
+  PNGStream.Position:=0;
+  lpng.LoadFromStream(PNGStream);
+  dxBarLargeButton9.HotGlyph.Assign(lpng);
+  lpng.Free;
+  PNGStream.Free;
+
+  PNGStream:=TMemoryStream.Create;
+  lpng:=TdxPNGImage.Create;
+  dxBarLargeButton10.HotGlyph.PixelFormat:=pf32bit;
+  dxBarLargeButton10.HotGlyph.TransparentMode:=tmFixed;
+  RibbonButtonPNGList.PngImages.Items[1].PngImage.SaveToStream(PNGStream);
+  PNGStream.Position:=0;
+  lpng.LoadFromStream(PNGStream);
+  dxBarLargeButton10.HotGlyph.Assign(lpng);
+  lpng.Free;
+  PNGStream.Free;
+
+  // End of PNG-Workaround
 
   ///////////////////////////////
   // PLUGINS AKTIVIEREN
@@ -13561,6 +13592,7 @@ begin
   grafischebuehnenansicht.dorefresh:=true;
   MainformScreenRefreshTimer.Enabled:=true;
   ElgatoStreamDeckForm.ElgatoStreamDeckTimer.Enabled:=true;
+  ElgatoStreamDeckForm.ElgatoStreamDeckDisplayTimer.Enabled:=true;
 
   SplashProgress(1, 96, 100);
   SplashCaptioninfo(_('Abschließende Arbeiten'));
@@ -27969,12 +28001,15 @@ var
   Buffer: array of byte;
   i,b, DeviceIndex:integer;
   CurrentButtonMode:byte;
+  AtLeastOneButtonPressed:boolean;
 begin
   if HidDev.Attributes.VendorID=$0FD9 then
   begin
     // it is a product of Elgato (we should not be connected to other devices)
     setlength(Buffer, Size);
     Move(Data^, Pointer(Buffer)^, Size);
+
+    AtLeastOneButtonPressed:=false;
 
     // search for this product serial in array
     for i:=0 to length(ElgatoStreamDeckArray)-1 do
@@ -27995,6 +28030,7 @@ begin
           begin
             // button pressed
             ElgatoStreamDeckArray[i].Buttons[b].Pressed:=true;
+            AtLeastOneButtonPressed:=true;
 
             if (b=(ElgatoStreamDeckArray[i].ButtonCount-1)) and (mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton) then
             begin
@@ -28095,6 +28131,14 @@ begin
 
         break;
       end;
+    end;
+
+    if AtLeastOneButtonPressed then
+    begin
+      elgatostreamdeckform.ElgatoStreamDeckDisplayTimer.Interval:=100;
+    end else
+    begin
+      elgatostreamdeckform.ElgatoStreamDeckDisplayTimer.Interval:=250;
     end;
   end;
 end;
