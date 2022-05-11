@@ -220,14 +220,15 @@ type
     Puffer1, Puffer2:TBitmap;
     startingup:boolean;
 
+    CurrentMousePositionX, CurrentMousePositionY:integer;
+    CurrentMouseMoveShiftState:TShiftState;
+    HandleMouseMove:boolean;
+
     LastDevice, LastBuehnenansichtdevice:integer;
     Counter:integer;
     oldvalues:array[1..8192] of byte;
     SelectedIcons:array of TSelectedIcons;
     pngobject:TPNGObject;
-    CurrentMousePositionX, CurrentMousePositionY:integer;
-    CurrentMouseMoveShiftState:TShiftState;
-    HandleMouseMove:boolean;
     procedure DrawGrafischeBuehnenansichtDevices(_Buffer:TCanvas);
     procedure DrawGrafischeBuehnenansicht(_Buffer:TCanvas);
     procedure GetSelectedIcons(X,Y:integer);
@@ -247,7 +248,7 @@ type
     RedrawPictures:boolean;
     ProcessorFriendlyRedraw:boolean;
     StopDeviceMoving:boolean;
-    
+
     dorefresh:boolean;
     Button:TButton;
     scrolling:boolean;
@@ -1036,6 +1037,11 @@ begin
   if not mainform.UserAccessGranted(2) then exit;
 
   ProcessorFriendlyRedraw:=false;
+
+  CurrentMousePositionX:=X;
+  CurrentMousePositionY:=Y;
+  CurrentMouseMoveShiftState:=Shift;
+  HandleMouseMove:=true;
 
   MouseUpPoint.X:=X;
   MouseUpPoint.Y:=Y;

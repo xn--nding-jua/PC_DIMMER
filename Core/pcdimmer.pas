@@ -875,6 +875,11 @@ type
     MIDIInPackets, MIDIOutPackets, DataInPackets, DMXOutPackets:integer;
     MIDIInPacketsFreq, MIDIOutPacketsFreq, DataInPacketsFreq, DMXOutPacketsFreq:integer;
 
+    // Dinge für Bühnenansicht
+    CurrentMousePositionX, CurrentMousePositionY:integer;
+    CurrentMouseMoveShiftState:TShiftState;
+    HandleMouseMove:boolean;
+
     // Dinge für Kanalübersicht
     oldvaluesChannelview:array[1..8192] of byte;
     ChannelWidth,ChannelHeight:integer;
@@ -9386,6 +9391,17 @@ begin
     InitCodeScene(codescenes[i].ID);
   end;
 
+
+  if not startingup then
+  begin
+    inprogress.filename.Caption:=_('Fertig');
+    inprogress.Refresh;
+  end else
+  begin
+    SplashCaptioninfo(_('Fertig'));
+    RefreshSplashText;
+  end;
+
   if not startingup then
 	  inprogress.Hide;
 
@@ -11367,8 +11383,431 @@ end;
 
 procedure TMainform.Timer1Timer(Sender: TObject);
 var
-  i:integer;
+  X,Y:integer;
+  Shift:TShiftState;
+  i,j,k,l,m,value,col,row,channelperrow,fadergroup,offset:integer;
+  dobreak:boolean;
 begin
+  if HandleMouseMove then
+  begin
+    X:=CurrentMousePositionX;
+    Y:=CurrentMousePositionY;
+    Shift:=CurrentMouseMoveShiftState;
+
+    HandleMouseMove:=false;
+
+    if (faderpanelup and (Y>Paintbox1.Height-258)) or (Y>(Paintbox1.Height-48)) then
+    begin
+      if not UserAccessGranted(2, false) then exit;
+
+      if not faderpanelup then
+      begin
+        faderpanelup:=true;
+      end;
+
+      faderpaneltimerbyte:=0;
+      FaderpanelhideTimer.Enabled:=true;
+
+      if faderpanelup then
+        offset:=258
+      else
+        offset:=48;
+
+      // Maus über Faderpanel
+      if (Shift=[ssLeft]) then
+      begin
+        if ((y-(Paintbox1.Height-offset))>50) then
+        begin
+          // Fader bewegen
+          value:=(y-(Paintbox1.Height-offset))+11-74;
+          if value<0 then value:=0;
+          if value>167 then value:=167;
+          value:=round(value/167*255);
+          // mainform.SendData(scrollbar1.position+mouseoverfader,-1,value,0,0);
+          mainform.SendData(faderchannel[mouseoverfader],-1,value,0,0);
+
+          fadergroup:=0;
+          for i:=0 to length(faderselected)-1 do
+          begin
+            if faderselected[i] and (i=(faderchannel[mouseoverfader]-1)) then fadergroup:=1;
+            if faderselectedalt[i] and (i=(faderchannel[mouseoverfader]-1)) then fadergroup:=fadergroup+2;
+            if faderselectedshift[i] and (i=(faderchannel[mouseoverfader]-1)) then fadergroup:=fadergroup+4;
+          end;
+
+          for i:=0 to length(faderselected)-1 do
+          begin
+            if faderselected[i] and (fadergroup and 1 = 1) then
+              mainform.SendData(i+1,-1,value,0,0);
+
+            if faderselectedalt[i] and (fadergroup and 2 = 2) then
+              mainform.SendData(i+1,-1,value,0,0);
+
+            if faderselectedshift[i] and (fadergroup and 4 = 4) then
+              mainform.SendData(i+1,-1,value,0,0);
+          end;
+        end;
+      end else
+      begin
+        if (X>0) and (X<40) then
+        begin
+          // linker Rand
+          scrolltoright:=false;
+          scrolltoleft:=true;
+        end else if (X>(Paintbox1.Width-40)) and (X<Paintbox1.Width) then
+        begin
+          // rechter Rand
+          scrolltoright:=true;
+          scrolltoleft:=false;
+        end else
+        begin
+          scrolltoright:=false;
+          scrolltoleft:=false;
+        end;
+      end;
+      RefreshMainformScreen:=true;
+    end else
+    begin
+      case pagecontrol1.ActivePageIndex of
+        0:  // Bühne
+        begin
+          if not UserAccessGranted(2, false) then exit;
+
+          grafischebuehnenansicht.dorefresh:=(Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]);
+
+  /////////// DeviceHoverEffect
+          grafischebuehnenansicht.MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+          dobreak:=false;
+          for i:=0 to length(mainform.devices)-1 do
+          begin
+            for j:=0 to length(mainform.devices[i].bank)-1 do
+            begin
+              if mainform.devices[i].ShowInStageview then
+              if mainform.devices[i].bank[j]=BankSelect.Itemindex then
+              begin
+                // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
+                if (mainform.devices[i].left[j]<=X)
+                and ((mainform.devices[i].left[j]+mainform.devices[i].picturesize)>=X)
+                and (mainform.devices[i].Top[j]<=Y)
+                and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize)>=Y) then
+                begin
+                  grafischebuehnenansicht.MouseOnDeviceID:=mainform.devices[i].ID;
+                  grafischebuehnenansicht.MouseOnDeviceHover:=i;
+                  dobreak:=true;
+                  break;
+                end;
+              end;
+            end;
+            if dobreak then
+              break;
+          end;
+          if not dobreak then
+          begin
+            grafischebuehnenansicht.MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+            grafischebuehnenansicht.MouseOnDeviceHover:=-1;
+          end;
+  ////////////
+
+  /////////// DeviceHighlight
+          if CheckBox6.Checked then
+          begin
+            // Altes Gerät zurücksetzen
+            geraetesteuerung.set_color(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.R, grafischebuehnenansicht.LastMouseOverHighlightDevice.G, grafischebuehnenansicht.LastMouseOverHighlightDevice.B, 150, 0);
+            geraetesteuerung.set_shutter(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.ShutterOpenOrClose);
+            geraetesteuerung.set_dimmer(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.Dimmer, 150, 0);
+            geraetesteuerung.set_channel(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, 'a', grafischebuehnenansicht.LastMouseOverHighlightDevice.A, 150, 0);
+            geraetesteuerung.set_channel(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, 'w', grafischebuehnenansicht.LastMouseOverHighlightDevice.W, 150, 0);
+
+            // Aktuelle Werte speichern
+            if not IsEqualGUID(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.MouseOnDeviceID) then
+            begin
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.ID:=grafischebuehnenansicht.MouseOnDeviceID;
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.Dimmer:=geraetesteuerung.get_dimmer(grafischebuehnenansicht.MouseOnDeviceID);
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.R:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'R');
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.G:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'G');
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.B:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'B');
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.A:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'A');
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.W:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'W');
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.ShutterOpenOrClose:=geraetesteuerung.get_shutter(grafischebuehnenansicht.MouseOnDeviceID);
+            end;
+
+            // Aktuelles Gerät setzen
+            if grafischebuehnenansicht.MouseOnDeviceHover>-1 then
+            begin
+              geraetesteuerung.set_shutter(grafischebuehnenansicht.MouseOnDeviceID, 255);
+              geraetesteuerung.set_color(grafischebuehnenansicht.MouseOnDeviceID, 255, 255, 255, 150, 0);
+              geraetesteuerung.set_dimmer(grafischebuehnenansicht.MouseOnDeviceID, 255, 150, 0);
+              geraetesteuerung.set_channel(grafischebuehnenansicht.MouseOnDeviceID, 'a', 255, 150, 0);
+              geraetesteuerung.set_channel(grafischebuehnenansicht.MouseOnDeviceID, 'w', 255, 150, 0);
+            end;
+          end;
+  ////////////
+
+          if grafischebuehnenansicht.MouseOnDevice>-1 then
+          begin
+            if CheckBox3.Checked then exit;
+
+            if mainform.devices[grafischebuehnenansicht.MouseOnDevice].hasDimmer then
+            begin
+              for k:=0 to length(mainform.devices[grafischebuehnenansicht.MouseOnDevice].kanaltyp)-1 do
+              if lowercase(mainform.devices[grafischebuehnenansicht.MouseOnDevice].kanaltyp[k])='dimmer' then
+                Paintbox1.Hint:=mainform.devices[grafischebuehnenansicht.MouseOnDevice].Name+' ('+mainform.levelstr(255-mainform.data.ch[mainform.devices[grafischebuehnenansicht.MouseOnDevice].Startaddress+k])+'), Geräteicon'
+            end else
+            begin
+              Paintbox1.Hint:='Geräteicon, '+mainform.devices[grafischebuehnenansicht.MouseOnDevice].Name;
+            end;
+
+            if Shift = [ssLeft] then
+            begin
+              // Linke Maustaste
+              grafischebuehnenansicht.RedrawPictures:=true;
+
+              if (mainform.devices[grafischebuehnenansicht.MouseOnDevice].selected[grafischebuehnenansicht.MouseOnDeviceCopy]=false) then
+              begin // einzelnes Gerätebild verschieben
+                // Sender GeräteBild
+                mainform.devices[grafischebuehnenansicht.MouseOnDevice].Left[grafischebuehnenansicht.MouseOnDeviceCopy]:=X-round(mainform.devices[grafischebuehnenansicht.MouseOnDevice].picturesize/2);
+                mainform.devices[grafischebuehnenansicht.MouseOnDevice].Top[grafischebuehnenansicht.MouseOnDeviceCopy]:=Y-round(mainform.devices[grafischebuehnenansicht.MouseOnDevice].picturesize/2);
+
+                for m:=0 to length(mainform.Devices)-1 do
+                begin
+                  if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[grafischebuehnenansicht.MouseOnDevice].ID)) then
+                  begin
+                    mainform.Devices[m].left[grafischebuehnenansicht.MouseOnDeviceCopy]:=X-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixXPosition;
+                    mainform.Devices[m].top[grafischebuehnenansicht.MouseOnDeviceCopy]:=Y-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixYPosition;
+                  end;
+                end;
+                // Sender GeräteBild Ende
+              end else
+              begin
+                // Andere GeräteBilder
+                for k:=0 to length(mainform.devices)-1 do
+                for l:=0 to length(mainform.devices[k].selected)-1 do
+                begin
+                  if ((mainform.devices[k].selected[l])) then
+                  begin
+                    grafischebuehnenansicht.StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
+                    if not grafischebuehnenansicht.StopDeviceMoving then
+                    begin
+                      mainform.devices[k].Left[l]:=mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X);
+                      mainform.devices[k].Top[l]:=mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
+                    end;
+                  end;
+                end;
+                // Andere GeräteBilder Ende
+
+                // Andere Kanal-Bilder
+                for k:=0 to length(mainform.buehnenansichtdevices)-1 do
+                begin
+                  if ((mainform.buehnenansichtdevices[k].selected)) then
+                  begin
+                    grafischebuehnenansicht.StopDeviceMoving:=(mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Height);
+                    if not grafischebuehnenansicht.StopDeviceMoving then
+                    begin
+                      mainform.buehnenansichtdevices[k].left:=mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X);
+                      mainform.buehnenansichtdevices[k].top:=mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
+                    end;
+                  end;
+                end;
+                // Andere Kanal-Bilder Ende
+              end;
+              // Ende von Linke Maustaste
+            end;
+          end else if grafischebuehnenansicht.MouseOnBuehnenansichtDevice>-1 then
+          begin
+            if CheckBox3.Checked then exit;
+
+            Paintbox1.Hint:='Kanalicon, Kanal: '+inttostr(mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].channel)+' ('+inttostr(mainform.channel_value[mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].channel])+')';
+
+              if Shift = [ssLeft] then
+              begin
+                // Linke Maustaste
+                if (mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].selected=false) then
+                begin // einzelnes Gerätebild verschieben
+                  // Sender KanalBild
+                  mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].Left:=X-round(mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].picturesize/2);
+                  mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].Top:=Y-round(mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].picturesize/2);
+                  // Sender KanalBild Ende
+                end else
+                begin
+                  // Andere KanalBilder
+                  for k:=0 to length(mainform.Buehnenansichtdevices)-1 do
+                  begin
+                    if ((mainform.Buehnenansichtdevices[k].selected)) then
+                    begin
+                      grafischebuehnenansicht.StopDeviceMoving:=(mainform.Buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.Buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.Buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.Buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.Buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.Buehnenansichtdevices[k].picturesize)>paintbox1.Height);
+                      if not grafischebuehnenansicht.StopDeviceMoving then
+                      begin
+                        mainform.Buehnenansichtdevices[k].Left:=mainform.Buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X);
+                        mainform.Buehnenansichtdevices[k].Top:=mainform.Buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
+                      end;
+                    end;
+                  end;
+                  // Andere KanalBilder Ende
+
+                  // Andere Geräte-Bilder
+                  for k:=0 to length(mainform.devices)-1 do
+                  for l:=0 to length(mainform.devices[k].selected)-1 do
+                  begin
+                    if ((mainform.devices[k].selected[l])) then
+                    begin
+                      grafischebuehnenansicht.StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
+                      if not grafischebuehnenansicht.StopDeviceMoving then
+                      begin
+                        mainform.devices[k].left[l]:=mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X);
+                        mainform.devices[k].top[l]:=mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
+                      end;
+                    end;
+                  end;
+                  // Andere Geräte-Bilder Ende
+                end;
+                // Ende von Linke Maustaste
+              end;
+          end else if grafischebuehnenansicht.MouseOnProgress>-1 then
+          begin
+            if Shift=[ssLeft] then
+            begin
+              value:=round(((X-mainform.devices[grafischebuehnenansicht.MouseOnProgress].left[grafischebuehnenansicht.MouseOnDeviceCopy])/mainform.devices[grafischebuehnenansicht.MouseOnProgress].picturesize)*255);
+              if value<0 then value:=0;
+              if value>255 then value:=255;
+              if mainform.devices[grafischebuehnenansicht.MouseOnProgress].hasDimmer then
+                geraetesteuerung.set_dimmer(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,value)
+              else if mainform.devices[grafischebuehnenansicht.MouseOnProgress].hasFog then
+                geraetesteuerung.set_fog(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,value);
+            end;
+          end else if grafischebuehnenansicht.MouseOnBuehnenansichtProgress>-1 then
+          begin
+            if Shift=[ssLeft] then
+            begin
+              value:=round(((X-mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].left)/mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].picturesize)*255);
+              if value<0 then value:=0;
+              if value>255 then value:=255;
+              mainform.Senddata(mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].channel, 255-value, 255-value, 0);
+        //      mainform.channel_value[mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].channel]:=value;
+            end;
+          end else if grafischebuehnenansicht.MouseOnBuehnenansichtColor>-1 then
+          begin
+          end else if grafischebuehnenansicht.MouseOnLabel>-1 then
+          begin
+          end else if grafischebuehnenansicht.MouseOnNumber>-1 then
+          begin
+          end else if grafischebuehnenansicht.MouseOnBuehnenansichtNumber>-1 then
+          begin
+          end else
+          begin
+          If shift=[ssLeft] then
+          begin
+            grafischebuehnenansicht.Auswahl.Right:=X;
+            grafischebuehnenansicht.Auswahl.Bottom:=Y;
+            grafischebuehnenansicht.ShowAuswahl:=true;
+
+            for i:=0 to length(mainform.buehnenansichtdevices)-1 do
+            begin
+              if mainform.buehnenansichtdevices[i].bank=BankSelect.Itemindex then
+              begin
+                // grafischebuehnenansicht.Auswahl.Left=Links grafischebuehnenansicht.Auswahl.Right=Rechts                                                                      grafischebuehnenansicht.Auswahl.Top=Oben grafischebuehnenansicht.Auswahl.Bottom=Unten
+                if (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom) then
+                  mainform.buehnenansichtdevices[i].selected:=true else mainform.buehnenansichtdevices[i].selected:=false;
+              end;
+            end;
+
+            for i:=0 to length(mainform.devices)-1 do
+            for j:=0 to length(mainform.devices[i].bank)-1 do
+            begin
+              if mainform.devices[i].bank[j]=BankSelect.Itemindex then
+              begin
+                // grafischebuehnenansicht.Auswahl.Left=Links grafischebuehnenansicht.Auswahl.Right=Rechts                                                                      grafischebuehnenansicht.Auswahl.Top=Oben grafischebuehnenansicht.Auswahl.Bottom=Unten
+                if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom) then
+                  mainform.devices[i].selected[j]:=true else mainform.devices[i].selected[j]:=false;
+              end;
+            end;
+          end;
+
+          If (shift=[ssLeft,ssShift]) or (shift=[ssLeft,ssShift,ssCtrl]) then
+          begin
+            grafischebuehnenansicht.Auswahl.Right:=X;
+            grafischebuehnenansicht.Auswahl.Bottom:=Y;
+            grafischebuehnenansicht.ShowAuswahl:=true;
+
+            for i:=0 to length(mainform.devices)-1 do
+            for j:=0 to length(mainform.devices[i].bank)-1 do
+            begin
+              if mainform.devices[i].bank[j]=BankSelect.Itemindex then
+              begin
+                // grafischebuehnenansicht.Auswahl.Left=Links grafischebuehnenansicht.Auswahl.Right=Rechts                                                                      grafischebuehnenansicht.Auswahl.Top=Oben grafischebuehnenansicht.Auswahl.Bottom=Unten
+                if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom) then
+                  mainform.DeviceSelected[i]:=true;
+              end;
+            end;
+          end;
+          end;
+        end;
+        1:  // Kanäle
+        begin
+          if not UserAccessGranted(2, false) then exit;
+
+          if (Shift=[ssLeft]) then
+          begin
+            ScrollBar1.Position:=round((mouseychannel-y)/ChannelHeight+scrollbarpositiononmousedown);
+            ErsteZeile:=Scrollbar1.position;
+          end;
+
+          lastx:=x;
+          lasty:=y;
+
+          if (Shift=[]) then
+          begin
+            col:=(x div ChannelWidth)+1;
+            row:=(y div ChannelHeight)+ErsteZeile;
+            channelperrow:=paintbox1.Width div ChannelWidth;
+            MouseOverKanal:=channelperrow*row+col;
+          end;
+
+          if (Shift=[ssLeft, ssCtrl, ssShift]) then
+          begin
+            if (MouseOverKanal>-1) and (MouseOverKanal<mainform.lastchan) then
+              if ((ChannelValueOnClick+(mouseychannel-y))>=0) and ((ChannelValueOnClick+(mouseychannel-y))<=255) then
+                mainform.channel_value[MouseOverKanal]:=ChannelValueOnClick+(mouseychannel-y);
+          end;
+
+          Label1.Caption:='';
+          Label2.Caption:='';
+          Label6.Caption:='Min-Wert: '+mainform.levelstr(mainform.channel_minvalue[MouseOverKanal]);
+          Label7.Caption:='Max-Wert: '+mainform.levelstr(mainform.channel_maxvalue[MouseOverKanal]);
+          Label6.Alignment:=taRightJustify;
+          Label7.Alignment:=taRightJustify;
+
+          for i:=0 to length(mainform.devices)-1 do
+          begin
+            if (MouseOverKanal>=mainform.devices[i].Startaddress) and (MouseOverKanal<mainform.devices[i].Startaddress+mainform.devices[i].MaxChan) then
+            begin
+              if length(Label1.Caption)>0 then
+                Label1.Caption:=Label1.Caption+', '+mainform.devices[i].Name
+              else
+                Label1.Caption:=mainform.devices[i].Name;
+              Label2.Caption:=mainform.devices[i].kanalname[MouseOverKanal-mainform.devices[i].Startaddress]+' | '+mainform.levelstr(mainform.channel_value[MouseOverKanal]);
+            end;
+          end;
+          RefreshMainformScreen:=true;
+        end;
+        2:  // Panel
+        begin
+          if not UserAccessGranted(3, false) then exit;
+
+          kontrollpanel.PaintBox1MouseMove(nil, Shift, X, Y);
+        end;
+      end;
+    end;
+  end;
+
+
   if splashscreenvalue=1 then
   begin
     if (fadesplash=true) then
@@ -24882,419 +25321,11 @@ end;
 
 procedure TMainform.PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
-var
-  i,j,k,l,m,value,col,row,channelperrow,fadergroup,offset:integer;
-  dobreak:boolean;
 begin
-  if (faderpanelup and (Y>Paintbox1.Height-258)) or (Y>(Paintbox1.Height-48)) then
-  begin
-    if not UserAccessGranted(2, false) then exit;
-
-    if not faderpanelup then
-    begin
-      faderpanelup:=true;
-    end;
-
-    faderpaneltimerbyte:=0;
-    FaderpanelhideTimer.Enabled:=true;
-
-    if faderpanelup then
-      offset:=258
-    else
-      offset:=48;
-
-    // Maus über Faderpanel
-    if (Shift=[ssLeft]) then
-    begin
-      if ((y-(Paintbox1.Height-offset))>50) then
-      begin
-        // Fader bewegen
-        value:=(y-(Paintbox1.Height-offset))+11-74;
-        if value<0 then value:=0;
-        if value>167 then value:=167;
-        value:=round(value/167*255);
-        // mainform.SendData(scrollbar1.position+mouseoverfader,-1,value,0,0);
-        mainform.SendData(faderchannel[mouseoverfader],-1,value,0,0);
-
-        fadergroup:=0;
-        for i:=0 to length(faderselected)-1 do
-        begin
-          if faderselected[i] and (i=(faderchannel[mouseoverfader]-1)) then fadergroup:=1;
-          if faderselectedalt[i] and (i=(faderchannel[mouseoverfader]-1)) then fadergroup:=fadergroup+2;
-          if faderselectedshift[i] and (i=(faderchannel[mouseoverfader]-1)) then fadergroup:=fadergroup+4;
-        end;
-
-        for i:=0 to length(faderselected)-1 do
-        begin
-          if faderselected[i] and (fadergroup and 1 = 1) then
-            mainform.SendData(i+1,-1,value,0,0);
-
-          if faderselectedalt[i] and (fadergroup and 2 = 2) then
-            mainform.SendData(i+1,-1,value,0,0);
-
-          if faderselectedshift[i] and (fadergroup and 4 = 4) then
-            mainform.SendData(i+1,-1,value,0,0);
-        end;
-      end;
-    end else
-    begin
-      if (X>0) and (X<40) then
-      begin
-        // linker Rand
-        scrolltoright:=false;
-        scrolltoleft:=true;
-      end else if (X>(Paintbox1.Width-40)) and (X<Paintbox1.Width) then
-      begin
-        // rechter Rand
-        scrolltoright:=true;
-        scrolltoleft:=false;
-      end else
-      begin
-        scrolltoright:=false;
-        scrolltoleft:=false;
-      end;
-    end;
-    RefreshMainformScreen:=true;
-  end else
-  begin
-    case pagecontrol1.ActivePageIndex of
-      0:  // Bühne
-      begin
-        if not UserAccessGranted(2, false) then exit;
-
-        grafischebuehnenansicht.dorefresh:=(Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]);
-
-/////////// DeviceHoverEffect
-        grafischebuehnenansicht.MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
-        dobreak:=false;
-        for i:=0 to length(mainform.devices)-1 do
-        begin
-          for j:=0 to length(mainform.devices[i].bank)-1 do
-          begin
-            if mainform.devices[i].ShowInStageview then
-            if mainform.devices[i].bank[j]=BankSelect.Itemindex then
-            begin
-              // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
-              if (mainform.devices[i].left[j]<=X)
-              and ((mainform.devices[i].left[j]+mainform.devices[i].picturesize)>=X)
-              and (mainform.devices[i].Top[j]<=Y)
-              and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize)>=Y) then
-              begin
-                grafischebuehnenansicht.MouseOnDeviceID:=mainform.devices[i].ID;
-                grafischebuehnenansicht.MouseOnDeviceHover:=i;
-                dobreak:=true;
-                break;
-              end;
-            end;
-          end;
-          if dobreak then
-            break;
-        end;
-        if not dobreak then
-        begin
-          grafischebuehnenansicht.MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
-          grafischebuehnenansicht.MouseOnDeviceHover:=-1;
-        end;
-////////////
-
-/////////// DeviceHighlight
-        if CheckBox6.Checked then
-        begin
-          // Altes Gerät zurücksetzen
-          geraetesteuerung.set_color(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.R, grafischebuehnenansicht.LastMouseOverHighlightDevice.G, grafischebuehnenansicht.LastMouseOverHighlightDevice.B, 150, 0);
-          geraetesteuerung.set_shutter(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.ShutterOpenOrClose);
-          geraetesteuerung.set_dimmer(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.Dimmer, 150, 0);
-          geraetesteuerung.set_channel(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, 'a', grafischebuehnenansicht.LastMouseOverHighlightDevice.A, 150, 0);
-          geraetesteuerung.set_channel(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, 'w', grafischebuehnenansicht.LastMouseOverHighlightDevice.W, 150, 0);
-
-          // Aktuelle Werte speichern
-          if not IsEqualGUID(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.MouseOnDeviceID) then
-          begin
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.ID:=grafischebuehnenansicht.MouseOnDeviceID;
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.Dimmer:=geraetesteuerung.get_dimmer(grafischebuehnenansicht.MouseOnDeviceID);
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.R:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'R');
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.G:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'G');
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.B:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'B');
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.A:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'A');
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.W:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'W');
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.ShutterOpenOrClose:=geraetesteuerung.get_shutter(grafischebuehnenansicht.MouseOnDeviceID);
-          end;
-
-          // Aktuelles Gerät setzen
-          if grafischebuehnenansicht.MouseOnDeviceHover>-1 then
-          begin
-            geraetesteuerung.set_shutter(grafischebuehnenansicht.MouseOnDeviceID, 255);
-            geraetesteuerung.set_color(grafischebuehnenansicht.MouseOnDeviceID, 255, 255, 255, 150, 0);
-            geraetesteuerung.set_dimmer(grafischebuehnenansicht.MouseOnDeviceID, 255, 150, 0);
-            geraetesteuerung.set_channel(grafischebuehnenansicht.MouseOnDeviceID, 'a', 255, 150, 0);
-            geraetesteuerung.set_channel(grafischebuehnenansicht.MouseOnDeviceID, 'w', 255, 150, 0);
-          end;
-        end;
-////////////
-
-        if grafischebuehnenansicht.MouseOnDevice>-1 then
-        begin
-          if CheckBox3.Checked then exit;
-
-          if mainform.devices[grafischebuehnenansicht.MouseOnDevice].hasDimmer then
-          begin
-            for k:=0 to length(mainform.devices[grafischebuehnenansicht.MouseOnDevice].kanaltyp)-1 do
-            if lowercase(mainform.devices[grafischebuehnenansicht.MouseOnDevice].kanaltyp[k])='dimmer' then
-              Paintbox1.Hint:=mainform.devices[grafischebuehnenansicht.MouseOnDevice].Name+' ('+mainform.levelstr(255-mainform.data.ch[mainform.devices[grafischebuehnenansicht.MouseOnDevice].Startaddress+k])+'), Geräteicon'
-          end else
-          begin
-            Paintbox1.Hint:='Geräteicon, '+mainform.devices[grafischebuehnenansicht.MouseOnDevice].Name;
-          end;
-
-          if Shift = [ssLeft] then
-          begin
-            // Linke Maustaste
-            grafischebuehnenansicht.RedrawPictures:=true;
-
-            if (mainform.devices[grafischebuehnenansicht.MouseOnDevice].selected[grafischebuehnenansicht.MouseOnDeviceCopy]=false) then
-            begin // einzelnes Gerätebild verschieben
-              // Sender GeräteBild
-              mainform.devices[grafischebuehnenansicht.MouseOnDevice].Left[grafischebuehnenansicht.MouseOnDeviceCopy]:=X-round(mainform.devices[grafischebuehnenansicht.MouseOnDevice].picturesize/2);
-              mainform.devices[grafischebuehnenansicht.MouseOnDevice].Top[grafischebuehnenansicht.MouseOnDeviceCopy]:=Y-round(mainform.devices[grafischebuehnenansicht.MouseOnDevice].picturesize/2);
-
-              for m:=0 to length(mainform.Devices)-1 do
-              begin
-                if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[grafischebuehnenansicht.MouseOnDevice].ID)) then
-                begin
-                  mainform.Devices[m].left[grafischebuehnenansicht.MouseOnDeviceCopy]:=X-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixXPosition;
-                  mainform.Devices[m].top[grafischebuehnenansicht.MouseOnDeviceCopy]:=Y-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixYPosition;
-                end;
-              end;
-              // Sender GeräteBild Ende
-            end else
-            begin
-              // Andere GeräteBilder
-              for k:=0 to length(mainform.devices)-1 do
-              for l:=0 to length(mainform.devices[k].selected)-1 do
-              begin
-                if ((mainform.devices[k].selected[l])) then
-                begin
-                  grafischebuehnenansicht.StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
-                  if not grafischebuehnenansicht.StopDeviceMoving then
-                  begin
-                    mainform.devices[k].Left[l]:=mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X);
-                    mainform.devices[k].Top[l]:=mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
-                  end;
-                end;
-              end;
-              // Andere GeräteBilder Ende
-
-              // Andere Kanal-Bilder
-              for k:=0 to length(mainform.buehnenansichtdevices)-1 do
-              begin
-                if ((mainform.buehnenansichtdevices[k].selected)) then
-                begin
-                  grafischebuehnenansicht.StopDeviceMoving:=(mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Height);
-                  if not grafischebuehnenansicht.StopDeviceMoving then
-                  begin
-                    mainform.buehnenansichtdevices[k].left:=mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X);
-                    mainform.buehnenansichtdevices[k].top:=mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
-                  end;
-                end;
-              end;
-              // Andere Kanal-Bilder Ende
-            end;
-            // Ende von Linke Maustaste
-          end;
-        end else if grafischebuehnenansicht.MouseOnBuehnenansichtDevice>-1 then
-        begin
-          if CheckBox3.Checked then exit;
-
-          Paintbox1.Hint:='Kanalicon, Kanal: '+inttostr(mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].channel)+' ('+inttostr(mainform.channel_value[mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].channel])+')';
-
-            if Shift = [ssLeft] then
-            begin
-              // Linke Maustaste
-              if (mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].selected=false) then
-              begin // einzelnes Gerätebild verschieben
-                // Sender KanalBild
-                mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].Left:=X-round(mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].picturesize/2);
-                mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].Top:=Y-round(mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].picturesize/2);
-                // Sender KanalBild Ende
-              end else
-              begin
-                // Andere KanalBilder
-                for k:=0 to length(mainform.Buehnenansichtdevices)-1 do
-                begin
-                  if ((mainform.Buehnenansichtdevices[k].selected)) then
-                  begin
-                    grafischebuehnenansicht.StopDeviceMoving:=(mainform.Buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.Buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.Buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.Buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.Buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.Buehnenansichtdevices[k].picturesize)>paintbox1.Height);
-                    if not grafischebuehnenansicht.StopDeviceMoving then
-                    begin
-                      mainform.Buehnenansichtdevices[k].Left:=mainform.Buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X);
-                      mainform.Buehnenansichtdevices[k].Top:=mainform.Buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
-                    end;
-                  end;
-                end;
-                // Andere KanalBilder Ende
-
-                // Andere Geräte-Bilder
-                for k:=0 to length(mainform.devices)-1 do
-                for l:=0 to length(mainform.devices[k].selected)-1 do
-                begin
-                  if ((mainform.devices[k].selected[l])) then
-                  begin
-                    grafischebuehnenansicht.StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
-                    if not grafischebuehnenansicht.StopDeviceMoving then
-                    begin
-                      mainform.devices[k].left[l]:=mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X);
-                      mainform.devices[k].top[l]:=mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
-                    end;
-                  end;
-                end;
-                // Andere Geräte-Bilder Ende
-              end;
-              // Ende von Linke Maustaste
-            end;
-        end else if grafischebuehnenansicht.MouseOnProgress>-1 then
-        begin
-          if Shift=[ssLeft] then
-          begin
-            value:=round(((X-mainform.devices[grafischebuehnenansicht.MouseOnProgress].left[grafischebuehnenansicht.MouseOnDeviceCopy])/mainform.devices[grafischebuehnenansicht.MouseOnProgress].picturesize)*255);
-            if value<0 then value:=0;
-            if value>255 then value:=255;
-            if mainform.devices[grafischebuehnenansicht.MouseOnProgress].hasDimmer then
-              geraetesteuerung.set_dimmer(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,value)
-            else if mainform.devices[grafischebuehnenansicht.MouseOnProgress].hasFog then
-              geraetesteuerung.set_fog(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,value);
-          end;
-        end else if grafischebuehnenansicht.MouseOnBuehnenansichtProgress>-1 then
-        begin
-          if Shift=[ssLeft] then
-          begin
-            value:=round(((X-mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].left)/mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].picturesize)*255);
-            if value<0 then value:=0;
-            if value>255 then value:=255;
-            mainform.Senddata(mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].channel, 255-value, 255-value, 0);
-      //      mainform.channel_value[mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].channel]:=value;
-          end;
-        end else if grafischebuehnenansicht.MouseOnBuehnenansichtColor>-1 then
-        begin
-        end else if grafischebuehnenansicht.MouseOnLabel>-1 then
-        begin
-        end else if grafischebuehnenansicht.MouseOnNumber>-1 then
-        begin
-        end else if grafischebuehnenansicht.MouseOnBuehnenansichtNumber>-1 then
-        begin
-        end else
-        begin
-        If shift=[ssLeft] then
-        begin
-          grafischebuehnenansicht.Auswahl.Right:=X;
-          grafischebuehnenansicht.Auswahl.Bottom:=Y;
-          grafischebuehnenansicht.ShowAuswahl:=true;
-
-          for i:=0 to length(mainform.buehnenansichtdevices)-1 do
-          begin
-            if mainform.buehnenansichtdevices[i].bank=BankSelect.Itemindex then
-            begin
-              // grafischebuehnenansicht.Auswahl.Left=Links grafischebuehnenansicht.Auswahl.Right=Rechts                                                                      grafischebuehnenansicht.Auswahl.Top=Oben grafischebuehnenansicht.Auswahl.Bottom=Unten
-              if (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom) then
-                mainform.buehnenansichtdevices[i].selected:=true else mainform.buehnenansichtdevices[i].selected:=false;
-            end;
-          end;
-
-          for i:=0 to length(mainform.devices)-1 do
-          for j:=0 to length(mainform.devices[i].bank)-1 do
-          begin
-            if mainform.devices[i].bank[j]=BankSelect.Itemindex then
-            begin
-              // grafischebuehnenansicht.Auswahl.Left=Links grafischebuehnenansicht.Auswahl.Right=Rechts                                                                      grafischebuehnenansicht.Auswahl.Top=Oben grafischebuehnenansicht.Auswahl.Bottom=Unten
-              if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom) then
-                mainform.devices[i].selected[j]:=true else mainform.devices[i].selected[j]:=false;
-            end;
-          end;
-        end;
-
-        If (shift=[ssLeft,ssShift]) or (shift=[ssLeft,ssShift,ssCtrl]) then
-        begin
-          grafischebuehnenansicht.Auswahl.Right:=X;
-          grafischebuehnenansicht.Auswahl.Bottom:=Y;
-          grafischebuehnenansicht.ShowAuswahl:=true;
-
-          for i:=0 to length(mainform.devices)-1 do
-          for j:=0 to length(mainform.devices[i].bank)-1 do
-          begin
-            if mainform.devices[i].bank[j]=BankSelect.Itemindex then
-            begin
-              // grafischebuehnenansicht.Auswahl.Left=Links grafischebuehnenansicht.Auswahl.Right=Rechts                                                                      grafischebuehnenansicht.Auswahl.Top=Oben grafischebuehnenansicht.Auswahl.Bottom=Unten
-              if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom) then
-                mainform.DeviceSelected[i]:=true;
-            end;
-          end;
-        end;
-        end;
-      end;
-      1:  // Kanäle
-      begin
-        if not UserAccessGranted(2, false) then exit;
-
-        if (Shift=[ssLeft]) then
-        begin
-          ScrollBar1.Position:=round((mouseychannel-y)/ChannelHeight+scrollbarpositiononmousedown);
-          ErsteZeile:=Scrollbar1.position;
-        end;
-
-        lastx:=x;
-        lasty:=y;
-
-        if (Shift=[]) then
-        begin
-          col:=(x div ChannelWidth)+1;
-          row:=(y div ChannelHeight)+ErsteZeile;
-          channelperrow:=paintbox1.Width div ChannelWidth;
-          MouseOverKanal:=channelperrow*row+col;
-        end;
-
-        if (Shift=[ssLeft, ssCtrl, ssShift]) then
-        begin
-          if (MouseOverKanal>-1) and (MouseOverKanal<mainform.lastchan) then
-            if ((ChannelValueOnClick+(mouseychannel-y))>=0) and ((ChannelValueOnClick+(mouseychannel-y))<=255) then
-              mainform.channel_value[MouseOverKanal]:=ChannelValueOnClick+(mouseychannel-y);
-        end;
-
-        Label1.Caption:='';
-        Label2.Caption:='';
-        Label6.Caption:='Min-Wert: '+mainform.levelstr(mainform.channel_minvalue[MouseOverKanal]);
-        Label7.Caption:='Max-Wert: '+mainform.levelstr(mainform.channel_maxvalue[MouseOverKanal]);
-        Label6.Alignment:=taRightJustify;
-        Label7.Alignment:=taRightJustify;
-
-        for i:=0 to length(mainform.devices)-1 do
-        begin
-          if (MouseOverKanal>=mainform.devices[i].Startaddress) and (MouseOverKanal<mainform.devices[i].Startaddress+mainform.devices[i].MaxChan) then
-          begin
-            if length(Label1.Caption)>0 then
-              Label1.Caption:=Label1.Caption+', '+mainform.devices[i].Name
-            else
-              Label1.Caption:=mainform.devices[i].Name;
-            Label2.Caption:=mainform.devices[i].kanalname[MouseOverKanal-mainform.devices[i].Startaddress]+' | '+mainform.levelstr(mainform.channel_value[MouseOverKanal]);
-          end;
-        end;
-        RefreshMainformScreen:=true;
-      end;
-      2:  // Panel
-      begin
-        if not UserAccessGranted(3, false) then exit;
-
-        kontrollpanel.PaintBox1MouseMove(nil, Shift, X, Y);
-      end;
-    end;
-  end;
+  CurrentMousePositionX:=X;
+  CurrentMousePositionY:=Y;
+  CurrentMouseMoveShiftState:=Shift;
+  HandleMouseMove:=true;
 end;
 
 procedure TMainform.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
@@ -25304,6 +25335,11 @@ var
   ddfwindowposition:integer;
   toppos, leftpos:single;
 begin
+  CurrentMousePositionX:=X;
+  CurrentMousePositionY:=Y;
+  CurrentMouseMoveShiftState:=Shift;
+  HandleMouseMove:=true;
+
   if (faderpanelup and (Y>Paintbox1.Height-258)) or (Y>(Paintbox1.Height-48)) then
   begin
     if not UserAccessGranted(2) then exit;

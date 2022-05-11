@@ -213,14 +213,13 @@ begin
     // first convert the JPEG to byte-array
     JPEGImage:=TJPEGImage.Create;
     try
-  {
-      JPEGImage.Performance:=jpBestSpeed;
-      JPEGImage.ProgressiveEncoding:=true;
-      JPEGImage.ProgressiveDisplay:=true;
-  }
+      JPEGImage.Performance:=jpBestQuality;
+      JPEGImage.ProgressiveEncoding:=false;
+      JPEGImage.ProgressiveDisplay:=false;
+      Bitmap.PixelFormat:=pf24bit;
       JPEGImage.Assign(Bitmap);
       JPEGImage.CompressionQuality:=100;
-  //    JPEGImage.Compress;
+      JPEGImage.Compress;
 
       Stream:=TMemoryStream.Create;
       JPEGImage.SaveToStream(Stream);
