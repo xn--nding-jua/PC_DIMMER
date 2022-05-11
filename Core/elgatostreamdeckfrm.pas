@@ -630,7 +630,7 @@ end;
 procedure Telgatostreamdeckform.ElgatoStreamDeckDisplayTimerTimer(
   Sender: TObject);
 var
-  dev, btn, x, y, DeviceIndex, i, l, k:integer;
+  dev, dev_check, btn, x, y, DeviceIndex, i, l, k:integer;
   ButtonPixels:byte;
   topval,leftval:integer;
   rect:TRect;
@@ -643,541 +643,552 @@ begin
   // display values on buttons
   for dev:=0 to length(mainform.ElgatoStreamDeckArray)-1 do
   begin
-    if mainform.ElgatoStreamDeckArray[dev].CurrentButtonMode=0 then
-      mainform.ElgatoStreamDeckArray[dev].CurrentButtonMode:=1;
-
-    if (mainform.ElgatoStreamDeckArray[dev].ButtonCount=32) then
+    // check, if this device is connected
+    for dev_check:=0 to length(mainform.ElgatoStreamSerials)-1 do
     begin
-      // large buttons
-      ButtonPixels:=96;
-    end else
-    begin
-      // small buttons
-      ButtonPixels:=72;
-    end;
-    _Buffer.Width:=ButtonPixels;
-    _Buffer.Height:=ButtonPixels;
-
-    for btn:=0 to mainform.ElgatoStreamDeckArray[dev].ButtonCount-1 do
-    begin
-      DrawEmptyButton:=false;
-
-      if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Pressed then
-        _Buffer.Canvas.Brush.Color:=clRed
-      else
-        _Buffer.Canvas.Brush.Color:=clNavy;
-
-      if (mainform.ElgatoStreamDeckArray[dev].UseAutoModeOnLastButton) and (btn<mainform.ElgatoStreamDeckArray[dev].ButtonCount-1) then
-        CurrentButtonMode:=mainform.ElgatoStreamDeckArray[dev].CurrentButtonMode
-      else
-        CurrentButtonMode:=mainform.ElgatoStreamDeckArray[dev].Buttons[btn].ButtonType;
-
-      // check if we want to use Mode-switcher on last button -> if yes, show current mode on this button
-      if (mainform.ElgatoStreamDeckArray[dev].UseAutoModeOnLastButton) and (btn=mainform.ElgatoStreamDeckArray[dev].ButtonCount-1) then
+      if (mainform.ElgatoStreamSerials[dev_check]=mainform.ElgatoStreamDeckArray[dev].Serial) then
       begin
-        // show AutoMode-Button and current AutoMode
-        _Buffer.Canvas.Brush.Color:=clMaroon;
-        _Buffer.Canvas.Brush.Style:=bsSolid;
-        _Buffer.Canvas.Pen.Color:=clBlack;
-        _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
+        // this device is connected
+        
+        if mainform.ElgatoStreamDeckArray[dev].CurrentButtonMode=0 then
+          mainform.ElgatoStreamDeckArray[dev].CurrentButtonMode:=1;
 
-        _Buffer.Canvas.Font.Color:=clWhite;
-        _Buffer.Canvas.TextOut(1,0,TimeToStr(now));
-        case mainform.ElgatoStreamDeckArray[dev].CurrentButtonMode of
-          1:
-          begin
-            _Buffer.Canvas.TextOut(1,18,'  > '+_('Panels')+' <');
-            _Buffer.Canvas.TextOut(1,30,'  '+_('Selektion')+'');
-            _Buffer.Canvas.TextOut(1,42,'  '+_('Data-In')+'');
-            _Buffer.Canvas.TextOut(1,54,'  '+_('Befehle')+'');
-          end;
-          2:
-          begin
-            _Buffer.Canvas.TextOut(1,18,'  '+_('Panels')+'');
-            _Buffer.Canvas.TextOut(1,30,'  > '+_('Selektion')+' <');
-            _Buffer.Canvas.TextOut(1,42,'  '+_('Data-In')+'');
-            _Buffer.Canvas.TextOut(1,54,'  '+_('Befehle')+'');
-          end;
-          3:
-          begin
-            _Buffer.Canvas.TextOut(1,18,'  '+_('Panels')+'');
-            _Buffer.Canvas.TextOut(1,30,'  '+_('Selektion')+'');
-            _Buffer.Canvas.TextOut(1,42,'  > '+_('Data-In')+' <');
-            _Buffer.Canvas.TextOut(1,54,'  '+_('Befehle')+'');
-          end;
-          4:
-          begin
-            _Buffer.Canvas.TextOut(1,18,'  '+_('Panels')+'');
-            _Buffer.Canvas.TextOut(1,30,'  '+_('Selektion')+'');
-            _Buffer.Canvas.TextOut(1,42,'  '+_('Data-In')+'');
-            _Buffer.Canvas.TextOut(1,54,'  > '+_('Befehle')+' <');
-          end;
+        if (mainform.ElgatoStreamDeckArray[dev].ButtonCount=32) then
+        begin
+          // large buttons
+          ButtonPixels:=96;
+        end else
+        begin
+          // small buttons
+          ButtonPixels:=72;
         end;
-        _Buffer.Canvas.Brush.Color:=clNavy;
-      end else
-      begin
-        case CurrentButtonMode of
-          0: // unused
+        _Buffer.Width:=ButtonPixels;
+        _Buffer.Height:=ButtonPixels;
+
+        for btn:=0 to mainform.ElgatoStreamDeckArray[dev].ButtonCount-1 do
+        begin
+          DrawEmptyButton:=false;
+
+          if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Pressed then
+            _Buffer.Canvas.Brush.Color:=clRed
+          else
+            _Buffer.Canvas.Brush.Color:=clNavy;
+
+          if (mainform.ElgatoStreamDeckArray[dev].UseAutoModeOnLastButton) and (btn<mainform.ElgatoStreamDeckArray[dev].ButtonCount-1) then
+            CurrentButtonMode:=mainform.ElgatoStreamDeckArray[dev].CurrentButtonMode
+          else
+            CurrentButtonMode:=mainform.ElgatoStreamDeckArray[dev].Buttons[btn].ButtonType;
+
+          // check if we want to use Mode-switcher on last button -> if yes, show current mode on this button
+          if (mainform.ElgatoStreamDeckArray[dev].UseAutoModeOnLastButton) and (btn=mainform.ElgatoStreamDeckArray[dev].ButtonCount-1) then
           begin
-            DrawEmptyButton:=true;
-          end;
-          1: // 1=Kontrollpanel
-          begin
+            // show AutoMode-Button and current AutoMode
+            _Buffer.Canvas.Brush.Color:=clMaroon;
             _Buffer.Canvas.Brush.Style:=bsSolid;
-            if ((mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1)>-1) and ((mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1)<length(mainform.kontrollpanelbuttons)) then
-            begin
-              if ((mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1)>-1) and ((mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1)<length(mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1])) then
+            _Buffer.Canvas.Pen.Color:=clBlack;
+            _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
+
+            _Buffer.Canvas.Font.Color:=clWhite;
+            _Buffer.Canvas.TextOut(1,0,TimeToStr(now));
+            case mainform.ElgatoStreamDeckArray[dev].CurrentButtonMode of
+              1:
               begin
-                _Buffer.Canvas.Brush.Color:=mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].Color;
-                if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Pressed then
-                  _Buffer.Canvas.Brush.Color:=InvertColor(_Buffer.Canvas.Brush.Color);
-
-                _Buffer.Canvas.Pen.Color:=_Buffer.Canvas.Brush.Color;  
-                _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
-
-                // Bild zeichnen
-                rect.Top:=16;
-                rect.Left:=12;
-                rect.right:=12+48;
-                rect.Bottom:=16+48;
-                pngobject.Assign(mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].PNG);
-                SmoothResize(pngobject, 48, 48);
-                pngobject.Draw(_Buffer.Canvas, rect);
-
-                if mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].Active then
-                begin
-                  _Buffer.Canvas.Font.Color:=InvertColor(_Buffer.Canvas.Brush.Color);
-                  _Buffer.Canvas.Font.Style:=[fsBold];
-                  _Buffer.Canvas.TextOut(1,0,mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].Name);
-                  _Buffer.Canvas.TextOut(1,12,mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].TypName);
-                  _Buffer.Canvas.TextOut(1,24,'');
-                  _Buffer.Canvas.Font.Style:=[];
-
-                  _Buffer.Canvas.Brush.Color:=clRed;
-                  _Buffer.Canvas.Pen.Color:=clBlack;
-                  _Buffer.Canvas.Rectangle(0, ButtonPixels-10, ButtonPixels, ButtonPixels);
-                end else
-                begin
-                  _Buffer.Canvas.Font.Color:=InvertColor(_Buffer.Canvas.Brush.Color);
-                  _Buffer.Canvas.TextOut(1,0,mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].Name);
-                  _Buffer.Canvas.TextOut(1,12,mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].TypName);
-                  _Buffer.Canvas.TextOut(1,24,'');
-                end;
-              end else
+                _Buffer.Canvas.TextOut(1,18,'  > '+_('Panels')+' <');
+                _Buffer.Canvas.TextOut(1,30,'  '+_('Selektion')+'');
+                _Buffer.Canvas.TextOut(1,42,'  '+_('Data-In')+'');
+                _Buffer.Canvas.TextOut(1,54,'  '+_('Befehle')+'');
+              end;
+              2:
+              begin
+                _Buffer.Canvas.TextOut(1,18,'  '+_('Panels')+'');
+                _Buffer.Canvas.TextOut(1,30,'  > '+_('Selektion')+' <');
+                _Buffer.Canvas.TextOut(1,42,'  '+_('Data-In')+'');
+                _Buffer.Canvas.TextOut(1,54,'  '+_('Befehle')+'');
+              end;
+              3:
+              begin
+                _Buffer.Canvas.TextOut(1,18,'  '+_('Panels')+'');
+                _Buffer.Canvas.TextOut(1,30,'  '+_('Selektion')+'');
+                _Buffer.Canvas.TextOut(1,42,'  > '+_('Data-In')+' <');
+                _Buffer.Canvas.TextOut(1,54,'  '+_('Befehle')+'');
+              end;
+              4:
+              begin
+                _Buffer.Canvas.TextOut(1,18,'  '+_('Panels')+'');
+                _Buffer.Canvas.TextOut(1,30,'  '+_('Selektion')+'');
+                _Buffer.Canvas.TextOut(1,42,'  '+_('Data-In')+'');
+                _Buffer.Canvas.TextOut(1,54,'  > '+_('Befehle')+' <');
+              end;
+            end;
+            _Buffer.Canvas.Brush.Color:=clNavy;
+          end else
+          begin
+            case CurrentButtonMode of
+              0: // unused
               begin
                 DrawEmptyButton:=true;
               end;
-            end else
-            begin
-              DrawEmptyButton:=true;
-            end;
-          end;
-          2: // 2=DeviceOrGroupSelection
-          begin
-            DeviceIndex:=geraetesteuerung.GetDevicePositionInDeviceArray(@mainform.ElgatoStreamDeckArray[dev].Buttons[btn].DeviceOrGroupID);
-            if DeviceIndex>-1 then
-            begin
-              // its a device
-              _Buffer.Canvas.Brush.Style:=bsSolid;
-              _Buffer.Canvas.Pen.Color:=clBlack;
-              _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
-
-              // Bild zeichnen
-              rect.Top:=16;
-              rect.Left:=12;
-              rect.right:=12+48;
-              rect.Bottom:=16+48;
-              pngobject.Assign(mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[DeviceIndex].bildadresse)].PngImage);
-              SmoothResize(pngobject, 48, 48);
-              pngobject.Draw(_Buffer.Canvas, rect);
-
-              _Buffer.Canvas.Font.Color:=clWhite;
-              _Buffer.Canvas.TextOut(1,0,mainform.devices[DeviceIndex].Name);
-              _Buffer.Canvas.TextOut(1,12,'Ch '+inttostr(mainform.devices[DeviceIndex].Startaddress));
-
-              if mainform.Devices[DeviceIndex].hasDimmer then
+              1: // 1=Kontrollpanel
               begin
-                Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[DeviceIndex].ID);
-                // Umrandung zeichnen
-                _Buffer.Canvas.Brush.Color:=ClMedGray;
-                _Buffer.Canvas.Pen.Style:=psSolid;
-                _Buffer.Canvas.Pen.Color:=clBlack;
-                _Buffer.Canvas.Rectangle(0, ButtonPixels-10, ButtonPixels, ButtonPixels);
+                _Buffer.Canvas.Brush.Style:=bsSolid;
+                if ((mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1)>-1) and ((mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1)<length(mainform.kontrollpanelbuttons)) then
+                begin
+                  if ((mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1)>-1) and ((mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1)<length(mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1])) then
+                  begin
+                    _Buffer.Canvas.Brush.Color:=mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].Color;
+                    if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Pressed then
+                      _Buffer.Canvas.Brush.Color:=InvertColor(_Buffer.Canvas.Brush.Color);
 
-                // Hintergrund zeichnen
-                _Buffer.Canvas.Pen.Color:=clSilver;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-9);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-9);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-8);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-8);
-                _Buffer.Canvas.Pen.Color:=clMedGray;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-7);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-7);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-6);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-6);
-                _Buffer.Canvas.Pen.Color:=clGray;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-5);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-5);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-4);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-4);
-                _Buffer.Canvas.Pen.Color:=clGray;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-3);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-3);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-2);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-2);
-                _Buffer.Canvas.Pen.Color:=clMedGray;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-1);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-1);
-                // Füllung zeichnen
-                _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,128);//$00FFFFFF;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-9);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-9);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-8);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-8);
-                _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,192);//$00A4FFA4;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-7);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-7);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-6);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-6);
-                _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,255);//$0000FF00;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-5);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-5);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-4);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-4);
-                _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,96);//$0000B000;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-3);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-3);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-2);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-2);
-                _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,64);//$00008000;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-1);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-1);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels);
+                    _Buffer.Canvas.Pen.Color:=_Buffer.Canvas.Brush.Color;  
+                    _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
 
-                // Wert in Prozent anzeigen
-                _Buffer.Canvas.Brush.Style:=bsClear;
-                _Buffer.Canvas.Pen.Style:=psClear;
-                _Buffer.Canvas.Font.Color:=clWhite;
-                _Buffer.Canvas.TextOut(1, ButtonPixels-12-10, mainform.levelstr(Dimmerwert));
-                _Buffer.Canvas.Pen.Style:=psSolid;
+                    // Bild zeichnen
+                    rect.Top:=16;
+                    rect.Left:=12;
+                    rect.right:=12+48;
+                    rect.Bottom:=16+48;
+                    pngobject.Assign(mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].PNG);
+                    SmoothResize(pngobject, 48, 48);
+                    pngobject.Draw(_Buffer.Canvas, rect);
+
+                    if mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].Active then
+                    begin
+                      _Buffer.Canvas.Font.Color:=InvertColor(_Buffer.Canvas.Brush.Color);
+                      _Buffer.Canvas.Font.Style:=[fsBold];
+                      _Buffer.Canvas.TextOut(1,0,mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].Name);
+                      _Buffer.Canvas.TextOut(1,12,mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].TypName);
+                      _Buffer.Canvas.TextOut(1,24,'');
+                      _Buffer.Canvas.Font.Style:=[];
+
+                      _Buffer.Canvas.Brush.Color:=clRed;
+                      _Buffer.Canvas.Pen.Color:=clBlack;
+                      _Buffer.Canvas.Rectangle(0, ButtonPixels-10, ButtonPixels, ButtonPixels);
+                    end else
+                    begin
+                      _Buffer.Canvas.Font.Color:=InvertColor(_Buffer.Canvas.Brush.Color);
+                      _Buffer.Canvas.TextOut(1,0,mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].Name);
+                      _Buffer.Canvas.TextOut(1,12,mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].TypName);
+                      _Buffer.Canvas.TextOut(1,24,'');
+                    end;
+                  end else
+                  begin
+                    DrawEmptyButton:=true;
+                  end;
+                end else
+                begin
+                  DrawEmptyButton:=true;
+                end;
               end;
-
-              // Farbball anzeigen
-              _Buffer.Canvas.Brush.Style:=bsSolid;
-              _Buffer.Canvas.Pen.Style:=psSolid;
-              _Buffer.Canvas.Pen.Color:=clBlack;
-
-              _Buffer.Canvas.Brush.Color:=geraetesteuerung.get_color(mainform.devices[DeviceIndex].ID);
-
-              if mainform.devices[DeviceIndex].hasPANTILT then
+              2: // 2=DeviceOrGroupSelection
               begin
-                  Topval:=round((ButtonPixels*(geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID, 'TILT')/255))-(ButtonPixels/3.2/2));
-                  Leftval:=round(ButtonPixels-(ButtonPixels*((255-geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID, 'PAN'))/255))+(ButtonPixels/3.2/2));
-                  _Buffer.Canvas.Ellipse(Leftval-round(ButtonPixels/3.2), Topval, Leftval, Topval+round(ButtonPixels/3.2));
-              end else
-              begin
-                  _Buffer.Canvas.Ellipse(ButtonPixels-round(ButtonPixels/3.4), ButtonPixels-round(ButtonPixels/3.4)-5, ButtonPixels, ButtonPixels-5);
+                DeviceIndex:=geraetesteuerung.GetDevicePositionInDeviceArray(@mainform.ElgatoStreamDeckArray[dev].Buttons[btn].DeviceOrGroupID);
+                if DeviceIndex>-1 then
+                begin
+                  // its a device
+                  _Buffer.Canvas.Brush.Style:=bsSolid;
+                  _Buffer.Canvas.Pen.Color:=clBlack;
+                  _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
+
+                  // Bild zeichnen
+                  rect.Top:=16;
+                  rect.Left:=12;
+                  rect.right:=12+48;
+                  rect.Bottom:=16+48;
+                  pngobject.Assign(mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[DeviceIndex].bildadresse)].PngImage);
+                  SmoothResize(pngobject, 48, 48);
+                  pngobject.Draw(_Buffer.Canvas, rect);
+
+                  _Buffer.Canvas.Font.Color:=clWhite;
+                  _Buffer.Canvas.TextOut(1,0,mainform.devices[DeviceIndex].Name);
+                  _Buffer.Canvas.TextOut(1,12,'Ch '+inttostr(mainform.devices[DeviceIndex].Startaddress));
+
+                  if mainform.Devices[DeviceIndex].hasDimmer then
+                  begin
+                    Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[DeviceIndex].ID);
+                    // Umrandung zeichnen
+                    _Buffer.Canvas.Brush.Color:=ClMedGray;
+                    _Buffer.Canvas.Pen.Style:=psSolid;
+                    _Buffer.Canvas.Pen.Color:=clBlack;
+                    _Buffer.Canvas.Rectangle(0, ButtonPixels-10, ButtonPixels, ButtonPixels);
+
+                    // Hintergrund zeichnen
+                    _Buffer.Canvas.Pen.Color:=clSilver;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-9);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-9);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-8);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-8);
+                    _Buffer.Canvas.Pen.Color:=clMedGray;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-7);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-7);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-6);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-6);
+                    _Buffer.Canvas.Pen.Color:=clGray;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-5);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-5);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-4);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-4);
+                    _Buffer.Canvas.Pen.Color:=clGray;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-3);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-3);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-2);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-2);
+                    _Buffer.Canvas.Pen.Color:=clMedGray;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-1);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-1);
+                    // Füllung zeichnen
+                    _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,128);//$00FFFFFF;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-9);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-9);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-8);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-8);
+                    _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,192);//$00A4FFA4;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-7);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-7);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-6);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-6);
+                    _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,255);//$0000FF00;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-5);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-5);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-4);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-4);
+                    _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,96);//$0000B000;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-3);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-3);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-2);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-2);
+                    _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,64);//$00008000;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-1);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-1);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels);
+
+                    // Wert in Prozent anzeigen
+                    _Buffer.Canvas.Brush.Style:=bsClear;
+                    _Buffer.Canvas.Pen.Style:=psClear;
+                    _Buffer.Canvas.Font.Color:=clWhite;
+                    _Buffer.Canvas.TextOut(1, ButtonPixels-12-10, mainform.levelstr(Dimmerwert));
+                    _Buffer.Canvas.Pen.Style:=psSolid;
+                  end;
+
+                  // Farbball anzeigen
+                  _Buffer.Canvas.Brush.Style:=bsSolid;
+                  _Buffer.Canvas.Pen.Style:=psSolid;
+                  _Buffer.Canvas.Pen.Color:=clBlack;
+
+                  _Buffer.Canvas.Brush.Color:=geraetesteuerung.get_color(mainform.devices[DeviceIndex].ID);
+
+                  if mainform.devices[DeviceIndex].hasPANTILT then
+                  begin
+                      Topval:=round((ButtonPixels*(geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID, 'TILT')/255))-(ButtonPixels/3.2/2));
+                      Leftval:=round(ButtonPixels-(ButtonPixels*((255-geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID, 'PAN'))/255))+(ButtonPixels/3.2/2));
+                      _Buffer.Canvas.Ellipse(Leftval-round(ButtonPixels/3.2), Topval, Leftval, Topval+round(ButtonPixels/3.2));
+                  end else
+                  begin
+                      _Buffer.Canvas.Ellipse(ButtonPixels-round(ButtonPixels/3.4), ButtonPixels-round(ButtonPixels/3.4)-5, ButtonPixels, ButtonPixels-5);
+                  end;
+                end else
+                begin
+                  DeviceIndex:=geraetesteuerung.GetGroupPositionInGroupArray(mainform.ElgatoStreamDeckArray[dev].Buttons[btn].DeviceOrGroupID);
+                  if DeviceIndex>-1 then
+                  begin
+                    // its a group
+                    _Buffer.Canvas.Brush.Style:=bsSolid;
+                    _Buffer.Canvas.Pen.Color:=clBlack;
+                    _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
+
+                    _Buffer.Canvas.Font.Color:=clWhite;
+                    _Buffer.Canvas.TextOut(1,0,mainform.DeviceGroups[DeviceIndex].Name);
+                    _Buffer.Canvas.TextOut(1,12,_('Gruppe'));
+
+
+                    Dimmerwert:=geraetesteuerung.get_group(mainform.DeviceGroups[DeviceIndex].ID, 'DIMMER');
+
+                    // Umrandung zeichnen
+                    _Buffer.Canvas.Brush.Color:=ClMedGray;
+                    _Buffer.Canvas.Pen.Style:=psSolid;
+                    _Buffer.Canvas.Pen.Color:=clBlack;
+                    _Buffer.Canvas.Rectangle(0, ButtonPixels-10, ButtonPixels, ButtonPixels);
+
+                    // Hintergrund zeichnen
+                    _Buffer.Canvas.Pen.Color:=clSilver;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-9);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-9);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-8);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-8);
+                    _Buffer.Canvas.Pen.Color:=clMedGray;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-7);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-7);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-6);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-6);
+                    _Buffer.Canvas.Pen.Color:=clGray;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-5);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-5);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-4);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-4);
+                    _Buffer.Canvas.Pen.Color:=clGray;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-3);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-3);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-2);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-2);
+                    _Buffer.Canvas.Pen.Color:=clMedGray;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-1);
+                    _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-1);
+                    // Füllung zeichnen
+                    _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,128);//$00FFFFFF;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-9);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-9);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-8);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-8);
+                    _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,192);//$00A4FFA4;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-7);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-7);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-6);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-6);
+                    _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,255);//$0000FF00;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-5);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-5);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-4);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-4);
+                    _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,96);//$0000B000;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-3);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-3);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-2);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-2);
+                    _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,64);//$00008000;
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels-1);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-1);
+                    _Buffer.Canvas.MoveTo(0, ButtonPixels);
+                    _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels);
+
+                    // Wert in Prozent anzeigen
+                    _Buffer.Canvas.Brush.Style:=bsClear;
+                    _Buffer.Canvas.Pen.Style:=psClear;
+                    _Buffer.Canvas.Font.Color:=clWhite;
+                    _Buffer.Canvas.TextOut(1, ButtonPixels-12-10, mainform.levelstr(Dimmerwert));
+                    _Buffer.Canvas.Pen.Style:=psSolid;
+                  end else
+                  begin
+                    DrawEmptyButton:=true;
+                  end;
+                end;
               end;
-            end else
-            begin
-              DeviceIndex:=geraetesteuerung.GetGroupPositionInGroupArray(mainform.ElgatoStreamDeckArray[dev].Buttons[btn].DeviceOrGroupID);
-              if DeviceIndex>-1 then
+              3: // 3=DataIn
               begin
-                // its a group
                 _Buffer.Canvas.Brush.Style:=bsSolid;
                 _Buffer.Canvas.Pen.Color:=clBlack;
                 _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
 
                 _Buffer.Canvas.Font.Color:=clWhite;
-                _Buffer.Canvas.TextOut(1,0,mainform.DeviceGroups[DeviceIndex].Name);
-                _Buffer.Canvas.TextOut(1,12,_('Gruppe'));
 
-
-                Dimmerwert:=geraetesteuerung.get_group(mainform.DeviceGroups[DeviceIndex].ID, 'DIMMER');
-
+                Dimmerwert:=mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue;
                 // Umrandung zeichnen
                 _Buffer.Canvas.Brush.Color:=ClMedGray;
                 _Buffer.Canvas.Pen.Style:=psSolid;
                 _Buffer.Canvas.Pen.Color:=clBlack;
-                _Buffer.Canvas.Rectangle(0, ButtonPixels-10, ButtonPixels, ButtonPixels);
+                _Buffer.Canvas.Rectangle(0, 0, ButtonPixels, 10);
 
                 // Hintergrund zeichnen
                 _Buffer.Canvas.Pen.Color:=clSilver;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-9);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-9);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-8);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-8);
+                _Buffer.Canvas.MoveTo(0, 1);
+                _Buffer.Canvas.LineTo(ButtonPixels, 1);
+                _Buffer.Canvas.MoveTo(0, 2);
+                _Buffer.Canvas.LineTo(ButtonPixels, 2);
                 _Buffer.Canvas.Pen.Color:=clMedGray;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-7);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-7);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-6);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-6);
+                _Buffer.Canvas.MoveTo(0, 3);
+                _Buffer.Canvas.LineTo(ButtonPixels, 3);
+                _Buffer.Canvas.MoveTo(0, 4);
+                _Buffer.Canvas.LineTo(ButtonPixels, 4);
                 _Buffer.Canvas.Pen.Color:=clGray;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-5);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-5);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-4);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-4);
+                _Buffer.Canvas.MoveTo(0, 5);
+                _Buffer.Canvas.LineTo(ButtonPixels, 5);
+                _Buffer.Canvas.MoveTo(0, 6);
+                _Buffer.Canvas.LineTo(ButtonPixels, 6);
                 _Buffer.Canvas.Pen.Color:=clGray;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-3);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-3);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-2);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-2);
+                _Buffer.Canvas.MoveTo(0, 7);
+                _Buffer.Canvas.LineTo(ButtonPixels, 7);
+                _Buffer.Canvas.MoveTo(0, 8);
+                _Buffer.Canvas.LineTo(ButtonPixels, 8);
                 _Buffer.Canvas.Pen.Color:=clMedGray;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-1);
-                _Buffer.Canvas.LineTo(ButtonPixels, ButtonPixels-1);
+                _Buffer.Canvas.MoveTo(0, 9);
+                _Buffer.Canvas.LineTo(ButtonPixels, 9);
                 // Füllung zeichnen
                 _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,128);//$00FFFFFF;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-9);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-9);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-8);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-8);
+                _Buffer.Canvas.MoveTo(0, 1);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 1);
+                _Buffer.Canvas.MoveTo(0, 2);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 2);
                 _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,192);//$00A4FFA4;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-7);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-7);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-6);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-6);
+                _Buffer.Canvas.MoveTo(0, 3);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 3);
+                _Buffer.Canvas.MoveTo(0, 4);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 4);
                 _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,255);//$0000FF00;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-5);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-5);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-4);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-4);
+                _Buffer.Canvas.MoveTo(0, 5);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 5);
+                _Buffer.Canvas.MoveTo(0, 6);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 6);
                 _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,96);//$0000B000;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-3);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-3);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-2);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-2);
+                _Buffer.Canvas.MoveTo(0, 7);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 7);
+                _Buffer.Canvas.MoveTo(0, 8);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 8);
                 _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,64);//$00008000;
-                _Buffer.Canvas.MoveTo(0, ButtonPixels-1);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels-1);
-                _Buffer.Canvas.MoveTo(0, ButtonPixels);
-                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), ButtonPixels);
+                _Buffer.Canvas.MoveTo(0, 9);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 9);
+                _Buffer.Canvas.MoveTo(0, 10);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 10);
 
                 // Wert in Prozent anzeigen
                 _Buffer.Canvas.Brush.Style:=bsClear;
                 _Buffer.Canvas.Pen.Style:=psClear;
                 _Buffer.Canvas.Font.Color:=clWhite;
-                _Buffer.Canvas.TextOut(1, ButtonPixels-12-10, mainform.levelstr(Dimmerwert));
+                _Buffer.Canvas.TextOut(1,12,'DataIn '+inttostr(mainform.ElgatoStreamDeckArray[dev].Buttons[btn].DataInChannel)+'@'+mainform.levelstr(Dimmerwert));
                 _Buffer.Canvas.Pen.Style:=psSolid;
-              end else
-              begin
-                DrawEmptyButton:=true;
+
+                if length(mainform.DataInEventArray)>0 then
+                for i:=0 to length(mainform.DataInEventArray)-1 do
+                begin
+                  if (mainform.ElgatoStreamDeckArray[dev].Buttons[btn].DataInChannel=mainform.DataInEventArray[i].channel) then
+                  begin
+                    // we found one element. PC_DIMMER supports connections to multiple DataIn-channels, but we have limited space in display
+                    // so just display first connection
+                    mainform.GetBefehlState(mainform.DataInEventArray[i].Befehl, Text_PCD_Function, Text_Function, Text_Value, Value);
+                    _Buffer.Canvas.TextOut(1,24,Text_PCD_Function);
+                    _Buffer.Canvas.TextOut(1,36,Text_Function);
+                    _Buffer.Canvas.TextOut(1,48,Text_Value);
+
+                    break;
+                  end;
+                end;
               end;
-            end;
-          end;
-          3: // 3=DataIn
-          begin
-            _Buffer.Canvas.Brush.Style:=bsSolid;
-            _Buffer.Canvas.Pen.Color:=clBlack;
-            _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
-
-            _Buffer.Canvas.Font.Color:=clWhite;
-
-            Dimmerwert:=mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue;
-            // Umrandung zeichnen
-            _Buffer.Canvas.Brush.Color:=ClMedGray;
-            _Buffer.Canvas.Pen.Style:=psSolid;
-            _Buffer.Canvas.Pen.Color:=clBlack;
-            _Buffer.Canvas.Rectangle(0, 0, ButtonPixels, 10);
-
-            // Hintergrund zeichnen
-            _Buffer.Canvas.Pen.Color:=clSilver;
-            _Buffer.Canvas.MoveTo(0, 1);
-            _Buffer.Canvas.LineTo(ButtonPixels, 1);
-            _Buffer.Canvas.MoveTo(0, 2);
-            _Buffer.Canvas.LineTo(ButtonPixels, 2);
-            _Buffer.Canvas.Pen.Color:=clMedGray;
-            _Buffer.Canvas.MoveTo(0, 3);
-            _Buffer.Canvas.LineTo(ButtonPixels, 3);
-            _Buffer.Canvas.MoveTo(0, 4);
-            _Buffer.Canvas.LineTo(ButtonPixels, 4);
-            _Buffer.Canvas.Pen.Color:=clGray;
-            _Buffer.Canvas.MoveTo(0, 5);
-            _Buffer.Canvas.LineTo(ButtonPixels, 5);
-            _Buffer.Canvas.MoveTo(0, 6);
-            _Buffer.Canvas.LineTo(ButtonPixels, 6);
-            _Buffer.Canvas.Pen.Color:=clGray;
-            _Buffer.Canvas.MoveTo(0, 7);
-            _Buffer.Canvas.LineTo(ButtonPixels, 7);
-            _Buffer.Canvas.MoveTo(0, 8);
-            _Buffer.Canvas.LineTo(ButtonPixels, 8);
-            _Buffer.Canvas.Pen.Color:=clMedGray;
-            _Buffer.Canvas.MoveTo(0, 9);
-            _Buffer.Canvas.LineTo(ButtonPixels, 9);
-            // Füllung zeichnen
-            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,128);//$00FFFFFF;
-            _Buffer.Canvas.MoveTo(0, 1);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 1);
-            _Buffer.Canvas.MoveTo(0, 2);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 2);
-            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,192);//$00A4FFA4;
-            _Buffer.Canvas.MoveTo(0, 3);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 3);
-            _Buffer.Canvas.MoveTo(0, 4);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 4);
-            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,255);//$0000FF00;
-            _Buffer.Canvas.MoveTo(0, 5);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 5);
-            _Buffer.Canvas.MoveTo(0, 6);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 6);
-            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,96);//$0000B000;
-            _Buffer.Canvas.MoveTo(0, 7);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 7);
-            _Buffer.Canvas.MoveTo(0, 8);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 8);
-            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,64);//$00008000;
-            _Buffer.Canvas.MoveTo(0, 9);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 9);
-            _Buffer.Canvas.MoveTo(0, 10);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 10);
-
-            // Wert in Prozent anzeigen
-            _Buffer.Canvas.Brush.Style:=bsClear;
-            _Buffer.Canvas.Pen.Style:=psClear;
-            _Buffer.Canvas.Font.Color:=clWhite;
-            _Buffer.Canvas.TextOut(1,12,'DataIn '+inttostr(mainform.ElgatoStreamDeckArray[dev].Buttons[btn].DataInChannel)+'@'+mainform.levelstr(Dimmerwert));
-            _Buffer.Canvas.Pen.Style:=psSolid;
-
-            if length(mainform.DataInEventArray)>0 then
-            for i:=0 to length(mainform.DataInEventArray)-1 do
-            begin
-              if (mainform.ElgatoStreamDeckArray[dev].Buttons[btn].DataInChannel=mainform.DataInEventArray[i].channel) then
+              4: // 4=Befehl
               begin
-                // we found one element. PC_DIMMER supports connections to multiple DataIn-channels, but we have limited space in display
-				        // so just display first connection
-                mainform.GetBefehlState(mainform.DataInEventArray[i].Befehl, Text_PCD_Function, Text_Function, Text_Value, Value);
+                _Buffer.Canvas.Brush.Style:=bsSolid;
+                _Buffer.Canvas.Pen.Color:=clBlack;
+                _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
+
+                _Buffer.Canvas.Font.Color:=clWhite;
+
+                Dimmerwert:=mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue;
+                // Umrandung zeichnen
+                _Buffer.Canvas.Brush.Color:=ClMedGray;
+                _Buffer.Canvas.Pen.Style:=psSolid;
+                _Buffer.Canvas.Pen.Color:=clBlack;
+                _Buffer.Canvas.Rectangle(0, 0, ButtonPixels, 10);
+
+                // Hintergrund zeichnen
+                _Buffer.Canvas.Pen.Color:=clSilver;
+                _Buffer.Canvas.MoveTo(0, 1);
+                _Buffer.Canvas.LineTo(ButtonPixels, 1);
+                _Buffer.Canvas.MoveTo(0, 2);
+                _Buffer.Canvas.LineTo(ButtonPixels, 2);
+                _Buffer.Canvas.Pen.Color:=clMedGray;
+                _Buffer.Canvas.MoveTo(0, 3);
+                _Buffer.Canvas.LineTo(ButtonPixels, 3);
+                _Buffer.Canvas.MoveTo(0, 4);
+                _Buffer.Canvas.LineTo(ButtonPixels, 4);
+                _Buffer.Canvas.Pen.Color:=clGray;
+                _Buffer.Canvas.MoveTo(0, 5);
+                _Buffer.Canvas.LineTo(ButtonPixels, 5);
+                _Buffer.Canvas.MoveTo(0, 6);
+                _Buffer.Canvas.LineTo(ButtonPixels, 6);
+                _Buffer.Canvas.Pen.Color:=clGray;
+                _Buffer.Canvas.MoveTo(0, 7);
+                _Buffer.Canvas.LineTo(ButtonPixels, 7);
+                _Buffer.Canvas.MoveTo(0, 8);
+                _Buffer.Canvas.LineTo(ButtonPixels, 8);
+                _Buffer.Canvas.Pen.Color:=clMedGray;
+                _Buffer.Canvas.MoveTo(0, 9);
+                _Buffer.Canvas.LineTo(ButtonPixels, 9);
+                // Füllung zeichnen
+                _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,128);//$00FFFFFF;
+                _Buffer.Canvas.MoveTo(0, 1);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 1);
+                _Buffer.Canvas.MoveTo(0, 2);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 2);
+                _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,192);//$00A4FFA4;
+                _Buffer.Canvas.MoveTo(0, 3);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 3);
+                _Buffer.Canvas.MoveTo(0, 4);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 4);
+                _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,255);//$0000FF00;
+                _Buffer.Canvas.MoveTo(0, 5);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 5);
+                _Buffer.Canvas.MoveTo(0, 6);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 6);
+                _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,96);//$0000B000;
+                _Buffer.Canvas.MoveTo(0, 7);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 7);
+                _Buffer.Canvas.MoveTo(0, 8);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 8);
+                _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,64);//$00008000;
+                _Buffer.Canvas.MoveTo(0, 9);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 9);
+                _Buffer.Canvas.MoveTo(0, 10);
+                _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 10);
+
+                // Wert in Prozent anzeigen
+                _Buffer.Canvas.Brush.Style:=bsClear;
+                _Buffer.Canvas.Pen.Style:=psClear;
+                _Buffer.Canvas.Font.Color:=clWhite;
+                _Buffer.Canvas.TextOut(1,12,_('Befehl')+' @ '+mainform.levelstr(Dimmerwert));
+                _Buffer.Canvas.Pen.Style:=psSolid;
+
+                mainform.GetBefehlState(mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Befehl, Text_PCD_Function, Text_Function, Text_Value, Value);
                 _Buffer.Canvas.TextOut(1,24,Text_PCD_Function);
                 _Buffer.Canvas.TextOut(1,36,Text_Function);
                 _Buffer.Canvas.TextOut(1,48,Text_Value);
-
-                break;
               end;
             end;
           end;
-          4: // 4=Befehl
+
+          if DrawEmptyButton then
           begin
             _Buffer.Canvas.Brush.Style:=bsSolid;
             _Buffer.Canvas.Pen.Color:=clBlack;
             _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
 
             _Buffer.Canvas.Font.Color:=clWhite;
-
-            Dimmerwert:=mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue;
-            // Umrandung zeichnen
-            _Buffer.Canvas.Brush.Color:=ClMedGray;
-            _Buffer.Canvas.Pen.Style:=psSolid;
-            _Buffer.Canvas.Pen.Color:=clBlack;
-            _Buffer.Canvas.Rectangle(0, 0, ButtonPixels, 10);
-
-            // Hintergrund zeichnen
-            _Buffer.Canvas.Pen.Color:=clSilver;
-            _Buffer.Canvas.MoveTo(0, 1);
-            _Buffer.Canvas.LineTo(ButtonPixels, 1);
-            _Buffer.Canvas.MoveTo(0, 2);
-            _Buffer.Canvas.LineTo(ButtonPixels, 2);
-            _Buffer.Canvas.Pen.Color:=clMedGray;
-            _Buffer.Canvas.MoveTo(0, 3);
-            _Buffer.Canvas.LineTo(ButtonPixels, 3);
-            _Buffer.Canvas.MoveTo(0, 4);
-            _Buffer.Canvas.LineTo(ButtonPixels, 4);
-            _Buffer.Canvas.Pen.Color:=clGray;
-            _Buffer.Canvas.MoveTo(0, 5);
-            _Buffer.Canvas.LineTo(ButtonPixels, 5);
-            _Buffer.Canvas.MoveTo(0, 6);
-            _Buffer.Canvas.LineTo(ButtonPixels, 6);
-            _Buffer.Canvas.Pen.Color:=clGray;
-            _Buffer.Canvas.MoveTo(0, 7);
-            _Buffer.Canvas.LineTo(ButtonPixels, 7);
-            _Buffer.Canvas.MoveTo(0, 8);
-            _Buffer.Canvas.LineTo(ButtonPixels, 8);
-            _Buffer.Canvas.Pen.Color:=clMedGray;
-            _Buffer.Canvas.MoveTo(0, 9);
-            _Buffer.Canvas.LineTo(ButtonPixels, 9);
-            // Füllung zeichnen
-            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,128);//$00FFFFFF;
-            _Buffer.Canvas.MoveTo(0, 1);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 1);
-            _Buffer.Canvas.MoveTo(0, 2);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 2);
-            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,192);//$00A4FFA4;
-            _Buffer.Canvas.MoveTo(0, 3);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 3);
-            _Buffer.Canvas.MoveTo(0, 4);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 4);
-            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,255);//$0000FF00;
-            _Buffer.Canvas.MoveTo(0, 5);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 5);
-            _Buffer.Canvas.MoveTo(0, 6);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 6);
-            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,96);//$0000B000;
-            _Buffer.Canvas.MoveTo(0, 7);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 7);
-            _Buffer.Canvas.MoveTo(0, 8);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 8);
-            _Buffer.Canvas.Pen.Color:=GetColor3(0,128,255,Dimmerwert,clRed,clYellow,clLime,64);//$00008000;
-            _Buffer.Canvas.MoveTo(0, 9);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 9);
-            _Buffer.Canvas.MoveTo(0, 10);
-            _Buffer.Canvas.LineTo(round((ButtonPixels)*(Dimmerwert/255)), 10);
-
-            // Wert in Prozent anzeigen
-            _Buffer.Canvas.Brush.Style:=bsClear;
-            _Buffer.Canvas.Pen.Style:=psClear;
-            _Buffer.Canvas.Font.Color:=clWhite;
-            _Buffer.Canvas.TextOut(1,12,_('Befehl')+' @ '+mainform.levelstr(Dimmerwert));
-            _Buffer.Canvas.Pen.Style:=psSolid;
-
-            mainform.GetBefehlState(mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Befehl, Text_PCD_Function, Text_Function, Text_Value, Value);
-            _Buffer.Canvas.TextOut(1,24,Text_PCD_Function);
-            _Buffer.Canvas.TextOut(1,36,Text_Function);
-            _Buffer.Canvas.TextOut(1,48,Text_Value);
+            _Buffer.Canvas.TextOut(1,0,TimeToStr(now));
+            _Buffer.Canvas.TextOut(1,12,'Button '+inttostr(btn+1));
+            _Buffer.Canvas.TextOut(1,24,'');
+            _Buffer.Canvas.TextOut(1,36,_('- Frei -'));
           end;
+
+          if elgatostreamdeckform.Showing and (devicelistbox.ItemIndex>-1) and (devicelistbox.ItemIndex<length(mainform.ElgatoStreamSerials)) and (mainform.ElgatoStreamDeckArray[dev].Serial=mainform.ElgatoStreamSerials[devicelistbox.ItemIndex]) then
+          begin
+            // preview on computerdisplay
+            X:=0;
+            Y:=0;
+            if mainform.ElgatoStreamDeckArray[dev].ButtonCount=6 then
+            begin
+              X:=btn-trunc(btn/3)*3;
+              Y:=trunc(btn/3);
+            end else if mainform.ElgatoStreamDeckArray[dev].ButtonCount=15 then
+            begin
+              X:=btn-trunc(btn/5)*5;
+              Y:=trunc(btn/5);
+            end else if mainform.ElgatoStreamDeckArray[dev].ButtonCount=32 then
+            begin
+              X:=btn-trunc(btn/8)*8;
+              Y:=trunc(btn/8);
+            end;
+            BitBlt(Paintbox1.Canvas.Handle, ButtonPixels*X, ButtonPixels*Y, ButtonPixels, ButtonPixels, _Buffer.Canvas.Handle, 0, 0, SrcCopy);
+          end;
+
+          // neuen schwarzen Rahmen über Button drüberlegen
+          _Buffer.Canvas.Brush.Style:=bsClear;
+          _Buffer.Canvas.Pen.Color:=clBlack;
+          _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
+          _Buffer.Canvas.Brush.Style:=bsSolid;
+
+          // send image to device
+          RotateBitmap(_Buffer, 3.141, false, 0);
+          SetKeyBitmap(mainform.ElgatoStreamDeckArray[dev].Serial, btn, _Buffer);
         end;
+
+        break;
       end;
-
-      if DrawEmptyButton then
-      begin
-        _Buffer.Canvas.Brush.Style:=bsSolid;
-        _Buffer.Canvas.Pen.Color:=clBlack;
-        _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
-
-        _Buffer.Canvas.Font.Color:=clWhite;
-        _Buffer.Canvas.TextOut(1,0,TimeToStr(now));
-        _Buffer.Canvas.TextOut(1,12,'Button '+inttostr(btn+1));
-        _Buffer.Canvas.TextOut(1,24,'');
-        _Buffer.Canvas.TextOut(1,36,_('- Frei -'));
-      end;
-
-      if elgatostreamdeckform.Showing and (devicelistbox.ItemIndex>-1) and (devicelistbox.ItemIndex<length(mainform.ElgatoStreamSerials)) and (mainform.ElgatoStreamDeckArray[dev].Serial=mainform.ElgatoStreamSerials[devicelistbox.ItemIndex]) then
-      begin
-        // preview on computerdisplay
-        X:=0;
-        Y:=0;
-        if mainform.ElgatoStreamDeckArray[dev].ButtonCount=6 then
-        begin
-          X:=btn-trunc(btn/3)*3;
-          Y:=trunc(btn/3);
-        end else if mainform.ElgatoStreamDeckArray[dev].ButtonCount=15 then
-        begin
-          X:=btn-trunc(btn/5)*5;
-          Y:=trunc(btn/5);
-        end else if mainform.ElgatoStreamDeckArray[dev].ButtonCount=32 then
-        begin
-          X:=btn-trunc(btn/8)*8;
-          Y:=trunc(btn/8);
-        end;
-        BitBlt(Paintbox1.Canvas.Handle, ButtonPixels*X, ButtonPixels*Y, ButtonPixels, ButtonPixels, _Buffer.Canvas.Handle, 0, 0, SrcCopy);
-      end;
-
-      // neuen schwarzen Rahmen über Button drüberlegen
-      _Buffer.Canvas.Brush.Style:=bsClear;
-      _Buffer.Canvas.Pen.Color:=clBlack;
-      _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
-      _Buffer.Canvas.Brush.Style:=bsSolid;
-
-      // send image to device
-      RotateBitmap(_Buffer, 3.141, false, 0);
-      SetKeyBitmap(mainform.ElgatoStreamDeckArray[dev].Serial, btn, _Buffer);
     end;
   end;
 end;

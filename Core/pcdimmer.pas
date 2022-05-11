@@ -28021,9 +28021,13 @@ begin
   // disconnect all devices and reconnect
   for i:=0 to length(ElgatoStreamDeckArray)-1 do
   begin
-    ElgatoStreamDeckArray[i].HidDevice.Free;
+    try
+      ElgatoStreamDeckArray[i].HidDevice.Free;
+    except
+    end;
     ElgatoStreamDeckArray[i].Online:=false;
   end;
+
   elgatostreamdeckform.devicelistbox.Clear;
   setlength(ElgatoStreamSerials, 0);
 

@@ -1,6 +1,6 @@
 object nodecontrolform: Tnodecontrolform
-  Left = 1048
-  Top = 228
+  Left = 541
+  Top = 123
   Width = 777
   Height = 529
   Caption = 'Knoten-Steuerung'
@@ -148,6 +148,7 @@ object nodecontrolform: Tnodecontrolform
   OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnHide = FormHide
   OnResize = FormResize
   OnShow = FormShow

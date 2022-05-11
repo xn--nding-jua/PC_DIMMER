@@ -2536,7 +2536,7 @@ begin
   begin
     if mainform.DeviceSelected[i] then
     begin
-      geraetesteuerung.set_channel(mainform.Devices[i].ID,'a',255-amberslider.position,255-amberslider.position,500);
+      geraetesteuerung.set_channel(mainform.Devices[i].ID,'a',-1,255-amberslider.position,500);
     end;
   end;
 end;
@@ -2549,7 +2549,7 @@ begin
   begin
     if mainform.DeviceSelected[i] then
     begin
-      geraetesteuerung.set_channel(mainform.Devices[i].ID,'w',255-whiteslider.position,255-whiteslider.position,500);
+      geraetesteuerung.set_channel(mainform.Devices[i].ID,'w',-1,255-whiteslider.position,500);
     end;
   end;
 end;
@@ -2562,7 +2562,7 @@ begin
   begin
     if mainform.DeviceSelected[i] then
     begin
-      geraetesteuerung.set_channel(mainform.Devices[i].ID,'uv',255-uvslider.position,255-uvslider.position,500);
+      geraetesteuerung.set_channel(mainform.Devices[i].ID,'uv',-1,255-uvslider.position,500);
     end;
   end;
 end;
