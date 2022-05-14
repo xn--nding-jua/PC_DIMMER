@@ -55,7 +55,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=488;
+  actualprojectversion=489;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -1004,6 +1004,8 @@ type
 		MidiInTimeCode: array of TMidiTimecode;
 		MidiOutControls: array of Pointer;
     LastMidiMSG, LastMidiData1, LastMidiData2: Byte;
+    LastDataInChannel:Word;
+    LastDataInValue: Byte;
     DimmerkernelResolution, MinDimmerkernelResolution:Cardinal; // in ms 1/44Hz=22,72ms - oder Automatisch
     DimmerkernelResolutionAutoset:boolean;
 
@@ -1126,7 +1128,9 @@ type
     Cuelistbank:array of TCuelistbank;
     TimeCodePlayerBank:array of TTimeCodePlayer;
     IREvent:array of TIREvent;
-    XTouchDevices:array of TXTouchDevice;
+    XTouchPCDDevicesOrGroups:array of TXTouchPCDDeviceOrGroup;
+    XTouchDevices:array of TXTouch;
+    XTouchMasterfaderBefehle:array of TBefehl2;
     ElgatoStreamDeckArray:array of TElgatoStreamDeck;
     ElgatoStreamSerials:array of string;
     // Szenenbibliothek
@@ -5737,11 +5741,34 @@ begin
 // XTouchControl speichern
   inprogress.filename.Caption:=_('Schreibe Datei... XTouchControl');
   inprogress.Refresh;
-  Count:=length(mainform.XTouchDevices);
+  Count:=length(mainform.XTouchPCDDevicesOrGroups);
   Filestream.WriteBuffer(Count,sizeof(Count));
   for i:=0 to Count-1 do
   begin
-    Filestream.WriteBuffer(mainform.XTouchDevices[i].ID,sizeof(mainform.XTouchDevices[i].ID));
+    Filestream.WriteBuffer(mainform.XTouchPCDDevicesOrGroups[i].ID,sizeof(mainform.XTouchPCDDevicesOrGroups[i].ID));
+  end;
+  Count:=length(XTouchMasterfaderBefehle);
+  Filestream.WriteBuffer(Count,sizeof(Count));
+  for i:=0 to Count-1 do
+  begin
+    Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].Typ,sizeof(XTouchMasterfaderBefehle[i].Typ));
+    Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].OnValue,sizeof(XTouchMasterfaderBefehle[i].OnValue));
+    Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].SwitchValue,sizeof(XTouchMasterfaderBefehle[i].SwitchValue));
+    Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].InvertSwitchValue,sizeof(XTouchMasterfaderBefehle[i].InvertSwitchValue));
+    Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].OffValue,sizeof(XTouchMasterfaderBefehle[i].OffValue));
+    Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].ScaleValue,sizeof(XTouchMasterfaderBefehle[i].ScaleValue));
+    Count2:=length(XTouchMasterfaderBefehle[i].ArgInteger);
+    Filestream.WriteBuffer(Count2,sizeof(Count2));
+    for k:=0 to Count2-1 do
+      Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].ArgInteger[k],sizeof(XTouchMasterfaderBefehle[i].ArgInteger[k]));
+    Count2:=length(XTouchMasterfaderBefehle[i].ArgString);
+    Filestream.WriteBuffer(Count2,sizeof(Count2));
+    for k:=0 to Count2-1 do
+      Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].ArgString[k],sizeof(XTouchMasterfaderBefehle[i].ArgString[k]));
+    Count2:=length(XTouchMasterfaderBefehle[i].ArgGUID);
+    Filestream.WriteBuffer(Count2,sizeof(Count2));
+    for k:=0 to Count2-1 do
+      Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].ArgGUID[k],sizeof(XTouchMasterfaderBefehle[i].ArgGUID[k]));
   end;
 // Ende XTouchControl
 // CodeSzenen speichern
@@ -8823,10 +8850,38 @@ begin
       end;
 
       Filestream.ReadBuffer(Count,sizeof(Count));
-      setlength(mainform.XTouchDevices, Count);
+      setlength(mainform.XTouchPCDDevicesOrGroups, Count);
       for i:=0 to Count-1 do
       begin
-        Filestream.ReadBuffer(mainform.XTouchDevices[i].ID,sizeof(mainform.XTouchDevices[i].ID));
+        Filestream.ReadBuffer(mainform.XTouchPCDDevicesOrGroups[i].ID,sizeof(mainform.XTouchPCDDevicesOrGroups[i].ID));
+      end;
+      if projektprogrammversionint>=489 then
+      begin
+        Filestream.ReadBuffer(Count,sizeof(Count));
+        setlength(XTouchMasterfaderBefehle, Count);
+        if length(XTouchMasterfaderBefehle)<length(XTouchDevices) then
+          setlength(XTouchMasterfaderBefehle, length(XTouchDevices));
+        for i:=0 to Count-1 do
+        begin
+          Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].Typ,sizeof(XTouchMasterfaderBefehle[i].Typ));
+          Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].OnValue,sizeof(XTouchMasterfaderBefehle[i].OnValue));
+          Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].SwitchValue,sizeof(XTouchMasterfaderBefehle[i].SwitchValue));
+          Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].InvertSwitchValue,sizeof(XTouchMasterfaderBefehle[i].InvertSwitchValue));
+          Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].OffValue,sizeof(XTouchMasterfaderBefehle[i].OffValue));
+          Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].ScaleValue,sizeof(XTouchMasterfaderBefehle[i].ScaleValue));
+          Filestream.ReadBuffer(Count2,sizeof(Count2));
+          setlength(XTouchMasterfaderBefehle[i].ArgInteger,Count2);
+          for k:=0 to Count2-1 do
+            Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].ArgInteger[k],sizeof(XTouchMasterfaderBefehle[i].ArgInteger[k]));
+          Filestream.ReadBuffer(Count2,sizeof(Count2));
+          setlength(XTouchMasterfaderBefehle[i].ArgString,Count2);
+          for k:=0 to Count2-1 do
+            Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].ArgString[k],sizeof(XTouchMasterfaderBefehle[i].ArgString[k]));
+          Filestream.ReadBuffer(Count2,sizeof(Count2));
+          setlength(XTouchMasterfaderBefehle[i].ArgGUID,Count2);
+          for k:=0 to Count2-1 do
+            Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].ArgGUID[k],sizeof(XTouchMasterfaderBefehle[i].ArgGUID[k]));
+        end;
       end;
     end;
 // Ende XTouchControl
@@ -12400,6 +12455,9 @@ begin
   if (address<1) or (address>8192) then exit;
 
   data_in_channels[address]:=endvalue;
+
+  LastDataInChannel:=address;
+  LastDataInValue:=endvalue;
 
   if DataInEventfrm.showing then
   begin
@@ -20711,7 +20769,7 @@ begin
 
   kontrollpanel.Left:=0;
   kontrollpanel.Top:=0;
-  kontrollpanel.ClientWidth:=767;
+  kontrollpanel.ClientWidth:=780;
   kontrollpanel.ClientHeight:=372;
 
   effektsequenzer.Left:=0;
@@ -27905,9 +27963,9 @@ procedure Tmainform.HidCtlDeviceCreateError(
   Controller: TJvHidDeviceController; PnPInfo: TJvHidPnPInfo; var Handled,
   RetryCreate: Boolean);
 begin
+  // handle errors if desired. For now: ignore error
   Handled:=true;
   RetryCreate:=false;
-  // TODO: handle errors if desired. For now: ignore error
 end;
 
 function Tmainform.HidCtlEnumerate(HidDev: TJvHidDevice;
@@ -28083,10 +28141,13 @@ begin
             begin
               if ElgatoStreamDeckArray[i].Buttons[b].UseHoldToChange then
               begin
-                if mainform.ElgatoStreamDeckArray[i].Buttons[b].CurrentValue=255 then
-                  mainform.ElgatoStreamDeckArray[i].Buttons[b].Increment:=-1*abs(mainform.ElgatoStreamDeckArray[i].Buttons[b].Increment)
-                else if mainform.ElgatoStreamDeckArray[i].Buttons[b].CurrentValue=0 then
-                  mainform.ElgatoStreamDeckArray[i].Buttons[b].Increment:=abs(mainform.ElgatoStreamDeckArray[i].Buttons[b].Increment);
+                if (CurrentButtonMode=3) or (CurrentButtonMode=4) then
+                begin
+                  if mainform.ElgatoStreamDeckArray[i].Buttons[b].CurrentValue=255 then
+                    mainform.ElgatoStreamDeckArray[i].Buttons[b].Increment:=-1*abs(mainform.ElgatoStreamDeckArray[i].Buttons[b].Increment)
+                  else if mainform.ElgatoStreamDeckArray[i].Buttons[b].CurrentValue=0 then
+                    mainform.ElgatoStreamDeckArray[i].Buttons[b].Increment:=abs(mainform.ElgatoStreamDeckArray[i].Buttons[b].Increment);
+                end;
               end else
               begin
                 mainform.ElgatoStreamDeckArray[i].Buttons[b].CurrentValue:=255;
@@ -28132,8 +28193,12 @@ begin
           begin
             // button released
             ElgatoStreamDeckArray[i].Buttons[b].Pressed:=false;
-            // change direction of value-change on each button-release
-            ElgatoStreamDeckArray[i].Buttons[b].Increment:=-1*ElgatoStreamDeckArray[i].Buttons[b].Increment;
+
+            if (CurrentButtonMode=3) or (CurrentButtonMode=4) then
+            begin
+              // change direction of value-change on each button-release
+              ElgatoStreamDeckArray[i].Buttons[b].Increment:=-1*ElgatoStreamDeckArray[i].Buttons[b].Increment;
+            end;
 
             if (b=(ElgatoStreamDeckArray[i].ButtonCount-1)) and (mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton) then
             begin
@@ -28176,6 +28241,7 @@ begin
     if AtLeastOneButtonPressed then
     begin
       elgatostreamdeckform.ElgatoStreamDeckDisplayTimer.Interval:=100;
+      elgatostreamdeckform.ElgatoStreamDeckDisplayTimerTimer(nil); // direct refresh of button
     end else
     begin
       elgatostreamdeckform.ElgatoStreamDeckDisplayTimer.Interval:=250;

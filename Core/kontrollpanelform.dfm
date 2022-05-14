@@ -1,7 +1,7 @@
 object kontrollpanel: Tkontrollpanel
   Left = 515
   Top = 144
-  Width = 775
+  Width = 796
   Height = 402
   HorzScrollBar.Smooth = True
   HorzScrollBar.Tracking = True
@@ -165,7 +165,7 @@ object kontrollpanel: Tkontrollpanel
   object PaintBox1: TPaintBox
     Left = 0
     Top = 98
-    Width = 759
+    Width = 780
     Height = 246
     Align = alClient
     OnMouseDown = PaintBox1MouseDown
@@ -176,7 +176,7 @@ object kontrollpanel: Tkontrollpanel
   object Panel1: TPanel
     Left = 0
     Top = 25
-    Width = 759
+    Width = 780
     Height = 73
     Align = alTop
     AutoSize = True
@@ -1196,7 +1196,7 @@ object kontrollpanel: Tkontrollpanel
   object StatusBar1: TStatusBar
     Left = 0
     Top = 344
-    Width = 759
+    Width = 780
     Height = 19
     Hint = 'Statusleiste doppelt anklicken, um Titelleiste auszublenden...'
     Panels = <
@@ -1220,7 +1220,7 @@ object kontrollpanel: Tkontrollpanel
   object TBDock1: TTBDock
     Left = 0
     Top = 0
-    Width = 759
+    Width = 780
     Height = 25
     object TBToolbar1: TTBToolbar
       Left = 0

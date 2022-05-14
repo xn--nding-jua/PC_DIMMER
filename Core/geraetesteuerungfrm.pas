@@ -3282,9 +3282,9 @@ begin
   end;
   // Ende Submaster
   // XTouchControl
-  for i:=0 to length(mainform.XTouchDevices)-1 do
+  for i:=0 to length(mainform.XTouchPCDDevicesOrGroups)-1 do
   begin
-    if IsEqualGUID(mainform.XTouchDevices[i].ID,ID) then
+    if IsEqualGUID(mainform.XTouchPCDDevicesOrGroups[i].ID,ID) then
     begin
       if XTouchControlNode=nil then
       begin

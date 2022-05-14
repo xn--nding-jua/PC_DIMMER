@@ -360,13 +360,6 @@ begin
   begin
     if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Pressed and mainform.ElgatoStreamDeckArray[dev].Buttons[btn].UseHoldToChange then
     begin
-      mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue:=mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue+mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Increment;
-
-      if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue>255 then
-        mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue:=255
-      else if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue<0 then
-        mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue:=0;
-
       if (mainform.ElgatoStreamDeckArray[dev].UseAutoModeOnLastButton) then
       begin
         CurrentButtonMode:=mainform.ElgatoStreamDeckArray[dev].CurrentButtonMode;
@@ -374,6 +367,16 @@ begin
       begin
         CurrentButtonMode:=mainform.ElgatoStreamDeckArray[dev].Buttons[btn].ButtonType;
       end;
+
+      if (CurrentButtonMode=3) or (CurrentButtonMode=4) then
+      begin
+        mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue:=mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue+mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Increment;
+      end;
+
+      if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue>255 then
+        mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue:=255
+      else if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue<0 then
+        mainform.ElgatoStreamDeckArray[dev].Buttons[btn].CurrentValue:=0;
 
       case CurrentButtonMode of
         3: // DataIn
@@ -735,21 +738,36 @@ begin
                 begin
                   if ((mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1)>-1) and ((mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1)<length(mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1])) then
                   begin
+                    // draw colored button
                     _Buffer.Canvas.Brush.Color:=mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].Color;
                     if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Pressed then
-                      _Buffer.Canvas.Brush.Color:=InvertColor(_Buffer.Canvas.Brush.Color);
+                      _Buffer.Canvas.Brush.Color:=clNavy;
 
-                    _Buffer.Canvas.Pen.Color:=_Buffer.Canvas.Brush.Color;  
-                    _Buffer.Canvas.Rectangle(0,0,ButtonPixels,ButtonPixels);
+                    _Buffer.Canvas.Pen.Color:=_Buffer.Canvas.Brush.Color;
+                    _Buffer.Canvas.Rectangle(0,24,ButtonPixels,ButtonPixels);
+
+                    // first 24 pixels leave white to make the text crisp
+                    if mainform.ElgatoStreamDeckArray[dev].Buttons[btn].Pressed then
+                      _Buffer.Canvas.Brush.Color:=clWhite
+                    else
+                      _Buffer.Canvas.Brush.Color:=clNavy;
+                    _Buffer.Canvas.Pen.Color:=_Buffer.Canvas.Brush.Color;
+                    _Buffer.Canvas.Rectangle(0,0,ButtonPixels,25);
 
                     // Bild zeichnen
-                    rect.Top:=16;
+                    rect.Top:=20;
                     rect.Left:=12;
                     rect.right:=12+48;
-                    rect.Bottom:=16+48;
-                    pngobject.Assign(mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].PNG);
-                    SmoothResize(pngobject, 48, 48);
-                    pngobject.Draw(_Buffer.Canvas, rect);
+                    rect.Bottom:=20+48;
+                    try
+                      if Assigned(mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].PNG) and (mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].Picture<>'') then
+                      begin
+                        pngobject.Assign(mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].PNG);
+                        SmoothResize(pngobject, 48, 48);
+                        pngobject.Draw(_Buffer.Canvas, rect);
+                      end;
+                    except
+                    end;
 
                     if mainform.kontrollpanelbuttons[mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelY-1][mainform.ElgatoStreamDeckArray[dev].Buttons[btn].KontrollpanelX-1].Active then
                     begin
@@ -794,9 +812,12 @@ begin
                   rect.Left:=12;
                   rect.right:=12+48;
                   rect.Bottom:=16+48;
-                  pngobject.Assign(mainform.devicepictures64.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[DeviceIndex].bildadresse)].PngImage);
-                  SmoothResize(pngobject, 48, 48);
-                  pngobject.Draw(_Buffer.Canvas, rect);
+                  try
+                    pngobject.Assign(mainform.devicepictures96.Items.Items[geraetesteuerung.GetImageIndex(mainform.devices[DeviceIndex].bildadresse)].PngImage);
+                    SmoothResize(pngobject, 48, 48);
+                    pngobject.Draw(_Buffer.Canvas, rect);
+                  except
+                  end;
 
                   _Buffer.Canvas.Font.Color:=clWhite;
                   _Buffer.Canvas.TextOut(1,0,mainform.devices[DeviceIndex].Name);

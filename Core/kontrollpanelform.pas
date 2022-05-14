@@ -357,7 +357,7 @@ begin
           if LReg.ValueExists('Width') then
             kontrollpanel.ClientWidth:=LReg.ReadInteger('Width')
           else
-            kontrollpanel.ClientWidth:=723;
+            kontrollpanel.ClientWidth:=780;
           if LReg.ValueExists('Heigth') then
             kontrollpanel.ClientHeight:=LReg.ReadInteger('Heigth')
           else
@@ -473,6 +473,7 @@ begin
 	if opendialog1.Execute then
   begin
     OpenFile(opendialog1.filename);
+    kontrollpanel.Caption:=_('Kontrollpanel')+' - '+ExtractFileName(opendialog1.filename);
   end;
 end;
 
@@ -1999,12 +2000,43 @@ begin
     Done:=true;
   end;
 
+  if lowercase(Identifier)='set_panelbuttoncolor' then
+  if args.Count=3 then
+  begin
+    if (args.values[0]>0) and (args.values[1]>0) and ((args.values[1]-1)<length(mainform.kontrollpanelbuttons)) and ((args.values[0]-1)<length(mainform.kontrollpanelbuttons[Integer(args.values[1])-1])) then
+    begin
+      mainform.kontrollpanelbuttons[Integer(args.values[1])-1][Integer(args.values[0])-1].Color:=TColor(args.values[2]);
+      Done:=true;
+    end;
+  end;
+
   if lowercase(Identifier)='get_panelbuttoncolor' then
   if args.Count=2 then
   begin
     if (args.values[0]>0) and (args.values[1]>0) and ((args.values[1]-1)<length(mainform.kontrollpanelbuttons)) and ((args.values[0]-1)<length(mainform.kontrollpanelbuttons[Integer(args.values[1])-1])) then
     begin
       Value:=mainform.kontrollpanelbuttons[Integer(args.values[1])-1][Integer(args.values[0])-1].Color;
+      args.HasResult:=true;
+      Done:=true;
+    end;
+  end;
+
+  if lowercase(Identifier)='set_panelbuttontext' then
+  if args.Count=3 then
+  begin
+    if (args.values[0]>0) and (args.values[1]>0) and ((args.values[1]-1)<length(mainform.kontrollpanelbuttons)) and ((args.values[0]-1)<length(mainform.kontrollpanelbuttons[Integer(args.values[1])-1])) then
+    begin
+      mainform.kontrollpanelbuttons[Integer(args.values[1])-1][Integer(args.values[0])-1].Name:=string(args.values[2]);
+      Done:=true;
+    end;
+  end;
+
+  if lowercase(Identifier)='get_panelbuttontext' then
+  if args.Count=2 then
+  begin
+    if (args.values[0]>0) and (args.values[1]>0) and ((args.values[1]-1)<length(mainform.kontrollpanelbuttons)) and ((args.values[0]-1)<length(mainform.kontrollpanelbuttons[Integer(args.values[1])-1])) then
+    begin
+      Value:=mainform.kontrollpanelbuttons[Integer(args.values[1])-1][Integer(args.values[0])-1].Name;
       args.HasResult:=true;
       Done:=true;
     end;
@@ -2019,12 +2051,26 @@ begin
     done:=true;
   end;
 
+  if lowercase(Identifier)='get_lastmidi' then
+  begin
+    Value:=char(mainform.LastMidiMSG)+char(mainform.LastMidiData1)+char(mainform.LastMidiData2);
+    args.HasResult:=true;
+    done:=true;
+  end;
+
   if lowercase(Identifier)='senddatain' then
   begin
     if args.Count=2 then
     begin
       mainform.ExecuteDataInEvent(args.values[0], args.values[1]);
     end;
+    done:=true;
+  end;
+
+  if lowercase(Identifier)='get_lastdatain' then
+  begin
+    Value:=char(byte(mainform.LastDataInChannel shr 8))+char(byte(mainform.LastDataInChannel))+char(mainform.LastDataInValue);
+    args.HasResult:=true;
     done:=true;
   end;
 

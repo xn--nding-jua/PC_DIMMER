@@ -954,7 +954,45 @@
     AccessLevel:integer;
   end;
 
-  TXTouchDevice = record
+  TXCtlScribblePad = record
+    ScribbleNeedsUpdate:boolean;
+    TopText: string[8];
+    BotText: string[8];
+    Color: byte; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+    Inverted: boolean;
+  end;
+  // Buttons can be of type OFF, FLASHING, ON
+  TXCtlChannel = record
+    CorrespondingID: TGUID;
+    CorrespondingChannel: integer;
+    CorrespondingChannelName: string;
+
+    ChannelNeedsUpdate:boolean;
+    FaderEnabled:boolean;
+    Faderposition:Word; // 0...16383
+    LastFaderposition:Word; // 0...16383
+    Meterlevel:byte; // 0...8
+    DialLevel:byte; // 0...13
+
+    Rec: byte; // 0=OFF, 1=ON, 2=FLASHING
+    Solo: byte; // 0=OFF, 1=ON, 2=FLASHING
+    Mute:byte; // 0=OFF, 1=ON, 2=FLASHING
+    Select:byte; // 0=OFF, 1=ON, 2=FLASHING
+  end;
+  TXTouch = record
+    IPAddress:string;
+    ChannelOffset:Word;
+    ScribblePad:array[0..7] of TXCtlScribblePad;
+    Channel:array[0..7] of TXCtlChannel;
+    FaderNeedsUpdate:boolean;
+    Masterfader:Word; // 0...16383
+    JogDialValue:Byte;
+    SegmentDisplay:array[0..11] of char;
+    ButtonLightOn:array[0..102] of Byte;
+    DisplaySelectedDevices:boolean;
+    DisplayGlobalView:boolean;
+  end;
+  TXTouchPCDDeviceOrGroup = record
     ID:TGUID;
     IsDevice:boolean;
     ChannelsToDisplay:Byte;

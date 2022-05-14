@@ -6,52 +6,13 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, gnugettext, Registry, IdBaseComponent, IdComponent, IdUDPBase,
   IdUDPServer, StdCtrls, IdGlobal, IdSocketHandle, ExtCtrls,
-  Buttons, PngBitBtn, Mask, JvExMask, JvSpin;
+  Buttons, PngBitBtn, Mask, JvExMask, JvSpin, befehleditorform2;
 
 const
   {$I GlobaleKonstanten.inc}
   XTouchMaxRes=16383;
 
 type
-  TXCtlScribblePad = record
-    ScribbleNeedsUpdate:boolean;
-    TopText: string[8];
-    BotText: string[8];
-    Color: byte; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-    Inverted: boolean;
-  end;
-  // Buttons can be of type OFF, FLASHING, ON
-  TXCtlChannel = record
-    CorrespondingID: TGUID;
-    CorrespondingChannel: integer;
-    CorrespondingChannelName: string;
-
-    ChannelNeedsUpdate:boolean;
-    FaderEnabled:boolean;
-    Faderposition:Word; // 0...16383
-    LastFaderposition:Word; // 0...16383
-    Meterlevel:byte; // 0...8
-    DialLevel:byte; // 0...13
-
-    Rec: byte; // 0=OFF, 1=ON, 2=FLASHING
-    Solo: byte; // 0=OFF, 1=ON, 2=FLASHING
-    Mute:byte; // 0=OFF, 1=ON, 2=FLASHING
-    Select:byte; // 0=OFF, 1=ON, 2=FLASHING
-  end;
-  TXTouch = record
-    IPAddress:string;
-    ChannelOffset:Word;
-    ScribblePad:array[0..7] of TXCtlScribblePad;
-    Channel:array[0..7] of TXCtlChannel;
-    FaderNeedsUpdate:boolean;
-    Masterfader:Word; // 0...16383
-    JogDialValue:Byte;
-    SegmentDisplay:array[0..11] of char;
-    ButtonLightOn:array[0..102] of Byte;
-    DisplaySelectedDevices:boolean;
-    DisplayGlobalView:boolean;
-  end;
-
   Txtouchcontrolform = class(TForm)
     xtouchserver: TIdUDPServer;
     WatchDogTimer: TTimer;
@@ -92,6 +53,7 @@ type
     showfogcheckbox: TCheckBox;
     showpantiltcheckbox: TCheckBox;
     showshuttercheckbox: TCheckBox;
+    editbtn: TPngBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure activebtnClick(Sender: TObject);
@@ -115,12 +77,12 @@ type
     procedure xtouchserverUDPException(AThread: TIdUDPListenerThread;
       ABinding: TIdSocketHandle; const AMessage: String;
       const AExceptionClass: TClass);
+    procedure editbtnClick(Sender: TObject);
   private
     { Private-Deklarationen }
     UseDataIn:boolean;
     DataInOffset:Word;
 
-    XTouchDevices:array of TXTouch;
     TotalChannelsToDisplay:Word;
     XCtl_Probe:TIdBytes;
     XCtl_ProbeResponse:TIdBytes;
@@ -154,7 +116,7 @@ begin
   TranslateComponent(self);
   LoadSettings;
 
-  setlength(XTouchDevices, 0);
+  setlength(mainform.XTouchDevices, 0);
 
   setlength(XCtl_Probe, 8);
   XCtl_Probe[0]:=$F0;
@@ -336,7 +298,7 @@ end;
 
 procedure Txtouchcontrolform.MSGNew;
 begin
-  setlength(mainform.XTouchDevices, 0);
+  setlength(mainform.XTouchPCDDevicesOrGroups, 0);
   RefreshList;
 end;
 
@@ -352,38 +314,38 @@ begin
   listboxitemindex:=listbox1.ItemIndex;
   listbox1.Items.Clear;
   TotalChannelsToDisplay:=0;
-  for i:=0 to length(mainform.XTouchDevices)-1 do
+  for i:=0 to length(mainform.XTouchPCDDevicesOrGroups)-1 do
   begin
-    itemindex:=geraetesteuerung.GetDevicePositionInDeviceArray(@mainform.XTouchDevices[i].ID);
+    itemindex:=geraetesteuerung.GetDevicePositionInDeviceArray(@mainform.XTouchPCDDevicesOrGroups[i].ID);
     if itemindex>=0 then
     begin
       // is device
-      mainform.XTouchDevices[i].IsDevice:=true;
+      mainform.XTouchPCDDevicesOrGroups[i].IsDevice:=true;
 
       // detect channels to display
-      mainform.XTouchDevices[i].ChannelsToDisplay:=0;
+      mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay:=0;
       if mainform.devices[itemindex].hasDimmer then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.devices[itemindex].hasShutter then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
 {
       if mainform.devices[itemindex].hasVirtualRGBAWDimmer then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
 }
       if mainform.devices[itemindex].hasRGB then
-        mainform.XTouchDevices[i].ChannelsToDisplay:=mainform.XTouchDevices[i].ChannelsToDisplay+3;
+        mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay:=mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay+3;
       if mainform.devices[itemindex].hasAmber then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.devices[itemindex].hasWhite then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.devices[itemindex].hasUV then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.devices[itemindex].hasFog then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.devices[itemindex].hasPANTILT then
-        mainform.XTouchDevices[i].ChannelsToDisplay:=mainform.XTouchDevices[i].ChannelsToDisplay+2;
+        mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay:=mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay+2;
 
-      TotalChannelsToDisplay:=TotalChannelsToDisplay+mainform.XTouchDevices[i].ChannelsToDisplay;
+      TotalChannelsToDisplay:=TotalChannelsToDisplay+mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay;
 
       // display item in listbox
       if mainform.devices[itemindex].MaxChan>1 then
@@ -393,35 +355,35 @@ begin
     end else
     begin
       // is group
-      mainform.XTouchDevices[i].IsDevice:=false;
-      itemindex:=geraetesteuerung.GetGroupPositionInGroupArray(mainform.XTouchDevices[i].ID);
+      mainform.XTouchPCDDevicesOrGroups[i].IsDevice:=false;
+      itemindex:=geraetesteuerung.GetGroupPositionInGroupArray(mainform.XTouchPCDDevicesOrGroups[i].ID);
 
       // detect channels to display
-      mainform.XTouchDevices[i].ChannelsToDisplay:=0;
+      mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay:=0;
       if mainform.DeviceGroups[itemindex].HasChanType[0] then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.DeviceGroups[itemindex].HasChanType[1] then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.DeviceGroups[itemindex].HasChanType[14] then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.DeviceGroups[itemindex].HasChanType[15] then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.DeviceGroups[itemindex].HasChanType[16] then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.DeviceGroups[itemindex].HasChanType[18] then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.DeviceGroups[itemindex].HasChanType[19] then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.DeviceGroups[itemindex].HasChanType[40] then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.DeviceGroups[itemindex].HasChanType[41] then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.DeviceGroups[itemindex].HasChanType[45] then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
       if mainform.DeviceGroups[itemindex].HasChanType[46] then
-        inc(mainform.XTouchDevices[i].ChannelsToDisplay);
+        inc(mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay);
 
-      TotalChannelsToDisplay:=TotalChannelsToDisplay+mainform.XTouchDevices[i].ChannelsToDisplay;
+      TotalChannelsToDisplay:=TotalChannelsToDisplay+mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay;
       
       // display item in listbox
       if itemindex>=0 then
@@ -460,9 +422,11 @@ procedure Txtouchcontrolform.UpdateXTouchData;
 var
   i, i_dev, i_ch, i_subch, i_id, j:integer;
   NewValue:Word;
+  NewValueInt:integer;
   NewText,NewText2:string;
   NewColor:byte;
   ChannelIsUsed:boolean;
+  Text_PCD_Function, Text_Function, Text_Value:string;
 
   DeviceIndex, GroupIndex, Value:integer;
   ClockString, ValueString:string;
@@ -491,48 +455,58 @@ var
     result:=s2;
   end;
 begin
-  for i_dev:=0 to length(XTouchDevices)-1 do
+  for i_dev:=0 to length(mainform.XTouchDevices)-1 do
   begin
     // Update Segment Display
-    XTouchDevices[i_dev].SegmentDisplay[0]:=char(49+i_dev);
+    mainform.XTouchDevices[i_dev].SegmentDisplay[0]:=char(49+i_dev);
     ClockString:=TimeToStr(now);
-    XTouchDevices[i_dev].SegmentDisplay[1]:=' ';
-    XTouchDevices[i_dev].SegmentDisplay[2]:=' ';
-    XTouchDevices[i_dev].SegmentDisplay[3]:=ClockString[1]; //11:22:33
-    XTouchDevices[i_dev].SegmentDisplay[4]:=ClockString[2]; //11:22:33
-    XTouchDevices[i_dev].SegmentDisplay[5]:=ClockString[4]; //11:22:33
-    XTouchDevices[i_dev].SegmentDisplay[6]:=ClockString[5]; //11:22:33
-    XTouchDevices[i_dev].SegmentDisplay[7]:=ClockString[7]; //11:22:33
-    XTouchDevices[i_dev].SegmentDisplay[8]:=ClockString[8]; //11:22:33
+    mainform.XTouchDevices[i_dev].SegmentDisplay[1]:=' ';
+    mainform.XTouchDevices[i_dev].SegmentDisplay[2]:=' ';
+    mainform.XTouchDevices[i_dev].SegmentDisplay[3]:=ClockString[1]; //11:22:33
+    mainform.XTouchDevices[i_dev].SegmentDisplay[4]:=ClockString[2]; //11:22:33
+    mainform.XTouchDevices[i_dev].SegmentDisplay[5]:=ClockString[4]; //11:22:33
+    mainform.XTouchDevices[i_dev].SegmentDisplay[6]:=ClockString[5]; //11:22:33
+    mainform.XTouchDevices[i_dev].SegmentDisplay[7]:=ClockString[7]; //11:22:33
+    mainform.XTouchDevices[i_dev].SegmentDisplay[8]:=ClockString[8]; //11:22:33
 
-    ValueString:=inttostr(XTouchDevices[i_dev].JogDialValue);
+    ValueString:=inttostr(mainform.XTouchDevices[i_dev].JogDialValue);
     if length(ValueString)=3 then
-      XTouchDevices[i_dev].SegmentDisplay[9]:=ValueString[1]
+      mainform.XTouchDevices[i_dev].SegmentDisplay[9]:=ValueString[1]
     else
-      XTouchDevices[i_dev].SegmentDisplay[9]:='0';
+      mainform.XTouchDevices[i_dev].SegmentDisplay[9]:='0';
     if length(ValueString)=3 then
-      XTouchDevices[i_dev].SegmentDisplay[10]:=ValueString[2]
+      mainform.XTouchDevices[i_dev].SegmentDisplay[10]:=ValueString[2]
     else if length(ValueString)=2 then
-      XTouchDevices[i_dev].SegmentDisplay[10]:=ValueString[1]
+      mainform.XTouchDevices[i_dev].SegmentDisplay[10]:=ValueString[1]
     else
-      XTouchDevices[i_dev].SegmentDisplay[10]:='0';
+      mainform.XTouchDevices[i_dev].SegmentDisplay[10]:='0';
     if length(ValueString)=3 then
-      XTouchDevices[i_dev].SegmentDisplay[11]:=ValueString[3]
+      mainform.XTouchDevices[i_dev].SegmentDisplay[11]:=ValueString[3]
     else if length(ValueString)=2 then
-      XTouchDevices[i_dev].SegmentDisplay[11]:=ValueString[2]
+      mainform.XTouchDevices[i_dev].SegmentDisplay[11]:=ValueString[2]
     else
-      XTouchDevices[i_dev].SegmentDisplay[11]:=ValueString[1];
+      mainform.XTouchDevices[i_dev].SegmentDisplay[11]:=ValueString[1];
 
     XTouchChannelOffsetCounter:=-2;
     XTouchChannelCounter:=0;
 
-    if XTouchDevices[i_dev].DisplayGlobalView then
+    // update Masterfader
+    if i_dev<length(mainform.XTouchMasterfaderBefehle) then
+    begin
+      mainform.GetBefehlState(mainform.XTouchMasterfaderBefehle[i_dev], Text_PCD_Function, Text_Function, Text_Value, NewValueInt);
+      NewValue:=round((NewValueInt/maxres)*XTouchMaxRes); // convert 255 -> 16388
+      mainform.XTouchDevices[i_dev].FaderNeedsUpdate:=NewValue<>mainform.XTouchDevices[i_dev].Masterfader;
+      mainform.XTouchDevices[i_dev].Masterfader:=NewValue;
+    end;
+
+    // update all other faders and buttons
+    if mainform.XTouchDevices[i_dev].DisplayGlobalView then
     begin
       // display all channels without devices
       for i_ch:=1 to chan do // 1...8192
       begin
         inc(XTouchChannelOffsetCounter);
-        if XTouchChannelOffsetCounter<XTouchDevices[i_dev].ChannelOffset then
+        if XTouchChannelOffsetCounter<mainform.XTouchDevices[i_dev].ChannelOffset then
           XTouchChannelCounter:=0;
 
         if XTouchChannelCounter>7 then
@@ -553,7 +527,7 @@ begin
         end;
         if not ChannelIsUsed then
         begin
-          if XTouchDevices[i_dev].DisplaySelectedDevices then
+          if mainform.XTouchDevices[i_dev].DisplaySelectedDevices then
             continue; // we want to show only used channels -> go to next channel
           NewText:='-------';
         end;
@@ -578,27 +552,27 @@ begin
         NewColor:=7;
         NewValue:=round((Value/maxres)*XTouchMaxRes);
 
-        XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText) OR (NewText2<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-        XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:=NewText;
-        XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText2;
-        XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-        XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannel:=i_ch;
-        XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-        XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-        XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-        XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+        mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText) OR (NewText2<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+        mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:=NewText;
+        mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText2;
+        mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+        mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannel:=i_ch;
+        mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+        mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+        mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+        mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
         inc(XTouchChannelCounter);
       end;
     end else
     begin
       // display specific device channels
       // prepare number of devices to display and prepare ID-list
-      if XTouchDevices[i_dev].DisplaySelectedDevices then
+      if mainform.XTouchDevices[i_dev].DisplaySelectedDevices then
       begin
         max_devices:=length(mainform.devices);
       end else
       begin
-        max_devices:=length(mainform.XTouchDevices);
+        max_devices:=length(mainform.XTouchPCDDevicesOrGroups);
       end;
 
       for i_id:=0 to max_devices-1 do
@@ -606,10 +580,10 @@ begin
         if XTouchChannelCounter>7 then
           break;
 
-        if XTouchDevices[i_dev].DisplaySelectedDevices or mainform.XTouchDevices[i_id].IsDevice then
+        if mainform.XTouchDevices[i_dev].DisplaySelectedDevices or mainform.XTouchPCDDevicesOrGroups[i_id].IsDevice then
         begin
           // is device or show selected devices
-          if XTouchDevices[i_dev].DisplaySelectedDevices then
+          if mainform.XTouchDevices[i_dev].DisplaySelectedDevices then
           begin
             if not mainform.DeviceSelected[i_id] then
               continue;
@@ -636,9 +610,9 @@ begin
               ChannelsToDisplay:=ChannelsToDisplay+2;
           end else
           begin
-            CurrentDeviceID:=mainform.XTouchDevices[i_id].ID;
+            CurrentDeviceID:=mainform.XTouchPCDDevicesOrGroups[i_id].ID;
             DeviceIndex:=geraetesteuerung.GetDevicePositionInDeviceArray(@CurrentDeviceID);
-            ChannelsToDisplay:=mainform.XTouchDevices[i_id].ChannelsToDisplay;
+            ChannelsToDisplay:=mainform.XTouchPCDDevicesOrGroups[i_id].ChannelsToDisplay;
           end;
 
           // get number of max displayed channels to spread device name over these displays
@@ -646,8 +620,8 @@ begin
           begin
             // only one display - dont spread
             SpreadText:=false;
-            XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:='       ';
-            XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:=copy(ReplaceGermanUmlaut(mainform.devices[DeviceIndex].Name), 1, 7);
+            mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:='       ';
+            mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:=copy(ReplaceGermanUmlaut(mainform.devices[DeviceIndex].Name), 1, 7);
           end else
           begin
             // more than one display - spread text
@@ -659,7 +633,7 @@ begin
           for i_subch:=0 to ChannelsToDisplay-1 do
           begin
             inc(XTouchChannelOffsetCounter);
-            if XTouchChannelOffsetCounter<XTouchDevices[i_dev].ChannelOffset then
+            if XTouchChannelOffsetCounter<mainform.XTouchDevices[i_dev].ChannelOffset then
               XTouchChannelCounter:=0;
 
             if XTouchChannelCounter>7 then
@@ -680,15 +654,15 @@ begin
                 if (length(DisplayText)<7) then
                   DisplayText:=DisplayText+'|';
               end;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:=DisplayText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:=DisplayText;
             end;
 
             // Reihenfolge: Dimmer, R, G, B, W, A, UV, SHUTTER, PAN, TILT, FOG
             if mainform.devices[DeviceIndex].hasDimmer and not ChannelTypeIsDone[0] and showdimmercheckbox.Checked then
             begin
               ChannelTypeIsDone[0]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='DIMMER';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='DIMMER';
               Value:=geraetesteuerung.get_channel(CurrentDeviceID, 'DIMMER');
               if length(inttostr(Value))=1 then
                 NewText:='DIM   '+inttostr(Value)
@@ -698,21 +672,21 @@ begin
                 NewText:='DIM '+inttostr(Value);
               NewColor:=7;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.devices[DeviceIndex].hasRGB and not ChannelTypeIsDone[1] and showrcheckbox.Checked then
             begin
               ChannelTypeIsDone[1]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='R';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='R';
               Value:=geraetesteuerung.get_channel(CurrentDeviceID, 'R');
               if length(inttostr(Value))=1 then
                 NewText:='R     '+inttostr(Value)
@@ -722,21 +696,21 @@ begin
                 NewText:='R   '+inttostr(Value);
               NewColor:=1;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.devices[DeviceIndex].hasRGB and not ChannelTypeIsDone[2] and showgcheckbox.Checked then
             begin
               ChannelTypeIsDone[2]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='G';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='G';
               Value:=geraetesteuerung.get_channel(CurrentDeviceID, 'G');
               if length(inttostr(Value))=1 then
                 NewText:='G     '+inttostr(Value)
@@ -746,21 +720,21 @@ begin
                 NewText:='G   '+inttostr(Value);
               NewColor:=2;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.devices[DeviceIndex].hasRGB and not ChannelTypeIsDone[3] and showbcheckbox.Checked then
             begin
               ChannelTypeIsDone[3]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='B';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='B';
               Value:=geraetesteuerung.get_channel(CurrentDeviceID, 'B');
               if length(inttostr(Value))=1 then
                 NewText:='B     '+inttostr(Value)
@@ -770,21 +744,21 @@ begin
                 NewText:='B   '+inttostr(Value);
               NewColor:=4;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.devices[DeviceIndex].hasWhite and not ChannelTypeIsDone[4] and showwcheckbox.Checked then
             begin
               ChannelTypeIsDone[4]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='W';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='W';
               Value:=geraetesteuerung.get_channel(CurrentDeviceID, 'W');
               if length(inttostr(Value))=1 then
                 NewText:='W     '+inttostr(Value)
@@ -794,21 +768,21 @@ begin
                 NewText:='W   '+inttostr(Value);
               NewColor:=7;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.devices[DeviceIndex].hasAmber and not ChannelTypeIsDone[5] and showacheckbox.Checked then
             begin
               ChannelTypeIsDone[5]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='A';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='A';
               Value:=geraetesteuerung.get_channel(CurrentDeviceID, 'A');
               if length(inttostr(Value))=1 then
                 NewText:='A     '+inttostr(Value)
@@ -818,21 +792,21 @@ begin
                 NewText:='A   '+inttostr(Value);
               NewColor:=3;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.devices[DeviceIndex].hasUV and not ChannelTypeIsDone[6] and showuvcheckbox.Checked then
             begin
               ChannelTypeIsDone[6]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='UV';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='UV';
               Value:=geraetesteuerung.get_channel(CurrentDeviceID, 'UV');
               if length(inttostr(Value))=1 then
                 NewText:='UV    '+inttostr(Value)
@@ -842,21 +816,21 @@ begin
                 NewText:='UV  '+inttostr(Value);
               NewColor:=5;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.devices[DeviceIndex].hasShutter and not ChannelTypeIsDone[7] and showshuttercheckbox.Checked then
             begin
               ChannelTypeIsDone[7]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='SHUTTER';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='SHUTTER';
               Value:=geraetesteuerung.get_channel(CurrentDeviceID, 'SHUTTER');
               if length(inttostr(Value))=1 then
                 NewText:='SHUTR '+inttostr(Value)
@@ -866,21 +840,21 @@ begin
                 NewText:='SHT '+inttostr(Value);
               NewColor:=7;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.devices[DeviceIndex].hasFog and not ChannelTypeIsDone[8] and showfogcheckbox.Checked then
             begin
               ChannelTypeIsDone[8]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='FOG';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='FOG';
               Value:=geraetesteuerung.get_channel(CurrentDeviceID, 'FOG');
               if length(inttostr(Value))=1 then
                 NewText:='FOG   '+inttostr(Value)
@@ -890,21 +864,21 @@ begin
                 NewText:='FOG '+inttostr(Value);
               NewColor:=6;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.devices[DeviceIndex].hasPANTILT and not ChannelTypeIsDone[9] and showpantiltcheckbox.Checked then
             begin
               ChannelTypeIsDone[9]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='PAN';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='PAN';
               Value:=geraetesteuerung.get_channel(CurrentDeviceID, 'PAN');
               if length(inttostr(Value))=1 then
                 NewText:='PAN   '+inttostr(Value)
@@ -914,21 +888,21 @@ begin
                 NewText:='PAN '+inttostr(Value);
               NewColor:=7;
               NewValue:=(Value shl 8)+geraetesteuerung.get_channel(CurrentDeviceID, 'PANFINE');
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.devices[DeviceIndex].hasPANTILT and not ChannelTypeIsDone[10] and showpantiltcheckbox.Checked then
             begin
               ChannelTypeIsDone[10]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='TILT';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=CurrentDeviceID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='TILT';
               Value:=geraetesteuerung.get_channel(CurrentDeviceID, 'TILT');
               if length(inttostr(Value))=1 then
                 NewText:='TILT  '+inttostr(Value)
@@ -938,13 +912,13 @@ begin
                 NewText:='TLT '+inttostr(Value);
               NewColor:=7;
               NewValue:=(Value shl 8)+geraetesteuerung.get_channel(CurrentDeviceID, 'TILTFINE');
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
@@ -952,16 +926,16 @@ begin
         end else
         begin
           // is group
-          GroupIndex:=geraetesteuerung.GetGroupPositionInGroupArray(mainform.XTouchDevices[i_id].ID);
-          ChannelsToDisplay:=mainform.XTouchDevices[i_id].ChannelsToDisplay;
+          GroupIndex:=geraetesteuerung.GetGroupPositionInGroupArray(mainform.XTouchPCDDevicesOrGroups[i_id].ID);
+          ChannelsToDisplay:=mainform.XTouchPCDDevicesOrGroups[i_id].ChannelsToDisplay;
 
           // get number of max displayed channels to spread device name over these displays
           if ChannelsToDisplay=1 then
           begin
             // only one display - dont spread
             SpreadText:=false;
-            XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:='       ';
-            XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:=copy(ReplaceGermanUmlaut(mainform.DeviceGroups[GroupIndex].Name), 1, 7);
+            mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:='       ';
+            mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:=copy(ReplaceGermanUmlaut(mainform.DeviceGroups[GroupIndex].Name), 1, 7);
           end else
           begin
             // more than one display - spread text
@@ -973,7 +947,7 @@ begin
           for i_subch:=0 to ChannelsToDisplay-1 do
           begin
             inc(XTouchChannelOffsetCounter);
-            if XTouchChannelOffsetCounter<XTouchDevices[i_dev].ChannelOffset then
+            if XTouchChannelOffsetCounter<mainform.XTouchDevices[i_dev].ChannelOffset then
               XTouchChannelCounter:=0;
 
             if XTouchChannelCounter>7 then
@@ -994,15 +968,15 @@ begin
                 if (length(DisplayText)<7) then
                   DisplayText:=DisplayText+'|';
               end;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:=DisplayText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].TopText:=DisplayText;
             end;
 
             // Reihenfolge: Dimmer, R, G, B, W, A, UV, SHUTTER, PAN, TILT, FOG
             if mainform.DeviceGroups[GroupIndex].HasChanType[19] and not ChannelTypeIsDone[0] and showdimmercheckbox.Checked then
             begin
               ChannelTypeIsDone[0]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='DIMMER';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchPCDDevicesOrGroups[i_id].ID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='DIMMER';
               Value:=geraetesteuerung.get_group(mainform.DeviceGroups[GroupIndex].ID, 'DIMMER');
               if length(inttostr(Value))=1 then
                 NewText:='G:DIM '+inttostr(Value)
@@ -1012,21 +986,21 @@ begin
                 NewText:='G:D '+inttostr(Value);
               NewColor:=7;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.DeviceGroups[GroupIndex].HasChanType[14] and not ChannelTypeIsDone[1] and showrcheckbox.Checked then
             begin
               ChannelTypeIsDone[1]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='R';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchPCDDevicesOrGroups[i_id].ID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='R';
               Value:=geraetesteuerung.get_group(mainform.DeviceGroups[GroupIndex].ID, 'R');
               if length(inttostr(Value))=1 then
                 NewText:='G:R   '+inttostr(Value)
@@ -1036,21 +1010,21 @@ begin
                 NewText:='G:R '+inttostr(Value);
               NewColor:=1;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.DeviceGroups[GroupIndex].HasChanType[15] and not ChannelTypeIsDone[2] and showgcheckbox.Checked then
             begin
               ChannelTypeIsDone[2]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='G';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchPCDDevicesOrGroups[i_id].ID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='G';
               Value:=geraetesteuerung.get_group(mainform.DeviceGroups[GroupIndex].ID, 'G');
               if length(inttostr(Value))=1 then
                 NewText:='G:G   '+inttostr(Value)
@@ -1060,21 +1034,21 @@ begin
                 NewText:='G:G '+inttostr(Value);
               NewColor:=2;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.DeviceGroups[GroupIndex].HasChanType[16] and not ChannelTypeIsDone[3] and showbcheckbox.Checked then
             begin
               ChannelTypeIsDone[3]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='B';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchPCDDevicesOrGroups[i_id].ID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='B';
               Value:=geraetesteuerung.get_group(mainform.DeviceGroups[GroupIndex].ID, 'B');
               if length(inttostr(Value))=1 then
                 NewText:='G:B   '+inttostr(Value)
@@ -1084,21 +1058,21 @@ begin
                 NewText:='G:B '+inttostr(Value);
               NewColor:=4;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.DeviceGroups[GroupIndex].HasChanType[40] and not ChannelTypeIsDone[4] and showwcheckbox.Checked then
             begin
               ChannelTypeIsDone[4]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='W';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchPCDDevicesOrGroups[i_id].ID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='W';
               Value:=geraetesteuerung.get_group(mainform.DeviceGroups[GroupIndex].ID, 'W');
               if length(inttostr(Value))=1 then
                 NewText:='G:W   '+inttostr(Value)
@@ -1108,21 +1082,21 @@ begin
                 NewText:='G:W '+inttostr(Value);
               NewColor:=7;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.DeviceGroups[GroupIndex].HasChanType[41] and not ChannelTypeIsDone[5] and showacheckbox.Checked then
             begin
               ChannelTypeIsDone[5]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='A';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchPCDDevicesOrGroups[i_id].ID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='A';
               Value:=geraetesteuerung.get_group(mainform.DeviceGroups[GroupIndex].ID, 'A');
               if length(inttostr(Value))=1 then
                 NewText:='G:A   '+inttostr(Value)
@@ -1132,21 +1106,21 @@ begin
                 NewText:='G:A '+inttostr(Value);
               NewColor:=3;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.DeviceGroups[GroupIndex].HasChanType[45] and not ChannelTypeIsDone[6] and showuvcheckbox.Checked then
             begin
               ChannelTypeIsDone[6]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='UV';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchPCDDevicesOrGroups[i_id].ID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='UV';
               Value:=geraetesteuerung.get_group(mainform.DeviceGroups[GroupIndex].ID, 'UV');
               if length(inttostr(Value))=1 then
                 NewText:='G:UV  '+inttostr(Value)
@@ -1156,21 +1130,21 @@ begin
                 NewText:='G:UV'+inttostr(Value);
               NewColor:=5;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.DeviceGroups[GroupIndex].HasChanType[18] and not ChannelTypeIsDone[7] and showshuttercheckbox.Checked then
             begin
               ChannelTypeIsDone[7]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='SHUTTER';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchPCDDevicesOrGroups[i_id].ID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='SHUTTER';
               Value:=geraetesteuerung.get_group(mainform.DeviceGroups[GroupIndex].ID, 'SHUTTER');
               if length(inttostr(Value))=1 then
                 NewText:='G:SHT '+inttostr(Value)
@@ -1180,21 +1154,21 @@ begin
                 NewText:='G:S '+inttostr(Value);
               NewColor:=7;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.DeviceGroups[GroupIndex].HasChanType[46] and not ChannelTypeIsDone[8] and showfogcheckbox.Checked then
             begin
               ChannelTypeIsDone[8]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='FOG';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchPCDDevicesOrGroups[i_id].ID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='FOG';
               Value:=geraetesteuerung.get_group(mainform.DeviceGroups[GroupIndex].ID, 'FOG');
               if length(inttostr(Value))=1 then
                 NewText:='G:FOG '+inttostr(Value)
@@ -1204,21 +1178,21 @@ begin
                 NewText:='G:F '+inttostr(Value);
               NewColor:=6;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.DeviceGroups[GroupIndex].HasChanType[0] and not ChannelTypeIsDone[9] and showpantiltcheckbox.Checked then
             begin
               ChannelTypeIsDone[9]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='PAN';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchPCDDevicesOrGroups[i_id].ID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='PAN';
               Value:=geraetesteuerung.get_group(mainform.DeviceGroups[GroupIndex].ID, 'PAN');
               if length(inttostr(Value))=1 then
                 NewText:='G:PAN '+inttostr(Value)
@@ -1228,21 +1202,21 @@ begin
                 NewText:='G:P '+inttostr(Value);
               NewColor:=7;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
             if mainform.DeviceGroups[GroupIndex].HasChanType[1] and not ChannelTypeIsDone[10] and showpantiltcheckbox.Checked then
             begin
               ChannelTypeIsDone[10]:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchDevices[i_id].ID;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='TILT';
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingID:=mainform.XTouchPCDDevicesOrGroups[i_id].ID;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].CorrespondingChannelName:='TILT';
               Value:=geraetesteuerung.get_group(mainform.DeviceGroups[GroupIndex].ID, 'TILT');
               if length(inttostr(Value))=1 then
                 NewText:='G:TILT'+inttostr(Value)
@@ -1252,13 +1226,13 @@ begin
                 NewText:='G:T '+inttostr(Value);
               NewColor:=7;
               NewValue:=round((Value/maxres)*XTouchMaxRes);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
-              XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
-              XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color);
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].BotText:=NewText;
+              mainform.XTouchDevices[i_dev].ScribblePad[XTouchChannelCounter].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].FaderEnabled:=true;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition);
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition:=NewValue;
+              mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[XTouchChannelCounter].Faderposition/XTouchMaxRes)*8);
               inc(XTouchChannelCounter);
               continue;
             end;
@@ -1268,26 +1242,26 @@ begin
     end;
 
     // blackout all unused channels
-    if (XTouchChannelCounter=0) and (not XTouchDevices[i_dev].DisplaySelectedDevices) then
+    if (XTouchChannelCounter=0) and (not mainform.XTouchDevices[i_dev].DisplaySelectedDevices) then
     begin
       // no channel is used. So display Welcome-Message
-      XTouchDevices[i_dev].ScribblePad[0].BotText:='Welcome';
-      XTouchDevices[i_dev].ScribblePad[1].BotText:='  to   ';
-      XTouchDevices[i_dev].ScribblePad[2].BotText:='XTouch-';
-      XTouchDevices[i_dev].ScribblePad[3].BotText:='Control';
-      XTouchDevices[i_dev].ScribblePad[4].BotText:='  for  ';
-      XTouchDevices[i_dev].ScribblePad[5].BotText:='  PC   ';
-      XTouchDevices[i_dev].ScribblePad[6].BotText:='DIMMER ';
-      XTouchDevices[i_dev].ScribblePad[7].BotText:='  :)   ';
+      mainform.XTouchDevices[i_dev].ScribblePad[0].BotText:='Welcome';
+      mainform.XTouchDevices[i_dev].ScribblePad[1].BotText:='  to   ';
+      mainform.XTouchDevices[i_dev].ScribblePad[2].BotText:='XTouch-';
+      mainform.XTouchDevices[i_dev].ScribblePad[3].BotText:='Control';
+      mainform.XTouchDevices[i_dev].ScribblePad[4].BotText:='  for  ';
+      mainform.XTouchDevices[i_dev].ScribblePad[5].BotText:='  PC   ';
+      mainform.XTouchDevices[i_dev].ScribblePad[6].BotText:='DIMMER ';
+      mainform.XTouchDevices[i_dev].ScribblePad[7].BotText:='  :)   ';
       for i_ch:=0 to 7 do
       begin
-        XTouchDevices[i_dev].ScribblePad[i_ch].TopText:='Ch '+inttostr(i_ch+1);
-        XTouchDevices[i_dev].ScribblePad[i_ch].Color:=7;
-        XTouchDevices[i_dev].ScribblePad[i_ch].ScribbleNeedsUpdate:=true;
-        XTouchDevices[i_dev].Channel[i_ch].FaderEnabled:=false;
-        XTouchDevices[i_dev].Channel[i_ch].ChannelNeedsUpdate:=(0<>XTouchDevices[i_dev].Channel[i_ch].Faderposition);
-        XTouchDevices[i_dev].Channel[i_ch].Faderposition:=0;
-        XTouchDevices[i_dev].Channel[i_ch].Meterlevel:=0;
+        mainform.XTouchDevices[i_dev].ScribblePad[i_ch].TopText:='Ch '+inttostr(i_ch+1);
+        mainform.XTouchDevices[i_dev].ScribblePad[i_ch].Color:=7;
+        mainform.XTouchDevices[i_dev].ScribblePad[i_ch].ScribbleNeedsUpdate:=true;
+        mainform.XTouchDevices[i_dev].Channel[i_ch].FaderEnabled:=false;
+        mainform.XTouchDevices[i_dev].Channel[i_ch].ChannelNeedsUpdate:=(0<>mainform.XTouchDevices[i_dev].Channel[i_ch].Faderposition);
+        mainform.XTouchDevices[i_dev].Channel[i_ch].Faderposition:=0;
+        mainform.XTouchDevices[i_dev].Channel[i_ch].Meterlevel:=0;
       end;
     end else
     begin
@@ -1296,14 +1270,14 @@ begin
         NewText:='       ';
         NewColor:=0;
         NewValue:=0;
-        XTouchDevices[i_dev].ScribblePad[i].ScribbleNeedsUpdate:=(NewText<>XTouchDevices[i_dev].ScribblePad[i].BotText) OR (NewColor<>XTouchDevices[i_dev].ScribblePad[i].Color);
-        XTouchDevices[i_dev].ScribblePad[i].TopText:=NewText;
-        XTouchDevices[i_dev].ScribblePad[i].BotText:=NewText;
-        XTouchDevices[i_dev].ScribblePad[i].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-        XTouchDevices[i_dev].Channel[i].FaderEnabled:=false;
-        XTouchDevices[i_dev].Channel[i].ChannelNeedsUpdate:=(NewValue<>XTouchDevices[i_dev].Channel[i].Faderposition);
-        XTouchDevices[i_dev].Channel[i].Faderposition:=NewValue;
-        XTouchDevices[i_dev].Channel[i].Meterlevel:=round((XTouchDevices[i_dev].Channel[i].Faderposition/XTouchMaxRes)*8);
+        mainform.XTouchDevices[i_dev].ScribblePad[i].ScribbleNeedsUpdate:=(NewText<>mainform.XTouchDevices[i_dev].ScribblePad[i].BotText) OR (NewColor<>mainform.XTouchDevices[i_dev].ScribblePad[i].Color);
+        mainform.XTouchDevices[i_dev].ScribblePad[i].TopText:=NewText;
+        mainform.XTouchDevices[i_dev].ScribblePad[i].BotText:=NewText;
+        mainform.XTouchDevices[i_dev].ScribblePad[i].Color:=NewColor; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+        mainform.XTouchDevices[i_dev].Channel[i].FaderEnabled:=false;
+        mainform.XTouchDevices[i_dev].Channel[i].ChannelNeedsUpdate:=(NewValue<>mainform.XTouchDevices[i_dev].Channel[i].Faderposition);
+        mainform.XTouchDevices[i_dev].Channel[i].Faderposition:=NewValue;
+        mainform.XTouchDevices[i_dev].Channel[i].Meterlevel:=round((mainform.XTouchDevices[i_dev].Channel[i].Faderposition/XTouchMaxRes)*8);
       end;
     end;
   end;
@@ -1316,16 +1290,16 @@ var
   DialLevelRaw:Word;
 begin
   try
-    // put content to XTouchDevices
-    for i_dev:=0 to length(XTouchDevices)-1 do
+    // put content to mainform.XTouchDevices
+    for i_dev:=0 to length(mainform.XTouchDevices)-1 do
     begin
       // Update ScribbleScripts
       setlength(XCtl_TxMessage, 22);
       for i_ch:=0 to 7 do
       begin
-        //if XTouchDevices[i_dev].ScribblePad[i_ch].ScribbleNeedsUpdate then
+        //if mainform.XTouchDevices[i_dev].ScribblePad[i_ch].ScribbleNeedsUpdate then
         begin
-          //XTouchDevices[i_dev].ScribblePad[i_ch].ScribbleNeedsUpdate:=false;
+          //mainform.XTouchDevices[i_dev].ScribblePad[i_ch].ScribbleNeedsUpdate:=false;
 
           XCtl_TxMessage[0]:=$F0;
           XCtl_TxMessage[1]:=$00;
@@ -1335,19 +1309,19 @@ begin
           XCtl_TxMessage[5]:=$20+i_ch;
 
           // prepare color
-          if XTouchDevices[i_dev].ScribblePad[i_ch].Inverted then
-            XCtl_TxMessage[6]:=$40+XTouchDevices[i_dev].ScribblePad[i_ch].Color
+          if mainform.XTouchDevices[i_dev].ScribblePad[i_ch].Inverted then
+            XCtl_TxMessage[6]:=$40+mainform.XTouchDevices[i_dev].ScribblePad[i_ch].Color
           else
-            XCtl_TxMessage[6]:=XTouchDevices[i_dev].ScribblePad[i_ch].Color;
+            XCtl_TxMessage[6]:=mainform.XTouchDevices[i_dev].ScribblePad[i_ch].Color;
 
           // prepare text
           for i:=0 to 6 do
           begin
-            XCtl_TxMessage[7+i]:=byte(XTouchDevices[i_dev].ScribblePad[i_ch].TopText[i+1]);
-            XCtl_TxMessage[14+i]:=byte(XTouchDevices[i_dev].ScribblePad[i_ch].BotText[i+1]);
+            XCtl_TxMessage[7+i]:=byte(mainform.XTouchDevices[i_dev].ScribblePad[i_ch].TopText[i+1]);
+            XCtl_TxMessage[14+i]:=byte(mainform.XTouchDevices[i_dev].ScribblePad[i_ch].BotText[i+1]);
           end;
           XCtl_TxMessage[21]:=$F7;
-          xtouchserver.SendBuffer(XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
+          xtouchserver.SendBuffer(mainform.XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
         end;
       end;
 
@@ -1382,18 +1356,18 @@ begin
       for i_ch:=0 to 7 do
       begin
         XCtl_TxMessage[1+i_ch*2]:=i_ch; // rec buttons 0...7
-        XCtl_TxMessage[2+i_ch*2]:=XTouchDevices[i_dev].Channel[i_ch].Rec;
+        XCtl_TxMessage[2+i_ch*2]:=mainform.XTouchDevices[i_dev].Channel[i_ch].Rec;
 
         XCtl_TxMessage[8*2+1+i_ch*2]:=8+i_ch; // solo buttons 8...15
-        XCtl_TxMessage[8*2+2+i_ch*2]:=XTouchDevices[i_dev].Channel[i_ch].Solo;
+        XCtl_TxMessage[8*2+2+i_ch*2]:=mainform.XTouchDevices[i_dev].Channel[i_ch].Solo;
 
         XCtl_TxMessage[16*2+1+i_ch*2]:=16+i_ch; // mute buttons 16..23
-        XCtl_TxMessage[16*2+2+i_ch*2]:=XTouchDevices[i_dev].Channel[i_ch].Mute;
+        XCtl_TxMessage[16*2+2+i_ch*2]:=mainform.XTouchDevices[i_dev].Channel[i_ch].Mute;
 
         XCtl_TxMessage[24*2+1+i_ch*2]:=24+i_ch; // select buttons 24..31
-        XCtl_TxMessage[24*2+2+i_ch*2]:=XTouchDevices[i_dev].Channel[i_ch].Select;
+        XCtl_TxMessage[24*2+2+i_ch*2]:=mainform.XTouchDevices[i_dev].Channel[i_ch].Select;
       end;
-      if XTouchDevices[i_dev].DisplaySelectedDevices then
+      if mainform.XTouchDevices[i_dev].DisplaySelectedDevices then
       begin
         XCtl_TxMessage[length(XCtl_TxMessage)-4]:=115;
         XCtl_TxMessage[length(XCtl_TxMessage)-3]:=2;
@@ -1402,7 +1376,7 @@ begin
         XCtl_TxMessage[length(XCtl_TxMessage)-4]:=115;
         XCtl_TxMessage[length(XCtl_TxMessage)-3]:=0;
       end;
-      if XTouchDevices[i_dev].DisplayGlobalView then
+      if mainform.XTouchDevices[i_dev].DisplayGlobalView then
       begin
         XCtl_TxMessage[length(XCtl_TxMessage)-2]:=51;
         XCtl_TxMessage[length(XCtl_TxMessage)-1]:=2;
@@ -1412,33 +1386,33 @@ begin
         XCtl_TxMessage[length(XCtl_TxMessage)-1]:=0;
       end;
 
-      for i:=0 to length(XTouchDevices[i_dev].ButtonLightOn)-1 do
+      for i:=0 to length(mainform.XTouchDevices[i_dev].ButtonLightOn)-1 do
       begin
-        if XTouchDevices[i_dev].ButtonLightOn[i]=255 then
+        if mainform.XTouchDevices[i_dev].ButtonLightOn[i]=255 then
         begin
           // Turn Button on
-          XTouchDevices[i_dev].ButtonLightOn[i]:=0;
+          mainform.XTouchDevices[i_dev].ButtonLightOn[i]:=0;
           setlength(XCtl_TxMessage, length(XCtl_TxMessage)+2);
           XCtl_TxMessage[length(XCtl_TxMessage)-2]:=i;
           XCtl_TxMessage[length(XCtl_TxMessage)-1]:=2;
-        end else if XTouchDevices[i_dev].ButtonLightOn[i]=254 then
+        end else if mainform.XTouchDevices[i_dev].ButtonLightOn[i]=254 then
         begin
           // Turn Button on with automatic turnoff
-          XTouchDevices[i_dev].ButtonLightOn[i]:=400 div UpdateTimer.interval;
+          mainform.XTouchDevices[i_dev].ButtonLightOn[i]:=400 div UpdateTimer.interval;
           setlength(XCtl_TxMessage, length(XCtl_TxMessage)+2);
           XCtl_TxMessage[length(XCtl_TxMessage)-2]:=i;
           XCtl_TxMessage[length(XCtl_TxMessage)-1]:=2;
-        end else if XTouchDevices[i_dev].ButtonLightOn[i]=1 then
+        end else if mainform.XTouchDevices[i_dev].ButtonLightOn[i]=1 then
         begin
           // Turn Button off
-          XTouchDevices[i_dev].ButtonLightOn[i]:=0;
+          mainform.XTouchDevices[i_dev].ButtonLightOn[i]:=0;
           setlength(XCtl_TxMessage, length(XCtl_TxMessage)+2);
           XCtl_TxMessage[length(XCtl_TxMessage)-2]:=i;
           XCtl_TxMessage[length(XCtl_TxMessage)-1]:=0;
         end;
       end;
 
-      xtouchserver.SendBuffer(XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
+      xtouchserver.SendBuffer(mainform.XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
 
       // Update DialLevels around PanKnob
       setlength(XCtl_TxMessage, 34);
@@ -1446,7 +1420,7 @@ begin
       for i_ch:=0 to 7 do
       begin
         DialLevelRaw:=0;
-        for i:=0 to round(XTouchDevices[i_dev].Channel[i_ch].DialLevel/21.25) do
+        for i:=0 to round(mainform.XTouchDevices[i_dev].Channel[i_ch].DialLevel/21.25) do
           DialLevelRaw:=DialLevelRaw+(1 shl i);
 
         XCtl_TxMessage[1+i_ch*4]:=$30+i_ch;
@@ -1454,7 +1428,7 @@ begin
         XCtl_TxMessage[3+i_ch*4]:=$38+i_ch;
         XCtl_TxMessage[4+i_ch*4]:=(DialLevelRaw shr 7) AND $7F;
       end;
-      xtouchserver.SendBuffer(XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
+      xtouchserver.SendBuffer(mainform.XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
 
       // Set 7-Segment-Displays
       setlength(XCtl_TxMessage, 25);
@@ -1473,9 +1447,9 @@ begin
         // 0x69-0x6B - Ticks digits
         // 0x70-0x7B - same as above but with . also lit
         // Value: 7-bit bitmap of segments to illuminate
-        XCtl_TxMessage[2+i*2]:=GetSegmentBitmap(XTouchDevices[i_dev].SegmentDisplay[i]);
+        XCtl_TxMessage[2+i*2]:=GetSegmentBitmap(mainform.XTouchDevices[i_dev].SegmentDisplay[i]);
       end;
-      xtouchserver.SendBuffer(XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
+      xtouchserver.SendBuffer(mainform.XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
     end;
   except
   end;
@@ -1487,19 +1461,19 @@ var
   i_dev, i_ch:integer;
 begin
   try
-    for i_dev:=0 to length(XTouchDevices)-1 do
+    for i_dev:=0 to length(mainform.XTouchDevices)-1 do
     begin
       for i_ch:=0 to 7 do
       begin
-        if XTouchDevices[i_dev].Channel[i_ch].ChannelNeedsUpdate then
+        if mainform.XTouchDevices[i_dev].Channel[i_ch].ChannelNeedsUpdate then
         begin
-          XTouchDevices[i_dev].Channel[i_ch].ChannelNeedsUpdate:=false;
+          mainform.XTouchDevices[i_dev].Channel[i_ch].ChannelNeedsUpdate:=false;
           // update faders
           setlength(XCtl_TxMessage, 3);
           XCtl_TxMessage[0]:=$E0+i_ch; // E0...E7 Fader 1-8, E8=Masterfader
-          XCtl_TxMessage[1]:=XTouchDevices[i_dev].Channel[i_ch].Faderposition AND $7F; // MIDI-Values between 0 and 127
-          XCtl_TxMessage[2]:=(XTouchDevices[i_dev].Channel[i_ch].Faderposition shr 7) AND $7F;
-          xtouchserver.SendBuffer(XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
+          XCtl_TxMessage[1]:=mainform.XTouchDevices[i_dev].Channel[i_ch].Faderposition AND $7F; // MIDI-Values between 0 and 127
+          XCtl_TxMessage[2]:=(mainform.XTouchDevices[i_dev].Channel[i_ch].Faderposition shr 7) AND $7F;
+          xtouchserver.SendBuffer(mainform.XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
         end;
       end;
 
@@ -1507,19 +1481,19 @@ begin
       setlength(XCtl_TxMessage, 9);
       XCtl_TxMessage[0]:=$D0;
       for i_ch:=0 to 7 do
-        XCtl_TxMessage[1+i_ch]:=(i_ch shl 4)+XTouchDevices[i_dev].Channel[i_ch].Meterlevel;
-      xtouchserver.SendBuffer(XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
+        XCtl_TxMessage[1+i_ch]:=(i_ch shl 4)+mainform.XTouchDevices[i_dev].Channel[i_ch].Meterlevel;
+      xtouchserver.SendBuffer(mainform.XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
 
-      if XTouchDevices[i_dev].FaderNeedsUpdate then
+      if mainform.XTouchDevices[i_dev].FaderNeedsUpdate then
       begin
-        XTouchDevices[i_dev].FaderNeedsUpdate:=false;
+        mainform.XTouchDevices[i_dev].FaderNeedsUpdate:=false;
 
         // update Masterfader
         setlength(XCtl_TxMessage, 3);
         XCtl_TxMessage[0]:=$E8; // E8=Masterfader
-        XCtl_TxMessage[1]:=XTouchDevices[i_dev].Masterfader AND $7F; // MIDI-Values between 0 and 127
-        XCtl_TxMessage[2]:=(XTouchDevices[i_dev].Masterfader shr 7) AND $7F;
-        xtouchserver.SendBuffer(XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
+        XCtl_TxMessage[1]:=mainform.XTouchDevices[i_dev].Masterfader AND $7F; // MIDI-Values between 0 and 127
+        XCtl_TxMessage[2]:=(mainform.XTouchDevices[i_dev].Masterfader shr 7) AND $7F;
+        xtouchserver.SendBuffer(mainform.XTouchDevices[i_dev].IPAddress, 10111, XCtl_TxMessage);
       end;
     end;
   except
@@ -1581,11 +1555,11 @@ begin
   // find corresponding device
   try
     CurrentDevice:=-1;
-    if length(XTouchDevices)>0 then
+    if length(mainform.XTouchDevices)>0 then
     begin
-      for i_dev:=0 to length(XTouchDevices)-1 do
+      for i_dev:=0 to length(mainform.XTouchDevices)-1 do
       begin
-        if ABinding.PeerIP=XTouchDevices[i_dev].IPAddress then
+        if ABinding.PeerIP=mainform.XTouchDevices[i_dev].IPAddress then
         begin
           CurrentDevice:=i_dev;
           break;
@@ -1596,39 +1570,41 @@ begin
     if CurrentDevice<0 then
     begin
       // device is new, so create it
-      setlength(XTouchDevices, length(XTouchDevices)+1);
-      listbox2.Items.Add('XTouch #' + inttostr(length(XTouchDevices)) + ' @ ' + ABinding.PeerIP);
-      CurrentDevice:=length(XTouchDevices)-1;
-      XTouchDevices[CurrentDevice].IPAddress:=ABinding.PeerIP;
+      setlength(mainform.XTouchDevices, length(mainform.XTouchDevices)+1);
+      if length(mainform.XTouchMasterfaderBefehle)<(length(mainform.XTouchDevices)) then
+        setlength(mainform.XTouchMasterfaderBefehle, length(mainform.XTouchDevices));
+      listbox2.Items.Add('XTouch #' + inttostr(length(mainform.XTouchDevices)) + ' @ ' + ABinding.PeerIP);
+      CurrentDevice:=length(mainform.XTouchDevices)-1;
+      mainform.XTouchDevices[CurrentDevice].IPAddress:=ABinding.PeerIP;
 
-      XTouchDevices[CurrentDevice].ScribblePad[0].BotText:='Welcome';
-      XTouchDevices[CurrentDevice].ScribblePad[1].BotText:='  to   ';
-      XTouchDevices[CurrentDevice].ScribblePad[2].BotText:='XTouch-';
-      XTouchDevices[CurrentDevice].ScribblePad[3].BotText:='Control';
-      XTouchDevices[CurrentDevice].ScribblePad[4].BotText:='  for  ';
-      XTouchDevices[CurrentDevice].ScribblePad[5].BotText:='  PC   ';
-      XTouchDevices[CurrentDevice].ScribblePad[6].BotText:='DIMMER ';
-      XTouchDevices[CurrentDevice].ScribblePad[7].BotText:='  :)   ';
-      XTouchDevices[CurrentDevice].FaderNeedsUpdate:=true;
-      XTouchDevices[CurrentDevice].Masterfader:=0;
+      mainform.XTouchDevices[CurrentDevice].ScribblePad[0].BotText:='Welcome';
+      mainform.XTouchDevices[CurrentDevice].ScribblePad[1].BotText:='  to   ';
+      mainform.XTouchDevices[CurrentDevice].ScribblePad[2].BotText:='XTouch-';
+      mainform.XTouchDevices[CurrentDevice].ScribblePad[3].BotText:='Control';
+      mainform.XTouchDevices[CurrentDevice].ScribblePad[4].BotText:='  for  ';
+      mainform.XTouchDevices[CurrentDevice].ScribblePad[5].BotText:='  PC   ';
+      mainform.XTouchDevices[CurrentDevice].ScribblePad[6].BotText:='DIMMER ';
+      mainform.XTouchDevices[CurrentDevice].ScribblePad[7].BotText:='  :)   ';
+      mainform.XTouchDevices[CurrentDevice].FaderNeedsUpdate:=true;
+      mainform.XTouchDevices[CurrentDevice].Masterfader:=0;
       for i_ch:=0 to 7 do
       begin
         // Set to Standard Data
-        XTouchDevices[CurrentDevice].ScribblePad[i_ch].Color:=7; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
-        XTouchDevices[CurrentDevice].ScribblePad[i_ch].TopText:='Ch '+inttostr(i_ch+1);
-        XTouchDevices[CurrentDevice].ScribblePad[i_ch].ScribbleNeedsUpdate:=true;
-        XTouchDevices[CurrentDevice].Channel[i_ch].ChannelNeedsUpdate:=true;
-        XTouchDevices[CurrentDevice].Channel[i_ch].Faderposition:=0;
-        XTouchDevices[CurrentDevice].Channel[i_ch].Meterlevel:=0;
-        XTouchDevices[CurrentDevice].Channel[i_ch].DialLevel:=0;
-        XTouchDevices[CurrentDevice].Channel[i_ch].Rec:=0;
-        XTouchDevices[CurrentDevice].Channel[i_ch].Solo:=0;
-        XTouchDevices[CurrentDevice].Channel[i_ch].Mute:=0;
-        XTouchDevices[CurrentDevice].Channel[i_ch].Select:=0;
+        mainform.XTouchDevices[CurrentDevice].ScribblePad[i_ch].Color:=7; // 0=BLACK, 1=RED, 2=GREEN, 3=YELLOW, 4=BLUE, 5=PINK, 6=CYAN, 7=WHITE
+        mainform.XTouchDevices[CurrentDevice].ScribblePad[i_ch].TopText:='Ch '+inttostr(i_ch+1);
+        mainform.XTouchDevices[CurrentDevice].ScribblePad[i_ch].ScribbleNeedsUpdate:=true;
+        mainform.XTouchDevices[CurrentDevice].Channel[i_ch].ChannelNeedsUpdate:=true;
+        mainform.XTouchDevices[CurrentDevice].Channel[i_ch].Faderposition:=0;
+        mainform.XTouchDevices[CurrentDevice].Channel[i_ch].Meterlevel:=0;
+        mainform.XTouchDevices[CurrentDevice].Channel[i_ch].DialLevel:=0;
+        mainform.XTouchDevices[CurrentDevice].Channel[i_ch].Rec:=0;
+        mainform.XTouchDevices[CurrentDevice].Channel[i_ch].Solo:=0;
+        mainform.XTouchDevices[CurrentDevice].Channel[i_ch].Mute:=0;
+        mainform.XTouchDevices[CurrentDevice].Channel[i_ch].Select:=0;
       end;
     end;
 
-    if (CurrentDevice>=0) and (CurrentDevice<length(XTouchDevices)) then
+    if (CurrentDevice>=0) and (CurrentDevice<length(mainform.XTouchDevices)) then
     begin
       if (AData[0]=$F0) and (AData[length(AData)-1]=$F7) then
       begin
@@ -1638,7 +1614,7 @@ begin
         if (length(AData)=length(XCtl_Probe)) and (CompareMem(AData, XCtl_Probe, length(XCtl_Probe))) then
         begin
           // we received a Probe-Message
-          xtouchserver.SendBuffer(XTouchDevices[CurrentDevice].IPAddress, 10111, XCtl_ProbeResponse);
+          xtouchserver.SendBuffer(mainform.XTouchDevices[CurrentDevice].IPAddress, 10111, XCtl_ProbeResponse);
 
           // enable timer if not happened already
           WatchDogTimer.Enabled:=true;
@@ -1681,17 +1657,17 @@ begin
             // Level := AData[1]+(AData[2] shl 7)
             if (((AData[0] AND $0F))<=7) then
             begin
-              if XTouchDevices[CurrentDevice].Channel[(AData[0] AND $0F)].FaderEnabled then
+              if mainform.XTouchDevices[CurrentDevice].Channel[(AData[0] AND $0F)].FaderEnabled then
               begin
                 Value:=round(((AData[1]+(AData[2] shl 7))/XTouchMaxRes)*maxres);
                 if Value>maxres then
                   Value:=maxres
                 else if Value<0 then
                   Value:=0;
-                if XTouchDevices[CurrentDevice].DisplayGlobalView then
-                  mainform.Senddata(XTouchDevices[CurrentDevice].Channel[(AData[0] AND $0F)].CorrespondingChannel, -1, maxres-Value, 0, 0)
+                if mainform.XTouchDevices[CurrentDevice].DisplayGlobalView then
+                  mainform.Senddata(mainform.XTouchDevices[CurrentDevice].Channel[(AData[0] AND $0F)].CorrespondingChannel, -1, maxres-Value, 0, 0)
                 else
-                  geraetesteuerung.set_channel(XTouchDevices[CurrentDevice].Channel[(AData[0] AND $0F)].CorrespondingID, XTouchDevices[CurrentDevice].Channel[(AData[0] AND $0F)].CorrespondingChannelName, -1, Value, 0, -1);
+                  geraetesteuerung.set_channel(mainform.XTouchDevices[CurrentDevice].Channel[(AData[0] AND $0F)].CorrespondingID, mainform.XTouchDevices[CurrentDevice].Channel[(AData[0] AND $0F)].CorrespondingChannelName, -1, Value, 0, -1);
               end;
             end;
 
@@ -1724,24 +1700,24 @@ begin
               if (Value>0) then
               begin
                 // Turn Right
-                if (XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel+Value)>maxres then
-                  XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel:=maxres
+                if (mainform.XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel+Value)>maxres then
+                  mainform.XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel:=maxres
                 else
-                  XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel:=XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel+Value;
+                  mainform.XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel:=mainform.XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel+Value;
               end else
               begin
                 // Turn Left
-                if (XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel+Value)<0 then
-                  XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel:=0
+                if (mainform.XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel+Value)<0 then
+                  mainform.XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel:=0
                 else
-                  XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel:=XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel+Value;
+                  mainform.XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel:=mainform.XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel+Value;
               end;
 
               // if desired, send all buttons to DataInEvent
               if UseDataIn then
               begin
                 Channel:=DataInOffset+(101*CurrentDevice)+AData[1]+1;
-                Value:=XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel;
+                Value:=mainform.XTouchDevices[CurrentDevice].Channel[AData[1]-16].DialLevel;
                 if Value>maxres then
                   Value:=maxres
                 else if Value<0 then
@@ -1754,24 +1730,24 @@ begin
               if (Value>0) then
               begin
                 // Turn Right
-                if (XTouchDevices[CurrentDevice].JogDialValue+Value)>maxres then
-                  XTouchDevices[CurrentDevice].JogDialValue:=maxres
+                if (mainform.XTouchDevices[CurrentDevice].JogDialValue+Value)>maxres then
+                  mainform.XTouchDevices[CurrentDevice].JogDialValue:=maxres
                 else
-                  XTouchDevices[CurrentDevice].JogDialValue:=XTouchDevices[CurrentDevice].JogDialValue+Value;
+                  mainform.XTouchDevices[CurrentDevice].JogDialValue:=mainform.XTouchDevices[CurrentDevice].JogDialValue+Value;
               end else
               begin
                 // Turn Left
-                if (XTouchDevices[CurrentDevice].JogDialValue+Value)<0 then
-                  XTouchDevices[CurrentDevice].JogDialValue:=0
+                if (mainform.XTouchDevices[CurrentDevice].JogDialValue+Value)<0 then
+                  mainform.XTouchDevices[CurrentDevice].JogDialValue:=0
                 else
-                  XTouchDevices[CurrentDevice].JogDialValue:=XTouchDevices[CurrentDevice].JogDialValue+Value;
+                  mainform.XTouchDevices[CurrentDevice].JogDialValue:=mainform.XTouchDevices[CurrentDevice].JogDialValue+Value;
               end;
 
               // if desired, send all buttons to DataInEvent
               if UseDataIn then
               begin
                 Channel:=DataInOffset+(101*CurrentDevice)+AData[1]+1;
-                mainform.ExecuteDataInEvent(Channel, XTouchDevices[CurrentDevice].JogDialValue);
+                mainform.ExecuteDataInEvent(Channel, mainform.XTouchDevices[CurrentDevice].JogDialValue);
               end;
             end;
           end;
@@ -1819,105 +1795,105 @@ begin
             // 115 Solo - on 7-seg display
 
             //if (ButtonState and (Button>=32) and (Button<102)) then
-            //  XTouchDevices[CurrentDevice].ButtonLightOn[Button]:=254; // 255=TurnOn, 254=enable with auto-TurnOff, 1=TurnOff
+            //  mainform.XTouchDevices[CurrentDevice].ButtonLightOn[Button]:=254; // 255=TurnOn, 254=enable with auto-TurnOff, 1=TurnOff
             if ((Button>=32) and (Button<102)) and not (Button=51) then // Button 51=DisplayGlobalView
             begin
               if ButtonState then
-                XTouchDevices[CurrentDevice].ButtonLightOn[Button]:=255
+                mainform.XTouchDevices[CurrentDevice].ButtonLightOn[Button]:=255
               else
-                XTouchDevices[CurrentDevice].ButtonLightOn[Button]:=1;
+                mainform.XTouchDevices[CurrentDevice].ButtonLightOn[Button]:=1;
             end;
 
             if (Button>=0) and (Button<=7) then // Rec-Buttons
             begin
-              if XTouchDevices[CurrentDevice].Channel[Button].FaderEnabled then
+              if mainform.XTouchDevices[CurrentDevice].Channel[Button].FaderEnabled then
               begin
                 if ButtonState then
                 begin
-                  XTouchDevices[CurrentDevice].Channel[Button].Rec:=2;
-                  XTouchDevices[CurrentDevice].Channel[Button].LastFaderposition:=XTouchDevices[CurrentDevice].Channel[Button].Faderposition;
+                  mainform.XTouchDevices[CurrentDevice].Channel[Button].Rec:=2;
+                  mainform.XTouchDevices[CurrentDevice].Channel[Button].LastFaderposition:=mainform.XTouchDevices[CurrentDevice].Channel[Button].Faderposition;
                   Value:=maxres;
-                  geraetesteuerung.set_channel(XTouchDevices[CurrentDevice].Channel[Button].CorrespondingID, XTouchDevices[CurrentDevice].Channel[Button].CorrespondingChannelName, -1, Value, 0, -1);
+                  geraetesteuerung.set_channel(mainform.XTouchDevices[CurrentDevice].Channel[Button].CorrespondingID, mainform.XTouchDevices[CurrentDevice].Channel[Button].CorrespondingChannelName, -1, Value, 0, -1);
                 end else
                 begin
-                  XTouchDevices[CurrentDevice].Channel[Button].Rec:=0;
-                  Value:=round((XTouchDevices[CurrentDevice].Channel[Button].LastFaderposition/XTouchMaxRes)*maxres);
-                  geraetesteuerung.set_channel(XTouchDevices[CurrentDevice].Channel[Button].CorrespondingID, XTouchDevices[CurrentDevice].Channel[Button].CorrespondingChannelName, -1, Value, 0, -1);
+                  mainform.XTouchDevices[CurrentDevice].Channel[Button].Rec:=0;
+                  Value:=round((mainform.XTouchDevices[CurrentDevice].Channel[Button].LastFaderposition/XTouchMaxRes)*maxres);
+                  geraetesteuerung.set_channel(mainform.XTouchDevices[CurrentDevice].Channel[Button].CorrespondingID, mainform.XTouchDevices[CurrentDevice].Channel[Button].CorrespondingChannelName, -1, Value, 0, -1);
                 end;
               end;
             end;
 
             if (Button>=8) and (Button<=15) then // Solo-Buttons
             begin
-              if XTouchDevices[CurrentDevice].Channel[Button-8].FaderEnabled then
+              if mainform.XTouchDevices[CurrentDevice].Channel[Button-8].FaderEnabled then
               begin
                 if ButtonState then
                 begin
-                  XTouchDevices[CurrentDevice].Channel[Button-8].Solo:=2;
-                  XTouchDevices[CurrentDevice].Channel[Button-8].LastFaderposition:=XTouchDevices[CurrentDevice].Channel[Button-8].Faderposition;
+                  mainform.XTouchDevices[CurrentDevice].Channel[Button-8].Solo:=2;
+                  mainform.XTouchDevices[CurrentDevice].Channel[Button-8].LastFaderposition:=mainform.XTouchDevices[CurrentDevice].Channel[Button-8].Faderposition;
                   Value:=169;
-                  geraetesteuerung.set_channel(XTouchDevices[CurrentDevice].Channel[Button-8].CorrespondingID, XTouchDevices[CurrentDevice].Channel[Button-8].CorrespondingChannelName, -1, Value, 0, -1);
+                  geraetesteuerung.set_channel(mainform.XTouchDevices[CurrentDevice].Channel[Button-8].CorrespondingID, mainform.XTouchDevices[CurrentDevice].Channel[Button-8].CorrespondingChannelName, -1, Value, 0, -1);
                 end else
                 begin
-                  XTouchDevices[CurrentDevice].Channel[Button-8].Solo:=0;
-                  Value:=round((XTouchDevices[CurrentDevice].Channel[Button-8].LastFaderposition/XTouchMaxRes)*maxres);
-                  geraetesteuerung.set_channel(XTouchDevices[CurrentDevice].Channel[Button-8].CorrespondingID, XTouchDevices[CurrentDevice].Channel[Button-8].CorrespondingChannelName, -1, Value, 0, -1);
+                  mainform.XTouchDevices[CurrentDevice].Channel[Button-8].Solo:=0;
+                  Value:=round((mainform.XTouchDevices[CurrentDevice].Channel[Button-8].LastFaderposition/XTouchMaxRes)*maxres);
+                  geraetesteuerung.set_channel(mainform.XTouchDevices[CurrentDevice].Channel[Button-8].CorrespondingID, mainform.XTouchDevices[CurrentDevice].Channel[Button-8].CorrespondingChannelName, -1, Value, 0, -1);
                 end;
               end;
             end;
 
             if (Button>=16) and (Button<=23) then // Mute-Buttons
             begin
-              if XTouchDevices[CurrentDevice].Channel[Button-16].FaderEnabled then
+              if mainform.XTouchDevices[CurrentDevice].Channel[Button-16].FaderEnabled then
               begin
                 if ButtonState then
                 begin
-                  XTouchDevices[CurrentDevice].Channel[Button-16].Mute:=2;
-                  XTouchDevices[CurrentDevice].Channel[Button-16].LastFaderposition:=XTouchDevices[CurrentDevice].Channel[Button-16].Faderposition;
+                  mainform.XTouchDevices[CurrentDevice].Channel[Button-16].Mute:=2;
+                  mainform.XTouchDevices[CurrentDevice].Channel[Button-16].LastFaderposition:=mainform.XTouchDevices[CurrentDevice].Channel[Button-16].Faderposition;
                   Value:=85;
-                  geraetesteuerung.set_channel(XTouchDevices[CurrentDevice].Channel[Button-16].CorrespondingID, XTouchDevices[CurrentDevice].Channel[Button-16].CorrespondingChannelName, -1, Value, 0, -1);
+                  geraetesteuerung.set_channel(mainform.XTouchDevices[CurrentDevice].Channel[Button-16].CorrespondingID, mainform.XTouchDevices[CurrentDevice].Channel[Button-16].CorrespondingChannelName, -1, Value, 0, -1);
                 end else
                 begin
-                  XTouchDevices[CurrentDevice].Channel[Button-16].Mute:=0;
-                  Value:=round((XTouchDevices[CurrentDevice].Channel[Button-16].LastFaderposition/XTouchMaxRes)*maxres);
-                  geraetesteuerung.set_channel(XTouchDevices[CurrentDevice].Channel[Button-16].CorrespondingID, XTouchDevices[CurrentDevice].Channel[Button-16].CorrespondingChannelName, -1, Value, 0, -1);
+                  mainform.XTouchDevices[CurrentDevice].Channel[Button-16].Mute:=0;
+                  Value:=round((mainform.XTouchDevices[CurrentDevice].Channel[Button-16].LastFaderposition/XTouchMaxRes)*maxres);
+                  geraetesteuerung.set_channel(mainform.XTouchDevices[CurrentDevice].Channel[Button-16].CorrespondingID, mainform.XTouchDevices[CurrentDevice].Channel[Button-16].CorrespondingChannelName, -1, Value, 0, -1);
                 end;
               end;
             end;
 
             if (Button>=24) and (Button<=31) then // Select-Buttons
             begin
-              if XTouchDevices[CurrentDevice].Channel[Button-24].FaderEnabled then
+              if mainform.XTouchDevices[CurrentDevice].Channel[Button-24].FaderEnabled then
               begin
                 if ButtonState then
                 begin
-                  XTouchDevices[CurrentDevice].Channel[Button-24].Select:=2;
-                  XTouchDevices[CurrentDevice].Channel[Button-24].LastFaderposition:=XTouchDevices[CurrentDevice].Channel[Button-24].Faderposition;
+                  mainform.XTouchDevices[CurrentDevice].Channel[Button-24].Select:=2;
+                  mainform.XTouchDevices[CurrentDevice].Channel[Button-24].LastFaderposition:=mainform.XTouchDevices[CurrentDevice].Channel[Button-24].Faderposition;
                   Value:=0;
-                  geraetesteuerung.set_channel(XTouchDevices[CurrentDevice].Channel[Button-24].CorrespondingID, XTouchDevices[CurrentDevice].Channel[Button-24].CorrespondingChannelName, -1, Value, 0, -1);
+                  geraetesteuerung.set_channel(mainform.XTouchDevices[CurrentDevice].Channel[Button-24].CorrespondingID, mainform.XTouchDevices[CurrentDevice].Channel[Button-24].CorrespondingChannelName, -1, Value, 0, -1);
                 end else
                 begin
-                  XTouchDevices[CurrentDevice].Channel[Button-24].Select:=0;
-                  Value:=round((XTouchDevices[CurrentDevice].Channel[Button-24].LastFaderposition/XTouchMaxRes)*maxres);
-                  geraetesteuerung.set_channel(XTouchDevices[CurrentDevice].Channel[Button-24].CorrespondingID, XTouchDevices[CurrentDevice].Channel[Button-24].CorrespondingChannelName, -1, Value, 0, -1);
+                  mainform.XTouchDevices[CurrentDevice].Channel[Button-24].Select:=0;
+                  Value:=round((mainform.XTouchDevices[CurrentDevice].Channel[Button-24].LastFaderposition/XTouchMaxRes)*maxres);
+                  geraetesteuerung.set_channel(mainform.XTouchDevices[CurrentDevice].Channel[Button-24].CorrespondingID, mainform.XTouchDevices[CurrentDevice].Channel[Button-24].CorrespondingChannelName, -1, Value, 0, -1);
                 end;
               end;
             end;
 
             if (Button=46) and ButtonState then
             begin
-              if XTouchDevices[CurrentDevice].ChannelOffset>=8 then
-                XTouchDevices[CurrentDevice].ChannelOffset:=XTouchDevices[CurrentDevice].ChannelOffset-8
+              if mainform.XTouchDevices[CurrentDevice].ChannelOffset>=8 then
+                mainform.XTouchDevices[CurrentDevice].ChannelOffset:=mainform.XTouchDevices[CurrentDevice].ChannelOffset-8
               else
-                XTouchDevices[CurrentDevice].ChannelOffset:=0;
+                mainform.XTouchDevices[CurrentDevice].ChannelOffset:=0;
             end;
 
-            if XTouchDevices[CurrentDevice].DisplayGlobalView then
+            if mainform.XTouchDevices[CurrentDevice].DisplayGlobalView then
             begin
               TotalChannelsToDisplay_local:=chan; //8192
             end else
             begin
-              if XTouchDevices[CurrentDevice].DisplaySelectedDevices then
+              if mainform.XTouchDevices[CurrentDevice].DisplaySelectedDevices then
                 TotalChannelsToDisplay_local:=64
               else
                 TotalChannelsToDisplay_local:=TotalChannelsToDisplay;
@@ -1925,37 +1901,37 @@ begin
 
             if (Button=47) and ButtonState then
             begin
-              if XTouchDevices[CurrentDevice].ChannelOffset<=(TotalChannelsToDisplay_local-9) then
+              if mainform.XTouchDevices[CurrentDevice].ChannelOffset<=(TotalChannelsToDisplay_local-9) then
               begin
-                XTouchDevices[CurrentDevice].ChannelOffset:=XTouchDevices[CurrentDevice].ChannelOffset+8;
+                mainform.XTouchDevices[CurrentDevice].ChannelOffset:=mainform.XTouchDevices[CurrentDevice].ChannelOffset+8;
               end else
               begin
-                XTouchDevices[CurrentDevice].ChannelOffset:=(TotalChannelsToDisplay_local-1);
+                mainform.XTouchDevices[CurrentDevice].ChannelOffset:=(TotalChannelsToDisplay_local-1);
               end;
             end;
             if (Button=48) and ButtonState then
             begin
-              if XTouchDevices[CurrentDevice].ChannelOffset>0 then
-                XTouchDevices[CurrentDevice].ChannelOffset:=XTouchDevices[CurrentDevice].ChannelOffset-1;
+              if mainform.XTouchDevices[CurrentDevice].ChannelOffset>0 then
+                mainform.XTouchDevices[CurrentDevice].ChannelOffset:=mainform.XTouchDevices[CurrentDevice].ChannelOffset-1;
             end;
             if (Button=49) and ButtonState then
             begin
-              if XTouchDevices[CurrentDevice].ChannelOffset<(TotalChannelsToDisplay_local-1) then
+              if mainform.XTouchDevices[CurrentDevice].ChannelOffset<(TotalChannelsToDisplay_local-1) then
               begin
-                XTouchDevices[CurrentDevice].ChannelOffset:=XTouchDevices[CurrentDevice].ChannelOffset+1;
+                mainform.XTouchDevices[CurrentDevice].ChannelOffset:=mainform.XTouchDevices[CurrentDevice].ChannelOffset+1;
               end else
               begin
-                XTouchDevices[CurrentDevice].ChannelOffset:=(TotalChannelsToDisplay_local-1);
+                mainform.XTouchDevices[CurrentDevice].ChannelOffset:=(TotalChannelsToDisplay_local-1);
               end;
             end;
             if (Button=51) and ButtonState then
             begin
-              XTouchDevices[CurrentDevice].DisplayGlobalView:=not XTouchDevices[CurrentDevice].DisplayGlobalView;
-              XTouchDevices[CurrentDevice].DisplaySelectedDevices:=false;
+              mainform.XTouchDevices[CurrentDevice].DisplayGlobalView:=not mainform.XTouchDevices[CurrentDevice].DisplayGlobalView;
+              mainform.XTouchDevices[CurrentDevice].DisplaySelectedDevices:=false;
             end;
             if (Button=52) and ButtonState then
             begin
-              XTouchDevices[CurrentDevice].DisplaySelectedDevices:=not XTouchDevices[CurrentDevice].DisplaySelectedDevices;
+              mainform.XTouchDevices[CurrentDevice].DisplaySelectedDevices:=not mainform.XTouchDevices[CurrentDevice].DisplaySelectedDevices;
             end;
           end;
         end;
@@ -1970,8 +1946,8 @@ var
   i_dev:integer;
 begin
   try
-    for i_dev:=0 to length(XTouchDevices)-1 do
-      xtouchserver.SendBuffer(XTouchDevices[i_dev].IPAddress, 10111, XCtl_IdlePacket);
+    for i_dev:=0 to length(mainform.XTouchDevices)-1 do
+      xtouchserver.SendBuffer(mainform.XTouchDevices[i_dev].IPAddress, 10111, XCtl_IdlePacket);
   except
   end;
 end;
@@ -1980,12 +1956,12 @@ procedure Txtouchcontrolform.UpdateTimerTimer(Sender: TObject);
 var
   i_dev, i:integer;
 begin
-  for i_dev:=0 to length(XTouchDevices)-1 do
+  for i_dev:=0 to length(mainform.XTouchDevices)-1 do
   begin
-    for i:=0 to length(XTouchDevices[i_dev].ButtonLightOn)-1 do
+    for i:=0 to length(mainform.XTouchDevices[i_dev].ButtonLightOn)-1 do
     begin
-      if (XTouchDevices[i_dev].ButtonLightOn[i]<254) and (XTouchDevices[i_dev].ButtonLightOn[i]>1) then
-        XTouchDevices[i_dev].ButtonLightOn[i]:=XTouchDevices[i_dev].ButtonLightOn[i]-1;
+      if (mainform.XTouchDevices[i_dev].ButtonLightOn[i]<254) and (mainform.XTouchDevices[i_dev].ButtonLightOn[i]>1) then
+        mainform.XTouchDevices[i_dev].ButtonLightOn[i]:=mainform.XTouchDevices[i_dev].ButtonLightOn[i]-1;
     end;
   end;
 
@@ -2022,8 +1998,8 @@ begin
       if adddevicetogroupform.listbox1.Selected[i] then
       begin
         // get GUID of device and add it to list
-        setlength(mainform.XTouchDevices, length(mainform.XTouchDevices)+1);
-        mainform.XTouchDevices[length(mainform.XTouchDevices)-1].ID:=adddevicetogroupform.GUIDList[i];
+        setlength(mainform.XTouchPCDDevicesOrGroups, length(mainform.XTouchPCDDevicesOrGroups)+1);
+        mainform.XTouchPCDDevicesOrGroups[length(mainform.XTouchPCDDevicesOrGroups)-1].ID:=adddevicetogroupform.GUIDList[i];
       end;
     end;
     RefreshList;
@@ -2032,25 +2008,26 @@ end;
 
 procedure Txtouchcontrolform.upbtnClick(Sender: TObject);
 var
-  XTouchDevice:TXTouchDevice;
+  ID:TGUID;
   IsDevice:boolean;
+  ChannelsToDisplay:Byte;
 begin
   if not mainform.UserAccessGranted(1) then exit;
 
   if listbox1.ItemIndex>0 then
   begin
     // move one step upwards
-    XTouchDevice.ID:=mainform.XTouchDevices[listbox1.ItemIndex-1].ID;
-    IsDevice:=mainform.XTouchDevices[listbox1.ItemIndex-1].IsDevice;
-    XTouchDevice.ChannelsToDisplay:=mainform.XTouchDevices[listbox1.ItemIndex-1].ChannelsToDisplay;
+    ID:=mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex-1].ID;
+    IsDevice:=mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex-1].IsDevice;
+    ChannelsToDisplay:=mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex-1].ChannelsToDisplay;
 
-    mainform.XTouchDevices[listbox1.ItemIndex-1].ID:=mainform.XTouchDevices[listbox1.ItemIndex].ID;
-    mainform.XTouchDevices[listbox1.ItemIndex-1].IsDevice:=mainform.XTouchDevices[listbox1.ItemIndex].IsDevice;
-    mainform.XTouchDevices[listbox1.ItemIndex-1].ChannelsToDisplay:=mainform.XTouchDevices[listbox1.ItemIndex].ChannelsToDisplay;
+    mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex-1].ID:=mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex].ID;
+    mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex-1].IsDevice:=mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex].IsDevice;
+    mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex-1].ChannelsToDisplay:=mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex].ChannelsToDisplay;
 
-    mainform.XTouchDevices[listbox1.ItemIndex].ID:=XTouchDevice.ID;
-    mainform.XTouchDevices[listbox1.ItemIndex].IsDevice:=IsDevice;
-    mainform.XTouchDevices[listbox1.ItemIndex].ChannelsToDisplay:=XTouchDevice.ChannelsToDisplay;
+    mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex].ID:=ID;
+    mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex].IsDevice:=IsDevice;
+    mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex].ChannelsToDisplay:=ChannelsToDisplay;
 
     listbox1.ItemIndex:=listbox1.ItemIndex-1;
 
@@ -2060,25 +2037,26 @@ end;
 
 procedure Txtouchcontrolform.downbtnClick(Sender: TObject);
 var
-  XTouchDevice:TXTouchDevice;
+  ID:TGUID;
   IsDevice:boolean;
+  ChannelsToDisplay:byte;
 begin
   if not mainform.UserAccessGranted(1) then exit;
 
   if listbox1.ItemIndex<(listbox1.Items.Count-1) then
   begin
     // move one step downwards
-    XTouchDevice.ID:=mainform.XTouchDevices[listbox1.ItemIndex+1].ID;
-    IsDevice:=mainform.XTouchDevices[listbox1.ItemIndex+1].IsDevice;
-    XTouchDevice.ChannelsToDisplay:=mainform.XTouchDevices[listbox1.ItemIndex+1].ChannelsToDisplay;
+    ID:=mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex+1].ID;
+    IsDevice:=mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex+1].IsDevice;
+    ChannelsToDisplay:=mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex+1].ChannelsToDisplay;
 
-    mainform.XTouchDevices[listbox1.ItemIndex+1].ID:=mainform.XTouchDevices[listbox1.ItemIndex].ID;
-    mainform.XTouchDevices[listbox1.ItemIndex+1].IsDevice:=mainform.XTouchDevices[listbox1.ItemIndex].IsDevice;
-    mainform.XTouchDevices[listbox1.ItemIndex+1].ChannelsToDisplay:=mainform.XTouchDevices[listbox1.ItemIndex].ChannelsToDisplay;
+    mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex+1].ID:=mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex].ID;
+    mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex+1].IsDevice:=mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex].IsDevice;
+    mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex+1].ChannelsToDisplay:=mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex].ChannelsToDisplay;
 
-    mainform.XTouchDevices[listbox1.ItemIndex].ID:=XTouchDevice.ID;
-    mainform.XTouchDevices[listbox1.ItemIndex].IsDevice:=IsDevice;
-    mainform.XTouchDevices[listbox1.ItemIndex].ChannelsToDisplay:=XTouchDevice.ChannelsToDisplay;
+    mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex].ID:=ID;
+    mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex].IsDevice:=IsDevice;
+    mainform.XTouchPCDDevicesOrGroups[listbox1.ItemIndex].ChannelsToDisplay:=ChannelsToDisplay;
 
     listbox1.ItemIndex:=listbox1.ItemIndex+1;
 
@@ -2095,13 +2073,13 @@ begin
   if listbox1.ItemIndex>-1 then
   begin
     // move all devices one up and reduce by one element
-    for i:=listbox1.itemindex to length(mainform.XTouchDevices)-2 do
+    for i:=listbox1.itemindex to length(mainform.XTouchPCDDevicesOrGroups)-2 do
     begin
-      mainform.XTouchDevices[i].ID:=mainform.XTouchDevices[i+1].ID;
-      mainform.XTouchDevices[i].IsDevice:=mainform.XTouchDevices[i+1].IsDevice;
-      mainform.XTouchDevices[i].ChannelsToDisplay:=mainform.XTouchDevices[i+1].ChannelsToDisplay;
+      mainform.XTouchPCDDevicesOrGroups[i].ID:=mainform.XTouchPCDDevicesOrGroups[i+1].ID;
+      mainform.XTouchPCDDevicesOrGroups[i].IsDevice:=mainform.XTouchPCDDevicesOrGroups[i+1].IsDevice;
+      mainform.XTouchPCDDevicesOrGroups[i].ChannelsToDisplay:=mainform.XTouchPCDDevicesOrGroups[i+1].ChannelsToDisplay;
     end;
-    setlength(mainform.XTouchDevices, length(mainform.XTouchDevices)-1);
+    setlength(mainform.XTouchPCDDevicesOrGroups, length(mainform.XTouchPCDDevicesOrGroups)-1);
 
     RefreshList;
   end;
@@ -2114,7 +2092,7 @@ end;
 
 procedure Txtouchcontrolform.resetbtnClick(Sender: TObject);
 begin
-  setlength(XTouchDevices, 0);
+  setlength(mainform.XTouchDevices, 0);
   listbox2.items.Clear;
 end;
 
@@ -2140,6 +2118,67 @@ procedure Txtouchcontrolform.xtouchserverUDPException(
   const AMessage: String; const AExceptionClass: TClass);
 begin
   // no exception
+end;
+
+procedure Txtouchcontrolform.editbtnClick(Sender: TObject);
+var
+  i:integer;
+begin
+  if (Listbox2.ItemIndex>-1) and (Listbox2.ItemIndex<length(mainform.XTouchDevices)) then
+  begin
+    setlength(befehlseditor_array2,length(befehlseditor_array2)+1);
+    befehlseditor_array2[length(befehlseditor_array2)-1]:=Tbefehlseditor2.Create(self);
+    befehlseditor_array2[length(befehlseditor_array2)-1].CheckBox1.Visible:=false;
+    befehlseditor_array2[length(befehlseditor_array2)-1].ShowInputValueToo:=true;
+
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ID:=mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ID;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.Typ:=mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].Typ;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.Name:=mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].Name;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.Beschreibung:=mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].Beschreibung;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.OnValue:=mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].OnValue;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.SwitchValue:=mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].SwitchValue;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.InvertSwitchValue:=mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].InvertSwitchValue;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.OffValue:=mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].OffValue;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ScaleValue:=mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ScaleValue;
+    befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.RunOnProjectLoad:=mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].RunOnProjectLoad;
+
+    setlength(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgInteger,length(mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgInteger));
+    for i:=0 to length(mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgInteger)-1 do
+      befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgInteger[i]:=mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgInteger[i];
+    setlength(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgString,length(mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgString));
+    for i:=0 to length(mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgString)-1 do
+      befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgString[i]:=mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgString[i];
+    setlength(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgGUID,length(mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgGUID));
+    for i:=0 to length(mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgGUID)-1 do
+      befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgGUID[i]:=mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgGUID[i];
+
+    befehlseditor_array2[length(befehlseditor_array2)-1].ShowModal;
+
+    if befehlseditor_array2[length(befehlseditor_array2)-1].ModalResult=mrOK then
+    begin
+      mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].Typ:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.Typ;
+      mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].Name:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.Name;
+      mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].Beschreibung:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.Beschreibung;
+      mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].OnValue:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.OnValue;
+      mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].SwitchValue:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.SwitchValue;
+      mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].InvertSwitchValue:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.InvertSwitchValue;
+      mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].OffValue:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.OffValue;
+      mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ScaleValue:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ScaleValue;
+      mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].RunOnProjectLoad:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.RunOnProjectLoad;
+      setlength(mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgInteger,length(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgInteger));
+      for i:=0 to length(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgInteger)-1 do
+        mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgInteger[i]:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgInteger[i];
+      setlength(mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgString,length(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgString));
+      for i:=0 to length(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgString)-1 do
+        mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgString[i]:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgString[i];
+      setlength(mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgGUID,length(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgGUID));
+      for i:=0 to length(befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgGUID)-1 do
+        mainform.XTouchMasterfaderBefehle[Listbox2.ItemIndex].ArgGUID[i]:=befehlseditor_array2[length(befehlseditor_array2)-1].AktuellerBefehl.ArgGUID[i];
+    end;
+
+    befehlseditor_array2[length(befehlseditor_array2)-1].Free;
+    setlength(befehlseditor_array2,length(befehlseditor_array2)-1);
+  end;
 end;
 
 end.

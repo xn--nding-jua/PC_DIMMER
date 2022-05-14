@@ -46,7 +46,7 @@ object addfunctionform: Taddfunctionform
       'Abfragedialog'
       ''
       'Variablen setzen/abfragen'
-      'Kontrollpanel Buttonfarbe abfragen'
+      'Kontrollpanel Buttonfarbe oder -text setzen oder abfragen'
       'MIDI-Nachricht senden'
       'DataIn-Nachricht senden'
       'PCD-Nachricht senden')

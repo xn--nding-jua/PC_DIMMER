@@ -236,19 +236,25 @@ begin
       Memo1.Clear;
       Memo1.Lines.Add(_('// Kontrollpanel Buttonfarbe abfragen'));
       Memo1.Lines.Add('//var Color:TColor;');
+      Memo1.Lines.Add('//var Text:String;');
       Memo1.Lines.Add('Color:=get_panelbuttoncolor(1,1);');
+      Memo1.Lines.Add('set_panelbuttoncolor(1,1, Color);');
+      Memo1.Lines.Add('Text:=get_panelbuttontext(1,1);');
+      Memo1.Lines.Add('set_panelbuttontext(1,1, Text);');
     end;
     24:
     begin
       Memo1.Clear;
       Memo1.Lines.Add(_('// MIDI Nachricht senden'));
       Memo1.Lines.Add('sendmidi(64, 64, 127);');
+      Memo1.Lines.Add('ShowMessage(get_lastmidi()); // returns MSG, Data1, Data2');
     end;
     25:
     begin
       Memo1.Clear;
       Memo1.Lines.Add(_('// DataIn Nachricht senden'));
       Memo1.Lines.Add('senddatain(1, 255);');
+      Memo1.Lines.Add('ShowMessage(get_lastdatain()); //returns MSB, LSB of Channel, Value');
     end;
     26:
     begin

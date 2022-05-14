@@ -1,6 +1,6 @@
 object codeeditorform: Tcodeeditorform
-  Left = 538
-  Top = 119
+  Left = 229
+  Top = 108
   Width = 662
   Height = 584
   Caption = 'Codeeditor'
@@ -370,6 +370,21 @@ object codeeditorform: Tcodeeditorform
         '    get_var(1, 2);'
         '    set_globalvar(1, 2);'
         '    get_globalvar(1, 2);'
+        '// Midi oder DataIn senden'
+        'sendmidi(MSG, Data1, Data2)'
+        'senddatain(Channel, Value)'
+        'get_lastmidi() // returns MSG, Data1, Data2 as char in string'
+        
+          'get_lastdatain() // returns HighByte, LowByte of Address and Val' +
+          'ue as char in string'
+        '// Kontrollpanel'
+        
+          'get_panelbuttoncolor(X,Y):TColor / set_panelbuttoncolor(X, Y, TC' +
+          'olor)'
+        
+          'get_panelbuttontext(X,Y):String / set_panelbuttontext(X, Y, Stri' +
+          'ng)'
+        ''
         ''
         
           '// Als ID z.B.: SzenenID='#39'{93FC1B07-BC0F-4070-BD73-A1DE250BA2BA}' +
