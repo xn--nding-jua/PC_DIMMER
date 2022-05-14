@@ -1096,6 +1096,43 @@
     grouplist.visible:=true;
     nousersetting:=false;
   end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[23].GUID) then
+  begin // Gruppe Fanning-Modus auf Eingangswert
+    grouplist.visible:=true;
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[24].GUID) then
+  begin // Gruppe Fanning-Master auf Eingangswert
+    grouplist.visible:=true;
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[25].GUID) then
+  begin // Gruppe Fanning-Modus setzen
+    grouplist.visible:=true;
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Fanning-Modus');
+    Arg1Combobox.Clear;
+    Arg1Combobox.Items.Add(_('Aus'));
+    Arg1Combobox.Items.Add(_('Gleichm‰ﬂig nach Links und Rechs'));
+    Arg1Combobox.Items.Add(_('Nur nach Rechts'));
+    Arg1Combobox.Items.Add(_('Nur nach Links'));
+    Arg1Combobox.Items.Add(_('Sinus nach Links und Rechts'));
+    Arg1Combobox.Items.Add(_('Tangens'));
+    Arg1Combobox.Items.Add(_('Tangens 2'));
+    Arg1Combobox.Items.Add(_('Von Auﬂen nach Innen'));
+    Arg1Combobox.ItemIndex:=AktuellerBefehl.ArgInteger[0]-1;
+    Arg1Combobox.Visible:=true;
+    Arg1Edit.Visible:=false;
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[26].GUID) then
+  begin // Gruppe Fanning-Master setzen
+    grouplist.visible:=true;
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Wert [0..255]:');
+    Arg1Edit.Text:=inttostr(AktuellerBefehl.ArgInteger[0]);
+    nousersetting:=false;
+  end;
 
   // Cueliste
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[7].Steuerung[0].GUID) then

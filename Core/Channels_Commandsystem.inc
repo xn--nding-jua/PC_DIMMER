@@ -684,7 +684,7 @@
   Befehlssystem[5].Steuerung[i].StringArgCount:=0;
   Befehlssystem[5].Steuerung[i].GUIDArgCount:=1;
 
-  setlength(Befehlssystem[6].Steuerung, 23);
+  setlength(Befehlssystem[6].Steuerung, 27);
   Befehlssystem[6].Programmteil:=_('Geräte-/Gruppensetup');
   Befehlssystem[6].ProgrammteilGUID:=StringToGuid('{396E970A-8FDB-4B87-A3C5-77D88FC4DB9F}');
   i:=0;
@@ -846,6 +846,34 @@
   Befehlssystem[6].Steuerung[i].GUID:=StringToGuid('{E948C731-77FD-4A43-9FF2-22A7EF90BEBC}');
   Befehlssystem[6].Steuerung[i].InputValueOnly:=false;
   Befehlssystem[6].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[6].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[6].Steuerung[i].GUIDArgCount:=1;
+  i:=i+1;
+  Befehlssystem[6].Steuerung[i].Bezeichnung:=_('Gruppe Fanning-Modus auf Eingangswert');
+  Befehlssystem[6].Steuerung[i].GUID:=StringToGuid('{99B4283F-B3B6-4EFF-A03C-152595A9274F}');
+  Befehlssystem[6].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[6].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[6].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[6].Steuerung[i].GUIDArgCount:=1;
+  i:=i+1;
+  Befehlssystem[6].Steuerung[i].Bezeichnung:=_('Gruppe Fanning-Master auf Eingangswert');
+  Befehlssystem[6].Steuerung[i].GUID:=StringToGuid('{BAC36A45-D0A3-46F9-8B2F-0221C59B405F}');
+  Befehlssystem[6].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[6].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[6].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[6].Steuerung[i].GUIDArgCount:=1;
+  i:=i+1;
+  Befehlssystem[6].Steuerung[i].Bezeichnung:=_('Gruppe Fanning-Modus setzen');
+  Befehlssystem[6].Steuerung[i].GUID:=StringToGuid('{3A051284-6A23-4FD5-8C57-29B2F9566B95}');
+  Befehlssystem[6].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[6].Steuerung[i].IntegerArgCount:=1;
+  Befehlssystem[6].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[6].Steuerung[i].GUIDArgCount:=1;
+  i:=i+1;
+  Befehlssystem[6].Steuerung[i].Bezeichnung:=_('Gruppe Fanning-Master setzen');
+  Befehlssystem[6].Steuerung[i].GUID:=StringToGuid('{380AE034-ACE9-48F3-8498-B3415B87CE84}');
+  Befehlssystem[6].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[6].Steuerung[i].IntegerArgCount:=1;
   Befehlssystem[6].Steuerung[i].StringArgCount:=0;
   Befehlssystem[6].Steuerung[i].GUIDArgCount:=1;
 

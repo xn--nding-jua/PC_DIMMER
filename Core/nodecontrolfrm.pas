@@ -175,6 +175,7 @@ begin
   // StretchBlt is around 160x slower than BitBlt since Windows 7. So we have to use a different solution
   //  StretchBlt(ShadowCanvas.Canvas.Handle, 0, 0, round(StageviewBuffer.width/StageViewScaling), round(StageviewBuffer.height/StageViewScaling), StageviewBuffer.canvas.handle, 0, 0, StageviewBuffer.Width, StageviewBuffer.Height, SrcCopy);
   // Use TPNGObject to scale
+
   PNGImage.Assign(StageviewBuffer);
   if (StageViewScaling>1) then
     SmoothResize(PNGImage, round(StageviewBuffer.width/StageViewScaling), round(StageviewBuffer.height/StageViewScaling));

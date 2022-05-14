@@ -1037,6 +1037,7 @@ type
     animationtimer:integer;
     UseAutoAmberCalculation:boolean;
     ddfsource:byte; // 0: geraetesteuerung, 1: ddfwindow
+    _killthreads : boolean;
     _killaccu : boolean;
     _killscan : boolean;
     _killanimation : boolean;
@@ -1955,7 +1956,6 @@ begin
   ///////////////////////////////
   // STARTSCHALTER
   ///////////////////////////////
-
   for i:=1 to paramcount do
   begin
     if (paramstr(i)='/debug') then
@@ -3529,12 +3529,13 @@ begin
   MidiCallbackTimer.Enabled:=false;
   MainformScreenRefreshTimer.Enabled:=false;
   leistungssteuerungform2.Timer2.enabled:=false;
-  ElgatoStreamDeckForm.ElgatoStreamDeckTimer.Enabled:=true;
-  ElgatoStreamDeckForm.ElgatoStreamDeckDisplayTimer.Enabled:=true;
+  ElgatoStreamDeckForm.ElgatoStreamDeckTimer.Enabled:=false;
+  ElgatoStreamDeckForm.ElgatoStreamDeckDisplayTimer.Enabled:=false;
 
   DebugAddToLine(' - OK', false);
   DebugAdd('SHUTDOWN: Sending Close-Message...');
 
+  _killthreads:=true;
   _killanimation:=true;
   _KillBuehnenansicht:=true;
   _killaccu := true;
@@ -9611,8 +9612,10 @@ begin
     gotosystray:=false;
   end;
 
+{
   if BeginValueBackups then
     CreateValueBackup;
+}
 
   if (autolocktime>0) then
   begin
@@ -16521,6 +16524,54 @@ begin
         if IsEqualGUID(devicegroups[j].ID,AktuellerBefehl.ArgGUID[0]) then
         begin
           devicegroups[j].Active:=false;
+          break;
+        end;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[23].GUID) then
+    begin // Gruppe Fanning-Modus auf Eingangswert
+      for j:=0 to length(devicegroups)-1 do
+      begin
+        if IsEqualGUID(devicegroups[j].ID,AktuellerBefehl.ArgGUID[0]) then
+        begin
+          devicegroups[j].FanMode:=Value;
+          break;
+        end;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[24].GUID) then
+    begin // Gruppe Fanning-Master auf Eingangswert
+      for j:=0 to length(devicegroups)-1 do
+      begin
+        if IsEqualGUID(devicegroups[j].ID,AktuellerBefehl.ArgGUID[0]) then
+        begin
+          devicegroups[j].MasterDevice:=devicegroups[j].IDs[trunc((length(devicegroups[j].IDs)-1)*(Value/255))];
+          break;
+        end;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[25].GUID) then
+    begin // Gruppe Fanning-Modus setzen
+      for j:=0 to length(devicegroups)-1 do
+      begin
+        if IsEqualGUID(devicegroups[j].ID,AktuellerBefehl.ArgGUID[0]) then
+        begin
+          devicegroups[j].FanMode:=AktuellerBefehl.ArgInteger[0];
+          break;
+        end;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[26].GUID) then
+    begin // Gruppe Fanning-Master setzen
+      for j:=0 to length(devicegroups)-1 do
+      begin
+        if IsEqualGUID(devicegroups[j].ID,AktuellerBefehl.ArgGUID[0]) then
+        begin
+          devicegroups[j].MasterDevice:=devicegroups[j].IDs[trunc((length(devicegroups[j].IDs)-1)*(AktuellerBefehl.ArgInteger[0]/255))];
           break;
         end;
       end;
@@ -28244,7 +28295,7 @@ begin
       elgatostreamdeckform.ElgatoStreamDeckDisplayTimerTimer(nil); // direct refresh of button
     end else
     begin
-      elgatostreamdeckform.ElgatoStreamDeckDisplayTimer.Interval:=250;
+      elgatostreamdeckform.ElgatoStreamDeckDisplayTimer.Interval:=500;
     end;
   end;
 end;

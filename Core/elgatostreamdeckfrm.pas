@@ -92,8 +92,8 @@ type
     { Private-Deklarationen }
     SelectedDevice, SelectedButton:integer;
     pngobject:TPNGObject;
-    _Buffer: TBitmap;
-    function SetKeyBitmap(Serial: string; KeyIndex:byte; Bitmap: TBitmap):integer;
+    _Buffer: TBitmap32;
+    function SetKeyBitmap(Serial: string; KeyIndex:byte; Bitmap: TBitmap32):integer;
   public
     { Public-Deklarationen }
     procedure MSGNew;
@@ -164,10 +164,11 @@ begin
   //
 end;
 
-function Telgatostreamdeckform.SetKeyBitmap(Serial: string; KeyIndex:byte; Bitmap: TBitmap):integer;
+function Telgatostreamdeckform.SetKeyBitmap(Serial: string; KeyIndex:byte; Bitmap: TBitmap32):integer;
 var
   w:Word;
   i, DeviceIndex: integer;
+  bmp:TBitMap;
   JPEGImage:TJPEGImage;
   Stream: TMemoryStream;
   TxBuffer, PayloadBuffer: array of byte;
@@ -211,13 +212,17 @@ begin
   if DeviceIndex>-1 then
   begin
     // first convert the JPEG to byte-array
+    bmp:=TBitmap.Create;
     JPEGImage:=TJPEGImage.Create;
     try
-      JPEGImage.Performance:=jpBestQuality;
+      JPEGImage.Performance:=jpBestSpeed;//jpBestQuality;
       JPEGImage.ProgressiveEncoding:=false;
       JPEGImage.ProgressiveDisplay:=false;
-      Bitmap.PixelFormat:=pf24bit;
-      JPEGImage.Assign(Bitmap);
+      //Bitmap.PixelFormat:=pf24bit;
+      Bitmap.FlipHorz(Bitmap);
+      Bitmap.FlipVert(Bitmap);
+      bmp.Assign(Bitmap); // convert Bitmap32 to Bitmap
+      JPEGImage.Assign(bmp); // convert Bitmap to JPEG
       JPEGImage.CompressionQuality:=100;
       JPEGImage.Compress;
 
@@ -229,6 +234,7 @@ begin
       Stream.Read(PayloadBuffer[0], Stream.Size);
     finally
       JPEGImage.Free;
+      bmp.Free;
     end;
 
     // now transmit the byte-array to Stream Deck Device
@@ -469,7 +475,7 @@ procedure Telgatostreamdeckform.FormCreate(Sender: TObject);
 begin
   TranslateComponent(self);
   pngobject:=TPNGObject.Create;
-  _Buffer:=TBitmap.Create;
+  _Buffer:=TBitmap32.Create;
 end;
 
 procedure Telgatostreamdeckform.panelbtnxChange(Sender: TObject);
@@ -1204,7 +1210,7 @@ begin
           _Buffer.Canvas.Brush.Style:=bsSolid;
 
           // send image to device
-          RotateBitmap(_Buffer, 3.141, false, 0);
+          //RotateBitmap(_Buffer, 3.141, false, 0);
           SetKeyBitmap(mainform.ElgatoStreamDeckArray[dev].Serial, btn, _Buffer);
         end;
 

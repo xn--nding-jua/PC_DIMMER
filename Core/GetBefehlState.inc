@@ -376,7 +376,7 @@
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[28].GUID) then
   begin // Datei ˆffnen
-    Text_Function:=_('√ñffne');
+    Text_Function:=_('÷ffne');
     Text_Value:=AktuellerBefehl.ArgString[0];
     exit;
   end;
@@ -825,7 +825,51 @@
   	Text_Value:=mainform.DeviceGroups[geraetesteuerung.GetGroupPositionInGroupArray(AktuellerBefehl.ArgGUID[0])].Name;
     exit;
   end;
-  
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[23].GUID) then
+  begin // Gruppe Fanning-Modus
+    Text_Function:=_('Gruppe Fanning-Modus');
+
+    case mainform.DeviceGroups[geraetesteuerung.GetGroupPositionInGroupArray(AktuellerBefehl.ArgGUID[0])].FanMode of
+        0: Text_Value:=_('Aus');
+        1: Text_Value:=_('Gleichm‰ﬂig nach Links und Rechs');
+        2: Text_Value:=_('Nur nach Rechts');
+        3: Text_Value:=_('Nur nach Links');
+        4: Text_Value:=_('Sinus nach Links und Rechts');
+        5: Text_Value:=_('Tangens');
+        6: Text_Value:=_('Tangens 2');
+        7: Text_Value:=_('Von Auﬂen nach Innen');
+    end;
+    Value:=mainform.DeviceGroups[geraetesteuerung.GetGroupPositionInGroupArray(AktuellerBefehl.ArgGUID[0])].FanMode;
+    exit;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[24].GUID) then
+  begin // Gruppe Fanning-Master
+    Text_Function:=_('Gruppe Fanning-Master');
+    exit;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[25].GUID) then
+  begin // Gruppe Fanning-Modus
+    Text_Function:=_('Gruppe Fanning-Modus');
+
+    case mainform.DeviceGroups[geraetesteuerung.GetGroupPositionInGroupArray(AktuellerBefehl.ArgGUID[0])].FanMode of
+        0: Text_Value:=_('Aus');
+        1: Text_Value:=_('Gleichm‰ﬂig nach Links und Rechs');
+        2: Text_Value:=_('Nur nach Rechts');
+        3: Text_Value:=_('Nur nach Links');
+        4: Text_Value:=_('Sinus nach Links und Rechts');
+        5: Text_Value:=_('Tangens');
+        6: Text_Value:=_('Tangens 2');
+        7: Text_Value:=_('Von Auﬂen nach Innen');
+    end;
+    Value:=mainform.DeviceGroups[geraetesteuerung.GetGroupPositionInGroupArray(AktuellerBefehl.ArgGUID[0])].FanMode;
+    exit;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[26].GUID) then
+  begin // Gruppe Fanning-Master
+    Text_Function:=_('Gruppe Fanning-Master');
+    exit;
+  end;
+
   // Cueliste
   Text_PCD_Function:=_('Cuelist');
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[7].Steuerung[0].GUID) then
