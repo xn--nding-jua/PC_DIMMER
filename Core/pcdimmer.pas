@@ -55,7 +55,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=489;
+  actualprojectversion=490;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -1131,7 +1131,7 @@ type
     IREvent:array of TIREvent;
     XTouchPCDDevicesOrGroups:array of TXTouchPCDDeviceOrGroup;
     XTouchDevices:array of TXTouch;
-    XTouchBefehle:array of array[0..8] of TBefehl2;
+    XTouchBefehle:array of array[0..17] of TBefehl2; // 8x Fader, Masterfader, 8x Dials, JogDial 
     ElgatoStreamDeckArray:array of TElgatoStreamDeck;
     ElgatoStreamSerials:array of string;
     // Szenenbibliothek
@@ -5753,7 +5753,7 @@ begin
   Filestream.WriteBuffer(Count,sizeof(Count));
   for i:=0 to Count-1 do
   begin
-    for j:=0 to 8 do // 8 Faders + Masterfader
+    for j:=0 to 17 do // 8 Faders + Masterfader, 8x Dials + JogDial
     begin
       Filestream.WriteBuffer(XTouchBefehle[i][j].Typ,sizeof(XTouchBefehle[i][j].Typ));
       Filestream.WriteBuffer(XTouchBefehle[i][j].OnValue,sizeof(XTouchBefehle[i][j].OnValue));
@@ -8860,7 +8860,7 @@ begin
       begin
         Filestream.ReadBuffer(mainform.XTouchPCDDevicesOrGroups[i].ID,sizeof(mainform.XTouchPCDDevicesOrGroups[i].ID));
       end;
-      if projektprogrammversionint>=489 then
+      if projektprogrammversionint>=490 then
       begin
         Filestream.ReadBuffer(Count,sizeof(Count));
         setlength(XTouchBefehle, Count);
@@ -8868,7 +8868,7 @@ begin
           setlength(XTouchBefehle, length(XTouchDevices));
         for i:=0 to Count-1 do
         begin
-          for j:=0 to 8 do
+          for j:=0 to 17 do
           begin
             Filestream.ReadBuffer(XTouchBefehle[i][j].Typ,sizeof(XTouchBefehle[i][j].Typ));
             Filestream.ReadBuffer(XTouchBefehle[i][j].OnValue,sizeof(XTouchBefehle[i][j].OnValue));

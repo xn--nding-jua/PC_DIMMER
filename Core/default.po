@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-05-15 11:04\n"
-"PO-Revision-Date: 2022-05-15 11:04\n"
+"POT-Creation-Date: 2022-05-16 01:12\n"
+"PO-Revision-Date: 2022-05-16 01:12\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3881,7 +3881,7 @@ msgstr ""
 #: touchscreenfrm.dfm:100
 #: geraetesteuerungfrm.pas:1573
 #. display item in listbox
-#: xtouchcontrolfrm.pas:392
+#: xtouchcontrolfrm.pas:395
 msgid "Geräte"
 msgstr ""
 
@@ -4490,7 +4490,7 @@ msgstr ""
 #. grafischebuehnenansicht..PopupMenu1..Speichern1..Caption
 #: plugins/Programmplugins/Alt/Buehnenansicht/buehnenansicht.dfm:2661
 #. Projekt speichern
-#: GetBefehlState.inc:269
+#: GetBefehlState.inc:273
 #: konsolensteuerungfrm.pas:142
 msgid "Speichern"
 msgstr ""
@@ -5239,7 +5239,7 @@ msgstr ""
 #. audioeffektplayerform..TBDock1..TBToolbar1..Datei1..Neu1..Caption
 #: audioeffektplayerfrm.dfm:4166
 #. Neues Projekt...
-#: GetBefehlState.inc:267
+#: GetBefehlState.inc:271
 msgid "Neu..."
 msgstr ""
 
@@ -5250,7 +5250,7 @@ msgstr ""
 #. mainform..MainMenu1..Datei1..ffnen1..Caption
 #: plugins/Programmplugins/Alt/Kontrollpanel/szenenpanelfrm.dfm:634
 #. Projekt öffnen...
-#: GetBefehlState.inc:268
+#: GetBefehlState.inc:272
 msgid "Öffnen..."
 msgstr ""
 
@@ -8778,7 +8778,7 @@ msgstr ""
 #. commandform..Caption
 #: commandfrm.dfm:5
 #. Fokus auf Kommandozeile
-#: GetBefehlState.inc:276
+#: GetBefehlState.inc:280
 msgid "Kommandozeile"
 msgstr ""
 
@@ -11287,13 +11287,13 @@ msgstr ""
 #. editdataineventfrm..GroupBox1..Label3..Caption
 #: editdatainevent.dfm:62
 #. Aktuell selektierte Geräte auf Eingangswert
-#: GetBefehlState.inc:504
+#: GetBefehlState.inc:508
 #. Bühnenansichtgerät auf Eingangswert
-#: GetBefehlState.inc:516
+#: GetBefehlState.inc:521
 #. _('Gerätegruppe');
-#: GetBefehlState.inc:528
+#: GetBefehlState.inc:534
 #. _('Gerätegruppe');
-#: GetBefehlState.inc:535
+#: GetBefehlState.inc:541
 #: datainevent.pas:153
 #. Kanal des Befehls hinzufügen
 #: devicescenefrm.pas:1160
@@ -14270,8 +14270,8 @@ msgstr ""
 #. Mainform..GroupBox5..Button18..Caption
 #: plugins/Ausgabeplugin/dmx4all/Testprogramm/main.dfm:4148
 #: EditBefehl.inc:1115
-#: GetBefehlState.inc:833
-#: GetBefehlState.inc:855
+#: GetBefehlState.inc:839
+#: GetBefehlState.inc:862
 #. Testen, ob Gerät nicht schon vorhanden
 #: effekttimelinefrm.pas:546
 msgid "Aus"
@@ -14622,8 +14622,8 @@ msgstr ""
 #: lauflichtassistentfrm.pas:253
 #: lauflichtassistentfrm.pas:255
 #. display item in listbox
-#: xtouchcontrolfrm.pas:353
-#: xtouchcontrolfrm.pas:355
+#: xtouchcontrolfrm.pas:356
+#: xtouchcontrolfrm.pas:358
 msgid "Adresse:"
 msgstr ""
 
@@ -17564,7 +17564,7 @@ msgstr ""
 #. MainForm..dxBarManager1..SaveAsRibbonBtn..Caption
 #: pcdimmer.dfm:19197
 #. Projekt speichern unter...
-#: GetBefehlState.inc:271
+#: GetBefehlState.inc:275
 msgid "Speichern unter..."
 msgstr ""
 
@@ -20280,7 +20280,7 @@ msgstr ""
 #. MainForm..dxRibbonStatusBar1......Text
 #: pcdimmer.dfm:319
 #. Kanalsetzmodus wechseln
-#: GetBefehlState.inc:255
+#: GetBefehlState.inc:259
 #: pcdimmer.pas:15570
 msgid "1 Einschalten"
 msgstr ""
@@ -21122,7 +21122,7 @@ msgstr ""
 #: projektverwaltungfrm.dfm:474
 #: Channels_Commandsystem.inc:1350
 #. Projektverwaltung
-#: GetBefehlState.inc:272
+#: GetBefehlState.inc:276
 msgid "Projektverwaltung"
 msgstr ""
 
@@ -21627,7 +21627,7 @@ msgstr ""
 #: pcdimmer.dfm:19595
 #: Channels_Commandsystem.inc:1351
 #. Kanalnamen ausdrucken
-#: GetBefehlState.inc:273
+#: GetBefehlState.inc:277
 msgid "Kanalnamen drucken"
 msgstr ""
 
@@ -22098,7 +22098,7 @@ msgstr ""
 #: pcdimmer.dfm:26429
 #. XTouchControl aktivieren, sofern beim letzten mal aktiv
 #: pcdimmer.pas:13756
-#: xtouchcontrolfrm.pas:1547
+#: xtouchcontrolfrm.pas:1649
 msgid "Ausschalten"
 msgstr ""
 
@@ -22108,7 +22108,7 @@ msgstr ""
 #: pcdimmer.dfm:26471
 #. xtouchcontrolform..Panel4..GroupBox2..activebtn..Caption
 #: xtouchcontrolfrm.dfm:660
-#: xtouchcontrolfrm.pas:1543
+#: xtouchcontrolfrm.pas:1645
 msgid "Einschalten"
 msgstr ""
 
@@ -23567,56 +23567,56 @@ msgstr ""
 #. groupeditorform..Panel2..FanningBox..FanningModeBox....Items.Strings
 #: reordergroupfrm.dfm:1513
 #: EditBefehl.inc:1116
-#: GetBefehlState.inc:834
-#: GetBefehlState.inc:856
+#: GetBefehlState.inc:840
+#: GetBefehlState.inc:863
 msgid "Gleichmäßig nach Links und Rechs"
 msgstr ""
 
 #. groupeditorform..Panel2..FanningBox..FanningModeBox....Items.Strings
 #: reordergroupfrm.dfm:1514
 #: EditBefehl.inc:1117
-#: GetBefehlState.inc:835
-#: GetBefehlState.inc:857
+#: GetBefehlState.inc:841
+#: GetBefehlState.inc:864
 msgid "Nur nach Rechts"
 msgstr ""
 
 #. groupeditorform..Panel2..FanningBox..FanningModeBox....Items.Strings
 #: reordergroupfrm.dfm:1515
 #: EditBefehl.inc:1118
-#: GetBefehlState.inc:836
-#: GetBefehlState.inc:858
+#: GetBefehlState.inc:842
+#: GetBefehlState.inc:865
 msgid "Nur nach Links"
 msgstr ""
 
 #. groupeditorform..Panel2..FanningBox..FanningModeBox....Items.Strings
 #: reordergroupfrm.dfm:1516
 #: EditBefehl.inc:1119
-#: GetBefehlState.inc:837
-#: GetBefehlState.inc:859
+#: GetBefehlState.inc:843
+#: GetBefehlState.inc:866
 msgid "Sinus nach Links und Rechts"
 msgstr ""
 
 #. groupeditorform..Panel2..FanningBox..FanningModeBox....Items.Strings
 #: reordergroupfrm.dfm:1517
 #: EditBefehl.inc:1120
-#: GetBefehlState.inc:838
-#: GetBefehlState.inc:860
+#: GetBefehlState.inc:844
+#: GetBefehlState.inc:867
 msgid "Tangens"
 msgstr ""
 
 #. groupeditorform..Panel2..FanningBox..FanningModeBox....Items.Strings
 #: reordergroupfrm.dfm:1518
 #: EditBefehl.inc:1121
-#: GetBefehlState.inc:839
-#: GetBefehlState.inc:861
+#: GetBefehlState.inc:845
+#: GetBefehlState.inc:868
 msgid "Tangens 2"
 msgstr ""
 
 #. groupeditorform..Panel2..FanningBox..FanningModeBox....Items.Strings
 #: reordergroupfrm.dfm:1519
 #: EditBefehl.inc:1122
-#: GetBefehlState.inc:840
-#: GetBefehlState.inc:862
+#: GetBefehlState.inc:846
+#: GetBefehlState.inc:869
 msgid "Von Außen nach Innen"
 msgstr ""
 
@@ -25557,7 +25557,7 @@ msgid "X-Touch Einstellungen"
 msgstr ""
 
 #. xtouchcontrolform..GroupBox1..Caption
-#: xtouchcontrolfrm.dfm:527
+#: xtouchcontrolfrm.dfm:45
 msgid " Geräte oder Gruppen für Steuerung mittels XTouch/XCtl "
 msgstr ""
 
@@ -25578,7 +25578,7 @@ msgstr ""
 
 #. xtouchcontrolform..Panel4..GroupBox2..Label4..Caption
 #: xtouchcontrolfrm.dfm:617
-msgid "Fader-Befehl editieren:"
+msgid "Befehl editieren:"
 msgstr ""
 
 #. xtouchcontrolform..Panel4..GroupBox2..CheckBox1..Caption
@@ -25592,48 +25592,93 @@ msgid "FOG"
 msgstr ""
 
 #. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
-#: xtouchcontrolfrm.dfm:768
+#: xtouchcontrolfrm.dfm:767
 msgid "Fader 1"
 msgstr ""
 
 #. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
-#: xtouchcontrolfrm.dfm:769
+#: xtouchcontrolfrm.dfm:768
 msgid "Fader 2"
 msgstr ""
 
 #. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
-#: xtouchcontrolfrm.dfm:770
+#: xtouchcontrolfrm.dfm:769
 msgid "Fader 3"
 msgstr ""
 
 #. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
-#: xtouchcontrolfrm.dfm:771
+#: xtouchcontrolfrm.dfm:770
 msgid "Fader 4"
 msgstr ""
 
 #. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
-#: xtouchcontrolfrm.dfm:772
+#: xtouchcontrolfrm.dfm:771
 msgid "Fader 5"
 msgstr ""
 
 #. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
-#: xtouchcontrolfrm.dfm:773
+#: xtouchcontrolfrm.dfm:772
 msgid "Fader 6"
 msgstr ""
 
 #. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
-#: xtouchcontrolfrm.dfm:774
+#: xtouchcontrolfrm.dfm:773
 msgid "Fader 7"
 msgstr ""
 
 #. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
-#: xtouchcontrolfrm.dfm:775
+#: xtouchcontrolfrm.dfm:774
 msgid "Fader 8"
 msgstr ""
 
 #. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
-#: xtouchcontrolfrm.dfm:776
+#: xtouchcontrolfrm.dfm:775
 msgid "Masterfader"
+msgstr ""
+
+#. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
+#: xtouchcontrolfrm.dfm:776
+msgid "Dial 1"
+msgstr ""
+
+#. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
+#: xtouchcontrolfrm.dfm:777
+msgid "Dial 2"
+msgstr ""
+
+#. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
+#: xtouchcontrolfrm.dfm:778
+msgid "Dial 3"
+msgstr ""
+
+#. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
+#: xtouchcontrolfrm.dfm:779
+msgid "Dial 4"
+msgstr ""
+
+#. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
+#: xtouchcontrolfrm.dfm:780
+msgid "Dial 5"
+msgstr ""
+
+#. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
+#: xtouchcontrolfrm.dfm:781
+msgid "Dial 6"
+msgstr ""
+
+#. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
+#: xtouchcontrolfrm.dfm:782
+msgid "Dial 7"
+msgstr ""
+
+#. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
+#: xtouchcontrolfrm.dfm:783
+msgid "Dial 8"
+msgstr ""
+
+#. xtouchcontrolform..Panel4..GroupBox2..befehleditbox....Items.Strings
+#: xtouchcontrolfrm.dfm:784
+msgid "JogDial"
 msgstr ""
 
 #. Form1..Caption
@@ -31909,7 +31954,7 @@ msgstr ""
 #: Channels_Commandsystem.inc:160
 #: Channels_Commandsystem.inc:1018
 #. Eingangswert
-#: GetBefehlState.inc:397
+#: GetBefehlState.inc:401
 msgid "Flash"
 msgstr ""
 
@@ -34278,6 +34323,8 @@ msgid "BPM-Wert abfragen"
 msgstr ""
 
 #: Channels_Commandsystem.inc:199
+#. Beat auslösen
+#: GetBefehlState.inc:141
 #: befehleditorform.pas:839
 msgid "Beat auslösen"
 msgstr ""
@@ -35265,193 +35312,188 @@ msgstr ""
 msgid "Titel:"
 msgstr ""
 
-#. Beat auslÃ¶sen
-#: GetBefehlState.inc:138
-msgid "Beat auslÃ¶sen"
-msgstr ""
-
 #. Grandmaster abfragen
-#: GetBefehlState.inc:166
+#: GetBefehlState.inc:169
 #. Flashmaster auf abfragen
-#: GetBefehlState.inc:186
+#: GetBefehlState.inc:189
 #. Speedmaster abfragen
-#: GetBefehlState.inc:206
+#: GetBefehlState.inc:209
 #. Audiomaster abfragen
-#: GetBefehlState.inc:226
+#: GetBefehlState.inc:229
 #. Abgefragter Wert schalten
-#: GetBefehlState.inc:417
+#: GetBefehlState.inc:421
 #. Abgefragten Wert dimmen
-#: GetBefehlState.inc:437
+#: GetBefehlState.inc:441
 msgid "abfragen"
 msgstr ""
 
 #. Audio-Mute ein/aus
-#: GetBefehlState.inc:234
-#: GetBefehlState.inc:309
+#: GetBefehlState.inc:237
+#: GetBefehlState.inc:313
 #. Ambilight aus
-#: GetBefehlState.inc:356
+#: GetBefehlState.inc:360
 #. Zeitsteuerung aus
-#: GetBefehlState.inc:368
+#: GetBefehlState.inc:372
 #. Alle Audioeffekte stoppen
-#: GetBefehlState.inc:374
+#: GetBefehlState.inc:378
 #. Selektion aus
-#: GetBefehlState.inc:737
+#: GetBefehlState.inc:743
 msgid "aus"
 msgstr ""
 
-#: GetBefehlState.inc:236
-#: GetBefehlState.inc:312
+#: GetBefehlState.inc:239
+#: GetBefehlState.inc:316
 #. Ambilight ein
-#: GetBefehlState.inc:350
+#: GetBefehlState.inc:354
 #. Zeitsteuerung ein
-#: GetBefehlState.inc:362
+#: GetBefehlState.inc:366
 msgid "ein"
 msgstr ""
 
 #. MIDI-Befehl senden
-#: GetBefehlState.inc:242
+#: GetBefehlState.inc:245
 #. Eingangswert als MIDI-Befehl
-#: GetBefehlState.inc:248
+#: GetBefehlState.inc:251
 msgid "senden"
 msgstr ""
 
-#: GetBefehlState.inc:256
+#: GetBefehlState.inc:260
 #: pcdimmer.pas:15571
 msgid "2 Ausschalten"
 msgstr ""
 
-#: GetBefehlState.inc:257
+#: GetBefehlState.inc:261
 #: pcdimmer.pas:15572
 msgid "3 Einblenden"
 msgstr ""
 
-#: GetBefehlState.inc:258
+#: GetBefehlState.inc:262
 #: pcdimmer.pas:15573
 msgid "4 Ausblenden"
 msgstr ""
 
-#: GetBefehlState.inc:259
+#: GetBefehlState.inc:263
 #: pcdimmer.pas:15574
 msgid "5 Flashen"
 msgstr ""
 
 #. Projekt schnellspeichern
-#: GetBefehlState.inc:270
+#: GetBefehlState.inc:274
 msgid "Schnellspeichern"
 msgstr ""
 
 #. PC_DIMMER beenden...
-#: GetBefehlState.inc:274
+#: GetBefehlState.inc:278
 msgid "Beenden..."
 msgstr ""
 
 #. PC_DIMMER sperren...
-#: GetBefehlState.inc:275
+#: GetBefehlState.inc:279
 msgid "Sperren..."
 msgstr ""
 
-#: GetBefehlState.inc:277
+#: GetBefehlState.inc:281
 msgid "Entsperren..."
 msgstr ""
 
 #. Stoppe alle Effekte
-#: GetBefehlState.inc:320
+#: GetBefehlState.inc:324
 msgid "stop"
 msgstr ""
 
 #. Partymodul-Preset Zufallsmodus
-#: GetBefehlState.inc:338
+#: GetBefehlState.inc:342
 msgid "Zufallsmodus"
 msgstr ""
 
 #. Blackout ein/aus
-#: GetBefehlState.inc:344
+#: GetBefehlState.inc:348
 msgid "ein/aus"
 msgstr ""
 
 #. Benutzer wechseln
-#: GetBefehlState.inc:386
+#: GetBefehlState.inc:390
 msgid "wechseln"
 msgstr ""
 
 #. Kanalminimum setzen Eingangswert
-#: GetBefehlState.inc:459
+#: GetBefehlState.inc:463
 msgid "Minimum"
 msgstr ""
 
 #. Kanalmaximum setzen Eingangswert
-#: GetBefehlState.inc:466
+#: GetBefehlState.inc:470
 msgid "Maximum"
 msgstr ""
 
 #. Kanalminimum setzen
-#: GetBefehlState.inc:473
+#: GetBefehlState.inc:477
 msgid "Min"
 msgstr ""
 
 #. Kanalmaximum setzen
-#: GetBefehlState.inc:480
+#: GetBefehlState.inc:484
 msgid "Max"
 msgstr ""
 
 #. Flash
-#: GetBefehlState.inc:614
+#: GetBefehlState.inc:620
 #. Flash
-#: GetBefehlState.inc:627
+#: GetBefehlState.inc:633
 #. Flash
-#: GetBefehlState.inc:640
+#: GetBefehlState.inc:646
 #. Flash
-#: GetBefehlState.inc:654
+#: GetBefehlState.inc:660
 msgid "flash"
 msgstr ""
 
 #. Alle Effekte stoppen
-#: GetBefehlState.inc:1109
+#: GetBefehlState.inc:1118
 msgid "stoppen"
 msgstr ""
 
 #. Knotenposition X auf Wert setzen
-#: GetBefehlState.inc:1234
+#: GetBefehlState.inc:1244
 msgid "X @ "
 msgstr ""
 
 #. Knotenposition Y auf Wert setzen
-#: GetBefehlState.inc:1246
+#: GetBefehlState.inc:1256
 msgid "Y @ "
 msgstr ""
 
 #. Knotenausdehnung auf Wert setzen
-#: GetBefehlState.inc:1256
+#: GetBefehlState.inc:1266
 msgid "Ausdehnung @ "
 msgstr ""
 
 #. Knotenkontrast auf Wert setzen
-#: GetBefehlState.inc:1265
+#: GetBefehlState.inc:1275
 msgid "Kontrast @ "
 msgstr ""
 
 #. Knotenfadezeit auf Wert setzen
-#: GetBefehlState.inc:1274
+#: GetBefehlState.inc:1284
 msgid "Fadetime @ "
 msgstr ""
 
 #. Knotenposition X auf Eingangswert
-#: GetBefehlState.inc:1285
+#: GetBefehlState.inc:1295
 msgid "X @ Wert"
 msgstr ""
 
 #. Knotenposition Y auf Eingangswert
-#: GetBefehlState.inc:1297
+#: GetBefehlState.inc:1308
 msgid "Y @ Wert"
 msgstr ""
 
 #. Knotenausdehnung auf Eingangswert
-#: GetBefehlState.inc:1307
+#: GetBefehlState.inc:1319
 msgid "Ausdehnung @ Wert"
 msgstr ""
 
 #. Knotenkontrast auf Eingangswert
-#: GetBefehlState.inc:1316
+#: GetBefehlState.inc:1329
 msgid "Kontrast @ Wert"
 msgstr ""
 
@@ -41259,8 +41301,12 @@ msgstr ""
 msgid "Received: "
 msgstr ""
 
-#: xtouchcontrolfrm.pas:395
+#: xtouchcontrolfrm.pas:398
 msgid "Fehlerhafter Eintrag!"
+msgstr ""
+
+#: xtouchcontrolfrm.pas:2412
+msgid "Bitte ein Gerät aus der Liste auswählen..."
 msgstr ""
 
 #. Programmer's name for it: s_no_file_exists

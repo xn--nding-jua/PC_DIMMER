@@ -972,7 +972,7 @@
     Faderposition:Word; // 0...16383
     LastFaderposition:Word; // 0...16383
     Meterlevel:byte; // 0...8
-    DialLevel:byte; // 0...13
+    DialLevel:byte; // 0..255 ->0..12
 
     Rec: byte; // 0=OFF, 1=ON, 2=FLASHING
     Solo: byte; // 0=OFF, 1=ON, 2=FLASHING

@@ -27,6 +27,7 @@
   begin // Springe zu Position
     Text_Function:=_('Position');
   	Text_Value:=mainform.MillisecondsToTimeShort(AktuellerBefehl.ArgInteger[0]);
+    Value:=Befehlssystem[0].Steuerung[3].CurrentValue;
     exit;
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[0].Steuerung[4].GUID) then
@@ -68,6 +69,7 @@
     Text_Function:=_('zu Datei');
     if (AktuellerBefehl.ArgInteger[0]>=0) and (AktuellerBefehl.ArgInteger[0]<audioeffektplayerform.audioeffektfilenamebox.Items.Count) then
 	  Text_Value:=audioeffektplayerform.audioeffektfilenamebox.Items[AktuellerBefehl.ArgInteger[0]];
+    Value:=Befehlssystem[0].Steuerung[9].CurrentValue;
     exit;
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[0].Steuerung[10].GUID) then
@@ -75,6 +77,7 @@
     Text_Function:=_('zu Datei');
     if (AktuellerBefehl.ArgInteger[0]>=0) and (AktuellerBefehl.ArgInteger[0]<audioeffektplayerform.audioeffektfilenamebox.Items.Count) then
 	  Text_Value:=audioeffektplayerform.audioeffektfilenamebox.Items[AktuellerBefehl.ArgInteger[0]];
+    Value:=Befehlssystem[0].Steuerung[10].CurrentValue;
     exit;
   end;
   
@@ -133,9 +136,9 @@
     exit;
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[2].Steuerung[3].GUID) then
-  begin // Beat auslÃ¶sen
+  begin // Beat auslösen
     Text_Function:=_('BPM');
-	  Text_Value:=_('Beat auslÃ¶sen');
+	  Text_Value:=_('Beat auslösen');
     exit;
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[2].Steuerung[4].GUID) then
@@ -245,7 +248,8 @@
   if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[14].GUID) then
   begin // Eingangswert als MIDI-Befehl
     Text_Function:=_('MIDI-Wert');
-	Text_Value:=_('senden');
+	  Text_Value:=_('senden');
+    Value:=Befehlssystem[3].Steuerung[14].CurrentValue;
     exit;
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[15].GUID) then
@@ -502,6 +506,7 @@
   begin // Aktuell selektierte Geräte auf Eingangswert
     Text_Function:=_('Sel. Geräte');
     Text_Value:=DeviceChannelNames[AktuellerBefehl.ArgInteger[0]]+'@'+_('Wert');
+    Value:=Befehlssystem[5].Steuerung[0].CurrentValue;
     exit;
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[5].Steuerung[1].GUID) then
@@ -514,6 +519,7 @@
   begin // Bühnenansichtgerät auf Eingangswert
     Text_Function:=_('Bühnenansichtgerät');
     Text_Value:=DeviceChannelNames[AktuellerBefehl.ArgInteger[0]]+'@'+_('Wert');
+    Value:=Befehlssystem[5].Steuerung[2].CurrentValue;
     exit;
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[5].Steuerung[3].GUID) then
@@ -845,6 +851,7 @@
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[24].GUID) then
   begin // Gruppe Fanning-Master
     Text_Function:=_('Gruppe Fanning-Master');
+    Value:=Befehlssystem[6].Steuerung[24].CurrentValue;
     exit;
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[25].GUID) then
@@ -867,6 +874,7 @@
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[26].GUID) then
   begin // Gruppe Fanning-Master
     Text_Function:=_('Gruppe Fanning-Master');
+    Value:=Befehlssystem[6].Steuerung[26].CurrentValue;
     exit;
   end;
 
@@ -1056,6 +1064,7 @@
       begin
         Text_Function:=_('Intensität')+'@'+_('Wert');
         Text_Value:=effektsequenzereffekte[j].Name;
+        Value:=Befehlssystem[9].Steuerung[7].CurrentValue;
         break;
       end;
     end;
@@ -1116,6 +1125,7 @@
   begin // Auf Eingangswert schalten
     if (AktuellerBefehl.ArgInteger[0]>0) and (AktuellerBefehl.ArgInteger[0]<17) then
       Text_Function:=_('Submaster')+' '+inttostr(AktuellerBefehl.ArgInteger[0])+'@'+_('Wert');
+    Value:=Befehlssystem[10].Steuerung[0].CurrentValue;
     exit;
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[10].Steuerung[1].GUID) then
@@ -1285,6 +1295,7 @@
         Text_Value:=_('X @ Wert');
       end;
     end;
+    Value:=Befehlssystem[13].Steuerung[6].CurrentValue;
     exit;
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[7].GUID) then
@@ -1297,6 +1308,7 @@
         Text_Value:=_('Y @ Wert');
       end;
     end;
+    Value:=Befehlssystem[13].Steuerung[7].CurrentValue;
     exit;
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[8].GUID) then
@@ -1306,6 +1318,7 @@
       Text_Function:=_('KnotenSet')+' '+inttostr(AktuellerBefehl.ArgInteger[0]);
   	  Text_Value:=_('Ausdehnung @ Wert');
     end;
+    Value:=Befehlssystem[13].Steuerung[8].CurrentValue;
     exit;
   end;
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[13].Steuerung[9].GUID) then
@@ -1315,6 +1328,7 @@
       Text_Function:=_('KnotenSet')+' '+inttostr(AktuellerBefehl.ArgInteger[0]);
 	    Text_Value:=_('Kontrast @ Wert');
     end;
+    Value:=Befehlssystem[13].Steuerung[9].CurrentValue;
     exit;
   end;
 
