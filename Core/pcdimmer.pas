@@ -1131,7 +1131,7 @@ type
     IREvent:array of TIREvent;
     XTouchPCDDevicesOrGroups:array of TXTouchPCDDeviceOrGroup;
     XTouchDevices:array of TXTouch;
-    XTouchMasterfaderBefehle:array of TBefehl2;
+    XTouchBefehle:array of array[0..8] of TBefehl2;
     ElgatoStreamDeckArray:array of TElgatoStreamDeck;
     ElgatoStreamSerials:array of string;
     // Szenenbibliothek
@@ -1224,6 +1224,7 @@ type
 
     procedure StartBefehl(ID: TGUID); overload;
     procedure StartBefehl(ID: TGUID; Inputvalue: integer); overload;
+    procedure StartBefehl(AktuellerBefehl:TBefehl2; Inputvalue: integer; Source:String); overload;
   	procedure GetBefehlState(AktuellerBefehl:TBefehl2; var Text_PCD_Function:string; var Text_Function:string; var Text_Value:string; var Value:integer);
 
     procedure ErrorPop(str: string);
@@ -5748,28 +5749,31 @@ begin
   begin
     Filestream.WriteBuffer(mainform.XTouchPCDDevicesOrGroups[i].ID,sizeof(mainform.XTouchPCDDevicesOrGroups[i].ID));
   end;
-  Count:=length(XTouchMasterfaderBefehle);
+  Count:=length(XTouchBefehle);
   Filestream.WriteBuffer(Count,sizeof(Count));
   for i:=0 to Count-1 do
   begin
-    Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].Typ,sizeof(XTouchMasterfaderBefehle[i].Typ));
-    Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].OnValue,sizeof(XTouchMasterfaderBefehle[i].OnValue));
-    Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].SwitchValue,sizeof(XTouchMasterfaderBefehle[i].SwitchValue));
-    Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].InvertSwitchValue,sizeof(XTouchMasterfaderBefehle[i].InvertSwitchValue));
-    Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].OffValue,sizeof(XTouchMasterfaderBefehle[i].OffValue));
-    Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].ScaleValue,sizeof(XTouchMasterfaderBefehle[i].ScaleValue));
-    Count2:=length(XTouchMasterfaderBefehle[i].ArgInteger);
-    Filestream.WriteBuffer(Count2,sizeof(Count2));
-    for k:=0 to Count2-1 do
-      Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].ArgInteger[k],sizeof(XTouchMasterfaderBefehle[i].ArgInteger[k]));
-    Count2:=length(XTouchMasterfaderBefehle[i].ArgString);
-    Filestream.WriteBuffer(Count2,sizeof(Count2));
-    for k:=0 to Count2-1 do
-      Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].ArgString[k],sizeof(XTouchMasterfaderBefehle[i].ArgString[k]));
-    Count2:=length(XTouchMasterfaderBefehle[i].ArgGUID);
-    Filestream.WriteBuffer(Count2,sizeof(Count2));
-    for k:=0 to Count2-1 do
-      Filestream.WriteBuffer(XTouchMasterfaderBefehle[i].ArgGUID[k],sizeof(XTouchMasterfaderBefehle[i].ArgGUID[k]));
+    for j:=0 to 8 do // 8 Faders + Masterfader
+    begin
+      Filestream.WriteBuffer(XTouchBefehle[i][j].Typ,sizeof(XTouchBefehle[i][j].Typ));
+      Filestream.WriteBuffer(XTouchBefehle[i][j].OnValue,sizeof(XTouchBefehle[i][j].OnValue));
+      Filestream.WriteBuffer(XTouchBefehle[i][j].SwitchValue,sizeof(XTouchBefehle[i][j].SwitchValue));
+      Filestream.WriteBuffer(XTouchBefehle[i][j].InvertSwitchValue,sizeof(XTouchBefehle[i][j].InvertSwitchValue));
+      Filestream.WriteBuffer(XTouchBefehle[i][j].OffValue,sizeof(XTouchBefehle[i][j].OffValue));
+      Filestream.WriteBuffer(XTouchBefehle[i][j].ScaleValue,sizeof(XTouchBefehle[i][j].ScaleValue));
+      Count2:=length(XTouchBefehle[i][j].ArgInteger);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for k:=0 to Count2-1 do
+        Filestream.WriteBuffer(XTouchBefehle[i][j].ArgInteger[k],sizeof(XTouchBefehle[i][j].ArgInteger[k]));
+      Count2:=length(XTouchBefehle[i][j].ArgString);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for k:=0 to Count2-1 do
+        Filestream.WriteBuffer(XTouchBefehle[i][j].ArgString[k],sizeof(XTouchBefehle[i][j].ArgString[k]));
+      Count2:=length(XTouchBefehle[i][j].ArgGUID);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for k:=0 to Count2-1 do
+        Filestream.WriteBuffer(XTouchBefehle[i][j].ArgGUID[k],sizeof(XTouchBefehle[i][j].ArgGUID[k]));
+    end;
   end;
 // Ende XTouchControl
 // CodeSzenen speichern
@@ -8859,29 +8863,32 @@ begin
       if projektprogrammversionint>=489 then
       begin
         Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(XTouchMasterfaderBefehle, Count);
-        if length(XTouchMasterfaderBefehle)<length(XTouchDevices) then
-          setlength(XTouchMasterfaderBefehle, length(XTouchDevices));
+        setlength(XTouchBefehle, Count);
+        if length(XTouchBefehle)<length(XTouchDevices) then
+          setlength(XTouchBefehle, length(XTouchDevices));
         for i:=0 to Count-1 do
         begin
-          Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].Typ,sizeof(XTouchMasterfaderBefehle[i].Typ));
-          Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].OnValue,sizeof(XTouchMasterfaderBefehle[i].OnValue));
-          Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].SwitchValue,sizeof(XTouchMasterfaderBefehle[i].SwitchValue));
-          Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].InvertSwitchValue,sizeof(XTouchMasterfaderBefehle[i].InvertSwitchValue));
-          Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].OffValue,sizeof(XTouchMasterfaderBefehle[i].OffValue));
-          Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].ScaleValue,sizeof(XTouchMasterfaderBefehle[i].ScaleValue));
-          Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(XTouchMasterfaderBefehle[i].ArgInteger,Count2);
-          for k:=0 to Count2-1 do
-            Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].ArgInteger[k],sizeof(XTouchMasterfaderBefehle[i].ArgInteger[k]));
-          Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(XTouchMasterfaderBefehle[i].ArgString,Count2);
-          for k:=0 to Count2-1 do
-            Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].ArgString[k],sizeof(XTouchMasterfaderBefehle[i].ArgString[k]));
-          Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(XTouchMasterfaderBefehle[i].ArgGUID,Count2);
-          for k:=0 to Count2-1 do
-            Filestream.ReadBuffer(XTouchMasterfaderBefehle[i].ArgGUID[k],sizeof(XTouchMasterfaderBefehle[i].ArgGUID[k]));
+          for j:=0 to 8 do
+          begin
+            Filestream.ReadBuffer(XTouchBefehle[i][j].Typ,sizeof(XTouchBefehle[i][j].Typ));
+            Filestream.ReadBuffer(XTouchBefehle[i][j].OnValue,sizeof(XTouchBefehle[i][j].OnValue));
+            Filestream.ReadBuffer(XTouchBefehle[i][j].SwitchValue,sizeof(XTouchBefehle[i][j].SwitchValue));
+            Filestream.ReadBuffer(XTouchBefehle[i][j].InvertSwitchValue,sizeof(XTouchBefehle[i][j].InvertSwitchValue));
+            Filestream.ReadBuffer(XTouchBefehle[i][j].OffValue,sizeof(XTouchBefehle[i][j].OffValue));
+            Filestream.ReadBuffer(XTouchBefehle[i][j].ScaleValue,sizeof(XTouchBefehle[i][j].ScaleValue));
+            Filestream.ReadBuffer(Count2,sizeof(Count2));
+            setlength(XTouchBefehle[i][j].ArgInteger,Count2);
+            for k:=0 to Count2-1 do
+              Filestream.ReadBuffer(XTouchBefehle[i][j].ArgInteger[k],sizeof(XTouchBefehle[i][j].ArgInteger[k]));
+            Filestream.ReadBuffer(Count2,sizeof(Count2));
+            setlength(XTouchBefehle[i][j].ArgString,Count2);
+            for k:=0 to Count2-1 do
+              Filestream.ReadBuffer(XTouchBefehle[i][j].ArgString[k],sizeof(XTouchBefehle[i][j].ArgString[k]));
+            Filestream.ReadBuffer(Count2,sizeof(Count2));
+            setlength(XTouchBefehle[i][j].ArgGUID,Count2);
+            for k:=0 to Count2-1 do
+              Filestream.ReadBuffer(XTouchBefehle[i][j].ArgGUID[k],sizeof(XTouchBefehle[i][j].ArgGUID[k]));
+          end;
         end;
       end;
     end;
@@ -14901,11 +14908,9 @@ end;
 
 procedure Tmainform.StartBefehl(ID: TGUID; Inputvalue: integer);
 var
-  g,h,i,j,k,tempvar,input,value:integer;
-  temp1,temp2,temp3:integer;
+  i,j,k,h:integer;
   AktuellerBefehl:TBefehl2;
-  EventFired:boolean;
-  S1, S2:single;
+  Local_LastEvent:string;
 begin
   if shutdown then exit;
   AktuellerBefehl.Typ:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
@@ -14963,7 +14968,7 @@ begin
       for j:=0 to length(MidiEventArray[i].Befehl.ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[j]:=MidiEventArray[i].Befehl.ArgGUID[j];
 
-      LastEvent:='MIDI: '+inttostr(inputvalue);
+      Local_LastEvent:='MIDI';
 
       break;
     end;
@@ -14993,7 +14998,7 @@ begin
       for j:=0 to length(DataInEventArray[i].Befehl.ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[j]:=DataInEventArray[i].Befehl.ArgGUID[j];
 
-      LastEvent:='DataIN: '+inttostr(inputvalue);
+      Local_LastEvent:='DataIN';
 
       break;
     end;
@@ -15023,7 +15028,7 @@ begin
       for j:=0 to length(JoystickEvents[i].Befehl.ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[j]:=JoystickEvents[i].Befehl.ArgGUID[j];
 
-      LastEvent:='Joystick '+inttostr(i)+': '+inttostr(inputvalue);
+      Local_LastEvent:='Joystick '+inttostr(i);
 
       break;
     end;
@@ -15053,7 +15058,7 @@ begin
       for j:=0 to length(TastencodeArray[i].Befehl.ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[j]:=TastencodeArray[i].Befehl.ArgGUID[j];
 
-      LastEvent:=_('Tastatur: ')+inttostr(inputvalue);
+      Local_LastEvent:=_('Tastatur');
 
       break;
     end;
@@ -15085,7 +15090,7 @@ begin
         for k:=0 to length(submasterbank[i].Befehl[j].ArgGUID)-1 do
           AktuellerBefehl.ArgGUID[k]:=submasterbank[i].Befehl[j].ArgGUID[k];
 
-        LastEvent:='Submaster: '+inttostr(inputvalue);
+        Local_LastEvent:='Submaster';
 
         break;
       end;
@@ -15117,7 +15122,7 @@ begin
       for k:=0 to length(devicescenes[i].Befehle[j].ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[k]:=devicescenes[i].Befehle[j].ArgGUID[k];
 
-      LastEvent:=_('Geräteszene: ')+inttostr(inputvalue);
+      Local_LastEvent:=_('Geräteszene');
 
       break;
     end;
@@ -15150,7 +15155,7 @@ begin
       for k:=0 to length(Effektaudiodatei_record.layer[h].effekt[i].Befehle[j].ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[k]:=Effektaudiodatei_record.layer[h].effekt[i].Befehle[j].ArgGUID[k];
 
-      LastEvent:=_('Direktszene AEP: ')+inttostr(inputvalue);
+      Local_LastEvent:=_('Direktszene AEP');
 
       break;
     end;
@@ -15182,7 +15187,7 @@ begin
       for k:=0 to length(Effektsequenzereffekte[h].Effektschritte[i].Befehle[j].ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[k]:=Effektsequenzereffekte[h].Effektschritte[i].Befehle[j].ArgGUID[k];
 
-      LastEvent:=_('Direktszene Effekt: ')+inttostr(inputvalue);
+      Local_LastEvent:=_('Direktszene Effekt');
 
       break;
     end;
@@ -15213,7 +15218,7 @@ begin
       for j:=0 to length(mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[j]:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgGUID[j];
 
-      LastEvent:='StreamDeck #'+inttostr(i+1)+'@Btn'+inttostr(k+1)+': '+inttostr(inputvalue);
+      Local_LastEvent:='StreamDeck #'+inttostr(i+1)+'@Btn'+inttostr(k+1);
 
       break;
     end;
@@ -15243,26 +15248,38 @@ begin
     AktuellerBefehl.ArgGUID[0]:=TerminalSystem.GUID1;
     AktuellerBefehl.ArgGUID[1]:=TerminalSystem.GUID2;
 
-    LastEvent:='Terminal: '+inttostr(inputvalue);
+    Local_LastEvent:='Terminal';
   end;
 
+  // Befehl ausführen
+  StartBefehl(AktuellerBefehl, inputvalue, Local_LastEvent);
+end;
 
+procedure Tmainform.StartBefehl(AktuellerBefehl:TBefehl2; Inputvalue: integer; Source:String);
+var
+  g,h,i,j,k,tempvar,input,value:integer;
+  temp1,temp2,temp3:integer;
+  S1, S2:single;
+  EventFired:boolean;
+begin
   if IsEqualGUID(AktuellerBefehl.Typ, StringToGUID('{00000000-0000-0000-0000-000000000000}')) then
     exit;
 
   value:=inputvalue;
 
-{
+  {
   // Sicherstellen, dass der maximale Wert auch bei schnellem Faderbewegen noch ausgeführt wird
   // (dies birgt das Problem, dass dann auch alle unteren Schwellen-Events ausgeführt werden)
   if (value<AktuellerBefehl.OffValue) then
     value:=AktuellerBefehl.OffValue;
   if (value>AktuellerBefehl.OnValue) then
     value:=AktuellerBefehl.OnValue;
-}
+  }
   // Befehl nicht ausführen, wenn außerhalb der Grenzwerte
   if (value<AktuellerBefehl.OffValue) or (value>AktuellerBefehl.OnValue) then
     exit;
+
+  LastEvent:=Source+': '+inttostr(inputvalue);
 
   if AktuellerBefehl.ScaleValue then
     value:=round((value-AktuellerBefehl.OffValue)*(255/(AktuellerBefehl.OnValue-AktuellerBefehl.OffValue)));
@@ -15283,6 +15300,8 @@ begin
     end;
   end;
 
+
+  // Befehl ausführen
   try
     // Audioeffektplayer
     if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[0].Steuerung[0].GUID) and EventFired then

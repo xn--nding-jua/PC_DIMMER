@@ -989,8 +989,8 @@
     JogDialValue:Byte;
     SegmentDisplay:array[0..11] of char;
     ButtonLightOn:array[0..102] of Byte;
-    DisplaySelectedDevices:boolean;
-    DisplayGlobalView:boolean;
+    DisplayOnlyUsedChannels:boolean;
+    DisplayMode:byte; // 0=(Selected) Devices, 1=DMX-Channels, 2=Befehle
   end;
   TXTouchPCDDeviceOrGroup = record
     ID:TGUID;
