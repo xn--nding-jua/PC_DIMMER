@@ -55,7 +55,7 @@ uses
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=490;
+  actualprojectversion=491;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -235,6 +235,14 @@ type
     SendMessage: procedure(MSG:Byte; Data1, Data2:Variant);stdcall;
   end;
 
+  // PCD_Helper_Thread deklarieren
+  THelperThread = class(TThread)
+  private
+  protected
+    procedure Execute; override;
+  public
+    constructor create();
+  end;
   // Thread für Akkuanzeige deklarieren
   TAccuEvent = procedure () of object;
   TAccuThread = class(TThread)
@@ -1198,6 +1206,7 @@ type
     EffektsequenzerTabs:array of string[255];
 
     accuThread: TAccuThread;
+    HelperThread: THelperThread;
     HidCtl:TJvHidDeviceController;
 
     // WORKAROUND FOR MEVP
@@ -3736,6 +3745,10 @@ begin
   inprogress.ProgressBar1.Position:=97;
   inprogress.Refresh;
   WaitForSingleObject(accuThread.Handle, 4000);
+  inprogress.filename.Caption:=_('Stoppe Helper-Thread...');
+  inprogress.ProgressBar1.Position:=98;
+  inprogress.Refresh;
+  WaitForSingleObject(HelperThread.Handle, 4000);
 
   // Fenster löschen
 
@@ -4036,6 +4049,7 @@ begin
   setlength(Effektsequenzereffekte,0);
   setlength(AktuellerEffekt,0);
   setlength(PluginSzenen,0);
+  setlength(CodeScenes,0);
 
   setlength(Autoszenen,6);
 //////////////////////
@@ -5788,7 +5802,7 @@ begin
     Filestream.WriteBuffer(mainform.CodeScenes[i].Beschreibung,sizeof(mainform.CodeScenes[i].Beschreibung));
     Filestream.WriteBuffer(mainform.CodeScenes[i].Category,sizeof(mainform.CodeScenes[i].Category));
     Count2:=length(mainform.CodeScenes[i].Code);
-    Filestream.WriteBuffer(Count,sizeof(Count));
+    Filestream.WriteBuffer(Count2,sizeof(Count2));
     Filestream.WriteBuffer(Pointer(mainform.CodeScenes[i].Code)^,length(mainform.CodeScenes[i].Code));
   end;
 // Ende CodeScenes
@@ -8894,7 +8908,7 @@ begin
     end;
 // Ende XTouchControl
 // CodeScene laden
-    if projektprogrammversionint>=486 then
+    if projektprogrammversionint>=491 then
     begin
       if not startingup then
       begin
@@ -8913,7 +8927,7 @@ begin
         Filestream.ReadBuffer(mainform.CodeScenes[i].ID,sizeof(mainform.CodeScenes[i].ID));
         Filestream.ReadBuffer(mainform.CodeScenes[i].Name,sizeof(mainform.CodeScenes[i].Name));
         Filestream.ReadBuffer(mainform.CodeScenes[i].Beschreibung,sizeof(mainform.CodeScenes[i].Beschreibung));
-        Filestream.ReadBuffer(CodeScenes[i].Category,sizeof(CodeScenes[i].Category));
+        Filestream.ReadBuffer(mainform.CodeScenes[i].Category,sizeof(mainform.CodeScenes[i].Category));
         Filestream.ReadBuffer(Count2,sizeof(Count2));
         setlength(mainform.CodeScenes[i].Code,Count2);
         Filestream.ReadBuffer(Pointer(mainform.CodeScenes[i].Code)^, Count2);
@@ -8921,7 +8935,7 @@ begin
     end;
 // Ende CodeScene
 // StreamDeck laden
-    if projektprogrammversionint>=486 then
+    if projektprogrammversionint>=491 then
     begin
       if not startingup then
       begin
@@ -8948,30 +8962,27 @@ begin
           Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY));
           Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID));
           Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel));
-          if projektprogrammversionint>=488 then
-          begin
-            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].UseHoldToChange,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].UseHoldToChange));
-            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Increment,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Increment));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].UseHoldToChange,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].UseHoldToChange));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Increment,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Increment));
 
-            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.Typ,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.Typ));
-            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OnValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OnValue));
-            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.SwitchValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.SwitchValue));
-            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.InvertSwitchValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.InvertSwitchValue));
-            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OffValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OffValue));
-            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ScaleValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ScaleValue));
-            Filestream.ReadBuffer(Count2,sizeof(Count2));
-            setlength(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger,Count2);
-            for k:=0 to Count2-1 do
-              Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger[k]));
-            Filestream.ReadBuffer(Count2,sizeof(Count2));
-            setlength(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString,Count2);
-            for k:=0 to Count2-1 do
-              Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString[k]));
-            Filestream.ReadBuffer(Count2,sizeof(Count2));
-            setlength(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID,Count2);
-            for k:=0 to Count2-1 do
-              Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID[k]));
-          end;
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.Typ,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.Typ));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OnValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OnValue));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.SwitchValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.SwitchValue));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.InvertSwitchValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.InvertSwitchValue));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OffValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OffValue));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ScaleValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ScaleValue));
+          Filestream.ReadBuffer(Count2,sizeof(Count2));
+          setlength(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger,Count2);
+          for k:=0 to Count2-1 do
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger[k]));
+          Filestream.ReadBuffer(Count2,sizeof(Count2));
+          setlength(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString,Count2);
+          for k:=0 to Count2-1 do
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString[k]));
+          Filestream.ReadBuffer(Count2,sizeof(Count2));
+          setlength(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID,Count2);
+          for k:=0 to Count2-1 do
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID[k]));
         end;
       end;
     end;
@@ -10405,6 +10416,119 @@ end;
 
 // Hier kommen die Threads
 //------------------------------------------------------------------------------
+
+{ HelperThread }
+
+constructor THelperThread.Create();
+begin
+  inherited create(false);
+  Priority := tpIdle;
+  FreeOnTerminate := true;
+end;
+
+procedure THelperThread.Execute;
+var
+  DeviceIndex, ButtonIndex, w:Word;
+  TxBuffer: array of byte;
+  HidReport:TReport;
+  WrittenPayloadBytes, RemainingPayloadBytes, PacketCounter:Cardinal;
+  BytesWritten:DWORD;
+begin
+  inherited;
+
+  repeat
+    try
+      // Transmit Data to Elgato StreamDeck
+      for DeviceIndex:=0 to length(elgatostreamdeckform.TotalPayloadBuffer)-1 do
+      begin
+        if (DeviceIndex<length(mainform.ElgatoStreamDeckArray)) and mainform.ElgatoStreamDeckArray[DeviceIndex].Online and (DeviceIndex<length(elgatostreamdeckform.TotalPayloadBuffer)) then
+        for ButtonIndex:=0 to length(elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex])-1 do
+        begin
+          if elgatostreamdeckform.TotalPayloadBuffer_ReadyToSend[DeviceIndex][ButtonIndex] then
+          begin
+            // reset ReadyToSend_Flag
+            elgatostreamdeckform.TotalPayloadBuffer_ReadyToSend[DeviceIndex][ButtonIndex]:=false;
+
+            // now transmit the byte-array to Stream Deck Device
+            WrittenPayloadBytes:=0;
+            RemainingPayloadBytes:=length(elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex]);
+            PacketCounter:=0;
+
+            setlength(TxBuffer, 8191);
+            TxBuffer[0]:=$02; // identifier
+            TxBuffer[1]:=$07; // cmd to set image
+            TxBuffer[2]:=ButtonIndex; // hex-value of button-id
+            //TxBuffer[3]:=$00; // 0x00 = not the last message, 0x01 = last message
+            //TxBuffer[4]:=$F8; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016
+            //TxBuffer[5]:=$03;
+            //TxBuffer[6]:=$00; // 16-bit little-endian value of the zero-based iteration, if the image is split
+            //TxBuffer[7]:=$00;
+            repeat
+              if RemainingPayloadBytes>1016 then
+              begin
+                // not the last message
+                TxBuffer[3]:=$00; // 0x00 = not the last message, 0x01 = last message
+                TxBuffer[4]:=$F8; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016 bytes
+                TxBuffer[5]:=$03;
+                TxBuffer[6]:=PacketCounter AND 255;
+                TxBuffer[7]:=(PacketCounter shr 8);
+
+                // copy 1016 bytes of PayloadBuffer
+                for w:=0 to 1015 do
+                begin
+                  TxBuffer[8+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                end;
+
+                for w:=0 to 7 do
+                  HidReport.Header[w]:=TxBuffer[w];
+                for w:=0 to 1015 do
+                  HidReport.Data[w]:=TxBuffer[8+w];
+                mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReport, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                WrittenPayloadBytes:=WrittenPayloadBytes+1016;
+                RemainingPayloadBytes:=RemainingPayloadBytes-1016;
+                PacketCounter:=PacketCounter+1;
+              end else
+              begin
+                // data fits into single message / last message
+                TxBuffer[3]:=$01; // 0x00 = not the last message, 0x01 = last message
+                TxBuffer[4]:=RemainingPayloadBytes AND 255; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016
+                TxBuffer[5]:=(RemainingPayloadBytes shr 8);
+                TxBuffer[6]:=PacketCounter AND 255;
+                TxBuffer[7]:=(PacketCounter shr 8);
+
+                // copy remaining bytes of PayloadBuffer
+                for w:=0 to RemainingPayloadBytes-1 do
+                begin
+                  TxBuffer[8+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                end;
+                // fill remaining bytes with zeros
+                for w:=RemainingPayloadBytes to 1015 do
+                begin
+                  TxBuffer[w]:=0;
+                end;
+
+                for w:=0 to 7 do
+                  HidReport.Header[w]:=TxBuffer[w];
+                for w:=0 to 1015 do
+                  HidReport.Data[w]:=TxBuffer[8+w];
+                mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReport, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                RemainingPayloadBytes:=0;
+                PacketCounter:=PacketCounter+1;
+              end;
+            until RemainingPayloadBytes=0;
+          end;
+        end;
+      end;
+    except
+      // something went wrong with the StreamDeck...
+    end;
+    // End of Elgato StreamDeck
+
+    sleep(50);
+  until mainform._killthreads;
+
+  Terminate;
+end;
 
 { TScanThread }
 
@@ -13667,6 +13791,12 @@ begin
     accupercent.Visible:=false;
     acculevel2.Visible:=false;
   end;
+
+  SplashAddText(_('Starte Helper-Thread...'));
+  RefreshSplashText;
+  DebugAdd('INIT: Starting Thread: HelperThread');
+  HelperThread := THelperThread.create();
+  DebugAddToLine(' - OK');
 
   // Timecodeplayer starten
   SplashAddText(_('Starte MIDI-Timecodeplayer...'));
@@ -28149,11 +28279,11 @@ begin
   // disconnect all devices and reconnect
   for i:=0 to length(ElgatoStreamDeckArray)-1 do
   begin
+    ElgatoStreamDeckArray[i].Online:=false;
     try
       ElgatoStreamDeckArray[i].HidDevice.Free;
     except
     end;
-    ElgatoStreamDeckArray[i].Online:=false;
   end;
 
   elgatostreamdeckform.devicelistbox.Clear;

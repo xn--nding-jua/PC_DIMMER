@@ -1959,6 +1959,11 @@ begin
         break;
       end;
     end;
+    if not Done then
+    begin
+      ShowMessage(_('Die Funktion "set_var" ist nur nach Abspeichern einer Code-Szene verfügbar...'));
+      Done:=true;
+    end;
   end;
   if (lowercase(Identifier)='get_var') then
   begin
@@ -1973,6 +1978,11 @@ begin
         Done:=true;
         break;
       end;
+    end;
+    if not Done then
+    begin
+      ShowMessage(_('Die Funktion "get_var" ist nur nach Abspeichern einer Code-Szene verfügbar...'));
+      Done:=true;
     end;
   end;
   if (lowercase(Identifier)='set_globalvar') then

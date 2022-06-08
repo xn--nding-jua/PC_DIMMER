@@ -93,9 +93,11 @@ type
     SelectedDevice, SelectedButton:integer;
     pngobject:TPNGObject;
     _Buffer: TBitmap32;
-    function SetKeyBitmap(Serial: string; KeyIndex:byte; Bitmap: TBitmap32):integer;
+    procedure SetKeyBitmap(DeviceIndex: integer; ButtonIndex:byte; Bitmap: TBitmap32);
   public
     { Public-Deklarationen }
+    TotalPayloadBuffer: array of array of array of byte; // Devices, Buttons, Data
+    TotalPayloadBuffer_ReadyToSend: array of array of boolean;
     procedure MSGNew;
     procedure MSGOpen;
     procedure SetBrightness(Serial: string; Percent: byte);
@@ -164,17 +166,11 @@ begin
   //
 end;
 
-function Telgatostreamdeckform.SetKeyBitmap(Serial: string; KeyIndex:byte; Bitmap: TBitmap32):integer;
+procedure Telgatostreamdeckform.SetKeyBitmap(DeviceIndex: integer; ButtonIndex:byte; Bitmap: TBitmap32);
 var
-  w:Word;
-  i, DeviceIndex: integer;
   bmp:TBitMap;
   JPEGImage:TJPEGImage;
   Stream: TMemoryStream;
-  TxBuffer, PayloadBuffer: array of byte;
-  HidReport:TReport;
-  WrittenPayloadBytes, RemainingPayloadBytes, PacketCounter:Cardinal;
-  TotalBytesWritten, BytesWritten:DWORD;
 begin
 {
   HID communication using input and output reports
@@ -198,119 +194,46 @@ begin
   06 / 07 = 16-bit little-endian value of the zero-based iteration, if the image is split
 }
 
-  TotalBytesWritten:=0;
-  DeviceIndex:=-1;
-  for i:=0 to length(mainform.ElgatoStreamDeckArray)-1 do
-  begin
-    if mainform.ElgatoStreamDeckArray[i].Serial=Serial then
-    begin
-      DeviceIndex:=i;
-      break;
-    end;
+  // first convert the JPEG to byte-array
+  bmp:=TBitmap.Create;
+  JPEGImage:=TJPEGImage.Create;
+  try
+    JPEGImage.Performance:=jpBestSpeed;//jpBestQuality;
+    JPEGImage.ProgressiveEncoding:=false;
+    JPEGImage.ProgressiveDisplay:=false;
+    //Bitmap.PixelFormat:=pf24bit;
+    Bitmap.FlipHorz(Bitmap);
+    Bitmap.FlipVert(Bitmap);
+    bmp.Assign(Bitmap); // convert Bitmap32 to Bitmap
+    JPEGImage.Assign(bmp); // convert Bitmap to JPEG
+    JPEGImage.CompressionQuality:=100;
+    JPEGImage.Compress;
+
+    Stream:=TMemoryStream.Create;
+    JPEGImage.SaveToStream(Stream);
+
+    if DeviceIndex>=length(TotalPayloadBuffer) then
+      setlength(TotalPayloadBuffer, DeviceIndex+1);
+    if DeviceIndex>=length(TotalPayloadBuffer_ReadyToSend) then
+      setlength(TotalPayloadBuffer_ReadyToSend, DeviceIndex+1);
+
+    if ButtonIndex>=length(TotalPayloadBuffer[DeviceIndex]) then
+      setlength(TotalPayloadBuffer[DeviceIndex], ButtonIndex+1);
+    if ButtonIndex>=length(TotalPayloadBuffer_ReadyToSend[DeviceIndex]) then
+      setlength(TotalPayloadBuffer_ReadyToSend[DeviceIndex], ButtonIndex+1);
+
+    setlength(TotalPayloadBuffer[DeviceIndex][ButtonIndex], Stream.Size);
+    Stream.Position:=0;
+    Stream.Read(TotalPayloadBuffer[DeviceIndex][ButtonIndex][0], Stream.Size);
+
+    // set ReadyToSend-flag for HelperThread
+    TotalPayloadBuffer_ReadyToSend[DeviceIndex][ButtonIndex]:=true;
+  finally
+    JPEGImage.Free;
+    bmp.Free;
   end;
 
-  if DeviceIndex>-1 then
-  begin
-    // first convert the JPEG to byte-array
-    bmp:=TBitmap.Create;
-    JPEGImage:=TJPEGImage.Create;
-    try
-      JPEGImage.Performance:=jpBestSpeed;//jpBestQuality;
-      JPEGImage.ProgressiveEncoding:=false;
-      JPEGImage.ProgressiveDisplay:=false;
-      //Bitmap.PixelFormat:=pf24bit;
-      Bitmap.FlipHorz(Bitmap);
-      Bitmap.FlipVert(Bitmap);
-      bmp.Assign(Bitmap); // convert Bitmap32 to Bitmap
-      JPEGImage.Assign(bmp); // convert Bitmap to JPEG
-      JPEGImage.CompressionQuality:=100;
-      JPEGImage.Compress;
-
-      Stream:=TMemoryStream.Create;
-      JPEGImage.SaveToStream(Stream);
-
-      setlength(PayloadBuffer, Stream.Size);
-      Stream.Position:=0;
-      Stream.Read(PayloadBuffer[0], Stream.Size);
-    finally
-      JPEGImage.Free;
-      bmp.Free;
-    end;
-
-    // now transmit the byte-array to Stream Deck Device
-    WrittenPayloadBytes:=0;
-    TotalBytesWritten:=0;
-    RemainingPayloadBytes:=length(PayloadBuffer);
-    PacketCounter:=0;
-
-    setlength(TxBuffer, 8191);
-    TxBuffer[0]:=$02; // identifier
-    TxBuffer[1]:=$07; // cmd to set image
-    TxBuffer[2]:=KeyIndex; // hex-value of button-id
-    //TxBuffer[3]:=$00; // 0x00 = not the last message, 0x01 = last message
-    //TxBuffer[4]:=$F8; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016
-    //TxBuffer[5]:=$03;
-    //TxBuffer[6]:=$00; // 16-bit little-endian value of the zero-based iteration, if the image is split
-    //TxBuffer[7]:=$00;
-    repeat
-      if RemainingPayloadBytes>1016 then
-      begin
-        // not the last message
-        TxBuffer[3]:=$00; // 0x00 = not the last message, 0x01 = last message
-        TxBuffer[4]:=$F8; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016 bytes
-        TxBuffer[5]:=$03;
-        TxBuffer[6]:=PacketCounter AND 255;
-        TxBuffer[7]:=(PacketCounter shr 8);
-
-        // copy 1016 bytes of PayloadBuffer
-        for w:=0 to 1015 do
-        begin
-          TxBuffer[8+w]:=PayloadBuffer[WrittenPayloadBytes+w];
-        end;
-
-        for w:=0 to 7 do
-          HidReport.Header[w]:=TxBuffer[w];
-        for w:=0 to 1015 do
-          HidReport.Data[w]:=TxBuffer[8+w];
-        mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReport, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
-        TotalBytesWritten:=TotalBytesWritten+BytesWritten;
-        WrittenPayloadBytes:=WrittenPayloadBytes+1016;
-        RemainingPayloadBytes:=RemainingPayloadBytes-1016;
-        PacketCounter:=PacketCounter+1;
-      end else
-      begin
-        // data fits into single message / last message
-        TxBuffer[3]:=$01; // 0x00 = not the last message, 0x01 = last message
-        TxBuffer[4]:=RemainingPayloadBytes AND 255; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016
-        TxBuffer[5]:=(RemainingPayloadBytes shr 8);
-        TxBuffer[6]:=PacketCounter AND 255;
-        TxBuffer[7]:=(PacketCounter shr 8);
-
-        // copy remaining bytes of PayloadBuffer
-        for w:=0 to RemainingPayloadBytes-1 do
-        begin
-          TxBuffer[8+w]:=PayloadBuffer[WrittenPayloadBytes+w];
-        end;
-        // fill remaining bytes with zeros
-        for w:=RemainingPayloadBytes to 1015 do
-        begin
-          TxBuffer[w]:=0;
-        end;
-
-        for w:=0 to 7 do
-          HidReport.Header[w]:=TxBuffer[w];
-        for w:=0 to 1015 do
-          HidReport.Data[w]:=TxBuffer[8+w];
-        mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReport, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
-        TotalBytesWritten:=TotalBytesWritten+BytesWritten;
-        RemainingPayloadBytes:=0;
-        PacketCounter:=PacketCounter+1;
-      end;
-    until RemainingPayloadBytes=0;
-
-    Stream.Free;
-  end;
-  result:=TotalBytesWritten;
+  Stream.Free;
 end;
 
 procedure Telgatostreamdeckform.SetBrightness(Serial: string; Percent: byte);
@@ -1211,7 +1134,7 @@ begin
 
           // send image to device
           //RotateBitmap(_Buffer, 3.141, false, 0);
-          SetKeyBitmap(mainform.ElgatoStreamDeckArray[dev].Serial, btn, _Buffer);
+          SetKeyBitmap(dev, btn, _Buffer);
         end;
 
         break;

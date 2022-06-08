@@ -366,7 +366,7 @@ object elgatostreamdeckform: Telgatostreamdeckform
   end
   object ElgatoStreamDeckDisplayTimer: TTimer
     Enabled = False
-    Interval = 250
+    Interval = 500
     OnTimer = ElgatoStreamDeckDisplayTimerTimer
     Left = 304
     Top = 8

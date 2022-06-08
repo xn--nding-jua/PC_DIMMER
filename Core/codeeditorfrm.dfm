@@ -1,6 +1,6 @@
 object codeeditorform: Tcodeeditorform
-  Left = 229
-  Top = 108
+  Left = 381
+  Top = 91
   Width = 662
   Height = 584
   Caption = 'Codeeditor'

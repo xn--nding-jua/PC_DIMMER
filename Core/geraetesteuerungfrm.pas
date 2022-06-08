@@ -8167,6 +8167,40 @@ begin
         end;
       end;
     end;
+  end else if (mainform.devices[DeviceIndex].hasWhite or mainform.devices[DeviceIndex].hasAmber) then
+  begin
+    // Device has no RGB, but Amber and/or White
+    if mainform.devices[DeviceIndex].hasDIMMER then
+    begin
+      Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[DeviceIndex].ID);
+      Amber:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'A');
+      White:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'W');
+
+      if mainform.devices[DeviceIndex].hasAmber then
+      begin
+        geraetesteuerung.ConvertRGBAWUVtoRGB(0, 0, 0, Amber, mainform.devices[DeviceIndex].AmberRatioR, mainform.devices[DeviceIndex].AmberRatioG, false, false, White, 0, R, G, B);
+        DeviceColor:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
+      end else
+      begin
+        geraetesteuerung.ConvertRGBAWUVtoRGB(0, 0, 0, 0, mainform.devices[DeviceIndex].AmberRatioR, mainform.devices[DeviceIndex].AmberRatioG, false, false, White, 0, R, G, B);
+        DeviceColor:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
+      end;
+    end else
+    begin
+      // kein Dimmer im Gerät
+      Amber:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'A');
+      White:=geraetesteuerung.get_channel(mainform.devices[DeviceIndex].ID,'W');
+
+      if mainform.devices[DeviceIndex].hasAmber then
+      begin
+        geraetesteuerung.ConvertRGBAWUVtoRGB(0, 0, 0, Amber, mainform.devices[DeviceIndex].AmberRatioR, mainform.devices[DeviceIndex].AmberRatioG, false, false, White, 0, R, G, B);
+        DeviceColor:=RGB2TColor(R, G, B);
+      end else
+      begin
+        geraetesteuerung.ConvertRGBAWUVtoRGB(0, 0, 0, 0, mainform.devices[DeviceIndex].AmberRatioR, mainform.devices[DeviceIndex].AmberRatioG, false, false, White, 0, R, G, B);
+        DeviceColor:=RGB2TColor(R, G, B);
+      end;
+    end;
   end else
   begin
     // nur Farbfilter
