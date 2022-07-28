@@ -46,7 +46,7 @@
   DeviceChannelNames[44]:='Y';
   DeviceChannelNames[45]:='UV';
   DeviceChannelNames[46]:='FOG';
-  // VIRTUALRGBDIMMER, VIRTUALRGBAWDIMMER, VIRTUALRGBAWDIMMER ist virtueller Dimmerkanal für RGBAW-Geräte
+  // VIRTUALRGBDIMMER, VIRTUALRGBADIMMER, VIRTUALRGBAWDIMMER ist virtueller Dimmerkanal für RGBAW-Geräte
 
   // Befehlssystem klarmachen
   setlength(Befehlssystem, 16);
@@ -171,7 +171,7 @@
   Befehlssystem[1].Steuerung[i].StringArgCount:=0;
   Befehlssystem[1].Steuerung[i].GUIDArgCount:=1;
 
-  setlength(Befehlssystem[2].Steuerung, 5);
+  setlength(Befehlssystem[2].Steuerung, 7);
   Befehlssystem[2].Programmteil:=_('Beattool');
   Befehlssystem[2].ProgrammteilGUID:=StringToGuid('{0359E9FC-5912-4637-8247-72A1B4963768}');
   i:=0;
@@ -207,6 +207,20 @@
   Befehlssystem[2].Steuerung[i].GUID:=StringToGuid('{5D7A3B16-1988-44BA-B4CA-D6427C1B408F}');
   Befehlssystem[2].Steuerung[i].InputValueOnly:=false;
   Befehlssystem[2].Steuerung[i].IntegerArgCount:=1;
+  Befehlssystem[2].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[2].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[2].Steuerung[i].Bezeichnung:=_('Temposlider setzen');
+  Befehlssystem[2].Steuerung[i].GUID:=StringToGuid('{1E442297-145E-49DA-8E43-CCDDD8CA67A9}');
+  Befehlssystem[2].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[2].Steuerung[i].IntegerArgCount:=1;
+  Befehlssystem[2].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[2].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[2].Steuerung[i].Bezeichnung:=_('Temposlider auf Eingangswert');
+  Befehlssystem[2].Steuerung[i].GUID:=StringToGuid('{C4E68F0A-ECCD-44C2-A9CC-6002D0D130C7}');
+  Befehlssystem[2].Steuerung[i].InputValueOnly:=true;
+  Befehlssystem[2].Steuerung[i].IntegerArgCount:=0;
   Befehlssystem[2].Steuerung[i].StringArgCount:=0;
   Befehlssystem[2].Steuerung[i].GUIDArgCount:=0;
 

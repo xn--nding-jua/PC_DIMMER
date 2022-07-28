@@ -1,23 +1,63 @@
 {
   HID communication using input and output reports
   Details zum Protokoll: https://gist.github.com/cliffrowley/d18a9c4569537b195f2b1eb6c68469e0
+  https://github.com/muesli/streamdeck/blob/master/streamdeck.go
+  https://github.com/abcminiuser/python-elgato-streamdeck/blob/e487aff4071daa50b0303b6ce65363ec2128f7cc/src/StreamDeck/DeviceManager.py
 
-  StreamDeck Software sends out JPEG-files for each button
-  - Image is transmitted in chunks of 1024 bytes
-  - header is added as prefix to JPEG payload
+  StreamDeck Orig, PID 0060, CmdSet v1, BMP, 72x72 Pixel, Header 16 Byte, Image Pagesize 7819 Byte, FeatureReportSize 17 Byte
+  StreamDeck Mini, PID 0063, CmdSet v1, BMP, 80x80 Pixel, Header 16 Byte, Image Pagesize 1024 Byte, FeatureReportSize 17 Byte
+  StreamDeck V2,   PID 006D, CmdSet v2, JPG, 72x72 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
+  StreamDeck MK2,  PID 0080, CmdSet v2, JPG, 72x72 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
+  StreamDeck XL,   PID 006C, CmdSet v2, JPG, 96x96 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
 
-  - structure: 8 byte header + 1016 byte payload
+  Firmware Revision 1:
+    ReadFirmwareCmd $04
+    ResetCmd $0B63
+    SetBrightnessCmd $0555AAD101xx
 
-  HEADER:
-  00 01 02 03 04 05 06 07
-  02 07 18 00 f8 03 00 00
+  Firmware Revision 2:
+    ReadFirmwareCmd $05
+    ResetCmd $0302
+    SetBrightnessCmd $0308xx
 
-  00 = static 02 (identifier)
-  01 = static 07 (cmd to set image?)
-  02 = hex-value of button-id
-  03 = 0x00 = not the last message, 0x01 = last message
-  04 / 05 = 16-bit little-endian value of length: f803 -> 0x03f8 = 1016
-  06 / 07 = 16-bit little-endian value of the zero-based iteration, if the image is split
+
+  StreamDeck MK.2: JPG, 72x72 pixel, 8-byte header, Report-Length: 1024 bytes
+    - Image is transmitted in chunks of 1024 bytes
+    - header is added as prefix to JPEG payload
+    - structure: 8 byte header + 1016 byte payload
+    Set Key image:
+      00 = static 02 (identifier)
+      01 = static 07 (cmd to set image)
+      02 = hex-value of button-id
+      03 = 0x00 = not the last message, 0x01 = last message
+      04 / 05 = 16-bit little-endian value of length: f803 -> 0x03f8 = 1016
+      06 / 07 = 16-bit little-endian value of the zero-based iteration, if the image is split
+
+  StreamDeck Original: BMP, 72x72 pixel, 16-byte header, Report-Length: 8191 bytes
+    Reset Key Stream: TX 8191 bytes: $02000000...
+    Reset: TX 17bytes: $0B63000000...
+    Brightness: TX 17bytes: $0555AAD101XX000000... with XX = Percent 00..FF
+    Set Key image:
+      00 = static 02 (identifier)
+      01 = static 01 (cmd to set image)
+      02 = PageID + 1
+      03 = 0x00
+      04 = 0x00 = not the last message, 0x01 = last message
+      05 = hex-value of button-id + 1
+      06..15 = 0x00
+
+  StreamDeck Mini: BMP, 80x80 pixel, 16-byte header, Report-Length: 1024 bytes
+    Reset Key Stream: TX 1024 bytes: $02000000...
+    Reset: TX 17bytes: $0B63000000...
+    Brightness: TX 17bytes: $0555AAD101XX000000... with XX = Percent 00..FF
+    Set Key image:
+      00 = static 02 (identifier)
+      01 = static 01 (cmd to set image)
+      02 = PageID + 1
+      03 = 0x00
+      04 = 0x00 = not the last message, 0x01 = last message
+      05 = hex-value of button-id + 1
+      06..15 = 0x00
 }
 
 unit elgatostreamdeckfrm;
@@ -31,7 +71,15 @@ uses
   befehleditorform2, Buttons, PngBitBtn;
 
 type
-  TReport = packed record
+  TReportA = packed record
+    Header: array [0..15] of byte;
+    Data: array [0..8174] of byte;
+  end;
+  TReportB = packed record
+    Header: array [0..15] of byte;
+    Data: array [0..1007] of byte;
+  end;
+  TReportC = packed record
     Header: array [0..7] of byte;
     Data: array [0..1015] of byte;
   end;
@@ -101,6 +149,7 @@ type
     procedure MSGNew;
     procedure MSGOpen;
     procedure SetBrightness(Serial: string; Percent: byte);
+    procedure ResetStreamDeck(Serial: string);
   end;
 
 var
@@ -171,75 +220,130 @@ var
   bmp:TBitMap;
   JPEGImage:TJPEGImage;
   Stream: TMemoryStream;
+  PID:Word;
 begin
-{
-  HID communication using input and output reports
-  Details zum Protokoll: https://gist.github.com/cliffrowley/d18a9c4569537b195f2b1eb6c68469e0
+  PID:=mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Attributes.ProductID;
 
-  StreamDeck Software sends out JPEG-files for each button
-  - Image is transmitted in chunks of 1024 bytes
-  - header is added as prefix to JPEG payload
-
-  - structure: 8 byte header + 1016 byte payload
-
-  HEADER:
-  00 01 02 03 04 05 06 07
-  02 07 18 00 f8 03 00 00
-
-  00 = static 02 (identifier)
-  01 = static 07 (cmd to set image?)
-  02 = hex-value of button-id
-  03 = 0x00 = not the last message, 0x01 = last message
-  04 / 05 = 16-bit little-endian value of length: f803 -> 0x03f8 = 1016
-  06 / 07 = 16-bit little-endian value of the zero-based iteration, if the image is split
-}
-
-  // first convert the JPEG to byte-array
   bmp:=TBitmap.Create;
-  JPEGImage:=TJPEGImage.Create;
-  try
-    JPEGImage.Performance:=jpBestSpeed;//jpBestQuality;
-    JPEGImage.ProgressiveEncoding:=false;
-    JPEGImage.ProgressiveDisplay:=false;
-    //Bitmap.PixelFormat:=pf24bit;
+  if (PID=$0060) then
+  begin
+    // StreamDeck Original
+    // BMP and flip horizontally
+    Bitmap.FlipHorz(Bitmap);
+
+    // convert the BMP to byte-array
+    try
+      //Bitmap.PixelFormat:=pf24bit;
+      bmp.Assign(Bitmap); // convert Bitmap32 to Bitmap
+
+      Stream:=TMemoryStream.Create;
+      bmp.SaveToStream(Stream);
+
+      if DeviceIndex>=length(TotalPayloadBuffer) then
+        setlength(TotalPayloadBuffer, DeviceIndex+1);
+      if DeviceIndex>=length(TotalPayloadBuffer_ReadyToSend) then
+        setlength(TotalPayloadBuffer_ReadyToSend, DeviceIndex+1);
+
+      if ButtonIndex>=length(TotalPayloadBuffer[DeviceIndex]) then
+        setlength(TotalPayloadBuffer[DeviceIndex], ButtonIndex+1);
+      if ButtonIndex>=length(TotalPayloadBuffer_ReadyToSend[DeviceIndex]) then
+        setlength(TotalPayloadBuffer_ReadyToSend[DeviceIndex], ButtonIndex+1);
+
+      setlength(TotalPayloadBuffer[DeviceIndex][ButtonIndex], Stream.Size);
+      Stream.Position:=0;
+      Stream.Read(TotalPayloadBuffer[DeviceIndex][ButtonIndex][0], Stream.Size);
+
+      // set ReadyToSend-flag for HelperThread
+      TotalPayloadBuffer_ReadyToSend[DeviceIndex][ButtonIndex]:=true;
+    finally
+      bmp.Free;
+    end;
+    Stream.Free;
+  end else if (PID=$0063) then
+  begin
+    // StreamDeck Mini
+    // BMP and rotate counterclockwise
+    Bitmap.Rotate270(Bitmap);
+
+    // convert the BMP to byte-array
+    try
+      //Bitmap.PixelFormat:=pf24bit;
+      bmp.Assign(Bitmap); // convert Bitmap32 to Bitmap
+
+      Stream:=TMemoryStream.Create;
+      bmp.SaveToStream(Stream);
+
+      if DeviceIndex>=length(TotalPayloadBuffer) then
+        setlength(TotalPayloadBuffer, DeviceIndex+1);
+      if DeviceIndex>=length(TotalPayloadBuffer_ReadyToSend) then
+        setlength(TotalPayloadBuffer_ReadyToSend, DeviceIndex+1);
+
+      if ButtonIndex>=length(TotalPayloadBuffer[DeviceIndex]) then
+        setlength(TotalPayloadBuffer[DeviceIndex], ButtonIndex+1);
+      if ButtonIndex>=length(TotalPayloadBuffer_ReadyToSend[DeviceIndex]) then
+        setlength(TotalPayloadBuffer_ReadyToSend[DeviceIndex], ButtonIndex+1);
+
+      setlength(TotalPayloadBuffer[DeviceIndex][ButtonIndex], Stream.Size);
+      Stream.Position:=0;
+      Stream.Read(TotalPayloadBuffer[DeviceIndex][ButtonIndex][0], Stream.Size);
+
+      // set ReadyToSend-flag for HelperThread
+      TotalPayloadBuffer_ReadyToSend[DeviceIndex][ButtonIndex]:=true;
+    finally
+      bmp.Free;
+    end;
+    Stream.Free;
+  end else
+  begin
+    // All other StreamDecks, JPG, flip horizontally and vertically
     Bitmap.FlipHorz(Bitmap);
     Bitmap.FlipVert(Bitmap);
-    bmp.Assign(Bitmap); // convert Bitmap32 to Bitmap
-    JPEGImage.Assign(bmp); // convert Bitmap to JPEG
-    JPEGImage.CompressionQuality:=100;
-    JPEGImage.Compress;
 
-    Stream:=TMemoryStream.Create;
-    JPEGImage.SaveToStream(Stream);
+    // convert the JPEG to byte-array
+    JPEGImage:=TJPEGImage.Create;
+    try
+      JPEGImage.Performance:=jpBestSpeed;//jpBestQuality;
+      JPEGImage.ProgressiveEncoding:=false;
+      JPEGImage.ProgressiveDisplay:=false;
+      //Bitmap.PixelFormat:=pf24bit;
+      bmp.Assign(Bitmap); // convert Bitmap32 to Bitmap
+      JPEGImage.Assign(bmp); // convert Bitmap to JPEG
+      JPEGImage.CompressionQuality:=100;
+      JPEGImage.Compress;
 
-    if DeviceIndex>=length(TotalPayloadBuffer) then
-      setlength(TotalPayloadBuffer, DeviceIndex+1);
-    if DeviceIndex>=length(TotalPayloadBuffer_ReadyToSend) then
-      setlength(TotalPayloadBuffer_ReadyToSend, DeviceIndex+1);
+      Stream:=TMemoryStream.Create;
+      JPEGImage.SaveToStream(Stream);
 
-    if ButtonIndex>=length(TotalPayloadBuffer[DeviceIndex]) then
-      setlength(TotalPayloadBuffer[DeviceIndex], ButtonIndex+1);
-    if ButtonIndex>=length(TotalPayloadBuffer_ReadyToSend[DeviceIndex]) then
-      setlength(TotalPayloadBuffer_ReadyToSend[DeviceIndex], ButtonIndex+1);
+      if DeviceIndex>=length(TotalPayloadBuffer) then
+        setlength(TotalPayloadBuffer, DeviceIndex+1);
+      if DeviceIndex>=length(TotalPayloadBuffer_ReadyToSend) then
+        setlength(TotalPayloadBuffer_ReadyToSend, DeviceIndex+1);
 
-    setlength(TotalPayloadBuffer[DeviceIndex][ButtonIndex], Stream.Size);
-    Stream.Position:=0;
-    Stream.Read(TotalPayloadBuffer[DeviceIndex][ButtonIndex][0], Stream.Size);
+      if ButtonIndex>=length(TotalPayloadBuffer[DeviceIndex]) then
+        setlength(TotalPayloadBuffer[DeviceIndex], ButtonIndex+1);
+      if ButtonIndex>=length(TotalPayloadBuffer_ReadyToSend[DeviceIndex]) then
+        setlength(TotalPayloadBuffer_ReadyToSend[DeviceIndex], ButtonIndex+1);
 
-    // set ReadyToSend-flag for HelperThread
-    TotalPayloadBuffer_ReadyToSend[DeviceIndex][ButtonIndex]:=true;
-  finally
-    JPEGImage.Free;
-    bmp.Free;
+      setlength(TotalPayloadBuffer[DeviceIndex][ButtonIndex], Stream.Size);
+      Stream.Position:=0;
+      Stream.Read(TotalPayloadBuffer[DeviceIndex][ButtonIndex][0], Stream.Size);
+
+      // set ReadyToSend-flag for HelperThread
+      TotalPayloadBuffer_ReadyToSend[DeviceIndex][ButtonIndex]:=true;
+    finally
+      JPEGImage.Free;
+      bmp.Free;
+    end;
+    Stream.Free;
   end;
-
-  Stream.Free;
 end;
 
 procedure Telgatostreamdeckform.SetBrightness(Serial: string; Percent: byte);
 var
   i, DeviceIndex:integer;
-  TxBuffer: array[0..31] of byte;
+  TxBuffer_Rev1: array[0..16] of byte;
+  TxBuffer_Rev2: array[0..31] of byte;
+  PID:Word;
 begin
   DeviceIndex:=-1;
   for i:=0 to length(mainform.ElgatoStreamDeckArray)-1 do
@@ -253,10 +357,99 @@ begin
 
   if DeviceIndex>-1 then
   begin
-    TxBuffer[0]:=$03;
-    TxBuffer[1]:=$08;
-    TxBuffer[2]:=Percent;
-    mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.SetFeature(TxBuffer, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.FeatureReportByteLength);
+    PID:=mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Attributes.ProductID;
+
+    {
+      StreamDeck Orig, PID 0060, CmdSet v1, BMP, 72x72 Pixel, Header 16 Byte, Image Pagesize 7819 Byte, FeatureReportSize 17 Byte
+      StreamDeck Mini, PID 0063, CmdSet v1, BMP, 80x80 Pixel, Header 16 Byte, Image Pagesize 1024 Byte, FeatureReportSize 17 Byte
+      StreamDeck V2,   PID 006D, CmdSet v2, JPG, 72x72 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
+      StreamDeck MK2,  PID 0080, CmdSet v2, JPG, 72x72 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
+      StreamDeck XL,   PID 006C, CmdSet v2, JPG, 96x96 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
+
+      Firmware Revision 1
+        ReadFirmwareCmd $04
+        ResetCmd $0B63
+        SetBrightnessCmd $0555AAD101
+
+      Firmware Revision 2
+        ReadFirmwareCmd $05
+        ResetCmd $0302
+        SetBrightnessCmd $0308
+    }
+
+    if (PID=$0060) or (PID=$0063) then
+    begin
+      // StreamDeck Original or Mini -> Firmware Rev1
+      TxBuffer_Rev1[0]:=$05;
+      TxBuffer_Rev1[1]:=$55;
+      TxBuffer_Rev1[2]:=$AA;
+      TxBuffer_Rev1[3]:=$D1;
+      TxBuffer_Rev1[4]:=$01;
+      TxBuffer_Rev1[5]:=Percent;
+      mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.SetFeature(TxBuffer_Rev1, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.FeatureReportByteLength);
+    end else if (PID=$006C) or (PID=$006D) or (PID=$0080) then
+    begin
+      // StreamDeck XL or V2 or MK2 -> Firmware Rev2
+      TxBuffer_Rev2[0]:=$03;
+      TxBuffer_Rev2[1]:=$08;
+      TxBuffer_Rev2[2]:=Percent;
+      mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.SetFeature(TxBuffer_Rev2, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.FeatureReportByteLength);
+    end;
+  end;
+end;
+
+procedure Telgatostreamdeckform.ResetStreamDeck(Serial: string);
+var
+  i, DeviceIndex:integer;
+  TxBuffer_Rev1: array[0..16] of byte;
+  TxBuffer_Rev2: array[0..31] of byte;
+  PID:Word;
+begin
+  DeviceIndex:=-1;
+  for i:=0 to length(mainform.ElgatoStreamDeckArray)-1 do
+  begin
+    if mainform.ElgatoStreamDeckArray[i].Serial=Serial then
+    begin
+      DeviceIndex:=i;
+      break;
+    end;
+  end;
+
+  if DeviceIndex>-1 then
+  begin
+    PID:=mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Attributes.ProductID;
+    
+    {
+      StreamDeck Orig, PID 0060, CmdSet v1, BMP, 72x72 Pixel, Header 16 Byte, Image Pagesize 7819 Byte, FeatureReportSize 17 Byte
+      StreamDeck Mini, PID 0063, CmdSet v1, BMP, 80x80 Pixel, Header 16 Byte, Image Pagesize 1024 Byte, FeatureReportSize 17 Byte
+      StreamDeck V2,   PID 006D, CmdSet v2, JPG, 72x72 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
+      StreamDeck MK2,  PID 0080, CmdSet v2, JPG, 72x72 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
+      StreamDeck XL,   PID 006C, CmdSet v2, JPG, 96x96 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
+
+      Firmware Revision 1
+        ReadFirmwareCmd $04
+        ResetCmd $0B63
+        SetBrightnessCmd $0555AAD101
+
+      Firmware Revision 2
+        ReadFirmwareCmd $05
+        ResetCmd $0302
+        SetBrightnessCmd $0308
+    }
+
+    if (PID=$0060) or (PID=$0063) then
+    begin
+      // StreamDeck Original or Mini -> Firmware Rev1
+      TxBuffer_Rev1[0]:=$0B;
+      TxBuffer_Rev1[1]:=$63;
+      mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.SetFeature(TxBuffer_Rev1, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.FeatureReportByteLength);
+    end else if (PID=$006C) or (PID=$006D) or (PID=$0080) then
+    begin
+      // StreamDeck XL or V2 or MK2 -> Firmware Rev2
+      TxBuffer_Rev2[0]:=$03;
+      TxBuffer_Rev2[1]:=$03;
+      mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.SetFeature(TxBuffer_Rev2, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.FeatureReportByteLength);
+    end;
   end;
 end;
 
@@ -343,7 +536,7 @@ begin
       SelectedDevice:=DeviceIndex;
       if (mainform.ElgatoStreamDeckArray[DeviceIndex].ButtonCount=6) then
       begin
-        SelectedButton:=trunc(X/72)+trunc(Y/72)*3;
+        SelectedButton:=trunc(X/80)+trunc(Y/80)*3;
       end else if (mainform.ElgatoStreamDeckArray[DeviceIndex].ButtonCount=15) then
       begin
         SelectedButton:=trunc(X/72)+trunc(Y/72)*5;
@@ -587,12 +780,16 @@ begin
 
         if (mainform.ElgatoStreamDeckArray[dev].ButtonCount=32) then
         begin
-          // large buttons
+          // StreamDeck XL
           ButtonPixels:=96;
+        end else if (mainform.ElgatoStreamDeckArray[dev].ButtonCount=15) then
+        begin
+          // StreamDeck Standard
+          ButtonPixels:=72;
         end else
         begin
-          // small buttons
-          ButtonPixels:=72;
+          // StreamDeck Mini
+          ButtonPixels:=80;
         end;
         _Buffer.Width:=ButtonPixels;
         _Buffer.Height:=ButtonPixels;

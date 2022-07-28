@@ -147,7 +147,21 @@
 	  Text_Value:=beatform.Temposourcebox.Items[AktuellerBefehl.ArgInteger[0]];
     exit;
   end;
-  
+  if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[2].Steuerung[5].GUID) then
+  begin // Temposlider setzen
+    Text_Function:=_('Temposlider');
+	  Text_Value:=inttostr(round((59999-beatform.temposlider.position)/100))+'BPM';
+    Value:=round(((59999-beatform.temposlider.position)/59999)*maxres);
+    exit;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[2].Steuerung[6].GUID) then
+  begin // Temposlider auf Eingangswert
+    Text_Function:=_('Temposlider');
+	  Text_Value:=inttostr(round((59999-beatform.temposlider.position)/100))+'BPM';
+    Value:=round(((59999-beatform.temposlider.position)/59999)*maxres);
+    exit;
+  end;
+
   // Master / MIDI
   Text_PCD_Function:=_('Master/MIDI/Programm');
   if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[0].GUID) then

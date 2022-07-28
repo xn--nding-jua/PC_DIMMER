@@ -2104,7 +2104,15 @@ begin
   begin
     if args.Count=1 then
     begin
-      mainform.startscene(StringToGUID(args.values[0]),false,false);
+      // Check Type of Scene. If it is a CodeScene show Error
+      if (mainform.GetSceneType(StringToGUID(args.values[0]))=11) then
+      begin
+        ShowMessage(_('Code-Szenen können nicht aus einer momentan ausgeführten Code-Szene heraus ausgeführt werden...'));
+      end else
+      begin
+        // start scene as it is no CodeScene
+        mainform.startscene(StringToGUID(args.values[0]),false,false);
+      end;
     end;
     done:=true;
   end;
@@ -2710,6 +2718,8 @@ begin
           begin
             StatusBar1.Panels.Items[2].Text:='Programmcode aus '+mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas';
             listbox.Items.LoadFromFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas');
+            ScriptInterpreterCallingCodeSceneID:=StringToGUID('{22358076-6286-4327-BC85-2CAD7F1F7E14}'); // just a random ID to direct to nirvana
+            ScriptInterpreter.Pas.Clear;
             ScriptInterpreter.Pas:=listbox.Items;
             ScriptInterpreter.Compile;
             ScriptInterpreterArgs.Count:=0;
@@ -2835,6 +2845,8 @@ begin
         begin
           StatusBar1.Panels.Items[2].Text:='Programmcode aus '+mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas';
           listbox.Items.LoadFromFile(mainform.userdirectory+'ProjectTemp\Kontrollpanel\Button'+inttostr(OverBtn.Y+1)+'x'+inttostr(OverBtn.X+1)+'.pas');
+          ScriptInterpreterCallingCodeSceneID:=StringToGUID('{22358076-6286-4327-BC85-2CAD7F1F7E14}'); // just a random ID to direct to nirvana
+          ScriptInterpreter.Pas.Clear;
           ScriptInterpreter.Pas:=listbox.Items;
           ScriptInterpreter.Compile;
           ScriptInterpreterArgs.Count:=0;

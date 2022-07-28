@@ -273,6 +273,17 @@
     Arg1Combobox.Visible:=true;
     nousersetting:=false;
   end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[2].Steuerung[5].GUID) then
+  begin // Temposlider setzen
+    Optionen1Box.Visible:=true;
+    Arg1Label.Caption:=_('Temposlider [Wert 1...599]:');
+    Arg1Edit.Text:=inttostr(AktuellerBefehl.ArgInteger[0]);
+    nousersetting:=false;
+  end;
+  if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[2].Steuerung[6].GUID) then
+  begin // Temposlider auf Eingangswert
+    nousersetting:=false;
+  end;
 
   // Master / MIDI / Programm
   if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[3].Steuerung[0].GUID) then

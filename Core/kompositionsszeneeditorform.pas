@@ -118,7 +118,7 @@ begin
           setlength(AktuelleKompositionsszene.IDs,length(AktuelleKompositionsszene.IDs)+1);
           setlength(AktuelleKompositionsszene.StopScene,length(AktuelleKompositionsszene.StopScene)+1);
           case Data^.NodeType of
-            0..3,6..9:
+            0..3,6..9,10..12:
             begin
               AktuelleKompositionsszene.IDs[length(AktuelleKompositionsszene.IDs)-1]:=Data^.ID;
               Listbox1.Items.Add(mainform.GetSceneInfo2(Data^.ID,'name'));

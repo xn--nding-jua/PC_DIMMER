@@ -1,6 +1,6 @@
 object szenenverwaltungform: Tszenenverwaltungform
-  Left = 501
-  Top = 144
+  Left = 576
+  Top = 152
   Width = 582
   Height = 488
   Caption = 'Szenenverwaltung'
