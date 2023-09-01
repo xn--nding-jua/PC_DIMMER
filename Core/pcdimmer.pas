@@ -1,13 +1,14 @@
 {*********************************************************************************}
 {**                                                                             **}
 {**  PHOENIXstudios PC_DIMMER                                                   **}
-{**  Copyrights (c) 2004-2022 by PHOENIXstudios Remsfeld                        **}
+{**  Copyrights (c) 2004-2023 by PHOENIXstudios Remsfeld                        **}
 {**                                                                             **}
 {**  Author: Dr.-Ing. Christian Nöding, info@pcdimmer.de                        **}
 {**  Co-Author: Martin Mikula (2012-2013)                                       **}
 {**                                                                             **}
-{**  Website: http://www.pcdimmer.de (Updates, Infos, etc.)                     **}
-{**  Forum: http://forum.pcdimmer.de                                            **}
+{**  Website: https://www.pcdimmer.de (Updates, Infos, etc.)                    **}
+{**  Forum: https://forum.pcdimmer.de                                           **}
+{**  Github: https://github.com/xn--nding-jua/PC_DIMMER                         **}
 {**                                                                             **}
 {**  This software is licensed under the GNU Public license                     **}
 {**                                                                             **}
