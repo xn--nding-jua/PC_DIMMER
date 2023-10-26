@@ -1,13 +1,14 @@
 {*********************************************************************************}
 {**                                                                             **}
 {**  PHOENIXstudios PC_DIMMER                                                   **}
-{**  Copyrights (c) 2004-2016 by PHOENIXstudios Remsfeld                        **}
+{**  Copyrights (c) 2004-2023 by PHOENIXstudios Remsfeld                        **}
 {**                                                                             **}
 {**  Author: Dr.-Ing. Christian Nöding, info@pcdimmer.de                        **}
 {**  Co-Author: Martin Mikula (2012-2013)                                       **}
 {**                                                                             **}
-{**  Website: http://www.pcdimmer.de (Updates, Infos, etc.)                     **}
-{**  Forum: http://forum.pcdimmer.de                                            **}
+{**  Website: https://www.pcdimmer.de (Updates, Infos, etc.)                    **}
+{**  Forum: https://forum.pcdimmer.de                                           **}
+{**  Github: https://github.com/xn--nding-jua/PC_DIMMER                         **}
 {**                                                                             **}
 {**  This software is licensed under the GNU Public license                     **}
 {**                                                                             **}
@@ -34,27 +35,28 @@ uses
   audioszeneeditorform, befehleditorform2, Tastenabfragefrm, buehnenansicht,
   {deviceformprototypfrm,} editdatainevent, datainevent,
   // fremde Units
-  spectrum_vis, osc_vis, CommonTypes, Bass, BASS_AC3, Basscd, BASSmix, Bass_fx,
+  GR32, spectrum_vis, osc_vis, CommonTypes, Bass, BASS_AC3, Basscd, BASSmix, Bass_fx,
   JvComponent, JvZlibMultiple, AudioIO, antTaskbarIcon, IAeverProgressBar,
   CPDrv, PowerButton, JvSimScope, MidiIn, MidiType, Monprocs, JvBaseDlg,
-  JclDebug, JvInterpreter, JvInterpreter_all, JvComponentBase,
+  JclDebug, JvInterpreter, JvInterpreter_all, JvComponentBase, pngimage,
   PngImageList, PngBitBtn, JvThreadTimer, uMultimediaTimer, Mask, JvExMask,
   JvSpin, JvProgressBar, JvXPProgressBar, JvExControls, JvWaitingGradient,
   JvExExtCtrls, JvExtComponent, JvCaptionPanel, JvSpecialProgress, JclSysInfo,
   JvAppStorage, JvAppXMLStorage, IdBaseComponent, IdComponent, MidiOut,
-  DECUtil, DECCipher, DECHash, DECFmt, DECRandom, GR32, IdTCPConnection,
+  DECUtil, DECCipher, DECHash, DECFmt, DECRandom, IdTCPConnection,
   IdTCPClient, pcdHTTPServer, IdHTTPServer, JvComputerInfoEx, PowerButton1, gnugettext,
-  ScktComp, TB2ToolWindow, pngimage, UdpSockUtil, CSVUtils, IdTCPServer,
+  ScktComp, TB2ToolWindow, UdpSockUtil, CSVUtils, IdTCPServer,
   Tokentools, dxBar, dxSkinsCore, dxStatusBar, dxRibbonStatusBar, cxClasses,
   dxRibbonForm, dxRibbon, cxControls, dxBarExtItems, JvPanel, JvColorBox,
   JvOfficeColorPanel, JvColorButton, cxStyles, dxGDIPlusClasses, SHDocVw,
   graphutil, IdCustomTCPServer, IdCustomHTTPServer, idContext, VistaAltFixUnit2,
   SVATimer, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, pcdMEVP,
-  dxRibbonSkins, dxBarApplicationMenu, D7GesturesHeader, jpeg;
+  dxRibbonSkins, dxBarApplicationMenu, D7GesturesHeader, jpeg,
+  JvHidControllerClass, Hid;
 
 const
   maincaption = 'PC_DIMMER';
-  actualprojectversion=484;
+  actualprojectversion=491;
   maxres = 255; // maximale Auflösung der Fader
   {$I GlobaleKonstanten.inc} // maximale Kanalzahl für PC_DIMMER !Vorsicht! Bei Ändern des Wertes müssen einzelne Plugins und Forms ebenfalls verändert werden, da dort auch chan gesetzt wird! Auch die GUI muss angepasst werden
   maxaudioeffektlayers = 8;
@@ -234,6 +236,14 @@ type
     SendMessage: procedure(MSG:Byte; Data1, Data2:Variant);stdcall;
   end;
 
+  // PCD_Helper_Thread deklarieren
+  THelperThread = class(TThread)
+  private
+  protected
+    procedure Execute; override;
+  public
+    constructor create();
+  end;
   // Thread für Akkuanzeige deklarieren
   TAccuEvent = procedure () of object;
   TAccuThread = class(TThread)
@@ -570,6 +580,9 @@ type
     dxBarLargeButton8: TdxBarLargeButton;
     TrackBar3: TTrackBar;
     Label15: TLabel;
+    dxBarLargeButton9: TdxBarLargeButton;
+    dxBarLargeButton10: TdxBarLargeButton;
+    RibbonButtonPNGList: TPngImageList;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -674,9 +687,6 @@ type
     procedure AutoFaderTimer(Sender: TObject);
     procedure BewegungsszenenTimerTimer(Sender: TObject);
     procedure TBItem20Click(Sender: TObject);
-    procedure ScriptInterpreterGetValue(Sender: TObject;
-      Identifier: String; var Value: Variant; Args: TJvInterpreterArgs;
-      var Done: Boolean);
     procedure TBItem13Click(Sender: TObject);
     procedure TBItem22Click(Sender: TObject);
     procedure TBItem23Click(Sender: TObject);
@@ -847,6 +857,16 @@ type
     procedure dxBarButton7Click(Sender: TObject);
     procedure dxBarLargeButton8Click(Sender: TObject);
     procedure TrackBar3Change(Sender: TObject);
+    procedure dxBarLargeButton9Click(Sender: TObject);
+    procedure dxBarLargeButton10Click(Sender: TObject);
+    procedure HidCtlDeviceCreateError(
+      Controller: TJvHidDeviceController; PnPInfo: TJvHidPnPInfo;
+      var Handled, RetryCreate: Boolean);
+    procedure HidCtlDeviceChange(Sender: TObject);
+    function HidCtlEnumerate(HidDev: TJvHidDevice;
+      const Idx: Integer): Boolean;
+    procedure HidCtlDeviceData(HidDev: TJvHidDevice; ReportID: Byte;
+      const Data: Pointer; Size: Word);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -863,6 +883,11 @@ type
     scrolltoleft, scrolltoright:boolean;
     MIDIInPackets, MIDIOutPackets, DataInPackets, DMXOutPackets:integer;
     MIDIInPacketsFreq, MIDIOutPacketsFreq, DataInPacketsFreq, DMXOutPacketsFreq:integer;
+
+    // Dinge für Bühnenansicht
+    CurrentMousePositionX, CurrentMousePositionY:integer;
+    CurrentMouseMoveShiftState:TShiftState;
+    HandleMouseMove:boolean;
 
     // Dinge für Kanalübersicht
     oldvaluesChannelview:array[1..8192] of byte;
@@ -988,6 +1013,8 @@ type
 		MidiInTimeCode: array of TMidiTimecode;
 		MidiOutControls: array of Pointer;
     LastMidiMSG, LastMidiData1, LastMidiData2: Byte;
+    LastDataInChannel:Word;
+    LastDataInValue: Byte;
     DimmerkernelResolution, MinDimmerkernelResolution:Cardinal; // in ms 1/44Hz=22,72ms - oder Automatisch
     DimmerkernelResolutionAutoset:boolean;
 
@@ -1019,6 +1046,7 @@ type
     animationtimer:integer;
     UseAutoAmberCalculation:boolean;
     ddfsource:byte; // 0: geraetesteuerung, 1: ddfwindow
+    _killthreads : boolean;
     _killaccu : boolean;
     _killscan : boolean;
     _killanimation : boolean;
@@ -1110,6 +1138,11 @@ type
     Cuelistbank:array of TCuelistbank;
     TimeCodePlayerBank:array of TTimeCodePlayer;
     IREvent:array of TIREvent;
+    XTouchPCDDevicesOrGroups:array of TXTouchPCDDeviceOrGroup;
+    XTouchDevices:array of TXTouch;
+    XTouchBefehle:array of array[0..17] of TBefehl2; // 8x Fader, Masterfader, 8x Dials, JogDial 
+    ElgatoStreamDeckArray:array of TElgatoStreamDeck;
+    ElgatoStreamSerials:array of string;
     // Szenenbibliothek
     EinfacheSzenen : array of TEinfacheSzene;
     DeviceScenes: array of TDeviceScene;
@@ -1131,6 +1164,8 @@ type
     pmmlights:array of TGUID;
     PartyMuckenModul:array of TPartyMuckenModul;
     PresetScenes: array of TPresetScene;
+    CodeScenes: array of TCodeScene;
+    GlobalVariables: array of Variant;
     NodeControlSets: array of TNodeControlSet;
     UserAccounts: array of TUserAccount;
     CurrentUser, StartupUser: String;
@@ -1172,6 +1207,8 @@ type
     EffektsequenzerTabs:array of string[255];
 
     accuThread: TAccuThread;
+    HelperThread: THelperThread;
+    HidCtl:TJvHidDeviceController;
 
     // WORKAROUND FOR MEVP
     MEVPDLL:THandle;
@@ -1192,9 +1229,13 @@ type
     procedure BlackoutDeviceScene(ID:TGUID; Fadetime:integer);
     function DoesSceneExists(ID:TGUID):boolean;
     procedure StopAllEffects;
+    procedure InitCodeScene(ID: TGUID);
+    procedure ExecuteCodeScene(ID: TGUID; Command: String);
 
     procedure StartBefehl(ID: TGUID); overload;
     procedure StartBefehl(ID: TGUID; Inputvalue: integer); overload;
+    procedure StartBefehl(AktuellerBefehl:TBefehl2; Inputvalue: integer; Source:String); overload;
+  	procedure GetBefehlState(AktuellerBefehl:TBefehl2; var Text_PCD_Function:string; var Text_Function:string; var Text_Value:string; var Value:integer);
 
     procedure ErrorPop(str: string);
     procedure Senddata(address, startvalue, endvalue, fadetime:integer);overload;
@@ -1300,7 +1341,8 @@ uses
   videoscreensynchronisierenfrm, ambilight, pmm, touchscreenfrm,
   ddfeditorassistant, dynguifrm, audiomanagerfrm, ProgressScreenSmallFrm,
   presetsceneeditorform, adddevicefrm, pcdUtils, pcdRegistry,
-  nodecontrolfrm, usermgmtfrm, changeuserfrm;
+  nodecontrolfrm, usermgmtfrm, changeuserfrm, xtouchcontrolfrm,
+  elgatostreamdeckfrm;
 
 {$R *.DFM}
 
@@ -1925,7 +1967,6 @@ begin
   ///////////////////////////////
   // STARTSCHALTER
   ///////////////////////////////
-
   for i:=1 to paramcount do
   begin
     if (paramstr(i)='/debug') then
@@ -2315,7 +2356,7 @@ begin
 
 // Audioplayer vorbereiten
 //  inttohex(BASS_GetVersion,8); //0x02040101
-  DebugAdd('Bass.dll in Version '+inttostr(strtoint(copy(inttohex(BASS_GetVersion,8),0,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_GetVersion,8),3,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_GetVersion,8),5,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_GetVersion,8),7,2)))+' found (minimum version: '+inttostr(strtoint(copy(inttohex(BASSVERSION,4),0,2)))+'.'+inttostr(strtoint(copy(inttohex(BASSVERSION,4),3,2)))+').');
+  DebugAdd('Bass.dll in Version '+copy(inttohex(BASS_GetVersion,8),0,2)+'.'+copy(inttohex(BASS_GetVersion,8),3,2)+'.'+copy(inttohex(BASS_GetVersion,8),5,2)+'.'+inttostr(strtoint(copy(inttohex(BASS_GetVersion,8),7,2)))+' found (minimum version: '+inttostr(strtoint(copy(inttohex(BASSVERSION,4),0,2)))+'.'+copy(inttohex(BASSVERSION,4),3,2)+').');
 
 	if (HIWORD(BASS_GetVersion) < BASSVERSION) then
 	begin
@@ -2326,9 +2367,9 @@ begin
   begin
     DebugAddToLine(' - OK');
   end;
-  DebugAdd('Bassfx.dll in Version '+inttostr(strtoint(copy(inttohex(BASS_FX_GetVersion,8),0,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_FX_GetVersion,8),3,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_FX_GetVersion,8),5,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_FX_GetVersion,8),7,2)))+' found.', false);
+  DebugAdd('Bassfx.dll in Version '+copy(inttohex(BASS_FX_GetVersion,8),0,2)+'.'+copy(inttohex(BASS_FX_GetVersion,8),3,2)+'.'+copy(inttohex(BASS_FX_GetVersion,8),5,2)+'.'+copy(inttohex(BASS_FX_GetVersion,8),7,2)+' found.', false);
  	DebugAddToLine(' - OK', false);
-  DebugAdd('Bassmix.dll in Version '+inttostr(strtoint(copy(inttohex(BASS_Mixer_GetVersion,8),0,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_Mixer_GetVersion,8),3,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_Mixer_GetVersion,8),5,2)))+'.'+inttostr(strtoint(copy(inttohex(BASS_Mixer_GetVersion,8),7,2)))+' found.', false);
+  DebugAdd('Bassmix.dll in Version '+copy(inttohex(BASS_Mixer_GetVersion,8),0,2)+'.'+copy(inttohex(BASS_Mixer_GetVersion,8),3,2)+'.'+copy(inttohex(BASS_Mixer_GetVersion,8),5,2)+'.'+copy(inttohex(BASS_Mixer_GetVersion,8),7,2)+' found.', false);
  	DebugAddToLine(' - OK', false);
   DebugAdd('Initializing BASS-System...');
 
@@ -2802,7 +2843,7 @@ begin
                   (devices[k].kanaltyp[address-devices[k].Startaddress]='y')) then
                 begin
                   // falls aktueller Kanal R,G,B,A,W, UV, C, M, Y
-                  virtualdimmerfaktor:=(geraetesteuerung.get_channel(devices[k].ID, 'DIMMER')/maxres);
+                  virtualdimmerfaktor:=(geraetesteuerung.get_channel(devices[k].ID, 'DIMMER')/maxres)*((maxres-masterform.dimmermaster.position)/maxres);
                   startvalue_Calibrated:=round(maxres-(virtualdimmerfaktor*(maxres-startvalue)));
                   endvalue_Calibrated:=round(maxres-(virtualdimmerfaktor*(maxres-endvalue)));
                   useCalibrationValue:=true;
@@ -2977,7 +3018,7 @@ begin
                 (devices[k].kanaltyp[tempvalue]='y')) then
               begin
                 // falls aktueller Kanal R,G,B,A,W, UV, C,M,Y und aktivierter VirtualDimmer, dann diesen berechnen
-                virtualdimmerfaktor:=(geraetesteuerung.get_channel(devices[k].ID, 'DIMMER')/255);
+                virtualdimmerfaktor:=(geraetesteuerung.get_channel(devices[k].ID, 'DIMMER')/255)*((maxres-masterform.dimmermaster.position)/maxres);
                 Value:=round(virtualdimmerfaktor*Integer(Data2));
               end;
               if (devices[k].kanaltyp[tempvalue]='dimmer') then
@@ -3434,6 +3475,10 @@ begin
     presetsceneeditor.close;
   if nodecontrolform.showing then
     nodecontrolform.close;
+  if xtouchcontrolform.showing then
+    xtouchcontrolform.close;
+  if elgatostreamdeckform.showing then
+    elgatostreamdeckform.close;
 
   // WORKAROUND FOR MEVP
   // 3D Visualizer schließen und freigeben
@@ -3495,10 +3540,13 @@ begin
   MidiCallbackTimer.Enabled:=false;
   MainformScreenRefreshTimer.Enabled:=false;
   leistungssteuerungform2.Timer2.enabled:=false;
+  ElgatoStreamDeckForm.ElgatoStreamDeckTimer.Enabled:=false;
+  ElgatoStreamDeckForm.ElgatoStreamDeckDisplayTimer.Enabled:=false;
 
   DebugAddToLine(' - OK', false);
   DebugAdd('SHUTDOWN: Sending Close-Message...');
 
+  _killthreads:=true;
   _killanimation:=true;
   _KillBuehnenansicht:=true;
   _killaccu := true;
@@ -3698,6 +3746,10 @@ begin
   inprogress.ProgressBar1.Position:=97;
   inprogress.Refresh;
   WaitForSingleObject(accuThread.Handle, 4000);
+  inprogress.filename.Caption:=_('Stoppe Helper-Thread...');
+  inprogress.ProgressBar1.Position:=98;
+  inprogress.Refresh;
+  WaitForSingleObject(HelperThread.Handle, 4000);
 
   // Fenster löschen
 
@@ -3785,6 +3837,8 @@ begin
   presetsceneeditor.free;
   nodecontrolform.free;
   usermgmtform.free;
+  xtouchcontrolform.Free;
+  elgatostreamdeckform.Free;
 
   // Finito :)
 
@@ -3996,6 +4050,7 @@ begin
   setlength(Effektsequenzereffekte,0);
   setlength(AktuellerEffekt,0);
   setlength(PluginSzenen,0);
+  setlength(CodeScenes,0);
 
   setlength(Autoszenen,6);
 //////////////////////
@@ -4085,6 +4140,8 @@ begin
   nodecontrolform.MSGNew;
   joystickform.MSGNew;
   beatform.MSGNew;
+  xtouchcontrolform.MSGNew;
+  elgatostreamdeckform.MSGNew;
 
   for i:=0 to 31 do
   begin
@@ -5698,6 +5755,101 @@ begin
     end;
   end;
 // Ende NodeControl
+// XTouchControl speichern
+  inprogress.filename.Caption:=_('Schreibe Datei... XTouchControl');
+  inprogress.Refresh;
+  Count:=length(mainform.XTouchPCDDevicesOrGroups);
+  Filestream.WriteBuffer(Count,sizeof(Count));
+  for i:=0 to Count-1 do
+  begin
+    Filestream.WriteBuffer(mainform.XTouchPCDDevicesOrGroups[i].ID,sizeof(mainform.XTouchPCDDevicesOrGroups[i].ID));
+  end;
+  Count:=length(XTouchBefehle);
+  Filestream.WriteBuffer(Count,sizeof(Count));
+  for i:=0 to Count-1 do
+  begin
+    for j:=0 to 17 do // 8 Faders + Masterfader, 8x Dials + JogDial
+    begin
+      Filestream.WriteBuffer(XTouchBefehle[i][j].Typ,sizeof(XTouchBefehle[i][j].Typ));
+      Filestream.WriteBuffer(XTouchBefehle[i][j].OnValue,sizeof(XTouchBefehle[i][j].OnValue));
+      Filestream.WriteBuffer(XTouchBefehle[i][j].SwitchValue,sizeof(XTouchBefehle[i][j].SwitchValue));
+      Filestream.WriteBuffer(XTouchBefehle[i][j].InvertSwitchValue,sizeof(XTouchBefehle[i][j].InvertSwitchValue));
+      Filestream.WriteBuffer(XTouchBefehle[i][j].OffValue,sizeof(XTouchBefehle[i][j].OffValue));
+      Filestream.WriteBuffer(XTouchBefehle[i][j].ScaleValue,sizeof(XTouchBefehle[i][j].ScaleValue));
+      Count2:=length(XTouchBefehle[i][j].ArgInteger);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for k:=0 to Count2-1 do
+        Filestream.WriteBuffer(XTouchBefehle[i][j].ArgInteger[k],sizeof(XTouchBefehle[i][j].ArgInteger[k]));
+      Count2:=length(XTouchBefehle[i][j].ArgString);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for k:=0 to Count2-1 do
+        Filestream.WriteBuffer(XTouchBefehle[i][j].ArgString[k],sizeof(XTouchBefehle[i][j].ArgString[k]));
+      Count2:=length(XTouchBefehle[i][j].ArgGUID);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for k:=0 to Count2-1 do
+        Filestream.WriteBuffer(XTouchBefehle[i][j].ArgGUID[k],sizeof(XTouchBefehle[i][j].ArgGUID[k]));
+    end;
+  end;
+// Ende XTouchControl
+// CodeSzenen speichern
+  inprogress.filename.Caption:=_('Schreibe Datei... Code-Szenen');
+  inprogress.Refresh;
+  Count:=length(mainform.CodeScenes);
+  Filestream.WriteBuffer(Count,sizeof(Count));
+  for i:=0 to Count-1 do
+  begin
+    Filestream.WriteBuffer(mainform.CodeScenes[i].ID,sizeof(mainform.CodeScenes[i].ID));
+    Filestream.WriteBuffer(mainform.CodeScenes[i].Name,sizeof(mainform.CodeScenes[i].Name));
+    Filestream.WriteBuffer(mainform.CodeScenes[i].Beschreibung,sizeof(mainform.CodeScenes[i].Beschreibung));
+    Filestream.WriteBuffer(mainform.CodeScenes[i].Category,sizeof(mainform.CodeScenes[i].Category));
+    Count2:=length(mainform.CodeScenes[i].Code);
+    Filestream.WriteBuffer(Count2,sizeof(Count2));
+    Filestream.WriteBuffer(Pointer(mainform.CodeScenes[i].Code)^,length(mainform.CodeScenes[i].Code));
+  end;
+// Ende CodeScenes
+// StreamDeck speichern
+  inprogress.filename.Caption:=_('Schreibe Datei... StreamDeck');
+  inprogress.Refresh;
+  Count:=length(mainform.ElgatoStreamDeckArray);
+  Filestream.WriteBuffer(Count,sizeof(Count));
+  for i:=0 to Count-1 do
+  begin
+    Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Serial,sizeof(mainform.ElgatoStreamDeckArray[i].Serial));
+    Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].ButtonCount,sizeof(mainform.ElgatoStreamDeckArray[i].ButtonCount));
+    Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Brightness,sizeof(mainform.ElgatoStreamDeckArray[i].Brightness));
+    Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton,sizeof(mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton));
+    for j:=0 to 31 do
+    begin
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].ButtonType,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].ButtonType));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelX,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelX));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].UseHoldToChange,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].UseHoldToChange));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Increment,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Increment));
+
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.Typ,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.Typ));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OnValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OnValue));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.SwitchValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.SwitchValue));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.InvertSwitchValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.InvertSwitchValue));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OffValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OffValue));
+      Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ScaleValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ScaleValue));
+      Count2:=length(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for k:=0 to Count2-1 do
+        Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger[k]));
+      Count2:=length(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for k:=0 to Count2-1 do
+        Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString[k]));
+      Count2:=length(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID);
+      Filestream.WriteBuffer(Count2,sizeof(Count2));
+      for k:=0 to Count2-1 do
+        Filestream.WriteBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID[k]));
+    end;
+  end;
+// Ende StreamDeck
+
   inprogress.filename.Caption:=_('Schreibe Datei...');
   inprogress.Refresh;
   FileStream.Free;
@@ -5838,6 +5990,8 @@ begin
   textbuchform.MSGNew;
   joystickform.MSGNew;
   beatform.MSGNew;
+  xtouchcontrolform.MSGNew;
+  elgatostreamdeckform.MSGNew;
 
   if not OnlyProject then
   begin
@@ -6285,24 +6439,24 @@ begin
     RefreshSplashText;
   end;
 
-          	  Filestream.ReadBuffer(Count,sizeof(Count));
-              setlength(Figuren,Count);
-              for i:=0 to Count-1 do
-              begin
-            	  Filestream.ReadBuffer(Figuren[i].ID,sizeof(Figuren[i].ID));
-            	  Filestream.ReadBuffer(Figuren[i].name,sizeof(Figuren[i].name));
-            	  Filestream.ReadBuffer(Figuren[i].invertpan,sizeof(Figuren[i].invertpan));
-            	  Filestream.ReadBuffer(Figuren[i].inverttilt,sizeof(Figuren[i].inverttilt));
-            	  Filestream.ReadBuffer(Count2,sizeof(Count2));
-                setlength(Figuren[i].posx,Count2);
-                setlength(Figuren[i].posy,Count2);
-                for k:=0 to Count2-1 do
-                begin
-              	  Filestream.ReadBuffer(Figuren[i].posx[k],sizeof(Figuren[i].posx[k]));
-              	  Filestream.ReadBuffer(Figuren[i].posy[k],sizeof(Figuren[i].posy[k]));
-                end;
-            	  Filestream.ReadBuffer(Figuren[i].gesamtlaenge,sizeof(Figuren[i].gesamtlaenge));
-              end;
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(Figuren,Count);
+  for i:=0 to Count-1 do
+  begin
+    Filestream.ReadBuffer(Figuren[i].ID,sizeof(Figuren[i].ID));
+    Filestream.ReadBuffer(Figuren[i].name,sizeof(Figuren[i].name));
+    Filestream.ReadBuffer(Figuren[i].invertpan,sizeof(Figuren[i].invertpan));
+    Filestream.ReadBuffer(Figuren[i].inverttilt,sizeof(Figuren[i].inverttilt));
+    Filestream.ReadBuffer(Count2,sizeof(Count2));
+    setlength(Figuren[i].posx,Count2);
+    setlength(Figuren[i].posy,Count2);
+    for k:=0 to Count2-1 do
+    begin
+      Filestream.ReadBuffer(Figuren[i].posx[k],sizeof(Figuren[i].posx[k]));
+      Filestream.ReadBuffer(Figuren[i].posy[k],sizeof(Figuren[i].posy[k]));
+    end;
+    Filestream.ReadBuffer(Figuren[i].gesamtlaenge,sizeof(Figuren[i].gesamtlaenge));
+  end;
   // Ende Figurendaten
   // Einfache-, Bewegungs- und Audioszenen, sowie Befehle öffnen
 	if not startingup then
@@ -6315,287 +6469,287 @@ begin
     RefreshSplashText;
   end;
 
-     	  Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(Einfacheszenen,Count);
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(Einfacheszenen,Count);
 
-        if projektprogrammversionint<439 then
+  if projektprogrammversionint<439 then
+  begin
+    for i:=0 to Count-1 do
+    begin
+      Filestream.ReadBuffer(OldEinfacheszene,sizeof(OldEinfacheszene));
+      Einfacheszenen[i].ID:=OldEinfacheszene.ID;
+      Einfacheszenen[i].Name:=OldEinfacheszene.Name;
+      Einfacheszenen[i].Beschreibung:=OldEinfacheszene.Beschreibung;
+      Einfacheszenen[i].einblendzeit:=OldEinfacheszene.einblendzeit;
+      for j:=1 to chan do
+      begin
+        Einfacheszenen[i].kanal[j]:=OldEinfacheszene.kanal[j];
+        Einfacheszenen[i].kanalaktiv[j]:=OldEinfacheszene.kanalaktiv[j];
+      end;
+    end;
+  end else
+  begin
+    for i:=0 to Count-1 do
+    begin
+      Filestream.ReadBuffer(Einfacheszenen[i].ID,sizeof(Einfacheszenen[i].ID));
+      Filestream.ReadBuffer(Einfacheszenen[i].Name,sizeof(Einfacheszenen[i].Name));
+      Filestream.ReadBuffer(Einfacheszenen[i].Beschreibung,sizeof(Einfacheszenen[i].Beschreibung));
+      Filestream.ReadBuffer(Einfacheszenen[i].einblendzeit,sizeof(Einfacheszenen[i].einblendzeit));
+      Filestream.ReadBuffer(Einfacheszenen[i].kanal,sizeof(Einfacheszenen[i].kanal));
+      Filestream.ReadBuffer(Einfacheszenen[i].kanalaktiv,sizeof(Einfacheszenen[i].kanalaktiv));
+      Filestream.ReadBuffer(Einfacheszenen[i].Category,sizeof(Einfacheszenen[i].Category));
+    end;
+  end;
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(Audioszenen,Count);
+  setlength(AudioszenenCHAN,Count);
+
+  if projektprogrammversionint>=411 then
+  begin
+    for i:=0 to Count-1 do
+    begin
+      Filestream.ReadBuffer(Audioszenen[i].ID,sizeof(Audioszenen[i].ID));
+      Filestream.ReadBuffer(Audioszenen[i].Name,sizeof(Audioszenen[i].Name));
+      Filestream.ReadBuffer(Audioszenen[i].Beschreibung,sizeof(Audioszenen[i].Beschreibung));
+      Filestream.ReadBuffer(Audioszenen[i].Datei,sizeof(Audioszenen[i].Datei));
+      Filestream.ReadBuffer(Audioszenen[i].Dauer,sizeof(Audioszenen[i].Dauer));
+      Filestream.ReadBuffer(Audioszenen[i].Volume,sizeof(Audioszenen[i].Volume));
+      Filestream.ReadBuffer(Audioszenen[i].FadeinTime,sizeof(Audioszenen[i].FadeinTime));
+      Filestream.ReadBuffer(Audioszenen[i].FadeoutTime,sizeof(Audioszenen[i].FadeoutTime));
+      if projektprogrammversionint>=432 then
+      begin
+        Filestream.ReadBuffer(Audioszenen[i].matrix,sizeof(Audioszenen[i].matrix));
+        Filestream.ReadBuffer(Audioszenen[i].Kanalsettings,sizeof(Audioszenen[i].Kanalsettings));
+      end else
+      begin
+        Audioszenen[i].matrix[0][0]:=1;
+        Audioszenen[i].matrix[0][1]:=0;
+        Audioszenen[i].matrix[0][2]:=0;
+        Audioszenen[i].matrix[0][3]:=0;
+        Audioszenen[i].matrix[0][4]:=0;
+        Audioszenen[i].matrix[0][5]:=0;
+        Audioszenen[i].matrix[0][6]:=0;
+        Audioszenen[i].matrix[0][7]:=0;
+        Audioszenen[i].matrix[1][0]:=0;
+        Audioszenen[i].matrix[1][1]:=0;
+        Audioszenen[i].matrix[1][2]:=1;
+        Audioszenen[i].matrix[1][3]:=0;
+        Audioszenen[i].matrix[1][4]:=0;
+        Audioszenen[i].matrix[1][5]:=0;
+        Audioszenen[i].matrix[1][6]:=0;
+        Audioszenen[i].matrix[1][7]:=0;
+        Audioszenen[i].Kanalsettings[0]:=0;
+        Audioszenen[i].Kanalsettings[1]:=0;
+        Audioszenen[i].Kanalsettings[2]:=0;
+        Audioszenen[i].Kanalsettings[3]:=0;
+        Audioszenen[i].Kanalsettings[4]:=0;
+        Audioszenen[i].Kanalsettings[5]:=0;
+        Audioszenen[i].Kanalsettings[6]:=0;
+        Audioszenen[i].Kanalsettings[7]:=0;
+      end;
+      if projektprogrammversionint>=439 then
+        Filestream.ReadBuffer(Audioszenen[i].Category,sizeof(Audioszenen[i].Category));
+    end;
+  end else
+  begin
+    for i:=0 to Count-1 do
+    begin
+      Filestream.ReadBuffer(AudioszeneOld,sizeof(AudioszeneOld));
+
+      Audioszenen[i].ID:=AudioszeneOld.ID;
+      Audioszenen[i].Name:=AudioszeneOld.Name;
+      Audioszenen[i].Beschreibung:=AudioszeneOld.Beschreibung;
+      Audioszenen[i].Datei:=AudioszeneOld.Datei;
+      Audioszenen[i].Dauer:=AudioszeneOld.Dauer;
+      Audioszenen[i].Volume:=1;
+      Audioszenen[i].FadeinTime:=0;
+      Audioszenen[i].FadeoutTime:=0;
+
+      Audioszenen[i].matrix[0][0]:=1;
+      Audioszenen[i].matrix[0][1]:=0;
+      Audioszenen[i].matrix[0][2]:=0;
+      Audioszenen[i].matrix[0][3]:=0;
+      Audioszenen[i].matrix[0][4]:=0;
+      Audioszenen[i].matrix[0][5]:=0;
+      Audioszenen[i].matrix[0][6]:=0;
+      Audioszenen[i].matrix[0][7]:=0;
+      Audioszenen[i].matrix[1][0]:=0;
+      Audioszenen[i].matrix[1][1]:=0;
+      Audioszenen[i].matrix[1][2]:=1;
+      Audioszenen[i].matrix[1][3]:=0;
+      Audioszenen[i].matrix[1][4]:=0;
+      Audioszenen[i].matrix[1][5]:=0;
+      Audioszenen[i].matrix[1][6]:=0;
+      Audioszenen[i].matrix[1][7]:=0;
+      Audioszenen[i].Kanalsettings[0]:=0;
+      Audioszenen[i].Kanalsettings[1]:=0;
+      Audioszenen[i].Kanalsettings[2]:=0;
+      Audioszenen[i].Kanalsettings[3]:=0;
+      Audioszenen[i].Kanalsettings[4]:=0;
+      Audioszenen[i].Kanalsettings[5]:=0;
+      Audioszenen[i].Kanalsettings[6]:=0;
+      Audioszenen[i].Kanalsettings[7]:=0;
+    end;
+  end;
+
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(Bewegungsszenen,Count);
+  setlength(BewegungsszenenZeit,Count);
+  setlength(BewegungsszenenAktiv,Count);
+  for i:=0 to Count-1 do
+  begin
+    Filestream.ReadBuffer(Bewegungsszenen[i].ID,sizeof(Bewegungsszenen[i].ID));
+    Filestream.ReadBuffer(Bewegungsszenen[i].Name,sizeof(Bewegungsszenen[i].Name));
+    Filestream.ReadBuffer(Bewegungsszenen[i].Beschreibung,sizeof(Bewegungsszenen[i].Beschreibung));
+    if projektprogrammversionint>=428 then
+      Filestream.ReadBuffer(Bewegungsszenen[i].IsBeatControlled,sizeof(Bewegungsszenen[i].IsBeatControlled));
+    Filestream.ReadBuffer(Bewegungsszenen[i].figur,sizeof(Bewegungsszenen[i].figur));
+    Filestream.ReadBuffer(Bewegungsszenen[i].dauer,sizeof(Bewegungsszenen[i].dauer));
+    if projektprogrammversionint>=417 then
+      Filestream.ReadBuffer(Bewegungsszenen[i].DontFade,sizeof(Bewegungsszenen[i].DontFade));
+    Filestream.ReadBuffer(Bewegungsszenen[i].repeats,sizeof(Bewegungsszenen[i].repeats));
+    Filestream.ReadBuffer(Bewegungsszenen[i].identischespurgeschwidigkeit,sizeof(Bewegungsszenen[i].identischespurgeschwidigkeit));
+    Filestream.ReadBuffer(Bewegungsszenen[i].startpositionrelativ,sizeof(Bewegungsszenen[i].startpositionrelativ));
+    if projektprogrammversionint>=439 then
+      Filestream.ReadBuffer(Bewegungsszenen[i].Category,sizeof(Bewegungsszenen[i].Category));
+
+    Filestream.ReadBuffer(Count2,sizeof(Count2));
+    setlength(Bewegungsszenen[i].Devices,Count2);
+    setlength(BewegungsszenenZeit[i],Count2);
+    setlength(BewegungsszenenAktiv[i].Zeit,Count2);
+    setlength(BewegungsszenenAktiv[i].Repeats,Count2);
+    setlength(BewegungsszenenAktiv[i].Position,Count2);
+    for j:=0 to Count2-1 do
+    begin
+      Filestream.ReadBuffer(Bewegungsszenen[i].Devices[j].ID,sizeof(Bewegungsszenen[i].Devices[j].ID));
+
+      Filestream.ReadBuffer(Count3,sizeof(Count3));
+      setlength(Bewegungsszenen[i].Devices[j].DeviceChannel,Count3);
+      setlength(Bewegungsszenen[i].Devices[j].Szenen,Count3);
+      setlength(BewegungsszenenZeit[i][j],Count3);
+      setlength(BewegungsszenenAktiv[i].Zeit[j],Count3);
+      setlength(BewegungsszenenAktiv[i].Repeats[j],Count3);
+      setlength(BewegungsszenenAktiv[i].Position[j],Count3);
+      for k:=0 to Count3-1 do
+      begin
+        if projektprogrammversionint>=425 then
+          Filestream.ReadBuffer(Bewegungsszenen[i].Devices[j].DeviceChannel[k],sizeof(Bewegungsszenen[i].Devices[j].DeviceChannel[k]))
+        else
         begin
-          for i:=0 to Count-1 do
-          begin
-            Filestream.ReadBuffer(OldEinfacheszene,sizeof(OldEinfacheszene));
-            Einfacheszenen[i].ID:=OldEinfacheszene.ID;
-            Einfacheszenen[i].Name:=OldEinfacheszene.Name;
-            Einfacheszenen[i].Beschreibung:=OldEinfacheszene.Beschreibung;
-            Einfacheszenen[i].einblendzeit:=OldEinfacheszene.einblendzeit;
-            for j:=1 to chan do
-            begin
-              Einfacheszenen[i].kanal[j]:=OldEinfacheszene.kanal[j];
-              Einfacheszenen[i].kanalaktiv[j]:=OldEinfacheszene.kanalaktiv[j];
-            end;
-          end;
-        end else
-        begin
-          for i:=0 to Count-1 do
-          begin
-            Filestream.ReadBuffer(Einfacheszenen[i].ID,sizeof(Einfacheszenen[i].ID));
-            Filestream.ReadBuffer(Einfacheszenen[i].Name,sizeof(Einfacheszenen[i].Name));
-            Filestream.ReadBuffer(Einfacheszenen[i].Beschreibung,sizeof(Einfacheszenen[i].Beschreibung));
-            Filestream.ReadBuffer(Einfacheszenen[i].einblendzeit,sizeof(Einfacheszenen[i].einblendzeit));
-            Filestream.ReadBuffer(Einfacheszenen[i].kanal,sizeof(Einfacheszenen[i].kanal));
-            Filestream.ReadBuffer(Einfacheszenen[i].kanalaktiv,sizeof(Einfacheszenen[i].kanalaktiv));
-            Filestream.ReadBuffer(Einfacheszenen[i].Category,sizeof(Einfacheszenen[i].Category));
-          end;
-        end;
-     	  Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(Audioszenen,Count);
-        setlength(AudioszenenCHAN,Count);
-
-        if projektprogrammversionint>=411 then
-       	begin
-          for i:=0 to Count-1 do
-          begin
-            Filestream.ReadBuffer(Audioszenen[i].ID,sizeof(Audioszenen[i].ID));
-            Filestream.ReadBuffer(Audioszenen[i].Name,sizeof(Audioszenen[i].Name));
-            Filestream.ReadBuffer(Audioszenen[i].Beschreibung,sizeof(Audioszenen[i].Beschreibung));
-            Filestream.ReadBuffer(Audioszenen[i].Datei,sizeof(Audioszenen[i].Datei));
-            Filestream.ReadBuffer(Audioszenen[i].Dauer,sizeof(Audioszenen[i].Dauer));
-            Filestream.ReadBuffer(Audioszenen[i].Volume,sizeof(Audioszenen[i].Volume));
-            Filestream.ReadBuffer(Audioszenen[i].FadeinTime,sizeof(Audioszenen[i].FadeinTime));
-            Filestream.ReadBuffer(Audioszenen[i].FadeoutTime,sizeof(Audioszenen[i].FadeoutTime));
-            if projektprogrammversionint>=432 then
-            begin
-              Filestream.ReadBuffer(Audioszenen[i].matrix,sizeof(Audioszenen[i].matrix));
-              Filestream.ReadBuffer(Audioszenen[i].Kanalsettings,sizeof(Audioszenen[i].Kanalsettings));
-            end else
-            begin
-              Audioszenen[i].matrix[0][0]:=1;
-              Audioszenen[i].matrix[0][1]:=0;
-              Audioszenen[i].matrix[0][2]:=0;
-              Audioszenen[i].matrix[0][3]:=0;
-              Audioszenen[i].matrix[0][4]:=0;
-              Audioszenen[i].matrix[0][5]:=0;
-              Audioszenen[i].matrix[0][6]:=0;
-              Audioszenen[i].matrix[0][7]:=0;
-              Audioszenen[i].matrix[1][0]:=0;
-              Audioszenen[i].matrix[1][1]:=0;
-              Audioszenen[i].matrix[1][2]:=1;
-              Audioszenen[i].matrix[1][3]:=0;
-              Audioszenen[i].matrix[1][4]:=0;
-              Audioszenen[i].matrix[1][5]:=0;
-              Audioszenen[i].matrix[1][6]:=0;
-              Audioszenen[i].matrix[1][7]:=0;
-              Audioszenen[i].Kanalsettings[0]:=0;
-              Audioszenen[i].Kanalsettings[1]:=0;
-              Audioszenen[i].Kanalsettings[2]:=0;
-              Audioszenen[i].Kanalsettings[3]:=0;
-              Audioszenen[i].Kanalsettings[4]:=0;
-              Audioszenen[i].Kanalsettings[5]:=0;
-              Audioszenen[i].Kanalsettings[6]:=0;
-              Audioszenen[i].Kanalsettings[7]:=0;
-            end;
-            if projektprogrammversionint>=439 then
-              Filestream.ReadBuffer(Audioszenen[i].Category,sizeof(Audioszenen[i].Category));
-          end;
-        end else
-        begin
-          for i:=0 to Count-1 do
-          begin
-            Filestream.ReadBuffer(AudioszeneOld,sizeof(AudioszeneOld));
-
-            Audioszenen[i].ID:=AudioszeneOld.ID;
-            Audioszenen[i].Name:=AudioszeneOld.Name;
-            Audioszenen[i].Beschreibung:=AudioszeneOld.Beschreibung;
-            Audioszenen[i].Datei:=AudioszeneOld.Datei;
-            Audioszenen[i].Dauer:=AudioszeneOld.Dauer;
-            Audioszenen[i].Volume:=1;
-            Audioszenen[i].FadeinTime:=0;
-            Audioszenen[i].FadeoutTime:=0;
-
-            Audioszenen[i].matrix[0][0]:=1;
-            Audioszenen[i].matrix[0][1]:=0;
-            Audioszenen[i].matrix[0][2]:=0;
-            Audioszenen[i].matrix[0][3]:=0;
-            Audioszenen[i].matrix[0][4]:=0;
-            Audioszenen[i].matrix[0][5]:=0;
-            Audioszenen[i].matrix[0][6]:=0;
-            Audioszenen[i].matrix[0][7]:=0;
-            Audioszenen[i].matrix[1][0]:=0;
-            Audioszenen[i].matrix[1][1]:=0;
-            Audioszenen[i].matrix[1][2]:=1;
-            Audioszenen[i].matrix[1][3]:=0;
-            Audioszenen[i].matrix[1][4]:=0;
-            Audioszenen[i].matrix[1][5]:=0;
-            Audioszenen[i].matrix[1][6]:=0;
-            Audioszenen[i].matrix[1][7]:=0;
-            Audioszenen[i].Kanalsettings[0]:=0;
-            Audioszenen[i].Kanalsettings[1]:=0;
-            Audioszenen[i].Kanalsettings[2]:=0;
-            Audioszenen[i].Kanalsettings[3]:=0;
-            Audioszenen[i].Kanalsettings[4]:=0;
-            Audioszenen[i].Kanalsettings[5]:=0;
-            Audioszenen[i].Kanalsettings[6]:=0;
-            Audioszenen[i].Kanalsettings[7]:=0;
-          end;
-        end;
-
-     	  Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(Bewegungsszenen,Count);
-        setlength(BewegungsszenenZeit,Count);
-        setlength(BewegungsszenenAktiv,Count);
-        for i:=0 to Count-1 do
-        begin
-          Filestream.ReadBuffer(Bewegungsszenen[i].ID,sizeof(Bewegungsszenen[i].ID));
-          Filestream.ReadBuffer(Bewegungsszenen[i].Name,sizeof(Bewegungsszenen[i].Name));
-          Filestream.ReadBuffer(Bewegungsszenen[i].Beschreibung,sizeof(Bewegungsszenen[i].Beschreibung));
-          if projektprogrammversionint>=428 then
-            Filestream.ReadBuffer(Bewegungsszenen[i].IsBeatControlled,sizeof(Bewegungsszenen[i].IsBeatControlled));
-          Filestream.ReadBuffer(Bewegungsszenen[i].figur,sizeof(Bewegungsszenen[i].figur));
-          Filestream.ReadBuffer(Bewegungsszenen[i].dauer,sizeof(Bewegungsszenen[i].dauer));
-          if projektprogrammversionint>=417 then
-            Filestream.ReadBuffer(Bewegungsszenen[i].DontFade,sizeof(Bewegungsszenen[i].DontFade));
-          Filestream.ReadBuffer(Bewegungsszenen[i].repeats,sizeof(Bewegungsszenen[i].repeats));
-          Filestream.ReadBuffer(Bewegungsszenen[i].identischespurgeschwidigkeit,sizeof(Bewegungsszenen[i].identischespurgeschwidigkeit));
-          Filestream.ReadBuffer(Bewegungsszenen[i].startpositionrelativ,sizeof(Bewegungsszenen[i].startpositionrelativ));
-          if projektprogrammversionint>=439 then
-            Filestream.ReadBuffer(Bewegungsszenen[i].Category,sizeof(Bewegungsszenen[i].Category));
-
-     	    Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(Bewegungsszenen[i].Devices,Count2);
-          setlength(BewegungsszenenZeit[i],Count2);
-          setlength(BewegungsszenenAktiv[i].Zeit,Count2);
-          setlength(BewegungsszenenAktiv[i].Repeats,Count2);
-          setlength(BewegungsszenenAktiv[i].Position,Count2);
-          for j:=0 to Count2-1 do
-          begin
-            Filestream.ReadBuffer(Bewegungsszenen[i].Devices[j].ID,sizeof(Bewegungsszenen[i].Devices[j].ID));
-
-            Filestream.ReadBuffer(Count3,sizeof(Count3));
-            setlength(Bewegungsszenen[i].Devices[j].DeviceChannel,Count3);
-            setlength(Bewegungsszenen[i].Devices[j].Szenen,Count3);
-            setlength(BewegungsszenenZeit[i][j],Count3);
-            setlength(BewegungsszenenAktiv[i].Zeit[j],Count3);
-            setlength(BewegungsszenenAktiv[i].Repeats[j],Count3);
-            setlength(BewegungsszenenAktiv[i].Position[j],Count3);
-            for k:=0 to Count3-1 do
-            begin
-              if projektprogrammversionint>=425 then
-                Filestream.ReadBuffer(Bewegungsszenen[i].Devices[j].DeviceChannel[k],sizeof(Bewegungsszenen[i].Devices[j].DeviceChannel[k]))
-              else
-              begin
-                Filestream.ReadBuffer(tempchannel_pre425,sizeof(tempchannel_pre425));
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].ChanActive:=tempchannel_pre425.ChanActive;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].invertx:=tempchannel_pre425.invertx;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].inverty:=tempchannel_pre425.inverty;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].mittelpunktx:=tempchannel_pre425.mittelpunktx;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].mittelpunkty:=tempchannel_pre425.mittelpunkty;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].scalex:=tempchannel_pre425.scalex;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].scaley:=tempchannel_pre425.scaley;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].x:=tempchannel_pre425.x;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].y:=tempchannel_pre425.y;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].mixXY:=tempchannel_pre425.mixXY;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].offset:=tempchannel_pre425.offset;
-                Bewegungsszenen[i].Devices[j].DeviceChannel[k].delay:=0;
-              end;
-
-
-              Filestream.ReadBuffer(Count4,sizeof(Count4));
-              setlength(Bewegungsszenen[i].Devices[j].Szenen[k],Count4);
-              for l:=0 to Count4-1 do
-              begin
-                Filestream.ReadBuffer(Bewegungsszenen[i].Devices[j].Szenen[k][l],sizeof(Bewegungsszenen[i].Devices[j].Szenen[k][l]));
-              end;
-            end;
-          end;
+          Filestream.ReadBuffer(tempchannel_pre425,sizeof(tempchannel_pre425));
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].ChanActive:=tempchannel_pre425.ChanActive;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].invertx:=tempchannel_pre425.invertx;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].inverty:=tempchannel_pre425.inverty;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].mittelpunktx:=tempchannel_pre425.mittelpunktx;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].mittelpunkty:=tempchannel_pre425.mittelpunkty;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].scalex:=tempchannel_pre425.scalex;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].scaley:=tempchannel_pre425.scaley;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].x:=tempchannel_pre425.x;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].y:=tempchannel_pre425.y;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].mixXY:=tempchannel_pre425.mixXY;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].offset:=tempchannel_pre425.offset;
+          Bewegungsszenen[i].Devices[j].DeviceChannel[k].delay:=0;
         end;
 
-        if projektprogrammversionint>=418 then
+
+        Filestream.ReadBuffer(Count4,sizeof(Count4));
+        setlength(Bewegungsszenen[i].Devices[j].Szenen[k],Count4);
+        for l:=0 to Count4-1 do
         begin
-       	  Filestream.ReadBuffer(Count,sizeof(Count));
-          setlength(Befehle2,Count);
-          for i:=0 to Count-1 do
-        	begin
-            Filestream.ReadBuffer(Befehle2[i].ID,sizeof(Befehle2[i].ID));
-            Filestream.ReadBuffer(Befehle2[i].Typ,sizeof(Befehle2[i].Typ));
-            Filestream.ReadBuffer(Befehle2[i].Name,sizeof(Befehle2[i].Name));
-            Filestream.ReadBuffer(Befehle2[i].Beschreibung,sizeof(Befehle2[i].Beschreibung));
-            Filestream.ReadBuffer(Befehle2[i].OnValue,sizeof(Befehle2[i].OnValue));
-            if projektprogrammversionint>=456 then
-              Filestream.ReadBuffer(Befehle2[i].SwitchValue,sizeof(Befehle2[i].SwitchValue))
-            else
-              Befehle2[i].SwitchValue:=Befehle2[i].OnValue;
-            if projektprogrammversionint>=462 then
-              Filestream.ReadBuffer(Befehle2[i].InvertSwitchValue,sizeof(Befehle2[i].InvertSwitchValue));
-            Filestream.ReadBuffer(Befehle2[i].OffValue,sizeof(Befehle2[i].OffValue));
-            if projektprogrammversionint>=457 then
-              Filestream.ReadBuffer(Befehle2[i].ScaleValue,sizeof(Befehle2[i].ScaleValue));
-
-            if projektprogrammversionint>=438 then
-              Filestream.ReadBuffer(Befehle2[i].RunOnProjectLoad,sizeof(Befehle2[i].RunOnProjectLoad));
-            if projektprogrammversionint>=439 then
-              Filestream.ReadBuffer(Befehle2[i].Category,sizeof(Befehle2[i].Category));
-
-       	    Filestream.ReadBuffer(Count2,sizeof(Count2));
-            setlength(Befehle2[i].ArgInteger,Count2);
-            for j:=0 to Count2-1 do
-            begin
-              Filestream.ReadBuffer(Befehle2[i].ArgInteger[j],sizeof(Befehle2[i].ArgInteger[j]));
-            end;
-         	  Filestream.ReadBuffer(Count2,sizeof(Count2));
-            setlength(Befehle2[i].ArgString,Count2);
-            for j:=0 to Count2-1 do
-            begin
-              Filestream.ReadBuffer(Befehle2[i].ArgString[j],sizeof(Befehle2[i].ArgString[j]));
-            end;
-         	  Filestream.ReadBuffer(Count2,sizeof(Count2));
-            setlength(Befehle2[i].ArgGUID,Count2);
-            for j:=0 to Count2-1 do
-            begin
-              Filestream.ReadBuffer(Befehle2[i].ArgGUID[j],sizeof(Befehle2[i].ArgGUID[j]));
-            end;
-          end;
-        end else
-        begin
-          // Nur aus Kompatibilitätsgründen
-     	    Filestream.ReadBuffer(Count,sizeof(Count));
-          setlength(OldBefehle,Count);
-          for i:=0 to Count-1 do
-          begin
-            Filestream.ReadBuffer(OldBefehle[i],sizeof(OldBefehle[i]));
-          end;
-          ConvertBefehlToBefehl2;
+          Filestream.ReadBuffer(Bewegungsszenen[i].Devices[j].Szenen[k][l],sizeof(Bewegungsszenen[i].Devices[j].Szenen[k][l]));
         end;
+      end;
+    end;
+  end;
 
-     	  Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(Kompositionsszenen,Count);
-        for i:=0 to Count-1 do
-      	begin
-          Filestream.ReadBuffer(Kompositionsszenen[i].ID,sizeof(Kompositionsszenen[i].ID));
-          Filestream.ReadBuffer(Kompositionsszenen[i].Name,sizeof(Kompositionsszenen[i].Name));
-          Filestream.ReadBuffer(Kompositionsszenen[i].Beschreibung,sizeof(Kompositionsszenen[i].Beschreibung));
-          if projektprogrammversionint>=439 then
-            Filestream.ReadBuffer(Kompositionsszenen[i].Category,sizeof(Kompositionsszenen[i].Category));
+  if projektprogrammversionint>=418 then
+  begin
+    Filestream.ReadBuffer(Count,sizeof(Count));
+    setlength(Befehle2,Count);
+    for i:=0 to Count-1 do
+    begin
+      Filestream.ReadBuffer(Befehle2[i].ID,sizeof(Befehle2[i].ID));
+      Filestream.ReadBuffer(Befehle2[i].Typ,sizeof(Befehle2[i].Typ));
+      Filestream.ReadBuffer(Befehle2[i].Name,sizeof(Befehle2[i].Name));
+      Filestream.ReadBuffer(Befehle2[i].Beschreibung,sizeof(Befehle2[i].Beschreibung));
+      Filestream.ReadBuffer(Befehle2[i].OnValue,sizeof(Befehle2[i].OnValue));
+      if projektprogrammversionint>=456 then
+        Filestream.ReadBuffer(Befehle2[i].SwitchValue,sizeof(Befehle2[i].SwitchValue))
+      else
+        Befehle2[i].SwitchValue:=Befehle2[i].OnValue;
+      if projektprogrammversionint>=462 then
+        Filestream.ReadBuffer(Befehle2[i].InvertSwitchValue,sizeof(Befehle2[i].InvertSwitchValue));
+      Filestream.ReadBuffer(Befehle2[i].OffValue,sizeof(Befehle2[i].OffValue));
+      if projektprogrammversionint>=457 then
+        Filestream.ReadBuffer(Befehle2[i].ScaleValue,sizeof(Befehle2[i].ScaleValue));
 
-          Filestream.ReadBuffer(Count2, sizeof(Count2));
-          setlength(Kompositionsszenen[i].IDs,Count2);
-          setlength(Kompositionsszenen[i].StopScene,Count2);
-          for j:=0 to Count2-1 do
-          begin
-            Filestream.ReadBuffer(Kompositionsszenen[i].IDs[j],sizeof(Kompositionsszenen[i].IDs[j]));
-            if projektprogrammversionint>=454 then
-              Filestream.ReadBuffer(Kompositionsszenen[i].StopScene[j],sizeof(Kompositionsszenen[i].StopScene[j]));
-          end;
-        end;
+      if projektprogrammversionint>=438 then
+        Filestream.ReadBuffer(Befehle2[i].RunOnProjectLoad,sizeof(Befehle2[i].RunOnProjectLoad));
+      if projektprogrammversionint>=439 then
+        Filestream.ReadBuffer(Befehle2[i].Category,sizeof(Befehle2[i].Category));
 
-        FileStream.ReadBuffer(Count,sizeof(Count));
-        Setlength(SzenenablaufArray,Count);
-        for i:=0 to Count-1 do
-        begin
-          Filestream.ReadBuffer(text,sizeof(text));
-          FileStream.ReadBuffer(Count2,sizeof(Count2));
-          Setlength(SzenenablaufArray[i],Count2);
-          for j:=0 to Count2-1 do
-            FileStream.ReadBuffer(SzenenablaufArray[i][j],sizeof(SzenenablaufArray[i][j]));
-        end;
+      Filestream.ReadBuffer(Count2,sizeof(Count2));
+      setlength(Befehle2[i].ArgInteger,Count2);
+      for j:=0 to Count2-1 do
+      begin
+        Filestream.ReadBuffer(Befehle2[i].ArgInteger[j],sizeof(Befehle2[i].ArgInteger[j]));
+      end;
+      Filestream.ReadBuffer(Count2,sizeof(Count2));
+      setlength(Befehle2[i].ArgString,Count2);
+      for j:=0 to Count2-1 do
+      begin
+        Filestream.ReadBuffer(Befehle2[i].ArgString[j],sizeof(Befehle2[i].ArgString[j]));
+      end;
+      Filestream.ReadBuffer(Count2,sizeof(Count2));
+      setlength(Befehle2[i].ArgGUID,Count2);
+      for j:=0 to Count2-1 do
+      begin
+        Filestream.ReadBuffer(Befehle2[i].ArgGUID[j],sizeof(Befehle2[i].ArgGUID[j]));
+      end;
+    end;
+  end else
+  begin
+    // Nur aus Kompatibilitätsgründen
+    Filestream.ReadBuffer(Count,sizeof(Count));
+    setlength(OldBefehle,Count);
+    for i:=0 to Count-1 do
+    begin
+      Filestream.ReadBuffer(OldBefehle[i],sizeof(OldBefehle[i]));
+    end;
+    ConvertBefehlToBefehl2;
+  end;
+
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(Kompositionsszenen,Count);
+  for i:=0 to Count-1 do
+  begin
+    Filestream.ReadBuffer(Kompositionsszenen[i].ID,sizeof(Kompositionsszenen[i].ID));
+    Filestream.ReadBuffer(Kompositionsszenen[i].Name,sizeof(Kompositionsszenen[i].Name));
+    Filestream.ReadBuffer(Kompositionsszenen[i].Beschreibung,sizeof(Kompositionsszenen[i].Beschreibung));
+    if projektprogrammversionint>=439 then
+      Filestream.ReadBuffer(Kompositionsszenen[i].Category,sizeof(Kompositionsszenen[i].Category));
+
+    Filestream.ReadBuffer(Count2, sizeof(Count2));
+    setlength(Kompositionsszenen[i].IDs,Count2);
+    setlength(Kompositionsszenen[i].StopScene,Count2);
+    for j:=0 to Count2-1 do
+    begin
+      Filestream.ReadBuffer(Kompositionsszenen[i].IDs[j],sizeof(Kompositionsszenen[i].IDs[j]));
+      if projektprogrammversionint>=454 then
+        Filestream.ReadBuffer(Kompositionsszenen[i].StopScene[j],sizeof(Kompositionsszenen[i].StopScene[j]));
+    end;
+  end;
+
+  FileStream.ReadBuffer(Count,sizeof(Count));
+  Setlength(SzenenablaufArray,Count);
+  for i:=0 to Count-1 do
+  begin
+    Filestream.ReadBuffer(text,sizeof(text));
+    FileStream.ReadBuffer(Count2,sizeof(Count2));
+    Setlength(SzenenablaufArray[i],Count2);
+    for j:=0 to Count2-1 do
+      FileStream.ReadBuffer(SzenenablaufArray[i][j],sizeof(SzenenablaufArray[i][j]));
+  end;
   // Ende Szenenöffnen
 
     // Timeline öffnen
@@ -6609,25 +6763,25 @@ begin
     RefreshSplashText;
   end;
 
-    		Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(Effekttimeline,Count);
-        for i:=0 to Count-1 do
-      	begin
-        	Filestream.ReadBuffer(Effekttimeline[i].name,sizeof(Effekttimeline[i].name));
-        	Filestream.ReadBuffer(Count2,sizeof(Count2));
-          setlength(Effekttimeline[i].value,Count2);
-          for j:=0 to Count2-1 do
-          	Filestream.ReadBuffer(Effekttimeline[i].value[j],sizeof(Effekttimeline[i].value[j]));
-        	Filestream.ReadBuffer(Effekttimeline[i].checked,sizeof(Effekttimeline[i].checked));
-      	  Filestream.ReadBuffer(Effekttimeline[i].steps,sizeof(Effekttimeline[i].steps));
-        	Filestream.ReadBuffer(Effekttimeline[i].blendzeit,sizeof(Effekttimeline[i].blendzeit));
-      	  Filestream.ReadBuffer(Effekttimeline[i].blitzfunktion,sizeof(Effekttimeline[i].blitzfunktion));
-        	Filestream.ReadBuffer(Effekttimeline[i].blitzzeit,sizeof(Effekttimeline[i].blitzzeit));
-      	  Filestream.ReadBuffer(Effekttimeline[i].pendeln,sizeof(Effekttimeline[i].pendeln));
-        	Filestream.ReadBuffer(Effekttimeline[i].zufall,sizeof(Effekttimeline[i].zufall));
-        end;
-    // Ende Timeline öffnen
-    // Skripttimer öffnen
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(Effekttimeline,Count);
+  for i:=0 to Count-1 do
+  begin
+    Filestream.ReadBuffer(Effekttimeline[i].name,sizeof(Effekttimeline[i].name));
+    Filestream.ReadBuffer(Count2,sizeof(Count2));
+    setlength(Effekttimeline[i].value,Count2);
+    for j:=0 to Count2-1 do
+      Filestream.ReadBuffer(Effekttimeline[i].value[j],sizeof(Effekttimeline[i].value[j]));
+    Filestream.ReadBuffer(Effekttimeline[i].checked,sizeof(Effekttimeline[i].checked));
+    Filestream.ReadBuffer(Effekttimeline[i].steps,sizeof(Effekttimeline[i].steps));
+    Filestream.ReadBuffer(Effekttimeline[i].blendzeit,sizeof(Effekttimeline[i].blendzeit));
+    Filestream.ReadBuffer(Effekttimeline[i].blitzfunktion,sizeof(Effekttimeline[i].blitzfunktion));
+    Filestream.ReadBuffer(Effekttimeline[i].blitzzeit,sizeof(Effekttimeline[i].blitzzeit));
+    Filestream.ReadBuffer(Effekttimeline[i].pendeln,sizeof(Effekttimeline[i].pendeln));
+    Filestream.ReadBuffer(Effekttimeline[i].zufall,sizeof(Effekttimeline[i].zufall));
+  end;
+  // Ende Timeline öffnen
+  // Skripttimer öffnen
 	if not startingup then
   begin
 	  inprogress.filename.Caption:=_('Lese Daten ein... Skripttimer');
@@ -6638,35 +6792,35 @@ begin
     RefreshSplashText;
   end;
 
-    		Filestream.ReadBuffer(Count,sizeof(Count));
-        setlength(AblaufTimer,Count);
-        for i:=0 to Count-1 do
-      	begin
-          Filestream.ReadBuffer(AblaufTimer[i].Aktiviert,sizeof(AblaufTimer[i].Aktiviert));
-          Filestream.ReadBuffer(AblaufTimer[i].Name,sizeof(AblaufTimer[i].Name));
-          Filestream.ReadBuffer(AblaufTimer[i].Beschreibung,sizeof(AblaufTimer[i].Beschreibung));
-          Filestream.ReadBuffer(AblaufTimer[i].Datum,sizeof(AblaufTimer[i].Datum));
-          Filestream.ReadBuffer(AblaufTimer[i].Uhrzeit,sizeof(AblaufTimer[i].Uhrzeit));
-          Filestream.ReadBuffer(AblaufTimer[i].TimerTyp,sizeof(AblaufTimer[i].TimerTyp));
-          Filestream.ReadBuffer(AblaufTimer[i].Skriptdatei,sizeof(AblaufTimer[i].Skriptdatei));
-          Filestream.ReadBuffer(AblaufTimer[i].LoadTyp,sizeof(AblaufTimer[i].LoadTyp));
-          Filestream.ReadBuffer(AblaufTimer[i].LoadID,sizeof(AblaufTimer[i].LoadID));
-          if projektprogrammversionint>=482 then
-          begin
-            Filestream.ReadBuffer(AblaufTimer[i].Weekday,sizeof(AblaufTimer[i].Weekday));
-          end else
-          begin
-            AblaufTimer[i].Weekday[1]:=true;
-            AblaufTimer[i].Weekday[2]:=true;
-            AblaufTimer[i].Weekday[3]:=true;
-            AblaufTimer[i].Weekday[4]:=true;
-            AblaufTimer[i].Weekday[5]:=true;
-            AblaufTimer[i].Weekday[6]:=true;
-            AblaufTimer[i].Weekday[7]:=true;
-          end;
-        end;
-    // Ende Skripttimer öffnen
-    // Hotkeys öffnen
+  Filestream.ReadBuffer(Count,sizeof(Count));
+  setlength(AblaufTimer,Count);
+  for i:=0 to Count-1 do
+  begin
+    Filestream.ReadBuffer(AblaufTimer[i].Aktiviert,sizeof(AblaufTimer[i].Aktiviert));
+    Filestream.ReadBuffer(AblaufTimer[i].Name,sizeof(AblaufTimer[i].Name));
+    Filestream.ReadBuffer(AblaufTimer[i].Beschreibung,sizeof(AblaufTimer[i].Beschreibung));
+    Filestream.ReadBuffer(AblaufTimer[i].Datum,sizeof(AblaufTimer[i].Datum));
+    Filestream.ReadBuffer(AblaufTimer[i].Uhrzeit,sizeof(AblaufTimer[i].Uhrzeit));
+    Filestream.ReadBuffer(AblaufTimer[i].TimerTyp,sizeof(AblaufTimer[i].TimerTyp));
+    Filestream.ReadBuffer(AblaufTimer[i].Skriptdatei,sizeof(AblaufTimer[i].Skriptdatei));
+    Filestream.ReadBuffer(AblaufTimer[i].LoadTyp,sizeof(AblaufTimer[i].LoadTyp));
+    Filestream.ReadBuffer(AblaufTimer[i].LoadID,sizeof(AblaufTimer[i].LoadID));
+    if projektprogrammversionint>=482 then
+    begin
+      Filestream.ReadBuffer(AblaufTimer[i].Weekday,sizeof(AblaufTimer[i].Weekday));
+    end else
+    begin
+      AblaufTimer[i].Weekday[1]:=true;
+      AblaufTimer[i].Weekday[2]:=true;
+      AblaufTimer[i].Weekday[3]:=true;
+      AblaufTimer[i].Weekday[4]:=true;
+      AblaufTimer[i].Weekday[5]:=true;
+      AblaufTimer[i].Weekday[6]:=true;
+      AblaufTimer[i].Weekday[7]:=true;
+    end;
+  end;
+  // Ende Skripttimer öffnen
+  // Hotkeys öffnen
 	if not startingup then
   begin
 	  inprogress.filename.Caption:=_('Lese Daten ein... Hotkeys');
@@ -6740,26 +6894,26 @@ begin
     ConvertHotkeysToHotkeys2;
   end;
 
-        if EnableHotKeys then
-        begin
-          for i:=0 to length(TastencodeArray)-1 do
-          begin
-            ShortCutToKey(TastencodeArray[i].Hotkey,Key,Shift);
-            ShiftNumber:=0;
-            if Shift=[ssAlt] then
-              ShiftNumber:=1
-            else if Shift=[ssCtrl] then
-              ShiftNumber:=ShiftNumber+2
-            else if Shift=[ssShift] then
-            begin
-              ShiftNumber:=ShiftNumber+4;
-            end;
-          end;
-        end;
+  if EnableHotKeys then
+  begin
+    for i:=0 to length(TastencodeArray)-1 do
+    begin
+      ShortCutToKey(TastencodeArray[i].Hotkey,Key,Shift);
+      ShiftNumber:=0;
+      if Shift=[ssAlt] then
+        ShiftNumber:=1
+      else if Shift=[ssCtrl] then
+        ShiftNumber:=ShiftNumber+2
+      else if Shift=[ssShift] then
+      begin
+        ShiftNumber:=ShiftNumber+4;
+      end;
+    end;
+  end;
 
-        ShortCutChecker.Enabled:=true;
-      // Ende Hotkey laden
-      // Nebelmaschineneinstellungen laden
+  ShortCutChecker.Enabled:=true;
+  // Ende Hotkey laden
+  // Nebelmaschineneinstellungen laden
     if not startingup then
     begin
       inprogress.filename.Caption:=_('Lese Daten ein... Nebelmaschine');
@@ -8702,6 +8856,138 @@ begin
       end;
     end;
 // Ende NodeControl
+// XTouchControl laden
+    if projektprogrammversionint>=485 then
+    begin
+      if not startingup then
+      begin
+        inprogress.filename.Caption:=_('Lese Daten ein... XTouchControl');
+        inprogress.Refresh;
+      end else
+      begin
+        SplashCaptioninfo(_('Lese Daten ein...XTouchControl'));
+        RefreshSplashText;
+      end;
+
+      Filestream.ReadBuffer(Count,sizeof(Count));
+      setlength(mainform.XTouchPCDDevicesOrGroups, Count);
+      for i:=0 to Count-1 do
+      begin
+        Filestream.ReadBuffer(mainform.XTouchPCDDevicesOrGroups[i].ID,sizeof(mainform.XTouchPCDDevicesOrGroups[i].ID));
+      end;
+      if projektprogrammversionint>=490 then
+      begin
+        Filestream.ReadBuffer(Count,sizeof(Count));
+        setlength(XTouchBefehle, Count);
+        if length(XTouchBefehle)<length(XTouchDevices) then
+          setlength(XTouchBefehle, length(XTouchDevices));
+        for i:=0 to Count-1 do
+        begin
+          for j:=0 to 17 do
+          begin
+            Filestream.ReadBuffer(XTouchBefehle[i][j].Typ,sizeof(XTouchBefehle[i][j].Typ));
+            Filestream.ReadBuffer(XTouchBefehle[i][j].OnValue,sizeof(XTouchBefehle[i][j].OnValue));
+            Filestream.ReadBuffer(XTouchBefehle[i][j].SwitchValue,sizeof(XTouchBefehle[i][j].SwitchValue));
+            Filestream.ReadBuffer(XTouchBefehle[i][j].InvertSwitchValue,sizeof(XTouchBefehle[i][j].InvertSwitchValue));
+            Filestream.ReadBuffer(XTouchBefehle[i][j].OffValue,sizeof(XTouchBefehle[i][j].OffValue));
+            Filestream.ReadBuffer(XTouchBefehle[i][j].ScaleValue,sizeof(XTouchBefehle[i][j].ScaleValue));
+            Filestream.ReadBuffer(Count2,sizeof(Count2));
+            setlength(XTouchBefehle[i][j].ArgInteger,Count2);
+            for k:=0 to Count2-1 do
+              Filestream.ReadBuffer(XTouchBefehle[i][j].ArgInteger[k],sizeof(XTouchBefehle[i][j].ArgInteger[k]));
+            Filestream.ReadBuffer(Count2,sizeof(Count2));
+            setlength(XTouchBefehle[i][j].ArgString,Count2);
+            for k:=0 to Count2-1 do
+              Filestream.ReadBuffer(XTouchBefehle[i][j].ArgString[k],sizeof(XTouchBefehle[i][j].ArgString[k]));
+            Filestream.ReadBuffer(Count2,sizeof(Count2));
+            setlength(XTouchBefehle[i][j].ArgGUID,Count2);
+            for k:=0 to Count2-1 do
+              Filestream.ReadBuffer(XTouchBefehle[i][j].ArgGUID[k],sizeof(XTouchBefehle[i][j].ArgGUID[k]));
+          end;
+        end;
+      end;
+    end;
+// Ende XTouchControl
+// CodeScene laden
+    if projektprogrammversionint>=491 then
+    begin
+      if not startingup then
+      begin
+        inprogress.filename.Caption:=_('Lese Daten ein... Code-Szenen');
+        inprogress.Refresh;
+      end else
+      begin
+        SplashCaptioninfo(_('Lese Daten ein...Code-Szenen'));
+        RefreshSplashText;
+      end;
+
+      Filestream.ReadBuffer(Count,sizeof(Count));
+      setlength(mainform.CodeScenes,Count);
+      for i:=0 to Count-1 do
+      begin
+        Filestream.ReadBuffer(mainform.CodeScenes[i].ID,sizeof(mainform.CodeScenes[i].ID));
+        Filestream.ReadBuffer(mainform.CodeScenes[i].Name,sizeof(mainform.CodeScenes[i].Name));
+        Filestream.ReadBuffer(mainform.CodeScenes[i].Beschreibung,sizeof(mainform.CodeScenes[i].Beschreibung));
+        Filestream.ReadBuffer(mainform.CodeScenes[i].Category,sizeof(mainform.CodeScenes[i].Category));
+        Filestream.ReadBuffer(Count2,sizeof(Count2));
+        setlength(mainform.CodeScenes[i].Code,Count2);
+        Filestream.ReadBuffer(Pointer(mainform.CodeScenes[i].Code)^, Count2);
+      end;
+    end;
+// Ende CodeScene
+// StreamDeck laden
+    if projektprogrammversionint>=491 then
+    begin
+      if not startingup then
+      begin
+        inprogress.filename.Caption:=_('Lese Daten ein... StreamDeck');
+        inprogress.Refresh;
+      end else
+      begin
+        SplashCaptioninfo(_('Lese Daten ein...StreamDeck'));
+        RefreshSplashText;
+      end;
+
+      Filestream.ReadBuffer(Count,sizeof(Count));
+      setlength(mainform.ElgatoStreamDeckArray,Count);
+      for i:=0 to Count-1 do
+      begin
+        Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Serial,sizeof(mainform.ElgatoStreamDeckArray[i].Serial));
+        Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].ButtonCount,sizeof(mainform.ElgatoStreamDeckArray[i].ButtonCount));
+        Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Brightness,sizeof(mainform.ElgatoStreamDeckArray[i].Brightness));
+        Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton,sizeof(mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton));
+        for j:=0 to 31 do
+        begin
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].ButtonType,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].ButtonType));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelX,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelX));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].KontrollpanelY));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DeviceOrGroupID));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].DataInChannel));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].UseHoldToChange,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].UseHoldToChange));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Increment,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Increment));
+
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.Typ,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.Typ));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OnValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OnValue));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.SwitchValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.SwitchValue));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.InvertSwitchValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.InvertSwitchValue));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OffValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.OffValue));
+          Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ScaleValue,sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ScaleValue));
+          Filestream.ReadBuffer(Count2,sizeof(Count2));
+          setlength(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger,Count2);
+          for k:=0 to Count2-1 do
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgInteger[k]));
+          Filestream.ReadBuffer(Count2,sizeof(Count2));
+          setlength(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString,Count2);
+          for k:=0 to Count2-1 do
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgString[k]));
+          Filestream.ReadBuffer(Count2,sizeof(Count2));
+          setlength(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID,Count2);
+          for k:=0 to Count2-1 do
+            Filestream.ReadBuffer(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID[k],sizeof(mainform.ElgatoStreamDeckArray[i].Buttons[j].Befehl.ArgGUID[k]));
+        end;
+      end;
+    end;
+// Ende StreamDeck
   end;
 
 	if not startingup then
@@ -8951,6 +9237,28 @@ begin
 
     if not startingup then
     begin
+      inprogress.filename.Caption:=_('Sende Öffnen-Befehl...XTouchControl');
+      inprogress.Refresh;
+    end else
+    begin
+      SplashCaptioninfo(_('Sende Öffnen-Befehl... XTouchControl'));
+      RefreshSplashText;
+    end;
+    xtouchcontrolform.MSGOpen;
+
+    if not startingup then
+    begin
+      inprogress.filename.Caption:=_('Sende Öffnen-Befehl...StreamDeckControl');
+      inprogress.Refresh;
+    end else
+    begin
+      SplashCaptioninfo(_('Sende Öffnen-Befehl... StreamDeckControl'));
+      RefreshSplashText;
+    end;
+    elgatostreamdeckform.MSGOpen;
+
+    if not startingup then
+    begin
       inprogress.filename.Caption:=_('Aktualisiere Hauptprogramm');
       inprogress.ProgressBar1.Position:=90;
       inprogress.Refresh;
@@ -9143,6 +9451,32 @@ begin
       StartBefehl(Befehle2[i].ID);
   end;
 
+  // Code-Szenen initialisieren
+  if not startingup then
+  begin
+    inprogress.filename.Caption:=_('Initialisiere Code-Szenen');
+    inprogress.Refresh;
+  end else
+  begin
+    SplashCaptioninfo(_('Initialisiere Code-Szenen'));
+    RefreshSplashText;
+  end;
+  for i:=0 to length(codescenes)-1 do
+  begin
+    InitCodeScene(codescenes[i].ID);
+  end;
+
+
+  if not startingup then
+  begin
+    inprogress.filename.Caption:=_('Fertig');
+    inprogress.Refresh;
+  end else
+  begin
+    SplashCaptioninfo(_('Fertig'));
+    RefreshSplashText;
+  end;
+
   if not startingup then
 	  inprogress.Hide;
 
@@ -9297,8 +9631,10 @@ begin
     gotosystray:=false;
   end;
 
+{
   if BeginValueBackups then
     CreateValueBackup;
+}
 
   if (autolocktime>0) then
   begin
@@ -10081,6 +10417,280 @@ end;
 
 // Hier kommen die Threads
 //------------------------------------------------------------------------------
+
+{ HelperThread }
+
+constructor THelperThread.Create();
+begin
+  inherited create(false);
+  Priority := tpIdle;
+  FreeOnTerminate := true;
+end;
+
+procedure THelperThread.Execute;
+var
+  DeviceIndex, ButtonIndex, w:Word;
+  TxBuffer: array of byte;
+  HidReportA:TReportA;
+  HidReportB:TReportB;
+  HidReportC:TReportC;
+  WrittenPayloadBytes, RemainingPayloadBytes, PacketCounter:Cardinal;
+  BytesWritten:DWORD;
+  PID:Word;
+begin
+  inherited;
+
+  repeat
+    try
+      // Transmit Data to Elgato StreamDeck
+      for DeviceIndex:=0 to length(elgatostreamdeckform.TotalPayloadBuffer)-1 do
+      begin
+        if (DeviceIndex<length(mainform.ElgatoStreamDeckArray)) and mainform.ElgatoStreamDeckArray[DeviceIndex].Online and (DeviceIndex<length(elgatostreamdeckform.TotalPayloadBuffer)) then
+        for ButtonIndex:=0 to length(elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex])-1 do
+        begin
+          if elgatostreamdeckform.TotalPayloadBuffer_ReadyToSend[DeviceIndex][ButtonIndex] then
+          begin
+            // reset ReadyToSend_Flag
+            elgatostreamdeckform.TotalPayloadBuffer_ReadyToSend[DeviceIndex][ButtonIndex]:=false;
+
+            // now transmit the byte-array to Stream Deck Device
+            WrittenPayloadBytes:=0;
+            RemainingPayloadBytes:=length(elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex]);
+            PacketCounter:=0;
+
+            PID:=mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Attributes.ProductID;
+
+            {
+            StreamDeck Orig, PID 0060, CmdSet v1, BMP, 72x72 Pixel, Header 16 Byte, Image Pagesize 8191 Byte, FeatureReportSize 17 Byte // maybe 7819 instead of 8191
+            -----------------
+            StreamDeck Mini, PID 0063, CmdSet v1, BMP, 80x80 Pixel, Header 16 Byte, Image Pagesize 1024 Byte, FeatureReportSize 17 Byte
+            =================
+            StreamDeck V2,   PID 006D, CmdSet v2, JPG, 72x72 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
+            StreamDeck MK2,  PID 0080, CmdSet v2, JPG, 72x72 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
+            StreamDeck XL,   PID 006C, CmdSet v2, JPG, 96x96 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
+            }
+
+            if (PID=$0060) then
+            begin
+              // StreamDeck Orig
+
+              {
+                Set Key image:
+                  00 = static 02 (identifier)
+                  01 = static 01 (cmd to set image)
+                  02 = PageID + 1
+                  03 = 0x00
+                  04 = 0x00 = not the last message, 0x01 = last message
+                  05 = hex-value of button-id + 1
+                  06..15 = 0x00
+              }
+
+              setlength(TxBuffer, 8191);
+              repeat
+                if RemainingPayloadBytes>8175 then // 8191 Bytes minus 16 Bytes of Header
+                begin
+                  // not the last message
+                  TxBuffer[0]:=$02; // identifier
+                  TxBuffer[1]:=$01; // cmd to set image
+                  TxBuffer[2]:=PacketCounter; // PageID
+                  TxBuffer[3]:=$00; // has to be 0
+                  TxBuffer[4]:=$00; // 0x00 = not the last message, 0x01 = last message
+                  TxBuffer[5]:=ButtonIndex+1;
+
+                  // copy 8175 bytes of PayloadBuffer
+                  for w:=0 to 8174 do
+                  begin
+                    TxBuffer[16+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                  end;
+
+                  for w:=0 to 15 do
+                    HidReportA.Header[w]:=TxBuffer[w];
+                  for w:=0 to 8174 do
+                    HidReportA.Data[w]:=TxBuffer[16+w];
+                  mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportA, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                  WrittenPayloadBytes:=WrittenPayloadBytes+8175;
+                  RemainingPayloadBytes:=RemainingPayloadBytes-8175;
+                  PacketCounter:=PacketCounter+1;
+                end else
+                begin
+                  // data fits into single message / last message
+                  TxBuffer[0]:=$02; // identifier
+                  TxBuffer[1]:=$01; // cmd to set image
+                  TxBuffer[2]:=PacketCounter; // PageID
+                  TxBuffer[3]:=$00; // has to be 0
+                  TxBuffer[4]:=$01; // 0x00 = not the last message, 0x01 = last message
+                  TxBuffer[5]:=ButtonIndex+1;
+
+                  // copy remaining bytes of PayloadBuffer
+                  for w:=0 to RemainingPayloadBytes-1 do
+                  begin
+                    TxBuffer[16+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                  end;
+                  // fill remaining bytes with zeros
+                  for w:=RemainingPayloadBytes to 8174 do
+                  begin
+                    TxBuffer[w]:=0;
+                  end;
+
+                  for w:=0 to 15 do
+                    HidReportA.Header[w]:=TxBuffer[w];
+                  for w:=0 to 8174 do
+                    HidReportA.Data[w]:=TxBuffer[16+w];
+                  mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportA, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                  RemainingPayloadBytes:=0;
+                  PacketCounter:=PacketCounter+1;
+                end;
+              until RemainingPayloadBytes=0;
+            end else if (PID=$0063) then
+            begin
+              // StreamDeck Mini
+
+              {
+                Set Key image:
+                  00 = static 02 (identifier)
+                  01 = static 01 (cmd to set image)
+                  02 = PageID + 1
+                  03 = 0x00
+                  04 = 0x00 = not the last message, 0x01 = last message
+                  05 = hex-value of button-id + 1
+                  06..15 = 0x00
+              }
+
+              setlength(TxBuffer, 1024);
+              repeat
+                if RemainingPayloadBytes>1008 then // 1024 Bytes minus 16 Bytes of Header
+                begin
+                  // not the last message
+                  TxBuffer[0]:=$02; // identifier
+                  TxBuffer[1]:=$01; // cmd to set image
+                  TxBuffer[2]:=PacketCounter; // PageID
+                  TxBuffer[3]:=$00; // has to be 0
+                  TxBuffer[4]:=$00; // 0x00 = not the last message, 0x01 = last message
+                  TxBuffer[5]:=ButtonIndex+1;
+
+                  // copy 1008 bytes of PayloadBuffer
+                  for w:=0 to 1007 do
+                  begin
+                    TxBuffer[16+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                  end;
+
+                  for w:=0 to 15 do
+                    HidReportB.Header[w]:=TxBuffer[w];
+                  for w:=0 to 1007 do
+                    HidReportB.Data[w]:=TxBuffer[16+w];
+                  mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportB, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                  WrittenPayloadBytes:=WrittenPayloadBytes+1008;
+                  RemainingPayloadBytes:=RemainingPayloadBytes-1008;
+                  PacketCounter:=PacketCounter+1;
+                end else
+                begin
+                  // data fits into single message / last message
+                  TxBuffer[0]:=$02; // identifier
+                  TxBuffer[1]:=$01; // cmd to set image
+                  TxBuffer[2]:=PacketCounter; // PageID
+                  TxBuffer[3]:=$00; // has to be 0
+                  TxBuffer[4]:=$01; // 0x00 = not the last message, 0x01 = last message
+                  TxBuffer[5]:=ButtonIndex+1;
+
+                  // copy remaining bytes of PayloadBuffer
+                  for w:=0 to RemainingPayloadBytes-1 do
+                  begin
+                    TxBuffer[16+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                  end;
+                  // fill remaining bytes with zeros
+                  for w:=RemainingPayloadBytes to 1007 do
+                  begin
+                    TxBuffer[w]:=0;
+                  end;
+
+                  for w:=0 to 15 do
+                    HidReportB.Header[w]:=TxBuffer[w];
+                  for w:=0 to 1007 do
+                    HidReportB.Data[w]:=TxBuffer[16+w];
+                  mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportB, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                  RemainingPayloadBytes:=0;
+                  PacketCounter:=PacketCounter+1;
+                end;
+              until RemainingPayloadBytes=0;
+            end else if (PID=$006D) or (PID=$006C) or (PID=$0080) then
+            begin
+              // StreamDeck XL, V2, MK2
+              setlength(TxBuffer, 1024);
+              TxBuffer[0]:=$02; // identifier
+              TxBuffer[1]:=$07; // cmd to set image
+              TxBuffer[2]:=ButtonIndex; // hex-value of button-id
+              //TxBuffer[3]:=$00; // 0x00 = not the last message, 0x01 = last message
+              //TxBuffer[4]:=$F8; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016
+              //TxBuffer[5]:=$03;
+              //TxBuffer[6]:=$00; // 16-bit little-endian value of the zero-based iteration, if the image is split
+              //TxBuffer[7]:=$00;
+              repeat
+                if RemainingPayloadBytes>1016 then // 1024 Bytes minus 8 Bytes of Header
+                begin
+                  // not the last message
+                  TxBuffer[3]:=$00; // 0x00 = not the last message, 0x01 = last message
+                  TxBuffer[4]:=$F8; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016 bytes
+                  TxBuffer[5]:=$03;
+                  TxBuffer[6]:=PacketCounter AND 255;
+                  TxBuffer[7]:=(PacketCounter shr 8);
+
+                  // copy 1016 bytes of PayloadBuffer
+                  for w:=0 to 1015 do
+                  begin
+                    TxBuffer[8+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                  end;
+
+                  for w:=0 to 7 do
+                    HidReportC.Header[w]:=TxBuffer[w];
+                  for w:=0 to 1015 do
+                    HidReportC.Data[w]:=TxBuffer[8+w];
+                  mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportC, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                  WrittenPayloadBytes:=WrittenPayloadBytes+1016;
+                  RemainingPayloadBytes:=RemainingPayloadBytes-1016;
+                  PacketCounter:=PacketCounter+1;
+                end else
+                begin
+                  // data fits into single message / last message
+                  TxBuffer[3]:=$01; // 0x00 = not the last message, 0x01 = last message
+                  TxBuffer[4]:=RemainingPayloadBytes AND 255; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016
+                  TxBuffer[5]:=(RemainingPayloadBytes shr 8);
+                  TxBuffer[6]:=PacketCounter AND 255;
+                  TxBuffer[7]:=(PacketCounter shr 8);
+
+                  // copy remaining bytes of PayloadBuffer
+                  for w:=0 to RemainingPayloadBytes-1 do
+                  begin
+                    TxBuffer[8+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                  end;
+                  // fill remaining bytes with zeros
+                  for w:=RemainingPayloadBytes to 1015 do
+                  begin
+                    TxBuffer[w]:=0;
+                  end;
+
+                  for w:=0 to 7 do
+                    HidReportC.Header[w]:=TxBuffer[w];
+                  for w:=0 to 1015 do
+                    HidReportC.Data[w]:=TxBuffer[8+w];
+                  mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportC, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                  RemainingPayloadBytes:=0;
+                  PacketCounter:=PacketCounter+1;
+                end;
+              until RemainingPayloadBytes=0;
+            end
+          end;
+        end;
+      end;
+    except
+      // something went wrong with the StreamDeck...
+    end;
+    // End of Elgato StreamDeck
+
+    sleep(50);
+  until mainform._killthreads;
+
+  Terminate;
+end;
 
 { TScanThread }
 
@@ -11124,8 +11734,431 @@ end;
 
 procedure TMainform.Timer1Timer(Sender: TObject);
 var
-  i:integer;
+  X,Y:integer;
+  Shift:TShiftState;
+  i,j,k,l,m,value,col,row,channelperrow,fadergroup,offset:integer;
+  dobreak:boolean;
 begin
+  if HandleMouseMove then
+  begin
+    X:=CurrentMousePositionX;
+    Y:=CurrentMousePositionY;
+    Shift:=CurrentMouseMoveShiftState;
+
+    HandleMouseMove:=false;
+
+    if (faderpanelup and (Y>Paintbox1.Height-258)) or (Y>(Paintbox1.Height-48)) then
+    begin
+      if not UserAccessGranted(2, false) then exit;
+
+      if not faderpanelup then
+      begin
+        faderpanelup:=true;
+      end;
+
+      faderpaneltimerbyte:=0;
+      FaderpanelhideTimer.Enabled:=true;
+
+      if faderpanelup then
+        offset:=258
+      else
+        offset:=48;
+
+      // Maus über Faderpanel
+      if (Shift=[ssLeft]) then
+      begin
+        if ((y-(Paintbox1.Height-offset))>50) then
+        begin
+          // Fader bewegen
+          value:=(y-(Paintbox1.Height-offset))+11-74;
+          if value<0 then value:=0;
+          if value>167 then value:=167;
+          value:=round(value/167*255);
+          // mainform.SendData(scrollbar1.position+mouseoverfader,-1,value,0,0);
+          mainform.SendData(faderchannel[mouseoverfader],-1,value,0,0);
+
+          fadergroup:=0;
+          for i:=0 to length(faderselected)-1 do
+          begin
+            if faderselected[i] and (i=(faderchannel[mouseoverfader]-1)) then fadergroup:=1;
+            if faderselectedalt[i] and (i=(faderchannel[mouseoverfader]-1)) then fadergroup:=fadergroup+2;
+            if faderselectedshift[i] and (i=(faderchannel[mouseoverfader]-1)) then fadergroup:=fadergroup+4;
+          end;
+
+          for i:=0 to length(faderselected)-1 do
+          begin
+            if faderselected[i] and (fadergroup and 1 = 1) then
+              mainform.SendData(i+1,-1,value,0,0);
+
+            if faderselectedalt[i] and (fadergroup and 2 = 2) then
+              mainform.SendData(i+1,-1,value,0,0);
+
+            if faderselectedshift[i] and (fadergroup and 4 = 4) then
+              mainform.SendData(i+1,-1,value,0,0);
+          end;
+        end;
+      end else
+      begin
+        if (X>0) and (X<40) then
+        begin
+          // linker Rand
+          scrolltoright:=false;
+          scrolltoleft:=true;
+        end else if (X>(Paintbox1.Width-40)) and (X<Paintbox1.Width) then
+        begin
+          // rechter Rand
+          scrolltoright:=true;
+          scrolltoleft:=false;
+        end else
+        begin
+          scrolltoright:=false;
+          scrolltoleft:=false;
+        end;
+      end;
+      RefreshMainformScreen:=true;
+    end else
+    begin
+      case pagecontrol1.ActivePageIndex of
+        0:  // Bühne
+        begin
+          if not UserAccessGranted(2, false) then exit;
+
+          grafischebuehnenansicht.dorefresh:=(Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]);
+
+  /////////// DeviceHoverEffect
+          grafischebuehnenansicht.MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+          dobreak:=false;
+          for i:=0 to length(mainform.devices)-1 do
+          begin
+            for j:=0 to length(mainform.devices[i].bank)-1 do
+            begin
+              if mainform.devices[i].ShowInStageview then
+              if mainform.devices[i].bank[j]=BankSelect.Itemindex then
+              begin
+                // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
+                if (mainform.devices[i].left[j]<=X)
+                and ((mainform.devices[i].left[j]+mainform.devices[i].picturesize)>=X)
+                and (mainform.devices[i].Top[j]<=Y)
+                and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize)>=Y) then
+                begin
+                  grafischebuehnenansicht.MouseOnDeviceID:=mainform.devices[i].ID;
+                  grafischebuehnenansicht.MouseOnDeviceHover:=i;
+                  dobreak:=true;
+                  break;
+                end;
+              end;
+            end;
+            if dobreak then
+              break;
+          end;
+          if not dobreak then
+          begin
+            grafischebuehnenansicht.MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+            grafischebuehnenansicht.MouseOnDeviceHover:=-1;
+          end;
+  ////////////
+
+  /////////// DeviceHighlight
+          if CheckBox6.Checked then
+          begin
+            // Altes Gerät zurücksetzen
+            geraetesteuerung.set_color(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.R, grafischebuehnenansicht.LastMouseOverHighlightDevice.G, grafischebuehnenansicht.LastMouseOverHighlightDevice.B, 150, 0);
+            geraetesteuerung.set_shutter(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.ShutterOpenOrClose);
+            geraetesteuerung.set_dimmer(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.Dimmer, 150, 0);
+            geraetesteuerung.set_channel(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, 'a', grafischebuehnenansicht.LastMouseOverHighlightDevice.A, 150, 0);
+            geraetesteuerung.set_channel(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, 'w', grafischebuehnenansicht.LastMouseOverHighlightDevice.W, 150, 0);
+
+            // Aktuelle Werte speichern
+            if not IsEqualGUID(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.MouseOnDeviceID) then
+            begin
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.ID:=grafischebuehnenansicht.MouseOnDeviceID;
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.Dimmer:=geraetesteuerung.get_dimmer(grafischebuehnenansicht.MouseOnDeviceID);
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.R:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'R');
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.G:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'G');
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.B:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'B');
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.A:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'A');
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.W:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'W');
+              grafischebuehnenansicht.LastMouseOverHighlightDevice.ShutterOpenOrClose:=geraetesteuerung.get_shutter(grafischebuehnenansicht.MouseOnDeviceID);
+            end;
+
+            // Aktuelles Gerät setzen
+            if grafischebuehnenansicht.MouseOnDeviceHover>-1 then
+            begin
+              geraetesteuerung.set_shutter(grafischebuehnenansicht.MouseOnDeviceID, 255);
+              geraetesteuerung.set_color(grafischebuehnenansicht.MouseOnDeviceID, 255, 255, 255, 150, 0);
+              geraetesteuerung.set_dimmer(grafischebuehnenansicht.MouseOnDeviceID, 255, 150, 0);
+              geraetesteuerung.set_channel(grafischebuehnenansicht.MouseOnDeviceID, 'a', 255, 150, 0);
+              geraetesteuerung.set_channel(grafischebuehnenansicht.MouseOnDeviceID, 'w', 255, 150, 0);
+            end;
+          end;
+  ////////////
+
+          if grafischebuehnenansicht.MouseOnDevice>-1 then
+          begin
+            if CheckBox3.Checked then exit;
+
+            if mainform.devices[grafischebuehnenansicht.MouseOnDevice].hasDimmer then
+            begin
+              for k:=0 to length(mainform.devices[grafischebuehnenansicht.MouseOnDevice].kanaltyp)-1 do
+              if lowercase(mainform.devices[grafischebuehnenansicht.MouseOnDevice].kanaltyp[k])='dimmer' then
+                Paintbox1.Hint:=mainform.devices[grafischebuehnenansicht.MouseOnDevice].Name+' ('+mainform.levelstr(255-mainform.data.ch[mainform.devices[grafischebuehnenansicht.MouseOnDevice].Startaddress+k])+'), Geräteicon'
+            end else
+            begin
+              Paintbox1.Hint:='Geräteicon, '+mainform.devices[grafischebuehnenansicht.MouseOnDevice].Name;
+            end;
+
+            if Shift = [ssLeft] then
+            begin
+              // Linke Maustaste
+              grafischebuehnenansicht.RedrawPictures:=true;
+
+              if (mainform.devices[grafischebuehnenansicht.MouseOnDevice].selected[grafischebuehnenansicht.MouseOnDeviceCopy]=false) then
+              begin // einzelnes Gerätebild verschieben
+                // Sender GeräteBild
+                mainform.devices[grafischebuehnenansicht.MouseOnDevice].Left[grafischebuehnenansicht.MouseOnDeviceCopy]:=X-round(mainform.devices[grafischebuehnenansicht.MouseOnDevice].picturesize/2);
+                mainform.devices[grafischebuehnenansicht.MouseOnDevice].Top[grafischebuehnenansicht.MouseOnDeviceCopy]:=Y-round(mainform.devices[grafischebuehnenansicht.MouseOnDevice].picturesize/2);
+
+                for m:=0 to length(mainform.Devices)-1 do
+                begin
+                  if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[grafischebuehnenansicht.MouseOnDevice].ID)) then
+                  begin
+                    mainform.Devices[m].left[grafischebuehnenansicht.MouseOnDeviceCopy]:=X-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixXPosition;
+                    mainform.Devices[m].top[grafischebuehnenansicht.MouseOnDeviceCopy]:=Y-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixYPosition;
+                  end;
+                end;
+                // Sender GeräteBild Ende
+              end else
+              begin
+                // Andere GeräteBilder
+                for k:=0 to length(mainform.devices)-1 do
+                for l:=0 to length(mainform.devices[k].selected)-1 do
+                begin
+                  if ((mainform.devices[k].selected[l])) then
+                  begin
+                    grafischebuehnenansicht.StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
+                    if not grafischebuehnenansicht.StopDeviceMoving then
+                    begin
+                      mainform.devices[k].Left[l]:=mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X);
+                      mainform.devices[k].Top[l]:=mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
+                    end;
+                  end;
+                end;
+                // Andere GeräteBilder Ende
+
+                // Andere Kanal-Bilder
+                for k:=0 to length(mainform.buehnenansichtdevices)-1 do
+                begin
+                  if ((mainform.buehnenansichtdevices[k].selected)) then
+                  begin
+                    grafischebuehnenansicht.StopDeviceMoving:=(mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Height);
+                    if not grafischebuehnenansicht.StopDeviceMoving then
+                    begin
+                      mainform.buehnenansichtdevices[k].left:=mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X);
+                      mainform.buehnenansichtdevices[k].top:=mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
+                    end;
+                  end;
+                end;
+                // Andere Kanal-Bilder Ende
+              end;
+              // Ende von Linke Maustaste
+            end;
+          end else if grafischebuehnenansicht.MouseOnBuehnenansichtDevice>-1 then
+          begin
+            if CheckBox3.Checked then exit;
+
+            Paintbox1.Hint:='Kanalicon, Kanal: '+inttostr(mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].channel)+' ('+inttostr(mainform.channel_value[mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].channel])+')';
+
+              if Shift = [ssLeft] then
+              begin
+                // Linke Maustaste
+                if (mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].selected=false) then
+                begin // einzelnes Gerätebild verschieben
+                  // Sender KanalBild
+                  mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].Left:=X-round(mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].picturesize/2);
+                  mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].Top:=Y-round(mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].picturesize/2);
+                  // Sender KanalBild Ende
+                end else
+                begin
+                  // Andere KanalBilder
+                  for k:=0 to length(mainform.Buehnenansichtdevices)-1 do
+                  begin
+                    if ((mainform.Buehnenansichtdevices[k].selected)) then
+                    begin
+                      grafischebuehnenansicht.StopDeviceMoving:=(mainform.Buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.Buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.Buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.Buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.Buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.Buehnenansichtdevices[k].picturesize)>paintbox1.Height);
+                      if not grafischebuehnenansicht.StopDeviceMoving then
+                      begin
+                        mainform.Buehnenansichtdevices[k].Left:=mainform.Buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X);
+                        mainform.Buehnenansichtdevices[k].Top:=mainform.Buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
+                      end;
+                    end;
+                  end;
+                  // Andere KanalBilder Ende
+
+                  // Andere Geräte-Bilder
+                  for k:=0 to length(mainform.devices)-1 do
+                  for l:=0 to length(mainform.devices[k].selected)-1 do
+                  begin
+                    if ((mainform.devices[k].selected[l])) then
+                    begin
+                      grafischebuehnenansicht.StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
+                      if not grafischebuehnenansicht.StopDeviceMoving then
+                      begin
+                        mainform.devices[k].left[l]:=mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X);
+                        mainform.devices[k].top[l]:=mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
+                      end;
+                    end;
+                  end;
+                  // Andere Geräte-Bilder Ende
+                end;
+                // Ende von Linke Maustaste
+              end;
+          end else if grafischebuehnenansicht.MouseOnProgress>-1 then
+          begin
+            if Shift=[ssLeft] then
+            begin
+              value:=round(((X-mainform.devices[grafischebuehnenansicht.MouseOnProgress].left[grafischebuehnenansicht.MouseOnDeviceCopy])/mainform.devices[grafischebuehnenansicht.MouseOnProgress].picturesize)*255);
+              if value<0 then value:=0;
+              if value>255 then value:=255;
+              if mainform.devices[grafischebuehnenansicht.MouseOnProgress].hasDimmer then
+                geraetesteuerung.set_dimmer(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,value)
+              else if mainform.devices[grafischebuehnenansicht.MouseOnProgress].hasFog then
+                geraetesteuerung.set_fog(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,value);
+            end;
+          end else if grafischebuehnenansicht.MouseOnBuehnenansichtProgress>-1 then
+          begin
+            if Shift=[ssLeft] then
+            begin
+              value:=round(((X-mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].left)/mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].picturesize)*255);
+              if value<0 then value:=0;
+              if value>255 then value:=255;
+              mainform.Senddata(mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].channel, 255-value, 255-value, 0);
+        //      mainform.channel_value[mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].channel]:=value;
+            end;
+          end else if grafischebuehnenansicht.MouseOnBuehnenansichtColor>-1 then
+          begin
+          end else if grafischebuehnenansicht.MouseOnLabel>-1 then
+          begin
+          end else if grafischebuehnenansicht.MouseOnNumber>-1 then
+          begin
+          end else if grafischebuehnenansicht.MouseOnBuehnenansichtNumber>-1 then
+          begin
+          end else
+          begin
+          If shift=[ssLeft] then
+          begin
+            grafischebuehnenansicht.Auswahl.Right:=X;
+            grafischebuehnenansicht.Auswahl.Bottom:=Y;
+            grafischebuehnenansicht.ShowAuswahl:=true;
+
+            for i:=0 to length(mainform.buehnenansichtdevices)-1 do
+            begin
+              if mainform.buehnenansichtdevices[i].bank=BankSelect.Itemindex then
+              begin
+                // grafischebuehnenansicht.Auswahl.Left=Links grafischebuehnenansicht.Auswahl.Right=Rechts                                                                      grafischebuehnenansicht.Auswahl.Top=Oben grafischebuehnenansicht.Auswahl.Bottom=Unten
+                if (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom) then
+                  mainform.buehnenansichtdevices[i].selected:=true else mainform.buehnenansichtdevices[i].selected:=false;
+              end;
+            end;
+
+            for i:=0 to length(mainform.devices)-1 do
+            for j:=0 to length(mainform.devices[i].bank)-1 do
+            begin
+              if mainform.devices[i].bank[j]=BankSelect.Itemindex then
+              begin
+                // grafischebuehnenansicht.Auswahl.Left=Links grafischebuehnenansicht.Auswahl.Right=Rechts                                                                      grafischebuehnenansicht.Auswahl.Top=Oben grafischebuehnenansicht.Auswahl.Bottom=Unten
+                if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom) then
+                  mainform.devices[i].selected[j]:=true else mainform.devices[i].selected[j]:=false;
+              end;
+            end;
+          end;
+
+          If (shift=[ssLeft,ssShift]) or (shift=[ssLeft,ssShift,ssCtrl]) then
+          begin
+            grafischebuehnenansicht.Auswahl.Right:=X;
+            grafischebuehnenansicht.Auswahl.Bottom:=Y;
+            grafischebuehnenansicht.ShowAuswahl:=true;
+
+            for i:=0 to length(mainform.devices)-1 do
+            for j:=0 to length(mainform.devices[i].bank)-1 do
+            begin
+              if mainform.devices[i].bank[j]=BankSelect.Itemindex then
+              begin
+                // grafischebuehnenansicht.Auswahl.Left=Links grafischebuehnenansicht.Auswahl.Right=Rechts                                                                      grafischebuehnenansicht.Auswahl.Top=Oben grafischebuehnenansicht.Auswahl.Bottom=Unten
+                if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
+                or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom) then
+                  mainform.DeviceSelected[i]:=true;
+              end;
+            end;
+          end;
+          end;
+        end;
+        1:  // Kanäle
+        begin
+          if not UserAccessGranted(2, false) then exit;
+
+          if (Shift=[ssLeft]) then
+          begin
+            ScrollBar1.Position:=round((mouseychannel-y)/ChannelHeight+scrollbarpositiononmousedown);
+            ErsteZeile:=Scrollbar1.position;
+          end;
+
+          lastx:=x;
+          lasty:=y;
+
+          if (Shift=[]) then
+          begin
+            col:=(x div ChannelWidth)+1;
+            row:=(y div ChannelHeight)+ErsteZeile;
+            channelperrow:=paintbox1.Width div ChannelWidth;
+            MouseOverKanal:=channelperrow*row+col;
+          end;
+
+          if (Shift=[ssLeft, ssCtrl, ssShift]) then
+          begin
+            if (MouseOverKanal>-1) and (MouseOverKanal<mainform.lastchan) then
+              if ((ChannelValueOnClick+(mouseychannel-y))>=0) and ((ChannelValueOnClick+(mouseychannel-y))<=255) then
+                mainform.channel_value[MouseOverKanal]:=ChannelValueOnClick+(mouseychannel-y);
+          end;
+
+          Label1.Caption:='';
+          Label2.Caption:='';
+          Label6.Caption:='Min-Wert: '+mainform.levelstr(mainform.channel_minvalue[MouseOverKanal]);
+          Label7.Caption:='Max-Wert: '+mainform.levelstr(mainform.channel_maxvalue[MouseOverKanal]);
+          Label6.Alignment:=taRightJustify;
+          Label7.Alignment:=taRightJustify;
+
+          for i:=0 to length(mainform.devices)-1 do
+          begin
+            if (MouseOverKanal>=mainform.devices[i].Startaddress) and (MouseOverKanal<mainform.devices[i].Startaddress+mainform.devices[i].MaxChan) then
+            begin
+              if length(Label1.Caption)>0 then
+                Label1.Caption:=Label1.Caption+', '+mainform.devices[i].Name
+              else
+                Label1.Caption:=mainform.devices[i].Name;
+              Label2.Caption:=mainform.devices[i].kanalname[MouseOverKanal-mainform.devices[i].Startaddress]+' | '+mainform.levelstr(mainform.channel_value[MouseOverKanal]);
+            end;
+          end;
+          RefreshMainformScreen:=true;
+        end;
+        2:  // Panel
+        begin
+          if not UserAccessGranted(3, false) then exit;
+
+          kontrollpanel.PaintBox1MouseMove(nil, Shift, X, Y);
+        end;
+      end;
+    end;
+  end;
+
+
   if splashscreenvalue=1 then
   begin
     if (fadesplash=true) then
@@ -11718,6 +12751,9 @@ begin
   if (address<1) or (address>8192) then exit;
 
   data_in_channels[address]:=endvalue;
+
+  LastDataInChannel:=address;
+  LastDataInValue:=endvalue;
 
   if DataInEventfrm.showing then
   begin
@@ -12523,6 +13559,8 @@ var
   ergebnisse:Variant;
   Wnd: hWnd;
   P: TdxPNGImage;
+  lpng: TdxPNGImage;
+  PngStream: TStream;
 
   // Funktionen für Bild-Laden aus Plugins
   DLLGetResourceData:function(const ResName: PChar; Buffer: Pointer; var Length: Integer):boolean;stdcall;
@@ -12543,6 +13581,32 @@ begin
   // Konstanten für Ribbon setzen, damit Ribbons nicht bei Doppelklick verschwinden
   dxribbon.dxRibbonOwnerMinimalWidth:=0;
   dxribbon.dxRibbonOwnerMinimalHeight:=0;
+
+
+  // PNG-Workaround for Delphi 7: put PNG-images to dxBarLargeButton from PNGList
+  PNGStream:=TMemoryStream.Create;
+  lpng:=TdxPNGImage.Create;
+  dxBarLargeButton9.HotGlyph.PixelFormat:=pf32bit;
+  dxBarLargeButton9.HotGlyph.TransparentMode:=tmFixed;
+  RibbonButtonPNGList.PngImages.Items[0].PngImage.SaveToStream(PNGStream);
+  PNGStream.Position:=0;
+  lpng.LoadFromStream(PNGStream);
+  dxBarLargeButton9.HotGlyph.Assign(lpng);
+  lpng.Free;
+  PNGStream.Free;
+
+  PNGStream:=TMemoryStream.Create;
+  lpng:=TdxPNGImage.Create;
+  dxBarLargeButton10.HotGlyph.PixelFormat:=pf32bit;
+  dxBarLargeButton10.HotGlyph.TransparentMode:=tmFixed;
+  RibbonButtonPNGList.PngImages.Items[1].PngImage.SaveToStream(PNGStream);
+  PNGStream.Position:=0;
+  lpng.LoadFromStream(PNGStream);
+  dxBarLargeButton10.HotGlyph.Assign(lpng);
+  lpng.Free;
+  PNGStream.Free;
+
+  // End of PNG-Workaround
 
   ///////////////////////////////
   // PLUGINS AKTIVIEREN
@@ -12890,6 +13954,12 @@ begin
     acculevel2.Visible:=false;
   end;
 
+  SplashAddText(_('Starte Helper-Thread...'));
+  RefreshSplashText;
+  DebugAdd('INIT: Starting Thread: HelperThread');
+  HelperThread := THelperThread.create();
+  DebugAddToLine(' - OK');
+
   // Timecodeplayer starten
   SplashAddText(_('Starte MIDI-Timecodeplayer...'));
   RefreshSplashText;
@@ -12970,6 +14040,22 @@ begin
         ambilightform.Button2.Caption:=_('Ambilight ausschalten');
       end;
     end;
+
+    // XTouchControl aktivieren, sofern beim letzten mal aktiv
+    if LReg.ReadWriteBool('XTouchControl active', false) then
+    begin
+      xtouchcontrolform.xtouchserver.Active:=true;
+      xtouchcontrolform.activebtn.Caption:=_('Ausschalten');
+    end;
+
+    // Create HID-Functions for Elgato StreamDeck and maybe other devices
+    // putting this component on the GUI will create strange errors
+    // regarding "Device cannot be identified"
+    // so we will create it manually in code
+    HidCtl:=TJvHidDeviceController.Create(mainform, HidCtlDeviceCreateError, HidCtlDeviceChange);
+    HidCtl.OnEnumerate:=HidCtlEnumerate;
+    HidCtl.OnDeviceData:=HidCtlDeviceData;
+
     LReg.CloseKey;
   end;
   LReg.Free;
@@ -13304,6 +14390,8 @@ begin
   grafischebuehnenansicht.RefreshTimer.enabled:=true;
   grafischebuehnenansicht.dorefresh:=true;
   MainformScreenRefreshTimer.Enabled:=true;
+  ElgatoStreamDeckForm.ElgatoStreamDeckTimer.Enabled:=true;
+  ElgatoStreamDeckForm.ElgatoStreamDeckDisplayTimer.Enabled:=true;
 
   SplashProgress(1, 96, 100);
   SplashCaptioninfo(_('Abschließende Arbeiten'));
@@ -13327,10 +14415,12 @@ begin
   SplashCaptioninfo(_('Oberfläche aktualisieren...'));
   RefreshSplashText;
 
+  ScriptInterpreter.OnGetValue:=kontrollpanel.ScriptInterpreterGetValue;
+
   if not (LastSessionWasCorrupt or RestoreLastValues or startupwitholdscene) then
   begin
     DebugAdd('INIT: Initializing devices...');
-  
+
     SplashProgress(1, 98, 100);
     SplashCaptioninfo(_('Geräte initialisieren...'));
     RefreshSplashText;
@@ -14110,11 +15200,9 @@ end;
 
 procedure Tmainform.StartBefehl(ID: TGUID; Inputvalue: integer);
 var
-  g,h,i,j,k,tempvar,input,value:integer;
-  temp1,temp2,temp3:integer;
+  i,j,k,h:integer;
   AktuellerBefehl:TBefehl2;
-  EventFired:boolean;
-  S1, S2:single;
+  Local_LastEvent:string;
 begin
   if shutdown then exit;
   AktuellerBefehl.Typ:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
@@ -14172,7 +15260,7 @@ begin
       for j:=0 to length(MidiEventArray[i].Befehl.ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[j]:=MidiEventArray[i].Befehl.ArgGUID[j];
 
-      LastEvent:='MIDI: '+inttostr(inputvalue);
+      Local_LastEvent:='MIDI';
 
       break;
     end;
@@ -14202,7 +15290,7 @@ begin
       for j:=0 to length(DataInEventArray[i].Befehl.ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[j]:=DataInEventArray[i].Befehl.ArgGUID[j];
 
-      LastEvent:='DataIN: '+inttostr(inputvalue);
+      Local_LastEvent:='DataIN';
 
       break;
     end;
@@ -14232,7 +15320,7 @@ begin
       for j:=0 to length(JoystickEvents[i].Befehl.ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[j]:=JoystickEvents[i].Befehl.ArgGUID[j];
 
-      LastEvent:='Joystick '+inttostr(i)+': '+inttostr(inputvalue);
+      Local_LastEvent:='Joystick '+inttostr(i);
 
       break;
     end;
@@ -14262,7 +15350,7 @@ begin
       for j:=0 to length(TastencodeArray[i].Befehl.ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[j]:=TastencodeArray[i].Befehl.ArgGUID[j];
 
-      LastEvent:=_('Tastatur: ')+inttostr(inputvalue);
+      Local_LastEvent:=_('Tastatur');
 
       break;
     end;
@@ -14294,7 +15382,7 @@ begin
         for k:=0 to length(submasterbank[i].Befehl[j].ArgGUID)-1 do
           AktuellerBefehl.ArgGUID[k]:=submasterbank[i].Befehl[j].ArgGUID[k];
 
-        LastEvent:='Submaster: '+inttostr(inputvalue);
+        Local_LastEvent:='Submaster';
 
         break;
       end;
@@ -14326,7 +15414,7 @@ begin
       for k:=0 to length(devicescenes[i].Befehle[j].ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[k]:=devicescenes[i].Befehle[j].ArgGUID[k];
 
-      LastEvent:=_('Geräteszene: ')+inttostr(inputvalue);
+      Local_LastEvent:=_('Geräteszene');
 
       break;
     end;
@@ -14359,7 +15447,7 @@ begin
       for k:=0 to length(Effektaudiodatei_record.layer[h].effekt[i].Befehle[j].ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[k]:=Effektaudiodatei_record.layer[h].effekt[i].Befehle[j].ArgGUID[k];
 
-      LastEvent:=_('Direktszene AEP: ')+inttostr(inputvalue);
+      Local_LastEvent:=_('Direktszene AEP');
 
       break;
     end;
@@ -14391,12 +15479,42 @@ begin
       for k:=0 to length(Effektsequenzereffekte[h].Effektschritte[i].Befehle[j].ArgGUID)-1 do
         AktuellerBefehl.ArgGUID[k]:=Effektsequenzereffekte[h].Effektschritte[i].Befehle[j].ArgGUID[k];
 
-      LastEvent:=_('Direktszene Effekt: ')+inttostr(inputvalue);
+      Local_LastEvent:=_('Direktszene Effekt');
 
       break;
     end;
   end;
 
+  if IsEqualGUID(AktuellerBefehl.Typ, StringToGUID('{00000000-0000-0000-0000-000000000000}')) then
+  for i:=0 to length(mainform.ElgatoStreamDeckArray)-1 do
+  for k:=0 to length(mainform.ElgatoStreamDeckArray[i].Buttons)-1 do
+  begin
+    if IsEqualGUID(ID,mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ID) then
+    begin
+      AktuellerBefehl.Typ:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.Typ;
+      AktuellerBefehl.Name:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.Name;
+      AktuellerBefehl.Beschreibung:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.Beschreibung;
+      AktuellerBefehl.OnValue:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.OnValue;
+      AktuellerBefehl.SwitchValue:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.SwitchValue;
+      AktuellerBefehl.InvertSwitchValue:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.InvertSwitchValue;
+      AktuellerBefehl.OffValue:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.OffValue;
+      AktuellerBefehl.ScaleValue:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ScaleValue;
+
+      setlength(AktuellerBefehl.ArgInteger, length(mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgInteger));
+      for j:=0 to length(mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgInteger)-1 do
+        AktuellerBefehl.ArgInteger[j]:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgInteger[j];
+      setlength(AktuellerBefehl.ArgString, length(mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgString));
+      for j:=0 to length(mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgString)-1 do
+        AktuellerBefehl.ArgString[j]:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgString[j];
+      setlength(AktuellerBefehl.ArgGUID, length(mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgGUID));
+      for j:=0 to length(mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgGUID)-1 do
+        AktuellerBefehl.ArgGUID[j]:=mainform.ElgatoStreamDeckArray[i].Buttons[k].Befehl.ArgGUID[j];
+
+      Local_LastEvent:='StreamDeck #'+inttostr(i+1)+'@Btn'+inttostr(k+1);
+
+      break;
+    end;
+  end;
 
   if IsEqualGUID(AktuellerBefehl.Typ, StringToGUID('{00000000-0000-0000-0000-000000000000}')) then
   if IsEqualGUID(ID, StringToGUID('{46368186-DF3D-467A-9792-DAC6B03A21E3}')) then
@@ -14422,26 +15540,38 @@ begin
     AktuellerBefehl.ArgGUID[0]:=TerminalSystem.GUID1;
     AktuellerBefehl.ArgGUID[1]:=TerminalSystem.GUID2;
 
-    LastEvent:='Terminal: '+inttostr(inputvalue);
+    Local_LastEvent:='Terminal';
   end;
 
+  // Befehl ausführen
+  StartBefehl(AktuellerBefehl, inputvalue, Local_LastEvent);
+end;
 
+procedure Tmainform.StartBefehl(AktuellerBefehl:TBefehl2; Inputvalue: integer; Source:String);
+var
+  g,h,i,j,k,tempvar,input,value:integer;
+  temp1,temp2,temp3:integer;
+  S1, S2:single;
+  EventFired:boolean;
+begin
   if IsEqualGUID(AktuellerBefehl.Typ, StringToGUID('{00000000-0000-0000-0000-000000000000}')) then
     exit;
 
   value:=inputvalue;
 
-{
+  {
   // Sicherstellen, dass der maximale Wert auch bei schnellem Faderbewegen noch ausgeführt wird
   // (dies birgt das Problem, dass dann auch alle unteren Schwellen-Events ausgeführt werden)
   if (value<AktuellerBefehl.OffValue) then
     value:=AktuellerBefehl.OffValue;
   if (value>AktuellerBefehl.OnValue) then
     value:=AktuellerBefehl.OnValue;
-}
+  }
   // Befehl nicht ausführen, wenn außerhalb der Grenzwerte
   if (value<AktuellerBefehl.OffValue) or (value>AktuellerBefehl.OnValue) then
     exit;
+
+  LastEvent:=Source+': '+inttostr(inputvalue);
 
   if AktuellerBefehl.ScaleValue then
     value:=round((value-AktuellerBefehl.OffValue)*(255/(AktuellerBefehl.OnValue-AktuellerBefehl.OffValue)));
@@ -14462,6 +15592,8 @@ begin
     end;
   end;
 
+
+  // Befehl ausführen
   try
     // Audioeffektplayer
     if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[0].Steuerung[0].GUID) and EventFired then
@@ -14622,6 +15754,16 @@ begin
       sleep(250);
       beatform.Temposourcebox.ItemIndex:=AktuellerBefehl.ArgInteger[0];
       beatform.TemposourceboxChange(beatform.Temposourcebox);
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[2].Steuerung[5].GUID) and EventFired then
+    begin // Temposlider setzen
+      beatform.temposlider.Position:=59999-(AktuellerBefehl.ArgInteger[0]*100);
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[2].Steuerung[6].GUID) then
+    begin // Temposlider auf Eingangswert
+      beatform.temposlider.Position:=round(59999-((Value/maxres)*59999));
       exit;
     end;
 
@@ -15708,6 +16850,54 @@ begin
       end;
       exit;
     end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[23].GUID) then
+    begin // Gruppe Fanning-Modus auf Eingangswert
+      for j:=0 to length(devicegroups)-1 do
+      begin
+        if IsEqualGUID(devicegroups[j].ID,AktuellerBefehl.ArgGUID[0]) then
+        begin
+          devicegroups[j].FanMode:=Value;
+          break;
+        end;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[24].GUID) then
+    begin // Gruppe Fanning-Master auf Eingangswert
+      for j:=0 to length(devicegroups)-1 do
+      begin
+        if IsEqualGUID(devicegroups[j].ID,AktuellerBefehl.ArgGUID[0]) then
+        begin
+          devicegroups[j].MasterDevice:=devicegroups[j].IDs[trunc((length(devicegroups[j].IDs)-1)*(Value/255))];
+          break;
+        end;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[25].GUID) then
+    begin // Gruppe Fanning-Modus setzen
+      for j:=0 to length(devicegroups)-1 do
+      begin
+        if IsEqualGUID(devicegroups[j].ID,AktuellerBefehl.ArgGUID[0]) then
+        begin
+          devicegroups[j].FanMode:=AktuellerBefehl.ArgInteger[0];
+          break;
+        end;
+      end;
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[6].Steuerung[26].GUID) then
+    begin // Gruppe Fanning-Master setzen
+      for j:=0 to length(devicegroups)-1 do
+      begin
+        if IsEqualGUID(devicegroups[j].ID,AktuellerBefehl.ArgGUID[0]) then
+        begin
+          devicegroups[j].MasterDevice:=devicegroups[j].IDs[trunc((length(devicegroups[j].IDs)-1)*(AktuellerBefehl.ArgInteger[0]/255))];
+          break;
+        end;
+      end;
+      exit;
+    end;
 
     // Cueliste
     if IsEqualGUID(AktuellerBefehl.Typ,mainform.Befehlssystem[7].Steuerung[0].GUID) and EventFired then
@@ -16066,7 +17256,7 @@ begin
     begin // Button schalten
       kontrollpanel.OverBtn.X:=AktuellerBefehl.ArgInteger[1]-1;
       kontrollpanel.OverBtn.Y:=AktuellerBefehl.ArgInteger[0]-1;
-    
+
       //kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
       kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssLeft], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
       kontrollpanel.PaintBox1MouseUp(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(AktuellerBefehl.ArgInteger[1]-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(AktuellerBefehl.ArgInteger[0]-1)+(kontrollpanel.btnheight.Value / 2)));
@@ -16350,6 +17540,13 @@ begin
   end;
 end;
 
+procedure Tmainform.GetBefehlState(AktuellerBefehl:TBefehl2; var Text_PCD_Function:string; var Text_Function:string; var Text_Value:string; var Value:integer);
+var
+  j:integer;
+begin
+  {$I GetBefehlState.inc}
+end;
+
 procedure Tmainform.ConvertBefehlToBefehl2;
 var
   i:integer;
@@ -16624,6 +17821,39 @@ begin
         else if PresetScenes[i].PrismaEnabled=0 then
           geraetesteuerung.set_prisma(mainform.PresetScenes[i].Devices[j], 0);
       end;
+      break;
+    end;
+  end;
+end;
+
+procedure TMainform.InitCodeScene(ID: TGUID);
+var
+  i:integer;
+begin
+  for i:=0 to length(CodeScenes)-1 do
+  begin
+    if IsEqualGUID(ID,CodeScenes[i].ID) then
+    begin // richtige Codescene gefunden
+      ExecuteCodeScene(CodeScenes[i].ID, 'InitScene');
+      break;
+    end;
+  end;
+end;
+
+procedure TMainform.ExecuteCodeScene(ID: TGUID; Command: string);
+var
+  i:integer;
+begin
+  for i:=0 to length(CodeScenes)-1 do
+  begin
+    if IsEqualGUID(ID,CodeScenes[i].ID) then
+    begin // richtige Codescene gefunden
+      kontrollpanel.ScriptInterpreterCallingCodeSceneID:=CodeScenes[i].ID;
+      kontrollpanel.ScriptInterpreter.Pas.Clear;
+      kontrollpanel.ScriptInterpreter.Pas.Text:=CodeScenes[i].Code;
+      kontrollpanel.ScriptInterpreter.Compile;
+      kontrollpanel.ScriptInterpreterArgs.Count:=0;
+      kontrollpanel.ScriptInterpreter.CallFunction(Command, kontrollpanel.ScriptInterpreterArgs, []);
       break;
     end;
   end;
@@ -18748,8 +19978,40 @@ begin
         mainform.PresetScenes[j].TiltFine:=presetsceneeditor.tiltfineval;
 
         mainform.PresetScenes[j].Gobo:=presetsceneeditor.selectedgobo;
-
       end;
+      break;
+    end;
+  end;
+
+  // CodeSzenen
+  for j:=0 to length(CodeScenes)-1 do
+  begin
+    if IsEqualGUID(CodeScenes[j].ID,ID) then
+    begin
+      codeeditorform.nameedit.Text:=mainform.CodeScenes[j].Name;
+      codeeditorform.descriptionedit.Text:=mainform.CodeScenes[j].Beschreibung;
+      codeeditorform.Memo1.Lines.Clear;
+      //codeeditorform.Memo1.Lines.Add(CodeScenes[j].Code);
+      codeeditorform.Memo1.Text:=CodeScenes[j].Code;
+
+      codeeditorform.Panel3.Visible:=true;
+      codeeditorform.MouseDown.Visible:=false;
+      codeeditorform.MouseUp.Visible:=false;
+
+      codeeditorform.ShowModal;
+
+      if codeeditorform.ModalResult=mrOK then
+      begin
+        mainform.CodeScenes[j].Name:=codeeditorform.nameedit.Text;
+        mainform.CodeScenes[j].Beschreibung:=codeeditorform.descriptionedit.Text;
+        mainform.CodeScenes[j].Code:=codeeditorform.Memo1.Text;//codeeditorform.Memo1.Lines.Text;
+        InitCodeScene(mainform.codescenes[j].ID);
+      end;
+
+      codeeditorform.Panel3.Visible:=false;
+      codeeditorform.MouseDown.Visible:=true;
+      codeeditorform.MouseUp.Visible:=true;
+
       break;
     end;
   end;
@@ -19003,6 +20265,19 @@ begin
     end;
   end;
 
+  // Codeszenen
+  if not nop then
+  for j:=0 to length(codescenes)-1 do
+  begin
+    if IsEqualGUID(codescenes[j].ID,ID) then
+    begin
+      ExecuteCodeScene(codescenes[j].ID, 'StartScene');
+      scenefound:=true;
+      nop:=true;
+      break;
+    end;
+  end;
+
   // Plugin Szenen
   if not nop then
   for j:=0 to length(PluginSzenen)-1 do
@@ -19162,6 +20437,18 @@ begin
   begin
     if IsEqualGUID(PresetScenes[j].ID,ID) then
     begin
+      scenefound:=true;
+      nop:=true;
+      break;
+    end;
+  end;
+  // Code-Szenen
+  if not nop then
+  for j:=0 to length(CodeScenes)-1 do
+  begin
+    if IsEqualGUID(CodeScenes[j].ID,ID) then
+    begin
+      ExecuteCodeScene(CodeScenes[j].ID, 'StopScene');
       scenefound:=true;
       nop:=true;
       break;
@@ -19380,13 +20667,24 @@ begin
       break;
     end;
   end;
+  // Codeszenen
+  if not nop then
+  for j:=0 to length(codescenes)-1 do
+  begin
+    if IsEqualGUID(codescenes[j].ID,ID) then
+    begin
+      scenefound:=11;
+      nop:=true;
+      break;
+    end;
+  end;
   // Plugin Szenen
   if not nop then
   for j:=0 to length(PluginSzenen)-1 do
   begin
     if IsEqualGUID(PluginSzenen[j].ID,ID) then
     begin
-      scenefound:=11;
+      scenefound:=12;
 //        nop:=true;
       break;
     end;
@@ -19846,7 +21144,7 @@ begin
 
   kontrollpanel.Left:=0;
   kontrollpanel.Top:=0;
-  kontrollpanel.ClientWidth:=767;
+  kontrollpanel.ClientWidth:=780;
   kontrollpanel.ClientHeight:=372;
 
   effektsequenzer.Left:=0;
@@ -19947,6 +21245,12 @@ begin
   nodecontrolform.Left:=0;
   nodecontrolform.ClientWidth:=761;
   nodecontrolform.ClientHeight:=546;
+
+  xtouchcontrolform.Top:=0;
+  xtouchcontrolform.Left:=0;
+
+  elgatostreamdeckform.Top:=0;
+  elgatostreamdeckform.Left:=0;
 end;
 
 procedure TMainform.AutobackuptimerTimer(Sender: TObject);
@@ -20099,129 +21403,6 @@ begin
   if not UserAccessGranted(2) then exit;
 
   ddfeditorform.show;
-end;
-
-procedure TMainform.ScriptInterpreterGetValue(Sender: TObject;
-  Identifier: String; var Value: Variant; Args: TJvInterpreterArgs;
-  var Done: Boolean);
-var
-  ID:TGUID;
-begin
-  if lowercase(Identifier)='init_channel' then
-  begin
-    if args.Count=3 then
-      geraetesteuerung.set_channel(StringToGUID(args.values[0]),args.values[1],args.values[2],args.values[2],0);
-    done:=true;
-  end;
-
-  if (lowercase(Identifier)='set_absolutchannel') or (lowercase(Identifier)='set_absolutechannel') then
-  begin
-    if args.Count=4 then
-    begin
-      mainform.Senddata(args.values[0],maxres-args.values[1],maxres-args.values[2],args.values[3]);
-    end;
-    if args.Count=5 then
-    begin
-      mainform.Senddata(args.values[0],maxres-args.values[1],maxres-args.values[2],args.values[3],args.values[4]);
-    end;
-    done:=true;
-  end;
-
-  if lowercase(Identifier)='set_pantilt' then
-  begin
-    if args.Count=6 then
-    begin
-      geraetesteuerung.set_pantilt(StringToGUID(args.values[0]),args.values[1],args.values[2],args.values[3],args.values[4],args.values[5]);
-    end;
-    done:=true;
-  end;
-
-  if lowercase(Identifier)='set_channel' then
-  begin
-    if args.Count=5 then
-    begin
-      geraetesteuerung.set_channel(StringToGUID(args.values[0]),args.values[1],args.values[2],args.values[3],args.values[4]);
-    end;
-    if args.Count=6 then
-    begin
-      geraetesteuerung.set_channel(StringToGUID(args.values[0]),args.values[1],args.values[2],args.values[3],args.values[4],args.values[5]);
-    end;
-    done:=true;
-  end;
-
-  if lowercase(Identifier)='set_color' then
-  begin
-    if args.Count=6 then
-    begin
-      geraetesteuerung.set_color(StringToGUID(args.values[0]),args.values[1],args.values[2],args.values[3],args.values[4],args.values[5]);
-    end;
-    done:=true;
-  end;
-
-  if (lowercase(Identifier)='get_absolutchannel') or (lowercase(Identifier)='get_absolutechannel') then
-  begin
-    Value:=maxres-mainform.data.ch[Integer(args.values[0])];
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='get_channel' then
-  if args.Count=2 then
-  begin
-    ID:=StringToGUID(args.values[0]);
-    Value:=geraetesteuerung.get_channel(mainform.Devices[geraetesteuerung.GetDevicePositionInDeviceArray(@ID)].ID,args.values[1]);
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='levelstr' then
-  begin
-    Value:=mainform.levelstr(args.values[0]);
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='sin' then
-  begin
-    Value:=sin(Extended(args.values[0]));
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='cos' then
-  begin
-    Value:=cos(Extended(args.values[0]));
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='arccos' then
-  begin
-    Value:=arccos(Extended(args.values[0]));
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='degtorad' then
-  begin
-    Value:=degtorad(Extended(args.values[0]));
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='radtodeg' then
-  begin
-    Value:=radtodeg(Extended(args.values[0]));
-    args.HasResult:=true;
-    Done:=true;
-  end;
-
-  if lowercase(Identifier)='frac' then
-  begin
-    Value:=frac(Extended(args.values[0]));
-    args.HasResult:=true;
-    Done:=true;
-  end;
 end;
 
 procedure TMainform.TBItem13Click(Sender: TObject);
@@ -21690,6 +22871,21 @@ begin
         break;
       end;
     end;
+    // Codeszenen
+    if scenetype=-1 then
+    for j:=0 to length(mainform.codescenes)-1 do
+    begin
+      if IsEqualGUID(mainform.codescenes[j].ID,ID) then
+      begin
+        Name:=mainform.codescenes[j].Name; // Name
+        Beschreibung:=mainform.codescenes[j].Beschreibung;
+        t:=0;
+        Blendzeit:=MillisecondsToTimeShort(t);
+        Typ:=_('Codeszene');
+        scenetype:=11;
+        break;
+      end;
+    end;
     // Plugin
     if scenetype=-1 then
     for j:=0 to length(mainform.PluginSzenen)-1 do
@@ -21700,7 +22896,7 @@ begin
         Beschreibung:='';
         Blendzeit:='-';
         Typ:=_('Plugin Szene');
-//        scenetype:=11;
+//        scenetype:=12;
         break;
       end;
     end;
@@ -21846,13 +23042,23 @@ begin
         break;
       end;
     end;
+    // Codeszenen
+    if typ=-1 then
+    for j:=0 to length(mainform.CodeScenes)-1 do
+    begin
+      if IsEqualGUID(mainform.CodeScenes[j].ID,ID) then
+      begin
+        typ:=11;
+        break;
+      end;
+    end;
     // PluginSzenen
     if typ=-1 then
     for j:=0 to length(mainform.PluginSzenen)-1 do
     begin
       if IsEqualGUID(mainform.PluginSzenen[j].ID,ID) then
       begin
-        typ:=11;
+        typ:=12;
         break;
       end;
     end;
@@ -21985,7 +23191,18 @@ begin
       if IsEqualGUID(mainform.PresetScenes[j].ID,ID) then
       begin
         typ:=10;
-        mainform.Devicepresets[j].Category:=Cat;
+        mainform.PresetScenes[j].Category:=Cat;
+        break;
+      end;
+    end;
+    // Codeszenen
+    if typ=-1 then
+    for j:=0 to length(mainform.CodeScenes)-1 do
+    begin
+      if IsEqualGUID(mainform.CodeScenes[j].ID,ID) then
+      begin
+        typ:=11;
+        mainform.CodeScenes[j].Category:=Cat;
         break;
       end;
     end;
@@ -21995,7 +23212,7 @@ begin
     begin
       if IsEqualGUID(mainform.PluginSzenen[j].ID,ID) then
       begin
-//        typ:=11;
+//        typ:=12;
         mainform.PluginSzenen[j].Category:=Cat;
         break;
       end;
@@ -22152,6 +23369,17 @@ begin
       if IsEqualGUID(ID, presetscenes[i].ID) then
       begin
         text:=presetscenes[i].Name;
+        break;
+      end;
+    end;
+  end;
+  if text='' then
+  begin
+    for i:=0 to length(codescenes)-1 do
+    begin
+      if IsEqualGUID(ID, codescenes[i].ID) then
+      begin
+        text:=codescenes[i].Name;
         break;
       end;
     end;
@@ -23398,102 +24626,110 @@ begin
 
       temp:='scenes ';
       case strtoint(value[0]) of
-        0:
+        0: // Einfache Szenen
         begin
           temp:=temp+inttostr(length(EinfacheSzenen));
           for i:=0 to length(EinfacheSzenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(EinfacheSzenen[i].Name)+','+GUIDtoString(EinfacheSzenen[i].ID);
           end;
-        end; // Einfache Szenen
-        1:
+        end;
+        1: // Geräteszenen
         begin
           temp:=temp+inttostr(length(DeviceScenes));
           for i:=0 to length(DeviceScenes)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(DeviceScenes[i].Name)+','+GUIDtoString(DeviceScenes[i].ID);
           end;
-        end; // Geräteszenen
-        2:
+        end;
+        2: // Audioszenen
         begin
           temp:=temp+inttostr(length(AudioSzenen));
           for i:=0 to length(AudioSzenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(AudioSzenen[i].Name)+','+GUIDtoString(AudioSzenen[i].ID);
           end;
-        end; // Audioszenen
-        3:
+        end;
+        3: // Bewegungsszenen
         begin
           temp:=temp+inttostr(length(BewegungsSzenen));
           for i:=0 to length(BewegungsSzenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(BewegungsSzenen[i].Name)+','+GUIDtoString(BewegungsSzenen[i].ID);
           end;
-        end; // Bewegungsszenen
-        4:
+        end;
+        4: // Befehle
         begin
           temp:=temp+inttostr(length(Befehle2));
           for i:=0 to length(Befehle2)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(Befehle2[i].Name)+','+GUIDtoString(Befehle2[i].ID);
           end;
-        end; // Befehle
-        5:
+        end;
+        5: // Kombinationsszenen
         begin
           temp:=temp+inttostr(length(Kompositionsszenen));
           for i:=0 to length(Kompositionsszenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(Kompositionsszenen[i].Name)+','+GUIDtoString(Kompositionsszenen[i].ID);
           end;
-        end; // Kombinationsszenen
-        6:
+        end;
+        6: // Presets
         begin
           temp:=temp+inttostr(length(DevicePresets));
           for i:=0 to length(DevicePresets)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(DevicePresets[i].Name)+','+GUIDtoString(DevicePresets[i].ID);
           end;
-        end; // Presets
-        7:
+        end;
+        7: // Automatikszenen
         begin
           temp:=temp+inttostr(length(Autoszenen));
           for i:=0 to length(Autoszenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(Autoszenen[i].Name)+','+GUIDtoString(Autoszenen[i].ID);
           end;
-        end; // Automatikszenen
-        8:
+        end;
+        8: // Effekte
         begin
           temp:=temp+inttostr(length(Effektsequenzereffekte));
           for i:=0 to length(Effektsequenzereffekte)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(Effektsequenzereffekte[i].Name)+','+GUIDtoString(Effektsequenzereffekte[i].ID);
           end;
-        end; // Effekte
-        9:
+        end;
+        9: // MediaCenter Szenen
         begin
           temp:=temp+inttostr(length(MediaCenterSzenen));
           for i:=0 to length(MediaCenterSzenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(MediaCenterSzenen[i].Name)+','+GUIDtoString(MediaCenterSzenen[i].ID);
           end;
-        end; // MediaCenter Szenen
-        10:
+        end;
+        10: // Presetszene
         begin
           temp:=temp+inttostr(length(presetscenes));
           for i:=0 to length(presetscenes)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(presetscenes[i].Name)+','+GUIDtoString(presetscenes[i].ID);
           end;
-        end; // Presetszene
-        11:
+        end;
+        11: // Codeszenen
+        begin
+          temp:=temp+inttostr(length(codescenes));
+          for i:=0 to length(codescenes)-1 do
+          begin
+            temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(codescenes[i].Name)+','+GUIDtoString(codescenes[i].ID);
+          end;
+        end;
+        12: // Pluginszenen
         begin
           temp:=temp+inttostr(length(PluginSzenen));
           for i:=0 to length(PluginSzenen)-1 do
           begin
             temp:=temp+' '+inttostr(i+1)+':'+FilterTextForNetwork(PluginSzenen[i].Name)+','+GUIDtoString(PluginSzenen[i].ID);
           end;
-        end; // Pluginszenen
+        end;
       end;
 
       AContext.Connection.Socket.WriteLn(temp);
@@ -24518,419 +25754,11 @@ end;
 
 procedure TMainform.PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
-var
-  i,j,k,l,m,value,col,row,channelperrow,fadergroup,offset:integer;
-  dobreak:boolean;
 begin
-  if (faderpanelup and (Y>Paintbox1.Height-258)) or (Y>(Paintbox1.Height-48)) then
-  begin
-    if not UserAccessGranted(2, false) then exit;
-
-    if not faderpanelup then
-    begin
-      faderpanelup:=true;
-    end;
-
-    faderpaneltimerbyte:=0;
-    FaderpanelhideTimer.Enabled:=true;
-
-    if faderpanelup then
-      offset:=258
-    else
-      offset:=48;
-
-    // Maus über Faderpanel
-    if (Shift=[ssLeft]) then
-    begin
-      if ((y-(Paintbox1.Height-offset))>50) then
-      begin
-        // Fader bewegen
-        value:=(y-(Paintbox1.Height-offset))+11-74;
-        if value<0 then value:=0;
-        if value>167 then value:=167;
-        value:=round(value/167*255);
-        // mainform.SendData(scrollbar1.position+mouseoverfader,-1,value,0,0);
-        mainform.SendData(faderchannel[mouseoverfader],-1,value,0,0);
-
-        fadergroup:=0;
-        for i:=0 to length(faderselected)-1 do
-        begin
-          if faderselected[i] and (i=(faderchannel[mouseoverfader]-1)) then fadergroup:=1;
-          if faderselectedalt[i] and (i=(faderchannel[mouseoverfader]-1)) then fadergroup:=fadergroup+2;
-          if faderselectedshift[i] and (i=(faderchannel[mouseoverfader]-1)) then fadergroup:=fadergroup+4;
-        end;
-
-        for i:=0 to length(faderselected)-1 do
-        begin
-          if faderselected[i] and (fadergroup and 1 = 1) then
-            mainform.SendData(i+1,-1,value,0,0);
-
-          if faderselectedalt[i] and (fadergroup and 2 = 2) then
-            mainform.SendData(i+1,-1,value,0,0);
-
-          if faderselectedshift[i] and (fadergroup and 4 = 4) then
-            mainform.SendData(i+1,-1,value,0,0);
-        end;
-      end;
-    end else
-    begin
-      if (X>0) and (X<40) then
-      begin
-        // linker Rand
-        scrolltoright:=false;
-        scrolltoleft:=true;
-      end else if (X>(Paintbox1.Width-40)) and (X<Paintbox1.Width) then
-      begin
-        // rechter Rand
-        scrolltoright:=true;
-        scrolltoleft:=false;
-      end else
-      begin
-        scrolltoright:=false;
-        scrolltoleft:=false;
-      end;
-    end;
-    RefreshMainformScreen:=true;
-  end else
-  begin
-    case pagecontrol1.ActivePageIndex of
-      0:  // Bühne
-      begin
-        if not UserAccessGranted(2, false) then exit;
-
-        grafischebuehnenansicht.dorefresh:=(Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]);
-
-/////////// DeviceHoverEffect
-        grafischebuehnenansicht.MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
-        dobreak:=false;
-        for i:=0 to length(mainform.devices)-1 do
-        begin
-          for j:=0 to length(mainform.devices[i].bank)-1 do
-          begin
-            if mainform.devices[i].ShowInStageview then
-            if mainform.devices[i].bank[j]=BankSelect.Itemindex then
-            begin
-              // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
-              if (mainform.devices[i].left[j]<=X)
-              and ((mainform.devices[i].left[j]+mainform.devices[i].picturesize)>=X)
-              and (mainform.devices[i].Top[j]<=Y)
-              and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize)>=Y) then
-              begin
-                grafischebuehnenansicht.MouseOnDeviceID:=mainform.devices[i].ID;
-                grafischebuehnenansicht.MouseOnDeviceHover:=i;
-                dobreak:=true;
-                break;
-              end;
-            end;
-          end;
-          if dobreak then
-            break;
-        end;
-        if not dobreak then
-        begin
-          grafischebuehnenansicht.MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
-          grafischebuehnenansicht.MouseOnDeviceHover:=-1;
-        end;
-////////////
-
-/////////// DeviceHighlight
-        if CheckBox6.Checked then
-        begin
-          // Altes Gerät zurücksetzen
-          geraetesteuerung.set_color(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.R, grafischebuehnenansicht.LastMouseOverHighlightDevice.G, grafischebuehnenansicht.LastMouseOverHighlightDevice.B, 150, 0);
-          geraetesteuerung.set_shutter(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.ShutterOpenOrClose);
-          geraetesteuerung.set_dimmer(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.LastMouseOverHighlightDevice.Dimmer, 150, 0);
-          geraetesteuerung.set_channel(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, 'a', grafischebuehnenansicht.LastMouseOverHighlightDevice.A, 150, 0);
-          geraetesteuerung.set_channel(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, 'w', grafischebuehnenansicht.LastMouseOverHighlightDevice.W, 150, 0);
-
-          // Aktuelle Werte speichern
-          if not IsEqualGUID(grafischebuehnenansicht.LastMouseOverHighlightDevice.ID, grafischebuehnenansicht.MouseOnDeviceID) then
-          begin
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.ID:=grafischebuehnenansicht.MouseOnDeviceID;
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.Dimmer:=geraetesteuerung.get_dimmer(grafischebuehnenansicht.MouseOnDeviceID);
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.R:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'R');
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.G:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'G');
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.B:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'B');
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.A:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'A');
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.W:=geraetesteuerung.get_channel(grafischebuehnenansicht.MouseOnDeviceID, 'W');
-            grafischebuehnenansicht.LastMouseOverHighlightDevice.ShutterOpenOrClose:=geraetesteuerung.get_shutter(grafischebuehnenansicht.MouseOnDeviceID);
-          end;
-
-          // Aktuelles Gerät setzen
-          if grafischebuehnenansicht.MouseOnDeviceHover>-1 then
-          begin
-            geraetesteuerung.set_shutter(grafischebuehnenansicht.MouseOnDeviceID, 255);
-            geraetesteuerung.set_color(grafischebuehnenansicht.MouseOnDeviceID, 255, 255, 255, 150, 0);
-            geraetesteuerung.set_dimmer(grafischebuehnenansicht.MouseOnDeviceID, 255, 150, 0);
-            geraetesteuerung.set_channel(grafischebuehnenansicht.MouseOnDeviceID, 'a', 255, 150, 0);
-            geraetesteuerung.set_channel(grafischebuehnenansicht.MouseOnDeviceID, 'w', 255, 150, 0);
-          end;
-        end;
-////////////
-
-        if grafischebuehnenansicht.MouseOnDevice>-1 then
-        begin
-          if CheckBox3.Checked then exit;
-
-          if mainform.devices[grafischebuehnenansicht.MouseOnDevice].hasDimmer then
-          begin
-            for k:=0 to length(mainform.devices[grafischebuehnenansicht.MouseOnDevice].kanaltyp)-1 do
-            if lowercase(mainform.devices[grafischebuehnenansicht.MouseOnDevice].kanaltyp[k])='dimmer' then
-              Paintbox1.Hint:=mainform.devices[grafischebuehnenansicht.MouseOnDevice].Name+' ('+mainform.levelstr(255-mainform.data.ch[mainform.devices[grafischebuehnenansicht.MouseOnDevice].Startaddress+k])+'), Geräteicon'
-          end else
-          begin
-            Paintbox1.Hint:='Geräteicon, '+mainform.devices[grafischebuehnenansicht.MouseOnDevice].Name;
-          end;
-
-          if Shift = [ssLeft] then
-          begin
-            // Linke Maustaste
-            grafischebuehnenansicht.RedrawPictures:=true;
-
-            if (mainform.devices[grafischebuehnenansicht.MouseOnDevice].selected[grafischebuehnenansicht.MouseOnDeviceCopy]=false) then
-            begin // einzelnes Gerätebild verschieben
-              // Sender GeräteBild
-              mainform.devices[grafischebuehnenansicht.MouseOnDevice].Left[grafischebuehnenansicht.MouseOnDeviceCopy]:=X-round(mainform.devices[grafischebuehnenansicht.MouseOnDevice].picturesize/2);
-              mainform.devices[grafischebuehnenansicht.MouseOnDevice].Top[grafischebuehnenansicht.MouseOnDeviceCopy]:=Y-round(mainform.devices[grafischebuehnenansicht.MouseOnDevice].picturesize/2);
-
-              for m:=0 to length(mainform.Devices)-1 do
-              begin
-                if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[grafischebuehnenansicht.MouseOnDevice].ID)) then
-                begin
-                  mainform.Devices[m].left[grafischebuehnenansicht.MouseOnDeviceCopy]:=X-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixXPosition;
-                  mainform.Devices[m].top[grafischebuehnenansicht.MouseOnDeviceCopy]:=Y-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixYPosition;
-                end;
-              end;
-              // Sender GeräteBild Ende
-            end else
-            begin
-              // Andere GeräteBilder
-              for k:=0 to length(mainform.devices)-1 do
-              for l:=0 to length(mainform.devices[k].selected)-1 do
-              begin
-                if ((mainform.devices[k].selected[l])) then
-                begin
-                  grafischebuehnenansicht.StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
-                  if not grafischebuehnenansicht.StopDeviceMoving then
-                  begin
-                    mainform.devices[k].Left[l]:=mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X);
-                    mainform.devices[k].Top[l]:=mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
-                  end;
-                end;
-              end;
-              // Andere GeräteBilder Ende
-
-              // Andere Kanal-Bilder
-              for k:=0 to length(mainform.buehnenansichtdevices)-1 do
-              begin
-                if ((mainform.buehnenansichtdevices[k].selected)) then
-                begin
-                  grafischebuehnenansicht.StopDeviceMoving:=(mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Height);
-                  if not grafischebuehnenansicht.StopDeviceMoving then
-                  begin
-                    mainform.buehnenansichtdevices[k].left:=mainform.buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X);
-                    mainform.buehnenansichtdevices[k].top:=mainform.buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
-                  end;
-                end;
-              end;
-              // Andere Kanal-Bilder Ende
-            end;
-            // Ende von Linke Maustaste
-          end;
-        end else if grafischebuehnenansicht.MouseOnBuehnenansichtDevice>-1 then
-        begin
-          if CheckBox3.Checked then exit;
-
-          Paintbox1.Hint:='Kanalicon, Kanal: '+inttostr(mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].channel)+' ('+inttostr(mainform.channel_value[mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].channel])+')';
-
-            if Shift = [ssLeft] then
-            begin
-              // Linke Maustaste
-              if (mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].selected=false) then
-              begin // einzelnes Gerätebild verschieben
-                // Sender KanalBild
-                mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].Left:=X-round(mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].picturesize/2);
-                mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].Top:=Y-round(mainform.Buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtDevice].picturesize/2);
-                // Sender KanalBild Ende
-              end else
-              begin
-                // Andere KanalBilder
-                for k:=0 to length(mainform.Buehnenansichtdevices)-1 do
-                begin
-                  if ((mainform.Buehnenansichtdevices[k].selected)) then
-                  begin
-                    grafischebuehnenansicht.StopDeviceMoving:=(mainform.Buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.Buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.Buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.Buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.Buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.Buehnenansichtdevices[k].picturesize)>paintbox1.Height);
-                    if not grafischebuehnenansicht.StopDeviceMoving then
-                    begin
-                      mainform.Buehnenansichtdevices[k].Left:=mainform.Buehnenansichtdevices[k].OldPos.X-(grafischebuehnenansicht.MouseDownPoint.X-X);
-                      mainform.Buehnenansichtdevices[k].Top:=mainform.Buehnenansichtdevices[k].OldPos.Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
-                    end;
-                  end;
-                end;
-                // Andere KanalBilder Ende
-
-                // Andere Geräte-Bilder
-                for k:=0 to length(mainform.devices)-1 do
-                for l:=0 to length(mainform.devices[k].selected)-1 do
-                begin
-                  if ((mainform.devices[k].selected[l])) then
-                  begin
-                    grafischebuehnenansicht.StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
-                    if not grafischebuehnenansicht.StopDeviceMoving then
-                    begin
-                      mainform.devices[k].left[l]:=mainform.devices[k].OldPos[l].X-(grafischebuehnenansicht.MouseDownPoint.X-X);
-                      mainform.devices[k].top[l]:=mainform.devices[k].OldPos[l].Y-(grafischebuehnenansicht.MouseDownPoint.Y-Y);
-                    end;
-                  end;
-                end;
-                // Andere Geräte-Bilder Ende
-              end;
-              // Ende von Linke Maustaste
-            end;
-        end else if grafischebuehnenansicht.MouseOnProgress>-1 then
-        begin
-          if Shift=[ssLeft] then
-          begin
-            value:=round(((X-mainform.devices[grafischebuehnenansicht.MouseOnProgress].left[grafischebuehnenansicht.MouseOnDeviceCopy])/mainform.devices[grafischebuehnenansicht.MouseOnProgress].picturesize)*255);
-            if value<0 then value:=0;
-            if value>255 then value:=255;
-            if mainform.devices[grafischebuehnenansicht.MouseOnProgress].hasDimmer then
-              geraetesteuerung.set_dimmer(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,value)
-            else if mainform.devices[grafischebuehnenansicht.MouseOnProgress].hasFog then
-              geraetesteuerung.set_fog(mainform.devices[grafischebuehnenansicht.MouseOnProgress].ID,value);
-          end;
-        end else if grafischebuehnenansicht.MouseOnBuehnenansichtProgress>-1 then
-        begin
-          if Shift=[ssLeft] then
-          begin
-            value:=round(((X-mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].left)/mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].picturesize)*255);
-            if value<0 then value:=0;
-            if value>255 then value:=255;
-            mainform.Senddata(mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].channel, 255-value, 255-value, 0);
-      //      mainform.channel_value[mainform.buehnenansichtdevices[grafischebuehnenansicht.MouseOnBuehnenansichtProgress].channel]:=value;
-          end;
-        end else if grafischebuehnenansicht.MouseOnBuehnenansichtColor>-1 then
-        begin
-        end else if grafischebuehnenansicht.MouseOnLabel>-1 then
-        begin
-        end else if grafischebuehnenansicht.MouseOnNumber>-1 then
-        begin
-        end else if grafischebuehnenansicht.MouseOnBuehnenansichtNumber>-1 then
-        begin
-        end else
-        begin
-        If shift=[ssLeft] then
-        begin
-          grafischebuehnenansicht.Auswahl.Right:=X;
-          grafischebuehnenansicht.Auswahl.Bottom:=Y;
-          grafischebuehnenansicht.ShowAuswahl:=true;
-
-          for i:=0 to length(mainform.buehnenansichtdevices)-1 do
-          begin
-            if mainform.buehnenansichtdevices[i].bank=BankSelect.Itemindex then
-            begin
-              // grafischebuehnenansicht.Auswahl.Left=Links grafischebuehnenansicht.Auswahl.Right=Rechts                                                                      grafischebuehnenansicht.Auswahl.Top=Oben grafischebuehnenansicht.Auswahl.Bottom=Unten
-              if (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom) then
-                mainform.buehnenansichtdevices[i].selected:=true else mainform.buehnenansichtdevices[i].selected:=false;
-            end;
-          end;
-
-          for i:=0 to length(mainform.devices)-1 do
-          for j:=0 to length(mainform.devices[i].bank)-1 do
-          begin
-            if mainform.devices[i].bank[j]=BankSelect.Itemindex then
-            begin
-              // grafischebuehnenansicht.Auswahl.Left=Links grafischebuehnenansicht.Auswahl.Right=Rechts                                                                      grafischebuehnenansicht.Auswahl.Top=Oben grafischebuehnenansicht.Auswahl.Bottom=Unten
-              if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom) then
-                mainform.devices[i].selected[j]:=true else mainform.devices[i].selected[j]:=false;
-            end;
-          end;
-        end;
-
-        If (shift=[ssLeft,ssShift]) or (shift=[ssLeft,ssShift,ssCtrl]) then
-        begin
-          grafischebuehnenansicht.Auswahl.Right:=X;
-          grafischebuehnenansicht.Auswahl.Bottom:=Y;
-          grafischebuehnenansicht.ShowAuswahl:=true;
-
-          for i:=0 to length(mainform.devices)-1 do
-          for j:=0 to length(mainform.devices[i].bank)-1 do
-          begin
-            if mainform.devices[i].bank[j]=BankSelect.Itemindex then
-            begin
-              // grafischebuehnenansicht.Auswahl.Left=Links grafischebuehnenansicht.Auswahl.Right=Rechts                                                                      grafischebuehnenansicht.Auswahl.Top=Oben grafischebuehnenansicht.Auswahl.Bottom=Unten
-              if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<grafischebuehnenansicht.Auswahl.Bottom)
-              or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<grafischebuehnenansicht.Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>grafischebuehnenansicht.Auswahl.Bottom) then
-                mainform.DeviceSelected[i]:=true;
-            end;
-          end;
-        end;
-        end;
-      end;
-      1:  // Kanäle
-      begin
-        if not UserAccessGranted(2, false) then exit;
-
-        if (Shift=[ssLeft]) then
-        begin
-          ScrollBar1.Position:=round((mouseychannel-y)/ChannelHeight+scrollbarpositiononmousedown);
-          ErsteZeile:=Scrollbar1.position;
-        end;
-
-        lastx:=x;
-        lasty:=y;
-
-        if (Shift=[]) then
-        begin
-          col:=(x div ChannelWidth)+1;
-          row:=(y div ChannelHeight)+ErsteZeile;
-          channelperrow:=paintbox1.Width div ChannelWidth;
-          MouseOverKanal:=channelperrow*row+col;
-        end;
-
-        if (Shift=[ssLeft, ssCtrl, ssShift]) then
-        begin
-          if (MouseOverKanal>-1) and (MouseOverKanal<mainform.lastchan) then
-            if ((ChannelValueOnClick+(mouseychannel-y))>=0) and ((ChannelValueOnClick+(mouseychannel-y))<=255) then
-              mainform.channel_value[MouseOverKanal]:=ChannelValueOnClick+(mouseychannel-y);
-        end;
-
-        Label1.Caption:='';
-        Label2.Caption:='';
-        Label6.Caption:='Min-Wert: '+mainform.levelstr(mainform.channel_minvalue[MouseOverKanal]);
-        Label7.Caption:='Max-Wert: '+mainform.levelstr(mainform.channel_maxvalue[MouseOverKanal]);
-        Label6.Alignment:=taRightJustify;
-        Label7.Alignment:=taRightJustify;
-
-        for i:=0 to length(mainform.devices)-1 do
-        begin
-          if (MouseOverKanal>=mainform.devices[i].Startaddress) and (MouseOverKanal<mainform.devices[i].Startaddress+mainform.devices[i].MaxChan) then
-          begin
-            if length(Label1.Caption)>0 then
-              Label1.Caption:=Label1.Caption+', '+mainform.devices[i].Name
-            else
-              Label1.Caption:=mainform.devices[i].Name;
-            Label2.Caption:=mainform.devices[i].kanalname[MouseOverKanal-mainform.devices[i].Startaddress]+' | '+mainform.levelstr(mainform.channel_value[MouseOverKanal]);
-          end;
-        end;
-        RefreshMainformScreen:=true;
-      end;
-      2:  // Panel
-      begin
-        if not UserAccessGranted(3, false) then exit;
-
-        kontrollpanel.PaintBox1MouseMove(nil, Shift, X, Y);
-      end;
-    end;
-  end;
+  CurrentMousePositionX:=X;
+  CurrentMousePositionY:=Y;
+  CurrentMouseMoveShiftState:=Shift;
+  HandleMouseMove:=true;
 end;
 
 procedure TMainform.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
@@ -24940,6 +25768,11 @@ var
   ddfwindowposition:integer;
   toppos, leftpos:single;
 begin
+  CurrentMousePositionX:=X;
+  CurrentMousePositionY:=Y;
+  CurrentMouseMoveShiftState:=Shift;
+  HandleMouseMove:=true;
+
   if (faderpanelup and (Y>Paintbox1.Height-258)) or (Y>(Paintbox1.Height-48)) then
   begin
     if not UserAccessGranted(2) then exit;
@@ -26051,7 +26884,7 @@ begin
       ShowText:=_('Installierte Geräte:')+' '+inttostr(length(mainform.devices));
       _MainformPreBuffer.Canvas.TextOut(_MainformPreBuffer.Width-_MainformPreBuffer.Canvas.TextWidth(ShowText)-16, 10, ShowText);
       // Anzahl der Szenen
-      i:=length(mainform.EinfacheSzenen)+length(mainform.devicescenes)+length(mainform.Audioszenen)+length(mainform.Bewegungsszenen)+length(mainform.Autoszenen)+length(mainform.MediaCenterSzenen)+length(mainform.DevicePresets)+length(mainform.presetscenes)+length(mainform.PluginSzenen);
+      i:=length(mainform.EinfacheSzenen)+length(mainform.devicescenes)+length(mainform.Audioszenen)+length(mainform.Bewegungsszenen)+length(mainform.Autoszenen)+length(mainform.MediaCenterSzenen)+length(mainform.DevicePresets)+length(mainform.presetscenes)+length(mainform.codescenes)+length(mainform.PluginSzenen);
       ShowText:=_('Erstellte Szenen:')+' '+inttostr(i);
       _MainformPreBuffer.Canvas.TextOut(_MainformPreBuffer.Width-_MainformPreBuffer.Canvas.TextWidth(ShowText)-16, 25, ShowText);
       // Dimmerkernelzeit
@@ -26916,6 +27749,8 @@ begin
   ReTranslateComponent(picturechangeform);
   ReTranslateComponent(nodecontrolform);
   ReTranslateComponent(usermgmtform);
+  ReTranslateComponent(xtouchcontrolform);
+  ReTranslateComponent(elgatostreamdeckform);
 
   // Plugins neu initiieren
   mainform.Pluginsreaktivieren1Click(nil);
@@ -27433,6 +28268,10 @@ begin
       midieventfrm.close;
     if winlircform.showing then
       winlircform.close;
+    if xtouchcontrolform.Showing then
+      xtouchcontrolform.Close;
+    if elgatostreamdeckform.Showing then
+      elgatostreamdeckform.Close;
   end;
 
 
@@ -27469,6 +28308,343 @@ procedure TMainform.TrackBar3Change(Sender: TObject);
 begin
   grafischebuehnenansicht.Trackbar2.Position:=Trackbar3.Position;
   grafischebuehnenansicht.Trackbar2Change(nil);
+end;
+
+procedure TMainform.dxBarLargeButton9Click(Sender: TObject);
+begin
+  if not UserAccessGranted(2) then exit;
+
+  if xtouchcontrolform.Showing then
+    xtouchcontrolform.BringToFront
+  else
+  begin
+    xtouchcontrolform.Show;
+  end;
+end;
+
+procedure TMainform.dxBarLargeButton10Click(Sender: TObject);
+begin
+  if not UserAccessGranted(2) then exit;
+
+  if elgatostreamdeckform.Showing then
+    elgatostreamdeckform.BringToFront
+  else
+  begin
+    elgatostreamdeckform.Show;
+  end;
+end;
+
+procedure Tmainform.HidCtlDeviceCreateError(
+  Controller: TJvHidDeviceController; PnPInfo: TJvHidPnPInfo; var Handled,
+  RetryCreate: Boolean);
+begin
+  // handle errors if desired. For now: ignore error
+  Handled:=true;
+  RetryCreate:=false;
+end;
+
+function Tmainform.HidCtlEnumerate(HidDev: TJvHidDevice;
+  const Idx: Integer): Boolean;
+var
+  i, btn, DeviceIndex, X, Y:integer;
+begin
+  if HidDev.Attributes.VendorID=$0FD9 then
+  begin
+    if (HidDev.Attributes.ProductID=$006C) or
+    (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or
+    (HidDev.Attributes.ProductID=$006D) or (HidDev.Attributes.ProductID=$0063) then
+    begin
+      // check if we already configured this device
+      DeviceIndex:=-1;
+      for i:=0 to length(ElgatoStreamDeckArray)-1 do
+      begin
+        if ElgatoStreamDeckArray[i].Serial=HidDev.SerialNumber then
+        begin
+          // device already in array
+          DeviceIndex:=i;
+          break;
+        end;
+      end;
+      if DeviceIndex=-1 then
+      begin
+        // this is a new device -> put it to new-device-combobox
+        setlength(ElgatoStreamDeckArray, length(ElgatoStreamDeckArray)+1);
+        DeviceIndex:=length(ElgatoStreamDeckArray)-1;
+
+        ElgatoStreamDeckArray[DeviceIndex].Brightness:=50; // set default brightness
+        ElgatoStreamDeckArray[DeviceIndex].UseAutoModeOnLastButton:=true;
+        ElgatoStreamDeckArray[DeviceIndex].CurrentButtonMode:=1;
+        for btn:=0 to 31 do
+        begin
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].ButtonType:=0;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Increment:=15;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].CurrentValue:=0;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].UseHoldToChange:=true;
+
+          X:=0;
+          Y:=0;
+          if HidDev.Attributes.ProductID=$0063 then
+          begin
+            // 6 Buttons
+            X:=btn-trunc(btn/3)*3;
+            Y:=trunc(btn/3);
+          end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
+          begin
+            // 15 Buttons
+            X:=btn-trunc(btn/5)*5;
+            Y:=trunc(btn/5);
+          end else if HidDev.Attributes.ProductID=$006C then
+          begin
+            // 32 Buttons
+            X:=btn-trunc(btn/8)*8;
+            Y:=trunc(btn/8);
+          end;
+
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelX:=X+1;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelY:=Y+1;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].DataInChannel:=btn+1;
+          CreateGUID(ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.ID);
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.Name:='Button '+inttostr(btn+1)+'-Event';
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OnValue:=255;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.SwitchValue:=128;
+          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OffValue:=0;
+        end;
+      end;
+
+      // connect this device
+      HidCtl.CheckOutByIndex(ElgatoStreamDeckArray[DeviceIndex].HidDevice, Idx);
+      // update ElgatoStreamDeckArray
+      ElgatoStreamDeckArray[DeviceIndex].Serial:=HidDev.SerialNumber;
+      ElgatoStreamDeckArray[DeviceIndex].Online:=true;
+
+      if HidDev.Attributes.ProductID=$006C then
+      begin
+        // it is a Stream Deck XL
+        // 32 buttons
+        ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=32;
+      end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
+      begin
+        // it is a Stream Deck or Stream Deck original v2 or Stream Deck MK2
+        // 15 buttons
+        ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=15;
+      end else if HidDev.Attributes.ProductID=$0063 then
+      begin
+        // it is a Stream Deck Mini
+        // 6 buttons
+        ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=6;
+      end;
+
+      // put this device to GUI
+      elgatostreamdeckform.devicelistbox.ItemIndex:=elgatostreamdeckform.devicelistbox.Items.Add(HidDev.VendorName+' '+HidDev.ProductName+' ['+HidDev.SerialNumber+']');
+      setlength(ElgatoStreamSerials, length(ElgatoStreamSerials)+1);
+      ElgatoStreamSerials[length(ElgatoStreamSerials)-1]:=HidDev.SerialNumber;
+
+      // set brightness
+      elgatostreamdeckform.SetBrightness(HidDev.SerialNumber, ElgatoStreamDeckArray[DeviceIndex].Brightness);
+    end;
+  end;
+
+  Result := True;
+end;
+
+procedure Tmainform.HidCtlDeviceChange(Sender: TObject);
+var
+  i: Integer;
+begin
+  // disconnect all devices and reconnect
+  for i:=0 to length(ElgatoStreamDeckArray)-1 do
+  begin
+    ElgatoStreamDeckArray[i].Online:=false;
+    try
+      ElgatoStreamDeckArray[i].HidDevice.Free;
+    except
+    end;
+  end;
+
+  elgatostreamdeckform.devicelistbox.Clear;
+  setlength(ElgatoStreamSerials, 0);
+
+  // search for all connected devices
+  HidCtl.Enumerate;
+end;
+
+procedure Tmainform.HidCtlDeviceData(HidDev: TJvHidDevice; ReportID: Byte;
+  const Data: Pointer; Size: Word);
+var
+  Buffer: array of byte;
+  i,b, DeviceIndex:integer;
+  CurrentButtonMode:byte;
+  AtLeastOneButtonPressed:boolean;
+  PID:Word;
+  PressedButton:integer;
+begin
+  if HidDev.Attributes.VendorID=$0FD9 then
+  begin
+    // it is a product of Elgato
+
+    // check if we have a StreamDeck
+    PID:=HidDev.Attributes.ProductID;
+
+    if (PID=$0060) or (PID=$0063) or (PID=$006D) or (PID=$0080) or (PID=$006C) then
+    begin
+      // StreamDeck detected. Copy data
+      setlength(Buffer, Size);
+      Move(Data^, Pointer(Buffer)^, Size);
+    end else
+    begin
+      // not a StreamDeck - exit
+      exit;
+    end;
+
+    AtLeastOneButtonPressed:=false;
+
+    // search for this product serial in array
+    for i:=0 to length(ElgatoStreamDeckArray)-1 do
+    begin
+      if ElgatoStreamDeckArray[i].Serial=HidDev.SerialNumber then
+      begin
+        for b:=0 to ElgatoStreamDeckArray[i].ButtonCount-1 do
+        begin
+          // StreamDeck Original has inverted indexing of buttons
+          if (PID=$0060) then
+          begin
+            PressedButton:=15-b; // StreamDeck Original has 15 buttons
+          end else
+          begin
+            PressedButton:=b;
+          end;
+
+          if (mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton) then
+          begin
+            CurrentButtonMode:=mainform.ElgatoStreamDeckArray[i].CurrentButtonMode;
+          end else
+          begin
+            CurrentButtonMode:=ElgatoStreamDeckArray[i].Buttons[PressedButton].ButtonType;
+          end;
+
+          if (Buffer[3+b]=1) and not ElgatoStreamDeckArray[i].Buttons[PressedButton].Pressed then
+          begin
+            // button pressed
+            ElgatoStreamDeckArray[i].Buttons[PressedButton].Pressed:=true;
+            AtLeastOneButtonPressed:=true;
+
+            if (PressedButton=(ElgatoStreamDeckArray[i].ButtonCount-1)) and (mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton) then
+            begin
+              // we are at last button and we want to switch between modes
+              if mainform.ElgatoStreamDeckArray[i].CurrentButtonMode<4 then
+                mainform.ElgatoStreamDeckArray[i].CurrentButtonMode:=mainform.ElgatoStreamDeckArray[i].CurrentButtonMode+1
+              else
+                mainform.ElgatoStreamDeckArray[i].CurrentButtonMode:=1;
+            end else
+            begin
+              if ElgatoStreamDeckArray[i].Buttons[PressedButton].UseHoldToChange then
+              begin
+                if (CurrentButtonMode=3) or (CurrentButtonMode=4) then
+                begin
+                  if mainform.ElgatoStreamDeckArray[i].Buttons[PressedButton].CurrentValue=255 then
+                    mainform.ElgatoStreamDeckArray[i].Buttons[PressedButton].Increment:=-1*abs(mainform.ElgatoStreamDeckArray[i].Buttons[PressedButton].Increment)
+                  else if mainform.ElgatoStreamDeckArray[i].Buttons[PressedButton].CurrentValue=0 then
+                    mainform.ElgatoStreamDeckArray[i].Buttons[PressedButton].Increment:=abs(mainform.ElgatoStreamDeckArray[i].Buttons[PressedButton].Increment);
+                end;
+              end else
+              begin
+                mainform.ElgatoStreamDeckArray[i].Buttons[PressedButton].CurrentValue:=255;
+              end;
+
+              case CurrentButtonMode of
+                1: // 1=Kontrollpanel
+                begin
+                  kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(ElgatoStreamDeckArray[i].Buttons[PressedButton].KontrollpanelX-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(ElgatoStreamDeckArray[i].Buttons[PressedButton].KontrollpanelY-1)+(kontrollpanel.btnheight.Value / 2)));
+                  kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssLeft], trunc(kontrollpanel.btnwidth.Value*(ElgatoStreamDeckArray[i].Buttons[PressedButton].KontrollpanelX-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(ElgatoStreamDeckArray[i].Buttons[PressedButton].KontrollpanelY-1)+(kontrollpanel.btnheight.Value / 2)));
+                end;
+                2: // 2=DeviceOrGroupSelection
+                begin
+                  DeviceIndex:=geraetesteuerung.GetDevicePositionInDeviceArray(@ElgatoStreamDeckArray[i].Buttons[PressedButton].DeviceOrGroupID);
+                  if DeviceIndex>-1 then
+                  begin
+                    // it is a device -> deselect all devices and select only this device
+                    DeSelectAllDevices;
+                    deviceselected[geraetesteuerung.GetDevicePositionInDeviceArray(@ElgatoStreamDeckArray[i].Buttons[PressedButton].DeviceOrGroupID)]:=true;
+                  end else
+                  begin
+                    // it is a Group
+                    SelectDeviceGroup(ElgatoStreamDeckArray[i].Buttons[PressedButton].DeviceOrGroupID, false);
+                  end;
+                end;
+                3: // 3=DataIn
+                begin
+                  if not ElgatoStreamDeckArray[i].Buttons[PressedButton].UseHoldToChange then
+                  begin
+                    mainform.ExecuteDataInEvent(ElgatoStreamDeckArray[i].Buttons[PressedButton].DataInChannel, 255);
+                  end;
+                end;
+                4: // 4=Befehl
+                begin
+                  if not ElgatoStreamDeckArray[i].Buttons[PressedButton].UseHoldToChange then
+                  begin
+                    StartBefehl(ElgatoStreamDeckArray[i].Buttons[PressedButton].Befehl.ID, 255);
+                  end;
+                end;
+              end;
+            end;
+          end else if (Buffer[3+b]=0) and ElgatoStreamDeckArray[i].Buttons[PressedButton].Pressed then
+          begin
+            // button released
+            ElgatoStreamDeckArray[i].Buttons[PressedButton].Pressed:=false;
+
+            if (CurrentButtonMode=3) or (CurrentButtonMode=4) then
+            begin
+              // change direction of value-change on each button-release
+              ElgatoStreamDeckArray[i].Buttons[PressedButton].Increment:=-1*ElgatoStreamDeckArray[i].Buttons[PressedButton].Increment;
+            end;
+
+            if (PressedButton=(ElgatoStreamDeckArray[i].ButtonCount-1)) and (mainform.ElgatoStreamDeckArray[i].UseAutoModeOnLastButton) then
+            begin
+              // we are at last button and we want to switch between modes
+              // nothing to do on release
+            end else
+            begin
+              if not ElgatoStreamDeckArray[i].Buttons[PressedButton].UseHoldToChange then
+                mainform.ElgatoStreamDeckArray[i].Buttons[PressedButton].CurrentValue:=0;
+
+              case CurrentButtonMode of
+                1: // 1=Kontrollpanel
+                begin
+                  kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(ElgatoStreamDeckArray[i].Buttons[PressedButton].KontrollpanelX-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(ElgatoStreamDeckArray[i].Buttons[PressedButton].KontrollpanelY-1)+(kontrollpanel.btnheight.Value / 2)));
+                  kontrollpanel.PaintBox1MouseUp(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(ElgatoStreamDeckArray[i].Buttons[PressedButton].KontrollpanelX-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(ElgatoStreamDeckArray[i].Buttons[PressedButton].KontrollpanelY-1)+(kontrollpanel.btnheight.Value / 2)));
+                end;
+                2: // 2=DeviceOrGroupSelection
+                begin
+                  // do nothing on release
+                end;
+                3: // 3=DataIn
+                begin
+                  if not ElgatoStreamDeckArray[i].Buttons[PressedButton].UseHoldToChange then
+                    mainform.ExecuteDataInEvent(ElgatoStreamDeckArray[i].Buttons[PressedButton].DataInChannel, 0);
+                end;
+                4: // 4=Befehl
+                begin
+                  if not ElgatoStreamDeckArray[i].Buttons[PressedButton].UseHoldToChange then
+                    StartBefehl(ElgatoStreamDeckArray[i].Buttons[PressedButton].Befehl.ID, 0);
+                end;
+              end;
+            end;
+          end;
+        end;
+
+        break;
+      end;
+    end;
+
+    if AtLeastOneButtonPressed then
+    begin
+      elgatostreamdeckform.ElgatoStreamDeckDisplayTimer.Interval:=100;
+      elgatostreamdeckform.ElgatoStreamDeckDisplayTimerTimer(nil); // direct refresh of button
+    end else
+    begin
+      elgatostreamdeckform.ElgatoStreamDeckDisplayTimer.Interval:=500;
+    end;
+  end;
 end;
 
 end.

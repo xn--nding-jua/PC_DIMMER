@@ -12,7 +12,7 @@
   <function channel="2" minvalue="0" maxvalue="255" name="Dimmer/Strobe" fade="yes" type="shutter"/>
   <function channel="3" minvalue="0" maxvalue="255" name="Colour" fade="yes" type="color1"/>
  </channels>
- <initvalues 0="128" 1="128" 2="-1" 3="-1" />
+ <initvalues ch0="128" ch1="128" ch2="-1" ch3="-1" />
  <colors>
   <color name="No function" value="0" valueend="7" r="0" g="0" b="0" />
   <color name="White" value="8" valueend="21" r="255" g="255" b="255" />

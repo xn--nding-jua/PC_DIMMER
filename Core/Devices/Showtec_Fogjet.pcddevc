@@ -9,7 +9,7 @@
  <channels>
   <function channel="0" minvalue="0" maxvalue="255" name="Fog" fade="no" type="shutter"/>
  </channels>
- <initvalues 0="0" />
+ <initvalues ch0="0" />
  <form width="195" height="150">
   <deviceimage top="8" left="8" width="64" height="64"/>
   <devicename top="10" left="80"/>

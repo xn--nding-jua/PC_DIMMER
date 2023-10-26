@@ -220,6 +220,10 @@ type
     Puffer1, Puffer2:TBitmap;
     startingup:boolean;
 
+    CurrentMousePositionX, CurrentMousePositionY:integer;
+    CurrentMouseMoveShiftState:TShiftState;
+    HandleMouseMove:boolean;
+
     LastDevice, LastBuehnenansichtdevice:integer;
     Counter:integer;
     oldvalues:array[1..8192] of byte;
@@ -244,7 +248,7 @@ type
     RedrawPictures:boolean;
     ProcessorFriendlyRedraw:boolean;
     StopDeviceMoving:boolean;
-    
+
     dorefresh:boolean;
     Button:TButton;
     scrolling:boolean;
@@ -1014,314 +1018,13 @@ end;
 
 procedure Tgrafischebuehnenansicht.StageMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
-var
-	i,j,k,l,m:integer;
-  value:integer;
-  dobreak:boolean;
 begin
   if not mainform.UserAccessGranted(2, false) then exit;
 
-  dorefresh:=(Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]);
-
-  /////////// DeviceHoverEffect
-  MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
-  dobreak:=false;
-  for i:=0 to length(mainform.devices)-1 do
-  begin
-    for j:=0 to length(mainform.devices[i].bank)-1 do
-    begin
-      if mainform.devices[i].ShowInStageview then
-      if mainform.devices[i].bank[j]=BankSelect.Itemindex then
-      begin
-        // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
-        if (mainform.devices[i].left[j]<=X)
-        and ((mainform.devices[i].left[j]+mainform.devices[i].picturesize)>=X)
-        and (mainform.devices[i].Top[j]<=Y)
-        and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize)>=Y) then
-        begin
-          MouseOnDeviceID:=mainform.devices[i].ID;
-          MouseOnDeviceHover:=i;
-          dobreak:=true;
-          break;
-        end;
-      end;
-    end;
-    if dobreak then
-      break;
-  end;
-  if not dobreak then
-  begin
-    MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
-    MouseOnDeviceHover:=-1;
-  end;
-
-
-/////////// DeviceHighlight
-  if CheckBox6.Checked then
-  begin
-    // Altes Gerät zurücksetzen
-    geraetesteuerung.set_color(LastMouseOverHighlightDevice.ID, LastMouseOverHighlightDevice.R, LastMouseOverHighlightDevice.G, LastMouseOverHighlightDevice.B, 150, 0);
-    geraetesteuerung.set_shutter(LastMouseOverHighlightDevice.ID, LastMouseOverHighlightDevice.ShutterOpenOrClose);
-    geraetesteuerung.set_dimmer(LastMouseOverHighlightDevice.ID, LastMouseOverHighlightDevice.Dimmer, 150, 0);
-    geraetesteuerung.set_channel(LastMouseOverHighlightDevice.ID, 'a', -1, LastMouseOverHighlightDevice.A, 150, 0);
-    geraetesteuerung.set_channel(LastMouseOverHighlightDevice.ID, 'w', -1, LastMouseOverHighlightDevice.W, 150, 0);
-
-    // Aktuelle Werte speichern
-    if not IsEqualGUID(LastMouseOverHighlightDevice.ID, MouseOnDeviceID) then
-    begin
-      LastMouseOverHighlightDevice.ID:=MouseOnDeviceID;
-      LastMouseOverHighlightDevice.Dimmer:=geraetesteuerung.get_dimmer(MouseOnDeviceID);
-      LastMouseOverHighlightDevice.R:=geraetesteuerung.get_channel(MouseOnDeviceID, 'R');
-      LastMouseOverHighlightDevice.G:=geraetesteuerung.get_channel(MouseOnDeviceID, 'G');
-      LastMouseOverHighlightDevice.B:=geraetesteuerung.get_channel(MouseOnDeviceID, 'B');
-      LastMouseOverHighlightDevice.A:=geraetesteuerung.get_channel(MouseOnDeviceID, 'A');
-      LastMouseOverHighlightDevice.W:=geraetesteuerung.get_channel(MouseOnDeviceID, 'W');
-      LastMouseOverHighlightDevice.ShutterOpenOrClose:=geraetesteuerung.get_shutter(MouseOnDeviceID);
-    end;
-
-    // Aktuelles Gerät setzen
-    if MouseOnDeviceHover>-1 then
-    begin
-      geraetesteuerung.set_shutter(MouseOnDeviceID, 255);
-      geraetesteuerung.set_color(MouseOnDeviceID, 255, 255, 255, 150, 0);
-      geraetesteuerung.set_dimmer(MouseOnDeviceID, 255, 150, 0);
-      geraetesteuerung.set_channel(MouseOnDeviceID, 'a', -1, 255, 150,0 );
-      geraetesteuerung.set_channel(MouseOnDeviceID, 'w', -1, 255, 150,0 );
-    end;
-  end;
-////////////
-
-  if MouseOnDevice>-1 then
-  begin
-    if CheckBox3.Checked then exit;
-
-    if mainform.devices[MouseOnDevice].hasDimmer then
-    begin
-      for k:=0 to length(mainform.devices[MouseOnDevice].kanaltyp)-1 do
-      if lowercase(mainform.devices[MouseOnDevice].kanaltyp[k])='dimmer' then
-        Paintbox1.Hint:=mainform.devices[MouseOnDevice].Name+' ('+mainform.levelstr(255-mainform.data.ch[mainform.devices[MouseOnDevice].Startaddress+k])+_('), Geräteicon')
-    end else
-    begin
-      Paintbox1.Hint:=_('Geräteicon, ')+mainform.devices[MouseOnDevice].Name;
-    end;
-
-    if (Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]) then
-    begin
-      // Linke Maustaste
-      RedrawPictures:=true;
-
-      if (mainform.devices[MouseOnDevice].selected[MouseOnDeviceCopy]=false) then
-      begin // einzelnes Gerätebild verschieben
-        // Sender GeräteBild
-        mainform.devices[MouseOnDevice].Left[MouseOnDeviceCopy]:=X-round(mainform.devices[MouseOnDevice].picturesize/2);
-        mainform.devices[MouseOnDevice].Top[MouseOnDeviceCopy]:=Y-round(mainform.devices[MouseOnDevice].picturesize/2);
-
-        for m:=0 to length(mainform.Devices)-1 do
-        begin
-          if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[MouseOnDevice].ID)) then
-          begin
-            mainform.Devices[m].left[MouseOnDeviceCopy]:=X-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixXPosition;
-            mainform.Devices[m].top[MouseOnDeviceCopy]:=Y-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixYPosition;
-          end;
-        end;
-
-        // Sender GeräteBild Ende
-      end else
-      begin
-        if Shift=[ssLeft, ssAlt] then
-        begin
-          ArrangeIcons(MouseDownPoint.X, MouseDownPoint.Y, X, Y);
-        end else
-        begin
-          // Andere GeräteBilder
-          for k:=0 to length(mainform.devices)-1 do
-          for l:=0 to length(mainform.devices[k].selected)-1 do
-          begin
-            if (mainform.devices[k].ShowInStageview and (mainform.devices[k].bank[l]=BankSelect.Itemindex) and (mainform.devices[k].selected[l])) then
-            begin
-              StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
-              if not StopDeviceMoving then
-              begin
-                mainform.devices[k].Left[l]:=mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X);
-                mainform.devices[k].Top[l]:=mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y);
-              end;
-            end;
-          end;
-          // Andere GeräteBilder Ende
-
-          // Andere Kanal-Bilder
-          for k:=0 to length(mainform.buehnenansichtdevices)-1 do
-          begin
-            if ((mainform.buehnenansichtdevices[k].selected)) then
-            begin
-              StopDeviceMoving:=(mainform.buehnenansichtdevices[k].OldPos.X-(MouseDownPoint.X-X)<0) or (mainform.buehnenansichtdevices[k].OldPos.X-(MouseDownPoint.X-X+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.buehnenansichtdevices[k].OldPos.Y-(MouseDownPoint.Y-Y)<0) or (mainform.buehnenansichtdevices[k].OldPos.Y-(MouseDownPoint.Y-Y+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Height);
-              if not StopDeviceMoving then
-              begin
-                mainform.buehnenansichtdevices[k].left:=mainform.buehnenansichtdevices[k].OldPos.X-(MouseDownPoint.X-X);
-                mainform.buehnenansichtdevices[k].top:=mainform.buehnenansichtdevices[k].OldPos.Y-(MouseDownPoint.Y-Y);
-              end;
-            end;
-          end;
-          // Andere Kanal-Bilder Ende
-        end;
-      end;
-      // Ende von Linke Maustaste
-    end;
-  end else if MouseOnBuehnenansichtDevice>-1 then
-  begin
-    if CheckBox3.Checked then exit;
-
-    Paintbox1.Hint:=_('Kanalicon, Kanal: ')+inttostr(mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].channel)+' ('+inttostr(mainform.channel_value[mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].channel])+')';
-
-    if (Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]) then
-    begin
-      // Linke Maustaste
-      RedrawPictures:=true;
-
-      if (mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].selected=false) then
-      begin // einzelnes Gerätebild verschieben
-        // Sender KanalBild
-        mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].Left:=X-round(mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].picturesize/2);
-        mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].Top:=Y-round(mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].picturesize/2);
-        // Sender KanalBild Ende
-      end else
-      begin
-        if Shift=[ssLeft, ssAlt] then
-        begin
-          ArrangeIcons(MouseDownPoint.X, MouseDownPoint.Y, X, Y);
-        end else
-        begin
-          // Andere KanalBilder
-          for k:=0 to length(mainform.Buehnenansichtdevices)-1 do
-          begin
-            if ((mainform.Buehnenansichtdevices[k].selected)) then
-            begin
-              StopDeviceMoving:=(mainform.Buehnenansichtdevices[k].OldPos.X-(MouseDownPoint.X-X)<0) or (mainform.Buehnenansichtdevices[k].OldPos.X-(MouseDownPoint.X-X+mainform.Buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.Buehnenansichtdevices[k].OldPos.Y-(MouseDownPoint.Y-Y)<0) or (mainform.Buehnenansichtdevices[k].OldPos.Y-(MouseDownPoint.Y-Y+mainform.Buehnenansichtdevices[k].picturesize)>paintbox1.Height);
-              if not StopDeviceMoving then
-              begin
-                mainform.Buehnenansichtdevices[k].Left:=mainform.Buehnenansichtdevices[k].OldPos.X-(MouseDownPoint.X-X);
-                mainform.Buehnenansichtdevices[k].Top:=mainform.Buehnenansichtdevices[k].OldPos.Y-(MouseDownPoint.Y-Y);
-              end;
-            end;
-          end;
-          // Andere KanalBilder Ende
-
-          // Andere Geräte-Bilder
-          for k:=0 to length(mainform.devices)-1 do
-          for l:=0 to length(mainform.devices[k].selected)-1 do
-          begin
-            if (mainform.devices[k].ShowInStageview and (mainform.devices[k].bank[l]=BankSelect.Itemindex) and (mainform.devices[k].selected[l])) then
-            begin
-              StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
-              if not StopDeviceMoving then
-              begin
-                mainform.devices[k].left[l]:=mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X);
-                mainform.devices[k].top[l]:=mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y);
-              end;
-            end;
-          end;
-          // Andere Geräte-Bilder Ende
-        end;
-      end;
-      // Ende von Linke Maustaste
-    end;
-  end else if MouseOnProgress>-1 then
-  begin
-    if Shift=[ssLeft] then
-    begin
-      value:=round(((X-mainform.devices[MouseOnProgress].left[MouseOnDeviceCopy])/mainform.devices[MouseOnProgress].picturesize)*255);
-      if value<0 then value:=0;
-      if value>255 then value:=255;
-//      geraetesteuerung.set_channel(mainform.devices[MouseOnProgress].ID,'DIMMER',value,value,0);
-      if mainform.devices[MouseOnProgress].hasDimmer then
-        geraetesteuerung.set_dimmer(mainform.devices[MouseOnProgress].ID,value)
-      else if mainform.devices[MouseOnProgress].hasFog then
-        geraetesteuerung.set_channel(mainform.devices[MouseOnProgress].ID,'FOG',value,value,0);
-    end;
-  end else if MouseOnBuehnenansichtProgress>-1 then
-  begin
-    if Shift=[ssLeft] then
-    begin
-      value:=round(((X-mainform.buehnenansichtdevices[MouseOnBuehnenansichtProgress].left)/mainform.buehnenansichtdevices[MouseOnBuehnenansichtProgress].picturesize)*255);
-      if value<0 then value:=0;
-      if value>255 then value:=255;
-      mainform.Senddata(mainform.buehnenansichtdevices[MouseOnBuehnenansichtProgress].channel, 255-value, 255-value, 0);
-//      mainform.channel_value[mainform.buehnenansichtdevices[MouseOnBuehnenansichtProgress].channel]:=value;
-    end;
-  end else if MouseOnBuehnenansichtColor>-1 then
-  begin
-  end else if MouseOnLabel>-1 then
-  begin
-  end else if MouseOnNumber>-1 then
-  begin
-  end else if MouseOnBuehnenansichtNumber>-1 then
-  begin
-  end else if MouseOnBuehnenansichtLabel>-1 then
-  begin
-  end else
-  begin
-    If shift=[ssLeft] then
-    begin
-      Auswahl.Right:=X;
-      Auswahl.Bottom:=Y;
-      ShowAuswahl:=true;
-
-      for i:=0 to length(mainform.buehnenansichtdevices)-1 do
-      begin
-        if mainform.buehnenansichtdevices[i].bank=BankSelect.Itemindex then
-        begin
-          // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
-          if (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)<Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))>Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)>Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))<Auswahl.Bottom)
-          or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)>Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))<Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)<Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))>Auswahl.Bottom)
-          or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)>Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))<Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)>Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))<Auswahl.Bottom)
-          or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)<Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))>Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)<Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))>Auswahl.Bottom) then
-            mainform.buehnenansichtdevices[i].selected:=true else mainform.buehnenansichtdevices[i].selected:=false;
-        end;
-      end;
-
-      for i:=0 to length(mainform.devices)-1 do
-      for j:=0 to length(mainform.devices[i].bank)-1 do
-      begin
-        if (mainform.devices[i].ShowInStageview and (mainform.devices[i].bank[j]=BankSelect.Itemindex)) then
-        begin
-          // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
-          if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Bottom)
-          or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Bottom)
-          or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Bottom)
-          or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Bottom) then
-            mainform.devices[i].selected[j]:=true else mainform.devices[i].selected[j]:=false;
-        end;
-      end;
-    end;
-
-    If (shift=[ssLeft,ssShift]) or (shift=[ssLeft,ssShift,ssCtrl]) then
-    begin
-      Auswahl.Right:=X;
-      Auswahl.Bottom:=Y;
-      ShowAuswahl:=true;
-
-      for i:=0 to length(mainform.devices)-1 do
-      for j:=0 to length(mainform.devices[i].bank)-1 do
-      begin
-        if (mainform.devices[i].ShowInStageview and (mainform.devices[i].bank[j]=BankSelect.Itemindex)) then
-        begin
-          // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
-          if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Bottom)
-          or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Bottom)
-          or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Bottom)
-          or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Bottom) then
-          begin
-            mainform.DeviceSelected[i]:=true;
-          end else
-          begin
-            if (shift=[ssLeft,ssShift]) then
-              mainform.DeviceSelected[i]:=false; // if no Ctrl pressed, remove DeviceSelection again, if not within rectangle
-          end;
-        end;
-      end;
-    end;
-  end;
-  dorefresh:=true;
+  CurrentMousePositionX:=X;
+  CurrentMousePositionY:=Y;
+  CurrentMouseMoveShiftState:=Shift;
+  HandleMouseMove:=true;
 end;
 
 procedure Tgrafischebuehnenansicht.StageMouseUp(Sender: TObject;
@@ -1334,6 +1037,11 @@ begin
   if not mainform.UserAccessGranted(2) then exit;
 
   ProcessorFriendlyRedraw:=false;
+
+  CurrentMousePositionX:=X;
+  CurrentMousePositionY:=Y;
+  CurrentMouseMoveShiftState:=Shift;
+  HandleMouseMove:=true;
 
   MouseUpPoint.X:=X;
   MouseUpPoint.Y:=Y;
@@ -2312,9 +2020,325 @@ end;
 
 procedure Tgrafischebuehnenansicht.RefreshTimerTimer(Sender: TObject);
 var
-  i:integer;
+	i,j,k,l,m:integer;
+  value:integer;
+  dobreak:boolean;
+  X,Y:integer;
+  Shift:TShiftState;
 begin
   RefreshTimer.Interval:=mainform.Rfr_Buehnenansicht;
+
+//////////////
+  if HandleMouseMove then
+  begin
+    X:=CurrentMousePositionX;
+    Y:=CurrentMousePositionY;
+    Shift:=CurrentMouseMoveShiftState;
+
+    HandleMouseMove:=false;
+    dorefresh:=(Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]);
+
+    /////////// DeviceHoverEffect
+    MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+    dobreak:=false;
+    for i:=0 to length(mainform.devices)-1 do
+    begin
+      for j:=0 to length(mainform.devices[i].bank)-1 do
+      begin
+        if mainform.devices[i].ShowInStageview then
+        if mainform.devices[i].bank[j]=BankSelect.Itemindex then
+        begin
+          // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
+          if (mainform.devices[i].left[j]<=X)
+          and ((mainform.devices[i].left[j]+mainform.devices[i].picturesize)>=X)
+          and (mainform.devices[i].Top[j]<=Y)
+          and ((mainform.devices[i].Top[j]+mainform.devices[i].picturesize)>=Y) then
+          begin
+            MouseOnDeviceID:=mainform.devices[i].ID;
+            MouseOnDeviceHover:=i;
+            dobreak:=true;
+            break;
+          end;
+        end;
+      end;
+      if dobreak then
+        break;
+    end;
+    if not dobreak then
+    begin
+      MouseOnDeviceID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+      MouseOnDeviceHover:=-1;
+    end;
+
+
+  /////////// DeviceHighlight
+    if CheckBox6.Checked then
+    begin
+      // Altes Gerät zurücksetzen
+      geraetesteuerung.set_color(LastMouseOverHighlightDevice.ID, LastMouseOverHighlightDevice.R, LastMouseOverHighlightDevice.G, LastMouseOverHighlightDevice.B, 150, 0);
+      geraetesteuerung.set_shutter(LastMouseOverHighlightDevice.ID, LastMouseOverHighlightDevice.ShutterOpenOrClose);
+      geraetesteuerung.set_dimmer(LastMouseOverHighlightDevice.ID, LastMouseOverHighlightDevice.Dimmer, 150, 0);
+      geraetesteuerung.set_channel(LastMouseOverHighlightDevice.ID, 'a', -1, LastMouseOverHighlightDevice.A, 150, 0);
+      geraetesteuerung.set_channel(LastMouseOverHighlightDevice.ID, 'w', -1, LastMouseOverHighlightDevice.W, 150, 0);
+
+      // Aktuelle Werte speichern
+      if not IsEqualGUID(LastMouseOverHighlightDevice.ID, MouseOnDeviceID) then
+      begin
+        LastMouseOverHighlightDevice.ID:=MouseOnDeviceID;
+        LastMouseOverHighlightDevice.Dimmer:=geraetesteuerung.get_dimmer(MouseOnDeviceID);
+        LastMouseOverHighlightDevice.R:=geraetesteuerung.get_channel(MouseOnDeviceID, 'R');
+        LastMouseOverHighlightDevice.G:=geraetesteuerung.get_channel(MouseOnDeviceID, 'G');
+        LastMouseOverHighlightDevice.B:=geraetesteuerung.get_channel(MouseOnDeviceID, 'B');
+        LastMouseOverHighlightDevice.A:=geraetesteuerung.get_channel(MouseOnDeviceID, 'A');
+        LastMouseOverHighlightDevice.W:=geraetesteuerung.get_channel(MouseOnDeviceID, 'W');
+        LastMouseOverHighlightDevice.ShutterOpenOrClose:=geraetesteuerung.get_shutter(MouseOnDeviceID);
+      end;
+
+      // Aktuelles Gerät setzen
+      if MouseOnDeviceHover>-1 then
+      begin
+        geraetesteuerung.set_shutter(MouseOnDeviceID, 255);
+        geraetesteuerung.set_color(MouseOnDeviceID, 255, 255, 255, 150, 0);
+        geraetesteuerung.set_dimmer(MouseOnDeviceID, 255, 150, 0);
+        geraetesteuerung.set_channel(MouseOnDeviceID, 'a', -1, 255, 150,0 );
+        geraetesteuerung.set_channel(MouseOnDeviceID, 'w', -1, 255, 150,0 );
+      end;
+    end;
+  ////////////
+
+    if MouseOnDevice>-1 then
+    begin
+      if CheckBox3.Checked then exit;
+
+      if mainform.devices[MouseOnDevice].hasDimmer then
+      begin
+        for k:=0 to length(mainform.devices[MouseOnDevice].kanaltyp)-1 do
+        if lowercase(mainform.devices[MouseOnDevice].kanaltyp[k])='dimmer' then
+          Paintbox1.Hint:=mainform.devices[MouseOnDevice].Name+' ('+mainform.levelstr(255-mainform.data.ch[mainform.devices[MouseOnDevice].Startaddress+k])+_('), Geräteicon')
+      end else
+      begin
+        Paintbox1.Hint:=_('Geräteicon, ')+mainform.devices[MouseOnDevice].Name;
+      end;
+
+      if (Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]) then
+      begin
+        // Linke Maustaste
+        RedrawPictures:=true;
+
+        if (mainform.devices[MouseOnDevice].selected[MouseOnDeviceCopy]=false) then
+        begin // einzelnes Gerätebild verschieben
+          // Sender GeräteBild
+          mainform.devices[MouseOnDevice].Left[MouseOnDeviceCopy]:=X-round(mainform.devices[MouseOnDevice].picturesize/2);
+          mainform.devices[MouseOnDevice].Top[MouseOnDeviceCopy]:=Y-round(mainform.devices[MouseOnDevice].picturesize/2);
+
+          for m:=0 to length(mainform.Devices)-1 do
+          begin
+            if (mainform.Devices[m].MatrixDeviceLevel=2) and (IsEqualGUID(mainform.Devices[m].MatrixMainDeviceID, mainform.devices[MouseOnDevice].ID)) then
+            begin
+              mainform.Devices[m].left[MouseOnDeviceCopy]:=X-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixXPosition;
+              mainform.Devices[m].top[MouseOnDeviceCopy]:=Y-round(mainform.Devices[m].picturesize/2)+mainform.Devices[m].picturesize*mainform.Devices[m].MatrixYPosition;
+            end;
+          end;
+
+          // Sender GeräteBild Ende
+        end else
+        begin
+          if Shift=[ssLeft, ssAlt] then
+          begin
+            ArrangeIcons(MouseDownPoint.X, MouseDownPoint.Y, X, Y);
+          end else
+          begin
+            // Andere GeräteBilder
+            for k:=0 to length(mainform.devices)-1 do
+            for l:=0 to length(mainform.devices[k].selected)-1 do
+            begin
+              if (mainform.devices[k].ShowInStageview and (mainform.devices[k].bank[l]=BankSelect.Itemindex) and (mainform.devices[k].selected[l])) then
+              begin
+                StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
+                if not StopDeviceMoving then
+                begin
+                  mainform.devices[k].Left[l]:=mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X);
+                  mainform.devices[k].Top[l]:=mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y);
+                end;
+              end;
+            end;
+            // Andere GeräteBilder Ende
+
+            // Andere Kanal-Bilder
+            for k:=0 to length(mainform.buehnenansichtdevices)-1 do
+            begin
+              if ((mainform.buehnenansichtdevices[k].selected)) then
+              begin
+                StopDeviceMoving:=(mainform.buehnenansichtdevices[k].OldPos.X-(MouseDownPoint.X-X)<0) or (mainform.buehnenansichtdevices[k].OldPos.X-(MouseDownPoint.X-X+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.buehnenansichtdevices[k].OldPos.Y-(MouseDownPoint.Y-Y)<0) or (mainform.buehnenansichtdevices[k].OldPos.Y-(MouseDownPoint.Y-Y+mainform.buehnenansichtdevices[k].picturesize)>paintbox1.Height);
+                if not StopDeviceMoving then
+                begin
+                  mainform.buehnenansichtdevices[k].left:=mainform.buehnenansichtdevices[k].OldPos.X-(MouseDownPoint.X-X);
+                  mainform.buehnenansichtdevices[k].top:=mainform.buehnenansichtdevices[k].OldPos.Y-(MouseDownPoint.Y-Y);
+                end;
+              end;
+            end;
+            // Andere Kanal-Bilder Ende
+          end;
+        end;
+        // Ende von Linke Maustaste
+      end;
+    end else if MouseOnBuehnenansichtDevice>-1 then
+    begin
+      if CheckBox3.Checked then exit;
+
+      Paintbox1.Hint:=_('Kanalicon, Kanal: ')+inttostr(mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].channel)+' ('+inttostr(mainform.channel_value[mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].channel])+')';
+
+      if (Shift=[ssLeft]) or (Shift=[ssLeft, ssAlt]) then
+      begin
+        // Linke Maustaste
+        RedrawPictures:=true;
+
+        if (mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].selected=false) then
+        begin // einzelnes Gerätebild verschieben
+          // Sender KanalBild
+          mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].Left:=X-round(mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].picturesize/2);
+          mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].Top:=Y-round(mainform.Buehnenansichtdevices[MouseOnBuehnenansichtDevice].picturesize/2);
+          // Sender KanalBild Ende
+        end else
+        begin
+          if Shift=[ssLeft, ssAlt] then
+          begin
+            ArrangeIcons(MouseDownPoint.X, MouseDownPoint.Y, X, Y);
+          end else
+          begin
+            // Andere KanalBilder
+            for k:=0 to length(mainform.Buehnenansichtdevices)-1 do
+            begin
+              if ((mainform.Buehnenansichtdevices[k].selected)) then
+              begin
+                StopDeviceMoving:=(mainform.Buehnenansichtdevices[k].OldPos.X-(MouseDownPoint.X-X)<0) or (mainform.Buehnenansichtdevices[k].OldPos.X-(MouseDownPoint.X-X+mainform.Buehnenansichtdevices[k].picturesize)>paintbox1.Width) or (mainform.Buehnenansichtdevices[k].OldPos.Y-(MouseDownPoint.Y-Y)<0) or (mainform.Buehnenansichtdevices[k].OldPos.Y-(MouseDownPoint.Y-Y+mainform.Buehnenansichtdevices[k].picturesize)>paintbox1.Height);
+                if not StopDeviceMoving then
+                begin
+                  mainform.Buehnenansichtdevices[k].Left:=mainform.Buehnenansichtdevices[k].OldPos.X-(MouseDownPoint.X-X);
+                  mainform.Buehnenansichtdevices[k].Top:=mainform.Buehnenansichtdevices[k].OldPos.Y-(MouseDownPoint.Y-Y);
+                end;
+              end;
+            end;
+            // Andere KanalBilder Ende
+
+            // Andere Geräte-Bilder
+            for k:=0 to length(mainform.devices)-1 do
+            for l:=0 to length(mainform.devices[k].selected)-1 do
+            begin
+              if (mainform.devices[k].ShowInStageview and (mainform.devices[k].bank[l]=BankSelect.Itemindex) and (mainform.devices[k].selected[l])) then
+              begin
+                StopDeviceMoving:=(mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X)<0) or (mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X+mainform.devices[k].picturesize)>paintbox1.Width) or (mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y)<0) or (mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y+mainform.devices[k].picturesize)>paintbox1.Height);
+                if not StopDeviceMoving then
+                begin
+                  mainform.devices[k].left[l]:=mainform.devices[k].OldPos[l].X-(MouseDownPoint.X-X);
+                  mainform.devices[k].top[l]:=mainform.devices[k].OldPos[l].Y-(MouseDownPoint.Y-Y);
+                end;
+              end;
+            end;
+            // Andere Geräte-Bilder Ende
+          end;
+        end;
+        // Ende von Linke Maustaste
+      end;
+    end else if MouseOnProgress>-1 then
+    begin
+      if Shift=[ssLeft] then
+      begin
+        value:=round(((X-mainform.devices[MouseOnProgress].left[MouseOnDeviceCopy])/mainform.devices[MouseOnProgress].picturesize)*255);
+        if value<0 then value:=0;
+        if value>255 then value:=255;
+  //      geraetesteuerung.set_channel(mainform.devices[MouseOnProgress].ID,'DIMMER',value,value,0);
+        if mainform.devices[MouseOnProgress].hasDimmer then
+          geraetesteuerung.set_dimmer(mainform.devices[MouseOnProgress].ID,value)
+        else if mainform.devices[MouseOnProgress].hasFog then
+          geraetesteuerung.set_channel(mainform.devices[MouseOnProgress].ID,'FOG',value,value,0);
+      end;
+    end else if MouseOnBuehnenansichtProgress>-1 then
+    begin
+      if Shift=[ssLeft] then
+      begin
+        value:=round(((X-mainform.buehnenansichtdevices[MouseOnBuehnenansichtProgress].left)/mainform.buehnenansichtdevices[MouseOnBuehnenansichtProgress].picturesize)*255);
+        if value<0 then value:=0;
+        if value>255 then value:=255;
+        mainform.Senddata(mainform.buehnenansichtdevices[MouseOnBuehnenansichtProgress].channel, 255-value, 255-value, 0);
+  //      mainform.channel_value[mainform.buehnenansichtdevices[MouseOnBuehnenansichtProgress].channel]:=value;
+      end;
+    end else if MouseOnBuehnenansichtColor>-1 then
+    begin
+    end else if MouseOnLabel>-1 then
+    begin
+    end else if MouseOnNumber>-1 then
+    begin
+    end else if MouseOnBuehnenansichtNumber>-1 then
+    begin
+    end else if MouseOnBuehnenansichtLabel>-1 then
+    begin
+    end else
+    begin
+      If shift=[ssLeft] then
+      begin
+        Auswahl.Right:=X;
+        Auswahl.Bottom:=Y;
+        ShowAuswahl:=true;
+
+        for i:=0 to length(mainform.buehnenansichtdevices)-1 do
+        begin
+          if mainform.buehnenansichtdevices[i].bank=BankSelect.Itemindex then
+          begin
+            // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
+            if (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)<Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))>Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)>Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))<Auswahl.Bottom)
+            or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)>Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))<Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)<Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))>Auswahl.Bottom)
+            or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)>Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))<Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)>Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))<Auswahl.Bottom)
+            or (mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2)<Auswahl.Left) and ((mainform.buehnenansichtdevices[i].left+(mainform.buehnenansichtdevices[i].picturesize div 2))>Auswahl.Right) and (mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2)<Auswahl.Top) and ((mainform.buehnenansichtdevices[i].Top+(mainform.buehnenansichtdevices[i].picturesize div 2))>Auswahl.Bottom) then
+              mainform.buehnenansichtdevices[i].selected:=true else mainform.buehnenansichtdevices[i].selected:=false;
+          end;
+        end;
+
+        for i:=0 to length(mainform.devices)-1 do
+        for j:=0 to length(mainform.devices[i].bank)-1 do
+        begin
+          if (mainform.devices[i].ShowInStageview and (mainform.devices[i].bank[j]=BankSelect.Itemindex)) then
+          begin
+            // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
+            if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Bottom)
+            or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Bottom)
+            or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Bottom)
+            or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Bottom) then
+              mainform.devices[i].selected[j]:=true else mainform.devices[i].selected[j]:=false;
+          end;
+        end;
+      end;
+
+      If (shift=[ssLeft,ssShift]) or (shift=[ssLeft,ssShift,ssCtrl]) then
+      begin
+        Auswahl.Right:=X;
+        Auswahl.Bottom:=Y;
+        ShowAuswahl:=true;
+
+        for i:=0 to length(mainform.devices)-1 do
+        for j:=0 to length(mainform.devices[i].bank)-1 do
+        begin
+          if (mainform.devices[i].ShowInStageview and (mainform.devices[i].bank[j]=BankSelect.Itemindex)) then
+          begin
+            // Auswahl.Left=Links Auswahl.Right=Rechts                                                                      Auswahl.Top=Oben Auswahl.Bottom=Unten
+            if (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Bottom)
+            or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Bottom)
+            or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)>Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))<Auswahl.Bottom)
+            or (mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Left) and ((mainform.devices[i].left[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Right) and (mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2)<Auswahl.Top) and ((mainform.devices[i].Top[j]+(mainform.devices[i].picturesize div 2))>Auswahl.Bottom) then
+            begin
+              mainform.DeviceSelected[i]:=true;
+            end else
+            begin
+              if (shift=[ssLeft,ssShift]) then
+                mainform.DeviceSelected[i]:=false; // if no Ctrl pressed, remove DeviceSelection again, if not within rectangle
+            end;
+          end;
+        end;
+      end;
+    end;
+    dorefresh:=true;
+  end;
+//////////////
 
   if not dorefresh then
   begin
@@ -3213,17 +3237,14 @@ end;
 
 procedure TGrafischeBuehnenansicht.DrawGrafischeBuehnenansicht(_Buffer:TCanvas);
 var
-	R,G,B,R2,G2,B2,R3,G3,B3:byte;
-  RGB, RGB3, shuttervalue:integer;
+  RGB,R,G,B:integer;
   //RGB2:integer;
-  AmberR,AmberG,AmberB,Amber,White,UV:byte;
 
 //  AmberRs,AmberGs,AmberBs,Ambers:double;
 //  AmberRGratio:single;
 
-  Farbradwert,Farbradwert2:byte;
   Dimmerwert:byte;
-  i,j,l:integer;
+  i,j:integer;
   topval,leftval:integer;
   rect:TRect;
   offset:integer;
@@ -3396,227 +3417,7 @@ begin
       _Buffer.Brush.Style:=bsSolid;
       _Buffer.Pen.Style:=psSolid;
       _Buffer.Pen.Color:=clBlack;
-      if mainform.devices[i].hasRGB then
-      begin
-        // RGB
-        if mainform.devices[i].hasDIMMER then
-        begin
-          Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[i].ID);
-          AmberR:=geraetesteuerung.get_channel(mainform.devices[i].ID,'R');
-          AmberG:=geraetesteuerung.get_channel(mainform.devices[i].ID,'G');
-          AmberB:=geraetesteuerung.get_channel(mainform.devices[i].ID,'B');
-          Amber:=geraetesteuerung.get_channel(mainform.devices[i].ID,'A');
-          White:=geraetesteuerung.get_channel(mainform.devices[i].ID,'W');
-          UV:=geraetesteuerung.get_channel(mainform.devices[i].ID,'UV');
-
-          if mainform.devices[i].hasAmber then
-          begin
-            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, UV, R, G, B);
-            _Buffer.Brush.Color:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
-          end else
-          begin
-            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, 0, 128, 128, false, false, White, UV, R, G, B);
-            _Buffer.Brush.Color:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
-//            _Buffer.Brush.Color:=RGB2TColor(round(AmberR*(Dimmerwert/255)),round(AmberG*(Dimmerwert/255)),round(AmberB*(Dimmerwert/255)));
-          end;
-        end else
-        begin
-          // kein Dimmer im Gerät
-          AmberR:=geraetesteuerung.get_channel(mainform.devices[i].ID,'R');
-          AmberG:=geraetesteuerung.get_channel(mainform.devices[i].ID,'G');
-          AmberB:=geraetesteuerung.get_channel(mainform.devices[i].ID,'B');
-          Amber:=geraetesteuerung.get_channel(mainform.devices[i].ID,'A');
-          White:=geraetesteuerung.get_channel(mainform.devices[i].ID,'W');
-          UV:=geraetesteuerung.get_channel(mainform.devices[i].ID,'UV');
-
-          if mainform.devices[i].hasAmber then
-          begin
-            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, UV, R, G, B);
-            _Buffer.Brush.Color:=RGB2TColor(R, G, B);
-          end else
-          begin
-            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, 0, 128, 128, false, false, White, UV, R, G, B);
-            _Buffer.Brush.Color:=RGB2TColor(R, G, B);
-          end;
-        end;
-      end else if mainform.devices[i].hasCMY then
-      begin
-        // CMY
-        if mainform.devices[i].hasDIMMER then
-        begin
-          Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[i].ID);
-          AmberR:=255-geraetesteuerung.get_channel(mainform.devices[i].ID,'C');
-          AmberG:=255-geraetesteuerung.get_channel(mainform.devices[i].ID,'M');
-          AmberB:=255-geraetesteuerung.get_channel(mainform.devices[i].ID,'Y');
-          Amber:=geraetesteuerung.get_channel(mainform.devices[i].ID,'A');
-          White:=geraetesteuerung.get_channel(mainform.devices[i].ID,'W');
-          UV:=geraetesteuerung.get_channel(mainform.devices[i].ID,'UV');
-
-          if mainform.devices[i].hasAmber then
-          begin
-            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, UV, R, G, B);
-            _Buffer.Brush.Color:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
-          end else
-          begin
-            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, 0, 128, 128, false, false, White, UV, R, G, B);
-            _Buffer.Brush.Color:=RGB2TColor(round(R*(Dimmerwert/255)),round(G*(Dimmerwert/255)),round(B*(Dimmerwert/255)));
-//            _Buffer.Brush.Color:=RGB2TColor(round(AmberR*(Dimmerwert/255)),round(AmberG*(Dimmerwert/255)),round(AmberB*(Dimmerwert/255)));
-          end;
-        end else
-        begin
-          // kein Dimmer im Gerät
-          AmberR:=255-geraetesteuerung.get_channel(mainform.devices[i].ID,'C');
-          AmberG:=255-geraetesteuerung.get_channel(mainform.devices[i].ID,'M');
-          AmberB:=255-geraetesteuerung.get_channel(mainform.devices[i].ID,'Y');
-          Amber:=geraetesteuerung.get_channel(mainform.devices[i].ID,'A');
-          White:=geraetesteuerung.get_channel(mainform.devices[i].ID,'W');
-          UV:=geraetesteuerung.get_channel(mainform.devices[i].ID,'UV');
-
-          if mainform.devices[i].hasAmber then
-          begin
-            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, Amber, mainform.devices[i].AmberRatioR, mainform.devices[i].AmberRatioG, mainform.devices[i].AmberMixingCompensateRG, mainform.devices[i].AmberMixingCompensateBlue, White, UV, R, G, B);
-            _Buffer.Brush.Color:=RGB2TColor(R, G, B);
-          end else
-          begin
-            geraetesteuerung.ConvertRGBAWUVtoRGB(AmberR, AmberG, AmberB, 0, 128, 128, false, false, White, UV, R, G, B);
-            _Buffer.Brush.Color:=RGB2TColor(R, G, B);
-//            _Buffer.Brush.Color:=RGB2TColor(AmberR,AmberG,AmberB);
-          end;
-        end;
-      end else if (mainform.devices[i].hasColor or mainform.devices[i].hasColor2) then
-      begin
-        if (mainform.devices[i].hasColor and mainform.devices[i].hasColor2) then
-        begin
-          // COLOR1 & COLOR2
-          Farbradwert:=geraetesteuerung.get_channel(mainform.devices[i].ID,'COLOR1');
-          Farbradwert2:=geraetesteuerung.get_channel(mainform.devices[i].ID,'COLOR2');
-
-          for l:=0 to length(mainform.devices[i].colorlevels)-1 do
-          begin
-            if (mainform.devices[i].colorlevels[l]<=Farbradwert) and
-              (mainform.devices[i].colorendlevels[l]>=Farbradwert) then
-            begin
-//              RGB:=ColorToRGB(mainform.devices[i].colors[l]);
-              TColor2RGB(mainform.devices[i].colors[l], R, G, B);
-              break;
-            end;
-          end;
-          for l:=0 to length(mainform.devices[i].colorlevels2)-1 do
-          begin
-            if (mainform.devices[i].colorlevels2[l]<=Farbradwert2) and
-              (mainform.devices[i].colorendlevels2[l]>=Farbradwert2) then
-            begin
-//              RGB2:=ColorToRGB(mainform.devices[i].colors2[l]);
-              TColor2RGB(mainform.devices[i].colors2[l], R2, G2, B2);
-              break;
-            end;
-          end;
-
-          R3:=round((R/255)*(R2/255)*255);
-          G3:=round((G/255)*(G2/255)*255);
-          B3:=round((B/255)*(B2/255)*255);
-          RGB3:=RGB2TColor(R3,G3,B3);
-
-          if mainform.devices[i].hasDimmer then
-          begin
-            Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[i].ID);
-
-            _Buffer.Brush.Color:=RGB2TColor(round(R3*Dimmerwert/255),round(G3*Dimmerwert/255),round(B3*Dimmerwert/255));
-          end else
-          begin
-            _Buffer.Brush.Color:=RGB3;
-          end;
-        end else if mainform.devices[i].hasColor then
-        begin
-          // COLOR1
-          Farbradwert:=geraetesteuerung.get_channel(mainform.devices[i].ID,'COLOR1');
-
-          for l:=0 to length(mainform.devices[i].colorlevels)-1 do
-          begin
-            if (mainform.devices[i].colorlevels[l]<=Farbradwert) and
-              (mainform.devices[i].colorendlevels[l]>=Farbradwert) then
-            begin
-              if mainform.devices[i].hasDimmer then
-              begin
-                Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[i].ID);
-
-                RGB:=ColorToRGB(mainform.devices[i].colors[l]);
-                R:=round(GetRValue(RGB)*Dimmerwert / 255);
-                G:=round(GetGValue(RGB)*Dimmerwert / 255);
-                B:=round(GetBValue(RGB)*Dimmerwert / 255);
-
-                _Buffer.Brush.Color:=RGB2TColor(R,G,B);
-              end else
-              begin
-                _Buffer.Brush.Color:=mainform.devices[i].colors[l];
-              end;
-              break;
-            end;
-          end;
-        end else
-        begin
-          // COLOR2
-          Farbradwert2:=geraetesteuerung.get_channel(mainform.devices[i].ID,'COLOR2');
-
-          for l:=0 to length(mainform.devices[i].colorlevels2)-1 do
-          begin
-            if (mainform.devices[i].colorlevels2[l]<=Farbradwert2) and
-              (mainform.devices[i].colorendlevels2[l]>=Farbradwert2) then
-            begin
-              if mainform.devices[i].hasDimmer then
-              begin
-                Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[i].ID);
-
-                RGB:=ColorToRGB(mainform.devices[i].colors2[l]);
-                R:=round(GetRValue(RGB)*Dimmerwert / 255);
-                G:=round(GetGValue(RGB)*Dimmerwert / 255);
-                B:=round(GetBValue(RGB)*Dimmerwert / 255);
-
-                _Buffer.Brush.Color:=RGB2TColor(R,G,B);
-              end else
-              begin
-                _Buffer.Brush.Color:=mainform.devices[i].colors2[l];
-              end;
-              break;
-            end;
-          end;
-        end;
-      end else
-      begin
-        // nur Farbfilter
-        if mainform.Devices[i].hasDimmer then
-        begin
-          Dimmerwert:=geraetesteuerung.get_dimmer(mainform.devices[i].ID);
-          RGB:=ColorToRGB(mainform.devices[i].color);
-          R:=round(GetRValue(RGB)*Dimmerwert / 255);
-          G:=round(GetGValue(RGB)*Dimmerwert / 255);
-          B:=round(GetBValue(RGB)*Dimmerwert / 255);
-          _Buffer.Brush.Color:=RGB2TColor(R,G,B);
-        end else if mainform.Devices[i].hasFog then
-        begin
-          Dimmerwert:=geraetesteuerung.get_channel(mainform.devices[i].ID, 'FOG');
-          R:=Dimmerwert;
-          G:=Dimmerwert;
-          B:=Dimmerwert;
-          _Buffer.Brush.Color:=RGB2TColor(R,G,B);
-        end else
-        begin
-          _Buffer.Brush.Color:=mainform.devices[i].color;
-          _Buffer.Pen.Color:=clBlack;
-        end;
-      end;
-      if mainform.Devices[i].hasShutter then
-      begin
-        shuttervalue:=geraetesteuerung.get_shutter(mainform.devices[i].ID);
-        if (shuttervalue=0) or (shuttervalue=255) then
-        begin
-          TColor2RGB(_Buffer.Brush.Color, R, G, B);
-          R:=round(R*shuttervalue/255);
-          G:=round(G*shuttervalue/255);
-          B:=round(B*shuttervalue/255);
-          _Buffer.Brush.Color:=RGB2TColor(R, G, B);
-        end;
-      end;
+      _Buffer.Brush.Color:=geraetesteuerung.get_color(mainform.devices[i].ID);
 
       if mainform.devices[i].hasPANTILT then
       begin

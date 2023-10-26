@@ -196,31 +196,34 @@ begin
   if ShuttingDown then
     exit;
 
-  case MSG of
-    MSG_ACTUALCHANNELVALUE:
-    begin
-    end;
-    MSG_EDITPLUGINSCENE:
-    begin
-	  if (string(Data1)='{EB86EDF4-F750-420C-81D9-3023741988E8}') or
-	    (string(Data1)='{4950EE57-ACAC-4BB3-ACA6-9CBD4D9F1B56}') then
-      Config.Show;
-    end;
-    MSG_STARTPLUGINSCENE:
-    begin
-      if string(Data1)='{EB86EDF4-F750-420C-81D9-3023741988E8}' then
+  try
+    case MSG of
+      MSG_ACTUALCHANNELVALUE:
       begin
-        //Temperaturregler: Ein
-        Config.tempon.StateOn:=true;
-        Config.tempon.OnOn(nil);
       end;
-      if string(Data1)='{4950EE57-ACAC-4BB3-ACA6-9CBD4D9F1B56}' then
+      MSG_EDITPLUGINSCENE:
       begin
-        //Temperaturregler: Aus
-        Config.tempon.StateOn:=false;
-        Config.tempon.OnOff(nil);
+      if (string(Data1)='{EB86EDF4-F750-420C-81D9-3023741988E8}') or
+        (string(Data1)='{4950EE57-ACAC-4BB3-ACA6-9CBD4D9F1B56}') then
+        Config.Show;
+      end;
+      MSG_STARTPLUGINSCENE:
+      begin
+        if string(Data1)='{EB86EDF4-F750-420C-81D9-3023741988E8}' then
+        begin
+          //Temperaturregler: Ein
+          Config.tempon.StateOn:=true;
+          Config.tempon.OnOn(nil);
+        end;
+        if string(Data1)='{4950EE57-ACAC-4BB3-ACA6-9CBD4D9F1B56}' then
+        begin
+          //Temperaturregler: Aus
+          Config.tempon.StateOn:=false;
+          Config.tempon.OnOff(nil);
+        end;
       end;
     end;
+  except
   end;
 end;
 

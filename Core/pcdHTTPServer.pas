@@ -163,7 +163,7 @@ begin
       LTemp1 := strtoint(copy(LParamValue,pos('Start ',LParamValue)+6,pos('x',LParamValue)-(pos('Start ',LParamValue)+6))); // erste Zahl
       LTemp2 := strtoint(copy(LParamValue,pos('x',LParamValue)+1,length(LParamValue))); // letzte Zahl
       kontrollpanel.PaintBox1MouseMove(nil, [], trunc(kontrollpanel.btnwidth.Value*(LTemp2-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(LTemp1-1)+(kontrollpanel.btnheight.Value / 2)));
-      kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(LTemp2-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(LTemp1-1)+(kontrollpanel.btnheight.Value / 2)));
+      kontrollpanel.PaintBox1MouseDown(nil, mbLeft, [ssLeft], trunc(kontrollpanel.btnwidth.Value*(LTemp2-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(LTemp1-1)+(kontrollpanel.btnheight.Value / 2)));
       kontrollpanel.PaintBox1MouseUp(nil, mbLeft, [], trunc(kontrollpanel.btnwidth.Value*(LTemp2-1)+(kontrollpanel.btnwidth.Value / 2)), trunc(kontrollpanel.btnheight.Value*(LTemp1-1)+(kontrollpanel.btnheight.Value / 2)));
       LHistoryBack:=true;
     end else if LParamName = 'controlpanelbuttonstop' then begin

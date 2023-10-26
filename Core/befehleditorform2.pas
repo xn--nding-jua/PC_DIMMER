@@ -147,6 +147,7 @@ type
     { Public-Deklarationen }
     AktuellerBefehl: TBefehl;
     ShowInputValueToo:boolean;
+    ShowValueParameters:boolean;
   end;
 
 var
@@ -176,6 +177,16 @@ var
   i,j:integer;
 begin
   nousersetting:=true;
+
+  Label13.Visible:=ShowValueParameters;
+  Label8.Visible:=ShowValueParameters;
+  Label12.Visible:=ShowValueParameters;
+  OffValue.Visible:=ShowValueParameters;
+  SwitchValue.Visible:=ShowValueParameters;
+  OnValue.Visible:=ShowValueParameters;
+  InvertSwitchValue.Visible:=ShowValueParameters;
+  ScaleValue.Visible:=ShowValueParameters;
+
   Edit1.text:=AktuellerBefehl.Name;
   Edit2.text:=AktuellerBefehl.Beschreibung;
 

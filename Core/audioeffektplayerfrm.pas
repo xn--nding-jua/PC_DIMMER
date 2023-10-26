@@ -489,6 +489,7 @@ type
     procedure DrawActualPosition(_Buffer:TCanvas);
     procedure DrawTimecode_Line(_Buffer:TCanvas; position: Single; x,y,linestart,lineend,namey : integer; name : string; Beschreibung: string; cl : TColor; Effektlength:integer; IgnoreScaleAndLayerDrawing: boolean);
     procedure Check_audioeffektbuttons();
+    procedure StopAudioeffectPlayer(StopRunningScenes:boolean);
     procedure openeffektaudiofile(audioeeffektfile: string);
     function GetPositionInMilliseconds:integer;
     procedure MSGOpen;
@@ -1084,7 +1085,7 @@ begin
         for j:=1 to maxaudioeffektlayers do
         begin
       	  mainform.effektaudio_record[audioeffektfilenamebox.Items.Count-1].effektaudiodatei.layername[j]:='Layer '+inttostr(j);
-          LayerCombobox.Checked[j]:=true;
+          LayerCombobox.Checked[j-1]:=true;
 //          LayerCombobox.ItemEnabled[i]:=true;
           activelayer[j-1]:=true;
         end;
@@ -1458,78 +1459,10 @@ begin
 end;
 
 procedure Taudioeffektplayerform.StopEffektaudioClick(Sender: TObject);
-var
-  i,j:integer;
 begin
   if not mainform.UserAccessGranted(2) then exit;
 
-  for j:=1 to maxaudioeffektlayers do
-	begin
-    for i:=0 to maxaudioeffekte[j]-1 do
-    begin
-     	_effektaudioeffektpassed[j][i]:=false;
-      if mainform.Effektaudiodatei_record.layer[j].effekt[i].UseIDScene then
-        mainform.StopSceneWithoutRecord(mainform.Effektaudiodatei_record.layer[j].effekt[i].ID);
-    end;
-  end;
-
-  if videoscreenform<>nil then
-  if (videoscreenform.Showing) then
-  begin
-    if mainform.Effektaudiodatei_record.videoseeking[1].enabled then
-    begin
-      videoscreenform.Filtergraph1.Stop;
-      videoscreenform.SetVideoPosition(1,0);
-    end;
-    if mainform.Effektaudiodatei_record.videoseeking[2].enabled then
-    begin
-      videoscreenform.Filtergraph2.Stop;
-      videoscreenform.SetVideoPosition(2,0);
-    end;
-    if mainform.Effektaudiodatei_record.videoseeking[3].enabled then
-    begin
-      videoscreenform.Filtergraph3.Stop;
-      videoscreenform.SetVideoPosition(3,0);
-    end;
-    if mainform.Effektaudiodatei_record.videoseeking[4].enabled then
-    begin
-      videoscreenform.Filtergraph4.Stop;
-      videoscreenform.SetVideoPosition(4,0);
-    end;
-  end;
-
-  BASS_ChannelStop(_chan[0]);
-  BASS_ChannelStop(_chan[1]);
-  BASS_ChannelStop(_chan[2]);
-  BASS_ChannelStop(_chan[3]);
-
-{
-  BASS_ChannelPause(_chan[0]);
-  BASS_ChannelPause(_chan[1]);
-  BASS_ChannelPause(_chan[2]);
-  BASS_ChannelPause(_chan[3]);
-}
-  audioeffektplaytimer.enabled:=false;
-  audioeffektscrollbar.Position:=0;
-
-  fadeoutvolume:=false;
-//  mainform.volumeslider.Position:=oldvolume;
-
-  BASS_ChannelSetPosition(_chan[0],BASS_ChannelSeconds2Bytes(_chan[0], 0), BASS_POS_BYTE);
-  BASS_ChannelSetPosition(_chan[1],BASS_ChannelSeconds2Bytes(_chan[0], 0), BASS_POS_BYTE);
-  BASS_ChannelSetPosition(_chan[2],BASS_ChannelSeconds2Bytes(_chan[0], 0), BASS_POS_BYTE);
-  BASS_ChannelSetPosition(_chan[3],BASS_ChannelSeconds2Bytes(_chan[0], 0), BASS_POS_BYTE);
-  LastPosition:=BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE));
-
-  PlayEffektaudio.Enabled:=true;
-  PauseEffektaudio.Enabled:=false;
-  StopEffektaudio.Enabled:=false;
-
-  waveform_zoomin.Enabled:=true;
-  waveform_zoomout.Enabled:=true;
-//	audioeffekttimerTimer(Sender);
-//	if effektliste.Enabled then effektliste.SetFocus;
-  mainform.SendMSG(MSG_AUDIOEFFECTPLAYEREVENT, 2, 0);
+  StopAudioeffectPlayer(true); // stop AudioEffectPlayer with stopping running effects
 end;
 
 procedure Taudioeffektplayerform.recordbtn_offClick(Sender: TObject);
@@ -3910,7 +3843,7 @@ begin
     // Am Ende stoppen
     if (CurrentPosition>=(BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetLength(_chan[0], BASS_POS_BYTE))-0.5)) or (LastPosition>CurrentPosition) then //    if BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE)>=(BASS_ChannelGetLength(_chan[0], BASS_POS_BYTE)-20000) then
     begin
-      StopEffektaudioClick(nil);
+      StopAudioeffectPlayer(false); // stop AudioEffectPlayer without stopping running effects
     end;
 
     // Aktuelle Position abspeichern:
@@ -4904,6 +4837,71 @@ begin
 
   movefileup.Enabled:=audioeffektfilenamebox.itemindex>0;
   movefiledown.Enabled:=audioeffektfilenamebox.itemindex<(audioeffektfilenamebox.Items.Count-2);
+end;
+
+procedure Taudioeffektplayerform.StopAudioeffectPlayer(StopRunningScenes:boolean);
+var
+  i,j:integer;
+begin
+  for j:=1 to maxaudioeffektlayers do
+	begin
+    for i:=0 to maxaudioeffekte[j]-1 do
+    begin
+     	_effektaudioeffektpassed[j][i]:=false;
+      if (StopRunningScenes and mainform.Effektaudiodatei_record.layer[j].effekt[i].UseIDScene) then
+        mainform.StopSceneWithoutRecord(mainform.Effektaudiodatei_record.layer[j].effekt[i].ID);
+    end;
+  end;
+
+  if videoscreenform<>nil then
+  if (videoscreenform.Showing) then
+  begin
+    if mainform.Effektaudiodatei_record.videoseeking[1].enabled then
+    begin
+      videoscreenform.Filtergraph1.Stop;
+      videoscreenform.SetVideoPosition(1,0);
+    end;
+    if mainform.Effektaudiodatei_record.videoseeking[2].enabled then
+    begin
+      videoscreenform.Filtergraph2.Stop;
+      videoscreenform.SetVideoPosition(2,0);
+    end;
+    if mainform.Effektaudiodatei_record.videoseeking[3].enabled then
+    begin
+      videoscreenform.Filtergraph3.Stop;
+      videoscreenform.SetVideoPosition(3,0);
+    end;
+    if mainform.Effektaudiodatei_record.videoseeking[4].enabled then
+    begin
+      videoscreenform.Filtergraph4.Stop;
+      videoscreenform.SetVideoPosition(4,0);
+    end;
+  end;
+
+  BASS_ChannelStop(_chan[0]);
+  BASS_ChannelStop(_chan[1]);
+  BASS_ChannelStop(_chan[2]);
+  BASS_ChannelStop(_chan[3]);
+
+  audioeffektplaytimer.enabled:=false;
+  audioeffektscrollbar.Position:=0;
+
+  fadeoutvolume:=false;
+
+  BASS_ChannelSetPosition(_chan[0],BASS_ChannelSeconds2Bytes(_chan[0], 0), BASS_POS_BYTE);
+  BASS_ChannelSetPosition(_chan[1],BASS_ChannelSeconds2Bytes(_chan[0], 0), BASS_POS_BYTE);
+  BASS_ChannelSetPosition(_chan[2],BASS_ChannelSeconds2Bytes(_chan[0], 0), BASS_POS_BYTE);
+  BASS_ChannelSetPosition(_chan[3],BASS_ChannelSeconds2Bytes(_chan[0], 0), BASS_POS_BYTE);
+  LastPosition:=BASS_ChannelBytes2Seconds(_chan[0],BASS_ChannelGetPosition(_chan[0], BASS_POS_BYTE));
+
+  PlayEffektaudio.Enabled:=true;
+  PauseEffektaudio.Enabled:=false;
+  StopEffektaudio.Enabled:=false;
+
+  waveform_zoomin.Enabled:=true;
+  waveform_zoomout.Enabled:=true;
+
+  mainform.SendMSG(MSG_AUDIOEFFECTPLAYEREVENT, 2, 0);
 end;
 
 procedure Taudioeffektplayerform.openeffektaudiofile(audioeeffektfile:string);
@@ -6898,8 +6896,9 @@ begin
     // Open file for bpm decoding detection
     hBPM := BASS_StreamCreateFile(FALSE, PChar(effektaudioeffektefilename), 0, 0, BASS_STREAM_DECODE);
   end;
-
-  orgBPM := BASS_FX_BPM_DecodeGet(hBPM, startSec, endSec, 0, BASS_FX_BPM_BKGRND Or BASS_FX_BPM_MULT2 Or BASS_FX_FREESOURCE, @GetBPM_Process);
+                                                                                                                                                   
+  orgBPM := BASS_FX_BPM_DecodeGet(hBPM, startSec, endSec, 0, BASS_FX_BPM_BKGRND Or BASS_FX_BPM_MULT2 Or BASS_FX_FREESOURCE, nil, @GetBPM_Process);
+          //BASS_FX_BPM_DecodeGet(hBPM, startSec, endSec, 0, BASS_FX_BPM_BKGRND Or BASS_FX_BPM_MULT2 Or BASS_FX_FREESOURCE, proc: BPMPROGRESSPROC; user: Pointer): Single;
 
   // don't bother to update the BPM view if it's zero
   bpmview.Caption := FormatFloat('###.##', GetNewBPM(hBPM))+' BPM';
@@ -6995,7 +6994,7 @@ begin
     bpmrefreshperiod:=10;
 
   if (chkBPMCallback.Checked) then
-    BASS_FX_BPM_CallbackSet(_chan[0], @GetBPM_Callback, bpmrefreshperiod, 0, BASS_FX_BPM_MULT2, 0)
+    BASS_FX_BPM_CallbackSet(_chan[0], @GetBPM_Callback, bpmrefreshperiod, 0, BASS_FX_BPM_MULT2, nil)
   else
     BASS_FX_BPM_Free(_chan[0]);
 

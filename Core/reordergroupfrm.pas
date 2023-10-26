@@ -668,6 +668,7 @@ begin
 
   if (Grouplistbox.itemindex>-1) and (grouplistbox.itemindex<length(mainform.devicegroups)) then
   begin
+    adddevicetogroupform.DeviceAndGroupMode:=false;
     adddevicetogroupform.showmodal;
 
     if adddevicetogroupform.modalresult=mrOK then
@@ -1041,6 +1042,7 @@ begin
 
   // aktuelle Gruppe ans Ende kopieren
   source:=Grouplistbox.ItemIndex;
+
   destination:=length(mainform.DeviceGroups)-1;
   mainform.DeviceGroups[destination].Active:=mainform.DeviceGroups[source].Active;
   CreateGUID(mainform.DeviceGroups[destination].ID);
@@ -1061,6 +1063,12 @@ begin
   mainform.DeviceGroups[destination].FanMode:=mainform.DeviceGroups[source].FanMode;
   mainform.DeviceGroups[destination].FanMorph:=mainform.DeviceGroups[source].FanMorph;
   mainform.DeviceGroups[destination].Delay:=mainform.DeviceGroups[source].Delay;
+
+  setlength(mainform.DeviceGroups[destination].HasChanType,length(mainform.DeviceGroups[source].HasChanType));
+  for k:=0 to length(mainform.DeviceGroups[destination].HasChanType)-1 do
+  begin
+    mainform.DeviceGroups[destination].HasChanType[k]:=mainform.DeviceGroups[source].HasChanType[k];
+  end;
 
   GroupListBox.Items.Add(mainform.DeviceGroups[destination].Name);
 end;

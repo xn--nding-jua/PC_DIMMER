@@ -10,7 +10,7 @@
   <function channel="0" minvalue="0" maxvalue="255" name="Command" fade="yes" type="special1"/>
   <function channel="1" minvalue="0" maxvalue="255" name="Execute" fade="yes" type="special2"/>
  </channels>
- <initvalues 0="-1" 1="-1" />
+ <initvalues ch0="-1" ch1="-1" />
  <form width="251" height="142">
   <deviceimage top="10" left="10" width="60" height="60"/>
   <devicename top="24" left="80"/>

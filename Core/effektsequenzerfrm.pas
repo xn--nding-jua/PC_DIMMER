@@ -216,7 +216,6 @@ type
     procedure VSTGetImageIndex(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
       var Ghosted: Boolean; var ImageIndex: Integer);
-    procedure VSTDblClick(Sender: TObject);
     procedure VSTClick(Sender: TObject);
     procedure VSTChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure NeuesTabhinzufgen1Click(Sender: TObject);
@@ -3110,12 +3109,6 @@ begin
   end;
 end;
 
-procedure Teffektsequenzer.VSTDblClick(Sender: TObject);
-begin
-  if EditBtn.Enabled then
-    EditBtn.Click;
-end;
-
 procedure Teffektsequenzer.VSTClick(Sender: TObject);
 begin
   checkbuttons;
@@ -3901,10 +3894,11 @@ end;
 procedure Teffektsequenzer.VSTMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-  if (Button = mbLeft) then
+  if (Shift=[ssLeft]) and (Button = mbLeft) then
   begin
     VST.BeginDrag(False);
-  end;
+  end else if (Shift=[ssLeft, ssDouble]) and EditBtn.Enabled then
+    EditBtn.Click;
 end;
 
 procedure Teffektsequenzer.VSTEndDrag(Sender, Target: TObject; X,

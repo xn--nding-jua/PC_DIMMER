@@ -1,6 +1,6 @@
 object groupeditorform: Tgroupeditorform
-  Left = 440
-  Top = 186
+  Left = 437
+  Top = 174
   Width = 689
   Height = 454
   Caption = 'Gruppeneditor'

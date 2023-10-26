@@ -33,6 +33,8 @@ type
     { Private-Deklarationen }
   public
     { Public-Deklarationen }
+    DeviceAndGroupMode:boolean;
+    GUIDList:array of TGUID;
   end;
 
 var
@@ -49,16 +51,46 @@ var
   i:integer;
 begin
   listbox1.Items.Clear;
-  for i:=0 to length(mainform.devices)-1 do
+
+  if DeviceAndGroupMode then
   begin
-    if mainform.devices[i].MaxChan>1 then
-      listbox1.items.add(mainform.devices[i].Name+' ['+_('Adresse:')+' '+inttostr(mainform.devices[i].Startaddress)+'..'+inttostr(mainform.devices[i].Startaddress+mainform.devices[i].MaxChan-1)+', '+mainform.devices[i].DeviceName+']')
-    else
-      listbox1.items.add(mainform.devices[i].Name+' ['+_('Adresse:')+' '+inttostr(mainform.devices[i].Startaddress)+', '+mainform.devices[i].DeviceName+']');
+    // add devices AND groups without moving options
+    setlength(GUIDList, length(mainform.devices)+length(mainform.DeviceGroups));
+
+    for i:=0 to length(mainform.devices)-1 do
+    begin
+      GUIDList[i]:=mainform.devices[i].ID;
+
+      if mainform.devices[i].MaxChan>1 then
+        listbox1.items.add(mainform.devices[i].Name+' ['+_('Adresse:')+' '+inttostr(mainform.devices[i].Startaddress)+'..'+inttostr(mainform.devices[i].Startaddress+mainform.devices[i].MaxChan-1)+', '+mainform.devices[i].DeviceName+']')
+      else
+        listbox1.items.add(mainform.devices[i].Name+' ['+_('Adresse:')+' '+inttostr(mainform.devices[i].Startaddress)+', '+mainform.devices[i].DeviceName+']');
+    end;
+    for i:=0 to length(mainform.DeviceGroups)-1 do
+    begin
+      GUIDList[length(mainform.devices)+i]:=mainform.DeviceGroups[i].ID;
+      listbox1.Items.Add(_('Gerätegruppe')+': '+mainform.DeviceGroups[i].Name);
+    end;
+  end else
+  begin
+    // add devices and allow moving of devices
+    setlength(GUIDList, length(mainform.devices));
+
+    for i:=0 to length(mainform.devices)-1 do
+    begin
+      GUIDList[i]:=mainform.devices[i].ID;
+
+      if mainform.devices[i].MaxChan>1 then
+        listbox1.items.add(mainform.devices[i].Name+' ['+_('Adresse:')+' '+inttostr(mainform.devices[i].Startaddress)+'..'+inttostr(mainform.devices[i].Startaddress+mainform.devices[i].MaxChan-1)+', '+mainform.devices[i].DeviceName+']')
+      else
+        listbox1.items.add(mainform.devices[i].Name+' ['+_('Adresse:')+' '+inttostr(mainform.devices[i].Startaddress)+', '+mainform.devices[i].DeviceName+']');
+    end;
+
+    upbtn.Enabled:=((listbox1.ItemIndex>0) and (listbox1.itemindex>-1));
+    downbtn.Enabled:=((listbox1.ItemIndex<(listbox1.items.Count-1)) and (listbox1.itemindex>-1));
   end;
 
-  upbtn.Enabled:=((listbox1.ItemIndex>0) and (listbox1.itemindex>-1));
-  downbtn.Enabled:=((listbox1.ItemIndex<(listbox1.items.Count-1)) and (listbox1.itemindex>-1));
+  panel5.visible:=not DeviceAndGroupMode;
 end;
 
 procedure Tadddevicetogroupform.FormCreate(Sender: TObject);

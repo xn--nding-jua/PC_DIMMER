@@ -221,6 +221,50 @@ begin
       Memo1.Lines.Add(_('    ShowMessage(''Es wurde "Nein" gedrückt'');'));
       Memo1.Lines.Add('  end;');
     end;
+
+    22:
+    begin
+      Memo1.Clear;
+      Memo1.Lines.Add(_('// Variablen setzen und abfragen'));
+      Memo1.Lines.Add('');
+      Memo1.Lines.Add('set_globalvar(1, ''Test'');');
+      Memo1.Lines.Add('set_var(2, 5.1); // Funktioniert lediglich außerhalb dieses Editors!');
+      Memo1.Lines.Add('ShowMessage(get_globalvar(1)+'' = ''+inttostr(get_var(2)));');
+    end;
+    23:
+    begin
+      Memo1.Clear;
+      Memo1.Lines.Add(_('// Kontrollpanel Buttonfarbe abfragen'));
+      Memo1.Lines.Add('//var Color:TColor;');
+      Memo1.Lines.Add('//var Text:String;');
+      Memo1.Lines.Add('Color:=get_panelbuttoncolor(1,1);');
+      Memo1.Lines.Add('set_panelbuttoncolor(1,1, Color);');
+      Memo1.Lines.Add('Text:=get_panelbuttontext(1,1);');
+      Memo1.Lines.Add('set_panelbuttontext(1,1, Text);');
+    end;
+    24:
+    begin
+      Memo1.Clear;
+      Memo1.Lines.Add(_('// MIDI Nachricht senden'));
+      Memo1.Lines.Add('sendmidi(64, 64, 127);');
+      Memo1.Lines.Add('ShowMessage(get_lastmidi()); // returns MSG, Data1, Data2');
+    end;
+    25:
+    begin
+      Memo1.Clear;
+      Memo1.Lines.Add(_('// DataIn Nachricht senden'));
+      Memo1.Lines.Add('senddatain(1, 255);');
+      Memo1.Lines.Add('ShowMessage(get_lastdatain()); //returns MSB, LSB of Channel, Value');
+    end;
+    26:
+    begin
+      Memo1.Clear;
+      Memo1.Lines.Add(_('// PC_DIMMER Nachricht senden'));
+      Memo1.Lines.Add('// Translate PC_DIMMER to english');
+      Memo1.Lines.Add('sendmessage(MSG_SETLANGUAGE, 0, 0);');
+      Memo1.Lines.Add('// Kanal 5 auf 241 setzen');
+      Memo1.Lines.Add('sendmessage(MSG_ACTUALCHANNELVALUE, 5, 241);');
+    end;
   end;
   Memo1.SelectAll;
   Memo1.CopyToClipboard;

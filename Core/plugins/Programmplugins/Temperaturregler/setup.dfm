@@ -1,6 +1,6 @@
 object setupform: Tsetupform
-  Left = 181
-  Top = 146
+  Left = 277
+  Top = 292
   BorderStyle = bsSingle
   Caption = 'Einstellungen'
   ClientHeight = 385

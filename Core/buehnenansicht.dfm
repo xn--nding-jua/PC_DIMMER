@@ -2538,7 +2538,7 @@ object grafischebuehnenansicht: Tgrafischebuehnenansicht
           Height = 21
           Ctl3D = True
           Max = 255
-          Min = 16
+          Min = 8
           ParentCtl3D = False
           Position = 32
           TabOrder = 1

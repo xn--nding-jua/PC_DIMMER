@@ -7,7 +7,8 @@ uses
   Dialogs, ExtCtrls, StdCtrls, mbColorPickerControl, HSColorPicker,
   HexaColorPicker, HRingPicker, mbTrackBarPicker, VColorPicker,
   HSLRingPicker, XPMan, Buttons, PngBitBtn, gnugettext, dxGDIPlusClasses,
-  Registry, Mask, JvExMask, JvSpin, HColorPicker, LColorPicker;
+  Registry, Mask, JvExMask, JvSpin, HColorPicker, LColorPicker, pngimage,
+  pcdUtils;
 
 type
   Tnodecontrolform = class(TForm)
@@ -79,12 +80,19 @@ type
       X, Y: Integer);
     procedure scaleboxChange(Sender: TObject);
     procedure setrgbcheckboxClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
     ShadowCanvas: TBitmap;
     MouseOnNode:integer;
     RoomHeight:word;
     StageViewScaling:double;
+    PNGImage:TPNGObject;
+
+    CurrentMousePositionX, CurrentMousePositionY:integer;
+    CurrentMouseMoveShiftState:TShiftState;
+    HandleMouseMove:boolean;
+
     procedure RecalculateDistances;
     procedure RefreshNodeList;
   public
@@ -112,10 +120,39 @@ procedure Tnodecontrolform.RedrawTimerTimer(Sender: TObject);
 var
   i, textposition:integer;
   X,Y:integer;
+  Shift:TShiftState;
 begin
   if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
     (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
     exit;
+
+  if HandleMouseMove then
+  begin
+    X:=CurrentMousePositionX;
+    Y:=CurrentMousePositionY;
+    Shift:=CurrentMouseMoveShiftState;
+
+    HandleMouseMove:=false;
+
+    if (shift=[ssLeft]) and (nodelist.ItemIndex>-1) then
+    begin
+      if X<0 then
+        mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=0
+      else if X>(Paintbox1.Width) then
+        mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=Paintbox1.Width
+      else
+        mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=X;
+
+      if Y<0 then
+        mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=0
+      else if Y>(Paintbox1.Height) then
+        mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=Paintbox1.Height
+      else
+        mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=Y;
+
+      PleaseRecalculateDistances:=true;
+    end;
+  end;
 
   if not grafischebuehnenansicht.RefreshTimer.Enabled then
   begin
@@ -133,8 +170,16 @@ begin
   ShadowCanvas.Canvas.Rectangle(0, 0, ShadowCanvas.Width, ShadowCanvas.Height);
 
   // grafische Bühnenansicht kopieren
-  //BitBlt(ShadowCanvas.Canvas.Handle, 0, 0, StageviewBuffer.width, StageviewBuffer.height, StageviewBuffer.canvas.handle, 0, 0, SrcCopy);
-  StretchBlt(ShadowCanvas.Canvas.Handle, 0, 0, round(StageviewBuffer.width/StageViewScaling), round(StageviewBuffer.height/StageViewScaling), StageviewBuffer.canvas.handle, 0, 0, StageviewBuffer.Width, StageviewBuffer.Height, SrcCopy);
+  // BitBlt will not scale
+  //  BitBlt(ShadowCanvas.Canvas.Handle, 0, 0, StageviewBuffer.width, StageviewBuffer.height, StageviewBuffer.canvas.handle, 0, 0, SrcCopy);
+  // StretchBlt is around 160x slower than BitBlt since Windows 7. So we have to use a different solution
+  //  StretchBlt(ShadowCanvas.Canvas.Handle, 0, 0, round(StageviewBuffer.width/StageViewScaling), round(StageviewBuffer.height/StageViewScaling), StageviewBuffer.canvas.handle, 0, 0, StageviewBuffer.Width, StageviewBuffer.Height, SrcCopy);
+  // Use TPNGObject to scale
+
+  PNGImage.Assign(StageviewBuffer);
+  if (StageViewScaling>1) then
+    SmoothResize(PNGImage, round(StageviewBuffer.width/StageViewScaling), round(StageviewBuffer.height/StageViewScaling));
+  BitBlt(ShadowCanvas.Canvas.Handle, 0, 0, round(StageviewBuffer.width/StageViewScaling), round(StageviewBuffer.height/StageViewScaling), PNGImage.canvas.handle, 0, 0, SrcCopy);
 
   for i:=0 to length(mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes)-1 do
   begin
@@ -187,33 +232,16 @@ end;
 procedure Tnodecontrolform.PaintBox1MouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 begin
-  if (length(mainform.NodeControlSets)=0) or (nodecontrolsetscombobox.itemindex=-1) or
-    (nodecontrolsetscombobox.itemindex>=length(mainform.NodeControlSets)) then
-    exit;
-
-  if (shift=[ssLeft]) and (nodelist.ItemIndex>-1) then
-  begin
-    if X<0 then
-      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=0
-    else if X>(Paintbox1.Width) then
-      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=Paintbox1.Width
-    else
-      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].X:=X;
-
-    if Y<0 then
-      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=0
-    else if Y>(Paintbox1.Height) then
-      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=Paintbox1.Height
-    else
-      mainform.NodeControlSets[nodecontrolsetscombobox.itemindex].NodeControlNodes[nodelist.ItemIndex].Y:=Y;
-
-    PleaseRecalculateDistances:=true;
-  end;
+  CurrentMousePositionX:=X;
+  CurrentMousePositionY:=Y;
+  CurrentMouseMoveShiftState:=Shift;
+  HandleMouseMove:=true;
 end;
 
 procedure Tnodecontrolform.FormCreate(Sender: TObject);
 begin
   TranslateComponent(self);
+  PNGImage:=TPNGObject.Create;
 
   Randomize;
 
@@ -810,6 +838,11 @@ begin
 
     PleaseRecalculateDistances:=true;
   end;
+end;
+
+procedure Tnodecontrolform.FormDestroy(Sender: TObject);
+begin
+  PNGImage.Free;
 end;
 
 end.

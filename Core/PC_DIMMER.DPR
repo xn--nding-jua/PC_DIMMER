@@ -4,6 +4,7 @@ program PC_DIMMER;
 {%File 'GlobaleKonstanten.inc'}
 {%File 'Channels_Commandsystem.inc'}
 {%File 'EditBefehl.inc'}
+{%File 'GetBefehlState.inc'}
 
 uses
   VCLFixPack,
@@ -122,14 +123,16 @@ uses
   opensourcefrm in 'opensourcefrm.pas' {opensourceform},
   D7GesturesHeader in 'D7GesturesHeader.pas',
   usermgmtfrm in 'usermgmtfrm.pas' {usermgmtform},
-  changeuserfrm in 'changeuserfrm.pas' {changeuserform};
+  changeuserfrm in 'changeuserfrm.pas' {changeuserform},
+  xtouchcontrolfrm in 'xtouchcontrolfrm.pas' {xtouchcontrolform},
+  elgatostreamdeckfrm in 'elgatostreamdeckfrm.pas' {elgatostreamdeckform};
 
 const
   sPC_DIMMERMutex = 'PC_DIMMER';
 
 {$R *.RES}
 {$R 'resources.RES'}
-{$R MANIFEST.RES}
+//{$R MANIFEST.RES}
 
 type
   TFixedHintWindow = class(THintWindow)
@@ -323,6 +326,10 @@ begin
     if showtext then mainform.SplashAddText(_('Erstelle Benutzerverwaltung-Form')); mainform.RefreshSplashText;
     Application.CreateForm(Tusermgmtform, usermgmtform);
     Application.CreateForm(Tchangeuserform, changeuserform);
+    if showtext then mainform.SplashAddText(_('Erstelle XTouchControl-Form')); mainform.RefreshSplashText;
+    Application.CreateForm(Txtouchcontrolform, xtouchcontrolform);
+    if showtext then mainform.SplashAddText(_('Erstelle ElgatoStreamDeck-Form')); mainform.RefreshSplashText;
+    Application.CreateForm(Telgatostreamdeckform, elgatostreamdeckform);
 
     // bitte neue Fenster im "OnClose"-Event des Hauptfensters zunächst schließen (wenn nötig) und dann "free"en!
 

@@ -14,7 +14,7 @@ const
 type
   PTreeData = ^TTreeData;
   TTreeData = record
-    NodeType: integer; // 0 Einfache Szenen, 1 Geräteszenen, 2 Audioszenen, 3 Bewegungsszenen, 4 Befehle, 5 Kombinationsszenen, 6 Presets, 7 Automatikszenen, 8 Effekt, 9 MediaCenter Szenen, 10 PresetSzenen, 11 PluginSzene
+    NodeType: integer; // 0 Einfache Szenen, 1 Geräteszenen, 2 Audioszenen, 3 Bewegungsszenen, 4 Befehle, 5 Kombinationsszenen, 6 Presets, 7 Automatikszenen, 8 Effekt, 9 MediaCenter Szenen, 10 PresetSzenen, 11 Code-Szenen, 12 PluginSzene
     IsRootNode:boolean;
     IsCatNode:boolean;
     Caption:WideString;
@@ -76,13 +76,13 @@ type
     SelektierteGerteUNDgenderteKanleaufnehmen1: TMenuItem;
     Kanlemanuellwhlen1: TMenuItem;
     PresetSzene1: TMenuItem;
+    CodeSzene1: TMenuItem;
     procedure AddBtnMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure EinfacheSzene1Click(Sender: TObject);
     procedure Audioszene1Click(Sender: TObject);
     procedure Bewegungsszene1Click(Sender: TObject);
     procedure Befehle1Click(Sender: TObject);
-    procedure EditBtnClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure DeleteBtnClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -144,6 +144,8 @@ type
     procedure VSTEndDrag(Sender, Target: TObject; X, Y: Integer);
     procedure VSTMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure CodeSzene1Click(Sender: TObject);
+    procedure EditBtnClick(Sender: TObject);
   private
     { Private-Deklarationen }
     NewGUID: TGUID;
@@ -172,7 +174,7 @@ uses PCDIMMER, bewegungsszeneneditor, insscene, audioszeneeditorform,
   kompositionsszeneeditorform, geraetesteuerungfrm, preseteditorform,
   devicescenefrm, geraeteremovedfrm, autoszenefrm, effektsequenzerfrm,
   befehleditorform2, mediacenterfrm, presetsceneeditorform,
-  audioeffektplayerfrm;
+  audioeffektplayerfrm, codeeditorfrm;
 
 {$R *.dfm}
 
@@ -557,29 +559,6 @@ begin
   setlength(befehlseditor_array2,length(befehlseditor_array2)-1);
 end;
 
-procedure Tszenenverwaltungform.EditBtnClick(Sender: TObject);
-var
-  Data: PTreeData;
-begin
-  if not mainform.UserAccessGranted(2) then exit;
-
-  if VST.SelectedCount=0 then exit;
-
-  Data:=VST.GetNodeData(VST.FocusedNode);
-
-  if Assigned(Data) and (not Data^.IsRootNode) then
-  begin
-    mainform.EditScene(Data^.ID);
-
-    Data:=VST.GetNodeData(VST.FocusedNode);
-    Data^.Caption:=mainform.GetSceneInfo2(Data^.ID, 'name');
-    Data^.Beschreibung:=mainform.GetSceneInfo2(Data^.ID, 'desc');
-    Data^.Fadetime:=mainform.GetSceneInfo2(Data^.ID, 'time');
-    positionselection:=Data^.ID;
-    VST.Refresh;
-  end;
-end;
-
 procedure Tszenenverwaltungform.FormShow(Sender: TObject);
 var
   i,k:integer;
@@ -704,7 +683,7 @@ begin
 
   if not Effektmodus then
   begin
-    setlength(VSTRootNodes, 12);
+    setlength(VSTRootNodes, 13);
 
     VSTRootNodes[0]:=VST.AddChild(nil);
     Data:=VST.GetNodeData(VSTRootNodes[0]);
@@ -786,6 +765,13 @@ begin
     VSTRootNodes[11]:=VST.AddChild(nil);
     Data:=VST.GetNodeData(VSTRootNodes[11]);
     Data^.NodeType:=11;
+    Data^.IsRootNode:=true;
+    Data^.IsCatNode:=false;
+    Data^.ID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
+    Data^.Caption:=_('Code-Szenen');
+    VSTRootNodes[12]:=VST.AddChild(nil);
+    Data:=VST.GetNodeData(VSTRootNodes[12]);
+    Data^.NodeType:=12;
     Data^.IsRootNode:=true;
     Data^.IsCatNode:=false;
     Data^.ID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
@@ -1252,6 +1238,48 @@ begin
       VST.Sort(CatNode, 0, sdAscending);
     end;
 
+    for i:=0 to length(mainform.codescenes)-1 do
+    begin
+      if mainform.codescenes[i].Category<>'' then
+      begin
+        CatNode:=nil;
+        TempNode:=VST.GetFirst;
+        while Assigned(TempNode) and (not Assigned(CatNode)) do
+        begin
+          Data:=VST.GetNodeData(TempNode);
+          if Data^.IsCatNode and (Data^.NodeType=11) and (Data^.Caption=mainform.codescenes[i].Category) then
+            CatNode:=TempNode;
+          TempNode:=VST.GetNext(TempNode);
+        end;
+
+        if not Assigned(CatNode) then
+        begin
+          CatNode:=VST.AddChild(VSTRootNodes[11]);
+          Data:=VST.GetNodeData(CatNode);
+          Data^.NodeType:=11;
+          Data^.IsRootNode:=false;
+          Data^.IsCatNode:=true;
+          Data^.Caption:=mainform.codescenes[i].Category;
+          Data^.Beschreibung:='';
+          Data^.Fadetime:='0';
+          Data^.ID:=StringToGUId('{00000000-0000-0000-0000-000000000000}');
+        end;
+      end else
+        CatNode:=VSTRootNodes[11];
+
+      TempNode:=VST.AddChild(CatNode);
+      Data:=VST.GetNodeData(TempNode);
+      Data^.NodeType:=11;
+      Data^.IsRootNode:=false;
+      Data^.IsCatNode:=false;
+      Data^.Caption:=mainform.codescenes[i].Name;
+      Data^.Beschreibung:=mainform.codescenes[i].Beschreibung;
+      Data^.Fadetime:='';
+      Data^.ID:=mainform.codescenes[i].ID;
+
+      VST.Sort(CatNode, 0, sdAscending);
+    end;
+
     for i:=0 to length(mainform.PluginSzenen)-1 do
     begin
       if mainform.PluginSzenen[i].Category<>'' then
@@ -1268,9 +1296,9 @@ begin
 
         if not Assigned(CatNode) then
         begin
-          CatNode:=VST.AddChild(VSTRootNodes[11]);
+          CatNode:=VST.AddChild(VSTRootNodes[12]);
           Data:=VST.GetNodeData(CatNode);
-          Data^.NodeType:=11;
+          Data^.NodeType:=12;
           Data^.IsRootNode:=false;
           Data^.IsCatNode:=true;
           Data^.Caption:=mainform.PluginSzenen[i].Category;
@@ -1279,11 +1307,11 @@ begin
           Data^.ID:=StringToGUID('{00000000-0000-0000-0000-000000000000}');
         end;
       end else
-        CatNode:=VSTRootNodes[11];
+        CatNode:=VSTRootNodes[12];
 
       TempNode:=VST.AddChild(CatNode);
       Data:=VST.GetNodeData(TempNode);
-      Data^.NodeType:=11;
+      Data^.NodeType:=12;
       Data^.IsRootNode:=false;
       Data^.IsCatNode:=false;
       Data^.Caption:=mainform.PluginSzenen[i].Name;
@@ -2053,7 +2081,50 @@ begin
                   DeleteTreeNode:=true;
                 end;
               end;
-              11: // PluginSzene löschen
+              11: // Codeszene löschen
+              begin
+                IDfordelete:=Data^.ID;
+                sceneinuse:=FindSceneConnections(IDfordelete,askforremovingform.Treeview1);
+
+                askforremovingform.Label4.Caption:=_('Szenenname:');
+                askforremovingform.devicenamelabel.Caption:=mainform.GetSceneInfo2(Data^.ID, 'name');
+                askforremovingform.Label2.Caption:=_('Beschreibung:');
+                askforremovingform.devicedescription.Caption:=mainform.GetSceneInfo2(Data^.ID, 'desc');
+                askforremovingform.Label6.Caption:=_('Szenentyp:');
+                askforremovingform.startadresselabel.Caption:=_('Code Szene');
+
+                // Gerät wird noch verwendet -> Dialogbox anzeigen
+                if sceneinuse then
+                begin
+                  askforremovingform.Label35.Caption:=_('Die zu löschende Szene wird noch verwendet. Bitte wählen Sie, wie weiter verfahren werden soll:');
+                  askforremovingform.Button1.Caption:=_('Szene löschen');
+                  askforremovingform.showmodal;
+                end;
+
+                if (sceneinuse=false) or (askforremovingform.modalresult=mrOK) then
+                begin
+                  for i:=0 to length(mainform.codescenes)-1 do
+                  begin
+                    if IsEqualGUID(Data^.ID, mainform.codescenes[i].ID) then
+                    begin
+                      position:=i;
+                      break;
+                    end;
+                  end;
+
+                  for i:=position to length(mainform.codescenes)-2 do
+                  begin
+                    mainform.codescenes[i].ID:=mainform.codescenes[i+1].ID;
+                    mainform.codescenes[i].Name:=mainform.codescenes[i+1].Name;
+                    mainform.codescenes[i].Beschreibung:=mainform.codescenes[i+1].Beschreibung;
+                    mainform.codescenes[i].Category:=mainform.codescenes[i+1].Category;
+                    mainform.codescenes[i].Code:=mainform.codescenes[i+1].Code;
+                  end;
+                  setlength(mainform.codescenes,length(mainform.codescenes)-1);
+                  DeleteTreeNode:=true;
+                end;
+              end;
+              12: // PluginSzene löschen
               begin
                 IDfordelete:=Data^.ID;
                 sceneinuse:=FindSceneConnections(IDfordelete,askforremovingform.Treeview1);
@@ -3386,7 +3457,41 @@ begin
               VST.Sort(VSTRootNodes[10], 0, sdAscending);
             end;
 
-            11: // Plugin szene kopieren
+            11: // Codeszenen
+            begin
+              for k:=0 to length(mainform.CodeScenes)-1 do
+              begin
+                if IsEqualGUID(mainform.CodeScenes[k].ID,Data^.ID) then
+                begin
+                  position:=k;
+                  break;
+                end;
+              end;
+              if position=-1 then exit;
+
+              setlength(mainform.CodeScenes,length(mainform.CodeScenes)+1);  //k
+              CreateGUID(mainform.CodeScenes[length(mainform.CodeScenes)-1].ID);
+              mainform.CodeScenes[length(mainform.CodeScenes)-1].Name:=mainform.CodeScenes[position].Name+_(' - Kopie');
+              mainform.CodeScenes[length(mainform.CodeScenes)-1].Beschreibung:=mainform.CodeScenes[position].Beschreibung;
+              mainform.CodeScenes[length(mainform.CodeScenes)-1].Category:=mainform.CodeScenes[position].Category;
+
+              mainform.CodeScenes[length(mainform.CodeScenes)-1].Code:=mainform.CodeScenes[position].Code;
+
+              positionselection:=mainform.CodeScenes[length(mainform.CodeScenes)-1].ID;
+
+              TempNode:=VST.AddChild(VSTRootNodes[11]);
+              Data:=VST.GetNodeData(TempNode);
+              Data^.NodeType:=11;
+              Data^.IsRootNode:=false;
+              Data^.IsCatNode:=false;
+              Data^.Caption:=mainform.CodeScenes[length(mainform.CodeScenes)-1].Name;
+              Data^.Beschreibung:=mainform.CodeScenes[length(mainform.CodeScenes)-1].Beschreibung;
+              Data^.Fadetime:=mainform.GetSceneInfo2(mainform.CodeScenes[length(mainform.CodeScenes)-1].ID, 'time');
+              Data^.ID:=mainform.CodeScenes[length(mainform.CodeScenes)-1].ID;
+              VST.Sort(VSTRootNodes[11], 0, sdAscending);
+            end;
+
+            12: // Plugin szene kopieren
             begin
               ShowMessage(_('Pluginszenen können nur innerhalb des Host-Plugins kopiert werden.'));
             end;
@@ -4409,7 +4514,7 @@ begin
             end;
           end;
         end;
-        11: CellText:='';
+        11..12: CellText:='';
       end;
     end;
     2:
@@ -4448,7 +4553,8 @@ begin
           8: if Data^.IsRootNode or Data^.IsCatNode then ImageIndex:=20 else ImageIndex:=100;
           9: if Data^.IsRootNode or Data^.IsCatNode then ImageIndex:=83 else ImageIndex:=101;
           10: if Data^.IsRootNode or Data^.IsCatNode then ImageIndex:=91 else ImageIndex:=98;
-          11: if Data^.IsRootNode or Data^.IsCatNode then ImageIndex:=31 else ImageIndex:=106;
+          11: if Data^.IsRootNode or Data^.IsCatNode then ImageIndex:=83 else ImageIndex:=101;
+          12: if Data^.IsRootNode or Data^.IsCatNode then ImageIndex:=31 else ImageIndex:=106;
         end;
       end;
     end;
@@ -4494,7 +4600,8 @@ begin
           8: Label1.Caption:=_('Effekte sind eine Ansammlung aufeinanderfolgender Szenen.');
           9: Label1.Caption:=_('MediaCenter Szenen steuern die Medienwiedergabe an entfernten Computern.');
           10: Label1.Caption:=_('Presetszenen sind ähnlich wie Presets, wenden die Eigenschaften aber nur auf bestimmte Geräte an');
-          11: Label1.Caption:=_('Pluginszenen werden von Plugins bereit gestellt und besitzen unterschiedliche Funktionen');
+          11: Label1.Caption:=_('Codeszenen enthalten Programm-Code, der vielfältige Funktionen beinhalten kann - auch eigene Oberflächen');
+          12: Label1.Caption:=_('Pluginszenen werden von Plugins bereit gestellt und besitzen unterschiedliche Funktionen');
           else
              Label1.Caption:='';
         end;
@@ -4692,6 +4799,18 @@ begin
           mainform.PresetScenes[Position].Name:=NewText;
         end;
         11:
+        begin
+          for i:=0 to length(mainform.CodeScenes)-1 do
+          begin
+            if IsEqualGUID(Data^.ID, mainform.CodeScenes[i].ID) then
+            begin
+              position:=i;
+            end;
+          end;
+          if position=-1 then exit;
+          mainform.CodeScenes[Position].Name:=NewText;
+        end;
+        12:
         begin
           for i:=0 to length(mainform.PluginSzenen)-1 do
           begin
@@ -5016,6 +5135,18 @@ begin
             end;
             11:
             begin
+              for i:=0 to length(mainform.CodeScenes)-1 do
+              begin
+                if IsEqualGUID(Data^.ID, mainform.CodeScenes[i].ID) then
+                begin
+                  position:=i;
+                end;
+              end;
+              if position=-1 then exit;
+              mainform.CodeScenes[Position].ID:=NewID;
+            end;
+            12:
+            begin
               for i:=0 to length(mainform.PluginSzenen)-1 do
               begin
                 if IsEqualGUID(Data^.ID, mainform.PluginSzenen[i].ID) then
@@ -5214,10 +5345,120 @@ end;
 
 procedure Tszenenverwaltungform.VSTMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  Data: PTreeData;
 begin
-  if (Button = mbLeft) then
+  if Shift=[ssLeft, ssDouble] then
+  begin
+    if not mainform.UserAccessGranted(2) then exit;
+    if VST.SelectedCount=0 then exit;
+
+    Data:=VST.GetNodeData(VST.FocusedNode);
+
+    if Assigned(Data) and (not Data^.IsRootNode) then
+    begin
+      mainform.EditScene(Data^.ID);
+
+      Data:=VST.GetNodeData(VST.FocusedNode);
+      Data^.Caption:=mainform.GetSceneInfo2(Data^.ID, 'name');
+      Data^.Beschreibung:=mainform.GetSceneInfo2(Data^.ID, 'desc');
+      Data^.Fadetime:=mainform.GetSceneInfo2(Data^.ID, 'time');
+      positionselection:=Data^.ID;
+      VST.Refresh;
+    end;
+  end;
+
+  if (Shift=[ssLeft]) and (Button=mbLeft) then
   begin
     VST.BeginDrag(False);
+  end;
+end;
+
+procedure Tszenenverwaltungform.CodeSzene1Click(Sender: TObject);
+var
+  Data: PTreeData;
+  TempNode:PVirtualNode;
+begin
+  if not mainform.UserAccessGranted(2) then exit;
+
+  codeeditorform.nameedit.Text:=_('Neue Code-Szene');
+  codeeditorform.descriptionedit.Text:='';
+  codeeditorform.Memo1.Text:='unit CodeScene;'+#13#10+
+  'interface'+#13#10+
+  'procedure InitScene;'+#13#10+
+  'procedure StartScene;'+#13#10+
+  'procedure StopScene;'+#13#10+
+  'implementation'+#13#10#13#10+
+  'procedure InitScene;'+#13#10+
+  'begin'+#13#10+
+  'end;'+#13#10#13#10+
+  'procedure StartScene;'+#13#10+
+  'begin'+#13#10+
+  'end;'+#13#10#13#10+
+  'procedure StopScene;'+#13#10+
+  'begin'+#13#10+
+  'end;'+#13#10#13#10+
+  'end.';
+
+  codeeditorform.Panel3.Visible:=true;
+  codeeditorform.MouseDown.Visible:=false;
+  codeeditorform.MouseUp.Visible:=false;
+
+  codeeditorform.ShowModal;
+
+  if codeeditorform.ModalResult=mrOK then
+  begin
+    setlength(mainform.CodeScenes,length(mainform.CodeScenes)+1);
+    CreateGUID(mainform.CodeScenes[length(mainform.CodeScenes)-1].ID);
+    positionselection:=mainform.CodeScenes[length(mainform.CodeScenes)-1].ID;
+    mainform.CodeScenes[length(mainform.CodeScenes)-1].Name:=codeeditorform.nameedit.Text;
+    mainform.CodeScenes[length(mainform.CodeScenes)-1].Beschreibung:=codeeditorform.descriptionedit.Text;
+    mainform.CodeScenes[length(mainform.CodeScenes)-1].Code:=codeeditorform.Memo1.Text;
+    mainform.InitCodeScene(mainform.CodeScenes[length(mainform.CodeScenes)-1].ID);
+
+    TempNode:=VST.AddChild(VSTRootNodes[11]);
+    Data:=VST.GetNodeData(TempNode);
+    Data^.NodeType:=11;
+    Data^.IsRootNode:=false;
+    Data^.IsCatNode:=false;
+    Data^.Caption:=mainform.CodeScenes[length(mainform.CodeScenes)-1].Name;
+    Data^.Beschreibung:=mainform.CodeScenes[length(mainform.CodeScenes)-1].Beschreibung;
+    Data^.Fadetime:='';
+    Data^.ID:=mainform.CodeScenes[length(mainform.CodeScenes)-1].ID;
+    VST.Expanded[TempNode]:=true;
+    VST.Expanded[TempNode.Parent]:=true;
+    VST.Selected[TempNode]:=true;
+    VST.FocusedNode:=TempNode;
+
+    // noch schnell die Einträge alphabetisch sortieren
+    VST.Sort(VSTRootNodes[11], 0, sdAscending);
+  end;
+
+  codeeditorform.Panel3.Visible:=false;
+  codeeditorform.MouseDown.Visible:=true;
+  codeeditorform.MouseUp.Visible:=true;
+end;
+
+procedure Tszenenverwaltungform.EditBtnClick(Sender: TObject);
+var
+  Data: PTreeData;
+begin
+  if not mainform.UserAccessGranted(2) then exit;
+
+  if VST.SelectedCount=0 then exit;
+
+  Data:=VST.GetNodeData(VST.FocusedNode);
+
+  if Assigned(Data) and (not Data^.IsRootNode) then
+  begin
+    mainform.EditScene(Data^.ID);
+
+    Data:=VST.GetNodeData(VST.FocusedNode);
+    Data^.Caption:=mainform.GetSceneInfo2(Data^.ID, 'name');
+    Data^.Beschreibung:=mainform.GetSceneInfo2(Data^.ID, 'desc');
+    Data^.Fadetime:=mainform.GetSceneInfo2(Data^.ID, 'time');
+    positionselection:=Data^.ID;
+    VST.Refresh;
   end;
 end;
 

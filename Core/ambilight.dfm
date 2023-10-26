@@ -1,6 +1,6 @@
 object ambilightform: Tambilightform
-  Left = 341
-  Top = 179
+  Left = 461
+  Top = 160
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Ambilight-Setup'

@@ -19,7 +19,7 @@ object addfunctionform: Taddfunctionform
     Left = 0
     Top = 57
     Width = 284
-    Height = 286
+    Height = 276
     Align = alLeft
     ItemHeight = 13
     Items.Strings = (
@@ -43,7 +43,13 @@ object addfunctionform: Taddfunctionform
       'Datum und Uhrzeit'
       'IF-Then-Else'
       'Case-Select'
-      'Abfragedialog')
+      'Abfragedialog'
+      ''
+      'Variablen setzen/abfragen'
+      'Kontrollpanel Buttonfarbe oder -text setzen oder abfragen'
+      'MIDI-Nachricht senden'
+      'DataIn-Nachricht senden'
+      'PCD-Nachricht senden')
     TabOrder = 0
     OnKeyDown = ListBox1KeyDown
     OnKeyUp = ListBox1KeyUp
@@ -54,7 +60,7 @@ object addfunctionform: Taddfunctionform
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 684
+    Width = 676
     Height = 57
     Align = alTop
     BevelOuter = bvNone
@@ -63,7 +69,7 @@ object addfunctionform: Taddfunctionform
     object JvGradient1: TJvGradient
       Left = 0
       Top = 0
-      Width = 684
+      Width = 676
       Height = 57
       Style = grVertical
       StartColor = clWhite
@@ -142,8 +148,8 @@ object addfunctionform: Taddfunctionform
   end
   object Panel2: TPanel
     Left = 0
-    Top = 343
-    Width = 684
+    Top = 333
+    Width = 676
     Height = 39
     Align = alBottom
     BevelOuter = bvNone
@@ -151,7 +157,7 @@ object addfunctionform: Taddfunctionform
     object Shape1: TShape
       Left = 0
       Top = 1
-      Width = 684
+      Width = 676
       Height = 38
       Align = alBottom
       Pen.Style = psClear
@@ -159,7 +165,7 @@ object addfunctionform: Taddfunctionform
     object Shape2: TShape
       Left = 0
       Top = 0
-      Width = 684
+      Width = 676
       Height = 1
       Align = alTop
       Brush.Color = clBlack
@@ -186,8 +192,8 @@ object addfunctionform: Taddfunctionform
   object Memo1: TMemo
     Left = 284
     Top = 57
-    Width = 400
-    Height = 286
+    Width = 392
+    Height = 276
     Align = alClient
     TabOrder = 3
   end
