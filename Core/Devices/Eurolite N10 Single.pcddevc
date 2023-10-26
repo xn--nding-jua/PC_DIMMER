@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\nebelmaschine.png">
+ <information id="PC_DIMMER">
+ <name>N10 Single</name>
+ <vendor>Eurolite</vendor>
+ <author>Peter</author>
+ <description>N10 DMX Single</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="DIMMER" fade="yes" type="dimmer"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="190" height="190">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <button name="Button1_927" top="105" left="5" width="36" height="40" action="A_off" caption="Off"/>
+  <button name="Button2_801" top="105" left="41" width="36" height="40" action="A_3000" caption="3 s"/>
+  <button name="Button3_793" top="105" left="77" width="36" height="40" action="A_5000" caption="5 s"/>
+  <button name="Button4_285" top="105" left="113" width="36" height="40" action="A_10000" caption="10 s"/>
+  <button name="Button5_136" top="105" left="149" width="36" height="40" action="A_dauer" caption="Dauer"/>
+  <button name="Button6" top="145" left="5" width="60" height="40" action="A_30s" caption="30s"/>
+  <button name="Button7" top="145" left="125" width="60" height="40" action="Gibsihm" caption="30s-30s-"/>
+  <checkbox name="Checkbox1" top="82" left="100" width="50" height="20" caption="Nebeln" action="Nebel" checked="false"/>
+  <progressbar name="Progressbar1" top="80" left="5" width="90" height="20" startvalue="0" endvalue="255" default="0"/>
+  <button name="Button8" top="145" left="65" width="60" height="40" action="five_Seconds_to_Smoke" caption="5x5x..."/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure NeueFunktion;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+      	progressbar1.position:=get_channel('Dimmer');
+      	value:=get_channel('Dimmer');
+      	case value of
+					0..126: Checkbox1.checked:=false;
+					127..255: Checkbox1.checked:=true;
+				end;	
+     	end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure NeueFunktion;
+//  var
+    // hier ist Platz für eigene Variablen (z.B. "temp: boolean;" oder "temp:string;")
+  begin
+    DontRefresh:=true;
+
+    // bitte hier die eigene Funktion eintragen
+  end;
+	procedure Nebel;
+		begin
+			if checkbox1.checked = false then
+				begin 
+					set_channel('Dimmer',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Dimmer',-1,255,0);
+				end;
+		end;
+	procedure A_Dauer;
+  begin
+		set_channel('Dimmer',-1,255,0);
+  end;
+  procedure A_3000;
+  begin
+		set_channel('Dimmer',-1,255,0);
+		set_channel('Dimmer',-1,0,0,3000);
+  end;
+  procedure A_5000;
+  begin
+		set_channel('Dimmer',-1,255,0);
+		set_channel('Dimmer',-1,0,0,5000);
+  end;
+  procedure A_10000;
+  begin
+		set_channel('Dimmer',-1,255,0);
+		set_channel('Dimmer',-1,0,0,10000);
+  end;
+  procedure A_off;
+  begin
+		set_channel('Dimmer',-1,0,0);
+  end;
+  procedure A_30s;
+	begin
+		set_channel('Dimmer',-1,255,0,0);
+	  set_channel('Dimmer',-1,0,0,30000);
+	end;
+	procedure Gibsihm;
+	begin
+		set_channel('Dimmer',-1,255,0,0000);
+		set_channel('Dimmer',-1,0,0,30000);
+		set_channel('Dimmer',-1,255,0,60000);
+		set_channel('Dimmer',-1,0,0,90000);
+	end;
+	procedure five_Seconds_to_Smoke;
+	var
+		i :Integer;
+	begin
+		begin
+			set_channel('Dimmer',-1,255,0,0);
+			set_channel('Dimmer',-1,0,0,5000);
+			set_channel('Dimmer',-1,255,0,10000);
+			set_channel('Dimmer',-1,0,0,15000);
+			set_channel('Dimmer',-1,255,0,20000);
+			set_channel('Dimmer',-1,0,0,25000);
+			set_channel('Dimmer',-1,255,0,30000);
+			set_channel('Dimmer',-1,0,0,35000);
+		end;
+	end;
+  end.
+ </code>
+</device>

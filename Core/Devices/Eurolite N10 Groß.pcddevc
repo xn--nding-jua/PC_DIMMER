@@ -1,0 +1,711 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\nebelmaschine.png">
+ <information id="PC_DIMMER">
+ <name>N10 4er Set Groß</name>
+ <vendor>Eurolite</vendor>
+ <author>Peter</author>
+ <description>Nebelmaschinen 4erSet Umfangreich</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Nebel 1" fade="yes" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Nebel 2" fade="yes" type="special2"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Nebel 3" fade="yes" type="special3"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Nebel 4" fade="yes" type="special4"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="510" height="380">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <line name="Line6_223" top="258" left="0" width="235" height="60"/>
+  <line name="Line7_697" top="198" left="0" width="235" height="60"/>
+  <line name="Line9_544" top="78" left="0" width="235" height="60"/>
+  <line name="Line10_983" top="318" left="0" width="235" height="62"/>
+  <line name="Line11_251" top="138" left="0" width="235" height="60"/>
+  <label name="Label6_900" top="80" left="5" width="35" height="15" caption="Nebel 1"/>
+  <label name="Label7_804" top="140" left="5" width="75" height="15" caption="Nebel 2"/>
+  <label name="Label8_101" top="200" left="5" width="37" height="13" caption="Nebel 3"/>
+  <label name="Label9_10" top="260" left="5" width="37" height="13" caption="Nebel 4"/>
+  <label name="Label10_237" top="320" left="5" width="115" height="15" caption="Alle"/>
+  <button name="Button1_927" top="95" left="5" width="45" height="40" action="A_off" caption="Off"/>
+  <button name="Button2_801" top="95" left="50" width="45" height="40" action="A_3000" caption="3 s"/>
+  <button name="Button3_793" top="95" left="95" width="45" height="40" action="A_5000" caption="5 s"/>
+  <button name="Button4_285" top="95" left="140" width="45" height="40" action="A_10000" caption="10 s"/>
+  <button name="Button5_136" top="95" left="185" width="45" height="40" action="A_dauer" caption="Dauer"/>
+  <button name="Button6_610" top="155" left="5" width="45" height="40" action="B_off" caption="Off"/>
+  <button name="Button7_531" top="155" left="50" width="45" height="40" action="B_3000" caption="3 s"/>
+  <button name="Button8_464" top="155" left="95" width="45" height="40" action="B_5000" caption="5 s"/>
+  <button name="Button9_565" top="155" left="140" width="45" height="40" action="B_10000" caption="10 s"/>
+  <button name="Button10_485" top="155" left="185" width="45" height="40" action="B_Dauer" caption="Dauer"/>
+  <button name="Button11_474" top="215" left="5" width="45" height="40" action="C_Off" caption="Off"/>
+  <button name="Button12_213" top="215" left="50" width="45" height="40" action="C_3000" caption="3 s"/>
+  <button name="Button13_227" top="215" left="95" width="45" height="40" action="C_5000" caption="5 s"/>
+  <button name="Button14_882" top="215" left="140" width="45" height="40" action="C_10000" caption="10 s"/>
+  <button name="Button15_255" top="215" left="185" width="45" height="40" action="C_Dauer" caption="Dauer"/>
+  <button name="Button16_691" top="275" left="5" width="45" height="40" action="D_Off" caption="Off"/>
+  <button name="Button17_913" top="275" left="50" width="45" height="40" action="D_3000" caption="3 s"/>
+  <button name="Button18_31" top="275" left="95" width="45" height="40" action="D_5000" caption="5 s"/>
+  <button name="Button19_740" top="275" left="140" width="45" height="40" action="D_10000" caption="10 s"/>
+  <button name="Button20_638" top="275" left="185" width="45" height="40" action="D_Dauer" caption="Dauer"/>
+  <button name="Button21_749" top="335" left="5" width="45" height="40" action="Alle_Off" caption="Alle Off"/>
+  <button name="Button22_924" top="335" left="50" width="45" height="40" action="Alle_3000" caption="3 s"/>
+  <button name="Button23_624" top="335" left="95" width="45" height="40" action="Alle_5000" caption="5 s"/>
+  <button name="Button24_133" top="335" left="140" width="45" height="40" action="Alle_10000" caption="10 s"/>
+  <button name="Button25_283" top="335" left="185" width="45" height="40" action="Alle_Dauer" caption="Dauer"/>
+  <button name="Button26_283" top="5" left="240" width="90" height="40" action="Lauf_2s" caption="Lauf 2s(14)"/>
+  <button name="Button27_283" top="5" left="330" width="90" height="40" action="Lauf_4s" caption="Lauf 4s(28)"/>
+  <button name="Button28_283" top="45" left="330" width="90" height="40" action="Matrix_4s" caption="Matrix 4s(36)"/>
+  <button name="Button29_283" top="45" left="240" width="90" height="40" action="Matrix_2s" caption="Matrix 2s(18)"/>
+  <button name="Button30_283" top="85" left="240" width="90" height="40" action="AB_5s" caption="AB"/>
+  <button name="Button31_283" top="85" left="330" width="90" height="40" action="AC_5s" caption="AC"/>
+  <button name="Button32_283" top="85" left="420" width="90" height="40" action="AD_5s" caption="AD"/>
+  <button name="Button33_283" top="125" left="240" width="90" height="40" action="BC_5s" caption="BC"/>
+  <button name="Button34_283" top="125" left="330" width="90" height="40" action="BD_5s" caption="BD"/>
+  <button name="Button35_283" top="125" left="420" width="90" height="40" action="CD_5s" caption="CD"/>
+  <button name="Button36_283" top="165" left="240" width="90" height="40" action="pAB" caption="+AB"/>
+  <button name="Button37_283" top="165" left="330" width="90" height="40" action="pAC" caption="+AC"/>
+  <button name="Button38_283" top="165" left="420" width="90" height="40" action="pAD" caption="+AD"/>
+  <button name="Button39_283" top="205" left="240" width="90" height="40" action="pBC" caption="+BC"/>
+  <button name="Button40_283" top="205" left="330" width="90" height="40" action="pBD" caption="+BD"/>
+  <button name="Button41_283" top="205" left="420" width="90" height="40" action="pCD" caption="+CD"/>
+  <button name="Button42_283" top="45" left="420" width="90" height="40" action="Matrix_5s" caption="Matrix 5s(60)"/>
+  <button name="Button43_283" top="5" left="420" width="90" height="40" action="Lauf_5s" caption="Lauf 5s(30)"/>
+  <button name="Button44_283" top="245" left="240" width="90" height="40" action="Ausen_Innen" caption="Außen Innen"/>
+  <button name="Button45_283" top="245" left="330" width="45" height="40" action="AILang" caption="Lang"/>
+  <button name="Button46_283" top="245" left="420" width="90" height="40" action="Innen_Ausen" caption="Innen Außen"/>
+  <button name="Button47_283" top="245" left="375" width="45" height="40" action="IALang" caption="Lang"/>
+  <button name="Button48_283" top="38" left="190" width="45" height="40" action="Alle30s" caption="Alle 30s"/>
+	<button name="Button49_283" top="285" left="240" width="90" height="40" action="RUN" caption="Run"/>
+	<button name="Button50_283" top="285" left="420" width="90" height="40" action="RUNReverse" caption="Run Rückwärts"/>
+	<button name="Button51_283" top="285" left="330" width="90" height="40" action="Change" caption="Wechsel"/>
+	<button name="Button52_283" top="325" left="240" width="90" height="40" action="Hind" caption="ADBC"/>
+	<button name="Button53_283" top="325" left="330" width="90" height="40" action="HindReverse" caption="DACB"/>
+	<button name="Button54_283" top="325" left="420" width="90" height="40" action="GIbsihm" caption="30s-30s-"/>
+	<progressbar name="Progressbar1" top="80" left="50" width="90" height="15" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar2" top="140" left="50" width="90" height="15" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar3" top="200" left="50" width="90" height="15" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar4" top="260" left="50" width="90" height="15" startvalue="0" endvalue="255" default="0"/>
+  <checkbox name="Checkbox1" top="78" left="145" width="90" height="15" caption="Nebeln" action="Nebel1" checked="false"/>
+  <checkbox name="Checkbox2" top="138" left="145" width="90" height="15" caption="Nebeln" action="Nebel2" checked="false"/>
+  <checkbox name="Checkbox3" top="198" left="145" width="90" height="15" caption="Nebeln" action="Nebel3" checked="false"/>
+  <checkbox name="Checkbox4" top="258" left="145" width="90" height="15" caption="Nebeln" action="Nebel4" checked="false"/>
+	</form> 
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure A_dauer;
+  procedure B_Dauer;
+  procedure C_Dauer;
+  procedure D_Dauer;
+  procedure A_3000;
+  procedure A_5000;
+  procedure A_10000;
+  procedure A_off;
+  procedure B_3000;
+  procedure B_5000;
+  procedure B_10000;
+  procedure B_off;
+  procedure C_3000;
+  procedure C_5000;
+  procedure C_10000;
+  procedure C_Off;
+  procedure D_3000;
+  procedure D_5000;
+  procedure D_10000;
+  procedure D_Off;
+  procedure Alle_Off;
+  procedure Alle_3000;
+  procedure Alle_5000;
+  procedure Alle_10000;
+  procedure Alle_Dauer;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        Progressbar1.position:=get_channel('Special1');
+        value:=get_channel('Special1');
+        case value of
+					0..126: Checkbox1.checked:=false;
+					127..255: Checkbox1.checked:=true;
+				end;	  
+      end;
+      1:
+      begin
+        Progressbar2.position:=get_channel('Special2'); 
+        value:=get_channel('Special2');
+        case value of
+					0..126: Checkbox2.checked:=false;
+					127..255: Checkbox2.checked:=true;
+				end;       
+      end;
+      2:
+      begin
+        Progressbar3.position:=get_channel('Special3');
+        value:=get_channel('Special3');
+        case value of
+					0..126: Checkbox3.checked:=false;
+					127..255: Checkbox3.checked:=true;
+				end;        
+      end;
+      3:
+      begin
+        Progressbar4.position:=get_channel('Special4'); 
+        value:=get_channel('Special4');
+        case value of
+					0..126: Checkbox4.checked:=false;
+					127..255: Checkbox4.checked:=true;
+				end;       
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure A_dauer;
+  begin
+		set_channel('SPECIAL1',-1,255,0);
+  end;
+  procedure B_Dauer;
+  begin
+		set_channel('SPECIAL2',-1,255,0);
+  end;
+  procedure C_Dauer;
+  begin
+		set_channel('SPECIAL3',-1,255,0);
+  end;
+  procedure D_Dauer;
+  begin
+		set_channel('SPECIAL4',-1,255,0);
+  end;
+  procedure A_3000;
+  begin
+		set_channel('SPECIAL1',-1,255,0);
+		set_channel('Special1',-1,0,0,3000);
+  end;
+  procedure A_5000;
+  begin
+		set_channel('SPECIAL1',-1,255,0);
+		set_channel('Special1',-1,0,0,5000);
+  end;
+  procedure A_10000;
+  begin
+		set_channel('SPECIAL1',-1,255,0);
+		set_channel('Special1',-1,0,0,10000);
+  end;
+  procedure A_off;
+  begin
+		set_channel('SPECIAL1',-1,0,0);
+  end;
+  procedure B_3000;
+  begin
+		set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL2',-1,0,0,3000);
+  end;
+  procedure B_5000;
+  begin
+		set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL2',-1,0,0,5000);
+  end;
+  procedure B_10000;
+  begin
+		set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL2',-1,0,0,10000);
+  end;
+  procedure B_off;
+  begin
+		set_channel('SPECIAL2',-1,0,0);
+  end;
+  procedure C_3000;
+  begin
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL3',-1,0,0,3000);
+  end;
+  procedure C_5000;
+  begin
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL3',-1,0,0,5000);
+  end;
+  procedure C_10000;
+  begin
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL3',-1,0,0,10000);
+  end;
+  procedure C_Off;
+  begin
+		set_channel('SPECIAL3',-1,0,0);
+  end;
+  procedure D_3000;
+  begin
+		set_channel('SPECIAL4',-1,255,0);
+		set_channel('SPECIAL4',-1,0,0,3000);
+  end;
+  procedure D_5000;
+  begin
+		set_channel('SPECIAL4',-1,255,0);
+		set_channel('SPECIAL4',-1,0,0,5000);
+  end;
+  procedure D_10000;
+  begin
+		set_channel('SPECIAL4',-1,255,0);
+		set_channel('SPECIAL4',-1,0,0,10000);
+  end;
+  procedure D_Off;
+  begin
+		set_channel('SPECIAL4',-1,0,0);
+  end;
+  procedure Alle_Off;
+  begin
+		set_channel('SPECIAL1',-1,0,0);
+		set_channel('SPECIAL2',-1,0,0);
+		set_channel('SPECIAL3',-1,0,0);
+		set_channel('SPECIAL4',-1,0,0);
+  end;
+  procedure Alle_3000;
+	begin
+		set_channel('SPECIAL1',-1,255,0);
+ 	  set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL4',-1,255,0);
+		set_channel('SPECIAL1',-1,0,0,3000);
+		set_channel('SPECIAL2',-1,0,0,3000);
+		set_channel('SPECIAL3',-1,0,0,3000);
+		set_channel('SPECIAL4',-1,0,0,3000);
+	end;
+  procedure Alle_5000;
+	begin
+		set_channel('SPECIAL1',-1,255,0);
+  	set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL4',-1,255,0);
+		set_channel('SPECIAL1',-1,0,0,5000);
+		set_channel('SPECIAL2',-1,0,0,5000);
+		set_channel('SPECIAL3',-1,0,0,5000);
+		set_channel('SPECIAL4',-1,0,0,5000);
+	end;
+  procedure Alle_10000;
+	begin
+		set_channel('SPECIAL1',-1,255,0);
+		set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL4',-1,255,0);
+		set_channel('SPECIAL1',-1,0,0,10000);
+		set_channel('SPECIAL2',-1,0,0,10000);
+		set_channel('SPECIAL3',-1,0,0,10000);
+		set_channel('SPECIAL4',-1,0,0,10000);
+	end;
+  procedure Alle_Dauer;
+	begin
+		set_channel('SPECIAL1',-1,255,0);
+	  set_channel('SPECIAL2',-1,255,0);
+		set_channel('SPECIAL3',-1,255,0);
+		set_channel('SPECIAL4',-1,255,0);
+	end;
+  procedure Lauf_2s;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+	  set_channel('SPECIAL2',-1,255,0,2000);
+		set_channel('SPECIAL3',-1,255,0,4000);
+		set_channel('SPECIAL4',-1,255,0,6000);
+		set_channel('Special1',-1,0,0,8000);
+		set_channel('Special2',-1,0,0,10000);
+		set_channel('Special3',-1,0,0,12000);
+		set_channel('Special4',-1,0,0,14000);
+	end;
+  procedure Matrix_4s;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+	  set_channel('SPECIAL2',-1,255,0,4000);
+		set_channel('SPECIAL3',-1,255,0,8000);
+		set_channel('SPECIAL4',-1,255,0,12000);
+		set_channel('Special1',-1,0,0,8000);
+		set_channel('Special2',-1,0,0,12000);
+		set_channel('Special3',-1,0,0,16000);
+		set_channel('Special4',-1,0,0,20000);
+		set_channel('SPECIAL1',-1,255,0,16000);
+	  set_channel('SPECIAL2',-1,255,0,20000);
+		set_channel('SPECIAL3',-1,255,0,24000);
+		set_channel('SPECIAL4',-1,255,0,28000);
+		set_channel('Special1',-1,0,0,24000);
+		set_channel('Special2',-1,0,0,28000);
+		set_channel('Special3',-1,0,0,32000);
+		set_channel('Special4',-1,0,0,36000);
+	end;
+  procedure Lauf_4s;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+	  set_channel('SPECIAL2',-1,255,0,4000);
+		set_channel('SPECIAL3',-1,255,0,8000);
+		set_channel('SPECIAL4',-1,255,0,12000);
+		set_channel('Special1',-1,0,0,16000);
+		set_channel('Special2',-1,0,0,20000);
+		set_channel('Special3',-1,0,0,24000);
+		set_channel('Special4',-1,0,0,28000);
+	end;
+  procedure AD_5s;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+	  set_channel('SPECIAL2',-1,0,0,0);
+		set_channel('SPECIAL3',-1,0,0,0);
+		set_channel('SPECIAL4',-1,255,0,0);
+	end;
+  procedure AC_5s;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+	  set_channel('SPECIAL2',-1,0,0,0);
+		set_channel('SPECIAL3',-1,255,0,0);
+		set_channel('SPECIAL4',-1,0,0,0);
+	end;
+  procedure AB_5s;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+	  set_channel('SPECIAL2',-1,255,0,0);
+		set_channel('SPECIAL3',-1,0,0,0);
+		set_channel('SPECIAL4',-1,0,0,0);
+	end;
+  procedure Matrix_2s;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+	  set_channel('SPECIAL2',-1,255,0,2000);
+		set_channel('SPECIAL3',-1,255,0,4000);
+		set_channel('SPECIAL4',-1,255,0,6000);
+		set_channel('Special1',-1,0,0,4000);
+		set_channel('Special2',-1,0,0,6000);
+		set_channel('Special3',-1,0,0,8000);
+		set_channel('Special4',-1,0,0,10000);
+		set_channel('SPECIAL1',-1,255,0,8000);
+	  set_channel('SPECIAL2',-1,255,0,10000);
+		set_channel('SPECIAL3',-1,255,0,12000);
+		set_channel('SPECIAL4',-1,255,0,14000);
+		set_channel('Special1',-1,0,0,12000);
+		set_channel('Special2',-1,0,0,14000);
+		set_channel('Special3',-1,0,0,16000);
+		set_channel('Special4',-1,0,0,18000);
+	end;
+  procedure BC_5s;
+	begin		
+		set_channel('SPECIAL1',-1,0,0,0);
+	  set_channel('SPECIAL2',-1,255,0,0);
+		set_channel('SPECIAL3',-1,255,0,0);
+		set_channel('SPECIAL4',-1,0,0,0);
+	end;
+  procedure BD_5s;
+	begin
+		set_channel('SPECIAL1',-1,0,0,0);
+	  set_channel('SPECIAL2',-1,255,0,0);
+		set_channel('SPECIAL3',-1,0,0,0);
+		set_channel('SPECIAL4',-1,255,0,0);
+	end;
+  procedure CD_5s;
+	begin
+		set_channel('SPECIAL1',-1,0,0,0);
+	  set_channel('SPECIAL2',-1,0,0,0);
+		set_channel('SPECIAL3',-1,255,0,0);
+		set_channel('SPECIAL4',-1,255,0,0);
+	end;
+  procedure pCD;
+	begin
+		set_channel('SPECIAL3',-1,255,0,0);
+		set_channel('SPECIAL4',-1,255,0,0);
+	end;
+  procedure pBD;
+	begin
+	  set_channel('SPECIAL2',-1,255,0,0);
+		set_channel('SPECIAL4',-1,255,0,0);
+	end;
+  procedure pBC;
+	begin		
+	  set_channel('SPECIAL2',-1,255,0,0);
+		set_channel('SPECIAL3',-1,255,0,0);
+	end;
+  procedure pAD;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+		set_channel('SPECIAL4',-1,255,0,0);
+	end;
+  procedure pAC;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+		set_channel('SPECIAL3',-1,255,0,0);
+	end;
+  procedure pAB;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+	  set_channel('SPECIAL2',-1,255,0,0);
+	end;
+  procedure Matrix_5s;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+	  set_channel('SPECIAL2',-1,255,0,5000);
+		set_channel('SPECIAL3',-1,255,0,10000);
+		set_channel('SPECIAL4',-1,255,0,15000);
+		set_channel('Special1',-1,0,0,10000);
+		set_channel('Special2',-1,0,0,15000);
+		set_channel('Special3',-1,0,0,20000);
+		set_channel('Special4',-1,0,0,25000);
+		set_channel('SPECIAL1',-1,255,0,20000);
+	  set_channel('SPECIAL2',-1,255,0,25000);
+		set_channel('SPECIAL3',-1,255,0,30000);
+		set_channel('SPECIAL4',-1,255,0,35000);
+		set_channel('Special1',-1,0,0,30000);
+		set_channel('Special2',-1,0,0,35000);
+		set_channel('Special3',-1,0,0,40000);
+		set_channel('Special4',-1,0,0,45000);
+		set_channel('SPECIAL1',-1,255,0,40000);
+	  set_channel('SPECIAL2',-1,255,0,45000);
+		set_channel('SPECIAL3',-1,255,0,50000);
+		set_channel('SPECIAL4',-1,255,0,55000);
+		set_channel('Special1',-1,0,0,50000);
+		set_channel('Special2',-1,0,0,55000);
+		set_channel('Special3',-1,0,0,60000);
+		set_channel('Special4',-1,0,0,65000);
+	end;
+  procedure Lauf_5s;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+		set_channel('SPECIAL2',-1,255,0,5000);
+		set_channel('SPECIAL3',-1,255,0,10000);
+		set_channel('SPECIAL4',-1,255,0,15000);
+		set_channel('Special1',-1,0,0,10000);
+		set_channel('Special2',-1,0,0,15000);
+		set_channel('Special3',-1,0,0,20000);
+		set_channel('Special4',-1,0,0,25000);
+	end;
+  procedure Ausen_Innen;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+	  set_channel('SPECIAL2',-1,255,0,2000);
+		set_channel('SPECIAL3',-1,255,0,2000);
+		set_channel('SPECIAL4',-1,255,0,0);
+		set_channel('Special1',-1,0,0,4000);
+		set_channel('Special2',-1,0,0,6000);
+		set_channel('Special3',-1,0,0,6000);
+		set_channel('Special4',-1,0,0,4000);
+	end;
+  procedure Innen_Ausen;
+	begin
+		set_channel('SPECIAL1',-1,255,0,2000);
+	  set_channel('SPECIAL2',-1,255,0,000);
+		set_channel('SPECIAL3',-1,255,0,000);
+		set_channel('SPECIAL4',-1,255,0,2000);
+		set_channel('Special1',-1,0,0,6000);
+		set_channel('Special2',-1,0,0,4000);
+		set_channel('Special3',-1,0,0,4000);
+		set_channel('Special4',-1,0,0,6000);
+	end;
+  procedure IALang;
+	begin
+		set_channel('SPECIAL1',-1,255,0,4000);
+	  set_channel('SPECIAL2',-1,255,0,000);
+		set_channel('SPECIAL3',-1,255,0,000);
+		set_channel('SPECIAL4',-1,255,0,4000);
+		set_channel('Special1',-1,0,0,16000);
+		set_channel('Special2',-1,0,0,8000);
+		set_channel('Special3',-1,0,0,8000);
+		set_channel('Special4',-1,0,0,16000);
+		set_channel('SPECIAL1',-1,255,0,24000);
+	  set_channel('SPECIAL2',-1,255,0,12000);
+		set_channel('SPECIAL3',-1,255,0,12000);
+		set_channel('SPECIAL4',-1,255,0,24000);
+		set_channel('Special1',-1,0,0,28000);
+		set_channel('Special2',-1,0,0,20000);
+		set_channel('Special3',-1,0,0,20000);
+		set_channel('Special4',-1,0,0,28000);
+	end;
+  procedure AILang;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+	  set_channel('SPECIAL2',-1,255,0,4000);
+		set_channel('SPECIAL3',-1,255,0,4000);
+		set_channel('SPECIAL4',-1,255,0,0);
+		set_channel('Special1',-1,0,0,8000);
+		set_channel('Special2',-1,0,0,16000);
+		set_channel('Special3',-1,0,0,16000);
+		set_channel('Special4',-1,0,0,8000);
+		set_channel('SPECIAL1',-1,255,0,12000);
+	  set_channel('SPECIAL2',-1,255,0,24000);
+		set_channel('SPECIAL3',-1,255,0,24000);
+		set_channel('SPECIAL4',-1,255,0,12000);
+		set_channel('Special1',-1,0,0,20000);
+		set_channel('Special2',-1,0,0,28000);
+		set_channel('Special3',-1,0,0,28000);
+		set_channel('Special4',-1,0,0,20000);
+	end;
+	procedure Alle30s;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+	  set_channel('SPECIAL2',-1,255,0,0);
+		set_channel('SPECIAL3',-1,255,0,0);
+		set_channel('SPECIAL4',-1,255,0,0);
+		set_channel('Special1',-1,0,0,30000);
+		set_channel('Special2',-1,0,0,30000);
+		set_channel('Special3',-1,0,0,30000);
+		set_channel('Special4',-1,0,0,30000);
+	end;
+	procedure RUN;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0);
+	  set_channel('SPECIAL2',-1,255,0,3000);
+		set_channel('SPECIAL3',-1,255,0,6000);
+		set_channel('SPECIAL4',-1,255,0,9000);
+		set_channel('Special1',-1,0,0,3000);
+		set_channel('Special2',-1,0,0,6000);
+		set_channel('Special3',-1,0,0,9000);
+		set_channel('Special4',-1,0,0,12000);
+	end;
+	procedure RunReverse;
+	begin
+		set_channel('SPECIAL1',-1,255,0,9000);
+	  set_channel('SPECIAL2',-1,255,0,6000);
+		set_channel('SPECIAL3',-1,255,0,3000);
+		set_channel('SPECIAL4',-1,255,0,0);
+		set_channel('Special1',-1,0,0,12000);
+		set_channel('Special2',-1,0,0,9000);
+		set_channel('Special3',-1,0,0,6000);
+		set_channel('Special4',-1,0,0,3000);
+	end;	
+	procedure Change;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0000);
+	  set_channel('SPECIAL2',-1,255,0,6000);
+		set_channel('SPECIAL3',-1,255,0,3000);
+		set_channel('SPECIAL4',-1,255,0,9000);
+		set_channel('Special1',-1,0,0,3000);
+		set_channel('Special2',-1,0,0,9000);
+		set_channel('Special3',-1,0,0,6000);
+		set_channel('Special4',-1,0,0,12000);
+	end;
+	procedure Hind;
+	begin
+		set_channel('SPECIAL1',-1,255,0,0000);
+	  set_channel('SPECIAL2',-1,255,0,6000);
+		set_channel('SPECIAL3',-1,255,0,9000);
+		set_channel('SPECIAL4',-1,255,0,3000);
+		set_channel('Special1',-1,0,0,3000);
+		set_channel('Special2',-1,0,0,9000);
+		set_channel('Special3',-1,0,0,12000);
+		set_channel('Special4',-1,0,0,6000);
+	end;
+	procedure HindReverse;
+	begin
+		set_channel('SPECIAL1',-1,255,0,3000);
+	  set_channel('SPECIAL2',-1,255,0,9000);
+		set_channel('SPECIAL3',-1,255,0,6000);
+		set_channel('SPECIAL4',-1,255,0,0000);
+		set_channel('Special1',-1,0,0,6000);
+		set_channel('Special2',-1,0,0,12000);
+		set_channel('Special3',-1,0,0,9000);
+		set_channel('Special4',-1,0,0,3000);
+	end;
+	procedure Gibsihm;
+	var 
+	begin
+		set_channel('SPECIAL1',-1,255,0,0000);
+		set_channel('SPECIAL2',-1,255,0,0000);
+		set_channel('SPECIAL3',-1,255,0,0000);
+		set_channel('SPECIAL4',-1,255,0,0000);
+		set_channel('Special1',-1,0,0,30000);
+		set_channel('Special2',-1,0,0,30000);
+		set_channel('Special3',-1,0,0,30000);
+		set_channel('Special4',-1,0,0,30000);
+		set_channel('SPECIAL1',-1,255,0,60000);
+		set_channel('SPECIAL2',-1,255,0,60000);
+		set_channel('SPECIAL3',-1,255,0,60000);
+		set_channel('SPECIAL4',-1,255,0,60000);
+		set_channel('Special1',-1,0,0,90000);
+		set_channel('Special2',-1,0,0,90000);
+		set_channel('Special3',-1,0,0,90000);
+		set_channel('Special4',-1,0,0,90000);	 
+	end;
+	procedure test;
+	var
+  r: Integer;
+	begin
+		r := MessageDlg ('Wiederholen?', mtInformation, [mbYes, mbNo], 0);
+		case r of
+			mrYes:
+				ShowMessage ('Run');
+			mrNo:
+				ShowMessage ('Broked');
+		end;
+	end;
+	procedure Nebel1;
+		begin
+			if checkbox1.checked = false then
+				begin 
+					set_channel('Special1',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Special1',-1,255,0);
+				end;
+		end;
+	procedure Nebel2;
+		begin
+			if checkbox2.checked = false then
+				begin 
+					set_channel('Special2',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Special2',-1,255,0);
+				end;
+		end;
+	procedure Nebel3;
+		begin
+			if checkbox3.checked = false then
+				begin 
+					set_channel('Special3',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Special3',-1,255,0);
+				end;
+		end;
+	procedure Nebel4;
+		begin
+			if checkbox4.checked = false then
+				begin 
+					set_channel('Special4',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Special4',-1,255,0);
+				end;
+		end;
+ end.
+ </code>
+</device>

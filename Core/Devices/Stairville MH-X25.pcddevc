@@ -1,0 +1,2020 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\MH-X25.png">
+ <information id="PC_DIMMER">
+ <name>MH-X25 neu</name>
+ <vendor>Stairville</vendor>
+ <author>Peter</author>
+ <description>Moving Head</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="PAN" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="TILT" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="PAN 16bit" fade="yes" type="panfine"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="TILT 16bit" fade="yes" type="tiltfine"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="P/T Speed" fade="yes" type="speed"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="Farbrad" fade="yes" type="color1"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Dimmer" fade="yes" type="dimmer"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Gobo-Rad" fade="yes" type="gobo1"/>
+  <function channel="9" minvalue="0" maxvalue="255" name="Gobo-Rotation" fade="yes" type="gobo1rot"/>
+  <function channel="10" minvalue="0" maxvalue="255" name="Besondere Funktionen" fade="yes" type="special1"/>
+  <function channel="11" minvalue="0" maxvalue="255" name="Programme" fade="yes" type="special2"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="no" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="-1" ch6="-1" ch7="-1" ch8="-1" ch9="-1" ch10="-1" ch11="-1" />
+ <colors>
+  <color name="Weiß" value="0" valueend="4" r="255" g="255" b="255" />
+  <color name="Gelb" value="5" valueend="9" r="255" g="255" b="0" />
+  <color name="Pink" value="10" valueend="14" r="255" g="0" b="255" />
+  <color name="Grün" value="15" valueend="19" r="0" g="255" b="0" />
+  <color name="Peachblow" value="20" valueend="24" r="215" g="115" b="91" />
+  <color name="Hellblau" value="25" valueend="29" r="143" g="197" b="250" />
+  <color name="Gelbgrün" value="30" valueend="34" r="128" g="255" b="0" />
+  <color name="Rot" value="35" valueend="39" r="255" g="0" b="0" />
+  <color name="Dunkelblau" value="40" valueend="44" r="0" g="0" b="255" />
+  <color name="Übergang Weiß->Gelb" value="45" valueend="54" r="255" g="255" b="128" />
+  <color name="Übergang Gelb->Pink" value="55" valueend="64" r="255" g="128" b="128" />
+  <color name="Übergang Pink->Grün" value="65" valueend="73" r="255" g="100" b="0" />
+  <color name="Übergang Grün->Peachblow" value="74" valueend="83" r="128" g="0" b="64" />
+  <color name="Übergang Peachblow->Hellblau" value="84" valueend="82" r="118" g="0" b="254" />
+  <color name="Übergang Hellblau->Gelbgrün" value="93" valueend="101" r="255" g="128" b="64" />
+  <color name="Übergang Gelbgrün->Rot" value="102" valueend="110" r="128" g="0" b="0" />
+  <color name="Übergang Rot->Dunkelblau" value="111" valueend="119" r="64" g="0" b="128" />
+  <color name="Übergang Dunkelblau->Weiß" value="120" valueend="127" r="0" g="255" b="255" />
+  <color name="Regenbogeneffekt IUZS" value="128" valueend="191" r="192" g="192" b="192" />
+  <color name="Regenbogeneffekt GUZS" value="192" valueend="255" r="128" g="128" b="128" />
+ </colors>
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="8" MaxValue="215" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="148" LeftMaxValue="231" OffValue="0" RightMinValue="64" RightMaxValue="147" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="148" LeftMaxValue="231" OffValue="0" RightMinValue="64" RightMaxValue="147" ChannelName="gobo1rot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <gobos>
+  <gobo name="Offen" value="0" valueend="7" filename="Offen1.png" />
+  <gobo name="Gobo 2 (Lochring)" value="8" valueend="15" filename="Ring Violett.png" />
+  <gobo name="Gobo 3 (Broken Glass)" value="16" valueend="23" filename="Broken Glas MH-X.png" />
+  <gobo name="Gobo 4 (Feuerkreisel)" value="24" valueend="31" filename="Kreisel.png" />
+  <gobo name="Gobo 5 (Biohazard)" value="32" valueend="39" filename="Biohazard.png" />
+  <gobo name="Gobo 6 (Rose)" value="40" valueend="47" filename="Rose1.png" />
+  <gobo name="Gobo 7 (Netz)" value="48" valueend="55" filename="BrokenGlass2.png" />
+  <gobo name="Gobo 8 (Galaxy)" value="56" valueend="63" filename="Galaxy.png" />
+  <gobo name="Gobo 8 shake (Galaxy)" value="64" valueend="71" filename="Galaxy - Kopie.png" />
+  <gobo name="Gobo 7 shake (Netz)" value="72" valueend="79" filename="BrokenGlass2 - Kopie.png" />
+  <gobo name="Gobo 6 shake (Rose)" value="80" valueend="87" filename="Rose1 - Kopie.png" />
+  <gobo name="Gobo 5 shake (Biohazard)" value="88" valueend="95" filename="Biohazard - Kopie.png" />
+  <gobo name="Gobo 4 shake (Kreisel)" value="96" valueend="103" filename="Kreisel - Kopie.png" />
+  <gobo name="Gobo 3 shake (Broken Glass)" value="104" valueend="111" filename="Broken Glas MH-X - Kopie.png" />
+  <gobo name="Gobo 2 shake (Lochring)" value="112" valueend="119" filename="Ring Violett - Kopie.png" />
+  <gobo name="Offen" value="120" valueend="127" filename="Offen1 - Kopie.png" />
+  <gobo name="Regenbogeneffekt IUZS" value="128" valueend="191" filename="Durchlauf.png" />
+  <gobo name="Regenbogeneffekt GUZS" value="192" valueend="255" filename="Durchlauf rückwärts.png" />
+ </gobos>
+ <form width="470" height="500">
+  <line name="Line6_223" top="269" left="238" width="224" height="71"/>
+  <line name="Line7" top="369" left="238" width="224" height="71"/>
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <position top="8" left="233" height="230" width="230" />
+  <colorbox top="245" left="240" height="22" width="220" />
+  <dropdown name="Colorbox1" top="270" left="250" width="200" height="22" action="ColorBox1Change">
+   <item caption="Weiß" value="4" valueend="-1" picture="White.bmp" />
+   <item caption="Gelb" value="5" valueend="-1" picture="Yellow.bmp" />
+   <item caption="Pink" value="10" valueend="-1" picture="Pink.bmp" />
+   <item caption="Grün" value="15" valueend="-1" picture="Green.bmp" />
+   <item caption="Peachblow" value="20" valueend="-1" picture="Peachblow.bmp" />
+   <item caption="Hellblau" value="25" valueend="-1" picture="Light Blue.bmp" />
+   <item caption="Gelbgrün" value="30" valueend="-1" picture="Yellow Green.bmp" />
+   <item caption="Rot" value="35" valueend="-1" picture="Red.bmp" />
+   <item caption="Dunkelblau" value="40" valueend="-1" picture="Blue.bmp" />
+   <item caption="Farbverlauf" value="45" valueend="-1" picture="Farbverlauf.bmp" />
+  </dropdown>
+  <dropdown name="Colorb2" top="293" left="250" width="200" height="22" action="Color1Slider">
+   <item caption="Normalfarben" value="0" valueend="-1" picture="White.bmp" />  
+   <item caption="Weiß zu Gelb" value="54" valueend="-1" picture="White-Yellow.bmp" />
+   <item caption="Gelb zu Pink" value="55" valueend="-1" picture="Yellow-Pink.bmp" />
+   <item caption="Pink zu Grün" value="65" valueend="-1" picture="Pink-Green.bmp" />
+   <item caption="Grün zu Peachblow" value="74" valueend="-1" picture="Green-Peachblow.bmp" />
+   <item caption="Peachblow zu Hellblau" value="84" valueend="-1" picture="Peachblow-Light Blue.bmp" />
+   <item caption="Hellblau zu Gelbgrün" value="93" valueend="-1" picture="Light Blue-Yellow Green.bmp" />
+   <item caption="Gelbgrün zu Rot" value="102" valueend="-1" picture="Yellow Green-Red.bmp" />
+   <item caption="Rot zu Dunkelblau" value="111" valueend="-1" picture="Red-Blue.bmp" />
+   <item caption="Dunkelblau zu Weiß" value="120" valueend="-1" picture="Blue-White.bmp" />
+   <item caption="Durchlauf vorwärts" value="128" valueend="-1" picture="Farbverlauf.bmp" />
+   <item caption="Durchlauf Rückwärts" value="192" valueend="-1" picture="Farbverlauf rück.bmp" />
+  </dropdown>
+  <dropdown name="GOBOBOX1" top="345" left="240" width="220" height="23" action="gobo1change">
+   <item caption="Offen" value="0" valueend="-1" picture="Offen1.bmp" />
+   <item caption="Gobo 2 (Lochring)" value="8" valueend="-1" picture="Ring Violett.bmp" />
+   <item caption="Gobo 3 (Broken Glass)" value="16" valueend="-1" picture="Broken Glas MH-X.bmp" />
+   <item caption="Gobo 4 (Feuerkreisel)" value="24" valueend="-1" picture="Kreisel.bmp" />
+   <item caption="Gobo 5 (Biohazard)" value="32" valueend="-1" picture="Biohazard.bmp" />
+   <item caption="Gobo 6 (Rose)" value="40" valueend="-1" picture="Rose1.bmp" />
+   <item caption="Gobo 7 (Netz)" value="48" valueend="-1" picture="BrokenGlass2.bmp" />
+   <item caption="Gobo 8 (Galaxy)" value="56" valueend="-1" picture="Galaxy.bmp" />
+   <item caption="Gobo 8 shake (Galaxy)" value="64" valueend="-1" picture="Galaxy - Kopie.bmp" />
+   <item caption="Gobo 7 shake (Netz)" value="72" valueend="-1" picture="BrokenGlass2 - Kopie.bmp" />
+   <item caption="Gobo 6 shake (Rose)" value="80" valueend="-1" picture="Rose1 - Kopie.bmp" />
+   <item caption="Gobo 5 shake (Biohazard)" value="88" valueend="-1" picture="Biohazard - Kopie.bmp" />
+   <item caption="Gobo 4 shake (Kreisel)" value="96" valueend="-1" picture="Kreisel - Kopie.bmp" />
+   <item caption="Gobo 3 shake (Broken Glass)" value="104" valueend="-1" picture="Broken Glas MH-X - Kopie.bmp" />
+   <item caption="Gobo 2 shake (Lochring)" value="112" valueend="-1" picture="Ring Violett - Kopie.bmp" />
+   <item caption="Offen" value="120" valueend="-1" picture="Offen1 - Kopie.bmp" />
+   <item caption="Regenbogeneffekt IUZS" value="128" valueend="-1" picture="Durchlauf.bmp" />
+   <item caption="Regenbogeneffekt GUZS" value="192" valueend="-1" picture="Durchlauf rückwärts.bmp" />
+  </dropdown>  
+  <dropdown name="Gobob1" top="370" left="250" width="200" height="22" action="Gob1change">
+   <item caption="Offen" value="0" valueend="-1" picture="Offen.bmp" />
+   <item caption="Lochring" value="8" valueend="-1" picture="Ring Violett.bmp" />
+   <item caption="Broken Glass" value="16" valueend="-1" picture="Broken Glas MH-X.bmp" />
+   <item caption="Kreisel" value="24" valueend="-1" picture="Kreisel.bmp" />
+   <item caption="Biohazard" value="32" valueend="-1" picture="Bio.bmp" />
+   <item caption="Rose" value="40" valueend="-1" picture="Rose1.bmp" />
+   <item caption="Netz" value="48" valueend="-1" picture="BrokenGlass2.bmp" />
+   <item caption="Galaxy" value="56" valueend="-1" picture="Galaxy.bmp" />
+   <item caption="Shake" value="64" valueend="-1" picture="Gobo01.bmp" />
+  </dropdown>
+  <dropdown name="Gobob2" top="393" left="250" width="200" height="22" action="Gobo1slider">
+		<item caption="Standard" value="0" valueend="-1" picture="Gobo01.bmp" />
+		<item caption="Galaxy" value="56" valueend="-1" picture="Galaxy.bmp" />
+		<item caption="Netz" value="48" valueend="-1" picture="BrokenGlass2.bmp" />
+		<item caption="Rose" value="40" valueend="-1" picture="Rose1.bmp" />
+		<item caption="Biohazard" value="32" valueend="-1" picture="Bio.bmp" />
+		<item caption="Kreisel" value="24" valueend="-1" picture="Kreisel.bmp" />
+		<item caption="Broken Glass" value="16" valueend="-1" picture="Broken Glas MH-X.bmp" />
+		<item caption="Lochring" value="8" valueend="-1" picture="Ring Violett.bmp" />
+		<item caption="Offen" value="0" valueend="-1" picture="Offen.bmp" />
+		<item caption="Durchlauf IUZS langsam -> schnell" value="56" valueend="-1" picture="Durchlauf.bmp" />
+		<item caption="Druchlauf GUZS langsam -> schnell" value="56" valueend="-1" picture="Durchlauf rückwärts.bmp" />
+  </dropdown>
+  <dropdown name="Combobox1" top="470" left="5" width="225" height="21" action="SPECIAL1change">
+   <item caption="Nicht benutzt" value="0" valueend="-1" picture="" />
+   <item caption="BO während PT-Move" value="0" valueend="-1" picture="" />
+   <item caption="Kein BO während PT-Move" value="0" valueend="-1" picture="" />
+   <item caption="BO bei Move Farbrad" value="0" valueend="-1" picture="" />
+   <item caption="Kein BO bei Move Farbrad" value="0" valueend="-1" picture="" />
+   <item caption="BO bei Move Goborad" value="0" valueend="-1" picture="" />
+   <item caption="Kein BO bei Move Goborad" value="0" valueend="-1" picture="" />
+   <item caption="Nicht benutzt" value="0" valueend="-1" picture="" />
+   <item caption="BO bei Bewegung" value="0" valueend="-1" picture="" />
+   <item caption="PT zurücksetzen" value="0" valueend="-1" picture="" />
+   <item caption="Nicht benutzt" value="0" valueend="-1" picture="" />
+   <item caption="Farbrad zurücksetzen" value="0" valueend="-1" picture="" />
+   <item caption="Gobo-Rad zurücksetzen" value="0" valueend="-1" picture="" />
+   <item caption="Gobo Drehung zurücksetzen" value="0" valueend="-1" picture="" />
+   <item caption="Nicht benutzt" value="0" valueend="-1" picture="" />
+   <item caption="Alle Kanäle Zurücksetzen" value="0" valueend="-1" picture="" />
+   <item caption="Nicht benutzt" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox2" top="470" left="240" width="225" height="21" action="SPECIAL2change">
+   <item caption="Nicht benutzt" value="0" valueend="-1" picture="" />
+   <item caption="Programm 1" value="0" valueend="-1" picture="" />
+   <item caption="Programm 2" value="0" valueend="-1" picture="" />
+   <item caption="Programm 3" value="0" valueend="-1" picture="" />
+   <item caption="Programm 4" value="0" valueend="-1" picture="" />
+   <item caption="Programm 5" value="0" valueend="-1" picture="" />
+   <item caption="Programm 6" value="0" valueend="-1" picture="" />
+   <item caption="Programm 7" value="0" valueend="-1" picture="" />
+   <item caption="Programm 8" value="0" valueend="-1" picture="" />
+   <item caption="Musikstuerung 1" value="0" valueend="-1" picture="" />
+   <item caption="Musikstuerung 2" value="0" valueend="-1" picture="" />
+   <item caption="Musikstuerung 3" value="0" valueend="-1" picture="" />
+   <item caption="Musikstuerung 4" value="0" valueend="-1" picture="" />
+   <item caption="Musikstuerung 5" value="0" valueend="-1" picture="" />
+   <item caption="Musikstuerung 6" value="0" valueend="-1" picture="" />
+   <item caption="Musikstuerung 7" value="0" valueend="-1" picture="" />
+   <item caption="Musikstuerung 8" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox3" top="220" left="40" width="145" height="21" action="Shutter_Definition">
+   <item caption="Geschlossen (Blackout)" value="0" valueend="-1" picture="" />
+   <item caption="Offen" value="0" valueend="-1" picture="" />
+   <item caption="Strob" value="0" valueend="-1" picture="" />
+   <item caption="Offen" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <slider name="PANFINEslider2" top="96" left="8" width="217" height="17" action="PANFINEchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="TILTFINEslider3" top="136" left="8" width="217" height="17" action="TILTFINEchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SPEEDslider4" top="176" left="8" width="217" height="17" action="SPEEDchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SHUTTERslider6" top="245" left="5" width="220" height="15" action="ShutterChange" startvalue="8" endvalue="215" default="8"/>
+  <slider name="DIMMERslider7" top="310" left="5" width="220" height="15" action="DIMMERchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="GOBO1ROTslider9" top="330" left="70" width="160" height="20" action="GOBO1ROTchange" startvalue="0" endvalue="63" default="0"/>
+  <slider name="Slider7" top="350" left="70" width="160" height="20" action="Gobo1Rotation2" startvalue="64" endvalue="147" default="64"/>
+  <slider name="Slider8" top="370" left="70" width="160" height="20" action="Gobo1Rotation3" startvalue="148" endvalue="231" default="148"/>
+  <slider name="Slider9" top="390" left="70" width="160" height="20" action="Gobo1Rotation4" startvalue="232" endvalue="255" default="232"/>
+  <slider name="Color1Slider" top="315" left="240" width="220" height="20" action="Color1Sliderr" startvalue="0" endvalue="63" default="232"/>
+  <slider name="Gobo1Slider" top="415" left="240" width="220" height="20" action="Gobo1Sliderr" startvalue="0" endvalue="63" default="232"/>
+  <label name="PANFINElbl2" top="80" left="8" width="48" height="13" caption="PAN 16bit"/>
+  <label name="TILTFINElbl3" top="120" left="8" width="49" height="13" caption="TILT 16bit"/>
+  <label name="SPEEDlbl4" top="160" left="8" width="53" height="13" caption="P/T Speed"/>
+  <label name="SHUTTERlbl6" top="200" left="8" width="34" height="13" caption="Shutter"/>
+  <label name="DIMMERlbl7" top="267" left="5" width="35" height="13" caption="Dimmer"/>
+  <label name="GOBO1ROTlbl9" top="335" left="5" width="47" height="13" caption="Gobo-Pos"/>
+  <label name="SPECIAL1lbl10" top="455" left="5" width="107" height="13" caption="Besondere Funktionen"/>
+  <label name="EXTRAlbl11" top="455" left="240" width="53" height="13" caption="Programme"/>
+  <label name="Label9_914" top="355" left="5" width="51" height="13" caption="Rotat UZS"/>
+  <label name="Label10_769" top="375" left="5" width="59" height="13" caption="Rotat GUZS"/>
+  <label name="Label11_378" top="395" left="5" width="56" height="13" caption="Jojo-Effekkt"/>
+  <label name="SHlbl" top="202" left="200" width="14" height="13" caption="0%"/>
+  <label name="Dimmerlbl" top="267" left="200" width="14" height="15" caption="0%"/>
+  <progressbar name="Progressbar2" top="198" left="45" width="150" height="20" startvalue="0" endvalue="255" default="0"/>
+  <progressbar name="Progressbar1" top="263" left="45" width="150" height="20" startvalue="0" endvalue="255" default="0"/>
+  <button name="DIMplus" top="310" left="208" width="17" height="15" action="DIMplus" caption=">"/>
+  <button name="DIMminus" top="310" left="5" width="17" height="15" action="DIMminus" caption="<"/>
+  <button name="SHplus" top="245" left="208" width="17" height="15" action="SHplus" caption=">"/>
+  <button name="SHminus" top="245" left="5" width="17" height="15" action="SHminus" caption="<"/>
+  <button name="Button2_180" top="35" left="120" width="40" height="40" action="PRE" caption="PRE"/>
+  <button name="Button5_360" top="20" left="160" width="70" height="25" action="Color_White" caption="Color White"/>
+  <button name="Button6_453" top="45" left="160" width="70" height="25" action="Gobo_opened" caption="Gobo Offen"/>
+  <button name="Sound2Light" top="70" left="160" width="50" height="25" action="S2L" caption="S2L"/>
+  <button name="Button9_776" top="75" left="80" width="80" height="20" action="No_Rotation" caption="No Rotation"/>
+  <button name="Button10_123" top="219" left="0" width="40" height="23" action="Shutter_closed" caption="Closed"/>
+  <button name="Button4" top="219" left="185" width="40" height="23" action="Offen" caption="Offen"/>
+  <button name="Button11_724" top="284" left="0" width="40" height="23" action="Dimmer_off" caption="Off"/>
+  <button name="Dimmer25" top="284" left="40" width="48" height="23" action="Dimmerquarter" caption="25%"/>
+  <button name="Dimmer50" top="284" left="88" width="49" height="23" action="Dimhalf" caption="50%"/>
+  <button name="Dimmer75" top="284" left="137" width="48" height="23" action="Dimmerthreequarter" caption="75%"/>
+  <button name="Button3" top="284" left="185" width="40" height="23" action="FullOn" caption="FullON"/>
+  <button name="Gobo1plus" top="370" left="450" width="10" height="22" action="Gobo1plus" caption=">"/>
+  <button name="Gobo1minus" top="370" left="240" width="10" height="22" action="Gobo1minus" caption="<"/>
+  <button name="Gobo2plus" top="393" left="450" width="10" height="22" action="Gobo2plus" caption=">"/>
+  <button name="Gobo2minus" top="393" left="240" width="10" height="22" action="Gobo2minus" caption="<"/>
+  <button name="Color1plus" top="270" left="450" width="10" height="22" action="Color1plus" caption=">"/>
+  <button name="Color1minus" top="270" left="240" width="10" height="22" action="Color1minus" caption="<"/>
+  <button name="Color2plus" top="293" left="450" width="10" height="22" action="Color2plus" caption=">"/>
+  <button name="Color2minus" top="293" left="240" width="10" height="22" action="Color2minus" caption="<"/>
+  <button name="C1plus" top="315" left="443" width="17" height="20" action="C1plus" caption=">"/>
+  <button name="C1minus" top="315" left="240" width="17" height="20" action="C1minus" caption="<"/>
+  <button name="G1plus" top="415" left="443" width="17" height="20" action="G1plus" caption=">"/>
+  <button name="G1minus" top="415" left="240" width="17" height="20" action="G1minus" caption="<"/>
+  <checkbox name="Checkbox1" top="415" left="5" width="115" height="15" caption="Color1 Slider P=128" action="C1" checked="false"/>
+  <checkbox name="Checkbox2" top="415" left="120" width="100" height="15" caption="Gobo1 Slider P=0" action="G1" checked="false"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure PANFINEchange;
+  procedure TILTFINEchange;
+  procedure SPEEDchange;
+  procedure DIMMERchange;
+  procedure GOBO1change;
+  procedure GOBO1ROTchange;
+  procedure SPECIAL1change;
+  procedure SPECIAL2change;
+  procedure Shutter_Definition;
+  procedure ShutterChange;
+  procedure Gobo1Rotation2;
+  procedure Gobo1Rotation3;
+  procedure Gobo1Rotation4;
+  procedure ColorBoxChange;
+  procedure Dimmerspecial;
+  procedure PRE;
+  procedure Dark;
+  procedure FullOn;
+  procedure Offen;
+  procedure Color_White;
+  procedure Gobo_opened;
+  procedure S2L;
+  procedure No_S2L;
+  procedure No_Rotation;
+  procedure Shutter_closed;
+  procedure Dimmer_off;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+   
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value,wert,wert1,shuval,Dimval:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        if usemhcontrol.checked then
+        begin
+          // Moving-Head-Steuerung
+          temp:=get_channel('tilt')+(get_channel('tiltfine')/256);
+          case round(temp) of
+            0..127: r:=((127-temp)/127);
+            128..255: r:=((temp-128)/127);
+          end;
+          phi:=(get_channel('pan')+(get_channel('panfine')/256))/255*6.283185307179586476925286766559;	//(X/255)*PI
+          PositionXY.Left:=round(r*sin(phi)*(Fadenkreuz.Width/2)+(Fadenkreuz.Width/2)-(PositionXY.Width div 2));
+          PositionXY.Top:=round(r*cos(phi)*(Fadenkreuz.Height/2)+(Fadenkreuz.Height/2)-(PositionXY.Width div 2));
+        end else
+        begin
+          // Scanner-Steuerung
+          PositionXY.Left:=round(Fadenkreuz.Width * (get_channel('pan')+get_channel('panfine')/256)/255)-(PositionXY.Width div 2);
+          PositionXY.Top:=round(Fadenkreuz.Height * (get_channel('tilt')+get_channel('tiltfine')/256)/255)-(PositionXY.Height div 2);
+        end;
+      end;
+      1:
+      begin
+        if usemhcontrol.checked then
+        begin
+          // Moving-Head-Steuerung
+          temp:=get_channel('tilt')+(get_channel('tiltfine')/256);
+          case round(temp) of
+            0..127: r:=((127-temp)/127);
+            128..255: r:=((temp-128)/127);
+          end;
+          phi:=(get_channel('pan')+(get_channel('panfine')/256))/255*6.283185307179586476925286766559;	//(X/255)*PI
+          PositionXY.Left:=round(r*sin(phi)*(Fadenkreuz.Width/2)+(Fadenkreuz.Width/2)-(PositionXY.Width div 2));
+          PositionXY.Top:=round(r*cos(phi)*(Fadenkreuz.Height/2)+(Fadenkreuz.Height/2)-(PositionXY.Width div 2));
+        end else
+        begin
+          // Scanner-Steuerung
+          PositionXY.Left:=round(Fadenkreuz.Width * (get_channel('pan')+get_channel('panfine')/256)/255)-(PositionXY.Width div 2);
+          PositionXY.Top:=round(Fadenkreuz.Height * (get_channel('tilt')+get_channel('tiltfine')/256)/255)-(PositionXY.Height div 2);
+        end;
+      end;
+      2:
+      begin
+        PANFINEslider2.position:=get_channel('PANFINE');
+      end;
+      3:
+      begin
+        TILTFINEslider3.position:=get_channel('TILTFINE');
+      end;
+      4:
+      begin
+        SPEEDslider4.position:=get_channel('SPEED');
+      end;
+      5:
+      begin
+        value:=get_channel('color1');
+        wert:=get_channel('color1');
+        case value of
+          0..4: colorbox.itemindex:=0;
+          5..9: colorbox.itemindex:=1;
+          10..14: colorbox.itemindex:=2;
+          15..19: colorbox.itemindex:=3;
+          20..24: colorbox.itemindex:=4;
+          25..29: colorbox.itemindex:=5;
+          30..34: colorbox.itemindex:=6;
+          35..39: colorbox.itemindex:=7;
+          40..44: colorbox.itemindex:=8;
+          45..54: colorbox.itemindex:=9;
+          55..64: colorbox.itemindex:=10;
+          65..73: colorbox.itemindex:=11;
+          74..83: colorbox.itemindex:=12;
+          84..92: colorbox.itemindex:=13;
+          93..101: colorbox.itemindex:=14;
+          102..110: colorbox.itemindex:=15;
+          111..119: colorbox.itemindex:=16;
+          120..127: colorbox.itemindex:=17;
+          128..191: colorbox.itemindex:=18;
+          192..255: colorbox.itemindex:=19;
+        end;
+        case value of
+          0..4: Colorbox1.itemindex:=0;
+          5..9: Colorbox1.itemindex:=1;
+          10..14: Colorbox1.itemindex:=2;
+          15..19: Colorbox1.itemindex:=3;
+          20..24: Colorbox1.itemindex:=4;
+          25..29: Colorbox1.itemindex:=5;
+          30..34: Colorbox1.itemindex:=6;
+          35..39: Colorbox1.itemindex:=7;
+          40..44: Colorbox1.itemindex:=8;
+          45..255: Colorbox1.itemindex:=9;
+        end;
+        case value of
+          0..44:
+						begin
+							Colorb2.itemindex:=0;
+							Color1slider.position:=value;
+						end;
+          45..54: 
+						begin
+							Colorb2.itemindex:=1;
+							Color1slider.position:= (Wert-45)*63/9;
+						end;
+          55..64:
+						begin
+							Colorb2.itemindex:=2;
+							Color1slider.position:= (Wert-55)*63/9;
+						end;
+          65..73:
+						begin
+							Colorb2.itemindex:=3;
+							Color1slider.position:= (Wert-65)*63/8;
+						end;
+          74..83: 
+						begin
+							Colorb2.itemindex:=4;
+							Color1slider.position:= (Wert-74)*63/9;
+						end;
+          84..92:
+						begin
+							Colorb2.itemindex:=5;
+							Color1slider.position:= (Wert-84)*63/8;
+						end;
+          93..101:
+						begin
+							Colorb2.itemindex:=6;
+							Color1slider.position:= (Wert-93)*63/8;
+						end;
+          102..110:
+						begin
+							Colorb2.itemindex:=7;
+							Color1slider.position:= (Wert-102)*63/8;
+						end;
+          111..119:
+						begin
+							Colorb2.itemindex:=8;
+							Color1slider.position:= (Wert-111)*63/8;
+						end;
+          120..127:
+						begin
+							Colorb2.itemindex:=9;
+							Color1slider.position:= (Wert-120)*63/8;
+						end;
+          128..191:
+						begin
+							Colorb2.itemindex:=10;
+							Color1slider.position:= (Wert-128);
+						end;
+          192..255:
+						begin
+							Colorb2.itemindex:=11;
+							Color1slider.position:= (Wert-192);
+						end;
+        end;
+      end;
+      6:
+      begin
+      	SHUTTERslider6.position:=get_channel('SHUTTER');
+        Progressbar2.position:=get_channel('Shutter');
+        shlbl.caption:=get_channel('SHUTTER');
+        value:=get_channel('Shutter');
+        case value of
+          0..3: combobox3.itemindex:=0;
+          4..7: combobox3.itemindex:=1;
+          8..215: combobox3.itemindex:=2;
+          216..255: combobox3.itemindex:=3;
+        end;
+        shuval:=get_channel('Shutter');        
+        Dimval:=get_channel('Dimmer');
+        if (shuval=255) and (Dimval=255) then begin
+					Button2_180.caption:= 'Dark'; end
+				else begin
+					Button2_180.caption:='Pre'; end;
+      end; 
+      7:
+      begin
+        DIMMERslider7.position:=get_channel('DIMMER');
+        Progressbar1.position:=get_channel('DIMMER');
+        Dimmerlbl.caption:=get_channel('DIMMER');
+        value:=get_channel('Dimmer');
+      end;
+      8:
+      begin
+				wert1:=get_channel('Gobo1');
+        value:=get_channel('Gobo1');
+        case value of
+          0..7: gobobox1.itemindex:=0;
+          8..15: gobobox1.itemindex:=1;
+          16..23: gobobox1.itemindex:=2;
+          24..31: gobobox1.itemindex:=3;
+          32..39: gobobox1.itemindex:=4;
+          40..47: gobobox1.itemindex:=5;
+          48..55: gobobox1.itemindex:=6;
+          56..63: gobobox1.itemindex:=7;
+          64..71: gobobox1.itemindex:=8;
+          72..79: gobobox1.itemindex:=9;
+          80..87: gobobox1.itemindex:=10;
+          88..95: gobobox1.itemindex:=11;
+          96..103: gobobox1.itemindex:=12;
+          104..111: gobobox1.itemindex:=13;
+          112..119: gobobox1.itemindex:=14;
+          120..127: gobobox1.itemindex:=15;
+          128..191: gobobox1.itemindex:=16;
+          192..255: gobobox1.itemindex:=17;
+        end;
+        case value of
+          0..7: gobob1.itemindex:=0;
+          8..15: gobob1.itemindex:=1;
+          16..23: gobob1.itemindex:=2;
+          24..31: gobob1.itemindex:=3;
+          32..39: gobob1.itemindex:=4;
+          40..47: gobob1.itemindex:=5;
+          48..55: gobob1.itemindex:=6;
+          56..63: gobob1.itemindex:=7;
+          64..255: gobob1.itemindex:=8;          
+        end;
+        case value of
+          0..63: 
+						begin
+							gobob2.itemindex:=0;
+							Gobo1slider.position:=value;
+						end;
+          64..71: 
+						begin
+							gobob2.itemindex:=1;
+							Gobo1slider.position:= (Wert1-64)*9;
+						end;
+          72..79:
+						begin
+							gobob2.itemindex:=2;
+							Gobo1slider.position:= (Wert1-72)*9;
+						end;
+          80..87:
+						begin
+							gobob2.itemindex:=3;
+							Gobo1slider.position:= (Wert1-80)*9;
+						end;
+          88..95: 
+						begin
+							gobob2.itemindex:=4;
+							Gobo1slider.position:= (Wert1-88)*9;
+						end;
+          96..103:
+						begin
+							gobob2.itemindex:=5;
+							Gobo1slider.position:= (Wert1-96)*9;
+						end;
+          104..111:
+						begin
+							gobob2.itemindex:=6;
+							Gobo1slider.position:= (Wert1-104)*9;
+						end;
+          112..119:
+						begin
+							gobob2.itemindex:=7;
+							Gobo1slider.position:= (Wert1-112)*9;
+						end;
+          120..127:
+						begin
+							gobob2.itemindex:=8;
+							Gobo1slider.position:= (Wert1-120)*9;
+						end;
+          128..191:
+						begin
+							gobob2.itemindex:=9;
+							Gobo1slider.position:= (Wert1-128);
+						end;
+          192..255:
+						begin
+							gobob2.itemindex:=10;
+							Gobo1slider.position:= (Wert1-192);
+						end;
+        end;
+      end;
+      9:
+      begin
+        GOBO1ROTslider9.position:=get_channel('GOBO1ROT');
+        Slider7.position:=get_channel('GOBO1ROT');
+        Slider8.position:=get_channel('GOBO1ROT');
+        slider9.position:=get_channel('GOBO1ROT');
+      end;
+      10:
+      begin
+        value:=get_channel('Special1');
+        case value of
+          0..7: combobox1.itemindex:=0;
+          8..15: combobox1.itemindex:=1;
+          16..23: combobox1.itemindex:=2;
+          24..31: combobox1.itemindex:=3;
+          32..39: combobox1.itemindex:=4;
+          40..47: combobox1.itemindex:=5;
+          48..55: combobox1.itemindex:=6;
+          56..63: combobox1.itemindex:=7;                         
+          88..95: combobox1.itemindex:=8;
+          96..103: combobox1.itemindex:=9;
+          104..111: combobox1.itemindex:=10;
+          112..119: combobox1.itemindex:=11;
+          120..127: combobox1.itemindex:=12;
+          128..135: combobox1.itemindex:=13;
+          136..151: combobox1.itemindex:=14;
+          152..159: combobox1.itemindex:=15;
+          160..255: combobox1.itemindex:=16;
+        end;
+      end;
+      11:
+      begin
+        value:=get_channel('Special2');
+        case value of
+          0..7: combobox2.itemindex:=0;
+          8..23: combobox2.itemindex:=1;
+          24..39: combobox2.itemindex:=2;
+          40..55: combobox2.itemindex:=3;
+          56..71: combobox2.itemindex:=4;
+          72..87: combobox2.itemindex:=5;
+          88..103: combobox2.itemindex:=6;
+          104..119: combobox2.itemindex:=7;                         
+          120..135: combobox2.itemindex:=8;
+          136..151: combobox2.itemindex:=9;
+          152..167: combobox2.itemindex:=10;
+          168..183: combobox2.itemindex:=11;
+          184..199: combobox2.itemindex:=12;
+          200..215: combobox2.itemindex:=13;
+          216..231: combobox2.itemindex:=14;
+          232..247: combobox2.itemindex:=15;
+          248..255: combobox2.itemindex:=16;
+        end;
+        if value=255 then
+					Sound2Light.caption:='S2L Off'
+				else
+					Sound2Light.caption:='S2L';
+      end; 
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  var
+	phi,r,x,y:Double;
+	pan, tilt, panfine, tiltfine:Double;
+  begin
+	if usemhcontrol.checked then
+	begin
+		// Moving-Head-Steuerung (Polarkoordinaten)
+		x:=((PositionXY.Left+(PositionXY.Width div 2)-(fadenkreuz.Width/2))/fadenkreuz.Width)*2;	//-1..0..1
+		y:=((PositionXY.Top+(PositionXY.Height div 2)-(fadenkreuz.Width/2))/fadenkreuz.Height)*2;	//-1..0..1
+		r:=sqrt(x*x+y*y);
+	
+		if (r>0) then
+		begin
+			if (y>=0) then
+				phi:=arccos(x/r)
+			else
+				phi:=6.283185307179586476925286766559-arccos(x/r);
+		end else
+			phi:=64;
+		
+		r:=128-((r/2)*255);
+		phi:=(phi/6.283185307179586476925286766559)*255;
+		if 64>=phi then
+			phi:=phi+191
+		else
+			phi:=phi-64;
+	
+		pan:=255-phi;
+		tilt:=255-r;
+	end else
+	begin
+		// Scannersteuerung (Kartesische Koordinaten)
+		pan:=((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255;
+		tilt:=((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255;
+	end;
+
+	// Ausgabe
+	if panmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(255-pan),trunc(255-pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(255-pan)*255),trunc(frac(255-pan)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(pan),trunc(pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(pan)*255),trunc(frac(pan)*255),0);
+	end;
+	if tiltmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(255-tilt),trunc(255-tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(255-tilt)*255),trunc(frac(255-tilt)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(tilt),trunc(tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(tilt)*255),trunc(frac(tilt)*255),0);
+	end;
+  end;
+  procedure PANFINEchange;
+  begin
+    set_channel('PANFINE',PANFINEslider2.position,PANFINEslider2.position,0);
+  end;
+  procedure TILTFINEchange;
+  begin
+    set_channel('TILTFINE',TILTFINEslider3.position,TILTFINEslider3.position,0);
+  end;
+  procedure SPEEDchange;
+  begin
+    set_channel('SPEED',SPEEDslider4.position,SPEEDslider4.position,0);
+  end;
+  procedure DIMMERchange;
+  begin
+    set_channel('DIMMER',DimmerSlider7.Position,DimmerSlider7.Position,0);
+ 	end;
+  procedure GOBO1change;
+  begin
+    case gobobox1.itemindex of
+      0: set_channel('gobo1', -1, 0, 0);
+      1: set_channel('gobo1', -1, 8, 0);
+      2: set_channel('gobo1', -1, 16, 0);
+      3: set_channel('gobo1', -1, 24, 0);
+      4: set_channel('gobo1', -1, 32, 0);
+      5: set_channel('gobo1', -1, 40, 0);
+      6: set_channel('gobo1', -1, 48, 0);
+      7: set_channel('gobo1', -1, 56, 0);
+      8: set_channel('gobo1', -1, 64, 0);
+      9: set_channel('gobo1', -1, 72, 0);
+      10: set_channel('gobo1', -1, 80, 0);
+      11: set_channel('gobo1', -1, 88, 0);
+      12: set_channel('gobo1', -1, 96, 0);
+      13: set_channel('gobo1', -1, 104, 0);
+      14: set_channel('gobo1', -1, 112, 0);
+      15: set_channel('gobo1', -1, 120, 0);
+      16: set_channel('gobo1', -1, 128, 0);
+      17: set_channel('gobo1', -1, 192, 0);
+    end;
+  end;
+  procedure GOBO1ROTchange;
+  begin
+		set_channel('GOBO1ROT',GOBO1ROTslider9.position,GOBO1ROTslider9.position,0);
+  end;
+  procedure SPECIAL1change;
+ begin
+    case combobox1.itemindex of
+      0: set_channel('Special1', -1, 0, 0);
+      1: set_channel('Special1', -1, 8, 0);
+      2: set_channel('Special1', -1, 16, 0);
+      3: set_channel('Special1', -1, 24, 0);
+      4: set_channel('Special1', -1, 32, 0);
+      5: set_channel('Special1', -1, 40, 0);
+      6: set_channel('Special1', -1, 48, 0);
+      7: set_channel('Special1', -1, 56, 0);
+      8: set_channel('Special1', -1, 88, 0);
+      9: set_channel('Special1', -1, 96, 0);
+      10: set_channel('Special1', -1, 104, 0); 
+      11: set_channel('Special1', -1, 112, 0);
+      12: set_channel('Special1', -1, 120, 0);
+      13: set_channel('Special1', -1, 128, 0);
+      14: set_channel('Special1', -1, 136, 0);
+      15: set_channel('Special1', -1, 152, 0);
+      16: set_channel('Special1', -1, 160, 0);
+    end;
+  end;
+  procedure SPECIAL2change;
+   begin
+    case combobox2.itemindex of
+      0: set_channel('SPECIAL2', -1, 0, 0);
+      1: set_channel('SPECIAL2', -1, 8, 0);
+      2: set_channel('SPECIAL2', -1, 24, 0);
+      3: set_channel('SPECIAL2', -1, 40, 0);
+      4: set_channel('SPECIAL2', -1, 56, 0);
+      5: set_channel('SPECIAL2', -1, 72, 0);
+      6: set_channel('SPECIAL2', -1, 88, 0);
+      7: set_channel('SPECIAL2', -1, 104, 0);
+      8: set_channel('SPECIAL2', -1, 120, 0);
+      9: set_channel('SPECIAL2', -1, 136, 0);
+      10: set_channel('SPECIAL2', -1, 152, 0); 
+      11: set_channel('SPECIAL2', -1, 168, 0);
+      12: set_channel('SPECIAL2', -1, 184, 0);
+      13: set_channel('SPECIAL2', -1, 200, 0);
+      14: set_channel('SPECIAL2', -1, 216, 0);
+      15: set_channel('SPECIAL2', -1, 232, 0);
+      16: set_channel('SPECIAL2', -1, 248, 0);
+    end;
+  end;
+  procedure Shutter_Definition;
+   begin
+    case combobox3.itemindex of
+      0: set_channel('Shutter', -1, 0, 0);
+      1: set_channel('Shutter', -1, 4, 0);
+      2: set_channel('Shutter', -1, 8, 0);
+      3: set_channel('Shutter', -1, 255, 0);
+    end;
+  end;
+  procedure ShutterChange;
+  begin
+    set_channel('SHUTTER',ShutterSlider6.Position,Shutterslider6.Position,0);
+ 	end;
+  procedure Gobo1Rotation2;
+  begin
+    set_channel('GOBO1ROT',slider7.position,slider7.position,0);
+  end;
+  procedure Gobo1Rotation3;
+  begin
+    set_channel('GOBO1ROT',slider8.position,slider8.position,0);
+  end;
+  procedure Gobo1Rotation4;
+  begin
+    set_channel('GOBO1ROT',slider9.position,slider9.position,0);
+  end;
+  procedure ColorBoxChange;
+  begin
+    case colorbox.itemindex of
+			0: set_channel('COLOR1', -1, 0, 0);
+      1: set_channel('COLOR1', -1, 5, 0);
+      2: set_channel('COLOR1', -1, 10, 0);
+      3: set_channel('COLOR1', -1, 15, 0);
+      4: set_channel('COLOR1', -1, 20, 0);
+      5: set_channel('COLOR1', -1, 25, 0);
+      6: set_channel('COLOR1', -1, 30, 0);
+      7: set_channel('COLOR1', -1, 35, 0);
+      8: set_channel('COLOR1', -1, 40, 0);
+      9: set_channel('COLOR1', -1, 45, 0);
+      10: set_channel('COLOR1', -1, 55, 0);
+      11: set_channel('COLOR1', -1, 65, 0);
+      12: set_channel('COLOR1', -1, 74, 0);
+      13: set_channel('COLOR1', -1, 84, 0);
+      14: set_channel('COLOR1', -1, 93, 0);
+      15: set_channel('COLOR1', -1, 102, 0);
+      16: set_channel('COLOR1', -1, 111, 0);
+      17: set_channel('COLOR1', -1, 120, 0);
+      18: set_channel('COLOR1', -1, 128, 0);
+      19: set_channel('COLOR1', -1, 192, 0);
+    end;
+  end;
+	procedure Dimmerquarter;
+		begin
+			set_channel('Dimmer',-1,64,0);
+		end;
+	procedure Dimhalf;
+		begin
+			set_channel('Dimmer',-1,128,0);
+		end;
+	procedure Dimmerthreequarter;
+		begin
+	set_channel('Dimmer', -1, 191, 0);
+		end;
+  procedure PRE;	
+  var	
+		Shuval,dimval:Integer;
+	begin
+		shuval:=get_channel('Shutter');
+		Dimval:=get_channel('Dimmer');
+	if (Shuval=255) and (Dimval=255) then begin
+		set_channel('Shutter', -1, 0, 0);
+		set_channel('Dimmer', -1, 0, 0);	end
+	else begin
+		set_channel('Shutter', -1, 255, 0);
+		set_channel('Dimmer', -1, 255, 0); end;
+	end;
+  procedure FullOn;
+begin
+	set_channel('Dimmer', -1, 255, 0);
+end;
+  procedure Offen;
+begin
+	set_channel('Shutter', -1, 255, 0);
+end;
+  procedure Color_White;
+begin
+	set_channel('Color1', -1, 0,0);
+end;
+  procedure Gobo_opened;
+begin
+	set_channel('Gobo1', -1, 0, 0);
+end;
+  procedure S2L;
+  var 
+		sp2:Integer;
+begin
+	sp2:=get_channel('Special2');
+	If sp2=255 then 
+	set_channel('Special2', -1, 0, 0)
+	else
+	set_channel('Special2', -1, 255, 0);
+end;
+  procedure No_S2L;
+begin
+	set_channel('Special2', -1, 0, 0);
+end;
+  procedure No_Rotation;
+begin
+	set_channel('Gobo1Rot', -1, 0, 0);
+end;
+  procedure Shutter_closed;
+	begin
+		set_channel('Shutter', -1, 0, 0);
+	end;
+  procedure Dimmer_off;
+begin
+	set_channel('Dimmer', -1, 0, 0);
+end;
+  procedure ColorBox1Change;
+  begin
+    case Colorbox1.itemindex of
+      0: set_channel('color1', -1, 0, 0);
+      1: set_channel('color1', -1, 5, 0);
+      2: set_channel('color1', -1, 10, 0);
+      3: set_channel('color1', -1, 15, 0);
+      4: set_channel('color1', -1, 20, 0);
+      5: set_channel('color1', -1, 25, 0);
+      6: set_channel('color1', -1, 30, 0);
+      7: set_channel('color1', -1, 35, 0);
+      8: set_channel('color1', -1, 40, 0);
+      9: set_channel('color1', -1, 45, 0);
+    end;
+  end;
+  procedure Colorb2Change;
+	begin
+		case Colorb2.itemindex of
+			0: 
+			begin 
+				Color1slider.position:=32;
+			end;
+			1: 
+			begin 
+				Color1slider.position:=32;
+				set_channel('Color1',45+round(Color1Slider.position/63*9),45+round(Color1Slider.position/63*9),0); 
+			end;
+			2:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',55+round(Color1Slider.position/63*9),55+round(Color1Slider.position/63*9),0);
+			end;
+			3:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',65+round(Color1Slider.position/63*8),65+round(Color1Slider.position/63*8),0);
+			end;
+			4:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',74+round(Color1Slider.position/63*9),74+round(Color1Slider.position/63*9),0);
+			end;
+			5:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',84+round(Color1Slider.position/63*8),84+round(Color1Slider.position/63*8),0);
+			end;
+			6:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',93+round(Color1Slider.position/63*8),93+round(Color1Slider.position/63*8),0);
+			end;
+			7:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',102+round(Color1Slider.position/63*8),102+round(Color1Slider.position/63*8),0);
+			end;
+			8:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',111+round(Color1Slider.position/63*8),111+round(Color1Slider.position/63*8),0);
+			end;
+			9:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',120+round(Color1Slider.position/63*7),120+round(Color1Slider.position/63*7),0);
+			end;
+			10:
+			begin
+				Color1slider.position:=0;
+				set_channel('Color1',128+Color1Slider.position,128+Color1Slider.position,0);
+			end;
+			11:
+			begin
+				Color1slider.position:=0;
+				set_channel('Color1',192+Color1Slider.position,192+Color1Slider.position,0);
+			end;
+		end;
+  end;
+ procedure Color1Slider;
+	begin
+		if checkbox1.checked = false then begin
+		case Colorb2.itemindex of
+			0: begin end;
+			1: 
+			begin 
+				set_channel('Color1',45+round(Color1Slider.position/63*9),45+round(Color1Slider.position/63*9),0); 
+			end;
+			2:
+			begin
+				set_channel('Color1',55+round(Color1Slider.position/63*9),55+round(Color1Slider.position/63*9),0);
+			end;
+			3:
+			begin
+				set_channel('Color1',65+round(Color1Slider.position/63*8),65+round(Color1Slider.position/63*8),0);
+			end;
+			4:
+			begin
+				set_channel('Color1',74+round(Color1Slider.position/63*9),74+round(Color1Slider.position/63*9),0);
+			end;
+			5:
+			begin
+				set_channel('Color1',84+round(Color1Slider.position/63*8),84+round(Color1Slider.position/63*8),0);
+			end;
+			6:
+			begin
+				set_channel('Color1',93+round(Color1Slider.position/63*8),93+round(Color1Slider.position/63*8),0);
+			end;
+			7:
+			begin
+				set_channel('Color1',102+round(Color1Slider.position/63*8),102+round(Color1Slider.position/63*8),0);
+			end;
+			8:
+			begin
+				set_channel('Color1',111+round(Color1Slider.position/63*8),111+round(Color1Slider.position/63*8),0);
+			end;
+			9:
+			begin
+				set_channel('Color1',120+round(Color1Slider.position/63*7),120+round(Color1Slider.position/63*7),0);
+			end;
+			10:
+			begin
+				set_channel('Color1',128+Color1Slider.position,128+Color1Slider.position,0);
+			end;
+			11:
+			begin
+				set_channel('Color1',192+Color1Slider.position,192+Color1Slider.position,0);
+			end;
+		end; end
+		else begin
+				case Colorb2.itemindex of
+			0: 
+			begin 
+				Color1slider.position:=32;
+			end;
+			1: 
+			begin 
+				Color1slider.position:=32;
+				set_channel('Color1',45+round(Color1Slider.position/63*9),45+round(Color1Slider.position/63*9),0); 
+			end;
+			2:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',55+round(Color1Slider.position/63*9),55+round(Color1Slider.position/63*9),0);
+			end;
+			3:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',65+round(Color1Slider.position/63*8),65+round(Color1Slider.position/63*8),0);
+			end;
+			4:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',74+round(Color1Slider.position/63*9),74+round(Color1Slider.position/63*9),0);
+			end;
+			5:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',84+round(Color1Slider.position/63*8),84+round(Color1Slider.position/63*8),0);
+			end;
+			6:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',93+round(Color1Slider.position/63*8),93+round(Color1Slider.position/63*8),0);
+			end;
+			7:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',102+round(Color1Slider.position/63*8),102+round(Color1Slider.position/63*8),0);
+			end;
+			8:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',111+round(Color1Slider.position/63*8),111+round(Color1Slider.position/63*8),0);
+			end;
+			9:
+			begin
+				Color1slider.position:=32;
+				set_channel('Color1',120+round(Color1Slider.position/63*7),120+round(Color1Slider.position/63*7),0);
+			end;
+			10:
+			begin
+				Color1slider.position:=0;
+				set_channel('Color1',128+Color1Slider.position,128+Color1Slider.position,0);
+			end;
+			11:
+			begin
+				Color1slider.position:=0;
+				set_channel('Color1',192+Color1Slider.position,192+Color1Slider.position,0);
+			end;
+		end;
+		end;
+  end;
+	procedure Color1Sliderr;
+	begin
+		case Colorb2.itemindex of
+			0: begin end;
+			1: 
+			begin 
+				set_channel('Color1',45+round(Color1Slider.position/63*9),45+round(Color1Slider.position/63*9),0); 
+			end;
+			2:
+			begin
+				set_channel('Color1',55+round(Color1Slider.position/63*9),55+round(Color1Slider.position/63*9),0);
+			end;
+			3:
+			begin
+				set_channel('Color1',65+round(Color1Slider.position/63*8),65+round(Color1Slider.position/63*8),0);
+			end;
+			4:
+			begin
+				set_channel('Color1',74+round(Color1Slider.position/63*9),74+round(Color1Slider.position/63*9),0);
+			end;
+			5:
+			begin
+				set_channel('Color1',84+round(Color1Slider.position/63*8),84+round(Color1Slider.position/63*8),0);
+			end;
+			6:
+			begin
+				set_channel('Color1',93+round(Color1Slider.position/63*8),93+round(Color1Slider.position/63*8),0);
+			end;
+			7:
+			begin
+				set_channel('Color1',102+round(Color1Slider.position/63*8),102+round(Color1Slider.position/63*8),0);
+			end;
+			8:
+			begin
+				set_channel('Color1',111+round(Color1Slider.position/63*8),111+round(Color1Slider.position/63*8),0);
+			end;
+			9:
+			begin
+				set_channel('Color1',120+round(Color1Slider.position/63*7),120+round(Color1Slider.position/63*7),0);
+			end;
+			10:
+			begin
+				set_channel('Color1',128+Color1Slider.position,128+Color1Slider.position,0);
+			end;
+			11:
+			begin
+				set_channel('Color1',192+Color1Slider.position,192+Color1Slider.position,0);
+			end;
+		end; 
+	end;
+ procedure Gobo1slider;
+	begin
+		if checkbox2.checked = false then begin
+		case Gobob2.itemindex of
+			0: 
+			begin 
+			end;
+			1: 
+			begin 
+				set_channel('Gobo1',64+round(Gobo1slider.position/9),64+round(Gobo1slider.position/9),0); 
+			end;
+			2:
+			begin
+				set_channel('Gobo1',72+round(Gobo1slider.position/9),72+round(Gobo1slider.position/9),0);
+			end;
+			3:
+			begin
+				set_channel('Gobo1',80+round(Gobo1slider.position/9),80+round(Gobo1slider.position/9),0);
+			end;
+			4:
+			begin
+				set_channel('Gobo1',88+round(Gobo1slider.position/9),88+round(Gobo1slider.position/9),0);
+			end;
+			5:
+			begin
+				set_channel('Gobo1',96+round(Gobo1slider.position/9),96+round(Gobo1slider.position/9),0);
+			end;
+			6:
+			begin
+				set_channel('Gobo1',104+round(Gobo1slider.position/9),104+round(Gobo1slider.position/9),0);
+			end;
+			7:
+			begin
+				set_channel('Gobo1',112+round(Gobo1slider.position/9),112+round(Gobo1slider.position/9),0);
+			end;
+			8:
+			begin
+				set_channel('Gobo1',120+round(Gobo1slider.position/9),120+round(Gobo1slider.position/9),0);
+			end;
+			9:
+			begin
+				set_channel('Gobo1',128+Gobo1slider.position,128+Gobo1slider.position,0);
+			end;
+			10:
+			begin
+				set_channel('Gobo1',192+Gobo1slider.position,192+Gobo1slider.position,0);
+			end;
+		end; end
+		else begin
+		case Gobob2.itemindex of
+			0: 
+			begin 
+			end;
+			1: 
+			begin 
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',64+round(Gobo1slider.position/9),64+round(Gobo1slider.position/9),0); 
+			end;
+			2:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',72+round(Gobo1slider.position/9),72+round(Gobo1slider.position/9),0);
+			end;
+			3:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',80+round(Gobo1slider.position/9),80+round(Gobo1slider.position/9),0);
+			end;
+			4:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',88+round(Gobo1slider.position/9),88+round(Gobo1slider.position/9),0);
+			end;
+			5:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',96+round(Gobo1slider.position/9),96+round(Gobo1slider.position/9),0);
+			end;
+			6:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',104+round(Gobo1slider.position/9),104+round(Gobo1slider.position/9),0);
+			end;
+			7:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',112+round(Gobo1slider.position/9),112+round(Gobo1slider.position/9),0);
+			end;
+			8:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',120+round(Gobo1slider.position/9),120+round(Gobo1slider.position/9),0);
+			end;
+			9:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',128+Gobo1slider.position,128+Gobo1slider.position,0);
+			end;
+			10:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',192+Gobo1slider.position,192+Gobo1slider.position,0);
+			end;
+		end;
+		end;
+  end;
+  procedure Gobo1sliderr;
+  begin
+		case Gobob2.itemindex of
+			0: 
+			begin 
+			end;
+			1: 
+			begin 
+				set_channel('Gobo1',64+round(Gobo1slider.position/9),64+round(Gobo1slider.position/9),0); 
+			end;
+			2:
+			begin
+				set_channel('Gobo1',72+round(Gobo1slider.position/9),72+round(Gobo1slider.position/9),0);
+			end;
+			3:
+			begin
+				set_channel('Gobo1',80+round(Gobo1slider.position/9),80+round(Gobo1slider.position/9),0);
+			end;
+			4:
+			begin
+				set_channel('Gobo1',88+round(Gobo1slider.position/9),88+round(Gobo1slider.position/9),0);
+			end;
+			5:
+			begin
+				set_channel('Gobo1',96+round(Gobo1slider.position/9),96+round(Gobo1slider.position/9),0);
+			end;
+			6:
+			begin
+				set_channel('Gobo1',104+round(Gobo1slider.position/9),104+round(Gobo1slider.position/9),0);
+			end;
+			7:
+			begin
+				set_channel('Gobo1',112+round(Gobo1slider.position/9),112+round(Gobo1slider.position/9),0);
+			end;
+			8:
+			begin
+				set_channel('Gobo1',120+round(Gobo1slider.position/9),120+round(Gobo1slider.position/9),0);
+			end;
+			9:
+			begin
+				set_channel('Gobo1',128+Gobo1slider.position,128+Gobo1slider.position,0);
+			end;
+			10:
+			begin
+				set_channel('Gobo1',192+Gobo1slider.position,192+Gobo1slider.position,0);
+			end;
+		end;
+	end;
+  procedure Gob1change; 
+  begin
+    case gobob1.itemindex of
+      0: 
+      begin
+				 set_channel('gobo1', -1, 0, 0); 
+      end;
+      1: 
+      begin
+				 set_channel('gobo1', -1, 8, 0); 
+      end;
+      2: 
+      begin
+				 set_channel('gobo1', -1, 16, 0); 
+      end;
+      3: 
+      begin
+				 set_channel('gobo1', -1, 24, 0); 
+      end;
+      4: 
+      begin
+				 set_channel('gobo1', -1, 32, 0); 
+      end;				
+      5: 
+      begin
+				 set_channel('gobo1', -1, 40, 0); 
+      end;
+      6: 
+      begin
+				 set_channel('gobo1', -1, 48, 0); 
+      end;
+      7: 
+      begin
+				 set_channel('gobo1', -1, 56, 0); 
+      end;
+      8: 
+      begin
+				 set_channel('Gobo1', -1, 64, 0); 
+      end;
+    end; 
+  end;
+  procedure Gobob2Change;
+	begin
+		case Gobob2.itemindex of
+			0: 
+			begin 
+			end;
+			1: 
+			begin 
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',64+round(Gobo1slider.position/9),64+round(Gobo1slider.position/9),0); 
+			end;
+			2:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',72+round(Gobo1slider.position/9),72+round(Gobo1slider.position/9),0);
+			end;
+			3:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',80+round(Gobo1slider.position/9),80+round(Gobo1slider.position/9),0);
+			end;
+			4:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',88+round(Gobo1slider.position/9),88+round(Gobo1slider.position/9),0);
+			end;
+			5:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',96+round(Gobo1slider.position/9),96+round(Gobo1slider.position/9),0);
+			end;
+			6:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',104+round(Gobo1slider.position/9),104+round(Gobo1slider.position/9),0);
+			end;
+			7:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',112+round(Gobo1slider.position/9),112+round(Gobo1slider.position/9),0);
+			end;
+			8:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',120+round(Gobo1slider.position/9),120+round(Gobo1slider.position/9),0);
+			end;
+			9:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',128+Gobo1slider.position,128+Gobo1slider.position,0);
+			end;
+			10:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',192+Gobo1slider.position,192+Gobo1slider.position,0);
+			end;
+		end;
+  end;
+  procedure C1;
+		begin
+		end;
+	procedure G1;
+		begin
+		end;
+	procedure Gobo1plus;
+		begin
+			case gobob1.itemindex of
+				0: 
+				begin
+					set_channel('gobo1', -1, 8, 0); 
+				end;
+				1: 
+				begin
+					set_channel('gobo1', -1, 16, 0); 
+				end;
+				2: 
+				begin
+					set_channel('gobo1', -1, 24, 0); 
+				end;
+				3: 
+				begin
+					set_channel('gobo1', -1, 32, 0); 
+				end;
+				4: 
+				begin
+					set_channel('gobo1', -1, 40, 0); 
+				end;				
+				5: 
+				begin
+					set_channel('gobo1', -1, 48, 0); 
+				end;
+				6: 
+				begin
+					set_channel('gobo1', -1, 56, 0); 
+				end;
+				7: 
+				begin
+					set_channel('gobo1', -1, 64, 0); 
+				end;
+				8: 
+				begin
+				end;
+			end; 
+		end;
+	procedure Gobo1minus;
+		begin
+			case gobob1.itemindex of
+				0: 
+				begin
+				end;
+				1: 
+				begin
+					set_channel('gobo1', -1, 0, 0); 
+				end;
+				2: 
+				begin
+					set_channel('gobo1', -1, 8, 0); 
+				end;
+				3: 
+				begin
+					set_channel('gobo1', -1, 16, 0); 
+				end;
+				4: 
+				begin
+					set_channel('gobo1', -1, 24, 0); 
+				end;				
+				5: 
+				begin
+					set_channel('gobo1', -1, 32, 0); 
+				end;
+				6: 
+				begin
+					set_channel('gobo1', -1, 40, 0); 
+				end;
+				7: 
+				begin
+					set_channel('gobo1', -1, 48, 0); 
+				end;
+				8: 
+				begin
+					set_channel('Gobo1', -1, 56, 0);
+				end;
+			end; 
+		end;
+	procedure Gobo2plus;
+	begin
+		if checkbox2.checked = false then begin
+		case Gobob2.itemindex of
+			0: 
+			begin 
+				set_channel('Gobo1',64+round(Gobo1slider.position/9),64+round(Gobo1slider.position/9),0); 
+			end;
+			1: 
+			begin 
+				set_channel('Gobo1',72+round(Gobo1slider.position/9),72+round(Gobo1slider.position/9),0);
+			end;
+			2:
+			begin
+				set_channel('Gobo1',80+round(Gobo1slider.position/9),80+round(Gobo1slider.position/9),0);
+			end;
+			3:
+			begin
+				set_channel('Gobo1',88+round(Gobo1slider.position/9),88+round(Gobo1slider.position/9),0);
+			end;
+			4:
+			begin
+				set_channel('Gobo1',96+round(Gobo1slider.position/9),96+round(Gobo1slider.position/9),0);
+			end;
+			5:
+			begin
+				set_channel('Gobo1',104+round(Gobo1slider.position/9),104+round(Gobo1slider.position/9),0);
+			end;
+			6:
+			begin
+				set_channel('Gobo1',112+round(Gobo1slider.position/9),112+round(Gobo1slider.position/9),0);
+			end;
+			7:
+			begin
+				set_channel('Gobo1',120+round(Gobo1slider.position/9),120+round(Gobo1slider.position/9),0);
+			end;
+			8:
+			begin
+				set_channel('Gobo1',128+Gobo1slider.position,128+Gobo1slider.position,0);
+			end;
+			9:
+			begin
+				set_channel('Gobo1',192+Gobo1slider.position,192+Gobo1slider.position,0);
+			end;
+			10:
+			begin
+			end;
+		end; end
+		else begin
+		case Gobob2.itemindex of
+			0: 
+			begin 
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',64+round(Gobo1slider.position/9),64+round(Gobo1slider.position/9),0);
+			end;
+			1: 
+			begin 
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',72+round(Gobo1slider.position/9),72+round(Gobo1slider.position/9),0); 
+			end;
+			2:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',80+round(Gobo1slider.position/9),80+round(Gobo1slider.position/9),0);
+			end;
+			3:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',88+round(Gobo1slider.position/9),88+round(Gobo1slider.position/9),0);
+			end;
+			4:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',96+round(Gobo1slider.position/9),96+round(Gobo1slider.position/9),0);
+			end;
+			5:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',104+round(Gobo1slider.position/9),104+round(Gobo1slider.position/9),0);
+			end;
+			6:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',112+round(Gobo1slider.position/9),112+round(Gobo1slider.position/9),0);
+			end;
+			7:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',120+round(Gobo1slider.position/9),120+round(Gobo1slider.position/9),0);
+			end;
+			8:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',128+Gobo1slider.position,128+Gobo1slider.position,0);
+			end;
+			9:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',192+Gobo1slider.position,192+Gobo1slider.position,0);
+			end;
+			10:
+			begin
+			end; end;
+		end;	
+	end;
+	procedure Gobo2minus;
+		begin
+		if checkbox2.checked = false then begin
+		case Gobob2.itemindex of
+			0: 
+			begin 
+			end;
+			1: 
+			begin 
+				set_channel('Gobo1',-1,56,0);
+			end;
+			2:
+			begin
+				set_channel('Gobo1',64+round(Gobo1slider.position/9),64+round(Gobo1slider.position/9),0); 
+			end;
+			3:
+			begin
+				set_channel('Gobo1',72+round(Gobo1slider.position/9),72+round(Gobo1slider.position/9),0);
+			end;
+			4:
+			begin
+				set_channel('Gobo1',80+round(Gobo1slider.position/9),80+round(Gobo1slider.position/9),0);
+			end;
+			5:
+			begin
+				set_channel('Gobo1',88+round(Gobo1slider.position/9),88+round(Gobo1slider.position/9),0);
+			end;
+			6:
+			begin
+				set_channel('Gobo1',96+round(Gobo1slider.position/9),96+round(Gobo1slider.position/9),0);
+			end;
+			7:
+			begin
+				set_channel('Gobo1',104+round(Gobo1slider.position/9),104+round(Gobo1slider.position/9),0);
+			end;
+			8:
+			begin
+				set_channel('Gobo1',112+round(Gobo1slider.position/9),112+round(Gobo1slider.position/9),0);
+			end;
+			9:
+			begin
+				set_channel('Gobo1',120+round(Gobo1slider.position/9),120+round(Gobo1slider.position/9),0);
+			end;
+			10:
+			begin
+				set_channel('Gobo1',128+Gobo1slider.position,128+Gobo1slider.position,0);
+			end;
+		end; end
+		else begin
+		case Gobob2.itemindex of
+			0: 
+			begin 
+			end;
+			1: 
+			begin 
+			end;
+			2:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',64+round(Gobo1slider.position/9),64+round(Gobo1slider.position/9),0); 
+			end;
+			3:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',72+round(Gobo1slider.position/9),72+round(Gobo1slider.position/9),0);
+			end;
+			4:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',80+round(Gobo1slider.position/9),80+round(Gobo1slider.position/9),0);
+			end;
+			5:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',88+round(Gobo1slider.position/9),88+round(Gobo1slider.position/9),0);
+			end;
+			6:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',96+round(Gobo1slider.position/9),96+round(Gobo1slider.position/9),0);
+			end;
+			7:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',104+round(Gobo1slider.position/9),104+round(Gobo1slider.position/9),0);
+			end;
+			8:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',112+round(Gobo1slider.position/9),112+round(Gobo1slider.position/9),0);
+			end;
+			9:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',120+round(Gobo1slider.position/9),120+round(Gobo1slider.position/9),0);
+			end;
+			10:
+			begin
+				Gobo1slider.position:=0;
+				set_channel('Gobo1',128+Gobo1slider.position,128+Gobo1slider.position,0);
+			end; end;
+		end;
+	end;
+	procedure Color1minus;
+  begin
+    case Colorbox1.itemindex of
+      0: begin end;
+      1: set_channel('color1', -1, 0, 0);
+      2: set_channel('color1', -1, 5, 0);
+      3: set_channel('color1', -1, 10, 0);
+      4: set_channel('color1', -1, 15, 0);
+      5: set_channel('color1', -1, 20, 0);
+      6: set_channel('color1', -1, 25, 0);
+      7: set_channel('color1', -1, 30, 0);
+      8: set_channel('color1', -1, 35, 0);
+      9: set_channel('color1', -1, 40, 0);
+    end;
+  end;
+	procedure Color1plus;
+  begin
+    case Colorbox1.itemindex of
+      0: set_channel('color1', -1, 5, 0);
+      1: set_channel('color1', -1, 10, 0);
+      2: set_channel('color1', -1, 15, 0);
+      3: set_channel('color1', -1, 20, 0);
+      4: set_channel('color1', -1, 25, 0);
+      5: set_channel('color1', -1, 30, 0);
+      6: set_channel('color1', -1, 35, 0);
+      7: set_channel('color1', -1, 40, 0);
+      8: set_channel('color1', -1, 45, 0);
+      9: begin end;
+    end;
+  end;
+	procedure Color2minus;
+		begin
+			if checkbox1.checked = false then begin
+				case Colorb2.itemindex of
+					0: 
+					begin 
+					end;
+					1: 
+					begin 
+						set_channel('Color1',-1,40,0);
+					end;
+					2:
+					begin
+						set_channel('Color1',45+round(Color1Slider.position/63*9),45+round(Color1Slider.position/63*9),0); 
+					end;
+					3:
+					begin
+						set_channel('Color1',55+round(Color1Slider.position/63*9),55+round(Color1Slider.position/63*9),0);
+					end;
+					4:
+					begin
+						set_channel('Color1',65+round(Color1Slider.position/63*8),65+round(Color1Slider.position/63*8),0);
+					end;
+					5:
+					begin
+						set_channel('Color1',74+round(Color1Slider.position/63*9),74+round(Color1Slider.position/63*9),0);
+					end;
+					6:
+					begin
+						set_channel('Color1',84+round(Color1Slider.position/63*8),84+round(Color1Slider.position/63*8),0);
+					end;
+					7:
+					begin
+						set_channel('Color1',93+round(Color1Slider.position/63*8),93+round(Color1Slider.position/63*8),0);
+					end;
+					8:
+					begin
+						set_channel('Color1',102+round(Color1Slider.position/63*8),102+round(Color1Slider.position/63*8),0);
+					end;
+					9:
+					begin
+						set_channel('Color1',111+round(Color1Slider.position/63*8),111+round(Color1Slider.position/63*8),0);
+					end;
+					10:
+					begin
+						set_channel('Color1',120+round(Color1Slider.position/63*7),120+round(Color1Slider.position/63*7),0);
+					end;
+					11:
+					begin
+						set_channel('Color1',128+Color1Slider.position,128+Color1Slider.position,0);
+					end;
+				end; end
+			else begin
+				case Colorb2.itemindex of
+					0: 
+					begin 
+					end;
+					1: 
+					begin 
+					end;
+					2:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',45+round(Color1Slider.position/63*9),45+round(Color1Slider.position/63*9),0); 
+					end;
+					3:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',55+round(Color1Slider.position/63*9),55+round(Color1Slider.position/63*9),0);
+					end;
+					4:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',65+round(Color1Slider.position/63*8),65+round(Color1Slider.position/63*8),0);
+					end;
+					5:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',74+round(Color1Slider.position/63*9),74+round(Color1Slider.position/63*9),0);
+					end;
+					6:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',84+round(Color1Slider.position/63*8),84+round(Color1Slider.position/63*8),0);
+					end;
+					7:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',93+round(Color1Slider.position/63*8),93+round(Color1Slider.position/63*8),0);
+					end;
+					8:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',102+round(Color1Slider.position/63*8),102+round(Color1Slider.position/63*8),0);
+					end;
+					9:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',111+round(Color1Slider.position/63*8),111+round(Color1Slider.position/63*8),0);
+					end;
+					10:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',120+round(Color1Slider.position/63*7),120+round(Color1Slider.position/63*7),0);
+					end;
+					11:
+					begin
+						Color1slider.position:=0;
+						set_channel('Color1',128+Color1Slider.position,128+Color1Slider.position,0);
+					end;
+				end;
+			end;
+		end;
+	procedure Color2plus;
+		begin
+			if checkbox1.checked = false then begin
+				case Colorb2.itemindex of
+					0: 
+					begin 
+						set_channel('Color1',45+round(Color1Slider.position/63*9),45+round(Color1Slider.position/63*9),0); 
+					end;
+					1: 
+					begin 
+						set_channel('Color1',55+round(Color1Slider.position/63*9),55+round(Color1Slider.position/63*9),0);
+					end;
+					2:
+					begin
+						set_channel('Color1',65+round(Color1Slider.position/63*8),65+round(Color1Slider.position/63*8),0);
+					end;
+					3:
+					begin
+						set_channel('Color1',74+round(Color1Slider.position/63*9),74+round(Color1Slider.position/63*9),0);
+					end;
+					4:
+					begin
+						set_channel('Color1',84+round(Color1Slider.position/63*8),84+round(Color1Slider.position/63*8),0);
+					end;
+					5:
+					begin
+						set_channel('Color1',93+round(Color1Slider.position/63*8),93+round(Color1Slider.position/63*8),0);
+					end;
+					6:
+					begin
+						set_channel('Color1',102+round(Color1Slider.position/63*8),102+round(Color1Slider.position/63*8),0);
+					end;
+					7:
+					begin
+						set_channel('Color1',111+round(Color1Slider.position/63*8),111+round(Color1Slider.position/63*8),0);
+					end;
+					8:
+					begin
+						set_channel('Color1',120+round(Color1Slider.position/63*7),120+round(Color1Slider.position/63*7),0);
+					end;
+					9:
+					begin
+						set_channel('Color1',128+Color1Slider.position,128+Color1Slider.position,0);
+					end;
+					10:
+					begin
+						set_channel('Color1',192+Color1Slider.position,192+Color1Slider.position,0);
+					end;
+					11:
+					begin
+					end;
+				end; end
+			else begin
+				case Colorb2.itemindex of
+					0: 
+					begin 
+						Color1slider.position:=32;
+						set_channel('Color1',45+round(Color1Slider.position/63*9),45+round(Color1Slider.position/63*9),0); 
+					end;
+					1: 
+					begin 
+						Color1slider.position:=32;
+						set_channel('Color1',55+round(Color1Slider.position/63*9),55+round(Color1Slider.position/63*9),0);
+					end;
+					2:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',65+round(Color1Slider.position/63*8),65+round(Color1Slider.position/63*8),0);
+					end;
+					3:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',74+round(Color1Slider.position/63*9),74+round(Color1Slider.position/63*9),0);
+					end;
+					4:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',84+round(Color1Slider.position/63*8),84+round(Color1Slider.position/63*8),0);
+					end;
+					5:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',93+round(Color1Slider.position/63*8),93+round(Color1Slider.position/63*8),0);
+					end;
+					6:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',102+round(Color1Slider.position/63*8),102+round(Color1Slider.position/63*8),0);
+					end;
+					7:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',111+round(Color1Slider.position/63*8),111+round(Color1Slider.position/63*8),0);
+					end;
+					8:
+					begin
+						Color1slider.position:=32;
+						set_channel('Color1',120+round(Color1Slider.position/63*7),120+round(Color1Slider.position/63*7),0);
+					end;
+					9:
+					begin
+						Color1slider.position:=0;
+						set_channel('Color1',128+Color1Slider.position,128+Color1Slider.position,0);
+					end;
+					10:
+					begin
+						Color1slider.position:=0;
+						set_channel('Color1',192+Color1Slider.position,192+Color1Slider.position,0);
+					end;
+					11:
+					begin
+					end;
+				end;
+			end;
+		end;
+	procedure C1Minus;
+		var
+			value:Integer;
+		begin
+			Value:=get_channel('Color1');
+			set_channel('Color1',-1,value-1,0);
+		end;
+	procedure C1Plus;
+		var
+			value:Integer;
+		begin
+			Value:=get_channel('Color1');
+			set_channel('Color1',-1,value+1,0);
+		end;
+	procedure G1Minus;
+		var
+			value:Integer;
+		begin
+			Value:=get_channel('Gobo1');
+			set_channel('Gobo1',-1,value-1,0);
+		end;
+	procedure G1Plus;
+		var
+			value:Integer;
+		begin
+			Value:=get_channel('Gobo1');
+			set_channel('Gobo1',-1,value+1,0);
+		end;	
+	procedure DIMMinus;
+		var
+			value:Integer;
+		begin
+			Value:=get_channel('DIMMER');
+			set_channel('DIMMER',-1,value-1,0);
+		end;
+	procedure DIMPlus;
+		var
+			value:Integer;
+		begin
+			Value:=get_channel('DIMMER');
+			set_channel('DIMMER',-1,value+1,0);
+		end;
+	procedure SHMinus;
+		var
+			value:Integer;
+		begin
+			Value:=get_channel('Shutter');
+			set_channel('Shutter',-1,value-1,0);
+		end;
+	procedure SHPlus;
+		var
+			value:Integer;
+		begin
+			Value:=get_channel('Shutter');
+			set_channel('Shutter',-1,value+1,0);
+		end;
+  end.
+ </code>
+</device>

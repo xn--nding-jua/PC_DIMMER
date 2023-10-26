@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\ledpar64.png">
+ <information id="PC_DIMMER">
+ <name>RGBWA Scheinwerfer</name>
+ <vendor>Generic</vendor>
+ <author>Christian Nöding</author>
+ <description>LED-Lampe mit Rot, Grün, Blau, Weiß und Amber/Gelb</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Grün" fade="yes" type="g"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Blau" fade="yes" type="b"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Weiß" fade="yes" type="w"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Amber" fade="yes" type="a"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" ch4="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <fog OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="180" height="360">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="8" left="80"/>
+  <deviceadress top="24" left="80"/>
+  <devicedipswitch top="40" left="70"/>
+  <colorpicker top="75" left="14" />
+  <edit name="fadezeit" top="238" left="58" width="40" height="21" text="3000" action="fadezeitchange"/>
+  <checkbox name="usefadezeit" top="240" left="116" width="100" height="17" caption="Faden" action="usefadezeitchange" checked="false"/>
+  <slider name="whiteslider" top="280" left="10" width="160" height="20" action="whitesliderchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="amberslider" top="330" left="10" width="160" height="20" action="ambersliderchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="label1" top="240" left="8" width="43" height="13" caption="Zeit [ms]:"/>
+  <label name="Label2_243" top="260" left="10" width="28" height="13" caption="Weiß:"/>
+  <label name="Label3_954" top="310" left="10" width="33" height="13" caption="Amber:"/>
+  <button name="changecolorpicker" top="210" left="8" width="160" height="21" action="onchangecolorpicker" caption="Wechsle Farbwahlbox"/>
+ </form>
+ <code>
+  unit RGBWALamp;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure onchangecolorpicker;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure fadezeitchange;
+  procedure usefadezeitchange;
+  procedure whitesliderchange;
+  procedure ambersliderchange;
+
+  implementation
+
+	
+	var
+		dontrefresh:boolean;
+
+  procedure InitDevice(Device: String);
+    begin
+      // bitte hier die eigene Funktion eintragen
+    end;
+  procedure FormShow;
+    begin
+      usefadezeit.checked:=true;
+    end;
+  procedure onchangecolorpicker;
+    begin
+      if colorpicker.visible then
+      begin
+        colorpicker.visible:=false;
+        colorpicker2.visible:=true;
+      end else
+      begin
+        colorpicker.visible:=true;
+        colorpicker2.visible:=false;
+      end;
+    end;
+  procedure FormRefresh(channel:Integer);
+    var
+      red,green,blue,white,amber:byte;
+      modusposition:integer;
+      wahr:integer;
+    begin
+      case channel of
+      0..2:
+      begin
+        red:=get_channel('r');
+        green:=get_channel('g');
+        blue:=get_channel('b');
+//        colorpicker2.SelectedColor:=red + green shl 8 + blue shl 16;
+      end;
+	  3:
+	  begin
+		white:=get_channel('w');
+		if not dontrefresh then
+			whiteslider.position:=white;
+	  end;
+	  4:
+	  begin
+		amber:=get_channel('a');
+		if not dontrefresh then
+			amberslider.position:=amber;
+	  end;
+      end;
+	  dontrefresh:=false;
+    end;
+  procedure FormClose;
+    begin
+    end;
+  procedure ColorPickerChange(R, G, B: Byte);
+    var
+      zeit:integer;
+    begin
+      if usefadezeit.checked then
+        zeit:=strtoint(fadezeit.text)
+      else
+        zeit:=0;
+	  
+	  set_color(r,g,b,zeit,0);
+    end;
+  procedure fadezeitchange;
+    begin
+    end;
+  procedure usefadezeitchange;
+    begin
+    end;
+  procedure whitesliderchange;
+	begin
+		dontrefresh:=true;
+		set_channel('w',-1,whiteslider.position,0,0);
+	end;
+  procedure ambersliderchange;
+	begin
+		dontrefresh:=true;
+		set_channel('a',-1,amberslider.position,0,0);
+	end;
+  end.
+ </code>
+</device>

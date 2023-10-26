@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\leddevil.png">
+ <information id="PC_DIMMER">
+ <name>LED Progression</name>
+ <vendor>Varytec</vendor>
+ <author>Peter</author>
+ <description>LED Cube</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="COLOR1" fade="yes" type="color1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="PRISMAROT" fade="yes" type="prismarot"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Strob" fade="yes" type="special1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Shutter" fade="yes" type="shutter"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" />
+ <colors>
+  <color name="Farbe 1" value="0" valueend="16" r="255" g="0" b="0" />
+  <color name="Farbe 2" value="17" valueend="33" r="128" g="0" b="0" />
+  <color name="Farbe 3" value="34" valueend="50" r="255" g="255" b="0" />
+  <color name="Farbe 4" value="51" valueend="67" r="128" g="128" b="0" />
+  <color name="Farbe 5" value="68" valueend="84" r="0" g="255" b="0" />
+  <color name="Farbe 6" value="85" valueend="101" r="0" g="128" b="0" />
+  <color name="Farbe 7" value="102" valueend="118" r="0" g="255" b="255" />
+  <color name="Farbe 8" value="119" valueend="135" r="0" g="128" b="128" />
+  <color name="Farbe 9" value="136" valueend="152" r="0" g="0" b="255" />
+  <color name="Farbe 10" value="153" valueend="169" r="0" g="0" b="128" />
+  <color name="Farbe 11" value="170" valueend="186" r="255" g="0" b="255" />
+  <color name="Farbe 12" value="187" valueend="203" r="128" g="0" b="128" />
+  <color name="Farbe 13" value="204" valueend="220" r="192" g="220" b="192" />
+  <color name="Farbe 14" value="221" valueend="237" r="166" g="202" b="240" />
+  <color name="Farbe 15" value="238" valueend="255" r="255" g="251" b="240" />
+ </colors>
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="1" MaxValue="255" ChannelName="special1"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="135" LeftMaxValue="245" OffValue="128" RightMinValue="10" RightMaxValue="120" ChannelName="prismarot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="10" LeftMaxValue="120" OffValue="128" RightMinValue="135" RightMaxValue="245" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="235" height="305">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <colorbox top="280" left="10" height="22" width="220" />
+  <dropdown name="Combobox1" top="255" left="10" width="220" height="21" action="SHUTTERchange">
+   <item caption="Shutter Geschlossen BO" value="0" valueend="-1" picture="" />
+   <item caption="Shutter Offen" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox2" top="95" left="35" width="160" height="21" action="Rotationchange">
+   <item caption="Keine Rotation" value="0" valueend="-1" picture="" />
+   <item caption="IUZS langsam bis schnell" value="0" valueend="-1" picture="" />
+   <item caption="Keine Rotation" value="0" valueend="-1" picture="" />
+   <item caption="GUZS langsam bis schnell" value="0" valueend="-1" picture="" />
+   <item caption="Keine Rotation" value="0" valueend="-1" picture="" />
+   <item caption="Sound 2 Light" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox3" top="180" left="35" width="160" height="21" action="Strobchange">
+   <item caption="Strob aus" value="0" valueend="-1" picture="" />
+   <item caption="Strob (langsam bis schnell)" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <slider name="PRISMAROTslider2" top="145" left="40" width="190" height="15" action="PRISMAROTchange2" startvalue="135" endvalue="245" default="135"/>
+  <slider name="SPECIAL1slider" top="210" left="10" width="220" height="15" action="SPECIAL1change" startvalue="1" endvalue="255" default="1"/>
+  <slider name="PRISMAROTslider1" top="125" left="40" width="190" height="15" action="PRISMAROTchange" startvalue="10" endvalue="120" default="12"/>
+  <label name="PRISMAROTlbl1" top="80" left="10" width="64" height="13" caption="PRISMAROT"/>
+  <label name="SPECIAL1lbl2" top="165" left="10" width="25" height="13" caption="Strob"/>
+  <label name="Label4_376" top="125" left="10" width="25" height="13" caption="IUZS"/>
+  <label name="Label5_643" top="145" left="5" width="30" height="13" caption="GUZS"/>
+  <button name="Button4_849" top="14" left="195" width="40" height="40" action="S2L" caption="S2L"/>
+  <button name="Button5_713" top="54" left="195" width="40" height="40" action="NoRotation" caption="No Rot"/>
+  <button name="Button7_492" top="69" left="85" width="110" height="25" action="No_Strob" caption="No Strob"/>
+  <button name="Button8_931" top="94" left="0" width="35" height="23" action="NoRotation" caption="Off"/>
+  <button name="Button9_956" top="94" left="195" width="35" height="23" action="S2L" caption="S2L"/>
+  <button name="Button10_414" top="179" left="0" width="35" height="23" action="No_Strob" caption="Off"/>
+  <button name="Button11_450" top="179" left="195" width="35" height="23" action="Full" caption="Full"/>
+  <checkbox name="Checkbox1" top="235" left="10" width="220" height="20" caption="Shutter opened/closed" action="Checkbox" checked="false"/>
+  <checkbox name="Checkbox2" top="49" left="80" width="115" height="20" caption="Shutter opened" action="Shutterbox" checked="false"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ColorBoxChange;
+  procedure PRISMAROTchange;
+  procedure SPECIAL1change;
+  procedure SHUTTERchange;
+  procedure PRISMAROTchange2;
+  procedure Rotationchange;
+  procedure Strobchange;
+  procedure ShutterClosed;
+  procedure ShutterOpened;
+  procedure S2L;
+  procedure NoRotation;
+  procedure No_Strob;
+  procedure Full;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        value:=get_channel('color1');
+        case value of
+          0..16: colorbox.itemindex:=0;
+          17..33: colorbox.itemindex:=1;
+          34..50: colorbox.itemindex:=2;
+          51..67: colorbox.itemindex:=3;
+          68..84: colorbox.itemindex:=4;
+          85..101: colorbox.itemindex:=5;
+          102..118: colorbox.itemindex:=6;
+          119..135: colorbox.itemindex:=7;
+          136..152: colorbox.itemindex:=8;
+          153..169: colorbox.itemindex:=9;
+          170..186: colorbox.itemindex:=10;
+          187..203: colorbox.itemindex:=11;
+          204..220: colorbox.itemindex:=12;
+          221..237: colorbox.itemindex:=13;
+          238..255: colorbox.itemindex:=14;
+        end;
+      end;
+      1:
+      begin
+        PRISMAROTslider1.position:=get_channel('PRISMAROT');
+        PRISMAROTslider2.position:=get_channel('PRISMAROT');
+        value:=get_channel('PRISMAROT');
+        case value of
+    			0..9: Combobox2.itemindex:=0;
+       		10..120: Combobox2.itemindex:=1;
+       		121..134: Combobox2.itemindex:=2;
+       		135..245: Combobox2.itemindex:=3;
+       		246..249: Combobox2.itemindex:=4;
+       		250..255: Combobox2.itemindex:=5;
+       	end;
+      end;
+      2:
+      begin
+        SPECIAL1slider.position:=get_channel('special1');
+        value:=get_channel('special1');
+        case value of
+          0: combobox3.itemindex:=0;
+          1..255: combobox3.itemindex:=1;
+        end;
+      end;
+      3:
+      begin
+        value:=get_channel('shutter');
+        case value of
+          0..15: 
+						begin
+							combobox1.itemindex:=0;
+							Checkbox1.checked:=false;
+							Checkbox2.checked:=false;
+							Checkbox1.Caption := 'Shutter CLOSED(/opened)'; 
+							Checkbox2.Caption := 'Shutter Closed'; 
+						end;
+          16..255: 
+						begin
+							combobox1.itemindex:=1;
+							Checkbox1.checked:=true;
+							Checkbox2.checked:=true;
+							Checkbox1.Caption := 'Shutter OPENED(/closed)';
+							Checkbox2.Caption := 'Shutter OPENED';  
+						end;
+        end;
+      end;
+    end;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure ColorBoxChange;
+  begin
+    case colorbox.itemindex of
+      0: set_channel('color1', -1, 0, 0);
+      1: set_channel('color1', -1, 17, 0);
+      2: set_channel('color1', -1, 34, 0);
+      3: set_channel('color1', -1, 51, 0);
+      4: set_channel('color1', -1, 68, 0);
+      5: set_channel('color1', -1, 85, 0);
+      6: set_channel('color1', -1, 102, 0);
+      7: set_channel('color1', -1, 119, 0);
+      8: set_channel('color1', -1, 136, 0);
+      9: set_channel('color1', -1, 153, 0);
+      10: set_channel('color1', -1, 170, 0);
+      11: set_channel('color1', -1, 187, 0);
+      12: set_channel('color1', -1, 204, 0);
+      13: set_channel('color1', -1, 221, 0);
+      14: set_channel('color1', -1, 238, 0);
+    end;
+  end;
+  procedure PRISMAROTchange;
+  begin
+		set_channel('PRISMAROT',PRISMAROTslider1.position,PRISMAROTslider1.position,0);
+  end;
+  procedure SPECIAL1change;
+  begin
+		set_channel('SPECIAL1',SPECIAL1slider.position,SPECIAL1slider.position,0);
+  end;
+  procedure SHUTTERchange;
+  begin
+    case combobox1.itemindex of
+      0: set_channel('shutter', -1, 0, 0);
+      1: set_channel('shutter', -1, 255, 0);
+    end;
+  end;
+  procedure PRISMAROTchange2;
+  begin
+    set_channel('PRISMAROT',PRISMAROTslider2.position,PRISMAROTslider2.position,0);
+  end;
+  procedure Rotationchange;
+  begin
+    case combobox2.itemindex of
+      0: set_channel('PRISMAROT', -1, 0, 0);
+      1: set_channel('PRISMAROT', -1, 10, 0);
+      2: set_channel('PRISMAROT', -1, 121, 0);
+      3: set_channel('PRISMAROT', -1, 135, 0);
+      4: set_channel('PRISMAROT', -1, 246, 0);
+			5: set_channel('PRISMAROT', -1, 250, 0);
+    end;
+  end;
+  procedure Strobchange;
+  begin
+    case combobox3.itemindex of
+      0: set_channel('SPECIAL1', -1, 0, 0);
+      1: set_channel('SPECIAL1', -1, 1, 0);
+    end;
+  end;
+  procedure ShutterClosed;
+  begin
+ 		set_channel('shutter', -1, 0, 0);
+  end;
+  procedure ShutterOpened;
+  begin
+ 		set_channel('shutter', -1, 255, 0);
+  end;
+  procedure S2L;
+  begin
+ 		set_channel('Prismarot', -1, 255, 0);
+  end;
+  procedure NoRotation;
+  begin
+ 		set_channel('Prismarot', -1, 0, 0);
+  end;
+  procedure No_Strob;
+begin
+	set_channel('Special1', -1 ,0 ,0);
+end;
+  procedure Full;
+begin
+	set_channel('Special1', -1 ,255 ,0);
+end;
+	procedure Checkbox;
+		begin
+			if checkbox1.checked = false then
+				begin 
+					set_channel('Shutter',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Shutter',-1,255,0);
+				end;
+		end;
+	procedure Shutterbox;
+		begin
+			if checkbox2.checked = false then
+				begin 
+					set_channel('Shutter',-1,0,0);
+				end
+			else
+				begin
+					set_channel('Shutter',-1,255,0);
+				end;
+		end;
+	procedure ColorChange;
+		begin
+			begin
+				set_channel('color1', -1, 0, 0,0);
+				set_channel('color1', -1, 17, 0,500);
+				set_channel('color1', -1, 34, 0,1000);
+				set_channel('color1', -1, 51, 0,1500);
+				set_channel('color1', -1, 68, 0,2000);
+				set_channel('color1', -1, 85, 0,2500);
+				set_channel('color1', -1, 102, 0,3000);
+				set_channel('color1', -1, 119, 0,3500);
+				set_channel('color1', -1, 136, 0,4000);
+				set_channel('color1', -1, 153, 0,4500);
+				set_channel('color1', -1, 170, 0,5000);
+				set_channel('color1', -1, 187, 0,5500);
+				set_channel('color1', -1, 204, 0,6000);
+				set_channel('color1', -1, 221, 0,6500);
+				set_channel('color1', -1, 238, 0,7000);
+			end;
+		end;
+  end.
+ </code>
+</device>

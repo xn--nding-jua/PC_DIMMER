@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\sunray.png">
+ <information id="PC_DIMMER">
+ <name>BC 6</name>
+ <vendor>Eurolite</vendor>
+ <author>Daniel</author>
+ <description>Effekt</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="OPTION" fade="no" type="option"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Rot" fade="yes" type="r"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Grün/Gelb" fade="yes" type="g"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Blau/Weiß" fade="yes" type="b"/>
+  <function channel="4" minvalue="0" maxvalue="255" name="Effekte" fade="yes" type="extra"/>
+  <function channel="5" minvalue="0" maxvalue="255" name="SHUTTER" fade="yes" type="shutter"/>
+  <function channel="6" minvalue="0" maxvalue="255" name="Farbüberblendung" fade="no" type="special1"/>
+  <function channel="7" minvalue="0" maxvalue="255" name="Rotationsgeschwindigkeit" fade="yes" type="moves"/>
+  <function channel="8" minvalue="0" maxvalue="255" name="Rotationsgeschwindigkeit" fade="yes" type="moves"/>
+ </channels>
+ <amber UseAmberMixing="no" AmberMixingCompensateRG="no" AmberMixingCompensateBlue="no" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="255" ch1="-1" ch2="-1" ch3="-1" ch4="-1" ch5="0" ch6="-1" ch7="-1" ch8="-1" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="470" height="336">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <colorpicker top="8" left="233" />
+  <slider name="OPTIONslider0" top="96" left="8" width="217" height="20" action="OPTIONchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="EXTRAslider4" top="136" left="8" width="217" height="20" action="EXTRAchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SHUTTERslider5" top="176" left="8" width="217" height="20" action="SHUTTERchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SPECIAL1slider6" top="216" left="8" width="217" height="20" action="SPECIAL1change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="MOVESslider7" top="256" left="8" width="217" height="20" action="MOVESchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="MOVESslider8" top="296" left="8" width="217" height="20" action="MOVESchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="OPTIONslider0" top="96" left="8" width="217" height="20" action="OPTIONchange" startvalue="0" endvalue="255" default="255"/>
+  <slider name="EXTRAslider4" top="136" left="8" width="217" height="20" action="EXTRAchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SHUTTERslider5" top="176" left="8" width="217" height="20" action="SHUTTERchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="SPECIAL1slider6" top="216" left="8" width="217" height="20" action="SPECIAL1change" startvalue="0" endvalue="255" default="0"/>
+  <slider name="MOVESslider7" top="256" left="8" width="217" height="20" action="MOVESchange" startvalue="0" endvalue="255" default="0"/>
+  <slider name="MOVESslider8" top="296" left="8" width="217" height="20" action="MOVESchange" startvalue="0" endvalue="255" default="0"/>
+  <label name="OPTIONlbl0" top="80" left="8" width="51" height="16" caption="OPTION"/>
+  <label name="EXTRAlbl4" top="120" left="8" width="41" height="16" caption="Effekte"/>
+  <label name="SHUTTERlbl5" top="160" left="8" width="66" height="16" caption="SHUTTER"/>
+  <label name="SPECIAL1lbl6" top="200" left="8" width="111" height="16" caption="Farbüberblendung"/>
+  <label name="MOVESlbl7" top="240" left="8" width="153" height="16" caption="Rotationsgeschwindigkeit"/>
+  <label name="MOVESlbl8" top="280" left="8" width="153" height="16" caption="Rotationsgeschwindigkeit"/>
+  <label name="OPTIONlbl0" top="80" left="8" width="51" height="16" caption="OPTION"/>
+  <label name="EXTRAlbl4" top="120" left="8" width="41" height="16" caption="Effekte"/>
+  <label name="SHUTTERlbl5" top="160" left="8" width="66" height="16" caption="SHUTTER"/>
+  <label name="SPECIAL1lbl6" top="200" left="8" width="111" height="16" caption="Farbüberblendung"/>
+  <label name="MOVESlbl7" top="240" left="8" width="153" height="16" caption="Rotationsgeschwindigkeit"/>
+  <label name="MOVESlbl8" top="280" left="8" width="153" height="16" caption="Rotationsgeschwindigkeit"/>
+  <button name="SwitchColorPickerBtn" top="145" left="234" width="150" height="25" action="SwitchColorPicker" caption="Andere Farbauswahl"/>
+  <button name="SwitchColorPickerBtn" top="145" left="234" width="150" height="25" action="SwitchColorPicker" caption="Andere Farbauswahl"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure OPTIONchange;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure SwitchColorPicker;
+  procedure EXTRAchange;
+  procedure SHUTTERchange;
+  procedure SPECIAL1change;
+  procedure MOVESchange;
+  procedure MOVESchange;
+  procedure OPTIONchange;
+  procedure ColorPickerChange(R, G, B: Byte);
+  procedure SwitchColorPicker;
+  procedure EXTRAchange;
+  procedure SHUTTERchange;
+  procedure SPECIAL1change;
+  procedure MOVESchange;
+  procedure MOVESchange;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        OPTIONslider0.position:=get_channel('OPTION');
+      end;
+      1:
+      begin
+        // RGB-Änderungen werden derzeit nicht im DDF angezeigt
+      end;
+      2:
+      begin
+        // RGB-Änderungen werden derzeit nicht im DDF angezeigt
+      end;
+      3:
+      begin
+        // RGB-Änderungen werden derzeit nicht im DDF angezeigt
+      end;
+      4:
+      begin
+        EXTRAslider4.position:=get_channel('EXTRA');
+      end;
+      5:
+      begin
+        SHUTTERslider5.position:=get_channel('SHUTTER');
+      end;
+      6:
+      begin
+        SPECIAL1slider6.position:=get_channel('SPECIAL1');
+      end;
+      7:
+      begin
+        MOVESslider7.position:=get_channel('MOVES');
+      end;
+      8:
+      begin
+        MOVESslider8.position:=get_channel('MOVES');
+      end;
+    end;
+    DontRefresh:=false;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure OPTIONchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('OPTION',-1,OPTIONslider0.position,0);
+  end;
+  procedure ColorPickerChange(R, G, B: Byte);
+  begin
+    set_channel('r',-1,r,0);
+    set_channel('g',-1,g,0);
+    set_channel('b',-1,b,0);
+    set_channel('c',-1,255-r,0);
+    set_channel('m',-1,255-g,0);
+    set_channel('y',-1,255-b,0);
+  end;
+  procedure SwitchColorPicker;
+  begin
+    if colorpicker.visible then
+    begin
+      colorpicker.visible:=false;
+      colorpicker2.visible:=true;
+    end else
+    begin
+      colorpicker.visible:=true;
+      colorpicker2.visible:=false;
+    end;
+  end;
+  procedure EXTRAchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('EXTRA',-1,EXTRAslider4.position,0);
+  end;
+  procedure SHUTTERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SHUTTER',-1,SHUTTERslider5.position,0);
+  end;
+  procedure SPECIAL1change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL1',-1,SPECIAL1slider6.position,0);
+  end;
+  procedure MOVESchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('MOVES',-1,MOVESslider7.position,0);
+  end;
+  procedure MOVESchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('MOVES',-1,MOVESslider8.position,0);
+  end;
+  procedure OPTIONchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('OPTION',-1,OPTIONslider0.position,0);
+  end;
+  procedure ColorPickerChange(R, G, B: Byte);
+  begin
+    set_channel('r',-1,r,0);
+    set_channel('g',-1,g,0);
+    set_channel('b',-1,b,0);
+    set_channel('c',-1,255-r,0);
+    set_channel('m',-1,255-g,0);
+    set_channel('y',-1,255-b,0);
+  end;
+  procedure SwitchColorPicker;
+  begin
+    if colorpicker.visible then
+    begin
+      colorpicker.visible:=false;
+      colorpicker2.visible:=true;
+    end else
+    begin
+      colorpicker.visible:=true;
+      colorpicker2.visible:=false;
+    end;
+  end;
+  procedure EXTRAchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('EXTRA',-1,EXTRAslider4.position,0);
+  end;
+  procedure SHUTTERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SHUTTER',-1,SHUTTERslider5.position,0);
+  end;
+  procedure SPECIAL1change;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL1',-1,SPECIAL1slider6.position,0);
+  end;
+  procedure MOVESchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('MOVES',-1,MOVESslider7.position,0);
+  end;
+  procedure MOVESchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('MOVES',-1,MOVESslider8.position,0);
+  end;
+  end.
+ </code>
+</device>

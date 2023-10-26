@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\SC-100.png">
+ <information id="PC_DIMMER">
+ <name>SC-100</name>
+ <vendor>Stairville</vendor>
+ <author>Peter</author>
+ <description>Scanner</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="PAN" fade="yes" type="pan"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="TILT" fade="yes" type="tilt"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Matrix" fade="yes" type="color1"/>
+  <function channel="3" minvalue="0" maxvalue="255" name="Strob" fade="yes" type="shutter"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="no" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="-1" ch1="-1" ch2="-1" ch3="-1" />
+ <colors>
+  <color name="Blackout" value="0" valueend="9" r="0" g="0" b="0" />
+  <color name="Pattern 01" value="10" valueend="19" r="255" g="0" b="0" />
+  <color name="Pattern 02" value="20" valueend="29" r="128" g="0" b="0" />
+  <color name="Pattern 03" value="30" valueend="39" r="255" g="255" b="0" />
+  <color name="Pattern 04" value="40" valueend="49" r="128" g="128" b="0" />
+  <color name="Pattern 05" value="50" valueend="59" r="0" g="255" b="0" />
+  <color name="Pattern 06" value="60" valueend="69" r="0" g="128" b="0" />
+  <color name="Pattern 07" value="70" valueend="79" r="0" g="255" b="255" />
+  <color name="Pattern 08" value="80" valueend="89" r="0" g="128" b="128" />
+  <color name="Pattern 09" value="90" valueend="99" r="0" g="0" b="255" />
+  <color name="Pattern 10" value="100" valueend="109" r="0" g="0" b="128" />
+  <color name="Pattern 11" value="110" valueend="119" r="255" g="0" b="255" />
+  <color name="Pattern 12" value="120" valueend="129" r="128" g="0" b="128" />
+  <color name="Pattern 13" value="130" valueend="139" r="192" g="220" b="192" />
+  <color name="Pattern 14" value="140" valueend="149" r="166" g="202" b="240" />
+  <color name="Pattern 15" value="150" valueend="159" r="255" g="251" b="240" />
+  <color name="Chase 01" value="160" valueend="169" r="192" g="192" b="192" />
+  <color name="Chase 02" value="170" valueend="179" r="160" g="160" b="164" />
+  <color name="Chase 03" value="180" valueend="189" r="128" g="128" b="128" />
+  <color name="Chase 04" value="190" valueend="199" r="255" g="128" b="64" />
+  <color name="Chase 05" value="200" valueend="209" r="128" g="255" b="0" />
+  <color name="Chase 06" value="210" valueend="219" r="128" g="0" b="255" />
+  <color name="Chase 07" value="220" valueend="229" r="0" g="128" b="255" />
+  <color name="Chase 08" value="230" valueend="239" r="128" g="0" b="64" />
+  <color name="Chase 09" value="240" valueend="249" r="64" g="0" b="128" />
+  <color name="Chase 10" value="250" valueend="255" r="128" g="128" b="0" />
+ </colors>
+ <shutter OpenValue="0" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="10" MaxValue="249" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="470" height="245">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <position top="8" left="233" height="230" width="230" />
+  <colorbox top="200" left="5" height="22" width="150" />
+  <dropdown name="Combobox1" top="95" left="5" width="220" height="21" action="Shutterdefinition">
+   <item caption="Kein Strob" value="0" valueend="-1" picture="" />
+   <item caption="Strob (langsam bis schnell)" value="0" valueend="-1" picture="" />
+   <item caption="Stand alone" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <dropdown name="Combobox2" top="145" left="5" width="220" height="21" action="Shutter_Definition">
+   <item caption="Langsam" value="0" valueend="-1" picture="" />
+   <item caption="Gering" value="0" valueend="-1" picture="" />
+   <item caption="Mittel" value="0" valueend="-1" picture="" />
+   <item caption="Stark" value="0" valueend="-1" picture="" />
+   <item caption="Heftig" value="0" valueend="-1" picture="" />
+   <item caption="Sound2Light" value="0" valueend="-1" picture="" />
+   <item caption="Aus" value="0" valueend="-1" picture="" />
+  </dropdown>
+  <slider name="SHUTTERslider3" top="120" left="5" width="220" height="20" action="SHUTTERchange" startvalue="10" endvalue="249" default="10"/>
+  <label name="SHUTTERlbl3" top="80" left="8" width="25" height="13" caption="Strob"/>
+  <button name="button" top="199" left="155" width="70" height="24" action="OFF" caption="OFF"/>
+  <button name="Button2_487" top="170" left="5" width="75" height="25" action="Strob_Off" caption="Strob Off"/>
+  <button name="Button3_993" top="170" left="80" width="75" height="25" action="Shutter_On" caption="Strob On"/>
+  <button name="Button4_604" top="170" left="155" width="70" height="25" action="S2L" caption="S2L"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure PositionXYChange(Top, Left: Integer);
+  procedure ColorBoxChange;
+  procedure SHUTTERchange;
+  procedure Shutterdefinition;
+  procedure Shutter_Definition;
+  procedure OFF;
+  procedure Strob_Off;
+  procedure Shutter_On;
+  procedure S2L;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    Value:integer;
+    r,phi,temp:Double;
+  begin
+    if not DontRefresh then
+    case channel of
+      0:
+      begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+      end;
+      1:
+      begin
+        PositionXY.Left:=round(Fadenkreuz.Width * get_channel('pan')/255)-(PositionXY.Width div 2);
+        PositionXY.Top:=round(Fadenkreuz.Height * get_channel('tilt')/255)-(PositionXY.Height div 2);
+      end;
+      2:
+      begin
+        value:=get_channel('color1');
+        case value of
+          0..9: colorbox.itemindex:=0;
+          10..19: colorbox.itemindex:=1;
+          20..29: colorbox.itemindex:=2;
+          30..39: colorbox.itemindex:=3;
+          40..49: colorbox.itemindex:=4;
+          50..59: colorbox.itemindex:=5;
+          60..69: colorbox.itemindex:=6;
+          70..79: colorbox.itemindex:=7;
+          80..89: colorbox.itemindex:=8;
+          90..99: colorbox.itemindex:=9;
+          100..109: colorbox.itemindex:=10;
+          110..119: colorbox.itemindex:=11;
+          120..129: colorbox.itemindex:=12;
+          130..139: colorbox.itemindex:=13;
+          140..149: colorbox.itemindex:=14;
+          150..159: colorbox.itemindex:=15;
+          160..169: colorbox.itemindex:=16;
+          170..179: colorbox.itemindex:=17;
+          180..189: colorbox.itemindex:=18;
+          190..199: colorbox.itemindex:=19;
+          200..209: colorbox.itemindex:=20;
+          210..219: colorbox.itemindex:=21;
+          220..229: colorbox.itemindex:=22;
+          230..239: colorbox.itemindex:=23;
+          240..249: colorbox.itemindex:=24;
+          250..255: colorbox.itemindex:=25;
+        end;
+      end;
+      3:
+      begin
+        SHUTTERslider3.position:=get_channel('SHUTTER');
+        value:=get_channel('shutter');
+       	case value of
+       		0..9: combobox1.itemindex:=0;
+       		10..249: combobox1.itemindex:=1;
+        	250..255: combobox1.itemindex:=2;
+       	end;
+       	value:=get_channel('shutter');
+      	case value of
+       		10: combobox2.itemindex:=0;
+     			11..70: combobox2.itemindex:=1;
+     			71..130: combobox2.itemindex:=2;
+     			131..189: combobox2.itemindex:=3;
+     			190..249: combobox2.itemindex:=4;
+     			250..255: combobox2.itemindex:=5;
+     			0..9: combobox2.itemindex:=6;
+   			end;
+      end;
+    end;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure PositionXYChange(Top, Left: Integer);
+  var
+	phi,r,x,y:Double;
+	pan, tilt, panfine, tiltfine:Double;
+  begin
+	if usemhcontrol.checked then
+	begin
+		// Moving-Head-Steuerung (Polarkoordinaten)
+		x:=((PositionXY.Left+(PositionXY.Width div 2)-(fadenkreuz.Width/2))/fadenkreuz.Width)*2;	//-1..0..1
+		y:=((PositionXY.Top+(PositionXY.Height div 2)-(fadenkreuz.Width/2))/fadenkreuz.Height)*2;	//-1..0..1
+		r:=sqrt(x*x+y*y);
+	
+		if (r>0) then
+		begin
+			if (y>=0) then
+				phi:=arccos(x/r)
+			else
+				phi:=6.283185307179586476925286766559-arccos(x/r);
+		end else
+			phi:=64;
+		
+		r:=128-((r/2)*255);
+		phi:=(phi/6.283185307179586476925286766559)*255;
+		if 64>=phi then
+			phi:=phi+191
+		else
+			phi:=phi-64;
+	
+		pan:=255-phi;
+		tilt:=255-r;
+	end else
+	begin
+		// Scannersteuerung (Kartesische Koordinaten)
+		pan:=((PositionXY.Left+(PositionXY.Width div 2))/fadenkreuz.Width)*255;
+		tilt:=((PositionXY.Top+(PositionXY.Height div 2))/fadenkreuz.Height)*255;
+	end;
+
+	// Ausgabe
+	if panmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(255-pan),trunc(255-pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(255-pan)*255),trunc(frac(255-pan)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('pan',trunc(pan),trunc(pan),0);
+		dontrefresh:=true;
+		set_channel('panfine',trunc(frac(pan)*255),trunc(frac(pan)*255),0);
+	end;
+	if tiltmirror.checked then
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(255-tilt),trunc(255-tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(255-tilt)*255),trunc(frac(255-tilt)*255),0);
+	end	else
+	begin
+		dontrefresh:=true;
+		set_channel('tilt',trunc(tilt),trunc(tilt),0);
+		dontrefresh:=true;
+		set_channel('tiltfine',trunc(frac(tilt)*255),trunc(frac(tilt)*255),0);
+	end;
+  end;
+  procedure ColorBoxChange;
+  begin
+    case colorbox.itemindex of
+      0: set_channel('color1', -1, 0, 0);
+      1: set_channel('color1', -1, 10, 0);
+      2: set_channel('color1', -1, 20, 0);
+      3: set_channel('color1', -1, 30, 0);
+      4: set_channel('color1', -1, 40, 0);
+      5: set_channel('color1', -1, 50, 0);
+      6: set_channel('color1', -1, 60, 0);
+      7: set_channel('color1', -1, 70, 0);
+      8: set_channel('color1', -1, 80, 0);
+      9: set_channel('color1', -1, 90, 0);
+      10: set_channel('color1', -1, 100, 0);
+      11: set_channel('color1', -1, 110, 0);
+      12: set_channel('color1', -1, 120, 0);
+      13: set_channel('color1', -1, 130, 0);
+      14: set_channel('color1', -1, 140, 0);
+      15: set_channel('color1', -1, 150, 0);
+      16: set_channel('color1', -1, 160, 0);
+      17: set_channel('color1', -1, 170, 0);
+      18: set_channel('color1', -1, 180, 0);
+      19: set_channel('color1', -1, 190, 0);
+      20: set_channel('color1', -1, 200, 0);
+      21: set_channel('color1', -1, 210, 0);
+      22: set_channel('color1', -1, 220, 0);
+      23: set_channel('color1', -1, 230, 0);
+      24: set_channel('color1', -1, 240, 0);
+      25: set_channel('color1', -1, 250, 0);
+    end;
+  end;
+  procedure SHUTTERchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SHUTTER',-1,SHUTTERslider3.position,0);
+  end;
+  procedure Shutterdefinition;
+	begin
+    case combobox1.itemindex of
+      0: set_channel('Shutter', -1, 0, 0);
+      1: set_channel('shutter', -1, 10, 0);
+      2: set_channel('shutter', -1, 250, 0);
+    end;
+  end;
+  procedure Shutter_Definition;
+	begin
+		case combobox2.itemindex of 
+			0: set_channel('Shutter', -1, 10, 0);
+			1: set_channel('Shutter', -1, 70, 0);
+			2: set_channel('Shutter', -1, 130, 0);
+			3: set_channel('Shutter', -1, 190, 0);
+			4: set_channel('Shutter', -1, 249, 0);
+			5: set_channel('Shutter', -1, 255, 0);
+			6: set_channel('Shutter', -1, 0, 0);
+		end;
+	end;
+  procedure OFF;
+begin
+	set_channel('Color1', -1, 0, 0);
+end;
+  procedure Strob_Off;
+begin
+	set_channel('Shutter', -1, 0, 0);
+end;
+  procedure Shutter_On;
+begin
+	set_channel('Shutter', -1, 249, 0);
+end;
+  procedure S2L;
+begin
+	set_channel('Shutter', -1, 255, 0);
+end;
+  end.
+ </code>
+</device>

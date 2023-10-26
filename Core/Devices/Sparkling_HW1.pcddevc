@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device image="64 x 64\600RGBV.png">
+ <information id="PC_DIMMER">
+ <name>Sparkling Fun HW-01</name>
+ <vendor>MadeInChina</vendor>
+ <author>FCV</author>
+ <description>Sternenzauber in Bude</description>
+ </information>
+ <channels>
+  <function channel="0" minvalue="0" maxvalue="255" name="Control" fade="no" type="special1"/>
+  <function channel="1" minvalue="0" maxvalue="255" name="Start/Stop" fade="no" type="special2"/>
+  <function channel="2" minvalue="0" maxvalue="255" name="Höhe" fade="yes" type="special3"/>
+ </channels>
+ <amber UseAmberMixing="yes" AmberMixingCompensateRG="yes" AmberMixingCompensateBlue="yes" AmberColorR="255"AmberColorG="191" />
+ <initvalues ch0="0" ch1="0" ch2="0" />
+ <shutter OpenValue="255" CloseValue="0" ChannelName="shutter"/>
+ <strobe OffValue="0" MinValue="0" MaxValue="0" ChannelName="shutter"/>
+ <dimmer OffValue="0" MaxValue="255"/>
+ <fog OffValue="0" MaxValue="255"/>
+ <gobo1rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo1rot"/>
+ <gobo2rot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="gobo2rot"/>
+ <prismarot LeftMinValue="0" LeftMaxValue="0" OffValue="128" RightMinValue="255" RightMaxValue="255" ChannelName="prismarot"/>
+ <prisma SingleValue="0" TripleValue="0"/>
+ <iris OpenValue="255" CloseValue="0" MinValue="0" MaxValue="255"/>
+ <form width="180" height="210">
+  <deviceimage top="8" left="8" width="64" height="64"/>
+  <devicename top="24" left="80"/>
+  <deviceadress top="8" left="80"/>
+  <devicedipswitch top="40" left="80"/>
+  <dropdown name="ch1combobox" top="90" left="10" width="160" height="23" action="">
+   <item caption="Stop" value="0" valueend="0" picture="" />
+   <item caption="Heizung aus" value="0" valueend="0" picture="" />
+   <item caption="Reinigen/Kühlen" value="0" valueend="0" picture="" />
+   <item caption="Vorbereiten" value="0" valueend="0" picture="" />
+  </dropdown>
+  <slider name="heightslider" top="180" left="10" width="160" height="20" action="" startvalue="0" endvalue="255" default="0"/>
+  <label name="Label1_310" top="160" left="10" width="30" height="10" caption="Höhe:"/>
+  <label name="statuslbl" top="160" left="150" width="20" height="10" caption="AUS"/>
+  <button name="Button1_414" top="120" left="10" width="80" height="30" action="" caption="Stop"/>
+  <button name="Button2_735" top="120" left="90" width="80" height="30" action="" caption="Start"/>
+ </form>
+ <code>
+  unit NewDeviceUnit;
+
+  interface
+
+  procedure InitDevice(Device: String);
+  procedure FormShow;
+  procedure FormRefresh(channel:Integer);
+  procedure FormClose;
+  procedure ch1change;
+  procedure startfcn;
+  procedure stopfcn;
+  procedure heightchange;
+
+  implementation
+
+  var
+   DontRefresh:boolean;
+
+  procedure InitDevice(Device: String);
+  begin
+  end;
+  procedure FormShow;
+  begin
+  end;
+  procedure FormRefresh(channel:Integer);
+  var
+    value:integer;
+  begin
+    case channel of
+      0:
+			begin
+				value:=get_channel('SPECIAL1');
+				case value of
+					0..159: ch1combobox.itemindex:=0;
+					160..179: ch1combobox.itemindex:=1;
+					180..199: ch1combobox.itemindex:=2;
+					200..255: ch1combobox.itemindex:=3;
+				end;
+			end;
+      1:
+			begin
+				value:=get_channel('SPECIAL2');
+				case value of
+					0..39: statuslbl.caption:='AUS';
+					40..255:  statuslbl.caption:='EIN';
+				end;
+			end;  
+      2:
+			begin
+				heightslider.position:=get_channel('SPECIAL3');
+			end;
+    end;
+  end;
+  procedure FormClose;
+  begin
+  end;
+  procedure ch1change;
+  begin
+    DontRefresh:=true;
+
+		case ch1combobox.itemindex of
+			0: set_channel('SPECIAL1',-1,0,0,0);
+			1: set_channel('SPECIAL1',-1,170,0,0);
+			2: set_channel('SPECIAL1',-1,190,0,0);                                     
+			3: set_channel('SPECIAL1',-1,255,0,0);
+		end;
+  end;
+  procedure startfcn;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL2',-1,255,0,0);
+  end;
+  procedure stopfcn;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL2',-1,0,0,0);
+  end;
+  procedure heightchange;
+  begin
+    DontRefresh:=true;
+
+    set_channel('SPECIAL3',-1,heightslider.position,0,0);
+  end;
+  end.
+ </code>
+</device>
