@@ -863,6 +863,7 @@ type
       Controller: TJvHidDeviceController; PnPInfo: TJvHidPnPInfo;
       var Handled, RetryCreate: Boolean);
     procedure HidCtlDeviceChange(Sender: TObject);
+    procedure NilFunction(Sender: TObject);
     function HidCtlEnumerate(HidDev: TJvHidDevice;
       const Idx: Integer): Boolean;
     procedure HidCtlDeviceData(HidDev: TJvHidDevice; ReportID: Byte;
@@ -14052,7 +14053,10 @@ begin
     // putting this component on the GUI will create strange errors
     // regarding "Device cannot be identified"
     // so we will create it manually in code
-    HidCtl:=TJvHidDeviceController.Create(mainform, HidCtlDeviceCreateError, HidCtlDeviceChange);
+	  // next function has a bug (see https://github.com/bitdump/BLHeli/issues/199)
+    //HidCtl:=TJvHidDeviceController.Create(mainform, HidCtlDeviceCreateError, HidCtlDeviceChange);
+    HidCtl:=TJvHidDeviceController.Create(mainform, HidCtlDeviceCreateError, NilFunction);
+    HidCtl.OnDeviceChange:=HidCtlDeviceChange; // workaround to mitigate "Device cannot be identified"-errors on startup
     HidCtl.OnEnumerate:=HidCtlEnumerate;
     HidCtl.OnDeviceData:=HidCtlDeviceData;
 
@@ -28466,6 +28470,11 @@ begin
 
   // search for all connected devices
   HidCtl.Enumerate;
+end;
+
+procedure Tmainform.NilFunction(Sender: TObject);
+begin
+  // Do Nothing
 end;
 
 procedure Tmainform.HidCtlDeviceData(HidDev: TJvHidDevice; ReportID: Byte;
