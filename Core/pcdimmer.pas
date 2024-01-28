@@ -863,7 +863,6 @@ type
       Controller: TJvHidDeviceController; PnPInfo: TJvHidPnPInfo;
       var Handled, RetryCreate: Boolean);
     procedure HidCtlDeviceChange(Sender: TObject);
-    procedure NilFunction(Sender: TObject);
     function HidCtlEnumerate(HidDev: TJvHidDevice;
       const Idx: Integer): Boolean;
     procedure HidCtlDeviceData(HidDev: TJvHidDevice; ReportID: Byte;
@@ -14049,16 +14048,20 @@ begin
       xtouchcontrolform.activebtn.Caption:=_('Ausschalten');
     end;
 
-    // Create HID-Functions for Elgato StreamDeck and maybe other devices
-    // putting this component on the GUI will create strange errors
-    // regarding "Device cannot be identified"
-    // so we will create it manually in code
-	  // next function has a bug (see https://github.com/bitdump/BLHeli/issues/199)
-    //HidCtl:=TJvHidDeviceController.Create(mainform, HidCtlDeviceCreateError, HidCtlDeviceChange);
-    HidCtl:=TJvHidDeviceController.Create(mainform, HidCtlDeviceCreateError, NilFunction);
-    HidCtl.OnDeviceChange:=HidCtlDeviceChange; // workaround to mitigate "Device cannot be identified"-errors on startup
-    HidCtl.OnEnumerate:=HidCtlEnumerate;
-    HidCtl.OnDeviceData:=HidCtlDeviceData;
+    try
+      // Create HID-Functions for Elgato StreamDeck and maybe other devices
+      // putting this component on the GUI will create strange errors
+      // regarding "Device cannot be identified"
+      // so we will create it manually in code
+      // next function has a bug (see https://github.com/bitdump/BLHeli/issues/199)
+      //HidCtl:=TJvHidDeviceController.Create(mainform, HidCtlDeviceCreateError, HidCtlDeviceChange);
+      HidCtl:=TJvHidDeviceController.Create(mainform, HidCtlDeviceCreateError);
+      HidCtl.OnDeviceChange:=HidCtlDeviceChange; // workaround to mitigate "Device cannot be identified"-errors on startup
+      HidCtl.OnEnumerate:=HidCtlEnumerate;
+      HidCtl.OnDeviceData:=HidCtlDeviceData;
+    except
+      ShowMessage(_('Problem beim Laden von HID-Geräten.'));
+    end;
 
     LReg.CloseKey;
   end;
@@ -28352,103 +28355,107 @@ function Tmainform.HidCtlEnumerate(HidDev: TJvHidDevice;
 var
   i, btn, DeviceIndex, X, Y:integer;
 begin
-  if HidDev.Attributes.VendorID=$0FD9 then
-  begin
-    if (HidDev.Attributes.ProductID=$006C) or
-    (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or
-    (HidDev.Attributes.ProductID=$006D) or (HidDev.Attributes.ProductID=$0063) then
+  try
+    if HidDev.Attributes.VendorID=$0FD9 then
     begin
-      // check if we already configured this device
-      DeviceIndex:=-1;
-      for i:=0 to length(ElgatoStreamDeckArray)-1 do
+      if (HidDev.Attributes.ProductID=$006C) or
+      (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or
+      (HidDev.Attributes.ProductID=$006D) or (HidDev.Attributes.ProductID=$0063) then
       begin
-        if ElgatoStreamDeckArray[i].Serial=HidDev.SerialNumber then
+        // check if we already configured this device
+        DeviceIndex:=-1;
+        for i:=0 to length(ElgatoStreamDeckArray)-1 do
         begin
-          // device already in array
-          DeviceIndex:=i;
-          break;
-        end;
-      end;
-      if DeviceIndex=-1 then
-      begin
-        // this is a new device -> put it to new-device-combobox
-        setlength(ElgatoStreamDeckArray, length(ElgatoStreamDeckArray)+1);
-        DeviceIndex:=length(ElgatoStreamDeckArray)-1;
-
-        ElgatoStreamDeckArray[DeviceIndex].Brightness:=50; // set default brightness
-        ElgatoStreamDeckArray[DeviceIndex].UseAutoModeOnLastButton:=true;
-        ElgatoStreamDeckArray[DeviceIndex].CurrentButtonMode:=1;
-        for btn:=0 to 31 do
-        begin
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].ButtonType:=0;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Increment:=15;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].CurrentValue:=0;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].UseHoldToChange:=true;
-
-          X:=0;
-          Y:=0;
-          if HidDev.Attributes.ProductID=$0063 then
+          if ElgatoStreamDeckArray[i].Serial=HidDev.SerialNumber then
           begin
-            // 6 Buttons
-            X:=btn-trunc(btn/3)*3;
-            Y:=trunc(btn/3);
-          end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
-          begin
-            // 15 Buttons
-            X:=btn-trunc(btn/5)*5;
-            Y:=trunc(btn/5);
-          end else if HidDev.Attributes.ProductID=$006C then
-          begin
-            // 32 Buttons
-            X:=btn-trunc(btn/8)*8;
-            Y:=trunc(btn/8);
+            // device already in array
+            DeviceIndex:=i;
+            break;
           end;
-
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelX:=X+1;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelY:=Y+1;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].DataInChannel:=btn+1;
-          CreateGUID(ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.ID);
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.Name:='Button '+inttostr(btn+1)+'-Event';
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OnValue:=255;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.SwitchValue:=128;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OffValue:=0;
         end;
+        if DeviceIndex=-1 then
+        begin
+          // this is a new device -> put it to new-device-combobox
+          setlength(ElgatoStreamDeckArray, length(ElgatoStreamDeckArray)+1);
+          DeviceIndex:=length(ElgatoStreamDeckArray)-1;
+
+          ElgatoStreamDeckArray[DeviceIndex].Brightness:=50; // set default brightness
+          ElgatoStreamDeckArray[DeviceIndex].UseAutoModeOnLastButton:=true;
+          ElgatoStreamDeckArray[DeviceIndex].CurrentButtonMode:=1;
+          for btn:=0 to 31 do
+          begin
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].ButtonType:=0;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Increment:=15;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].CurrentValue:=0;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].UseHoldToChange:=true;
+
+            X:=0;
+            Y:=0;
+            if HidDev.Attributes.ProductID=$0063 then
+            begin
+              // 6 Buttons
+              X:=btn-trunc(btn/3)*3;
+              Y:=trunc(btn/3);
+            end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
+            begin
+              // 15 Buttons
+              X:=btn-trunc(btn/5)*5;
+              Y:=trunc(btn/5);
+            end else if HidDev.Attributes.ProductID=$006C then
+            begin
+              // 32 Buttons
+              X:=btn-trunc(btn/8)*8;
+              Y:=trunc(btn/8);
+            end;
+
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelX:=X+1;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelY:=Y+1;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].DataInChannel:=btn+1;
+            CreateGUID(ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.ID);
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.Name:='Button '+inttostr(btn+1)+'-Event';
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OnValue:=255;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.SwitchValue:=128;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OffValue:=0;
+          end;
+        end;
+
+        // connect this device
+        HidCtl.CheckOutByIndex(ElgatoStreamDeckArray[DeviceIndex].HidDevice, Idx);
+        // update ElgatoStreamDeckArray
+        ElgatoStreamDeckArray[DeviceIndex].Serial:=HidDev.SerialNumber;
+        ElgatoStreamDeckArray[DeviceIndex].Online:=true;
+
+        if HidDev.Attributes.ProductID=$006C then
+        begin
+          // it is a Stream Deck XL
+          // 32 buttons
+          ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=32;
+        end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
+        begin
+          // it is a Stream Deck or Stream Deck original v2 or Stream Deck MK2
+          // 15 buttons
+          ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=15;
+        end else if HidDev.Attributes.ProductID=$0063 then
+        begin
+          // it is a Stream Deck Mini
+          // 6 buttons
+          ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=6;
+        end;
+
+        // put this device to GUI
+        elgatostreamdeckform.devicelistbox.ItemIndex:=elgatostreamdeckform.devicelistbox.Items.Add(HidDev.VendorName+' '+HidDev.ProductName+' ['+HidDev.SerialNumber+']');
+        setlength(ElgatoStreamSerials, length(ElgatoStreamSerials)+1);
+        ElgatoStreamSerials[length(ElgatoStreamSerials)-1]:=HidDev.SerialNumber;
+
+        // set brightness
+        elgatostreamdeckform.SetBrightness(HidDev.SerialNumber, ElgatoStreamDeckArray[DeviceIndex].Brightness);
       end;
-
-      // connect this device
-      HidCtl.CheckOutByIndex(ElgatoStreamDeckArray[DeviceIndex].HidDevice, Idx);
-      // update ElgatoStreamDeckArray
-      ElgatoStreamDeckArray[DeviceIndex].Serial:=HidDev.SerialNumber;
-      ElgatoStreamDeckArray[DeviceIndex].Online:=true;
-
-      if HidDev.Attributes.ProductID=$006C then
-      begin
-        // it is a Stream Deck XL
-        // 32 buttons
-        ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=32;
-      end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
-      begin
-        // it is a Stream Deck or Stream Deck original v2 or Stream Deck MK2
-        // 15 buttons
-        ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=15;
-      end else if HidDev.Attributes.ProductID=$0063 then
-      begin
-        // it is a Stream Deck Mini
-        // 6 buttons
-        ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=6;
-      end;
-
-      // put this device to GUI
-      elgatostreamdeckform.devicelistbox.ItemIndex:=elgatostreamdeckform.devicelistbox.Items.Add(HidDev.VendorName+' '+HidDev.ProductName+' ['+HidDev.SerialNumber+']');
-      setlength(ElgatoStreamSerials, length(ElgatoStreamSerials)+1);
-      ElgatoStreamSerials[length(ElgatoStreamSerials)-1]:=HidDev.SerialNumber;
-
-      // set brightness
-      elgatostreamdeckform.SetBrightness(HidDev.SerialNumber, ElgatoStreamDeckArray[DeviceIndex].Brightness);
     end;
-  end;
 
-  Result := True;
+    Result := True;
+  except
+    Result := False;
+  end;
 end;
 
 procedure Tmainform.HidCtlDeviceChange(Sender: TObject);
@@ -28469,12 +28476,10 @@ begin
   setlength(ElgatoStreamSerials, 0);
 
   // search for all connected devices
-  HidCtl.Enumerate;
-end;
-
-procedure Tmainform.NilFunction(Sender: TObject);
-begin
-  // Do Nothing
+  try
+    HidCtl.Enumerate;
+  except
+  end;
 end;
 
 procedure Tmainform.HidCtlDeviceData(HidDev: TJvHidDevice; ReportID: Byte;

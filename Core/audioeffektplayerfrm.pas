@@ -2484,7 +2484,6 @@ begin
     BASS_ChannelGetInfo(_chan[0], info);
     _chan[0] := BASS_FX_TempoCreate(_chan[0], BASS_SAMPLE_LOOP Or BASS_FX_FREESOURCE);
     BASS_ChannelSetAttribute(_chan[0], BASS_ATTRIB_TEMPO, 0); // +-30 ist möglich
-    BASS_ChannelSetAttribute(_chan[0], BASS_ATTRIB_TEMPO_FREQ, 44100); // Frequenz stufenlos von 0 bis 192000 möglich
     BASS_ChannelSetAttribute(_chan[0], BASS_ATTRIB_VOL, 1.0);
 
     DecodingBPM(true, AktuellePosition, AktuellePosition+bpmscanlength);
