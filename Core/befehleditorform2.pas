@@ -261,6 +261,7 @@ begin
     mainform.input_number_minus(i,s);
     TEdit(Sender).text:=s;
     TEdit(Sender).selstart:=i;
+    
     AktuellerBefehl.ArgInteger[0]:=strtoint(Arg1Edit.Text);
   end;
 end;
@@ -282,6 +283,7 @@ begin
     mainform.input_number_minus(i,s);
     TEdit(Sender).text:=s;
     TEdit(Sender).selstart:=i;
+    
     AktuellerBefehl.ArgInteger[1]:=strtoint(Arg2Edit.Text);
   end;
 end;
@@ -457,14 +459,19 @@ var
 begin
   if nousersetting then exit;
 
-  s:=TEdit(Sender).text;
-  if s='-' then exit;
-  i:=TEdit(Sender).selstart;
-  mainform.input_number_minus(i,s);
-  TEdit(Sender).text:=s;
-  TEdit(Sender).selstart:=i;
+  if length(AktuellerBefehl.ArgString)>2 then
+    AktuellerBefehl.ArgString[2]:=Arg3Edit.Text
+  else
+  begin
+    s:=TEdit(Sender).text;
+    if s='-' then exit;
+    i:=TEdit(Sender).selstart;
+    mainform.input_number_minus(i,s);
+    TEdit(Sender).text:=s;
+    TEdit(Sender).selstart:=i;
 
-  AktuellerBefehl.ArgInteger[2]:=strtoint(Arg3Edit.Text);
+    AktuellerBefehl.ArgInteger[2]:=strtoint(Arg3Edit.Text);
+  end;
 end;
 
 procedure Tbefehlseditor2.FormClose(Sender: TObject;

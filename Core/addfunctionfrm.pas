@@ -265,6 +265,12 @@ begin
       Memo1.Lines.Add('// Kanal 5 auf 241 setzen');
       Memo1.Lines.Add('sendmessage(MSG_ACTUALCHANNELVALUE, 5, 241);');
     end;
+    27:
+    begin
+      Memo1.Clear;
+      Memo1.Lines.Add(_('// MQTT Nachricht senden'));
+      Memo1.Lines.Add('sendmqtt(''Testtopic'',''Testpayload'');');
+    end;
   end;
   Memo1.SelectAll;
   Memo1.CopyToClipboard;

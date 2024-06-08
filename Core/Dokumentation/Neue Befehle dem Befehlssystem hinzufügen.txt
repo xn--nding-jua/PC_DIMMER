@@ -1,0 +1,10 @@
+Neue Befehle hinzufügen
+1. Channels_Commandsystem.inc
+	a) Länge des Arrays anpassen
+	b) neue Option hinzufügen
+
+2. EditBefehl.inc
+	a) Neue Bearbeitungsoption hinzufügen
+
+3. pcdimmer.pas
+	a) Programmfunktionen in StartBefehl() einfügen

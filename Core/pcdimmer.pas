@@ -52,7 +52,7 @@ uses
   graphutil, IdCustomTCPServer, IdCustomHTTPServer, idContext, VistaAltFixUnit2,
   SVATimer, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, pcdMEVP,
   dxRibbonSkins, dxBarApplicationMenu, D7GesturesHeader, jpeg,
-  JvHidControllerClass, Hid;
+  JvHidControllerClass, Hid, OverbyteIcsMQTT;
 
 const
   maincaption = 'PC_DIMMER';
@@ -583,6 +583,8 @@ type
     dxBarLargeButton9: TdxBarLargeButton;
     dxBarLargeButton10: TdxBarLargeButton;
     RibbonButtonPNGList: TPngImageList;
+    mqtt: TIcsMQTTClient;
+    MQTTClientActivateRibbonBox: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -867,6 +869,7 @@ type
       const Idx: Integer): Boolean;
     procedure HidCtlDeviceData(HidDev: TJvHidDevice; ReportID: Byte;
       const Data: Pointer; Size: Word);
+    procedure MQTTClientActivateRibbonBoxClick(Sender: TObject);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -1111,6 +1114,7 @@ type
     autologouttime:byte;
     autologouttimecounter:integer;
     httppasswordscrambled:string[255];
+    mqttpasswordscrambled:string[255];
     dontloadproject,gotosystray:boolean;
     askforsaveproject:boolean;
     powerswitchoff:boolean;
@@ -3599,6 +3603,7 @@ begin
     LReg.WriteInteger('Refresh_KontrollpanelCheckForActive',Rfr_KontrollpanelCheckForActive);
     LReg.WriteInteger('Refresh_Submaster',Rfr_Submaster);
     LReg.WriteBool('Start HTTP-Server',FHTTPServer.Active);
+    LReg.WriteBool('Start MQTT-Client',MQTTClientActivateRibbonBox.Down);
     LReg.WriteInteger('Beatsource',lastbeatsource);
     LReg.WriteString('Last Midi Inputdevices',lastmidiinputdevices);
     LReg.WriteString('Last Midi Outputdevices',lastmidioutputdevices);
@@ -9962,6 +9967,10 @@ begin
   Optionenbox.maxautobackupfilesedit.Value:=maxautobackupfiles;
   Optionenbox.HTTPServerPasswordCheckbox.Checked:=FHTTPServer.UsePassword;
   Optionenbox.HTTPServerPassword.Text:= FHTTPServer.Password;
+  Optionenbox.MQTTBrokerIP.Text:=mqtt.Host;
+  Optionenbox.MQTTBrokerPort.Value:=mqtt.Port;
+  Optionenbox.MQTTBrokerUser.Text:=mqtt.Username;
+  Optionenbox.MQTTBrokerPassword.Text:=mqtt.Password;
   Optionenbox.mbs_onlineCheckbox.Checked:=MBS_Online;
   Optionenbox.mbs_MSGonEdit.text:=inttostr(MBS_MSGon);
   Optionenbox.mbs_MSGoffEdit.text:=inttostr(MBS_MSGoff);
@@ -10090,6 +10099,10 @@ begin
   Autobackuptimer.Enabled:=Autobackupcountermax>0;
   FHTTPServer.UsePassword := Optionenbox.HTTPServerPasswordCheckbox.Checked;
   FHTTPServer.Password := Optionenbox.HTTPServerPassword.Text;
+  mqtt.Host:=Optionenbox.MQTTBrokerIP.Text;
+  mqtt.Port:=round(Optionenbox.MQTTBrokerPort.Value);
+  mqtt.Username:=Optionenbox.MQTTBrokerUser.Text;
+  mqtt.Password:=Optionenbox.MQTTBrokerPassword.Text;
   MBS_Online:=Optionenbox.mbs_onlineCheckbox.Checked;
   MBS_MSGon:=strtoint(Optionenbox.mbs_MSGonEdit.text);
   MBS_MSGoff:=strtoint(Optionenbox.mbs_MSGoffEdit.text);
@@ -14027,6 +14040,41 @@ begin
       MediaCenterTimecodeSocket.Open;
     end;
 
+    // MQTT-Client vorbereiten
+    if LReg.ValueExists('MQTT Host') then
+    begin
+      mqtt.Host := LReg.ReadString('MQTT Host');
+    end;
+    if LReg.ValueExists('MQTT Port') then
+    begin
+      mqtt.Port := LReg.ReadInteger('MQTT Port');
+    end;
+    if LReg.ValueExists('MQTT User') then
+    begin
+      mqtt.Username := LReg.ReadString('MQTT User');
+    end;
+    if LReg.ValueExists('MQTT Password') then
+    begin
+      LReg.ReadBinaryData('MQTT Password',mqttpasswordscrambled,sizeof(mqttpasswordscrambled));
+
+      with TCipher_Blowfish.Create do
+      try
+        Init(blowfishscramblekey);
+        mqtt.Password := DecodeBinary(mqttpasswordscrambled, TFormat_Copy);
+      finally
+        Free;
+      end;
+    end;
+    // MQTT Client aktivieren, sofern beim letzten mal aktiv
+    if LReg.ValueExists('Start MQTT-Client') then
+    begin
+      if LReg.ReadBool('Start MQTT-Client') then
+      begin
+        mqtt.Activate(true);
+        MQTTClientActivateRibbonBox.Down:=true;
+      end;
+    end;
+
     // WinLIRC-Server aktivieren, sofern beim letzten mal aktiv
     winlircform.cs.Active := LReg.ReadWriteBool('WinLIRC Server active', false);
 
@@ -16015,6 +16063,16 @@ begin
     if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[29].GUID) and EventFired then
     begin // Benutzer wechseln
       ChangeUser(false);
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[30].GUID) and EventFired then
+    begin // MQTT: Payload senden
+      mqtt.Publish(string(AktuellerBefehl.ArgString[0]), string(AktuellerBefehl.ArgString[1]), qtAT_MOST_ONCE, false);
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[31].GUID) and EventFired then
+    begin // MQTT: Wert senden
+      mqtt.Publish(string(AktuellerBefehl.ArgString[0]), inttostr(round(Value/maxres*100)), qtAT_MOST_ONCE, false);
       exit;
     end;
 
@@ -23711,6 +23769,9 @@ begin
     LReg.WriteInteger('Autobackup Files',maxautobackupfiles);
     LReg.WriteInteger('Timer',animationtimer);
     LReg.WriteBool('Use HTTP Password',OptionenBox.HTTPServerPasswordCheckbox.Checked);
+    LReg.WriteString('MQTT Host', mqtt.Host);
+    LReg.WriteInteger('MQTT Port', mqtt.Port);
+    LReg.WriteString('MQTT User', mqtt.Username);
     LReg.WriteBool('MidiBeatSignal On',MBS_Online);
     LReg.WriteInteger('MidiBeatSignal MSG On',MBS_MSGon);
     LReg.WriteInteger('MidiBeatSignal MSG Off',MBS_MSGoff);
@@ -23748,6 +23809,15 @@ begin
       Free;
     end;
     LReg.WriteBinaryData('HTTP Password',httppasswordscrambled,sizeof(httppasswordscrambled));
+
+    with TCipher_Blowfish.Create do
+    try
+      Init(blowfishscramblekey);
+      mqttpasswordscrambled := EncodeBinary(mqtt.Password, TFormat_Copy);
+    finally
+      Free;
+    end;
+    LReg.WriteBinaryData('MQTT Password',mqttpasswordscrambled,sizeof(mqttpasswordscrambled));
 
     with TCipher_Blowfish.Create do
     try
@@ -28659,6 +28729,13 @@ begin
       elgatostreamdeckform.ElgatoStreamDeckDisplayTimer.Interval:=500;
     end;
   end;
+end;
+
+procedure TMainform.MQTTClientActivateRibbonBoxClick(Sender: TObject);
+begin
+  if not UserAccessGranted(1) then exit;
+
+  mqtt.Activate(HTTPServerActivateRibbonBox.Down);
 end;
 
 end.

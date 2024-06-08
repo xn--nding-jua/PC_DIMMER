@@ -15,7 +15,8 @@ uses
   JvExControls, JvComponent, JvColorBox, JvColorButton, Mask,
   JvExMask, JvSpin, JvZlibMultiple, MPlayer, Menus, Buttons, ImgList, Registry,
   Math, JvComponentBase, PngBitBtn, JvExButtons, JvButtons, JvInterpreter,
-  gnugettext, TB2Item, TB2Dock, TB2Toolbar, pngimage, GR32, D7GesturesHeader;
+  gnugettext, TB2Item, TB2Dock, TB2Toolbar, pngimage, GR32, D7GesturesHeader,
+  OverbyteIcsMQTT;
 
 
 const
@@ -2089,6 +2090,15 @@ begin
     if args.Count=3 then
     begin
       mainform.SendMSG(args.values[0], args.values[1], args.values[2]);
+    end;
+    done:=true;
+  end;
+
+  if lowercase(Identifier)='sendmqtt' then
+  begin
+    if args.Count=2 then
+    begin
+      mainform.mqtt.Publish(string(args.values[0]), string(args.values[1]), qtAT_MOST_ONCE, false);
     end;
     done:=true;
   end;
