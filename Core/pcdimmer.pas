@@ -52,7 +52,7 @@ uses
   graphutil, IdCustomTCPServer, IdCustomHTTPServer, idContext, VistaAltFixUnit2,
   SVATimer, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, pcdMEVP,
   dxRibbonSkins, dxBarApplicationMenu, D7GesturesHeader, jpeg,
-  JvHidControllerClass, Hid;
+  JvHidControllerClass, Hid, OverbyteIcsMQTT;
 
 const
   maincaption = 'PC_DIMMER';
@@ -583,6 +583,8 @@ type
     dxBarLargeButton9: TdxBarLargeButton;
     dxBarLargeButton10: TdxBarLargeButton;
     RibbonButtonPNGList: TPngImageList;
+    mqtt: TIcsMQTTClient;
+    MQTTClientActivateRibbonBox: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure DefaultSettings1Click(Sender: TObject);
@@ -867,6 +869,7 @@ type
       const Idx: Integer): Boolean;
     procedure HidCtlDeviceData(HidDev: TJvHidDevice; ReportID: Byte;
       const Data: Pointer; Size: Word);
+    procedure MQTTClientActivateRibbonBoxClick(Sender: TObject);
   private
     { Private declarations }
     FirstStart:boolean;
@@ -1111,6 +1114,7 @@ type
     autologouttime:byte;
     autologouttimecounter:integer;
     httppasswordscrambled:string[255];
+    mqttpasswordscrambled:string[255];
     dontloadproject,gotosystray:boolean;
     askforsaveproject:boolean;
     powerswitchoff:boolean;
@@ -3599,6 +3603,7 @@ begin
     LReg.WriteInteger('Refresh_KontrollpanelCheckForActive',Rfr_KontrollpanelCheckForActive);
     LReg.WriteInteger('Refresh_Submaster',Rfr_Submaster);
     LReg.WriteBool('Start HTTP-Server',FHTTPServer.Active);
+    LReg.WriteBool('Start MQTT-Client',MQTTClientActivateRibbonBox.Down);
     LReg.WriteInteger('Beatsource',lastbeatsource);
     LReg.WriteString('Last Midi Inputdevices',lastmidiinputdevices);
     LReg.WriteString('Last Midi Outputdevices',lastmidioutputdevices);
@@ -9962,6 +9967,10 @@ begin
   Optionenbox.maxautobackupfilesedit.Value:=maxautobackupfiles;
   Optionenbox.HTTPServerPasswordCheckbox.Checked:=FHTTPServer.UsePassword;
   Optionenbox.HTTPServerPassword.Text:= FHTTPServer.Password;
+  Optionenbox.MQTTBrokerIP.Text:=mqtt.Host;
+  Optionenbox.MQTTBrokerPort.Value:=mqtt.Port;
+  Optionenbox.MQTTBrokerUser.Text:=mqtt.Username;
+  Optionenbox.MQTTBrokerPassword.Text:=mqtt.Password;
   Optionenbox.mbs_onlineCheckbox.Checked:=MBS_Online;
   Optionenbox.mbs_MSGonEdit.text:=inttostr(MBS_MSGon);
   Optionenbox.mbs_MSGoffEdit.text:=inttostr(MBS_MSGoff);
@@ -10090,6 +10099,10 @@ begin
   Autobackuptimer.Enabled:=Autobackupcountermax>0;
   FHTTPServer.UsePassword := Optionenbox.HTTPServerPasswordCheckbox.Checked;
   FHTTPServer.Password := Optionenbox.HTTPServerPassword.Text;
+  mqtt.Host:=Optionenbox.MQTTBrokerIP.Text;
+  mqtt.Port:=round(Optionenbox.MQTTBrokerPort.Value);
+  mqtt.Username:=Optionenbox.MQTTBrokerUser.Text;
+  mqtt.Password:=Optionenbox.MQTTBrokerPassword.Text;
   MBS_Online:=Optionenbox.mbs_onlineCheckbox.Checked;
   MBS_MSGon:=strtoint(Optionenbox.mbs_MSGonEdit.text);
   MBS_MSGoff:=strtoint(Optionenbox.mbs_MSGoffEdit.text);
@@ -14027,6 +14040,41 @@ begin
       MediaCenterTimecodeSocket.Open;
     end;
 
+    // MQTT-Client vorbereiten
+    if LReg.ValueExists('MQTT Host') then
+    begin
+      mqtt.Host := LReg.ReadString('MQTT Host');
+    end;
+    if LReg.ValueExists('MQTT Port') then
+    begin
+      mqtt.Port := LReg.ReadInteger('MQTT Port');
+    end;
+    if LReg.ValueExists('MQTT User') then
+    begin
+      mqtt.Username := LReg.ReadString('MQTT User');
+    end;
+    if LReg.ValueExists('MQTT Password') then
+    begin
+      LReg.ReadBinaryData('MQTT Password',mqttpasswordscrambled,sizeof(mqttpasswordscrambled));
+
+      with TCipher_Blowfish.Create do
+      try
+        Init(blowfishscramblekey);
+        mqtt.Password := DecodeBinary(mqttpasswordscrambled, TFormat_Copy);
+      finally
+        Free;
+      end;
+    end;
+    // MQTT Client aktivieren, sofern beim letzten mal aktiv
+    if LReg.ValueExists('Start MQTT-Client') then
+    begin
+      if LReg.ReadBool('Start MQTT-Client') then
+      begin
+        mqtt.Activate(true);
+        MQTTClientActivateRibbonBox.Down:=true;
+      end;
+    end;
+
     // WinLIRC-Server aktivieren, sofern beim letzten mal aktiv
     winlircform.cs.Active := LReg.ReadWriteBool('WinLIRC Server active', false);
 
@@ -14048,13 +14096,20 @@ begin
       xtouchcontrolform.activebtn.Caption:=_('Ausschalten');
     end;
 
-    // Create HID-Functions for Elgato StreamDeck and maybe other devices
-    // putting this component on the GUI will create strange errors
-    // regarding "Device cannot be identified"
-    // so we will create it manually in code
-    HidCtl:=TJvHidDeviceController.Create(mainform, HidCtlDeviceCreateError, HidCtlDeviceChange);
-    HidCtl.OnEnumerate:=HidCtlEnumerate;
-    HidCtl.OnDeviceData:=HidCtlDeviceData;
+    try
+      // Create HID-Functions for Elgato StreamDeck and maybe other devices
+      // putting this component on the GUI will create strange errors
+      // regarding "Device cannot be identified"
+      // so we will create it manually in code
+      // next function has a bug (see https://github.com/bitdump/BLHeli/issues/199)
+      //HidCtl:=TJvHidDeviceController.Create(mainform, HidCtlDeviceCreateError, HidCtlDeviceChange);
+      HidCtl:=TJvHidDeviceController.Create(mainform, HidCtlDeviceCreateError);
+      HidCtl.OnDeviceChange:=HidCtlDeviceChange; // workaround to mitigate "Device cannot be identified"-errors on startup
+      HidCtl.OnEnumerate:=HidCtlEnumerate;
+      HidCtl.OnDeviceData:=HidCtlDeviceData;
+    except
+      ShowMessage(_('Problem beim Laden von HID-Geräten.'));
+    end;
 
     LReg.CloseKey;
   end;
@@ -16008,6 +16063,16 @@ begin
     if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[29].GUID) and EventFired then
     begin // Benutzer wechseln
       ChangeUser(false);
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[30].GUID) and EventFired then
+    begin // MQTT: Payload senden
+      mqtt.Publish(string(AktuellerBefehl.ArgString[0]), string(AktuellerBefehl.ArgString[1]), qtAT_MOST_ONCE, false);
+      exit;
+    end;
+    if IsEqualGUID(AktuellerBefehl.Typ,Befehlssystem[3].Steuerung[31].GUID) and EventFired then
+    begin // MQTT: Wert senden
+      mqtt.Publish(string(AktuellerBefehl.ArgString[0]), inttostr(round(Value/maxres*100)), qtAT_MOST_ONCE, false);
       exit;
     end;
 
@@ -23704,6 +23769,9 @@ begin
     LReg.WriteInteger('Autobackup Files',maxautobackupfiles);
     LReg.WriteInteger('Timer',animationtimer);
     LReg.WriteBool('Use HTTP Password',OptionenBox.HTTPServerPasswordCheckbox.Checked);
+    LReg.WriteString('MQTT Host', mqtt.Host);
+    LReg.WriteInteger('MQTT Port', mqtt.Port);
+    LReg.WriteString('MQTT User', mqtt.Username);
     LReg.WriteBool('MidiBeatSignal On',MBS_Online);
     LReg.WriteInteger('MidiBeatSignal MSG On',MBS_MSGon);
     LReg.WriteInteger('MidiBeatSignal MSG Off',MBS_MSGoff);
@@ -23741,6 +23809,15 @@ begin
       Free;
     end;
     LReg.WriteBinaryData('HTTP Password',httppasswordscrambled,sizeof(httppasswordscrambled));
+
+    with TCipher_Blowfish.Create do
+    try
+      Init(blowfishscramblekey);
+      mqttpasswordscrambled := EncodeBinary(mqtt.Password, TFormat_Copy);
+    finally
+      Free;
+    end;
+    LReg.WriteBinaryData('MQTT Password',mqttpasswordscrambled,sizeof(mqttpasswordscrambled));
 
     with TCipher_Blowfish.Create do
     try
@@ -28348,103 +28425,107 @@ function Tmainform.HidCtlEnumerate(HidDev: TJvHidDevice;
 var
   i, btn, DeviceIndex, X, Y:integer;
 begin
-  if HidDev.Attributes.VendorID=$0FD9 then
-  begin
-    if (HidDev.Attributes.ProductID=$006C) or
-    (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or
-    (HidDev.Attributes.ProductID=$006D) or (HidDev.Attributes.ProductID=$0063) then
+  try
+    if HidDev.Attributes.VendorID=$0FD9 then
     begin
-      // check if we already configured this device
-      DeviceIndex:=-1;
-      for i:=0 to length(ElgatoStreamDeckArray)-1 do
+      if (HidDev.Attributes.ProductID=$006C) or
+      (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or
+      (HidDev.Attributes.ProductID=$006D) or (HidDev.Attributes.ProductID=$0063) then
       begin
-        if ElgatoStreamDeckArray[i].Serial=HidDev.SerialNumber then
+        // check if we already configured this device
+        DeviceIndex:=-1;
+        for i:=0 to length(ElgatoStreamDeckArray)-1 do
         begin
-          // device already in array
-          DeviceIndex:=i;
-          break;
-        end;
-      end;
-      if DeviceIndex=-1 then
-      begin
-        // this is a new device -> put it to new-device-combobox
-        setlength(ElgatoStreamDeckArray, length(ElgatoStreamDeckArray)+1);
-        DeviceIndex:=length(ElgatoStreamDeckArray)-1;
-
-        ElgatoStreamDeckArray[DeviceIndex].Brightness:=50; // set default brightness
-        ElgatoStreamDeckArray[DeviceIndex].UseAutoModeOnLastButton:=true;
-        ElgatoStreamDeckArray[DeviceIndex].CurrentButtonMode:=1;
-        for btn:=0 to 31 do
-        begin
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].ButtonType:=0;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Increment:=15;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].CurrentValue:=0;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].UseHoldToChange:=true;
-
-          X:=0;
-          Y:=0;
-          if HidDev.Attributes.ProductID=$0063 then
+          if ElgatoStreamDeckArray[i].Serial=HidDev.SerialNumber then
           begin
-            // 6 Buttons
-            X:=btn-trunc(btn/3)*3;
-            Y:=trunc(btn/3);
-          end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
-          begin
-            // 15 Buttons
-            X:=btn-trunc(btn/5)*5;
-            Y:=trunc(btn/5);
-          end else if HidDev.Attributes.ProductID=$006C then
-          begin
-            // 32 Buttons
-            X:=btn-trunc(btn/8)*8;
-            Y:=trunc(btn/8);
+            // device already in array
+            DeviceIndex:=i;
+            break;
           end;
-
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelX:=X+1;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelY:=Y+1;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].DataInChannel:=btn+1;
-          CreateGUID(ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.ID);
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.Name:='Button '+inttostr(btn+1)+'-Event';
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OnValue:=255;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.SwitchValue:=128;
-          ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OffValue:=0;
         end;
+        if DeviceIndex=-1 then
+        begin
+          // this is a new device -> put it to new-device-combobox
+          setlength(ElgatoStreamDeckArray, length(ElgatoStreamDeckArray)+1);
+          DeviceIndex:=length(ElgatoStreamDeckArray)-1;
+
+          ElgatoStreamDeckArray[DeviceIndex].Brightness:=50; // set default brightness
+          ElgatoStreamDeckArray[DeviceIndex].UseAutoModeOnLastButton:=true;
+          ElgatoStreamDeckArray[DeviceIndex].CurrentButtonMode:=1;
+          for btn:=0 to 31 do
+          begin
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].ButtonType:=0;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Increment:=15;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].CurrentValue:=0;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].UseHoldToChange:=true;
+
+            X:=0;
+            Y:=0;
+            if HidDev.Attributes.ProductID=$0063 then
+            begin
+              // 6 Buttons
+              X:=btn-trunc(btn/3)*3;
+              Y:=trunc(btn/3);
+            end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
+            begin
+              // 15 Buttons
+              X:=btn-trunc(btn/5)*5;
+              Y:=trunc(btn/5);
+            end else if HidDev.Attributes.ProductID=$006C then
+            begin
+              // 32 Buttons
+              X:=btn-trunc(btn/8)*8;
+              Y:=trunc(btn/8);
+            end;
+
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelX:=X+1;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelY:=Y+1;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].DataInChannel:=btn+1;
+            CreateGUID(ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.ID);
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.Name:='Button '+inttostr(btn+1)+'-Event';
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OnValue:=255;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.SwitchValue:=128;
+            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OffValue:=0;
+          end;
+        end;
+
+        // connect this device
+        HidCtl.CheckOutByIndex(ElgatoStreamDeckArray[DeviceIndex].HidDevice, Idx);
+        // update ElgatoStreamDeckArray
+        ElgatoStreamDeckArray[DeviceIndex].Serial:=HidDev.SerialNumber;
+        ElgatoStreamDeckArray[DeviceIndex].Online:=true;
+
+        if HidDev.Attributes.ProductID=$006C then
+        begin
+          // it is a Stream Deck XL
+          // 32 buttons
+          ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=32;
+        end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
+        begin
+          // it is a Stream Deck or Stream Deck original v2 or Stream Deck MK2
+          // 15 buttons
+          ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=15;
+        end else if HidDev.Attributes.ProductID=$0063 then
+        begin
+          // it is a Stream Deck Mini
+          // 6 buttons
+          ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=6;
+        end;
+
+        // put this device to GUI
+        elgatostreamdeckform.devicelistbox.ItemIndex:=elgatostreamdeckform.devicelistbox.Items.Add(HidDev.VendorName+' '+HidDev.ProductName+' ['+HidDev.SerialNumber+']');
+        setlength(ElgatoStreamSerials, length(ElgatoStreamSerials)+1);
+        ElgatoStreamSerials[length(ElgatoStreamSerials)-1]:=HidDev.SerialNumber;
+
+        // set brightness
+        elgatostreamdeckform.SetBrightness(HidDev.SerialNumber, ElgatoStreamDeckArray[DeviceIndex].Brightness);
       end;
-
-      // connect this device
-      HidCtl.CheckOutByIndex(ElgatoStreamDeckArray[DeviceIndex].HidDevice, Idx);
-      // update ElgatoStreamDeckArray
-      ElgatoStreamDeckArray[DeviceIndex].Serial:=HidDev.SerialNumber;
-      ElgatoStreamDeckArray[DeviceIndex].Online:=true;
-
-      if HidDev.Attributes.ProductID=$006C then
-      begin
-        // it is a Stream Deck XL
-        // 32 buttons
-        ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=32;
-      end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
-      begin
-        // it is a Stream Deck or Stream Deck original v2 or Stream Deck MK2
-        // 15 buttons
-        ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=15;
-      end else if HidDev.Attributes.ProductID=$0063 then
-      begin
-        // it is a Stream Deck Mini
-        // 6 buttons
-        ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=6;
-      end;
-
-      // put this device to GUI
-      elgatostreamdeckform.devicelistbox.ItemIndex:=elgatostreamdeckform.devicelistbox.Items.Add(HidDev.VendorName+' '+HidDev.ProductName+' ['+HidDev.SerialNumber+']');
-      setlength(ElgatoStreamSerials, length(ElgatoStreamSerials)+1);
-      ElgatoStreamSerials[length(ElgatoStreamSerials)-1]:=HidDev.SerialNumber;
-
-      // set brightness
-      elgatostreamdeckform.SetBrightness(HidDev.SerialNumber, ElgatoStreamDeckArray[DeviceIndex].Brightness);
     end;
-  end;
 
-  Result := True;
+    Result := True;
+  except
+    Result := False;
+  end;
 end;
 
 procedure Tmainform.HidCtlDeviceChange(Sender: TObject);
@@ -28465,7 +28546,10 @@ begin
   setlength(ElgatoStreamSerials, 0);
 
   // search for all connected devices
-  HidCtl.Enumerate;
+  try
+    HidCtl.Enumerate;
+  except
+  end;
 end;
 
 procedure Tmainform.HidCtlDeviceData(HidDev: TJvHidDevice; ReportID: Byte;
@@ -28645,6 +28729,13 @@ begin
       elgatostreamdeckform.ElgatoStreamDeckDisplayTimer.Interval:=500;
     end;
   end;
+end;
+
+procedure TMainform.MQTTClientActivateRibbonBoxClick(Sender: TObject);
+begin
+  if not UserAccessGranted(1) then exit;
+
+  mqtt.Activate(HTTPServerActivateRibbonBox.Down);
 end;
 
 end.

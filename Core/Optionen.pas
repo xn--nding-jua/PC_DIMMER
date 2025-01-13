@@ -225,6 +225,15 @@ type
     startupuseredit: TComboBox;
     Label87: TLabel;
     autoambercheckbox: TCheckBox;
+    GroupBox16: TGroupBox;
+    Label88: TLabel;
+    MQTTBrokerIP: TEdit;
+    Label89: TLabel;
+    MQTTBrokerPort: TJvSpinEdit;
+    MQTTBrokerUser: TEdit;
+    Label90: TLabel;
+    MQTTBrokerPassword: TEdit;
+    Label91: TLabel;
     procedure input_number(var pos:integer; var s:string);
     procedure FormShow(Sender: TObject);
     procedure prioritaetChange(Sender: TObject);

@@ -1039,7 +1039,7 @@ object OptionenBox: TOptionenBox
         Height = 21
         Hint = 'Soundkarte: '
         Style = csDropDownList
-        ItemHeight = 0
+        ItemHeight = 13
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
@@ -1734,6 +1734,73 @@ object OptionenBox: TOptionenBox
           Height = 21
           Value = 10153.000000000000000000
           TabOrder = 0
+        end
+      end
+      object GroupBox16: TGroupBox
+        Left = 16
+        Top = 128
+        Width = 465
+        Height = 73
+        Caption = ' MQTT-Broker '
+        TabOrder = 3
+        object Label88: TLabel
+          Left = 8
+          Top = 24
+          Width = 54
+          Height = 13
+          Caption = 'IP-Adresse:'
+        end
+        object Label89: TLabel
+          Left = 104
+          Top = 24
+          Width = 46
+          Height = 13
+          Caption = 'TCP-Port:'
+        end
+        object Label90: TLabel
+          Left = 192
+          Top = 24
+          Width = 71
+          Height = 13
+          Caption = 'Benutzername:'
+        end
+        object Label91: TLabel
+          Left = 336
+          Top = 24
+          Width = 46
+          Height = 13
+          Caption = 'Passwort:'
+        end
+        object MQTTBrokerIP: TEdit
+          Left = 8
+          Top = 40
+          Width = 89
+          Height = 21
+          TabOrder = 0
+          Text = '127.0.0.1'
+        end
+        object MQTTBrokerPort: TJvSpinEdit
+          Left = 104
+          Top = 40
+          Width = 65
+          Height = 21
+          Value = 1883.000000000000000000
+          TabOrder = 1
+        end
+        object MQTTBrokerUser: TEdit
+          Left = 192
+          Top = 40
+          Width = 137
+          Height = 21
+          TabOrder = 2
+        end
+        object MQTTBrokerPassword: TEdit
+          Left = 336
+          Top = 40
+          Width = 121
+          Height = 21
+          PasswordChar = '*'
+          TabOrder = 3
         end
       end
     end

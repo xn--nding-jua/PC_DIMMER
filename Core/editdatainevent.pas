@@ -137,6 +137,7 @@ type
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure Button1Click(Sender: TObject);
     procedure FormHide(Sender: TObject);
+    procedure okbtnClick(Sender: TObject);
   private
     { Private-Deklarationen }
     ManualEditingOfCombobox2:boolean;
@@ -194,14 +195,19 @@ var
 begin
   if nousersetting then exit;
 
-  s:=TEdit(Sender).text;
-  if s='-' then exit;
-  i:=TEdit(Sender).selstart;
-  mainform.input_number_minus(i,s);
-  TEdit(Sender).text:=s;
-  TEdit(Sender).selstart:=i;
+  if length(AktuellerBefehl.ArgString)>0 then
+    AktuellerBefehl.ArgString[0]:=Arg1Edit.Text
+  else
+  begin
+    s:=TEdit(Sender).text;
+    if s='-' then exit;
+    i:=TEdit(Sender).selstart;
+    mainform.input_number_minus(i,s);
+    TEdit(Sender).text:=s;
+    TEdit(Sender).selstart:=i;
 
-  AktuellerBefehl.ArgInteger[0]:=strtoint(Arg1Edit.Text);
+    AktuellerBefehl.ArgInteger[0]:=strtoint(Arg1Edit.Text);
+  end;
 end;
 
 procedure Teditdataineventfrm.Arg2EditChange(Sender: TObject);
@@ -211,14 +217,19 @@ var
 begin
   if nousersetting then exit;
 
-  s:=TEdit(Sender).text;
-  if s='-' then exit;
-  i:=TEdit(Sender).selstart;
-  mainform.input_number_minus(i,s);
-  TEdit(Sender).text:=s;
-  TEdit(Sender).selstart:=i;
+  if length(AktuellerBefehl.ArgString)>1 then
+    AktuellerBefehl.ArgString[1]:=Arg2Edit.Text
+  else
+  begin
+    s:=TEdit(Sender).text;
+    if s='-' then exit;
+    i:=TEdit(Sender).selstart;
+    mainform.input_number_minus(i,s);
+    TEdit(Sender).text:=s;
+    TEdit(Sender).selstart:=i;
 
-  AktuellerBefehl.ArgInteger[1]:=strtoint(Arg2Edit.Text);
+    AktuellerBefehl.ArgInteger[1]:=strtoint(Arg2Edit.Text);
+  end;
 end;
 
 procedure Teditdataineventfrm.Arg2bEditChange(Sender: TObject);
@@ -378,14 +389,19 @@ var
 begin
   if nousersetting then exit;
 
-  s:=TEdit(Sender).text;
-  if s='-' then exit;
-  i:=TEdit(Sender).selstart;
-  mainform.input_number_minus(i,s);
-  TEdit(Sender).text:=s;
-  TEdit(Sender).selstart:=i;
+  if length(AktuellerBefehl.ArgString)>2 then
+    AktuellerBefehl.ArgString[2]:=Arg3Edit.Text
+  else
+  begin
+    s:=TEdit(Sender).text;
+    if s='-' then exit;
+    i:=TEdit(Sender).selstart;
+    mainform.input_number_minus(i,s);
+    TEdit(Sender).text:=s;
+    TEdit(Sender).selstart:=i;
 
-  AktuellerBefehl.ArgInteger[2]:=strtoint(Arg3Edit.Text);
+    AktuellerBefehl.ArgInteger[2]:=strtoint(Arg3Edit.Text);
+  end;
 end;
 
 procedure Teditdataineventfrm.FormShow(Sender: TObject);
@@ -506,6 +522,29 @@ end;
 procedure Teditdataineventfrm.FormHide(Sender: TObject);
 begin
   Timer1.enabled:=false;
+end;
+
+procedure Teditdataineventfrm.okbtnClick(Sender: TObject);
+begin
+  if InvertSwitchValue.Checked then
+  begin
+    if (mainform.Befehlssystem[Combobox1.itemindex].Steuerung[Combobox2.itemindex].InputValueOnly and (SwitchValue.Value<255)) then
+    begin
+      if messagedlg(_('Sie nutzen das invertierte Eingangssignal, aber haben noch eine Schaltschwelle unterhalb von 255 eingestellt. Soll die Schaltschwelle auf 255 gesetzt werden, um den vollen Wertebereich nutzen zu können?'),mtConfirmation, [mbYes,mbNo],0)=mrYes then
+      begin
+        SwitchValue.Value:=255;
+      end;
+    end;
+  end else
+  begin
+    if (mainform.Befehlssystem[Combobox1.itemindex].Steuerung[Combobox2.itemindex].InputValueOnly and (SwitchValue.Value>0)) then
+    begin
+      if messagedlg(_('Sie nutzen das Eingangssignal, aber haben noch eine Schaltschwelle oberhalb von 0 eingestellt. Soll die Schaltschwelle auf 0 gesetzt werden, um den vollen Wertebereich nutzen zu können?'),mtConfirmation, [mbYes,mbNo],0)=mrYes then
+      begin
+        SwitchValue.Value:=0;
+      end;
+    end;
+  end;
 end;
 
 end.

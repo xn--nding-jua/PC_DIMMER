@@ -1,6 +1,6 @@
 object editdataineventfrm: Teditdataineventfrm
-  Left = 488
-  Top = 139
+  Left = 547
+  Top = 126
   BorderStyle = bsToolWindow
   Caption = 'Data-In-Event bearbeiten'
   ClientHeight = 329
@@ -164,6 +164,7 @@ object editdataineventfrm: Teditdataineventfrm
     Caption = 'OK'
     ModalResult = 1
     TabOrder = 1
+    OnClick = okbtnClick
   end
   object cancelbtn: TButton
     Left = 96
@@ -538,7 +539,12 @@ object editdataineventfrm: Teditdataineventfrm
       Top = 53
       Width = 89
       Height = 17
+      Hint = 
+        'Skaliert den Wert unter Ber'#252'cksichtigung des unteren und oberen ' +
+        'Wertes auf 0 bis 100'
       Caption = 'Skaliere Wert'
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 14
       OnMouseUp = ScaleValueMouseUp
     end
@@ -547,7 +553,7 @@ object editdataineventfrm: Teditdataineventfrm
       Top = 53
       Width = 41
       Height = 17
-      Hint = 'Invertiert die Schaltschwellenrichtung'
+      Hint = 'Invertiert die Schaltschwellenrichtung, bzw. den Wert'
       Caption = 'INV'
       ParentShowHint = False
       ShowHint = True

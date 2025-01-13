@@ -49,7 +49,8 @@ object addfunctionform: Taddfunctionform
       'Kontrollpanel Buttonfarbe oder -text setzen oder abfragen'
       'MIDI-Nachricht senden'
       'DataIn-Nachricht senden'
-      'PCD-Nachricht senden')
+      'PCD-Nachricht senden'
+      'MQTT-Nachricht senden')
     TabOrder = 0
     OnKeyDown = ListBox1KeyDown
     OnKeyUp = ListBox1KeyUp

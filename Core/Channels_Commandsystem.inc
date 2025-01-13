@@ -224,7 +224,7 @@
   Befehlssystem[2].Steuerung[i].StringArgCount:=0;
   Befehlssystem[2].Steuerung[i].GUIDArgCount:=0;
 
-  setlength(Befehlssystem[3].Steuerung, 30);
+  setlength(Befehlssystem[3].Steuerung, 32);
   Befehlssystem[3].Programmteil:=_('Master / MIDI / Programm');
   Befehlssystem[3].ProgrammteilGUID:=StringToGuid('{43D6EC65-DED7-40FB-AC0A-1DC3D4250BAE}');
   i:=0;
@@ -436,6 +436,20 @@
   Befehlssystem[3].Steuerung[i].InputValueOnly:=false;
   Befehlssystem[3].Steuerung[i].IntegerArgCount:=0;
   Befehlssystem[3].Steuerung[i].StringArgCount:=0;
+  Befehlssystem[3].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[3].Steuerung[i].Bezeichnung:=_('MQTT: Payload senden');
+  Befehlssystem[3].Steuerung[i].GUID:=StringToGuid('{847d49c1-390e-4f32-ac0a-c154cfa6aa3c}');
+  Befehlssystem[3].Steuerung[i].InputValueOnly:=false;
+  Befehlssystem[3].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[3].Steuerung[i].StringArgCount:=2;
+  Befehlssystem[3].Steuerung[i].GUIDArgCount:=0;
+  i:=i+1;
+  Befehlssystem[3].Steuerung[i].Bezeichnung:=_('MQTT: Wert senden');
+  Befehlssystem[3].Steuerung[i].GUID:=StringToGuid('{d0816e03-ff0a-451e-a05d-22ebae2c414e}');
+  Befehlssystem[3].Steuerung[i].InputValueOnly:=true;
+  Befehlssystem[3].Steuerung[i].IntegerArgCount:=0;
+  Befehlssystem[3].Steuerung[i].StringArgCount:=1;
   Befehlssystem[3].Steuerung[i].GUIDArgCount:=0;
 
   setlength(Befehlssystem[4].Steuerung, 12);
