@@ -1,7 +1,7 @@
 {*********************************************************************************}
 {**                                                                             **}
 {**  PHOENIXstudios PC_DIMMER                                                   **}
-{**  Copyrights (c) 2004-2023 by PHOENIXstudios Remsfeld                        **}
+{**  Copyrights (c) 2004-2025 by PHOENIXstudios Remsfeld                        **}
 {**                                                                             **}
 {**  Author: Dr.-Ing. Christian Nöding, info@pcdimmer.de                        **}
 {**  Co-Author: Martin Mikula (2012-2013)                                       **}
@@ -1147,6 +1147,7 @@ type
     XTouchBefehle:array of array[0..17] of TBefehl2; // 8x Fader, Masterfader, 8x Dials, JogDial 
     ElgatoStreamDeckArray:array of TElgatoStreamDeck;
     ElgatoStreamSerials:array of string;
+    GlobalSupportElgatoStreamDeckEnabled : boolean;
     // Szenenbibliothek
     EinfacheSzenen : array of TEinfacheSzene;
     DeviceScenes: array of TDeviceScene;
@@ -2166,6 +2167,7 @@ begin
     mevp.ThreadPriority := IntToThreadPriority(LReg.ReadWriteInt('Mevp Thread Priority', 3));
     MaxAutobackupFiles := LReg.ReadWriteInt('Autobackup Files', 5);
     AutoBackupCounterMax := LReg.ReadWriteInt('Autobackup', 10);
+    GlobalSupportElgatoStreamDeckEnabled := LReg.ReadWriteBool('Enable Elgato StreamDeck Functions', true);
     if AutoBackupCounterMax > 0 then
     begin
       AutoBackupCounter := 0;
@@ -10455,242 +10457,245 @@ begin
 
   repeat
     try
-      // Transmit Data to Elgato StreamDeck
-      for DeviceIndex:=0 to length(elgatostreamdeckform.TotalPayloadBuffer)-1 do
+      if mainform.GlobalSupportElgatoStreamDeckEnabled then
       begin
-        if (DeviceIndex<length(mainform.ElgatoStreamDeckArray)) and mainform.ElgatoStreamDeckArray[DeviceIndex].Online and (DeviceIndex<length(elgatostreamdeckform.TotalPayloadBuffer)) then
-        for ButtonIndex:=0 to length(elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex])-1 do
+        // Transmit Data to Elgato StreamDeck
+        for DeviceIndex:=0 to length(elgatostreamdeckform.TotalPayloadBuffer)-1 do
         begin
-          if elgatostreamdeckform.TotalPayloadBuffer_ReadyToSend[DeviceIndex][ButtonIndex] then
+          if (DeviceIndex<length(mainform.ElgatoStreamDeckArray)) and mainform.ElgatoStreamDeckArray[DeviceIndex].Online and (DeviceIndex<length(elgatostreamdeckform.TotalPayloadBuffer)) then
+          for ButtonIndex:=0 to length(elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex])-1 do
           begin
-            // reset ReadyToSend_Flag
-            elgatostreamdeckform.TotalPayloadBuffer_ReadyToSend[DeviceIndex][ButtonIndex]:=false;
-
-            // now transmit the byte-array to Stream Deck Device
-            WrittenPayloadBytes:=0;
-            RemainingPayloadBytes:=length(elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex]);
-            PacketCounter:=0;
-
-            PID:=mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Attributes.ProductID;
-
-            {
-            StreamDeck Orig, PID 0060, CmdSet v1, BMP, 72x72 Pixel, Header 16 Byte, Image Pagesize 8191 Byte, FeatureReportSize 17 Byte // maybe 7819 instead of 8191
-            -----------------
-            StreamDeck Mini, PID 0063, CmdSet v1, BMP, 80x80 Pixel, Header 16 Byte, Image Pagesize 1024 Byte, FeatureReportSize 17 Byte
-            =================
-            StreamDeck V2,   PID 006D, CmdSet v2, JPG, 72x72 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
-            StreamDeck MK2,  PID 0080, CmdSet v2, JPG, 72x72 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
-            StreamDeck XL,   PID 006C, CmdSet v2, JPG, 96x96 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
-            }
-
-            if (PID=$0060) then
+            if elgatostreamdeckform.TotalPayloadBuffer_ReadyToSend[DeviceIndex][ButtonIndex] then
             begin
-              // StreamDeck Orig
+              // reset ReadyToSend_Flag
+              elgatostreamdeckform.TotalPayloadBuffer_ReadyToSend[DeviceIndex][ButtonIndex]:=false;
+
+              // now transmit the byte-array to Stream Deck Device
+              WrittenPayloadBytes:=0;
+              RemainingPayloadBytes:=length(elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex]);
+              PacketCounter:=0;
+
+              PID:=mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Attributes.ProductID;
 
               {
-                Set Key image:
-                  00 = static 02 (identifier)
-                  01 = static 01 (cmd to set image)
-                  02 = PageID + 1
-                  03 = 0x00
-                  04 = 0x00 = not the last message, 0x01 = last message
-                  05 = hex-value of button-id + 1
-                  06..15 = 0x00
+              StreamDeck Orig, PID 0060, CmdSet v1, BMP, 72x72 Pixel, Header 16 Byte, Image Pagesize 8191 Byte, FeatureReportSize 17 Byte // maybe 7819 instead of 8191
+              -----------------
+              StreamDeck Mini, PID 0063, CmdSet v1, BMP, 80x80 Pixel, Header 16 Byte, Image Pagesize 1024 Byte, FeatureReportSize 17 Byte
+              =================
+              StreamDeck V2,   PID 006D, CmdSet v2, JPG, 72x72 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
+              StreamDeck MK2,  PID 0080, CmdSet v2, JPG, 72x72 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
+              StreamDeck XL,   PID 006C, CmdSet v2, JPG, 96x96 Pixel, Header 8 Byte, Image Pagesize 1024 Byte, FeatureReportSize 32 Byte
               }
 
-              setlength(TxBuffer, 8191);
-              repeat
-                if RemainingPayloadBytes>8175 then // 8191 Bytes minus 16 Bytes of Header
-                begin
-                  // not the last message
-                  TxBuffer[0]:=$02; // identifier
-                  TxBuffer[1]:=$01; // cmd to set image
-                  TxBuffer[2]:=PacketCounter; // PageID
-                  TxBuffer[3]:=$00; // has to be 0
-                  TxBuffer[4]:=$00; // 0x00 = not the last message, 0x01 = last message
-                  TxBuffer[5]:=ButtonIndex+1;
+              if (PID=$0060) then
+              begin
+                // StreamDeck Orig
 
-                  // copy 8175 bytes of PayloadBuffer
-                  for w:=0 to 8174 do
+                {
+                  Set Key image:
+                    00 = static 02 (identifier)
+                    01 = static 01 (cmd to set image)
+                    02 = PageID + 1
+                    03 = 0x00
+                    04 = 0x00 = not the last message, 0x01 = last message
+                    05 = hex-value of button-id + 1
+                    06..15 = 0x00
+                }
+
+                setlength(TxBuffer, 8191);
+                repeat
+                  if RemainingPayloadBytes>8175 then // 8191 Bytes minus 16 Bytes of Header
                   begin
-                    TxBuffer[16+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
-                  end;
+                    // not the last message
+                    TxBuffer[0]:=$02; // identifier
+                    TxBuffer[1]:=$01; // cmd to set image
+                    TxBuffer[2]:=PacketCounter; // PageID
+                    TxBuffer[3]:=$00; // has to be 0
+                    TxBuffer[4]:=$00; // 0x00 = not the last message, 0x01 = last message
+                    TxBuffer[5]:=ButtonIndex+1;
 
-                  for w:=0 to 15 do
-                    HidReportA.Header[w]:=TxBuffer[w];
-                  for w:=0 to 8174 do
-                    HidReportA.Data[w]:=TxBuffer[16+w];
-                  mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportA, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
-                  WrittenPayloadBytes:=WrittenPayloadBytes+8175;
-                  RemainingPayloadBytes:=RemainingPayloadBytes-8175;
-                  PacketCounter:=PacketCounter+1;
-                end else
-                begin
-                  // data fits into single message / last message
-                  TxBuffer[0]:=$02; // identifier
-                  TxBuffer[1]:=$01; // cmd to set image
-                  TxBuffer[2]:=PacketCounter; // PageID
-                  TxBuffer[3]:=$00; // has to be 0
-                  TxBuffer[4]:=$01; // 0x00 = not the last message, 0x01 = last message
-                  TxBuffer[5]:=ButtonIndex+1;
+                    // copy 8175 bytes of PayloadBuffer
+                    for w:=0 to 8174 do
+                    begin
+                      TxBuffer[16+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                    end;
 
-                  // copy remaining bytes of PayloadBuffer
-                  for w:=0 to RemainingPayloadBytes-1 do
+                    for w:=0 to 15 do
+                      HidReportA.Header[w]:=TxBuffer[w];
+                    for w:=0 to 8174 do
+                      HidReportA.Data[w]:=TxBuffer[16+w];
+                    mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportA, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                    WrittenPayloadBytes:=WrittenPayloadBytes+8175;
+                    RemainingPayloadBytes:=RemainingPayloadBytes-8175;
+                    PacketCounter:=PacketCounter+1;
+                  end else
                   begin
-                    TxBuffer[16+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                    // data fits into single message / last message
+                    TxBuffer[0]:=$02; // identifier
+                    TxBuffer[1]:=$01; // cmd to set image
+                    TxBuffer[2]:=PacketCounter; // PageID
+                    TxBuffer[3]:=$00; // has to be 0
+                    TxBuffer[4]:=$01; // 0x00 = not the last message, 0x01 = last message
+                    TxBuffer[5]:=ButtonIndex+1;
+
+                    // copy remaining bytes of PayloadBuffer
+                    for w:=0 to RemainingPayloadBytes-1 do
+                    begin
+                      TxBuffer[16+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                    end;
+                    // fill remaining bytes with zeros
+                    for w:=RemainingPayloadBytes to 8174 do
+                    begin
+                      TxBuffer[w]:=0;
+                    end;
+
+                    for w:=0 to 15 do
+                      HidReportA.Header[w]:=TxBuffer[w];
+                    for w:=0 to 8174 do
+                      HidReportA.Data[w]:=TxBuffer[16+w];
+                    mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportA, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                    RemainingPayloadBytes:=0;
+                    PacketCounter:=PacketCounter+1;
                   end;
-                  // fill remaining bytes with zeros
-                  for w:=RemainingPayloadBytes to 8174 do
+                until RemainingPayloadBytes=0;
+              end else if (PID=$0063) then
+              begin
+                // StreamDeck Mini
+
+                {
+                  Set Key image:
+                    00 = static 02 (identifier)
+                    01 = static 01 (cmd to set image)
+                    02 = PageID + 1
+                    03 = 0x00
+                    04 = 0x00 = not the last message, 0x01 = last message
+                    05 = hex-value of button-id + 1
+                    06..15 = 0x00
+                }
+
+                setlength(TxBuffer, 1024);
+                repeat
+                  if RemainingPayloadBytes>1008 then // 1024 Bytes minus 16 Bytes of Header
                   begin
-                    TxBuffer[w]:=0;
-                  end;
+                    // not the last message
+                    TxBuffer[0]:=$02; // identifier
+                    TxBuffer[1]:=$01; // cmd to set image
+                    TxBuffer[2]:=PacketCounter; // PageID
+                    TxBuffer[3]:=$00; // has to be 0
+                    TxBuffer[4]:=$00; // 0x00 = not the last message, 0x01 = last message
+                    TxBuffer[5]:=ButtonIndex+1;
 
-                  for w:=0 to 15 do
-                    HidReportA.Header[w]:=TxBuffer[w];
-                  for w:=0 to 8174 do
-                    HidReportA.Data[w]:=TxBuffer[16+w];
-                  mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportA, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
-                  RemainingPayloadBytes:=0;
-                  PacketCounter:=PacketCounter+1;
-                end;
-              until RemainingPayloadBytes=0;
-            end else if (PID=$0063) then
-            begin
-              // StreamDeck Mini
+                    // copy 1008 bytes of PayloadBuffer
+                    for w:=0 to 1007 do
+                    begin
+                      TxBuffer[16+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                    end;
 
-              {
-                Set Key image:
-                  00 = static 02 (identifier)
-                  01 = static 01 (cmd to set image)
-                  02 = PageID + 1
-                  03 = 0x00
-                  04 = 0x00 = not the last message, 0x01 = last message
-                  05 = hex-value of button-id + 1
-                  06..15 = 0x00
-              }
-
-              setlength(TxBuffer, 1024);
-              repeat
-                if RemainingPayloadBytes>1008 then // 1024 Bytes minus 16 Bytes of Header
-                begin
-                  // not the last message
-                  TxBuffer[0]:=$02; // identifier
-                  TxBuffer[1]:=$01; // cmd to set image
-                  TxBuffer[2]:=PacketCounter; // PageID
-                  TxBuffer[3]:=$00; // has to be 0
-                  TxBuffer[4]:=$00; // 0x00 = not the last message, 0x01 = last message
-                  TxBuffer[5]:=ButtonIndex+1;
-
-                  // copy 1008 bytes of PayloadBuffer
-                  for w:=0 to 1007 do
+                    for w:=0 to 15 do
+                      HidReportB.Header[w]:=TxBuffer[w];
+                    for w:=0 to 1007 do
+                      HidReportB.Data[w]:=TxBuffer[16+w];
+                    mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportB, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                    WrittenPayloadBytes:=WrittenPayloadBytes+1008;
+                    RemainingPayloadBytes:=RemainingPayloadBytes-1008;
+                    PacketCounter:=PacketCounter+1;
+                  end else
                   begin
-                    TxBuffer[16+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                    // data fits into single message / last message
+                    TxBuffer[0]:=$02; // identifier
+                    TxBuffer[1]:=$01; // cmd to set image
+                    TxBuffer[2]:=PacketCounter; // PageID
+                    TxBuffer[3]:=$00; // has to be 0
+                    TxBuffer[4]:=$01; // 0x00 = not the last message, 0x01 = last message
+                    TxBuffer[5]:=ButtonIndex+1;
+
+                    // copy remaining bytes of PayloadBuffer
+                    for w:=0 to RemainingPayloadBytes-1 do
+                    begin
+                      TxBuffer[16+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                    end;
+                    // fill remaining bytes with zeros
+                    for w:=RemainingPayloadBytes to 1007 do
+                    begin
+                      TxBuffer[w]:=0;
+                    end;
+
+                    for w:=0 to 15 do
+                      HidReportB.Header[w]:=TxBuffer[w];
+                    for w:=0 to 1007 do
+                      HidReportB.Data[w]:=TxBuffer[16+w];
+                    mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportB, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                    RemainingPayloadBytes:=0;
+                    PacketCounter:=PacketCounter+1;
                   end;
-
-                  for w:=0 to 15 do
-                    HidReportB.Header[w]:=TxBuffer[w];
-                  for w:=0 to 1007 do
-                    HidReportB.Data[w]:=TxBuffer[16+w];
-                  mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportB, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
-                  WrittenPayloadBytes:=WrittenPayloadBytes+1008;
-                  RemainingPayloadBytes:=RemainingPayloadBytes-1008;
-                  PacketCounter:=PacketCounter+1;
-                end else
-                begin
-                  // data fits into single message / last message
-                  TxBuffer[0]:=$02; // identifier
-                  TxBuffer[1]:=$01; // cmd to set image
-                  TxBuffer[2]:=PacketCounter; // PageID
-                  TxBuffer[3]:=$00; // has to be 0
-                  TxBuffer[4]:=$01; // 0x00 = not the last message, 0x01 = last message
-                  TxBuffer[5]:=ButtonIndex+1;
-
-                  // copy remaining bytes of PayloadBuffer
-                  for w:=0 to RemainingPayloadBytes-1 do
+                until RemainingPayloadBytes=0;
+              end else if (PID=$006D) or (PID=$006C) or (PID=$0080) then
+              begin
+                // StreamDeck XL, V2, MK2
+                setlength(TxBuffer, 1024);
+                TxBuffer[0]:=$02; // identifier
+                TxBuffer[1]:=$07; // cmd to set image
+                TxBuffer[2]:=ButtonIndex; // hex-value of button-id
+                //TxBuffer[3]:=$00; // 0x00 = not the last message, 0x01 = last message
+                //TxBuffer[4]:=$F8; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016
+                //TxBuffer[5]:=$03;
+                //TxBuffer[6]:=$00; // 16-bit little-endian value of the zero-based iteration, if the image is split
+                //TxBuffer[7]:=$00;
+                repeat
+                  if RemainingPayloadBytes>1016 then // 1024 Bytes minus 8 Bytes of Header
                   begin
-                    TxBuffer[16+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
-                  end;
-                  // fill remaining bytes with zeros
-                  for w:=RemainingPayloadBytes to 1007 do
+                    // not the last message
+                    TxBuffer[3]:=$00; // 0x00 = not the last message, 0x01 = last message
+                    TxBuffer[4]:=$F8; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016 bytes
+                    TxBuffer[5]:=$03;
+                    TxBuffer[6]:=PacketCounter AND 255;
+                    TxBuffer[7]:=(PacketCounter shr 8);
+
+                    // copy 1016 bytes of PayloadBuffer
+                    for w:=0 to 1015 do
+                    begin
+                      TxBuffer[8+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                    end;
+
+                    for w:=0 to 7 do
+                      HidReportC.Header[w]:=TxBuffer[w];
+                    for w:=0 to 1015 do
+                      HidReportC.Data[w]:=TxBuffer[8+w];
+                    mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportC, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                    WrittenPayloadBytes:=WrittenPayloadBytes+1016;
+                    RemainingPayloadBytes:=RemainingPayloadBytes-1016;
+                    PacketCounter:=PacketCounter+1;
+                  end else
                   begin
-                    TxBuffer[w]:=0;
+                    // data fits into single message / last message
+                    TxBuffer[3]:=$01; // 0x00 = not the last message, 0x01 = last message
+                    TxBuffer[4]:=RemainingPayloadBytes AND 255; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016
+                    TxBuffer[5]:=(RemainingPayloadBytes shr 8);
+                    TxBuffer[6]:=PacketCounter AND 255;
+                    TxBuffer[7]:=(PacketCounter shr 8);
+
+                    // copy remaining bytes of PayloadBuffer
+                    for w:=0 to RemainingPayloadBytes-1 do
+                    begin
+                      TxBuffer[8+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
+                    end;
+                    // fill remaining bytes with zeros
+                    for w:=RemainingPayloadBytes to 1015 do
+                    begin
+                      TxBuffer[w]:=0;
+                    end;
+
+                    for w:=0 to 7 do
+                      HidReportC.Header[w]:=TxBuffer[w];
+                    for w:=0 to 1015 do
+                      HidReportC.Data[w]:=TxBuffer[8+w];
+                    mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportC, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
+                    RemainingPayloadBytes:=0;
+                    PacketCounter:=PacketCounter+1;
                   end;
-
-                  for w:=0 to 15 do
-                    HidReportB.Header[w]:=TxBuffer[w];
-                  for w:=0 to 1007 do
-                    HidReportB.Data[w]:=TxBuffer[16+w];
-                  mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportB, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
-                  RemainingPayloadBytes:=0;
-                  PacketCounter:=PacketCounter+1;
-                end;
-              until RemainingPayloadBytes=0;
-            end else if (PID=$006D) or (PID=$006C) or (PID=$0080) then
-            begin
-              // StreamDeck XL, V2, MK2
-              setlength(TxBuffer, 1024);
-              TxBuffer[0]:=$02; // identifier
-              TxBuffer[1]:=$07; // cmd to set image
-              TxBuffer[2]:=ButtonIndex; // hex-value of button-id
-              //TxBuffer[3]:=$00; // 0x00 = not the last message, 0x01 = last message
-              //TxBuffer[4]:=$F8; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016
-              //TxBuffer[5]:=$03;
-              //TxBuffer[6]:=$00; // 16-bit little-endian value of the zero-based iteration, if the image is split
-              //TxBuffer[7]:=$00;
-              repeat
-                if RemainingPayloadBytes>1016 then // 1024 Bytes minus 8 Bytes of Header
-                begin
-                  // not the last message
-                  TxBuffer[3]:=$00; // 0x00 = not the last message, 0x01 = last message
-                  TxBuffer[4]:=$F8; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016 bytes
-                  TxBuffer[5]:=$03;
-                  TxBuffer[6]:=PacketCounter AND 255;
-                  TxBuffer[7]:=(PacketCounter shr 8);
-
-                  // copy 1016 bytes of PayloadBuffer
-                  for w:=0 to 1015 do
-                  begin
-                    TxBuffer[8+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
-                  end;
-
-                  for w:=0 to 7 do
-                    HidReportC.Header[w]:=TxBuffer[w];
-                  for w:=0 to 1015 do
-                    HidReportC.Data[w]:=TxBuffer[8+w];
-                  mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportC, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
-                  WrittenPayloadBytes:=WrittenPayloadBytes+1016;
-                  RemainingPayloadBytes:=RemainingPayloadBytes-1016;
-                  PacketCounter:=PacketCounter+1;
-                end else
-                begin
-                  // data fits into single message / last message
-                  TxBuffer[3]:=$01; // 0x00 = not the last message, 0x01 = last message
-                  TxBuffer[4]:=RemainingPayloadBytes AND 255; // 16-bit little-endian value of length: f803 -> 0x03f8 = 1016
-                  TxBuffer[5]:=(RemainingPayloadBytes shr 8);
-                  TxBuffer[6]:=PacketCounter AND 255;
-                  TxBuffer[7]:=(PacketCounter shr 8);
-
-                  // copy remaining bytes of PayloadBuffer
-                  for w:=0 to RemainingPayloadBytes-1 do
-                  begin
-                    TxBuffer[8+w]:=elgatostreamdeckform.TotalPayloadBuffer[DeviceIndex][ButtonIndex][WrittenPayloadBytes+w];
-                  end;
-                  // fill remaining bytes with zeros
-                  for w:=RemainingPayloadBytes to 1015 do
-                  begin
-                    TxBuffer[w]:=0;
-                  end;
-
-                  for w:=0 to 7 do
-                    HidReportC.Header[w]:=TxBuffer[w];
-                  for w:=0 to 1015 do
-                    HidReportC.Data[w]:=TxBuffer[8+w];
-                  mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.WriteFile(HidReportC, mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Caps.OutputReportByteLength, BytesWritten);
-                  RemainingPayloadBytes:=0;
-                  PacketCounter:=PacketCounter+1;
-                end;
-              until RemainingPayloadBytes=0;
-            end
+                until RemainingPayloadBytes=0;
+              end
+            end;
           end;
         end;
       end;
@@ -23766,6 +23771,7 @@ begin
     LReg.WriteBool('Show Accuwarnings',showakkuwarnings);
     LReg.WriteBool('Blendout unfocused forms',blendoutforms);
     LReg.WriteInteger('Autobackup',Autobackupcountermax);
+    LReg.WriteBool('Enable Elgato StreamDeck Functions', GlobalSupportElgatoStreamDeckEnabled);
     LReg.WriteInteger('Autobackup Files',maxautobackupfiles);
     LReg.WriteInteger('Timer',animationtimer);
     LReg.WriteBool('Use HTTP Password',OptionenBox.HTTPServerPasswordCheckbox.Checked);
@@ -28425,106 +28431,113 @@ function Tmainform.HidCtlEnumerate(HidDev: TJvHidDevice;
 var
   i, btn, DeviceIndex, X, Y:integer;
 begin
-  try
-    if HidDev.Attributes.VendorID=$0FD9 then
-    begin
-      if (HidDev.Attributes.ProductID=$006C) or
-      (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or
-      (HidDev.Attributes.ProductID=$006D) or (HidDev.Attributes.ProductID=$0063) then
+  if mainform.GlobalSupportElgatoStreamDeckEnabled then
+  begin
+    try
+      if HidDev.Attributes.VendorID=$0FD9 then
       begin
-        // check if we already configured this device
-        DeviceIndex:=-1;
-        for i:=0 to length(ElgatoStreamDeckArray)-1 do
+        if (HidDev.Attributes.ProductID=$006C) or
+        (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or
+        (HidDev.Attributes.ProductID=$006D) or (HidDev.Attributes.ProductID=$0063) then
         begin
-          if ElgatoStreamDeckArray[i].Serial=HidDev.SerialNumber then
+          // check if we already configured this device
+          DeviceIndex:=-1;
+          for i:=0 to length(ElgatoStreamDeckArray)-1 do
           begin
-            // device already in array
-            DeviceIndex:=i;
-            break;
-          end;
-        end;
-        if DeviceIndex=-1 then
-        begin
-          // this is a new device -> put it to new-device-combobox
-          setlength(ElgatoStreamDeckArray, length(ElgatoStreamDeckArray)+1);
-          DeviceIndex:=length(ElgatoStreamDeckArray)-1;
-
-          ElgatoStreamDeckArray[DeviceIndex].Brightness:=50; // set default brightness
-          ElgatoStreamDeckArray[DeviceIndex].UseAutoModeOnLastButton:=true;
-          ElgatoStreamDeckArray[DeviceIndex].CurrentButtonMode:=1;
-          for btn:=0 to 31 do
-          begin
-            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].ButtonType:=0;
-            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Increment:=15;
-            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].CurrentValue:=0;
-            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].UseHoldToChange:=true;
-
-            X:=0;
-            Y:=0;
-            if HidDev.Attributes.ProductID=$0063 then
+            if ElgatoStreamDeckArray[i].Serial=HidDev.SerialNumber then
             begin
-              // 6 Buttons
-              X:=btn-trunc(btn/3)*3;
-              Y:=trunc(btn/3);
-            end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
-            begin
-              // 15 Buttons
-              X:=btn-trunc(btn/5)*5;
-              Y:=trunc(btn/5);
-            end else if HidDev.Attributes.ProductID=$006C then
-            begin
-              // 32 Buttons
-              X:=btn-trunc(btn/8)*8;
-              Y:=trunc(btn/8);
+              // device already in array
+              DeviceIndex:=i;
+              break;
             end;
-
-            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelX:=X+1;
-            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelY:=Y+1;
-            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].DataInChannel:=btn+1;
-            CreateGUID(ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.ID);
-            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.Name:='Button '+inttostr(btn+1)+'-Event';
-            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OnValue:=255;
-            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.SwitchValue:=128;
-            ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OffValue:=0;
           end;
+          if DeviceIndex=-1 then
+          begin
+            // this is a new device -> put it to new-device-combobox
+            setlength(ElgatoStreamDeckArray, length(ElgatoStreamDeckArray)+1);
+            DeviceIndex:=length(ElgatoStreamDeckArray)-1;
+
+            ElgatoStreamDeckArray[DeviceIndex].Brightness:=50; // set default brightness
+            ElgatoStreamDeckArray[DeviceIndex].UseAutoModeOnLastButton:=true;
+            ElgatoStreamDeckArray[DeviceIndex].CurrentButtonMode:=1;
+            for btn:=0 to 31 do
+            begin
+              ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].ButtonType:=0;
+              ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Increment:=15;
+              ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].CurrentValue:=0;
+              ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].UseHoldToChange:=true;
+
+              X:=0;
+              Y:=0;
+              if HidDev.Attributes.ProductID=$0063 then
+              begin
+                // 6 Buttons
+                X:=btn-trunc(btn/3)*3;
+                Y:=trunc(btn/3);
+              end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
+              begin
+                // 15 Buttons
+                X:=btn-trunc(btn/5)*5;
+                Y:=trunc(btn/5);
+              end else if HidDev.Attributes.ProductID=$006C then
+              begin
+                // 32 Buttons
+                X:=btn-trunc(btn/8)*8;
+                Y:=trunc(btn/8);
+              end;
+
+              ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelX:=X+1;
+              ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].KontrollpanelY:=Y+1;
+              ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].DataInChannel:=btn+1;
+              CreateGUID(ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.ID);
+              ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.Name:='Button '+inttostr(btn+1)+'-Event';
+              ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OnValue:=255;
+              ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.SwitchValue:=128;
+              ElgatoStreamDeckArray[DeviceIndex].Buttons[btn].Befehl.OffValue:=0;
+            end;
+          end;
+
+          // connect this device
+          HidCtl.CheckOutByIndex(ElgatoStreamDeckArray[DeviceIndex].HidDevice, Idx);
+          // update ElgatoStreamDeckArray
+          ElgatoStreamDeckArray[DeviceIndex].Serial:=HidDev.SerialNumber;
+          ElgatoStreamDeckArray[DeviceIndex].Online:=true;
+
+          if HidDev.Attributes.ProductID=$006C then
+          begin
+            // it is a Stream Deck XL
+            // 32 buttons
+            ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=32;
+          end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
+          begin
+            // it is a Stream Deck or Stream Deck original v2 or Stream Deck MK2
+            // 15 buttons
+            ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=15;
+          end else if HidDev.Attributes.ProductID=$0063 then
+          begin
+            // it is a Stream Deck Mini
+            // 6 buttons
+            ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=6;
+          end;
+
+          // put this device to GUI
+          elgatostreamdeckform.devicelistbox.ItemIndex:=elgatostreamdeckform.devicelistbox.Items.Add(HidDev.VendorName+' '+HidDev.ProductName+' ['+HidDev.SerialNumber+']');
+          setlength(ElgatoStreamSerials, length(ElgatoStreamSerials)+1);
+          ElgatoStreamSerials[length(ElgatoStreamSerials)-1]:=HidDev.SerialNumber;
+
+          // set brightness
+          elgatostreamdeckform.SetBrightness(HidDev.SerialNumber, ElgatoStreamDeckArray[DeviceIndex].Brightness);
         end;
-
-        // connect this device
-        HidCtl.CheckOutByIndex(ElgatoStreamDeckArray[DeviceIndex].HidDevice, Idx);
-        // update ElgatoStreamDeckArray
-        ElgatoStreamDeckArray[DeviceIndex].Serial:=HidDev.SerialNumber;
-        ElgatoStreamDeckArray[DeviceIndex].Online:=true;
-
-        if HidDev.Attributes.ProductID=$006C then
-        begin
-          // it is a Stream Deck XL
-          // 32 buttons
-          ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=32;
-        end else if (HidDev.Attributes.ProductID=$0080) or (HidDev.Attributes.ProductID=$0060) or (HidDev.Attributes.ProductID=$006D) then
-        begin
-          // it is a Stream Deck or Stream Deck original v2 or Stream Deck MK2
-          // 15 buttons
-          ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=15;
-        end else if HidDev.Attributes.ProductID=$0063 then
-        begin
-          // it is a Stream Deck Mini
-          // 6 buttons
-          ElgatoStreamDeckArray[DeviceIndex].ButtonCount:=6;
-        end;
-
-        // put this device to GUI
-        elgatostreamdeckform.devicelistbox.ItemIndex:=elgatostreamdeckform.devicelistbox.Items.Add(HidDev.VendorName+' '+HidDev.ProductName+' ['+HidDev.SerialNumber+']');
-        setlength(ElgatoStreamSerials, length(ElgatoStreamSerials)+1);
-        ElgatoStreamSerials[length(ElgatoStreamSerials)-1]:=HidDev.SerialNumber;
-
-        // set brightness
-        elgatostreamdeckform.SetBrightness(HidDev.SerialNumber, ElgatoStreamDeckArray[DeviceIndex].Brightness);
       end;
-    end;
 
+      Result := True;
+    except
+      Result := False;
+    end;
+  end else
+  begin
+    // we do not want to use the Elgato Stream Deck
     Result := True;
-  except
-    Result := False;
   end;
 end;
 
@@ -28545,10 +28558,13 @@ begin
   elgatostreamdeckform.devicelistbox.Clear;
   setlength(ElgatoStreamSerials, 0);
 
-  // search for all connected devices
-  try
-    HidCtl.Enumerate;
-  except
+  if mainform.GlobalSupportElgatoStreamDeckEnabled then
+  begin
+    // search for all connected devices
+    try
+      HidCtl.Enumerate;
+    except
+    end;
   end;
 end;
 
@@ -28562,7 +28578,8 @@ var
   PID:Word;
   PressedButton:integer;
 begin
-  if HidDev.Attributes.VendorID=$0FD9 then
+
+  if (mainform.GlobalSupportElgatoStreamDeckEnabled) and (HidDev.Attributes.VendorID=$0FD9) then
   begin
     // it is a product of Elgato
 

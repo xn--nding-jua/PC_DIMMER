@@ -14,6 +14,7 @@ object elgatostreamdeckform: Telgatostreamdeckform
   OldCreateOrder = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -356,6 +357,17 @@ object elgatostreamdeckform: Telgatostreamdeckform
       Height = 384
       OnMouseUp = PaintBox1MouseUp
     end
+  end
+  object enablestreamdeck: TCheckBox
+    Left = 96
+    Top = 584
+    Width = 217
+    Height = 17
+    Caption = 'StreamDeck-Funktionen verwenden'
+    Checked = True
+    State = cbChecked
+    TabOrder = 6
+    OnMouseUp = enablestreamdeckMouseUp
   end
   object ElgatoStreamDeckTimer: TTimer
     Enabled = False

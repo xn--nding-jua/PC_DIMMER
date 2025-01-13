@@ -111,6 +111,7 @@ type
     editbtn: TPngBitBtn;
     ElgatoStreamDeckDisplayTimer: TTimer;
     Panel1: TPanel;
+    enablestreamdeck: TCheckBox;
     procedure brightnessbarChange(Sender: TObject);
     procedure ElgatoStreamDeckTimerTimer(Sender: TObject);
     procedure PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
@@ -136,6 +137,9 @@ type
     procedure incrementeditChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure ElgatoStreamDeckDisplayTimerTimer(Sender: TObject);
+    procedure enablestreamdeckMouseUp(Sender: TObject;
+      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure FormShow(Sender: TObject);
   private
     { Private-Deklarationen }
     SelectedDevice, SelectedButton:integer;
@@ -222,6 +226,9 @@ var
   Stream: TMemoryStream;
   PID:Word;
 begin
+  if not mainform.GlobalSupportElgatoStreamDeckEnabled then
+    exit;
+
   PID:=mainform.ElgatoStreamDeckArray[DeviceIndex].HidDevice.Attributes.ProductID;
 
   bmp:=TBitmap.Create;
@@ -345,6 +352,9 @@ var
   TxBuffer_Rev2: array[0..31] of byte;
   PID:Word;
 begin
+  if not mainform.GlobalSupportElgatoStreamDeckEnabled then
+    exit;
+
   DeviceIndex:=-1;
   for i:=0 to length(mainform.ElgatoStreamDeckArray)-1 do
   begin
@@ -405,6 +415,9 @@ var
   TxBuffer_Rev2: array[0..31] of byte;
   PID:Word;
 begin
+  if not mainform.GlobalSupportElgatoStreamDeckEnabled then
+    exit;
+
   DeviceIndex:=-1;
   for i:=0 to length(mainform.ElgatoStreamDeckArray)-1 do
   begin
@@ -1338,6 +1351,17 @@ begin
       end;
     end;
   end;
+end;
+
+procedure Telgatostreamdeckform.enablestreamdeckMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  mainform.GlobalSupportElgatoStreamDeckEnabled := enablestreamdeck.Checked;
+end;
+
+procedure Telgatostreamdeckform.FormShow(Sender: TObject);
+begin
+  enablestreamdeck.Checked := mainform.GlobalSupportElgatoStreamDeckEnabled;
 end;
 
 end.
