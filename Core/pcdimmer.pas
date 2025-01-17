@@ -24517,6 +24517,15 @@ begin
       ScriptInterpreter.CallFunction('RunCommand',nil,[]);
 //      ScriptInterpreter.Run;
       AContext.Connection.Socket.WriteLn('Done');
+    end else if pos('begin',cmd)>0 then
+    begin
+      ScriptInterpreter.Pas.Clear;
+      ScriptInterpreter.Pas.Text:='unit runDelphiCode;' + #13#10 + 'interface' + #13#10 + 'procedure RunCommand;' + #13#10 + 'implementation' + #13#10;
+      ScriptInterpreter.Pas.Text:=ScriptInterpreter.Pas.Text + 'procedure RunCommand;' + #13#10 + cmd + #13#10 + 'end.';
+      ScriptInterpreter.Compile;
+      ScriptInterpreter.CallFunction('RunCommand',nil,[]);
+//      ScriptInterpreter.Run;
+      AContext.Connection.Socket.WriteLn('Done');
     end else if pos('get_devices',cmd)>0 then
     begin
       temp:='devices '+inttostr(length(devices));
@@ -24897,6 +24906,7 @@ var
   value:array[0..8] of string;
   i, j:integer;
   Pos1, Pos2:integer;
+  channelArray: array of integer;
 begin
   if (pos('set_channel',cmd)>0) or (pos('set_ch',cmd)>0) then  // set_ch GUID DIMMER -1 255 5000 0
   begin
@@ -25325,7 +25335,7 @@ begin
     else if (strtoint(value[2])>-1) then
       senddata(strtoint(value[0]), strtoint(value[1]), 255-strtoint(value[2]), strtoint(value[3]), strtoint(value[4]));
   end;
-  if (pos('set_datainchannel',cmd)>0) or (pos('set_dch',cmd)>0) or (pos('SetChannel',cmd)>0) or (pos('SC',cmd)>0) then  // DMXControl-Kompatibilität
+  if (pos('set_datainchannel',cmd)>0) or (pos('set_dch',cmd)>0) or (pos('SetChannel',cmd)>0) or (pos('SC',cmd)>0) then
   begin
     temp:=cmd;
     temp:=copy(temp, pos(' ',temp)+1, length(temp));
@@ -25339,6 +25349,80 @@ begin
     value[1]:=temp;
 
     ExecuteDataInEvent(strtoint(value[0]), strtoint(value[1]));
+  end;
+  if (pos('route_datain',cmd)>0) then  // route_datain DATAIN-CHANNEL DESIRED-PCDIMMER-CHANNELS
+  begin
+    temp:=cmd;
+    temp:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    value[0]:=copy(temp, 0, pos(' ',temp)-1);
+    value[1]:=copy(temp, pos(' ',temp)+1, length(temp));
+
+    // value[0] = DataInChannel
+    // value[1] = CSV for destination-channels within PC_DIMMER
+
+    if (length(value[1])=0) or (CountChars(value[1], ',') = 0) then
+    begin
+      // disable this channel
+      if (strtoint(value[1]) <= 0) then
+      begin
+        if (strtoint(value[0]) > 0) and (strtoint(value[0]) <= dataineventfrm.ListBox2.Items.Count) then
+        begin
+          dataineventfrm.Listbox2.ItemIndex := strtoint(value[0]) - 1;
+          dataineventfrm.ListBox2.Checked[dataineventfrm.Listbox2.ItemIndex] := false;
+          dataineventfrm.checklistboxb;
+
+          // thats it :)
+        end;
+      end;
+    end else
+    begin
+      // Re-Route
+      if (strtoint(value[0]) > 0) and (strtoint(value[0]) <= dataineventfrm.ListBox2.Items.Count) then
+      begin
+        dataineventfrm.Listbox2.ItemIndex := strtoint(value[0]) - 1;
+        dataineventfrm.Listbox2.Checked[dataineventfrm.Listbox2.ItemIndex] := true;
+        dataineventfrm.checklistboxb;
+
+        // remove all settings for this channel
+        for i:=0 to dataineventfrm.Checklistbox2.Items.Count-1 do
+          dataineventfrm.Checklistbox2.Checked[i]:=false;
+
+        // now set the desired routing-destinations
+        // convert 1,2,3,4,5,6,7 to array
+        setlength(channelArray, 0);
+        temp := value[1];
+        for i:=0 to CountChars(value[1], ',')-1 do
+        begin
+          setlength(channelArray, length(channelArray) + 1);
+          channelArray[length(channelArray)-1]:=strtoint(copy(temp, 0, pos(',',temp)-1));
+
+          // remove this item from string
+          temp:=copy(temp, pos(',',temp)+1, length(temp));
+        end;
+        setlength(channelArray, length(channelArray) + 1);
+        channelArray[length(channelArray)-1]:=strtoint(temp);
+
+        // set this channels in the GUI
+        for i:=0 to length(channelArray)-1 do
+        begin
+          dataineventfrm.Checklistbox2.Checked[channelArray[i] - 1]:=true;
+        end;
+
+        // and set the softpatch-array
+        for i:=0 to length(mainform.softpatch2)-1 do
+        begin
+          if mainform.softpatch2[i].Channel2=strtoint(value[0]) then
+          begin
+            setlength(mainform.softpatch2[i].RouteToPC_DIMMERChan, length(channelArray));
+            for j:=0 to length(channelArray)-1 do
+            begin
+              mainform.softpatch2[i].RouteToPC_DIMMERChan[j]:=channelArray[j];
+            end;
+          end;
+        end;
+      end;
+    end;
   end;
   if (pos('start_scene',cmd)>0) or (pos('start_sc',cmd)>0) then // start_scene GUID
   begin

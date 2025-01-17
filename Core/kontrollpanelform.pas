@@ -2238,6 +2238,11 @@ begin
     Value := O2V(mainform);
     Done := True;
   end;
+  if lowercase(Identifier)='beatform' then
+  begin
+    Value := O2V(beatform);
+    Done := True;
+  end;
   if lowercase(Identifier)='globalvariables' then
   begin
     Value := mainform.GlobalVariables;
@@ -2253,6 +2258,29 @@ begin
     Value := O2V(sync_btn);
     Done := True;
   end;
+
+{
+  // object still not found. So crawl through *all* forms
+  for i := 0 to Screen.FormCount - 1 do
+  begin
+    Value := O2V(FindComponent(Screen.Forms[i].Name + '.' + Identifier));
+    Done := True;
+  end;
+}
+  // check all forms
+  if (not Done) then
+  begin
+    Value := O2V(Application.FindComponent(Identifier));
+    Done := True;
+  end;
+{
+  // last hope to find it without Application
+  if (not Done) then
+  begin
+    Value := O2V(FindComponent(Identifier));
+    Done := True;
+  end;
+}
 end;
 
 procedure Tkontrollpanel.FormDeactivate(Sender: TObject);

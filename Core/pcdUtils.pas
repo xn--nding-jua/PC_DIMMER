@@ -18,6 +18,7 @@ function CalcSunrise(Longitude, Latitude: double): double;
 function CalcSunset(Longitude, Latitude: double): double;
 function IsSummertime(ADate:TDateTime): boolean;
 function Wochentag(ADate: TDateTime): string;
+function CountChars(const S: string; const C: char): integer;
 
 function GetHue(AR, AG, AB: byte): Word;
 function GetLuminance(AR, AG, AB: byte): Word;
@@ -252,6 +253,16 @@ begin
   end;
 
   Result := LText;
+end;
+
+function CountChars(const S: string; const C: char): integer;
+var
+  i: Integer;
+begin
+  result := 0;
+  for i := 1 to Length(S) do
+    if S[i] = C then
+      inc(result);
 end;
 
 function GetHue(AR, AG, AB: byte): Word;
