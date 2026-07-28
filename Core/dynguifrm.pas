@@ -113,6 +113,13 @@ type
     Label11: TLabel;
     amberslider: TTrackBar;
     Label12: TLabel;
+    frostpanel: TPanel;
+    Shape20: TShape;
+    Shape21: TShape;
+    Label13: TLabel;
+    frostminus: TButton;
+    frostslider: TTrackBar;
+    frostplus: TButton;
     procedure FormCreate(Sender: TObject);
 //    procedure CreateParams(var Params:TCreateParams);override;
     procedure Timer1Timer(Sender: TObject);
@@ -192,6 +199,9 @@ type
     procedure ambersliderChange(Sender: TObject);
     procedure colorpicker2MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure frostsliderChange(Sender: TObject);
+    procedure frostplusClick(Sender: TObject);
+    procedure frostminusClick(Sender: TObject);
   private
     { Private-Deklarationen }
     LastPosX, LastPosY:integer;
@@ -1428,6 +1438,29 @@ begin
       geraetesteuerung.set_color(mainform.devices[i].ID, R, G, B, 500, 0);
     end;
   end;
+end;
+
+procedure Tdynguiform.frostsliderChange(Sender: TObject);
+var
+  i:integer;
+begin
+  for i:=0 to length(mainform.Devices)-1 do
+  begin
+    if mainform.DeviceSelected[i] then
+    begin
+      geraetesteuerung.set_channel(mainform.Devices[i].ID, 'FROST', -1, 255-frostslider.position, 0, 0);
+    end;
+  end;
+end;
+
+procedure Tdynguiform.frostplusClick(Sender: TObject);
+begin
+  frostslider.position:=frostslider.position-25
+end;
+
+procedure Tdynguiform.frostminusClick(Sender: TObject);
+begin
+  frostslider.position:=frostslider.position+25
 end;
 
 end.

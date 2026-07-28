@@ -1,6 +1,6 @@
 object dynguiform: Tdynguiform
-  Left = 538
-  Top = 499
+  Left = 107
+  Top = 168
   HorzScrollBar.Increment = 99
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
@@ -8,7 +8,7 @@ object dynguiform: Tdynguiform
   BorderStyle = bsSingle
   Caption = 'Dynamische Oberfl'#228'che'
   ClientHeight = 260
-  ClientWidth = 1269
+  ClientWidth = 1336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -102,7 +102,7 @@ object dynguiform: Tdynguiform
   object Shape10: TShape
     Left = 0
     Top = 0
-    Width = 1269
+    Width = 1336
     Height = 5
     Align = alTop
     Brush.Color = clNavy
@@ -1114,6 +1114,15 @@ object dynguiform: Tdynguiform
     BevelOuter = bvNone
     TabOrder = 7
     Visible = False
+    object Shape19: TShape
+      Left = 227
+      Top = 0
+      Width = 5
+      Height = 255
+      Align = alRight
+      Brush.Color = clBtnShadow
+      Pen.Style = psClear
+    end
     object Shape9: TShape
       Left = 0
       Top = 224
@@ -1136,15 +1145,6 @@ object dynguiform: Tdynguiform
       Font.Style = [fsBold]
       ParentFont = False
       Transparent = True
-    end
-    object Shape19: TShape
-      Left = 227
-      Top = 0
-      Width = 5
-      Height = 255
-      Align = alRight
-      Brush.Color = clBtnShadow
-      Pen.Style = psClear
     end
     object fadenkreuz: TPanel
       Left = 0
@@ -1839,6 +1839,95 @@ object dynguiform: Tdynguiform
       ParentFont = False
       TabOrder = 2
       OnClick = zoomminusClick
+    end
+  end
+  object frostpanel: TPanel
+    Left = 1281
+    Top = 5
+    Width = 56
+    Height = 255
+    Align = alLeft
+    BevelOuter = bvNone
+    TabOrder = 9
+    Visible = False
+    object Shape20: TShape
+      Left = 51
+      Top = 0
+      Width = 5
+      Height = 255
+      Align = alRight
+      Brush.Color = clBtnShadow
+      Pen.Style = psClear
+    end
+    object Shape21: TShape
+      Left = 0
+      Top = 224
+      Width = 200
+      Height = 33
+      Brush.Color = clBlue
+      Pen.Style = psClear
+    end
+    object Label13: TLabel
+      Left = 8
+      Top = 232
+      Width = 31
+      Height = 16
+      Alignment = taCenter
+      Caption = 'Frost'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWhite
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Transparent = True
+    end
+    object frostminus: TButton
+      Left = 8
+      Top = 192
+      Width = 33
+      Height = 25
+      Caption = '-'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+      OnClick = frostminusClick
+    end
+    object frostslider: TTrackBar
+      Left = 8
+      Top = 32
+      Width = 33
+      Height = 161
+      Hint = 'Fokus-Slider'
+      Max = 255
+      Orientation = trVertical
+      ParentShowHint = False
+      Position = 255
+      ShowHint = True
+      TabOrder = 1
+      ThumbLength = 30
+      TickMarks = tmBoth
+      TickStyle = tsNone
+      OnChange = frostsliderChange
+    end
+    object frostplus: TButton
+      Left = 8
+      Top = 8
+      Width = 33
+      Height = 25
+      Caption = '+'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 2
+      OnClick = frostplusClick
     end
   end
   object pnglist: TPngImageCollection

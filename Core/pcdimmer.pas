@@ -1,13 +1,12 @@
 {*********************************************************************************}
 {**                                                                             **}
 {**  PHOENIXstudios PC_DIMMER                                                   **}
-{**  Copyrights (c) 2004-2025 by PHOENIXstudios Remsfeld                        **}
+{**  Copyrights (c) 2004-2026 by PHOENIXstudios Remsfeld                        **}
 {**                                                                             **}
 {**  Author: Dr.-Ing. Christian Nöding, info@pcdimmer.de                        **}
 {**  Co-Author: Martin Mikula (2012-2013)                                       **}
 {**                                                                             **}
 {**  Website: https://www.pcdimmer.de (Updates, Infos, etc.)                    **}
-{**  Forum: https://forum.pcdimmer.de                                           **}
 {**  Github: https://github.com/xn--nding-jua/PC_DIMMER                         **}
 {**                                                                             **}
 {**  This software is licensed under the GNU Public license                     **}
@@ -2948,6 +2947,14 @@ var
 begin
   if IsFreezeMode then exit;
 
+  // prevent PC_DIMMER from sending data to individual program-parts when starting/resetting
+  if pcdimmerresetting and (MSG in [MSG_STARTSCENE, MSG_STOPSCENE, MSG_STARTEFFECT, MSG_STOPEFFECT,
+    MSG_STARTPLUGINSCENE, MSG_STOPPLUGINSCENE, MSG_EDITPLUGINSCENE, MSG_STARTPLUGINCOMMAND]) then
+  begin
+    exit;
+  end;
+
+
   DimmerkernelChanges:=DimmerkernelChanges+1;
 
   panchan:=0;
@@ -2960,7 +2967,10 @@ begin
   begin
     if (@ProgramPlugins[i].SendMessage<>nil) then
     begin
-      ProgramPlugins[i].SendMessage(MSG, Data1, Data2);
+      try
+        ProgramPlugins[i].SendMessage(MSG, Data1, Data2);
+      except
+      end;
     end;
   end;
 
@@ -3313,8 +3323,34 @@ begin
 
   shutdown:=true;
 
-  // Fenster schließen
+  // Timer beenden
+  DebugAdd('SHUTDOWN: Closing Timers...');
+  AutoFader.Enabled:=false;
+  BewegungsszenenTimer.Enabled:=false;
+  audioeffektplayerform.audioeffekttimer.Enabled:=false;
+  audioeffektplayerform.audioeffektplaytimer.Enabled:=false;
+  Uhrzeit_Timer.Enabled:=false;
+  Timer1.Enabled:=false;
+  Optotimer.Enabled:=false;
+  schedulerform.Skripttimer_timer.Enabled:=false;
+  joystickform.JoystickTimer.enabled:=false;
+  kontrollpanel.beattime_blinker.enabled:=false;
+  kontrollpanel.CheckFileExists.enabled:=false;
+  insscenedlg.ChangedChannels.enabled:=false;
+  bewegungsszeneneditorform.Repaint.Enabled:=false;
+  bewegungsszeneneditorform.BewegungsszeneTimer.enabled:=false;
+  grafischebuehnenansicht.RefreshTimer.enabled:=false;
+  AkkuTimer.Enabled:=false;
+  ShortCutChecker.Enabled:=false;
+  MidiCallbackTimer.Enabled:=false;
+  MainformScreenRefreshTimer.Enabled:=false;
+  leistungssteuerungform2.Timer2.enabled:=false;
+  ElgatoStreamDeckForm.ElgatoStreamDeckTimer.Enabled:=false;
+  ElgatoStreamDeckForm.ElgatoStreamDeckDisplayTimer.Enabled:=false;
+  DebugAddToLine(' - OK', false);
 
+  // Fenster schließen
+  DebugAdd('SHUTDOWN: Closing Windows...');
   if DimmerkernelQueueForm<>nil then
     if DimmerkernelQueueForm.Showing then
       DimmerkernelQueueForm.close;
@@ -3485,6 +3521,7 @@ begin
     xtouchcontrolform.close;
   if elgatostreamdeckform.showing then
     elgatostreamdeckform.close;
+  DebugAddToLine(' - OK', false);
 
   // WORKAROUND FOR MEVP
   // 3D Visualizer schließen und freigeben
@@ -3523,33 +3560,6 @@ begin
 
   DebugAdd('', false, false);
   DebugAdd('----------------------------------------------------------------------------', false);
-  DebugAdd('SHUTDOWN: Closing Timers...');
-
-  // Timer beenden
-  AutoFader.Enabled:=false;
-  BewegungsszenenTimer.Enabled:=false;
-  audioeffektplayerform.audioeffekttimer.Enabled:=false;
-  audioeffektplayerform.audioeffektplaytimer.Enabled:=false;
-  Uhrzeit_Timer.Enabled:=false;
-  Timer1.Enabled:=false;
-  Optotimer.Enabled:=false;
-  schedulerform.Skripttimer_timer.Enabled:=false;
-  joystickform.JoystickTimer.enabled:=false;
-  kontrollpanel.beattime_blinker.enabled:=false;
-  kontrollpanel.CheckFileExists.enabled:=false;
-  insscenedlg.ChangedChannels.enabled:=false;
-  bewegungsszeneneditorform.Repaint.Enabled:=false;
-  bewegungsszeneneditorform.BewegungsszeneTimer.enabled:=false;
-  grafischebuehnenansicht.RefreshTimer.enabled:=false;
-  AkkuTimer.Enabled:=false;
-  ShortCutChecker.Enabled:=false;
-  MidiCallbackTimer.Enabled:=false;
-  MainformScreenRefreshTimer.Enabled:=false;
-  leistungssteuerungform2.Timer2.enabled:=false;
-  ElgatoStreamDeckForm.ElgatoStreamDeckTimer.Enabled:=false;
-  ElgatoStreamDeckForm.ElgatoStreamDeckDisplayTimer.Enabled:=false;
-
-  DebugAddToLine(' - OK', false);
   DebugAdd('SHUTDOWN: Sending Close-Message...');
 
   _killthreads:=true;
@@ -21760,7 +21770,7 @@ var
   IsInList,MinusOneIsLast:boolean;
 //  Data:PTreeData;
   GoboIsInList:boolean;
-  showcolor, showdimmer, showiris, showzoom, showstrobo, showfocus, showprisma, showgobo, showxy:boolean;
+  showcolor, showdimmer, showiris, showzoom, showstrobo, showfocus, showprisma, showgobo, showxy, showfrost:boolean;
   dunklefarbe:boolean;
 begin
   if startingup then exit;
@@ -21776,7 +21786,8 @@ begin
   showprisma:=false;
   showgobo:=false;
   showxy:=false;
-  
+  showfrost:=false;
+
 {
   // Gerätesteuerung aktualisieren
   if geraetesteuerung.Showing then
@@ -21998,6 +22009,15 @@ begin
     begin
       showxy:=true;
     end;
+    //Frost
+    for j:=0 to length(mainform.devices[i].kanaltyp)-1 do
+    begin
+      if uppercase(mainform.devices[i].kanaltyp[j])='FROST' then
+      begin
+        showfrost:=true;
+        break;
+      end;
+    end;
   end;
 
   // Elemente einblenden
@@ -22010,9 +22030,11 @@ begin
   dynguiform.prismapanel.Visible:=false;
   dynguiform.gobopanel.Visible:=false;
   dynguiform.xypanel.Visible:=false;
+  dynguiform.frostpanel.Visible:=false;
 
-  dynguiform.Label10.Visible:=not (showcolor or showdimmer or showiris or showzoom or showstrobo or showfocus or showprisma
-  or showgobo or showxy);
+  dynguiform.Label10.Visible:=not (showcolor or showdimmer or showiris or
+    showzoom or showstrobo or showfocus or showprisma or showgobo or showxy or
+    showfrost);
 
   dynguiform.colorpanel.Visible:=showcolor;
   dynguiform.dimmerpanel.Visible:=showdimmer;
@@ -22031,6 +22053,8 @@ begin
     dynguiform.gobopanel.Left:=2000;
   dynguiform.xypanel.Visible:=showxy;
     dynguiform.xypanel.Left:=2000;
+  dynguiform.frostpanel.Visible:=showfrost;
+    dynguiform.frostpanel.Left:=2000;
 
   // Größe und Farbe der dynamischen Oberfläche anpassen
   newwidth:=0;
@@ -22115,6 +22139,16 @@ begin
       dynguiform.Shape9.Brush.Color:=clBlue;
     newwidth:=newwidth+dynguiform.xypanel.Width;
   end;
+  if dynguiform.frostpanel.Visible then
+  begin
+    dunklefarbe:=not dunklefarbe;
+    if dunklefarbe then
+      dynguiform.Shape6.Brush.Color:=clNavy
+    else
+      dynguiform.Shape6.Brush.Color:=clBlue;
+    newwidth:=newwidth+dynguiform.frostpanel.Width;
+  end;
+
   if newwidth=0 then
     newwidth:=160;
   if dynguiform.BorderStyle=bsSingle then
